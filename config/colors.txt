@@ -1,0 +1,13 @@
+black		00	00	00	FF
+white		FF	FF	FF	FF
+red		FF	00	00	FF
+green		00	FF	00	FF
+blue		00	00	FF	FF
+cyan		00	FF	FF	FF
+magenta		FF	00	FF	FF
+yellow		FF	FF	00	FF
+orange		FF	A5	00	FF
+pink		FF	C8	CB	FF
+purple		80	00	80	FF
+turquoise	40	E0	D0	FF
+violet		EE	82	EE	FF

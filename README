@@ -1,0 +1,85 @@
+Zenipex Library
+===============
+
+Contents
+========
+1. Introduction
+2. License
+3. Supported Platforms
+4. Documentation
+
+
+
+1. Introduction
+===============
+
+The Zenipex Library is a game development framework, created 
+with the goal of allowing someone with some knowledge of C++ 
+to create 3D games for both Windows and Linux platforms (and 
+hopefully others) quickly.
+
+SDL combined with SDL_mixer already did much of the work 
+*not* related to 3D graphics.  The focuses on the project 
+were to abstract away some basic differences between OpenGL 
+and Direct3D 9 and to create an object-oriented framework for 
+game development.  It was never the goal to abstract away all 
+differences between OpenGL and Direct3D or to create a fully 
+optimzed game development library with every features you 
+could possibly want.
+
+Truly it started as an exercise in learning both OpenGL and 
+Direct3D, with the hope that it would become something 
+useful to me if to nobody else.  Hopefully someone else in 
+Wolverine Soft will use the thing too ;)
+
+-bazald
+
+
+
+2. License/Authors
+==================
+
+Generally speaking, the Zenipex Library is an open source 
+project.  For details please refer to the first comment in 
+any given file and refer to the ./COPYING and ./GPL files.
+
+
+
+3. Supported Platforms
+======================
+ 
+This software is known to operate on:
+ 
+- Windows: XP
+- Linux: {U,Ku}buntu
+
+It should be possible to build it on any platform supporting:
+
+The Simple Directmedia Layer (SDL) [http://www.libsdl.org/]
+
+Direct3D 9 [http://www.microsoft.com/windows/directx/]
+     and/or
+OpenGL [http://www.opengl.org/]
+        - Required for graphics
+
+SDL_mixer [http://www.libsdl.org/projects/SDL_mixer/] 
+        - Required for sound
+SDL_image [http://www.libsdl.org/projects/SDL_image/]
+        - Required for texture loading for OpenGL
+SDL_gfx [http://www.ferzkopp.net/Software/SDL_gfx-2.0/]
+        - Possibly required for texture resizing for OpenGL
+        - Not required if images loaded are already in the 
+          correcty format (both width and height powers of 2)
+SDL_ttf [http://www.libsdl.org/projects/SDL_ttf/]
+        - Required for text rendering in OpenGL
+lib3ds [http://lib3ds.sourceforge.net/]
+        - Required for model loading and rendering
+
+
+
+4. Documentation
+================
+
+Documentation is available in any format supported by Doxygen.
+You can build any format by modifying the ./Doxyfile file to 
+access the correct directories on your system.
