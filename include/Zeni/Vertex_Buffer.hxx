@@ -33,6 +33,10 @@
 
 namespace Zeni {
 
+  int Vertex_Buffer::get_begin_end() const {
+    return m_begin_end;
+  }
+
   int Vertex_Buffer_3FC::num_triangles() const {
     return int(m_triangles_no_mat.size() + m_triangles_mat.size());
   }

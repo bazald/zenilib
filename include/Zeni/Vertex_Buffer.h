@@ -92,6 +92,7 @@ namespace Zeni {
       int num_elements;
     };
 
+    Vertex_Buffer();
     virtual ~Vertex_Buffer() {}
 
     virtual void add_triangle(Renderable *triangle) = 0; ///< Add a Triangle to the Vertex_Buffer
@@ -100,7 +101,15 @@ namespace Zeni {
     virtual void debug_render() = 0; ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
     virtual void prerender() = 0; ///< Create the vertex buffer in the GPU/VPU
+    virtual void render_begin(); ///< Start using the Vertex_Buffer; optional - use to increase performance when rendering multiple times
     virtual void render() = 0; ///< Render the Vertex_Buffer
+    virtual void render_end(); ///< End use of the Vertex_Buffer; NOT optional if render_begin was called
+
+  protected:
+    inline int get_begin_end() const;
+
+  private:
+    int m_begin_end;
   };
 
   class Vertex_Buffer_3FC : public Vertex_Buffer {
@@ -173,7 +182,9 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FC_GL();
 
     virtual void prerender();
+    virtual void render_begin();
     virtual void render();
+    virtual void render_end();
 
   private:
     inline int vertex_size() const;
@@ -194,7 +205,9 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FT_GL();
 
     virtual void prerender();
+    virtual void render_begin();
     virtual void render();
+    virtual void render_end();
 
   private:
     inline int vertex_size() const;
@@ -218,7 +231,9 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FC_DX9();
 
     virtual void prerender();
+    virtual void render_begin();
     virtual void render();
+    virtual void render_end();
 
   private:
     inline int vertex_size() const;
@@ -233,7 +248,9 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FT_DX9();
 
     virtual void prerender();
+    virtual void render_begin();
     virtual void render();
+    virtual void render_end();
 
   private:
     inline int vertex_size() const;

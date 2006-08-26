@@ -192,28 +192,29 @@ namespace Zeni {
     material.set(*this);
   }
 
-  void Video_GL::push_model_stack() {
+  void Video_GL::select_world_matrix() {
+    glMatrixMode(GL_MODELVIEW);
+  }
+
+  void Video_GL::push_world_stack() {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
   }
 
-  void Video_GL::pop_model_stack() {
+  void Video_GL::pop_world_stack() {
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
   }
 
   void Video_GL::translate_scene(const Vector3f &direction) {
-    glMatrixMode(GL_MODELVIEW);
     glTranslatef(direction.i(), direction.j(), direction.k());
   }
 
   void Video_GL::rotate_scene(const Vector3f &about, const float &radians) {
-    glMatrixMode(GL_MODELVIEW);
     glRotatef(radians * 180.0f / pi, about.i(), about.j(), about.k());
   }
 
   void Video_GL::scale_scene(const Vector3f &factor) {
-    glMatrixMode(GL_MODELVIEW);
     glScalef(factor.i(), factor.j(), factor.k());
   }
 

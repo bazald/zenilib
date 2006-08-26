@@ -197,11 +197,14 @@ namespace Zeni {
     material.set(*this);
   }
 
-  void Video_DX9::push_model_stack() {
+  void Video_DX9::select_world_matrix() {
+  }
+
+  void Video_DX9::push_world_stack() {
     get_matrix_stack()->Push();
   }
 
-  void Video_DX9::pop_model_stack() {
+  void Video_DX9::pop_world_stack() {
     get_matrix_stack()->Pop();
     m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
   }

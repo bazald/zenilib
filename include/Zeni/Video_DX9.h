@@ -94,8 +94,9 @@ namespace Zeni {
     virtual void set_material(const Material &material); ///< Set a Material
 
     // Model Stack Functions
-    virtual void push_model_stack(); ///< Push a model view matrix onto the stack
-    virtual void pop_model_stack(); ///< Pop a model view matrix off the stack
+    virtual void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
+    virtual void push_world_stack(); ///< Push a model view matrix onto the stack
+    virtual void pop_world_stack(); ///< Pop a model view matrix off the stack
     virtual void translate_scene(const Vector3f &direction); ///< Translate the scene
     virtual void rotate_scene(const Vector3f &about, const float &radians); ///< Rotate the scene
     virtual void scale_scene(const Vector3f &factor); ///< Scale the scene
