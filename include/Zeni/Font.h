@@ -75,22 +75,20 @@ namespace Zeni {
   class Font {
   public:
     Font(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
-    Font(const bool &bold, const bool &italic, const int &glyph_height, const Color &color); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font(const bool &bold, const bool &italic, const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     virtual ~Font() {}
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
     inline int get_glyph_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
-    inline const Color & get_color() const; ///< Get the color of the font.
 
     /// Render text at screen position (x, y), with justification JUSTIFY.  Remember not to clip the screen if you want this to look good in OpenGL.
     virtual void render_text(const std::string &text, const int &x, const int &y, 
-      const JUSTIFY &justify = ZENI_LEFT) const = 0;
+      const Color &color, const JUSTIFY &justify = ZENI_LEFT) const = 0;
 
   private:
     bool m_bold, m_italic;
     int m_glyph_height;
-    Color m_color;
   };
 
 #ifndef DISABLE_GL
@@ -99,7 +97,7 @@ namespace Zeni {
 
     struct Glyph {
       Glyph();
-      Glyph(TTF_Font *font_, const Color &color, const char &c);
+      Glyph(TTF_Font *font_, const char &c);
       ~Glyph();
 
       inline int get_glyph_width() const;
@@ -116,11 +114,11 @@ namespace Zeni {
   public:
     Font_GL(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     Font_GL(const std::string &codename, const bool &bold, const bool &italic, 
-      const int &glyph_height, const Color &color); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+      const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     ~Font_GL();
 
     virtual void render_text(const std::string &text, const int &x, const int &y, 
-      const JUSTIFY &justify = ZENI_LEFT) const;
+      const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
 
   private:
     Glyph *m_glyph[num_glyphs];
@@ -133,11 +131,11 @@ namespace Zeni {
   public:
     Font_DX9(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     Font_DX9(const std::string &codename, const bool &bold, const bool &italic, 
-      const int &glyph_height, const Color &color); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+      const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     ~Font_DX9();
 
     virtual void render_text(const std::string &text, const int &x, const int &y, 
-      const JUSTIFY &justify = ZENI_LEFT) const;
+      const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
 
   private:
     LPD3DXFONT font;

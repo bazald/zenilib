@@ -259,8 +259,8 @@ namespace Zeni {
     return new Texture_GL(name, filename, *this);
   }
 
-  Font * Video_GL::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height, const Color &color) {
-    return new Font_GL(filename, bold, italic, glyph_height, color);
+  Font * Video_GL::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
+    return new Font_GL(filename, bold, italic, glyph_height);
   }
 
   Vertex_Buffer_3FC * Video_GL::create_Vertex_Buffer_3FC() {

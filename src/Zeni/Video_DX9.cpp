@@ -244,8 +244,8 @@ namespace Zeni {
     return new Texture_DX9(name, filename, *this);
   }
 
-  Font * Video_DX9::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height, const Color &color) {
-    return new Font_DX9(filename, bold, italic, glyph_height, color);
+  Font * Video_DX9::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
+    return new Font_DX9(filename, bold, italic, glyph_height);
   }
 
   Vertex_Buffer_3FC * Video_DX9::create_Vertex_Buffer_3FC() {

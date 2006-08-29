@@ -101,7 +101,7 @@ namespace Zeni {
     // Creation Functions
     virtual Texture * load_Texture(const std::string &name, const std::string &filename); ///< Function for loading a Texture; used internally by Textures
     virtual Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-      const int &glyph_height, const Color &color); ///< Function for creating a Font; used internally by Fonts
+      const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
     virtual Vertex_Buffer_3FC * create_Vertex_Buffer_3FC(); ///< Function for creating a Vertex_Buffer_3FC
     virtual Vertex_Buffer_3FT * create_Vertex_Buffer_3FT(); ///< Function for creating a Vertex_Buffer_3FT
 

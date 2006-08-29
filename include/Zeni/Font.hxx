@@ -45,10 +45,6 @@ namespace Zeni {
     return m_glyph_height;
   }
 
-  const Color & Font::get_color() const {
-    return m_color;
-  }
-
 #ifndef DISABLE_GL
 
   int Font_GL::Glyph::get_glyph_width() const {

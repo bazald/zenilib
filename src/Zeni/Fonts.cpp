@@ -78,13 +78,13 @@ namespace Zeni {
     string name, codename, color;
     bool bold, italic;
     int height;
-    while(fin >> name >> bold >> italic >> height >> color >> ws) {
+    while(fin >> name >> bold >> italic >> height >> ws) {
       getline(fin, codename);
       while(!codename.empty() && isspace(codename[codename.size() - 1]))
         codename.resize(codename.size() - 1);
 
       try {
-        m_fonts[name] = Video::get_reference().create_Font(codename, bold, italic, height, Colors::get_reference().get_color(color));
+        m_fonts[name] = Video::get_reference().create_Font(codename, bold, italic, height);
       }
       catch(...) {
         uninit();
