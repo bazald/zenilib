@@ -177,19 +177,19 @@ namespace Zeni {
     if(vdx.get_lighting())
       vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
     else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 
     //Set the alpha to come completely from the texture
     if(vdx.get_lighting())
       vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
     else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 
-    static_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device()->SetTexture(0, m_texture);
+    vdx.get_d3d_device()->SetTexture(0, m_texture);
   }
 #endif
 

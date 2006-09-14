@@ -108,6 +108,8 @@ namespace Zeni {
   void Video_DX9::unapply_texture() {
     m_textured = false;
 
+    m_d3d_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+
     set_fvf();
   }
 
