@@ -27,24 +27,24 @@
 */
 
 /**
- * \class Zeni::Rectangle<VERTEX>
+ * \class Zeni::Quadrilateral<VERTEX>
  *
  * \ingroup Zenilib
  *
  * \brief An Abstraction of a Quadrilateral
  *
- * I call it a Rectangle, but there is nothing forcing you to use it as such.
+ * I call it a Quadrilateral, but there is nothing forcing you to use it as such.
  * Really it is a triangle fan consisting of four vertices.
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Rectangle is rendered.
+ * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Quadrilateral is rendered.
  *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
  */
 
-#ifndef ZENI_RECTANGLE_H
-#define ZENI_RECTANGLE_H
+#ifndef ZENI_Quadrilateral_H
+#define ZENI_Quadrilateral_H
 
 #include "Render_Wrapper.h"
 #include "Triangle.h"
@@ -54,10 +54,10 @@
 namespace Zeni {
 
   template <typename VERTEX>
-  class Rectangle : public Renderable {
+  class Quadrilateral : public Renderable {
   public:
-    /// The best way to create a Rectangle
-    Rectangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
+    /// The best way to create a Quadrilateral
+    Quadrilateral(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
       const VERTEX &vertex2 = VERTEX(), const VERTEX &vertex3 = VERTEX(), 
       Render_Wrapper *render_wrapper = new Render_Wrapper());
 
@@ -76,10 +76,10 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
-    Rectangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Rectangle
+    Quadrilateral<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Quadrilateral
 
-    Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Rectangle
-    Triangle<VERTEX> * get_duplicate_t1() const; ///< Get the second half of the Rectangle
+    Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral
+    Triangle<VERTEX> * get_duplicate_t1() const; ///< Get the second half of the Quadrilateral
 
   private:
     VERTEX m_vertex[4];
@@ -89,7 +89,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Rectangle.hxx"
+#include "Quadrilateral.hxx"
 #endif
 
 #endif

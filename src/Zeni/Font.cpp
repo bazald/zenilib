@@ -32,7 +32,7 @@
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Color.hxx>
-#include <Zeni/Rectangle.hxx>
+#include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Vertex2f.hxx>
 #include <Zeni/Video.hxx>
 
@@ -111,7 +111,7 @@ namespace Zeni {
     glEnable(GL_TEXTURE_2D);
     texture->apply_texture();
 
-    Rectangle<Vertex2f_Texture> rect
+    Quadrilateral<Vertex2f_Texture> rect
       (Vertex2f_Texture(Point2f(float(x), float(y)), Point2f(0, 0)),
       Vertex2f_Texture(Point2f(float(x), float(y) + m_glyph_height), Point2f(0, tex_h)),
       Vertex2f_Texture(Point2f(float(x) + m_glyph_width, float(y) + m_glyph_height), Point2f(tex_w, tex_h)),

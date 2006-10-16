@@ -29,7 +29,7 @@
 #include <Zeni/Vertex_Buffer.hxx>
 
 #include <Zeni/Coordinate.hxx>
-#include <Zeni/Rectangle.hxx>
+#include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Render_Wrapper.hxx>
 #include <Zeni/Vertex3f.hxx>
 #include <Zeni/Video_GL.hxx>
@@ -111,9 +111,9 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer_3FC::add_rectangle(Renderable *rectangle) {
-    std::auto_ptr<Renderable> to_delete(rectangle);
-    const Rectangle<Vertex3f_Color> * const p_rect = dynamic_cast<Rectangle<Vertex3f_Color> *>(rectangle);
+  void Vertex_Buffer_3FC::add_Quadrilateral(Renderable *quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    const Quadrilateral<Vertex3f_Color> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Color> *>(quad);
 
     if(!p_rect)
       throw VBuf_Init_Failure();
@@ -122,9 +122,9 @@ namespace Zeni {
     add_triangle(p_rect->get_duplicate_t1());
   }
 
-  void Vertex_Buffer_3FT::add_rectangle(Renderable *rectangle) {
-    std::auto_ptr<Renderable> to_delete(rectangle);
-    const Rectangle<Vertex3f_Texture> * const p_rect = dynamic_cast<Rectangle<Vertex3f_Texture> *>(rectangle);
+  void Vertex_Buffer_3FT::add_Quadrilateral(Renderable *quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    const Quadrilateral<Vertex3f_Texture> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Texture> *>(quad);
 
     if(!p_rect)
       throw VBuf_Init_Failure();

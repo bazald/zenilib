@@ -26,10 +26,10 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_RECTANGLE_HXX
-#define ZENI_RECTANGLE_HXX
+#ifndef ZENI_Quadrilateral_HXX
+#define ZENI_Quadrilateral_HXX
 
-#include "Rectangle.h"
+#include "Quadrilateral.h"
 
 #include "Triangle.hxx"
 
@@ -38,7 +38,7 @@
 namespace Zeni {
 
   template <typename VERTEX>
-  Rectangle<VERTEX>::Rectangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper *render_wrapper)
+  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper *render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     m_vertex[0] = vertex0;
@@ -48,21 +48,21 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  const VERTEX & Rectangle<VERTEX>::get_vertex(const int &index) const {
+  const VERTEX & Quadrilateral<VERTEX>::get_vertex(const int &index) const {
     if(index < 0 || index > 3)
       throw Invalid_Vertex_Index();
     return m_vertex[index];
   }
 
   template <typename VERTEX>
-  void Rectangle<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
+  void Quadrilateral<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
     if(index < 0 || index > 3)
       throw Invalid_Vertex_Index();
     m_vertex[index] = vertex;
   }
 
   template <typename VERTEX>
-  Point3f Rectangle<VERTEX>::get_position() const {
+  Point3f Quadrilateral<VERTEX>::get_position() const {
     return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x + m_vertex[3].get_position().x) * 0.25f,
       (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y + m_vertex[3].get_position().y) * 0.25f,
       (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z + m_vertex[3].get_position().z) * 0.25f);
@@ -70,7 +70,7 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   template <typename VERTEX>
-  void Rectangle<VERTEX>::render_to(Video_GL &screen) const {
+  void Quadrilateral<VERTEX>::render_to(Video_GL &screen) const {
     m_render_wrapper->prerender();
 
     glBegin(GL_TRIANGLE_FAN);
@@ -84,7 +84,7 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
-  void Rectangle<VERTEX>::render_to(Video_DX9 &screen) const {
+  void Quadrilateral<VERTEX>::render_to(Video_DX9 &screen) const {
     m_render_wrapper->prerender();
     screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, m_vertex[0].get_address(), sizeof(VERTEX));
     m_render_wrapper->postrender();
@@ -92,22 +92,22 @@ namespace Zeni {
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * const Rectangle<VERTEX>::get_render_wrapper() const {
+  const Render_Wrapper * const Quadrilateral<VERTEX>::get_render_wrapper() const {
     return m_render_wrapper.get();
   }
 
   template <typename VERTEX>
-  Rectangle<VERTEX> * Rectangle<VERTEX>::get_duplicate() const {
-    return new Rectangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
+  Quadrilateral<VERTEX> * Quadrilateral<VERTEX>::get_duplicate() const {
+    return new Quadrilateral<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
-  Triangle<VERTEX> * Rectangle<VERTEX>::get_duplicate_t0() const {
+  Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t0() const {
     return new Triangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
-  Triangle<VERTEX> * Rectangle<VERTEX>::get_duplicate_t1() const {
+  Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t1() const {
     return new Triangle<VERTEX>(m_vertex[0], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
   }
 
