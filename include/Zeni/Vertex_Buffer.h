@@ -96,7 +96,7 @@ namespace Zeni {
     virtual ~Vertex_Buffer() {}
 
     virtual void add_triangle(Renderable *triangle) = 0; ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_Quadrilateral(Renderable *Quadrilateral) = 0; ///< Add a Quadrilateral to the Vertex_Buffer
+    virtual void add_quadrilateral(Renderable *quadrilateral) = 0; ///< Add a Quadrilateral to the Vertex_Buffer
 
     virtual void debug_render() = 0; ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
@@ -117,7 +117,7 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FC();
 
     virtual void add_triangle(Renderable *triangle); ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_Quadrilateral(Renderable *Quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    virtual void add_quadrilateral(Renderable *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
 
     virtual void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
@@ -148,7 +148,7 @@ namespace Zeni {
     virtual ~Vertex_Buffer_3FT();
 
     virtual void add_triangle(Renderable *triangle); ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_Quadrilateral(Renderable *Quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    virtual void add_quadrilateral(Renderable *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
 
     virtual void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 

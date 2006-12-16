@@ -36,19 +36,9 @@ using std::string;
 
 namespace Zeni {
 
-  BGM_On_Close::~BGM_On_Close() {
-    Sound::get_reference().m_callback_loop = 0;
-    delete this;
-  }
-
-  int BGM_On_Close::delay_by() const {
-    return 500;
-  }
-
   Sound::Sound()
     : m_bgmm(0),
     m_channels(8),
-    m_callback_loop(0),
     m_enabled(false)
   {
     // Ensure Core is initialized
@@ -78,31 +68,19 @@ namespace Zeni {
   void Sound::disable() {
     m_enabled = false;
 
-    unload_BGM(0);
+    stop_BGM();
     Mix_CloseAudio();
   }
 
   void Sound::set_BGM(const string &filename) {
     m_bgmusic = filename;
-  }
-
-  static int bcm_callback_loop(void *callback) {
-    BGM_On_Close *callback_fcn = reinterpret_cast<BGM_On_Close *>(callback);
-
-    while(SDL_GetAudioStatus() != SDL_AUDIO_STOPPED)
-      SDL_Delay(callback_fcn->delay_by());
-
-    (*callback_fcn)();
-    delete callback_fcn;
-
-    return 0;
-  }
-
-  void Sound::load_BGM(const int &fade_time, const int &play_count, BGM_On_Close *callback) {
+    
+    // Actually load
+    
     if(!m_enabled)
       enable();
 
-    unload_BGM(0);
+    stop_BGM();
 
     if(!m_bgmusic.length())
       throw BGM_Init_Failure();
@@ -113,23 +91,11 @@ namespace Zeni {
     m_bgmm = Mix_LoadMUS(m_bgmusic.c_str());
     if(!m_bgmm)
       throw BGM_Init_Failure();
-
-    Mix_FadeInMusic(m_bgmm, play_count, fade_time);
-
-    if(play_count != -1 && callback)
-      m_callback_loop = SDL_CreateThread(bcm_callback_loop, callback);
   }
 
-  void Sound::unload_BGM(const int &fade_time) {
-    if(!m_enabled)
-      return;
-
-    if(m_callback_loop) {
-      SDL_KillThread(m_callback_loop);
-      m_callback_loop = 0;
-    }
-
-    Mix_FadeOutMusic(fade_time);
+  void Sound::play_BGM(const int &loops, const int &fade_for_ms, const double &start_second) {
+    Mix_RewindMusic();
+    Mix_FadeInMusicPos(m_bgmm, loops, fade_for_ms, start_second);
   }
 
   bool Sound::play_sound(const Sound_Effect &sound_effect, const int &loop_times) {

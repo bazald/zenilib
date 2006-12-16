@@ -65,8 +65,8 @@ int main(int argc, char *argv[]) {
   }
   catch(...) {
     cerr << "Unrecognized Error Captured in main\n";
-    throw;
+    return 1;
   }
 
-  return(0);
+  return 0;
 }

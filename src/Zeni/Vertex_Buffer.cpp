@@ -111,7 +111,7 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer_3FC::add_Quadrilateral(Renderable *quad) {
+  void Vertex_Buffer_3FC::add_quadrilateral(Renderable *quad) {
     std::auto_ptr<Renderable> to_delete(quad);
     const Quadrilateral<Vertex3f_Color> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Color> *>(quad);
 
@@ -122,7 +122,7 @@ namespace Zeni {
     add_triangle(p_rect->get_duplicate_t1());
   }
 
-  void Vertex_Buffer_3FT::add_Quadrilateral(Renderable *quad) {
+  void Vertex_Buffer_3FT::add_quadrilateral(Renderable *quad) {
     std::auto_ptr<Renderable> to_delete(quad);
     const Quadrilateral<Vertex3f_Texture> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Texture> *>(quad);
 

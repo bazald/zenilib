@@ -37,6 +37,27 @@ namespace Zeni {
     return m_enabled;
   }
 
+  bool Sound::playing_BGM() {
+    return Mix_PlayingMusic() == 1;
+  }
+
+  bool Sound::paused_BGM() {
+    return Mix_PausedMusic() == 1;
+  }
+  
+  void Sound::stop_BGM(const int &fade_for_ms) {
+    if(!Mix_FadeOutMusic(fade_for_ms))
+      Mix_HaltMusic();
+  }
+
+  void Sound::pause_BGM() {
+    Mix_PauseMusic();
+  }
+  
+  void Sound::resume_BGM() {
+    Mix_ResumeMusic();
+  }
+
 }
 
 #endif
