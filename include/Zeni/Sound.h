@@ -27,24 +27,6 @@
 */
 
 /**
- * \class Zeni::BGM_On_Close
- *
- * \ingroup Zenilib
- *
- * \brief A Callback for When the Music Stops
- *
- * If you want something to happen when the music stops playing, create a class 
- * derived from BGM_On_Close to send to Load_BGM.  It could start another song, 
- * or cause something to happen in game.
- *
- * \note If you want looping functionality, it is better to simply leave the play_count at -1.  This will not be called in that case
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Sound
  *
  * \ingroup Zenilib
