@@ -94,6 +94,7 @@ namespace Zeni {
   }
 
   void Sound::play_BGM(const int &loops, const int &fade_for_ms, const double &start_second) {
+    Mix_HaltMusic();
     Mix_RewindMusic();
     Mix_FadeInMusicPos(m_bgmm, loops, fade_for_ms, start_second);
   }
