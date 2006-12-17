@@ -52,7 +52,8 @@ namespace Zeni {
   }
 
   TCP_Socket::TCP_Socket(IPaddress ip)
-    : sock(0)
+    : sock(0),
+      sockset(0)
   {
     Net::get_reference();
 
@@ -60,18 +61,36 @@ namespace Zeni {
       throw TCP_Socket_Init_Failure();
 
     sock = SDLNet_TCP_Open(&ip);
-    if(!sock)
+    sockset = SDLNet_AllocSocketSet(1);
+    
+    if(!sock ||
+       !sockset ||
+       SDLNet_TCP_AddSocket(sockset, sock) == -1) {
+      SDLNet_TCP_Close(sock);
+      SDLNet_FreeSocketSet(sockset);
       throw TCP_Socket_Init_Failure();
+    }
   }
 
   TCP_Socket::TCP_Socket(TCPsocket socket)
-    : sock(socket)
+    : sock(socket),
+      sockset(0)
   {
     if(!sock)
       throw TCP_Socket_Init_Failure();
+
+    sockset = SDLNet_AllocSocketSet(1);
+
+    if(!sockset ||
+       SDLNet_TCP_AddSocket(sockset, sock) == -1) {
+      SDLNet_TCP_Close(sock);
+      throw TCP_Socket_Init_Failure();
+    }
   }
 
   TCP_Socket::~TCP_Socket() {
+    SDLNet_TCP_DelSocket(sockset, sock);
+    SDLNet_FreeSocketSet(sockset);
     SDLNet_TCP_Close(sock);
   }
 
@@ -88,9 +107,17 @@ namespace Zeni {
   string TCP_Socket::receive(const int &num_bytes) {
     string data;
     data.resize(num_bytes);
-    if(SDLNet_TCP_Recv(sock, const_cast<char *>(data.c_str()), num_bytes) <= 0)
+
+    int retval = SDLNet_CheckSockets(sockset, 0);
+    if(retval == -1)
       throw Socket_Closed();
-    return data;
+    else if(retval) {
+      retval = SDLNet_TCP_Recv(sock, const_cast<char *>(data.c_str()), num_bytes);
+      if(retval <= 0)
+        throw Socket_Closed();
+    }
+
+    return data.substr(0, retval);
   }
 
   TCP_Listener::TCP_Listener(const unsigned short &port)
@@ -115,8 +142,11 @@ namespace Zeni {
   }
 
   UDP_Socket::UDP_Socket(const unsigned short &port)
-    : sock(SDLNet_UDP_Open(port))
+    : sock(0)
   {
+    Net::get_reference();
+
+    sock = SDLNet_UDP_Open(port);
     if(!sock)
       throw UDP_Socket_Init_Failure();
   }
@@ -142,9 +172,7 @@ namespace Zeni {
       throw Socket_Closed();
   }
 
-  string UDP_Socket::receive(const int &num_bytes, unsigned int *ip, unsigned short *port) {
-    string data;
-    data.resize(num_bytes);
+  IPaddress UDP_Socket::receive(std::string &data) {
     IPaddress ipaddress = {0, 0};
 
     UDPpacket packet =
@@ -161,19 +189,14 @@ namespace Zeni {
     if(retval == -1)
       throw Socket_Closed();
     else if(!retval) {
+      data.clear();
       packet.address.host = 0;
       packet.address.port = 0;
-      packet.len = 0;
     }
+    else
+      data.resize(packet.len);
 
-    if(ip)
-      *ip = SDLNet_Read32(&packet.address.host);
-
-    if(port)
-      *port = SDLNet_Read16(&packet.address.port);
-
-    data.resize(packet.len);
-    return data;
+    return packet.address;
   }
 
 }
