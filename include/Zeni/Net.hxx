@@ -26,53 +26,23 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Game.h>
-#include <Zeni/zeniapp.h>
+#ifndef ZENI_NET_HXX
+#define ZENI_NET_HXX
 
-#include <Zeni/Gamestate.hxx>
+#include "Net.h"
 
 namespace Zeni {
 
-  Game::Game(const std::vector<std::string> * const args)
-    : fps(0x36)
-  {
-    // Ensure Core is initialized
-    Core::get_reference();
-
-    m_states.push(Gamestate(new Gamestate_One(args)));
+  IPaddress Net::resolve_host(const std::string &host, const unsigned short &port) {
+    IPaddress ip;
+    SDLNet_ResolveHost(&ip, host.c_str(), port);
+    return ip;
   }
 
-  Game & Game::get_reference(const std::vector<std::string> * const args) {
-    static Game e_game(args);
-    return e_game;
-  }
-
-  void Game::calculate_fps() {
-    static unsigned int
-      frames_output = 0, frames_passed = 0,
-      ticks_output = 0,  ticks_passed = 0,  ticks_prev = 0;
-
-    ticks_passed = SDL_GetTicks();
-
-    static bool first_time = true;
-    if(first_time) {
-      ticks_output = ticks_passed;
-      first_time = false;
-    }
-    else
-      ++frames_passed;
-
-    if((ticks_passed - ticks_output) > 1000) {
-      fps =  (frames_passed - frames_output) * 1000 / (ticks_passed - ticks_output);
-
-      frames_output = frames_passed;
-      ticks_output =  ticks_passed;
-    }
-
-    if((ticks_passed - ticks_prev) < 10) {
-      SDL_Delay(5);
-    }
-    ticks_prev = ticks_passed;
+  std::string Net::reverse_lookup(IPaddress ip) {
+    return SDLNet_ResolveIP(&ip);
   }
 
 }
+
+#endif

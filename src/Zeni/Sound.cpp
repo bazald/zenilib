@@ -30,7 +30,6 @@
 #include <Zeni/Sounds.hxx>
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
 
 using std::string;
 
@@ -57,10 +56,10 @@ namespace Zeni {
   }
 
   void Sound::enable() {
-    m_enabled = true;
-
     if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
       throw Sound_Init_Failure();
+
+    m_enabled = true;
 
     Mix_AllocateChannels(m_channels);
   }
@@ -69,6 +68,7 @@ namespace Zeni {
     m_enabled = false;
 
     stop_BGM();
+
     Mix_CloseAudio();
   }
 
@@ -94,6 +94,7 @@ namespace Zeni {
   }
 
   void Sound::play_BGM(const int &loops, const int &fade_for_ms, const double &start_second) {
+    Mix_ResumeMusic();
     Mix_HaltMusic();
     Mix_RewindMusic();
     Mix_FadeInMusicPos(m_bgmm, loops, fade_for_ms, start_second);

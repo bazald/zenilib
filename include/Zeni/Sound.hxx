@@ -46,6 +46,7 @@ namespace Zeni {
   }
   
   void Sound::stop_BGM(const int &fade_for_ms) {
+    Mix_ResumeMusic();
     if(!Mix_FadeOutMusic(fade_for_ms))
       Mix_HaltMusic();
   }

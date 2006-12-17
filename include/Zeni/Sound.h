@@ -55,8 +55,6 @@ namespace Zeni {
   class Sound_Effect;
 
   class Sound {
-    friend class BGM_On_Close;
-
     Sound();
     ~Sound();
 
