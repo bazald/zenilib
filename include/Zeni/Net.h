@@ -40,6 +40,52 @@
  * Contact: bazald@zenipex.com
  */
 
+/**
+ * \class Zeni::TCP_Socket
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A TCP Socket for sending and receiving data
+ *
+ * This class not only provides a TCP socket but prevents receive calls from blocking as well.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::TCP_Listener
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Socket for accepting new TCP connections (in the form of TCP_Sockets)
+ *
+ * Not much more to it.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::UDP_Socket
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A UDP Socket for sending and receiving data
+ *
+ * UDP Sockets are little more than a lock on a given port on a computer.  A program
+ * that might need a dozen TCP Sockets can get by with one UDP_Socket.  Note that
+ * if you opt to use UDP_Sockets, you'll get faster data transmission at the expense 
+ * of reliability.  If all the data being transmitted has to get there, you're better
+ * off using TCP_Sockets, even if the order of arrival is unimportant.  Code carefully.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 
@@ -64,7 +110,7 @@ namespace Zeni {
     // Get reference to only instance; Might throw Sound_Init_Failure
     static Net & get_reference();
 
-    /// An empty host address indicates server/listening mode.  Default port 0 indicates a pure lookup with no intention of connecting.
+    /// Default port 0 indicates a pure lookup with no intention of connecting.
     inline IPaddress resolve_host(const std::string &host, const unsigned short &port = 0);
     /// If you want to find a URL associated with an IP address
     inline std::string reverse_lookup(IPaddress ip);
@@ -72,17 +118,18 @@ namespace Zeni {
 
   class TCP_Socket {
   public:
-    TCP_Socket(IPaddress ip); ///< host address must NOT be 0
-    TCP_Socket(TCPsocket sock);
+    TCP_Socket(IPaddress ip); ///< For outgoing connections
+    TCP_Socket(TCPsocket sock); ///< For incoming connections
     ~TCP_Socket();
 
     IPaddress peer_address() const;
 
     void send(const std::string &data); ///< Send data
-    std::string receive(const int &num_bytes); ///< Receive num_bytes
+    std::string receive(const int &num_bytes); ///< Receive up to num_bytes
 
   private:
     TCPsocket sock;
+    SDLNet_SocketSet sockset;
   };
 
   class TCP_Listener {
@@ -90,7 +137,7 @@ namespace Zeni {
     TCP_Listener(const unsigned short &port);
     ~TCP_Listener();
 
-    TCP_Socket accept(); ///< returns 0 if there exists nothing to listen to
+    TCP_Socket accept(); ///< Will cause an error to be thrown if there exists nothing to listen to; Expect to catch it
 
   private:
     TCPsocket sock;
@@ -101,8 +148,8 @@ namespace Zeni {
     UDP_Socket(const unsigned short &port);
     ~UDP_Socket();
 
-    void send(const std::string &data, IPaddress ip); ///< Send data to an IP address/port combination
-    std::string receive(const int &num_bytes, unsigned int *ip, unsigned short *port); ///< Receive num_bytes, store sender's IP and/or port in local machine's endianness
+    void send(const std::string &data, IPaddress ip); ///< Send data to an IPaddress
+    IPaddress receive(std::string &data); ///< Receive data of up to data.size() from the returned IPaddress; Will error if data.size() is too low
     
   private:
     UDPsocket sock;
