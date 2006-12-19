@@ -309,8 +309,8 @@ namespace Zeni {
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
     // Initialize Assorted Variables
-    glPointSize(GLfloat(sqrt(pow(get_screen_width(), 2.) * pow(get_screen_height(), 2.)) / 1000000));
-    glLineWidth(GLfloat(sqrt(pow(get_screen_width(), 2.) * pow(get_screen_height(), 2.)) / 1000000));
+    glPointSize(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
+    glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
 
     // Finish with a few function calls
     set_3d(Camera());
