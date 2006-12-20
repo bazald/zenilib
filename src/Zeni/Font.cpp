@@ -73,8 +73,8 @@ namespace Zeni {
   {
     TTF_GlyphMetrics(font_, c, 0, 0, 0, 0, &m_glyph_width);
     const int 
-      next_w = int(pow(2, ceil(log(float(m_glyph_width))/log(2.0f)))), 
-      next_h = int(pow(2, ceil(log(float(m_glyph_height))/log(2.0f))));
+      next_w = int(pow(2.0f, ceil(log(float(m_glyph_width))/log(2.0f)))), 
+      next_h = int(pow(2.0f, ceil(log(float(m_glyph_height))/log(2.0f))));
 
     SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
 
