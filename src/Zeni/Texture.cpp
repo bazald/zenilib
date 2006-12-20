@@ -79,8 +79,8 @@ namespace Zeni {
     }
 
     if(!width_pow2 || !height_pow2) {
-      float next_w = pow(2, ceil(log(float(surface->w))/log(2.0f)));
-      float next_h = pow(2, ceil(log(float(surface->h))/log(2.0f)));
+      float next_w = pow(2.0f, ceil(log(float(surface->w))/log(2.0f)));
+      float next_h = pow(2.0f, ceil(log(float(surface->h))/log(2.0f)));
 
       SDL_Surface *surf2 = rotozoomSurfaceXY(surface, 0,
         next_w/surface->w,
