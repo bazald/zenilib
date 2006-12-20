@@ -53,7 +53,7 @@ namespace Zeni {
   }
 
   void Material::set_shininess(const float &shininess) {
-    m_power = pow(2, 10.0f * shininess);
+    m_power = pow(2.0f, 10.0f * shininess);
     if(m_power > 128.0f)
       m_power = 128.0f;
   }
