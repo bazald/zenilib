@@ -1,8 +1,8 @@
 # MODIFY BELOW
 
 #DISABLEGL = -DDISABLE_GL
-#DISABLEWGL = -DDISABLEWGL
-#DISABLEDX9 = -DDISABLE_DX9
+DISABLEWGL = -DDISABLEWGL
+DISABLEDX9 = -DDISABLE_DX9
 
 #BUILD = DEBUG
 BUILD = RELEASE
@@ -23,12 +23,11 @@ WGLFLAGS = -lopengl32 -lglu32
 WFLAGS = -mwindows -lmingw32 -lwinmm -lcomctl32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32
 DX9FLAGS = -ld3dx9 -ld3d9 -ld3dxof -ldxguid
 3DSFLAGS = -l3ds
-LSMPEGFLAGS = -lsmpeg
-WSMPEGFLAGS = -lSMPEG
+LOALFLAGS = -lalut -lopenal
 
 CFLAGS = $($(BUILD))
-XFLAGS = $(WSMPEGFLAGS) $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
-LFLAGS = `sdl-config --cflags --static-libs` $(LSMPEGFLAGS) $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS) --static-libgcc
+XFLAGS = $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
+LFLAGS = `sdl-config --cflags --static-libs` $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS) $(LOALFLAGS) --static-libgcc
 LD = ld
 
 SRCS =  src/Zeni/Camera.cpp \
@@ -58,6 +57,15 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Video.cpp \
 	src/Zeni/Video_DX9.cpp \
 	src/Zeni/Video_GL.cpp \
+	Character.cpp \
+	Enemy.cpp \
+	Fight.cpp \
+	Instructions.cpp \
+	Level1.cpp \
+	Level2.cpp \
+	Loss.cpp \
+	Title.cpp \
+	Victory.cpp \
 	zeniapp.cpp
 OBJS = $(SRCS:.cpp=.o)
 
