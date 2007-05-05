@@ -29,6 +29,7 @@
 #include <Zeni/Vertex_Buffer.hxx>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Material.hxx>
 #include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Render_Wrapper.hxx>
 #include <Zeni/Vertex3f.hxx>
@@ -48,103 +49,96 @@ namespace Zeni {
   }
 
   Vertex_Buffer::Vertex_Buffer()
-    : m_begin_end(0)
   {
   }
 
-  void Vertex_Buffer::render_begin() {
-    ++m_begin_end;
-  }
-
-  void Vertex_Buffer::render_end() {
-    --m_begin_end;
-  }
-
   template <typename VERTEX>
-  static void clear_buffers(vector<Triangle<VERTEX> *> &triangles_no_mat,
-    vector<Triangle<VERTEX> *> &triangles_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_no_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_mat) {
-      for(unsigned int i = 0; i < triangles_no_mat.size(); ++i)
-        delete triangles_no_mat[i];
-      for(unsigned int i = 0; i < triangles_mat.size(); ++i)
-        delete triangles_mat[i];
-      for(unsigned int i = 0; i < descriptors_no_mat.size(); ++i)
-        delete descriptors_no_mat[i];
-      for(unsigned int i = 0; i < descriptors_mat.size(); ++i)
-        delete descriptors_mat[i];
+  static void clear_triangles(vector<Triangle<VERTEX> *> &triangles) {
+    for(unsigned int i = 0; i < triangles.size(); ++i)
+      delete triangles[i];
+    triangles.clear();
   }
 
-  Vertex_Buffer_3FC::~Vertex_Buffer_3FC() {
-    clear_buffers(m_triangles_no_mat, m_triangles_mat, m_descriptors_no_mat, m_descriptors_mat);
+  Vertex_Buffer::~Vertex_Buffer() {
+    clear_triangles(m_triangles_c);
+    clear_triangles(m_triangles_cm);
+    clear_triangles(m_triangles_t);
   }
 
-  Vertex_Buffer_3FT::~Vertex_Buffer_3FT() {
-    clear_buffers(m_triangles_no_mat, m_triangles_mat, m_descriptors_no_mat, m_descriptors_mat);
-  }
-
-  void Vertex_Buffer_3FC::add_triangle(Renderable *triangle) {
-    Triangle<Vertex3f_Color> *p_tri = dynamic_cast<Triangle<Vertex3f_Color> *>(triangle);
-
-    if(!p_tri)
+  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Color> *triangle) {
+    if(!triangle)
       throw VBuf_Init_Failure();
 
-    if(dynamic_cast<const Material_Render_Wrapper * const>(p_tri->get_render_wrapper()))
-      push_mat(p_tri);
+    const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
+
+    if(mrw)
+      if(mrw->get_material().get_texture().empty())
+        m_triangles_cm.push_back(triangle);
+      else
+        throw VBuf_Init_Failure();
     else
-      push_no_mat(p_tri);
+      m_triangles_c.push_back(triangle);
   }
 
-  void Vertex_Buffer_3FT::add_triangle(Renderable *triangle) {
-    Triangle<Vertex3f_Texture> *p_tri = dynamic_cast<Triangle<Vertex3f_Texture> *>(triangle);
-
-    if(!p_tri)
+  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Texture> *triangle) {
+    if(!triangle)
       throw VBuf_Init_Failure();
 
-    if(const Multiple_Render_Wrapper * const multirw = dynamic_cast<const Multiple_Render_Wrapper * const>(p_tri->get_render_wrapper()))
-      push_mat(p_tri, multirw);
-    else if(dynamic_cast<const Texture_Render_Wrapper * const>(p_tri->get_render_wrapper()))
-      push_no_mat(p_tri);
-    else {
-      delete triangle;
+    const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
+
+    if(mrw && !mrw->get_material().get_texture().empty())
+      m_triangles_t.push_back(triangle);
+    else
       throw VBuf_Init_Failure();
+  }
+
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Color> *quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+
+    if(!quad)
+      throw VBuf_Init_Failure();
+
+    Triangle<Vertex3f_Color> *tri0 = quad->get_duplicate_t0(),
+                             *tri1 = quad->get_duplicate_t1();
+
+    try {
+      add_triangle(tri0);
+      add_triangle(tri1);
+    }
+    catch(...) {
+      delete tri0;
+      delete tri1;
+      throw;
     }
   }
 
-  void Vertex_Buffer_3FC::add_quadrilateral(Renderable *quad) {
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quad) {
     std::auto_ptr<Renderable> to_delete(quad);
-    const Quadrilateral<Vertex3f_Color> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Color> *>(quad);
 
-    if(!p_rect)
+    if(!quad)
       throw VBuf_Init_Failure();
 
-    add_triangle(p_rect->get_duplicate_t0());
-    add_triangle(p_rect->get_duplicate_t1());
+    Triangle<Vertex3f_Texture> *tri0 = quad->get_duplicate_t0(),
+                               *tri1 = quad->get_duplicate_t1();
+
+    try {
+      add_triangle(tri0);
+      add_triangle(tri1);
+    }
+    catch(...) {
+      delete tri0;
+      delete tri1;
+      throw;
+    }
   }
 
-  void Vertex_Buffer_3FT::add_quadrilateral(Renderable *quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
-    const Quadrilateral<Vertex3f_Texture> * const p_rect = dynamic_cast<Quadrilateral<Vertex3f_Texture> *>(quad);
-
-    if(!p_rect)
-      throw VBuf_Init_Failure();
-
-    add_triangle(p_rect->get_duplicate_t0());
-    add_triangle(p_rect->get_duplicate_t1());
-  }
-
-  void Vertex_Buffer_3FC::debug_render() {
-    for(unsigned int i = 0; i < m_triangles_no_mat.size(); ++i)
-      Video::get_reference().render(*m_triangles_no_mat[i]);
-    for(unsigned int i = 0; i < m_triangles_mat.size(); ++i)
-      Video::get_reference().render(*m_triangles_mat[i]);
-  }
-
-  void Vertex_Buffer_3FT::debug_render() {
-    for(unsigned int i = 0; i < m_triangles_no_mat.size(); ++i)
-      Video::get_reference().render(*m_triangles_no_mat[i]);
-    for(unsigned int i = 0; i < m_triangles_mat.size(); ++i)
-      Video::get_reference().render(*m_triangles_mat[i]);
+  void Vertex_Buffer::debug_render() {
+    for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
+      Video::get_reference().render(*m_triangles_c[i]);
+    for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
+      Video::get_reference().render(*m_triangles_cm[i]);
+    for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
+      Video::get_reference().render(*m_triangles_t[i]);
   }
 
   template <typename VERTEX>
@@ -154,431 +148,332 @@ namespace Zeni {
     }
   };
 
-  void Vertex_Buffer_3FC::sort_triangles() {
-    std::sort(m_triangles_no_mat.begin(), m_triangles_no_mat.end(), SORTER<Vertex3f_Color>());
-    std::sort(m_triangles_mat.begin(), m_triangles_mat.end(), SORTER<Vertex3f_Color>());
-  }
-
-  void Vertex_Buffer_3FT::sort_triangles() {
-    std::sort(m_triangles_no_mat.begin(), m_triangles_no_mat.end(), SORTER<Vertex3f_Texture>());
-    std::sort(m_triangles_mat.begin(), m_triangles_mat.end(), SORTER<Vertex3f_Texture>());
+  void Vertex_Buffer::sort_triangles() {
+    std::sort(m_triangles_c.begin(), m_triangles_c.end(), SORTER<Vertex3f_Color>());
+    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color>());
+    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
   }
 
   template <typename VERTEX>
-  static void set_descriptors(vector<Triangle<VERTEX> *> &triangles_no_mat,
-    vector<Triangle<VERTEX> *> &triangles_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_no_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_mat) {
-      int last = 0;
-      if(!triangles_no_mat.empty()) {
-        descriptors_no_mat.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles_no_mat[0]->get_render_wrapper()->get_duplicate(), 0, 1));
-        for(unsigned int i = 1; i < triangles_no_mat.size(); ++i)
-          if(*descriptors_no_mat[last]->render_wrapper == *triangles_no_mat[i]->get_render_wrapper())
-            ++descriptors_no_mat[last]->num_elements;
-          else {
-            descriptors_no_mat.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles_no_mat[i]->get_render_wrapper()->get_duplicate(), i, 1));
-            ++last;
-          }
-      }
-
-      last = 0;
-      if(!triangles_mat.empty()) {
-        descriptors_mat.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles_mat[0]->get_render_wrapper()->get_duplicate(), int(triangles_no_mat.size()), 1));
-        for(unsigned int i = 1; i < triangles_mat.size(); ++i)
-          if(*descriptors_mat[last]->render_wrapper == *triangles_mat[i]->get_render_wrapper())
-            ++descriptors_mat[last]->num_elements;
-          else {
-            descriptors_mat.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles_mat[i]->get_render_wrapper()->get_duplicate(), int(triangles_no_mat.size())+i, 1));
-            ++last;
-          }
-      }
+  static int set_descriptors(vector<Triangle<VERTEX> *> &triangles,
+                             vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+                             const int &triangles_done) {
+    int last = 0;
+    if(!triangles.empty()) {
+      descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[0]->get_render_wrapper()->get_duplicate(), triangles_done, 1));
+      descriptors[last]->render_wrapper->clear_optimization();
+      for(unsigned int i = 1; i < triangles.size(); ++i)
+        if(*descriptors[last]->render_wrapper == *triangles[i]->get_render_wrapper())
+          ++descriptors[last]->num_elements;
+        else {
+          descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[i]->get_render_wrapper()->get_duplicate(), triangles_done+i, 1));
+          ++last;
+          descriptors[last]->render_wrapper->clear_optimization();
+          descriptors[last]->render_wrapper->optimize_to_follow(*descriptors[last - 1]->render_wrapper);
+          descriptors[last - 1]->render_wrapper->optimize_to_precede(*descriptors[last]->render_wrapper);
+        }
+    }
+    return int(triangles.size());
   }
 
-  void Vertex_Buffer_3FC::set_descriptors() {
-    Zeni::set_descriptors(m_triangles_no_mat, m_triangles_mat, m_descriptors_no_mat, m_descriptors_mat);
-  }
-
-  void Vertex_Buffer_3FT::set_descriptors() {
-    Zeni::set_descriptors(m_triangles_no_mat, m_triangles_mat, m_descriptors_no_mat, m_descriptors_mat);
-  }
-
-  template <typename VERTEX>
-  static void clear_triangles(vector<Triangle<VERTEX> *> &triangles_no_mat,
-    vector<Triangle<VERTEX> *> &triangles_mat) {
-      for(unsigned int i = 0; i < triangles_no_mat.size(); ++i)
-        delete triangles_no_mat[i];
-      triangles_no_mat.clear();
-      for(unsigned int i = 0; i < triangles_mat.size(); ++i)
-        delete triangles_mat[i];
-      triangles_mat.clear();
-  }
-
-  void Vertex_Buffer_3FC::push_no_mat(Triangle<Vertex3f_Color> *p_tri) {
-    m_triangles_no_mat.push_back(p_tri);
-  }
-
-  void Vertex_Buffer_3FT::push_no_mat(Triangle<Vertex3f_Texture> *p_tri) {
-    m_triangles_no_mat.push_back(p_tri);
-  }
-
-  void Vertex_Buffer_3FC::push_mat(Triangle<Vertex3f_Color> *p_tri) {
-    m_triangles_mat.push_back(p_tri);
-  }
-
-  void Vertex_Buffer_3FT::push_mat(Triangle<Vertex3f_Texture> *p_tri, const Multiple_Render_Wrapper *const multirw) {
-    const Texture_Render_Wrapper * const texrw = dynamic_cast<const Texture_Render_Wrapper * const>(&multirw->get_first());
-    const Material_Render_Wrapper * const matrw = dynamic_cast<const Material_Render_Wrapper * const>(&multirw->get_second());
-
-    if(!texrw || !matrw)
-      throw VBuf_Init_Failure();
-
-    m_triangles_mat.push_back(p_tri);
+  void Vertex_Buffer::set_descriptors() {
+    int done = 0;
+    done += Zeni::set_descriptors(m_triangles_c, m_descriptors_c, done);
+    done += Zeni::set_descriptors(m_triangles_cm, m_descriptors_cm, done);
+    done += Zeni::set_descriptors(m_triangles_t, m_descriptors_t, done);
   }
 
 #ifndef DISABLE_GL
 
-  Vertex_Buffer_3FC_GL::Vertex_Buffer_3FC_GL() {
-    for(int i = 0; i < 3; ++i)
+  Vertex_Buffer_GL::Vertex_Buffer_GL() {
+    for(int i = 0; i < 6; ++i)
       m_vbuf[i] = 0;
   }
 
-  Vertex_Buffer_3FT_GL::Vertex_Buffer_3FT_GL() {
-    for(int i = 0; i < 3; ++i)
-      m_vbuf[i] = 0;
-  }
-
-  Vertex_Buffer_3FC_GL::~Vertex_Buffer_3FC_GL() {
+  Vertex_Buffer_GL::~Vertex_Buffer_GL() {
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
     if(m_vbuf[0])
       vgl.pglDeleteBuffersARB(3, m_vbuf);
+    if(m_vbuf[3])
+      vgl.pglDeleteBuffersARB(3, m_vbuf+3);
   }
 
-  Vertex_Buffer_3FT_GL::~Vertex_Buffer_3FT_GL() {
+  void Vertex_Buffer_GL::prerender() {
+    if(m_vbuf[0])
+      throw VBuf_Render_Failure();
+
+    sort_triangles();
+    set_descriptors();
+
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
-    if(m_vbuf[0])
-      vgl.pglDeleteBuffersARB(3, m_vbuf);
-  }
+    const unsigned int v_size = vertex_size();
+    const unsigned int n_size = normal_size();
+    const unsigned int c_size = color_size();
+    const unsigned int t_size = texel_size();
 
-  template <typename VERTEX>
-  static void prerender(GLuint vbuf[],
-    vector<Triangle<VERTEX> *> &triangles_no_mat,
-    vector<Triangle<VERTEX> *> &triangles_mat,
-    const int &vertex_size,
-    const int &buffer_size,
-    const int &normal_size,
-    const int &normbuf_size,
-    const int &special_size,
-    const int &specialbuf_size) {
-      if(vbuf[0])
-        throw VBuf_Render_Failure();
-
-      Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
-
-      char *p_verts = reinterpret_cast<char *>(malloc(buffer_size));
-      char *p_normals = reinterpret_cast<char *>(malloc(normbuf_size));
-      char *p_specials = reinterpret_cast<char *>(malloc(specialbuf_size));
+    const unsigned int vbuf_c_size = v_size * (num_vertices_c() + num_vertices_cm());
+    const unsigned int nbuf_c_size = n_size * (num_vertices_c() + num_vertices_cm());
+    const unsigned int cbuf_size = c_size * (num_vertices_c() + num_vertices_cm());
+    const unsigned int vbuf_t_size = v_size * (num_vertices_t());
+    const unsigned int nbuf_t_size = n_size * (num_vertices_t());
+    const unsigned int tbuf_size = t_size * (num_vertices_t());
+    
+    if(vbuf_c_size) {
+      char *p_verts = reinterpret_cast<char *>(malloc(vbuf_c_size));
+      char *p_normals = reinterpret_cast<char *>(malloc(nbuf_c_size));
+      char *p_colors = reinterpret_cast<char *>(malloc(cbuf_size));
 
       char *buffered_verts = p_verts;
       char *buffered_normals = p_normals;
-      char *buffered_specials = p_specials;
+      char *buffered_colors = p_colors;
 
-      for(unsigned int i = 0; i < triangles_no_mat.size(); ++i)
+      for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(int j = 0; j < 3; ++j) {
-          memcpy(buffered_verts, triangles_no_mat[i]->get_vertex(j).get_address(), vertex_size);
-          buffered_verts += vertex_size;
+          memcpy(buffered_verts, m_triangles_c[i]->get_vertex(j).get_address(), v_size);
+          buffered_verts += v_size;
 
-          memcpy(buffered_normals, reinterpret_cast<float *>(triangles_no_mat[i]->get_vertex(j).get_address())+3, normal_size);
-          buffered_normals += normal_size;
+          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_c[i]->get_vertex(j).get_address())+3, n_size);
+          buffered_normals += n_size;
 
-          memcpy(buffered_specials, reinterpret_cast<float *>(triangles_no_mat[i]->get_vertex(j).get_address())+6, special_size);
-          buffered_specials += special_size;
+          memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_c[i]->get_vertex(j).get_address())+6, c_size);
+          buffered_colors += c_size;
         }
 
-        for(unsigned int i = 0; i < triangles_mat.size(); ++i)
-          for(int j = 0; j < 3; ++j) {
-            memcpy(buffered_verts, triangles_mat[i]->get_vertex(j).get_address(), vertex_size);
-            buffered_verts += vertex_size;
+      for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
+        for(int j = 0; j < 3; ++j) {
+          memcpy(buffered_verts, m_triangles_cm[i]->get_vertex(j).get_address(), v_size);
+          buffered_verts += v_size;
 
-            memcpy(buffered_normals, reinterpret_cast<float *>(triangles_mat[i]->get_vertex(j).get_address())+3, normal_size);
-            buffered_normals += normal_size;
+          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_cm[i]->get_vertex(j).get_address())+3, n_size);
+          buffered_normals += n_size;
 
-            memcpy(buffered_specials, reinterpret_cast<float *>(triangles_mat[i]->get_vertex(j).get_address())+6, special_size);
-            buffered_specials += special_size;
-          }
+          memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_cm[i]->get_vertex(j).get_address())+6, c_size);
+          buffered_colors += c_size;
+        }
 
-          vgl.pglGenBuffersARB(3, vbuf);
+      vgl.pglGenBuffersARB(3, m_vbuf);
 
-          vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, vbuf[0]);
-          vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, buffer_size, p_verts, GL_STATIC_DRAW_ARB);
-          vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, vbuf[1]);
-          vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, normbuf_size, p_normals, GL_STATIC_DRAW_ARB);
-          vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, vbuf[2]);
-          vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, specialbuf_size, p_specials, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, vbuf_c_size, p_verts, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, nbuf_c_size, p_normals, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, cbuf_size, p_colors, GL_STATIC_DRAW_ARB);
 
-          free(p_verts);
-          free(p_normals);
-          free(p_specials);
+      free(p_verts);
+      free(p_normals);
+      free(p_colors);
+    }
 
-          clear_triangles(triangles_no_mat, triangles_mat);
+    if(vbuf_t_size) {
+      char *p_verts = reinterpret_cast<char *>(malloc(vbuf_t_size));
+      char *p_normals = reinterpret_cast<char *>(malloc(nbuf_t_size));
+      char *p_texels = reinterpret_cast<char *>(malloc(tbuf_size));
+
+      char *buffered_verts = p_verts;
+      char *buffered_normals = p_normals;
+      char *buffered_texels = p_texels;
+
+      for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
+        for(int j = 0; j < 3; ++j) {
+          memcpy(buffered_verts, m_triangles_t[i]->get_vertex(j).get_address(), v_size);
+          buffered_verts += v_size;
+
+          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_t[i]->get_vertex(j).get_address())+3, n_size);
+          buffered_normals += n_size;
+
+          memcpy(buffered_texels, reinterpret_cast<float *>(m_triangles_t[i]->get_vertex(j).get_address())+6, t_size);
+          buffered_texels += t_size;
+        }
+
+      vgl.pglGenBuffersARB(3, m_vbuf+3);
+
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, vbuf_t_size, p_verts, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, nbuf_t_size, p_normals, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5]);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, tbuf_size, p_texels, GL_STATIC_DRAW_ARB);
+
+      free(p_verts);
+      free(p_normals);
+      free(p_texels);
+    }
+
+    clear_triangles(m_triangles_c);
+    clear_triangles(m_triangles_cm);
+    clear_triangles(m_triangles_t);
   }
 
-  void Vertex_Buffer_3FC_GL::prerender() {
-    sort_triangles();
-    set_descriptors();
-
-    Zeni::prerender(m_vbuf, m_triangles_no_mat, m_triangles_mat, vertex_size(), buffer_size(), normal_size(), normbuf_size(), color_size(), colorbuf_size());
+  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
+    for(unsigned int i = 0; i < descriptors.size(); ++i) {
+      descriptors[i]->render_wrapper->prerender();
+      glDrawArrays(GL_TRIANGLES, 3*descriptors[i]->start, 3*descriptors[i]->num_elements);
+      descriptors[i]->render_wrapper->postrender();
+    }
   }
 
-  void Vertex_Buffer_3FT_GL::prerender() {
-    sort_triangles();
-    set_descriptors();
+  void Vertex_Buffer_GL::render() {
+    if(!m_vbuf[0] && !m_vbuf[3])
+      prerender();
 
-    Zeni::prerender(m_vbuf, m_triangles_no_mat, m_triangles_mat, vertex_size(), buffer_size(), normal_size(), normbuf_size(), texel_size(), texbuf_size());
-  }
-
-  static inline void render_begin(GLuint vbuf[]) {
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, vbuf[0]);
-      glVertexPointer(3, GL_FLOAT, 0, 0);
-
     glEnableClientState(GL_NORMAL_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, vbuf[1]);
+
+    if(!m_descriptors_c.empty() || !m_descriptors_cm.empty()) {
+      // Bind Vertex Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0]);
+      glVertexPointer(3, GL_FLOAT, 0, 0);
+      // Bind Normal Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1]);
       glNormalPointer(GL_FLOAT, 0, 0);
-  }
+      // Bind Color Buffer
+      glEnableClientState(GL_COLOR_ARRAY);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2]);
+      glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
 
-  void Vertex_Buffer_3FC_GL::render_begin() {
-    if(!m_vbuf[0])
-      prerender();
+      Zeni::render(m_descriptors_c);
+      Zeni::render(m_descriptors_cm);
 
-    Vertex_Buffer::render_begin();
-    if(get_begin_end() != 1)
-      return;
+      glDisableClientState(GL_COLOR_ARRAY);
+    }
 
-    Zeni::render_begin(m_vbuf);
+    if(!m_descriptors_t.empty()) {
+      // Bind Vertex Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3]);
+      glVertexPointer(3, GL_FLOAT, 0, 0);
+      // Bind Normal Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4]);
+      glNormalPointer(GL_FLOAT, 0, 0);
+      // Bind Texel Buffer
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5]);
+      glTexCoordPointer(2, GL_FLOAT, 0, 0);
+      Zeni::render(m_descriptors_t);
 
-    Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
-
-    glEnableClientState(GL_COLOR_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2]);
-    glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
-  }
-
-  void Vertex_Buffer_3FT_GL::render_begin() {
-    if(!m_vbuf[0])
-      prerender();
-
-    Vertex_Buffer::render_begin();
-    if(get_begin_end() != 1)
-      return;
-
-    Zeni::render_begin(m_vbuf);
-
-    Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
-
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2]);
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
-  }
-
-  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_no_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_mat) {
-      for(unsigned int i = 0; i < descriptors_no_mat.size(); ++i) {
-        descriptors_no_mat[i]->render_wrapper->prerender();
-        glDrawArrays(GL_TRIANGLES, 3*descriptors_no_mat[i]->start, 3*descriptors_no_mat[i]->num_elements);
-        descriptors_no_mat[i]->render_wrapper->postrender();
-      }
-
-      for(unsigned int i = 0; i < descriptors_mat.size(); ++i) {
-        descriptors_mat[i]->render_wrapper->prerender();
-        glDrawArrays(GL_TRIANGLES, 3*descriptors_mat[i]->start, 3*descriptors_mat[i]->num_elements);
-        descriptors_mat[i]->render_wrapper->postrender();
-      }
-  }
-
-  void Vertex_Buffer_3FC_GL::render() {
-    render_begin();
-
-    Zeni::render(m_descriptors_no_mat, m_descriptors_mat);
-
-    render_end();
-  }
-
-  void Vertex_Buffer_3FT_GL::render() {
-    render_begin();
-
-    Zeni::render(m_descriptors_no_mat, m_descriptors_mat);
-
-    render_end();
-  }
-
-  void Vertex_Buffer_3FC_GL::render_end() {
-    Vertex_Buffer::render_end();
-    if(get_begin_end())
-      return;
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-  }
-
-  void Vertex_Buffer_3FT_GL::render_end() {
-    Vertex_Buffer::render_end();
-    if(get_begin_end())
-      return;
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   }
 
 #endif
 #ifndef DISABLE_DX9
 
-  Vertex_Buffer_3FC_DX9::Vertex_Buffer_3FC_DX9()
-    : m_vbuf(0)
+  Vertex_Buffer_DX9::Vertex_Buffer_DX9()
+    : m_buf_c(0),
+      m_buf_t(0)
   {
   }
 
-  Vertex_Buffer_3FT_DX9::Vertex_Buffer_3FT_DX9()
-    : m_vbuf(0)
-  {
+  Vertex_Buffer_DX9::~Vertex_Buffer_DX9() {
+    if(m_buf_c)
+      m_buf_c->Release();
+    if(m_buf_t)
+      m_buf_t->Release();
   }
 
-  Vertex_Buffer_3FC_DX9::~Vertex_Buffer_3FC_DX9() {
-    if(m_vbuf)
-      m_vbuf->Release();
-  }
+  void Vertex_Buffer_DX9::prerender() {
+    sort_triangles();
+    set_descriptors();
 
-  Vertex_Buffer_3FT_DX9::~Vertex_Buffer_3FT_DX9() {
-    if(m_vbuf)
-      m_vbuf->Release();
-  }
+    if(m_buf_c || m_buf_t)
+      throw VBuf_Render_Failure();
 
-  template <typename VERTEX>
-  static void prerender(IDirect3DVertexBuffer9 *&vbuf,
-    vector<Triangle<VERTEX> *> &triangles_no_mat,
-    vector<Triangle<VERTEX> *> &triangles_mat,
-    const int &buffer_size,
-    const int &vertex_size,
-    const DWORD &special) {
-      if(vbuf)
-        throw VBuf_Render_Failure();
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    unsigned int vertex_size;
+    char *buffered;
 
-      Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
+    if(!m_triangles_c.empty() || !m_triangles_cm.empty()) {
       if(FAILED
         (vdx.get_d3d_device()->CreateVertexBuffer
-        (buffer_size,
+        ((vertex_c_size() * (num_vertices_c() + num_vertices_cm())),
         D3DUSAGE_WRITEONLY,
-        D3DFVF_XYZ | D3DFVF_NORMAL | special,
+        D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE,
         D3DPOOL_MANAGED,
-        &vbuf, NULL))) {
+        &m_buf_c, NULL))) {
           throw VBuf_Render_Failure();
       }
 
-      char *buffered = 0;
-      if(FAILED(vbuf->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+      vertex_size = vertex_c_size();
+      buffered = 0;
+      if(FAILED(m_buf_c->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
         throw VBuf_Render_Failure();
 
-      for(unsigned int i = 0; i < triangles_no_mat.size(); ++i)
+      for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, triangles_no_mat[i]->get_vertex(j).get_address(), vertex_size);
+          memcpy(buffered, m_triangles_c[i]->get_vertex(j).get_address(), vertex_size);
           buffered += vertex_size;
         }
 
-      for(unsigned int i = 0; i < triangles_mat.size(); ++i)
+      for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, triangles_mat[i]->get_vertex(j).get_address(), vertex_size);
+          memcpy(buffered, m_triangles_cm[i]->get_vertex(j).get_address(), vertex_size);
           buffered += vertex_size;
         }
 
-      vbuf->Unlock();
+      m_buf_c->Unlock();
+    }
 
-      clear_triangles(triangles_no_mat, triangles_mat);
+    if(!m_triangles_t.empty()) {
+      if(FAILED
+        (vdx.get_d3d_device()->CreateVertexBuffer
+        ((vertex_t_size() * num_vertices_t()),
+        D3DUSAGE_WRITEONLY,
+        D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1,
+        D3DPOOL_MANAGED,
+        &m_buf_t, NULL))) {
+          throw VBuf_Render_Failure();
+      }
+
+      vertex_size = vertex_t_size();
+      buffered = 0;
+      if(FAILED(m_buf_t->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+        throw VBuf_Render_Failure();
+
+      for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
+        for(unsigned int j = 0; j < 3; ++j) {
+          memcpy(buffered, m_triangles_t[i]->get_vertex(j).get_address(), vertex_size);
+          buffered += vertex_size;
+        }
+
+      m_buf_t->Unlock();
+    }
+
+    clear_triangles(m_triangles_c);
+    clear_triangles(m_triangles_cm);
+    clear_triangles(m_triangles_t);
   }
 
-  void Vertex_Buffer_3FC_DX9::prerender() {
-    sort_triangles();
-    set_descriptors();
-
-    Zeni::prerender(m_vbuf, m_triangles_no_mat, m_triangles_mat, buffer_size(), vertex_size(), D3DFVF_DIFFUSE);
-  }
-
-  void Vertex_Buffer_3FT_DX9::prerender() {
-    sort_triangles();
-    set_descriptors();
-
-    Zeni::prerender(m_vbuf, m_triangles_no_mat, m_triangles_mat, buffer_size(), vertex_size(), D3DFVF_TEX1);
-  }
-
-  void Vertex_Buffer_3FC_DX9::render_begin() {
-    if(!m_vbuf)
-      prerender();
-
-    Vertex_Buffer::render_begin();
-    if(get_begin_end() != 1)
-      return;
-
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
-    vdx.get_d3d_device()->SetStreamSource(0, m_vbuf, 0, vertex_size());
-  }
-
-  void Vertex_Buffer_3FT_DX9::render_begin() {
-    if(!m_vbuf)
-      prerender();
-
-    Vertex_Buffer::render_begin();
-    if(get_begin_end() != 1)
-      return;
-
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
-    vdx.get_d3d_device()->SetStreamSource(0, m_vbuf, 0, vertex_size());
-  }
-
-  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_no_mat,
-    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors_mat, 
+  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
     Video_DX9 &vdx) {
-      for(unsigned int i = 0; i < descriptors_no_mat.size(); ++i) {
-        descriptors_no_mat[i]->render_wrapper->prerender();
-        vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors_no_mat[i]->start, descriptors_no_mat[i]->num_elements);
-        descriptors_no_mat[i]->render_wrapper->postrender();
-      }
-
-      for(unsigned int i = 0; i < descriptors_mat.size(); ++i) {
-        descriptors_mat[i]->render_wrapper->prerender();
-        vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors_mat[i]->start, descriptors_mat[i]->num_elements);
-        descriptors_mat[i]->render_wrapper->postrender();
+      for(unsigned int i = 0; i < descriptors.size(); ++i) {
+        descriptors[i]->render_wrapper->prerender();
+        vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors[i]->start, descriptors[i]->num_elements);
+        descriptors[i]->render_wrapper->postrender();
       }
   }
 
-  void Vertex_Buffer_3FC_DX9::render() {
-    render_begin();
+  void Vertex_Buffer_DX9::render() {
+    if(!m_buf_c && !m_buf_t)
+      prerender();
 
-    Zeni::render(m_descriptors_no_mat, m_descriptors_mat, dynamic_cast<Video_DX9 &>(Video::get_reference()));
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
 
-    render_end();
-  }
-
-  void Vertex_Buffer_3FT_DX9::render() {
-    render_begin();
-
-    Zeni::render(m_descriptors_no_mat, m_descriptors_mat, dynamic_cast<Video_DX9 &>(Video::get_reference()));
-
-    render_end();
-  }
-
-  void Vertex_Buffer_3FC_DX9::render_end() {
-    Vertex_Buffer::render_end();
-  }
-
-  void Vertex_Buffer_3FT_DX9::render_end() {
-    Vertex_Buffer::render_end();
+    if(m_buf_c) {
+      vdx.get_d3d_device()->SetStreamSource(0, m_buf_c, 0, vertex_c_size());
+      Zeni::render(m_descriptors_c, vdx);
+      Zeni::render(m_descriptors_cm, vdx);
+    }
+    if(m_buf_t) {
+      vdx.get_d3d_device()->SetStreamSource(0, m_buf_t, 0, vertex_t_size());
+      Zeni::render(m_descriptors_t, vdx);
+    }
   }
 
 #endif

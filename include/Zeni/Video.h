@@ -74,8 +74,7 @@ namespace Zeni {
   class Renderable;
   class Texture;
   class Vector3f;
-  class Vertex_Buffer_3FC;
-  class Vertex_Buffer_3FT;
+  class Vertex_Buffer;
 
   class Video {
   protected:
@@ -129,7 +128,8 @@ namespace Zeni {
     virtual void set_normal_interpolation(const bool &on = true); ///< Set normal interpolation on/off
     virtual void set_ambient_lighting(const Color &color) = 0; ///< Set ambient lighting on/off
     virtual void set_light(const int &number, const Light * const light = 0) = 0; ///< Set a particular Light
-    virtual void set_material(const Material &material) = 0; ///< Set a Material
+    virtual void set_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
+    virtual void unset_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
 
     // Model Stack Functions
     virtual void select_world_matrix() = 0; ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
@@ -149,8 +149,7 @@ namespace Zeni {
     virtual Texture * load_Texture(const std::string &name, const std::string &filename) = 0; ///< Function for loading a Texture; used internally by Textures
     virtual Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height) = 0; ///< Function for creating a Font; used internally by Fonts
-    virtual Vertex_Buffer_3FC * create_Vertex_Buffer_3FC() = 0; ///< Function for creating a Vertex_Buffer_3FC
-    virtual Vertex_Buffer_3FT * create_Vertex_Buffer_3FT() = 0; ///< Function for creating a Vertex_Buffer_3FT
+    virtual Vertex_Buffer * create_Vertex_Buffer() = 0; ///< Function for creating a Vertex_Buffer
 
     // Initialization Checks and Changes
     inline static const bool & is_initialized(); ///< Determine whether Video is already initialized

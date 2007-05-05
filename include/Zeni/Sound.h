@@ -44,15 +44,84 @@
 #define ZENI_SOUND_H
 
 #include "Core.h"
+#include "Coordinate.h"
 
-#include <SDL/SDL_mixer.h>
+#include <AL/alut.h>
 #include <string>
-
-struct SDL_Thread;
 
 namespace Zeni {
 
-  class Sound_Effect;
+  class Sound_Buffer {
+  public:
+    Sound_Buffer();
+    Sound_Buffer(const Sound_Buffer &rhs); ///< Transfers the buffer rather than copying it (auto_ptr semantics)
+    Sound_Buffer(const std::string &filename);
+    ~Sound_Buffer();
+
+    inline const ALuint & get_id() const;
+
+    /// Transfers the buffer rather than copying it (auto_ptr semantics)
+    Sound_Buffer & operator=(const Sound_Buffer &rhs);
+
+  private:
+    mutable ALuint m_buffer;
+  };
+
+  class Sound_Source {
+  public:
+    Sound_Source();
+    Sound_Source(const Sound_Source &rhs);
+    Sound_Source(const Sound_Buffer &buffer,
+                 const float &pitch = 1.0f,
+                 const float &gain = 1.0f,
+                 const Point3f &position = Point3f(),
+                 const Point3f &velocity = Point3f(),
+                 const bool &looping = false);
+    Sound_Source(const ALuint &buffer,
+                 const float &pitch = 1.0f,
+                 const float &gain = 1.0f,
+                 const Point3f &position = Point3f(),
+                 const Point3f &velocity = Point3f(),
+                 const bool &looping = false);
+    ~Sound_Source();
+
+    inline void set_buffer(const Sound_Buffer &buffer);
+    inline void set_buffer(const ALuint &buffer);
+    inline void set_pitch(const float &pitch);
+    inline void set_gain(const float &gain);
+    inline void set_position(const Point3f &position);
+    inline void set_velocity(const Point3f &velocity);
+    inline void set_looping(const bool &looping);
+    inline void set_time(const float &time);
+
+    inline ALuint get_buffer() const;
+    inline float get_pitch() const;
+    inline float get_gain() const;
+    inline Point3f get_position() const;
+    inline Point3f get_velocity() const;
+    inline bool is_looping() const;
+    inline float get_time() const;
+
+    inline void play();
+    inline void pause();
+    inline void stop();
+
+    inline bool is_playing();
+    inline bool is_paused();
+    inline bool is_stopped();
+
+    Sound_Source & operator=(const Sound_Source &rhs);
+
+  private:
+    void init(const ALuint &buffer,
+              const float &pitch = 1.0f,
+              const float &gain = 1.0f,
+              const Point3f &position = Point3f(),
+              const Point3f &velocity = Point3f(),
+              const bool &looping = false) const;
+
+    mutable ALuint m_source;
+  };
 
   class Sound {
     Sound();
@@ -69,38 +138,36 @@ namespace Zeni {
     // Accessors
     inline bool is_enabled() const; ///< Check Sound is currently enabled
 
-    // Modifiers
-    void enable(); ///< Enable Sound
-    void disable(); ///< Disable Sound
-
     // BackGround Music Functions
     void set_BGM(const std::string &filename); ///< Set BackGround Music
 
     inline bool playing_BGM(); ///< Check to see if BackGround Music is playing
     inline bool paused_BGM(); ///< Check to see if BackGround Music is paused
+    inline bool stopped_BGM(); ///< Check to see if BackGround Music is stopped
 
-    void play_BGM(const int &loops = -1, const int &fade_for_ms = 0, const double &start_second = 0.0f); ///< Begin Playing BackGround Music
-    inline void stop_BGM(const int &fade_for_ms = 0); ///< Stop BackGround Music
+    inline void play_BGM(); ///< Begin Playing BackGround Music
     inline void pause_BGM(); ///< Pause BackGround Music
-    inline void resume_BGM(); ///< Unpause BackGround Music
-
-    // Sound_Effect Functions
-    bool play_sound(const Sound_Effect &, const int &loop_times = 0); ///< Play a Sound_Effect
+    inline void stop_BGM(); ///< Stop BackGround Music
+    inline void loop_BGM(const bool &looping = true); ///< Loop BackGround Music
 
   private:
-    std::string m_bgmusic;
-    Mix_Music *m_bgmm;
-    int m_channels;
+    void assert_m_bgm();
 
-    bool m_enabled;
+    std::string m_bgmusic;
+    Sound_Buffer *m_bgm;
+    Sound_Source *m_bgm_source;
+  };
+
+  struct Sound_Buffer_Init_Failure : public Error {
+    Sound_Buffer_Init_Failure() : Error("Zeni Sound Buffer Failed to Initialize Correctly") {}
+  };
+
+  struct Sound_Source_Init_Failure : public Error {
+    Sound_Source_Init_Failure() : Error("Zeni Sound Source Failed to Initialize Correctly") {}
   };
 
   struct Sound_Init_Failure : public Error {
     Sound_Init_Failure() : Error("Zeni Sound Failed to Initialize Correctly") {}
-  };
-
-  struct BGM_Init_Failure : public Error {
-    BGM_Init_Failure() : Error("Zeni BGM Failed to Initialize Correctly") {}
   };
 
 }

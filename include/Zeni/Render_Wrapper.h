@@ -157,30 +157,13 @@ namespace Zeni {
 
     virtual Render_Wrapper * get_duplicate() const; ///< Get a duplicate Render_Wrapper
 
+    virtual void optimize_to_follow(const Render_Wrapper &) {} ///< Optimize for application directly after rhs
+    virtual void optimize_to_precede(const Render_Wrapper &) {} ///< Optimize for application directly before rhs
+    virtual void clear_optimization() {} ///< Clear optimization
+
   private:
     virtual bool less_than(const Render_Wrapper &rhs) const; ///< Should be overridden in derived classes
     virtual bool equal_to(const Render_Wrapper &rhs) const; ///< Should be overridden in derived classes
-  };
-
-  class Texture_Render_Wrapper : public Render_Wrapper {
-  public:
-    Texture_Render_Wrapper(const std::string &texture);
-
-    inline const std::string & get_texture() const; ///< Get the wrapped Texture string
-
-    virtual void prerender() const;
-    virtual void postrender() const;
-
-    inline bool operator<(const Texture_Render_Wrapper &rhs) const;
-    inline bool operator==(const Texture_Render_Wrapper &rhs) const;
-
-    virtual Render_Wrapper * get_duplicate() const;
-
-  private:
-    virtual bool less_than(const Render_Wrapper &rhs) const;
-    virtual bool equal_to(const Render_Wrapper &rhs) const;
-
-    std::string m_texture;
   };
 
   class Material_Render_Wrapper : public Render_Wrapper {
@@ -197,34 +180,16 @@ namespace Zeni {
 
     virtual Render_Wrapper * get_duplicate() const;
 
+    virtual void optimize_to_follow(const Render_Wrapper &rhs); ///< Optimize for application directly after rhs
+    virtual void optimize_to_precede(const Render_Wrapper &rhs); ///< Optimize for application directly before rhs
+    virtual void clear_optimization(); ///< Clear optimization
+
   private:
     virtual bool less_than(const Render_Wrapper &rhs) const;
     virtual bool equal_to(const Render_Wrapper &rhs) const;
 
     Material m_material;
-  };
-
-  class Multiple_Render_Wrapper : public Render_Wrapper {
-  public:
-    Multiple_Render_Wrapper(Render_Wrapper *first, Render_Wrapper *second);
-    ~Multiple_Render_Wrapper();
-
-    inline const Render_Wrapper & get_first() const; ///< Get the first wrapped Render_Wrapper
-    inline const Render_Wrapper & get_second() const; ///< Get the second wrapped Render_Wrapper
-
-    virtual void prerender() const;
-    virtual void postrender() const;
-
-    inline bool operator<(const Multiple_Render_Wrapper &rhs) const;
-    inline bool operator==(const Multiple_Render_Wrapper &rhs) const;
-
-    virtual Render_Wrapper * get_duplicate() const;
-
-  private:
-    virtual bool less_than(const Render_Wrapper &rhs) const;
-    virtual bool equal_to(const Render_Wrapper &rhs) const;
-
-    Render_Wrapper *m_first, *m_second;
+    int optimization;
   };
 
   struct Invalid_Vertex_Index : public Error {

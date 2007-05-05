@@ -53,6 +53,10 @@ namespace Zeni {
     return m_power;
   }
 
+  const std::string & Material::get_texture() const {
+    return m_texture;
+  }
+
   void Material::set_ambient(const Color &ambient) {
     m_ambient = ambient;
   }
@@ -71,6 +75,10 @@ namespace Zeni {
 
   void Material::set_power(const float &power) {
     m_power = power;
+  }
+
+  void Material::set_texture(const std::string &texture) {
+    m_texture = texture;
   }
 
 }

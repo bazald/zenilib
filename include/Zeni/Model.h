@@ -107,7 +107,7 @@ namespace Zeni {
   class Model : public Renderable {
   public:
     /// The only way to create a Model
-    Model(const std::string &filename, Render_Wrapper *render_wrapper = new Render_Wrapper());
+    Model(const std::string &filename);
     ~Model();
 
     // Accessors
@@ -115,7 +115,6 @@ namespace Zeni {
     virtual Point3f get_position() const; ///< Get the position of the Model
     inline Model_Extents get_extents() const; ///< Get the extents of the Model
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
-    inline const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
 
     // Modifiers
     inline void set_scale(const Point3f &multiplier); ///< Scale the Model
@@ -136,7 +135,6 @@ namespace Zeni {
 
   private:
     Lib3dsFile *m_file;
-    std::auto_ptr<Render_Wrapper> m_render_wrapper;
 
     mutable Model_Visitor *m_unrenderer;
 

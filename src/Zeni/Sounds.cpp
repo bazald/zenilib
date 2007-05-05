@@ -29,6 +29,7 @@
 #include <Zeni/Sounds.h>
 
 #include <Zeni/Sound.hxx>
+#include <Zeni/Coordinate.hxx>
 
 #include <fstream>
 
@@ -37,21 +38,6 @@ using std::map;
 using std::ifstream;
 
 namespace Zeni {
-
-  Sound_Effect::Sound_Effect()
-    : m_mix_chunk(0)
-  {
-  }
-
-  Sound_Effect::Sound_Effect(const string &filename) {
-    m_mix_chunk = Mix_LoadWAV(filename.c_str());
-    if(!m_mix_chunk)
-      throw Sounds_Init_Failure();
-  }
-
-  Sound_Effect::~Sound_Effect() {
-    delete m_mix_chunk;
-  }
 
   Sounds::Sounds()
     : m_soundsfile("config/sounds.txt")
@@ -69,13 +55,13 @@ namespace Zeni {
     return e_sounds;
   }
 
-  void Sounds::play_sound(const string &sound_effect, const int &loop_times) const {
-    map<std::string, Sound_Effect>::const_iterator it = m_sounds.find(sound_effect);
+  const Sound_Buffer & Sounds::get_sound(const string &sound_effect) const {
+    map<std::string, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
 
     if(it == m_sounds.end())
       throw Sound_Effect_Not_Found();
 
-    Sound::get_reference().play_sound(it->second, loop_times);
+    return it->second;
   }
 
   void Sounds::reload(const string &soundsfile) {
@@ -96,7 +82,7 @@ namespace Zeni {
     string name, filename;
 
     while(soundsin >> name >> filename)
-      m_sounds[name] = Sound_Effect(filename);
+      m_sounds[name] = Sound_Buffer(filename);
   }
 
 }

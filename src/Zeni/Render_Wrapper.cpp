@@ -28,6 +28,8 @@
 
 #include <Zeni/Render_Wrapper.hxx>
 
+#include <Zeni/Material.hxx>
+
 #include <Zeni/Video.h>
 #include <Zeni/Coordinate.h>
 
@@ -55,85 +57,70 @@ namespace Zeni {
     return this == &rhs;
   }
 
-  Texture_Render_Wrapper::Texture_Render_Wrapper(const std::string &texture)
-    : m_texture(texture)
-  {
-  }
-
-  void Texture_Render_Wrapper::prerender() const {
-    Video::get_reference().apply_texture(m_texture);
-  }
-
-  void Texture_Render_Wrapper::postrender() const {
-    Video::get_reference().unapply_texture();
-  }
-
-  Render_Wrapper * Texture_Render_Wrapper::get_duplicate() const {
-    return new Texture_Render_Wrapper(m_texture);
-  }
-
-  bool Texture_Render_Wrapper::less_than(const Render_Wrapper &rhs) const {
-    return *this < dynamic_cast<const Texture_Render_Wrapper &>(rhs);
-  }
-
-  bool Texture_Render_Wrapper::equal_to(const Render_Wrapper &rhs) const {
-    return *this == dynamic_cast<const Texture_Render_Wrapper &>(rhs);
-  }
-
   Material_Render_Wrapper::Material_Render_Wrapper(const Material &material)
-    : m_material(material)
+    : m_material(material),
+      optimization(0)
   {
   }
 
   void Material_Render_Wrapper::prerender() const {
-    Video::get_reference().set_material(m_material);
+    Video::get_reference().set_material(m_material, optimization);
   }
 
-  void Material_Render_Wrapper::postrender() const {}
+  void Material_Render_Wrapper::postrender() const {
+    Video::get_reference().unset_material(m_material, optimization);
+  }
 
   Render_Wrapper * Material_Render_Wrapper::get_duplicate() const {
     return new Material_Render_Wrapper(m_material);
   }
 
   bool Material_Render_Wrapper::less_than(const Render_Wrapper &rhs) const {
-    return *this < dynamic_cast<const Material_Render_Wrapper &>(rhs);
+    return !equal_to(rhs) && this < &rhs;///HACK *this < dynamic_cast<const Material_Render_Wrapper &>(rhs);
   }
 
   bool Material_Render_Wrapper::equal_to(const Render_Wrapper &rhs) const {
     return *this == dynamic_cast<const Material_Render_Wrapper &>(rhs);
   }
 
-  Multiple_Render_Wrapper::Multiple_Render_Wrapper(Render_Wrapper *first, Render_Wrapper *second)
-    : m_first(first),
-    m_second(second)
-  {
+  void Material_Render_Wrapper::optimize_to_follow(const Render_Wrapper &rhs) {
+    const Material_Render_Wrapper &mrw = dynamic_cast<const Material_Render_Wrapper &>(rhs);
+    const Material &material = mrw.get_material();
+
+    if(m_material.get_ambient() == material.get_ambient())
+      optimization |= (1 << 0);
+    if(m_material.get_diffuse() == material.get_diffuse())
+      optimization |= (1 << 1);
+    if(m_material.get_specular() == material.get_specular())
+      optimization |= (1 << 2);
+    if(m_material.get_emissive() == material.get_emissive())
+      optimization |= (1 << 3);
+    if(m_material.get_power() == material.get_power())
+      optimization |= (1 << 4);
+    if(m_material.get_texture() == material.get_texture())
+      optimization |= (1 << 5);
   }
 
-  Multiple_Render_Wrapper::~Multiple_Render_Wrapper() {
-    delete m_first;
-    delete m_second;
+  void Material_Render_Wrapper::optimize_to_precede(const Render_Wrapper &rhs) {
+    const Material_Render_Wrapper &mrw = dynamic_cast<const Material_Render_Wrapper &>(rhs);
+    const Material &material = mrw.get_material();
+
+    if(m_material.get_ambient() == material.get_ambient())
+      optimization |= (1 << 6);
+    if(m_material.get_diffuse() == material.get_diffuse())
+      optimization |= (1 << 7);
+    if(m_material.get_specular() == material.get_specular())
+      optimization |= (1 << 8);
+    if(m_material.get_emissive() == material.get_emissive())
+      optimization |= (1 << 9);
+    if(m_material.get_power() == material.get_power())
+      optimization |= (1 << 10);
+    if(m_material.get_texture() == material.get_texture())
+      optimization |= (1 << 11);
   }
 
-  void Multiple_Render_Wrapper::prerender() const {
-    m_first->prerender();
-    m_second->prerender();
-  }
-
-  void Multiple_Render_Wrapper::postrender() const {
-    m_second->postrender();
-    m_first->postrender();
-  }
-
-  Render_Wrapper * Multiple_Render_Wrapper::get_duplicate() const {
-    return new Multiple_Render_Wrapper(m_first->get_duplicate(), m_second->get_duplicate());
-  }
-
-  bool Multiple_Render_Wrapper::less_than(const Render_Wrapper &rhs) const {
-    return *this < dynamic_cast<const Multiple_Render_Wrapper &>(rhs);
-  }
-
-  bool Multiple_Render_Wrapper::equal_to(const Render_Wrapper &rhs) const {
-    return *this == dynamic_cast<const Multiple_Render_Wrapper &>(rhs);
+  void Material_Render_Wrapper::clear_optimization() {
+    optimization = 0;
   }
 
 }

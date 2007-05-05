@@ -70,6 +70,7 @@
 #define ZENI_VERTEX_BUFFER_H
 
 #include "Triangle.h"
+#include "Quadrilateral.h"
 #include "Vertex3f.h"
 
 #include <vector>
@@ -93,37 +94,23 @@ namespace Zeni {
     };
 
     Vertex_Buffer();
-    virtual ~Vertex_Buffer() {}
+    virtual ~Vertex_Buffer();
 
-    virtual void add_triangle(Renderable *triangle) = 0; ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_quadrilateral(Renderable *quadrilateral) = 0; ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex3f_Color> *triangle); ///< Add a Triangle to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex3f_Texture> *triangle); ///< Add a Triangle to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex3f_Color> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
 
-    virtual void debug_render() = 0; ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
+    void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
     virtual void prerender() = 0; ///< Create the vertex buffer in the GPU/VPU
-    virtual void render_begin(); ///< Start using the Vertex_Buffer; optional - use to increase performance when rendering multiple times
     virtual void render() = 0; ///< Render the Vertex_Buffer
-    virtual void render_end(); ///< End use of the Vertex_Buffer; NOT optional if render_begin was called
 
   protected:
-    inline int get_begin_end() const;
 
-  private:
-    int m_begin_end;
-  };
-
-  class Vertex_Buffer_3FC : public Vertex_Buffer {
-  public:
-    virtual ~Vertex_Buffer_3FC();
-
-    virtual void add_triangle(Renderable *triangle); ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_quadrilateral(Renderable *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
-
-    virtual void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
-
-  protected:
-    inline int num_triangles() const;
-    inline int num_vertices() const;
+    inline int num_vertices_c() const;
+    inline int num_vertices_cm() const;
+    inline int num_vertices_t() const;
 
     // Sort push_no_mat by color
     // Sort push_mat by color first, material (arbitrary order) second
@@ -132,131 +119,50 @@ namespace Zeni {
     // Generate lists of vertex ranges to be rendered more efficiently
     void set_descriptors();
 
-    std::vector<Triangle<Vertex3f_Color> *> m_triangles_no_mat;
-    std::vector<Triangle<Vertex3f_Color> *> m_triangles_mat;
+    std::vector<Triangle<Vertex3f_Color> *> m_triangles_c;
+    std::vector<Triangle<Vertex3f_Color> *> m_triangles_cm;
+    std::vector<Triangle<Vertex3f_Texture> *> m_triangles_t;
 
-    std::vector<Vertex_Buffer_Range *> m_descriptors_no_mat;
-    std::vector<Vertex_Buffer_Range *> m_descriptors_mat;
-
-  private:
-    void push_no_mat(Triangle<Vertex3f_Color> *p_tri);
-    void push_mat(Triangle<Vertex3f_Color> *p_tri);
-  };
-
-  class Vertex_Buffer_3FT : public Vertex_Buffer {
-  public:
-    virtual ~Vertex_Buffer_3FT();
-
-    virtual void add_triangle(Renderable *triangle); ///< Add a Triangle to the Vertex_Buffer
-    virtual void add_quadrilateral(Renderable *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
-
-    virtual void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
-
-  protected:
-    inline int num_triangles() const;
-    inline int num_vertices() const;
-
-    // Sort push_no_mat by texture name
-    // Sort push_mat by texture name first, material (arbitrary order) second
-    void sort_triangles();
-
-    // Generate lists of vertex ranges to be rendered more efficiently
-    void set_descriptors();
-
-    std::vector<Triangle<Vertex3f_Texture> *> m_triangles_no_mat;
-    std::vector<Triangle<Vertex3f_Texture> *> m_triangles_mat;
-
-    std::vector<Vertex_Buffer_Range *> m_descriptors_no_mat;
-    std::vector<Vertex_Buffer_Range *> m_descriptors_mat;
-
-  private:
-    void push_no_mat(Triangle<Vertex3f_Texture> *p_tri);
-    void push_mat(Triangle<Vertex3f_Texture> *p_tri, const Multiple_Render_Wrapper * const multirw);
+    std::vector<Vertex_Buffer_Range *> m_descriptors_c;
+    std::vector<Vertex_Buffer_Range *> m_descriptors_cm;
+    std::vector<Vertex_Buffer_Range *> m_descriptors_t;
   };
 
 #ifndef DISABLE_GL
 
-  class Vertex_Buffer_3FC_GL : public Vertex_Buffer_3FC {
+  class Vertex_Buffer_GL : public Vertex_Buffer {
   public:
-    Vertex_Buffer_3FC_GL();
-    virtual ~Vertex_Buffer_3FC_GL();
+    Vertex_Buffer_GL();
+    virtual ~Vertex_Buffer_GL();
 
     virtual void prerender();
-    virtual void render_begin();
     virtual void render();
-    virtual void render_end();
 
   private:
     inline int vertex_size() const;
-    inline int buffer_size() const;
-
     inline int normal_size() const;
-    inline int normbuf_size() const;
-
     inline int color_size() const;
-    inline int colorbuf_size() const;
-
-    GLuint m_vbuf[3];
-  };
-
-  class Vertex_Buffer_3FT_GL : public Vertex_Buffer_3FT {
-  public:
-    Vertex_Buffer_3FT_GL();
-    virtual ~Vertex_Buffer_3FT_GL();
-
-    virtual void prerender();
-    virtual void render_begin();
-    virtual void render();
-    virtual void render_end();
-
-  private:
-    inline int vertex_size() const;
-    inline int buffer_size() const;
-
-    inline int normal_size() const;
-    inline int normbuf_size() const;
-
     inline int texel_size() const;
-    inline int texbuf_size() const;
 
-    GLuint m_vbuf[3];
+    GLuint m_vbuf[6];
   };
 
 #endif
 #ifndef DISABLE_DX9
 
-  class Vertex_Buffer_3FC_DX9 : public Vertex_Buffer_3FC {
+  class Vertex_Buffer_DX9 : public Vertex_Buffer {
   public:
-    Vertex_Buffer_3FC_DX9();
-    virtual ~Vertex_Buffer_3FC_DX9();
+    Vertex_Buffer_DX9();
+    virtual ~Vertex_Buffer_DX9();
 
     virtual void prerender();
-    virtual void render_begin();
     virtual void render();
-    virtual void render_end();
 
   private:
-    inline int vertex_size() const;
-    inline int buffer_size() const;
+    inline int vertex_c_size() const;
+    inline int vertex_t_size() const;
 
-    IDirect3DVertexBuffer9 *m_vbuf;
-  };
-
-  class Vertex_Buffer_3FT_DX9 : public Vertex_Buffer_3FT {
-  public:
-    Vertex_Buffer_3FT_DX9();
-    virtual ~Vertex_Buffer_3FT_DX9();
-
-    virtual void prerender();
-    virtual void render_begin();
-    virtual void render();
-    virtual void render_end();
-
-  private:
-    inline int vertex_size() const;
-    inline int buffer_size() const;
-
-    IDirect3DVertexBuffer9 *m_vbuf;
+    IDirect3DVertexBuffer9 *m_buf_c, *m_buf_t;
   };
 
 #endif

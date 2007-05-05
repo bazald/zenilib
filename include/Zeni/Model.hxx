@@ -45,10 +45,6 @@ namespace Zeni {
     return float(m_file->frames);
   }
 
-  const Render_Wrapper * const Model::get_render_wrapper() const {
-    return m_render_wrapper.get();
-  }
-
   void Model::set_scale(const Point3f &multiplier) {
     m_scale = multiplier;
   }

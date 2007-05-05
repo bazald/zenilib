@@ -100,7 +100,7 @@ namespace Zeni {
 
   void TCP_Socket::send(const string &data) {
     int data_len = int(data.size());
-    if(SDLNet_TCP_Send(sock, data.c_str(), data_len) < data_len)
+    if(SDLNet_TCP_Send(sock, const_cast<char *>(data.c_str()), data_len) < data_len)
       throw Socket_Closed();
   }
 

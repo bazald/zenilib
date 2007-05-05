@@ -27,27 +27,153 @@
 */
 
 #include <Zeni/Sound.hxx>
-#include <Zeni/Sounds.hxx>
+
+#include <Zeni/Coordinate.hxx>
 
 #include <SDL/SDL.h>
+#include <iostream>
 
 using std::string;
 
 namespace Zeni {
 
+  Sound_Buffer::Sound_Buffer()
+    : m_buffer(AL_NONE)
+  {
+    Sound::get_reference();
+
+    m_buffer = alutCreateBufferHelloWorld();
+
+    if(m_buffer == AL_NONE) {
+      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
+      throw Sound_Buffer_Init_Failure();
+    }
+  }
+
+  Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
+    : m_buffer(rhs.m_buffer)
+  {
+    Sound::get_reference();
+
+    rhs.m_buffer = AL_NONE;
+    rhs.m_buffer = alutCreateBufferHelloWorld();
+    
+    if(rhs.m_buffer == AL_NONE) {
+      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
+      throw Sound_Buffer_Init_Failure();
+    }
+  }
+
+  Sound_Buffer::Sound_Buffer(const string &filename)
+    : m_buffer(AL_NONE)
+  {
+    Sound::get_reference();
+
+    m_buffer = alutCreateBufferFromFile(filename.c_str());
+
+    if(m_buffer == AL_NONE) {
+      std::cerr << "ALUT error on '" << filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
+      throw Sound_Buffer_Init_Failure();
+    }
+  }
+
+  Sound_Buffer::~Sound_Buffer() {
+    if(m_buffer != AL_NONE)
+      alDeleteBuffers(1, &m_buffer);
+  }
+  
+  Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
+    Sound_Buffer temp(rhs);
+    std::swap(m_buffer, temp.m_buffer);
+    return *this;
+  }
+
+  static Sound_Buffer g_Hello_World_Buffer;
+
+  Sound_Source::Sound_Source()
+    : m_source(AL_NONE)
+  {
+    init(g_Hello_World_Buffer.get_id());
+  }
+
+  Sound_Source::Sound_Source(const Sound_Source &rhs)
+    : m_source(rhs.m_source)
+  {
+    rhs.m_source = AL_NONE;
+    rhs.init(g_Hello_World_Buffer.get_id());
+  }
+
+  Sound_Source::Sound_Source(const Sound_Buffer &buffer, const float &pitch, const float &gain,
+    const Point3f &position, const Point3f &velocity, const bool &looping)
+    : m_source(AL_NONE)
+  {
+    init(buffer.get_id(), pitch, gain, position, velocity, looping);
+  }
+
+  Sound_Source::Sound_Source(const ALuint &buffer, const float &pitch, const float &gain,
+    const Point3f &position, const Point3f &velocity, const bool &looping)
+    : m_source(AL_NONE)
+  {
+    init(buffer, pitch, gain, position, velocity, looping);
+  }
+
+  Sound_Source::~Sound_Source() {
+    if(m_source != AL_NONE)
+      alDeleteSources(1, &m_source);
+  }
+
+  void Sound_Source::init(const ALuint &buffer, const float &pitch, const float &gain,
+                          const Point3f &position, const Point3f &velocity, const bool &looping) const {
+    Sound::get_reference();
+
+    alGenSources(1, &m_source);
+
+    if(m_source == AL_NONE) {
+      std::cerr << "ALUT error" << ": " << alutGetErrorString(alutGetError()) << std::endl;
+      throw Sound_Source_Init_Failure();
+    }
+
+    alSourcei(m_source, AL_BUFFER, buffer);
+    alSourcef(m_source, AL_PITCH, pitch);
+    alSourcef(m_source, AL_GAIN, gain);
+    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
+    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
+    alSourcei(m_source, AL_LOOPING, looping);
+  }
+
+  Sound_Source & Sound_Source::operator=(const Sound_Source &rhs) {
+    Sound_Source temp(rhs);
+    std::swap(m_source, temp.m_source);
+    return *this;
+  }
+
   Sound::Sound()
-    : m_bgmm(0),
-    m_channels(8),
-    m_enabled(false)
+    : m_bgm(0),
+    m_bgm_source(0)
   {
     // Ensure Core is initialized
     Core::get_reference();
 
-    enable();
+    if(!alutInit(0, 0))
+      throw Sound_Init_Failure();
+
+    // Check for Vorbis extension functionality; seems to always fail :(
+    alIsExtensionPresent("AL_EXT_vorbis");
+    std::cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << std::endl;
+
+    ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
+    ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
+    ALfloat listener_forward_and_up[] = {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+
+    alListenerfv(AL_POSITION, listener_position);
+    alListenerfv(AL_VELOCITY, listener_velocity);
+    alListenerfv(AL_ORIENTATION, listener_forward_and_up);
   }
 
   Sound::~Sound() {
-    disable();
+    delete m_bgm_source;
+    delete m_bgm;
+    alutExit();
   }
 
   Sound & Sound::get_reference() {
@@ -55,67 +181,46 @@ namespace Zeni {
     return e_sound;
   }
 
-  void Sound::enable() {
-    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
-      throw Sound_Init_Failure();
-
-    m_enabled = true;
-
-    Mix_AllocateChannels(m_channels);
-  }
-
-  void Sound::disable() {
-    m_enabled = false;
-
-    stop_BGM();
-
-    Mix_CloseAudio();
-  }
-
   void Sound::set_BGM(const string &filename) {
+    assert_m_bgm();
+
+    bool playing = m_bgm_source->is_playing() ? true : false;
+    float pitch = m_bgm_source->get_pitch();
+    float gain = m_bgm_source->get_gain();
+    Point3f position = m_bgm_source->get_position();
+    Point3f velocity = m_bgm_source->get_velocity();
+    bool looping = m_bgm_source->is_looping();
+
+    m_bgm_source->stop();
+    delete m_bgm_source;
+    m_bgm_source = 0;
+
     m_bgmusic = filename;
-    
-    // Actually load
-    
-    if(!m_enabled)
-      enable();
+    *m_bgm = Sound_Buffer(filename);
 
-    stop_BGM();
+    m_bgm_source = new Sound_Source(*m_bgm, pitch, gain, position, velocity, looping);
 
-    if(!m_bgmusic.length())
-      throw BGM_Init_Failure();
-
-    if(m_bgmm)
-      Mix_FreeMusic(m_bgmm);
-
-    m_bgmm = Mix_LoadMUS(m_bgmusic.c_str());
-    if(!m_bgmm)
-      throw BGM_Init_Failure();
+    if(playing)
+      m_bgm_source->play();
   }
 
-  void Sound::play_BGM(const int &loops, const int &fade_for_ms, const double &start_second) {
-    Mix_ResumeMusic();
-    Mix_HaltMusic();
-    Mix_RewindMusic();
-    Mix_FadeInMusicPos(m_bgmm, loops, fade_for_ms, start_second);
-  }
+  void Sound::assert_m_bgm() {
+    if(!m_bgm) {
+      m_bgm = new Sound_Buffer();
+      if(!m_bgm) {
+        alutExit();
+        throw Sound_Init_Failure();
+      }
+    }
 
-  bool Sound::play_sound(const Sound_Effect &sound_effect, const int &loop_times) {
-    if(!m_enabled)
-      enable();
-
-    int channels = Sound::m_channels;
-    while(Mix_Playing(-1) < (channels >> 1))
-      channels = channels >> 1;
-    while(Mix_Playing(-1) >= channels)
-      channels = channels << 1;
-
-    if(channels != Sound::m_channels)
-      Mix_AllocateChannels(Sound::m_channels = channels);
-
-    Mix_PlayChannelTimed(-1, const_cast<Mix_Chunk *>(sound_effect.get_Mix_Chunk()), loop_times, -1);
-
-    return true;
+    if(!m_bgm_source) {
+      m_bgm_source = new Sound_Source(*m_bgm);
+      if(!m_bgm_source) {
+        delete m_bgm;
+        alutExit();
+        throw Sound_Init_Failure();
+      }
+    }
   }
 
 }

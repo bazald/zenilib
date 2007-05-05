@@ -188,8 +188,12 @@ namespace Zeni {
       glDisable(ln);
   }
 
-  void Video_GL::set_material(const Material &material) {
-    material.set(*this);
+  void Video_GL::set_material(const Material &material, const int &optimization) {
+    material.set(*this, optimization);
+  }
+
+  void Video_GL::unset_material(const Material &material, const int &optimization) {
+    material.unset(*this, optimization);
   }
 
   void Video_GL::select_world_matrix() {
@@ -263,12 +267,8 @@ namespace Zeni {
     return new Font_GL(filename, bold, italic, glyph_height);
   }
 
-  Vertex_Buffer_3FC * Video_GL::create_Vertex_Buffer_3FC() {
-    return new Vertex_Buffer_3FC_GL();
-  }
-
-  Vertex_Buffer_3FT * Video_GL::create_Vertex_Buffer_3FT() {
-    return new Vertex_Buffer_3FT_GL();
+  Vertex_Buffer * Video_GL::create_Vertex_Buffer() {
+    return new Vertex_Buffer_GL();
   }
 
   void Video_GL::init() {

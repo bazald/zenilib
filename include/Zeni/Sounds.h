@@ -58,24 +58,13 @@
 #define ZENI_SOUNDS_H
 
 #include "Core.h"
+#include "Sound.h"
 
-#include <SDL/SDL_mixer.h>
+#include <AL/alut.h>
 #include <string>
 #include <map>
 
 namespace Zeni {
-
-  class Sound_Effect {
-  public:
-    Sound_Effect();
-    Sound_Effect(const std::string &filename);
-    ~Sound_Effect();
-
-    inline const Mix_Chunk * const get_Mix_Chunk() const;
-
-  private:
-    Mix_Chunk *m_mix_chunk;
-  };
 
   class Sounds {
     Sounds();
@@ -89,7 +78,7 @@ namespace Zeni {
     // Get reference to only instance;
     static Sounds & get_reference(); ///< Get access to the singleton.
 
-    void play_sound(const std::string &sound_effect, const int &loop_times) const; ///< Play a Sound_Effect
+    const Sound_Buffer & get_sound(const std::string &sound_effect) const; ///< Get a Sound_Effect
 
     void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Effect database
 
@@ -97,7 +86,7 @@ namespace Zeni {
     void init();
 
     std::string m_soundsfile;
-    std::map <std::string, Sound_Effect> m_sounds;
+    std::map <std::string, Sound_Buffer> m_sounds;
   };
 
   struct Sound_Effect_Not_Found : public Error {
@@ -109,9 +98,5 @@ namespace Zeni {
   };
 
 }
-
-#ifdef ZENI_INLINES
-#include "Sounds.hxx"
-#endif
 
 #endif

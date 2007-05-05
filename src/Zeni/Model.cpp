@@ -31,6 +31,7 @@
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Color.hxx>
+#include <Zeni/Material.hxx>
 #include <Zeni/Video_DX9.hxx>
 
 #include <lib3ds/mesh.h>
@@ -86,25 +87,27 @@ namespace Zeni {
       Material mat;
       Color pseudo_color;
 
-      if(material) {
+      if(material) {///HACK
         mat = Material(Color(material->ambient[0], material->ambient[1], material->ambient[2], material->ambient[3]),
           Color(material->diffuse[0], material->diffuse[1], material->diffuse[2], material->diffuse[3]),
           Color(material->specular[0], material->specular[1], material->specular[2], material->specular[3]),
-          Color(0, 0, 0, 1.0f));
+          Color(0, 0, 0, 1.0f),
+          1.0f, mesh->texels ? material->texture1_map.name : "");
         mat.set_shininess(material->shininess);
 
-        pseudo_color = Color(material->diffuse[0], material->diffuse[1], material->diffuse[2], material->diffuse[3]).interpolate_to(0.5f, Color(material->ambient[0], material->ambient[1], material->ambient[2], material->ambient[3]));
+        pseudo_color = Color(material->diffuse[0], material->diffuse[1], material->diffuse[2], material->diffuse[3]);//.interpolate_to(0.5f, Color(material->ambient[0], material->ambient[1], material->ambient[2], material->ambient[3]));
       }
 
-      if(mesh->texels)
+      if(mat.get_texture().size()) {
         user_d->add_triangle
         (new Triangle<Vertex3f_Texture>
         (
         Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
         Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
         Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
-        (material ? reinterpret_cast<Render_Wrapper *>(new Multiple_Render_Wrapper(model.get_render_wrapper()->get_duplicate(), new Material_Render_Wrapper(mat))) : reinterpret_cast<Render_Wrapper *>(model.get_render_wrapper()->get_duplicate()))
+        (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
         ));
+      }
       else
         user_d->add_triangle
         (new Triangle<Vertex3f_Color>
@@ -156,9 +159,8 @@ namespace Zeni {
       (*texel)[1] *= -1;
   }
 
-  Model::Model(const std::string &filename, Render_Wrapper *render_wrapper)
+  Model::Model(const std::string &filename)
     : m_file(0), 
-    m_render_wrapper(render_wrapper),
     m_unrenderer(0), 
     m_scale(1, 1, 1), 
     m_rotate(0, 0, 1), 
@@ -242,11 +244,10 @@ namespace Zeni {
     if(!mesh)
       throw Model_Render_Failure();
 
+    //mesh->texels = 0; ///HACK
+
     if(!node->user.d)
-      if(mesh->texels)
-        create_vertex_buffer(new Vertex_Buffer_3FT_GL(), model, node, mesh);
-      else
-        create_vertex_buffer(new Vertex_Buffer_3FC_GL(), model, node, mesh);
+      create_vertex_buffer(new Vertex_Buffer_GL(), model, node, mesh);
 
     Vertex_Buffer *user_d = reinterpret_cast<Vertex_Buffer *>(node->user.d);
     if(!user_d)
@@ -272,6 +273,7 @@ namespace Zeni {
     lib3ds_matrix_inv(M);
     glMultMatrixf(&M[0][0]);
 
+    //user_d->debug_render(); ///HACK
     user_d->render();
 
     glPopMatrix();
@@ -318,10 +320,7 @@ namespace Zeni {
       throw Model_Render_Failure();
 
     if(!node->user.d)
-      if(mesh->texels)
-        create_vertex_buffer(new Vertex_Buffer_3FT_DX9(), model, node, mesh);
-      else
-        create_vertex_buffer(new Vertex_Buffer_3FC_DX9(), model, node, mesh);
+      create_vertex_buffer(new Vertex_Buffer_DX9(), model, node, mesh);
 
     Vertex_Buffer *user_d = reinterpret_cast<Vertex_Buffer *>(node->user.d);
     if(!mesh)
@@ -335,7 +334,7 @@ namespace Zeni {
     vdx.get_matrix_stack()->MultMatrixLocal(reinterpret_cast<D3DXMATRIX *>(node->matrix));
 
     {//vdx.get_matrix_stack()->TranslateLocal(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-      if (lib3ds_matrix_det(node->matrix) < 0.0) {
+      if (lib3ds_matrix_det(node->matrix) < 0.0 && lib3ds_matrix_det(mesh->matrix) < 0.0) {
         vdx.get_matrix_stack()->ScaleLocal(-1.0, 1.0, 1.0);
         vdx.get_matrix_stack()->TranslateLocal(data->pivot[0], -data->pivot[1], -data->pivot[2]);
       }
@@ -350,6 +349,7 @@ namespace Zeni {
 
     vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
 
+    //user_d->debug_render(); ///HACK
     user_d->render();
 
     vdx.get_matrix_stack()->Pop();

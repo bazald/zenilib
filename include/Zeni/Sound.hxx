@@ -33,30 +33,147 @@
 
 namespace Zeni {
 
-  bool Sound::is_enabled() const {
-    return m_enabled;
+  const ALuint & Sound_Buffer::get_id() const {
+    return m_buffer;
+  }
+
+  void Sound_Source::set_buffer(const Sound_Buffer &buffer) {
+    alSourcei(m_source, AL_BUFFER, buffer.get_id());
+  }
+
+  void Sound_Source::set_buffer(const ALuint &buffer) {
+    alSourcei(m_source, AL_BUFFER, buffer);
+  }
+
+  void Sound_Source::set_pitch(const float &pitch) {
+    alSourcef(m_source, AL_PITCH, pitch);
+  }
+
+  void Sound_Source::set_gain(const float &gain) {
+    alSourcef(m_source, AL_GAIN, gain);
+  }
+
+  void Sound_Source::set_position(const Point3f &position) {
+    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
+  }
+
+  void Sound_Source::set_velocity(const Point3f &velocity) {
+    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
+  }
+
+  void Sound_Source::set_looping(const bool &looping) {
+    alSourcei(m_source, AL_LOOPING, looping);
+  }
+
+  void Sound_Source::set_time(const float &time) {
+    alSourcef(m_source, AL_SEC_OFFSET, time);
+  }
+
+  ALuint Sound_Source::get_buffer() const {
+    ALint buffer;
+    alGetSourcei(m_source, AL_BUFFER, &buffer);
+    return buffer;
+  }
+
+  float Sound_Source::get_pitch() const {
+    float pitch;
+    alGetSourcef(m_source, AL_PITCH, &pitch);
+    return pitch;
+  }
+
+  float Sound_Source::get_gain() const {
+    float gain;
+    alGetSourcef(m_source, AL_GAIN, &gain);
+    return gain;
+  }
+
+  Point3f Sound_Source::get_position() const {
+    Point3f position;
+    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<float *>(&position));
+    return position;
+  }
+
+  Point3f Sound_Source::get_velocity() const {
+    Point3f velocity;
+    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<float *>(&velocity));
+    return velocity;
+  }
+
+  bool Sound_Source::is_looping() const {
+    ALint looping;
+    alGetSourcei(m_source, AL_LOOPING, &looping);
+    return looping != AL_FALSE;
+  }
+
+  float Sound_Source::get_time() const {
+    float time;
+    alGetSourcef(m_source, AL_SEC_OFFSET, &time);
+    return time;
+  }
+
+  void Sound_Source::play() {
+    alSourcePlay(m_source);
+  }
+
+  void Sound_Source::pause() {
+    alSourcePause(m_source);
+  }
+
+  void Sound_Source::stop() {
+    alSourceStop(m_source);
+  }
+
+  bool Sound_Source::is_playing() {
+    ALenum state;
+    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING;
+  }
+
+  bool Sound_Source::is_paused() {
+    ALenum state;
+    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PAUSED;
+  }
+
+  bool Sound_Source::is_stopped() {
+    ALenum state;
+    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_STOPPED;
   }
 
   bool Sound::playing_BGM() {
-    return Mix_PlayingMusic() == 1;
+    assert_m_bgm();
+    return m_bgm_source->is_playing();
   }
 
   bool Sound::paused_BGM() {
-    return Mix_PausedMusic() == 1;
+    assert_m_bgm();
+    return m_bgm_source->is_paused();
   }
-  
-  void Sound::stop_BGM(const int &fade_for_ms) {
-    Mix_ResumeMusic();
-    if(!Mix_FadeOutMusic(fade_for_ms))
-      Mix_HaltMusic();
+
+  bool Sound::stopped_BGM() {
+    assert_m_bgm();
+    return m_bgm_source->is_stopped();
+  }
+
+  void Sound::play_BGM() {
+    assert_m_bgm();
+    return m_bgm_source->play();
   }
 
   void Sound::pause_BGM() {
-    Mix_PauseMusic();
+    assert_m_bgm();
+    return m_bgm_source->pause();
   }
   
-  void Sound::resume_BGM() {
-    Mix_ResumeMusic();
+  void Sound::stop_BGM() {
+    assert_m_bgm();
+    return m_bgm_source->stop();
+  }
+
+  void Sound::loop_BGM(const bool &looping) {
+    assert_m_bgm();
+    return m_bgm_source->set_looping(looping);
   }
 
 }

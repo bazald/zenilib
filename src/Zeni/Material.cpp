@@ -31,20 +31,31 @@
 #include <Zeni/Video.hxx>
 #include <Zeni/Video_DX9.hxx>
 
+#include <Zeni/Textures.hxx>
+
 #include <cmath>
 
 #ifndef DISABLE_GL
 #include <GL/gl.h>
 #endif
 
+using namespace std;
+
 namespace Zeni {
 
-  Material::Material(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power)
+  Material::Material(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power, const string &texture)
     : m_diffuse(diffuse),
     m_ambient(ambient),
     m_specular(specular), 
     m_emissive(emissive),
-    m_power(power)
+    m_power(power),
+    m_texture(texture)
+  {
+  }
+
+  Material::Material(const string &texture)
+    : m_power(1.0f),
+    m_texture(texture)
   {
   }
 
@@ -59,33 +70,61 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  void Material::set(Video_GL &) const {
+  void Material::set(Video_GL &, const int &optimization) const {
     GLenum face = Video::get_reference().get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
 
-    glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
-    glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&m_diffuse));
-    glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&m_specular));
-    glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&m_emissive));
-    glMaterialfv(face, GL_SHININESS, &m_power);
+    if(!(optimization & (1 << 0)))
+      glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
+    if(!(optimization & (1 << 1)))
+      glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&m_diffuse));
+    if(!(optimization & (1 << 2)))
+      glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&m_specular));
+    if(!(optimization & (1 << 3)))
+      glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&m_emissive));
+    if(!(optimization & (1 << 4)))
+      glMaterialfv(face, GL_SHININESS, &m_power);
+
+    if(!(optimization & (1 << 5)) &&
+       !m_texture.empty())
+      Video::get_reference().apply_texture(m_texture);
+  }
+
+  void Material::unset(Video_GL &, const int &optimization) const {
+    if(!(optimization & (1 << 11)) &&
+       !m_texture.empty())
+      Video::get_reference().unapply_texture();
   }
 #endif
 
 #ifndef DISABLE_DX9
-  void Material::set(Video_DX9 &screen) const {
-    screen.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
+  void Material::set(Video_DX9 &screen, const int &optimization) const {
+    if(!(optimization & ((1 << 5) - 1)))
+      screen.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
+
+    if(!(optimization & (1 << 5)) &&
+       !m_texture.empty())
+      Video::get_reference().apply_texture(m_texture);
+  }
+
+  void Material::unset(Video_DX9 &, const int &optimization) const {
+    if(!(optimization & (1 << 11)) &&
+       !m_texture.empty())
+      Video::get_reference().unapply_texture();
   }
 #endif
 
   bool Material::operator<(const Material &rhs) const {
-    return m_diffuse < rhs.m_diffuse ||
-      m_ambient < rhs.m_ambient ||
-      m_specular < rhs.m_specular ||
-      m_emissive < rhs.m_emissive ||
-      m_power < rhs.m_power;
+    return m_texture < rhs.m_texture || m_texture == rhs.m_texture &&
+      (m_diffuse < rhs.m_diffuse || m_diffuse == rhs.m_diffuse &&
+      (m_ambient < rhs.m_ambient || m_ambient == rhs.m_ambient &&
+      (m_specular < rhs.m_specular || m_specular == rhs.m_specular &&
+      (m_emissive < rhs.m_emissive || m_emissive == rhs.m_emissive &&
+      m_power < rhs.m_power))));
   }
 
   bool Material::operator==(const Material &rhs) const {
-    return m_diffuse == rhs.m_diffuse &&
+    return m_texture == rhs.m_texture &&
+      m_diffuse == rhs.m_diffuse &&
       m_ambient == rhs.m_ambient &&
       m_specular == rhs.m_specular &&
       m_emissive == rhs.m_emissive &&

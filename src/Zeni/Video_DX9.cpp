@@ -109,6 +109,7 @@ namespace Zeni {
     m_textured = false;
 
     m_d3d_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+    m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
     set_fvf();
   }
@@ -195,8 +196,12 @@ namespace Zeni {
       m_d3d_device->LightEnable(number, FALSE);
   }
 
-  void Video_DX9::set_material(const Material &material) {
-    material.set(*this);
+  void Video_DX9::set_material(const Material &material, const int &optimization) {
+    material.set(*this, optimization);
+  }
+
+  void Video_DX9::unset_material(const Material &material, const int &optimization) {
+    material.unset(*this, optimization);
   }
 
   void Video_DX9::select_world_matrix() {
@@ -250,12 +255,8 @@ namespace Zeni {
     return new Font_DX9(filename, bold, italic, glyph_height);
   }
 
-  Vertex_Buffer_3FC * Video_DX9::create_Vertex_Buffer_3FC() {
-    return new Vertex_Buffer_3FC_DX9();
-  }
-
-  Vertex_Buffer_3FT * Video_DX9::create_Vertex_Buffer_3FT() {
-    return new Vertex_Buffer_3FT_DX9();
+  Vertex_Buffer * Video_DX9::create_Vertex_Buffer() {
+    return new Vertex_Buffer_DX9();
   }
 
   void Video_DX9::init() {

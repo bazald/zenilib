@@ -41,18 +41,6 @@ namespace Zeni {
     return equal_to(rhs);
   }
 
-  const std::string & Texture_Render_Wrapper::get_texture() const {
-    return m_texture;
-  }
-
-  bool Texture_Render_Wrapper::operator<(const Texture_Render_Wrapper &rhs) const {
-    return m_texture < rhs.m_texture;
-  }
-
-  bool Texture_Render_Wrapper::operator==(const Texture_Render_Wrapper &rhs) const {
-    return m_texture == rhs.m_texture;
-  }
-
   const Material & Material_Render_Wrapper::get_material() const {
     return m_material;
   }
@@ -63,22 +51,6 @@ namespace Zeni {
 
   bool Material_Render_Wrapper::operator==(const Material_Render_Wrapper &rhs) const {
     return m_material == rhs.m_material;
-  }
-
-  const Render_Wrapper & Multiple_Render_Wrapper::get_first() const {
-    return *m_first;
-  }
-
-  const Render_Wrapper & Multiple_Render_Wrapper::get_second() const {
-    return *m_second;
-  }
-
-  bool Multiple_Render_Wrapper::operator<(const Multiple_Render_Wrapper &rhs) const {
-    return *m_first < *rhs.m_first || *m_first == *rhs.m_first && *m_second < *rhs.m_second;
-  }
-
-  bool Multiple_Render_Wrapper::operator==(const Multiple_Render_Wrapper &rhs) const {
-    return *m_first == *rhs.m_first && *m_second == *rhs.m_second;
   }
 
 }

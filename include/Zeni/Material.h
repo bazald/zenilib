@@ -46,6 +46,9 @@
 #define ZENI_MATERIAL_H
 
 #include "Color.h"
+#include "Texture.h"
+
+#include <string>
 
 #ifndef DISABLE_GL
 #include <GL/gl.h>
@@ -65,7 +68,9 @@ namespace Zeni {
     Material(const Color &ambient = Color(0.0f, 0.0f, 0.0f, 1.0f), 
       const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
       const Color &specular = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &emissive = Color(0.0f, 0.0f, 0.0f, 1.0f), const float &power = 1.0f);
+      const Color &emissive = Color(0.0f, 0.0f, 0.0f, 1.0f), const float &power = 1.0f,
+      const std::string &texture = "");
+    Material(const std::string &texture);
 
     // Accessors
     inline const Color & get_ambient() const; ///< Get the ambient Color
@@ -74,6 +79,7 @@ namespace Zeni {
     inline const Color & get_emissive() const; ///< Get the emissive Color
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)
     float get_shininess() const; ///< Get the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
+    inline const std::string & get_texture() const; ///< Get the texture identifier
 
     // Modifiers
     inline void set_ambient(const Color &ambient); ///< Set the ambient Color
@@ -82,13 +88,16 @@ namespace Zeni {
     inline void set_emissive(const Color &emissive); ///< Set the emissive Color
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
+    inline void set_texture(const std::string &texture); ///< Set the texture identifier
 
 #ifndef DISABLE_GL
-    void set(Video_GL &screen) const;
+    void set(Video_GL &screen, const int &optimization) const;
+    void unset(Video_GL &screen, const int &optimization) const;
 #endif
 
 #ifndef DISABLE_DX9
-    void set(Video_DX9 &screen) const;
+    void set(Video_DX9 &screen, const int &optimization) const;
+    void unset(Video_DX9 &screen, const int &optimization) const;
 #endif
 
     bool operator<(const Material &rhs) const; ///< To provide an arbitrary total ordering. Do not depend on it remaining the same in the future.
@@ -101,6 +110,7 @@ namespace Zeni {
     Color m_specular;
     Color m_emissive;
     float m_power;
+    std::string m_texture;
   };
 
 }

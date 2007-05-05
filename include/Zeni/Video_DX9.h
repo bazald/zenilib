@@ -91,7 +91,8 @@ namespace Zeni {
     virtual void set_normal_interpolation(const bool &on = true); ///< Set normal interpolation on/off
     virtual void set_ambient_lighting(const Color &color); ///< Set ambient lighting on/off
     virtual void set_light(const int &number, const Light * const light = 0); ///< Set a particular Light
-    virtual void set_material(const Material &material); ///< Set a Material
+    virtual void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
+    virtual void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
 
     // Model Stack Functions
     virtual void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
@@ -105,8 +106,7 @@ namespace Zeni {
     virtual Texture * load_Texture(const std::string &name, const std::string &filename); ///< Function for loading a Texture; used internally by Textures
     virtual Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
-    virtual Vertex_Buffer_3FC * create_Vertex_Buffer_3FC(); ///< Function for creating a Vertex_Buffer_3FC
-    virtual Vertex_Buffer_3FT * create_Vertex_Buffer_3FT(); ///< Function for creating a Vertex_Buffer_3FT
+    virtual Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
 
     // D3D-Related Functions
     inline const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details
