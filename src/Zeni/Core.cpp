@@ -30,15 +30,35 @@
 
 #include <SDL/SDL.h>
 
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
 namespace Zeni {
 
+  static streambuf * cerr_bak = 0;
+  static streambuf * cout_bak = 0;
+
+  static ofstream cerr_file("stderr.txt");
+  static ofstream cout_file("stdout.txt");
+
   Core::Core() {
-    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO) == -1)
+    cerr_bak = cerr.rdbuf();
+    cout_bak = cout.rdbuf();
+
+    cerr.rdbuf(cerr_file.rdbuf());
+    cout.rdbuf(cout_file.rdbuf());
+
+    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
       throw Core_Init_Failure();
   }
 
   Core::~Core() {
     SDL_Quit();
+
+    cout.rdbuf(cout_bak);
+    cerr.rdbuf(cerr_bak);
   }
 
   Core & Core::get_reference() {

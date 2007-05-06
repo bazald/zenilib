@@ -60,12 +60,16 @@ int main(int argc, char *argv[]) {
       Video::get_reference().render_all();
     }
   }
+  catch(Quit_Event &nonerror) {
+    cerr << nonerror.msg << endl;
+  }
   catch(Error &error) {
     cerr << error.msg << endl;
+    return 1;
   }
   catch(...) {
     cerr << "Unrecognized Error Captured in main\n";
-    return 1;
+    return -1;
   }
 
   return 0;

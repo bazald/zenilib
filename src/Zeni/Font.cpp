@@ -239,10 +239,10 @@ namespace Zeni {
 
     D3DVIEWPORT9 vp;
     if(dynamic_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device()->GetViewport(&vp) == S_OK) {
-      x_scale = float(vp.Height) / Video::get_reference().get_screen_height();
+      /*x_scale = float(vp.Width) / Video::get_reference().get_screen_width();*/
       y_scale = float(vp.Height) / Video::get_reference().get_screen_height();
 
-      if(x_scale != 1.0f || y_scale != 1.0f) {
+      if(/*x_scale != 1.0f ||*/ y_scale != 1.0f) {
         if(ratio == y_scale)
           ptr = resized;
         else {
@@ -263,10 +263,10 @@ namespace Zeni {
           else
             ptr = resized;
         }
-
-        x_diff += vp.X;
-        y_diff += vp.Y;
       }
+
+      x_diff += vp.X;
+      y_diff += vp.Y;
     }
 
     RECT rect;    

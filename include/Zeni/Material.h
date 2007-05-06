@@ -65,9 +65,9 @@ namespace Zeni {
   class Material {
   public:
     /// An Alternative to the numerous setter functions
-    Material(const Color &ambient = Color(0.0f, 0.0f, 0.0f, 1.0f), 
+    Material(const Color &ambient = Color(1.0f, 1.0f, 1.0f, 1.0f), 
       const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &specular = Color(1.0f, 1.0f, 1.0f, 1.0f), 
+      const Color &specular = Color(0.2f, 0.2f, 0.2f, 1.0f), 
       const Color &emissive = Color(0.0f, 0.0f, 0.0f, 1.0f), const float &power = 1.0f,
       const std::string &texture = "");
     Material(const std::string &texture);
