@@ -53,6 +53,7 @@
 #ifndef ZENI_VERTEX2F_H
 #define ZENI_VERTEX2F_H
 
+#include "Color.h"
 #include "Coordinate.h"
 #include "Render_Wrapper.h"
 
@@ -82,11 +83,12 @@ namespace Zeni {
   class Vertex2f_Color : public Renderable, public Vertex2f {
   public:
     /// Initialize the Vertex2f_Color
-    Vertex2f_Color(const Point2f &position = Point2f(), const long &argb = 0xFF000000);
+    Vertex2f_Color(const Point2f &position = Point2f(), const Color &color = Color());
+    Vertex2f_Color(const Point2f &position, const long &argb);
 
     virtual Vertex2f * interpolate_to(const float &rhs_part, const Vertex2f &rhs) const; ///< Get a Vertex2f_Color between two vertices; rhs must be a Vertex2f_Color
 
-    inline const long & get_color() const; ///< Get the current Color
+    inline const unsigned long & get_color() const; ///< Get the current Color
     inline void set_color(const long &argb); ///< Set the current Color
 
     // Begin rendering functions
@@ -103,7 +105,7 @@ namespace Zeni {
 #endif
 
   private:
-    long m_argb;
+    unsigned long m_argb;
   };
 
   class Vertex2f_Texture : public Renderable, public Vertex2f {

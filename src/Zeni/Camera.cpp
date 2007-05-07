@@ -60,26 +60,26 @@ namespace Zeni {
   }
 
   void Camera::move_forward_xy(const float &distance) {
-    m_position += Vector3f(m_up.k() * m_forward.i(), m_up.k() * m_forward.j(), 0.0f).normalized() * distance;
+    m_position += Vector3f(m_up.k * m_forward.i, m_up.k * m_forward.j, 0.0f).normalized() * distance;
   }
 
   void Camera::move_left_xy(const float &distance) {
     Vector3f xy_left = get_left();
-    m_position += Vector3f(xy_left.i(), xy_left.j(), 0.0f).normalized() * distance;
+    m_position += Vector3f(xy_left.i, xy_left.j, 0.0f).normalized() * distance;
   }
 
   void Camera::turn_left_xy(const float &theta) {
     float c = cos(theta), s = sin(theta);
 
     Vector3f
-      xy_forward(m_forward.i(), m_forward.j(), 0.0f),
-      xy_up(m_up.i(), m_up.j(), 0.0f);
+      xy_forward(m_forward.i, m_forward.j, 0.0f),
+      xy_up(m_up.i, m_up.j, 0.0f);
 
     xy_forward = c * xy_forward + s * (vector_k % xy_forward);
     xy_up = c * xy_up + s * (vector_k % xy_up);
 
-    m_forward = Vector3f(xy_forward.i(), xy_forward.j(), m_forward.k());
-    m_up = Vector3f(xy_up.i(), xy_up.j(), m_up.k());
+    m_forward = Vector3f(xy_forward.i, xy_forward.j, m_forward.k);
+    m_up = Vector3f(xy_up.i, xy_up.j, m_up.k);
   }
 
 }

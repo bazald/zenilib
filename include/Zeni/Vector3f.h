@@ -48,7 +48,7 @@
 namespace Zeni {
 
   struct Point3f;
-  class Vector3f;
+  struct Vector3f;
 
   extern const float pi; ///< pi == 3.1415926...
   extern const float pi_over_two; ///< pi/2
@@ -61,16 +61,11 @@ namespace Zeni {
   extern const Vector3f vector_j; ///< j == Vector3f(0, 1, 0)
   extern const Vector3f vector_k; ///< k == Vector3f(0, 0, 1)
 
-  class Vector3f {
+  struct Vector3f {
   public:
     /// The best way to create a Vector3f
     Vector3f(const float &i_ = 0, const float &j_ = 0, const float &k_ = 0);
     Vector3f(const Vector3f &rhs);
-
-    // Accessors
-    inline float i() const; ///< Get the i-value
-    inline float j() const; ///< Get the j-value
-    inline float k() const; ///< Get the k-value
 
     // Vector addition/subtraction
     inline Vector3f operator+(const Vector3f &rhs) const; ///< Get the sum
@@ -100,8 +95,7 @@ namespace Zeni {
     float phi() const; ///< phi   == radians down from k
     void set_spherical(const float &theta, const float &phi, const float &magnitude = 1); ///< Set the vector using spherical coordinates
 
-  private:
-    float m_i, m_j, m_k;
+    float i, j, k;
   };
 
   // Vector Scalar Multiplication Part II of II

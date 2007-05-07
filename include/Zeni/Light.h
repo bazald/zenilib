@@ -66,7 +66,7 @@ namespace Zeni {
   class Light {
   public:
     /// An Alternative to the numerous setter functions
-    Light(const Color &ambient = Color(0.0f, 0.0f, 0.0f, 1.0f), 
+    Light(const Color &ambient = Color(1.0f, 0.0f, 0.0f, 0.0f), 
       const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
       const Color &specular = Color(1.0f, 1.0f, 1.0f, 1.0f), 
       const Point3f &position = Point3f(0.0f, 0.0f, 0.0f), 

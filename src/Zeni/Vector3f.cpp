@@ -44,12 +44,12 @@ namespace Zeni {
   extern const Vector3f vector_k(0, 0, 1);
 
   Vector3f::Vector3f(const float &i_, const float &j_, const float &k_)
-    : m_i(i_), m_j(j_), m_k(k_)
+    : i(i_), j(j_), k(k_)
   {
   }
 
   Vector3f::Vector3f(const Vector3f &rhs)
-    : m_i(rhs.m_i), m_j(rhs.m_j), m_k(rhs.m_k)
+    : i(rhs.i), j(rhs.j), k(rhs.k)
   {
   }
 
@@ -61,9 +61,9 @@ namespace Zeni {
 
     mplier = 1 / mplier;
 
-    m_i *= mplier;
-    m_j *= mplier;
-    m_k *= mplier;
+    i *= mplier;
+    j *= mplier;
+    k *= mplier;
 
     return *this;
   }
@@ -76,33 +76,33 @@ namespace Zeni {
 
     mplier = 1 / mplier;
 
-    return Vector3f(m_i * mplier, m_j * mplier, m_k * mplier);
+    return Vector3f(i * mplier, j * mplier, k * mplier);
   }
 
   float Vector3f::theta() const {
-    if(m_i > 0)
-      return atan(m_j/m_i);
-    else if(m_i < 0)
-      return atan(m_j/m_i) + pi;
-    else if(m_j > 0)
+    if(i > 0)
+      return atan(j/i);
+    else if(i < 0)
+      return atan(j/i) + pi;
+    else if(j > 0)
       return pi_over_two;
-    else if(m_j < 0)
+    else if(j < 0)
       return three_pi_over_two;
     return 0;
   }
 
   float Vector3f::phi() const {
-    if(m_i || m_j)
-      return pi_over_two * atan(m_k / sqrt(pow(m_i, 2) + pow(m_j, 2)));
-    else if(m_k < 0)
+    if(i || j)
+      return pi_over_two * atan(k / sqrt(pow(i, 2) + pow(j, 2)));
+    else if(k < 0)
       return pi;
     return 0;
   }
 
   void Vector3f::set_spherical(const float &theta, const float &phi, const float &magnitude) {
-    m_i = sin(phi) * magnitude;
-    m_j = sin(theta) * m_i;
-    m_i *= cos(theta);
-    m_k = cos(phi) * magnitude;
+    i = sin(phi) * magnitude;
+    j = sin(theta) * i;
+    i *= cos(theta);
+    k = cos(phi) * magnitude;
   }
 }

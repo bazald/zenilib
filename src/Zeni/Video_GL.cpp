@@ -112,13 +112,13 @@ namespace Zeni {
         up = camera.get_up().normalized();
       const float
         &x = position.x, &y = position.y, &z = position.z,
-        &i = forward.i(), &j = forward.j(), &k = forward.k();
+        &i = forward.i, &j = forward.j, &k = forward.k;
 
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
       gluLookAt(x, y, z,
         x + i, y + j, z + k,
-        up.i(), up.j(), up.k());
+        up.i, up.j, up.k);
 
       // Enable Depth Buffer
       glEnable(GL_DEPTH_TEST);
@@ -211,15 +211,15 @@ namespace Zeni {
   }
 
   void Video_GL::translate_scene(const Vector3f &direction) {
-    glTranslatef(direction.i(), direction.j(), direction.k());
+    glTranslatef(direction.i, direction.j, direction.k);
   }
 
   void Video_GL::rotate_scene(const Vector3f &about, const float &radians) {
-    glRotatef(radians * 180.0f / pi, about.i(), about.j(), about.k());
+    glRotatef(radians * 180.0f / pi, about.i, about.j, about.k);
   }
 
   void Video_GL::scale_scene(const Vector3f &factor) {
-    glScalef(factor.i(), factor.j(), factor.k());
+    glScalef(factor.i, factor.j, factor.k);
   }
 
   void Video_GL::set_backface_culling(const bool &on) {

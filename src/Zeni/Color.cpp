@@ -30,14 +30,21 @@
 
 namespace Zeni {
 
-  Color::Color(const float &r, const float &g, const float b, const float &a) {
+  Color::Color() {
+    rgba[0] = 1.0f;
+    rgba[1] = 1.0f;
+    rgba[2] = 1.0f;
+    rgba[3] = 1.0f;
+  }
+
+  Color::Color(const float &a, const float &r, const float g, const float &b) {
     rgba[0] = r;
     rgba[1] = g;
     rgba[2] = b;
     rgba[3] = a;
   }
 
-  Color::Color(const long &argb) {
+  Color::Color(const unsigned long &argb) {
     rgba[0] = ((argb >> 16) & 0xFF) / 256.0f;
     rgba[1] = ((argb >> 8) & 0xFF) / 256.0f;
     rgba[2] = (argb & 0xFF) / 256.0f;

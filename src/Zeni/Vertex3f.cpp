@@ -57,9 +57,21 @@ namespace Zeni {
       Color(m_argb).interpolate_to(rhs_part, rhs_c.m_argb).get_argb());
   }
 
+  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Color &color)
+    : Vertex3f(position, normal),
+    m_argb(color.get_argb())
+  {
+  }
+
   Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb)
     : Vertex3f(position, normal),
     m_argb(argb)
+  {
+  }
+
+  Vertex3f_Color::Vertex3f_Color(const Point3f &position_, const Color &color)
+    : Vertex3f(position_),
+    m_argb(color.get_argb())
   {
   }
 
@@ -85,7 +97,7 @@ namespace Zeni {
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
-    glNormal3f(get_normal().i(), get_normal().j(), get_normal().k());
+    glNormal3f(get_normal().i, get_normal().j, get_normal().k);
     glVertex3f(get_position().x, get_position().y, get_position().z);
   }
 #endif
@@ -126,7 +138,7 @@ namespace Zeni {
 
   void Vertex3f_Texture::subrender_to(Video_GL &) const {
     glTexCoord2f(m_texture_coordinate.x, m_texture_coordinate.y);
-    glNormal3f(get_normal().i(), get_normal().j(), get_normal().k());
+    glNormal3f(get_normal().i, get_normal().j, get_normal().k);
     glVertex3f(get_position().x, get_position().y, get_position().z);
   }
 #endif

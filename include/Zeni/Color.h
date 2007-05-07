@@ -33,7 +33,7 @@
  *
  * \brief Color
  *
- * This class describes a color in RGBA mode.
+ * This class describes a color in ARGB mode.
  *
  * \note Different functions prefer receiving color channels in different types and orders.  Be careful.
  *
@@ -50,18 +50,19 @@ namespace Zeni {
   class Color {
   public:
     /// Set the red, green, blue, and alpha channels using the stored type, float
-    Color(const float &r = 0.0f, const float &g = 0.0f, const float b = 0.0f, const float &a = 1.0f);
-    Color(const long &argb);
+    Color();
+    Color(const float &a, const float &r, const float g, const float &b);
+    Color(const unsigned long &argb);
 
+    inline const float & a() const; ///< Get the alpha channel [0.0f, 1.0f]
     inline const float & r() const; ///< Get the red channel [0.0f, 1.0f]
     inline const float & g() const; ///< Get the green channel [0.0f, 1.0f]
     inline const float & b() const; ///< Get the blue channel [0.0f, 1.0f]
-    inline const float & a() const; ///< Get the alpha channel [0.0f, 1.0f]
 
+    inline unsigned char a_ub() const; ///< Get the alpha channel [0x00, 0xFF]
     inline unsigned char r_ub() const; ///< Get the red channel [0x00, 0xFF]
     inline unsigned char g_ub() const; ///< Get the green channel [0x00, 0xFF]
     inline unsigned char b_ub() const; ///< Get the blue channel [0x00, 0xFF]
-    inline unsigned char a_ub() const; ///< Get the alpha channel [0x00, 0xFF]
 
     inline unsigned int get_rgba() const; ///< Get a Uint32 representation of 0xRRGGBBAA
     inline unsigned int get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB

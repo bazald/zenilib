@@ -53,6 +53,7 @@
 #ifndef ZENI_VERTEX3F_H
 #define ZENI_VERTEX3F_H
 
+#include "Color.h"
 #include "Coordinate.h"
 #include "Render_Wrapper.h"
 #include "Vector3f.h"
@@ -86,12 +87,15 @@ namespace Zeni {
   public:
     /// Initialize the Vertex3f_Color
     Vertex3f_Color(const Point3f &position = Point3f(), const Vector3f &normal = Vector3f(), 
-      const long &argb = 0xFF000000);
+      const Color &color = Color());
+    Vertex3f_Color(const Point3f &position, const Vector3f &normal, 
+      const long &argb);
+    Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const long &argb);
 
     virtual Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f &rhs) const; ///< Get a Vertex3f_Color between two vertices; rhs must be a Vertex3f_Color
 
-    inline const long & get_color() const; ///< Get the current Color
+    inline const unsigned long & get_color() const; ///< Get the current Color
     inline void set_color(const long &argb); ///< Set the current Color
 
     // Begin rendering functions
@@ -108,7 +112,7 @@ namespace Zeni {
 #endif
 
   private:
-    long m_argb;
+    unsigned long m_argb;
   };
 
   class Vertex3f_Texture : public Renderable, public Vertex3f {

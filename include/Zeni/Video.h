@@ -73,8 +73,8 @@ namespace Zeni {
   class Material;
   class Renderable;
   class Texture;
-  class Vector3f;
   class Vertex_Buffer;
+  struct Vector3f;
 
   class Video {
   protected:

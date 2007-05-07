@@ -28,11 +28,11 @@
 
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
+
+#include <iostream>
 #include <fstream>
 
-using std::string;
-using std::set;
-using std::ifstream;
+using namespace std;
 
 namespace Zeni {
 
@@ -61,8 +61,10 @@ namespace Zeni {
     Texture temp(name);
     std::set<Texture *, Texture_Cmp>::const_iterator it = m_textures.find(&temp);
 
-    if(it == m_textures.end())
+    if(it == m_textures.end()) {
+      std::cerr << "Missing Texture: " << name << std::endl;
       throw Texture_Not_Found();
+    }
 
     (*it)->apply_texture();
   }

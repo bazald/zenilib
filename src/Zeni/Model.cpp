@@ -88,14 +88,14 @@ namespace Zeni {
       Color pseudo_color;
 
       if(material) {///HACK
-        mat = Material(Color(material->ambient[0], material->ambient[1], material->ambient[2], material->ambient[3]),
-          Color(material->diffuse[0], material->diffuse[1], material->diffuse[2], material->diffuse[3]),
-          Color(material->specular[0], material->specular[1], material->specular[2], material->specular[3]),
-          Color(0, 0, 0, 1.0f),
+        mat = Material(Color(material->ambient[3], material->ambient[0], material->ambient[1], material->ambient[2]),
+          Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]),
+          Color(material->specular[3], material->specular[0], material->specular[1], material->specular[2]),
+          Color(1.0f, 0.0f, 0.0f, 0.0f),
           1.0f, mesh->texels ? material->texture1_map.name : "");
         mat.set_shininess(material->shininess);
 
-        pseudo_color = Color(material->diffuse[0], material->diffuse[1], material->diffuse[2], material->diffuse[3]);//.interpolate_to(0.5f, Color(material->ambient[0], material->ambient[1], material->ambient[2], material->ambient[3]));
+        pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
       if(mat.get_texture().size()) {

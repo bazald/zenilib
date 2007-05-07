@@ -29,12 +29,10 @@
 #include <Zeni/Colors.h>
 
 #include <iomanip>
+#include <iostream>
 #include <fstream>
 
-using std::string;
-using std::map;
-using std::ifstream;
-using std::hex;
+using namespace std;
 
 namespace Zeni {
 
@@ -63,17 +61,19 @@ namespace Zeni {
       throw Colors_Init_Failure();
 
     Color tmp;
-    short r, g, b, a;
+    short a, r, g, b;
     string name;
-    while(colorin >> name >> hex >> r >> g >> b >> a)
-      m_color[name] = Color(r/256.0f, g/256.0f, b/256.0f, a/256.0f);
+    while(colorin >> name >> hex >> a >> r >> g >> b)
+      m_color[name] = Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f);
   }
 
   const Color & Colors::access_color(const string &color) const {
     map<string, Color>::const_iterator it = m_color.find(color);
 
-    if(it == m_color.end())
+    if(it == m_color.end()) {
+      std::cerr << "Missing Color: " << color << std::endl;
       throw Color_Not_Found();
+    }
 
     return it->second;
   }

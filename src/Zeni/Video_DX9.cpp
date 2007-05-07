@@ -53,8 +53,8 @@ namespace Zeni {
     : m_d3d(0),
     m_d3d_device(0),
     m_matrix_stack(0), 
-    m_color(0.0f, 0.0f, 0.0f, 1.0f),
-    m_clear_color(0.0f, 0.0f, 0.0f, 1.0f),
+    m_color(1.0f, 0.0f, 0.0f, 0.0f),
+    m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
     m_textured(false),
     m_3d(false)
   {
@@ -123,7 +123,7 @@ namespace Zeni {
         up = camera.get_up().normalized();
       const float
         &x = position.x, &y = position.y, &z = position.z,
-        &i = forward.i(), &j = forward.j(), &k = forward.k();
+        &i = forward.i, &j = forward.j, &k = forward.k;
 
       D3DXMATRIX world, scale, rot, trans;
       D3DXMatrixIdentity(&world);
@@ -131,7 +131,7 @@ namespace Zeni {
 
       D3DXVECTOR3 initial(x, y, z), 
         terminal(x + i, y + j, z + k),
-        cross(up.i(), up.j(), up.k());
+        cross(up.i, up.j, up.k);
       D3DXMATRIX view;
       D3DXMatrixLookAtRH(&view, &initial, &terminal, &cross);
       m_d3d_device->SetTransform(D3DTS_VIEW, &view);
@@ -217,7 +217,7 @@ namespace Zeni {
   }
 
   void Video_DX9::translate_scene(const Vector3f &direction) {
-    m_matrix_stack->TranslateLocal(direction.i(), direction.j(), direction.k());
+    m_matrix_stack->TranslateLocal(direction.i, direction.j, direction.k);
     m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
   }
 
@@ -227,7 +227,7 @@ namespace Zeni {
   }
 
   void Video_DX9::scale_scene(const Vector3f &factor) {
-    m_matrix_stack->ScaleLocal(factor.i(), factor.j(), factor.k());
+    m_matrix_stack->ScaleLocal(factor.i, factor.j, factor.k);
     m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
   }
 

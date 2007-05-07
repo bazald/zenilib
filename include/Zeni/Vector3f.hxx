@@ -37,55 +37,43 @@
 
 namespace Zeni {
 
-  float Vector3f::i() const {
-    return m_i;
-  }
-
-  float Vector3f::j() const {
-    return m_j;
-  }
-
-  float Vector3f::k() const {
-    return m_k;
-  }
-
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {
-    return Vector3f(m_i + rhs.m_i,
-      m_j + rhs.m_j,
-      m_k + rhs.m_k);
+    return Vector3f(i + rhs.i,
+      j + rhs.j,
+      k + rhs.k);
   }
 
   Vector3f Vector3f::operator-(const Vector3f &rhs) const {
-    return Vector3f(m_i - rhs.m_i,
-      m_j - rhs.m_j,
-      m_k - rhs.m_k);
+    return Vector3f(i - rhs.i,
+      j - rhs.j,
+      k - rhs.k);
   }
 
   Vector3f & Vector3f::operator+=(const Vector3f &rhs) {
-    m_i += rhs.m_i;
-    m_j += rhs.m_j;
-    m_k += rhs.m_k;
+    i += rhs.i;
+    j += rhs.j;
+    k += rhs.k;
     return *this;
   }
 
   Vector3f & Vector3f::operator-=(const Vector3f &rhs) {
-    m_i -= rhs.m_i;
-    m_j -= rhs.m_j;
-    m_k -= rhs.m_k;
+    i -= rhs.i;
+    j -= rhs.j;
+    k -= rhs.k;
     return *this;
   }
 
   float Vector3f::operator*(const Vector3f &rhs) const {
     return
-      m_i * rhs.m_i +
-      m_j * rhs.m_j +
-      m_k * rhs.m_k;
+      i * rhs.i +
+      j * rhs.j +
+      k * rhs.k;
   }
 
   Vector3f Vector3f::operator%(const Vector3f &rhs) const {
-    return Vector3f(m_j * rhs.m_k - rhs.m_j *m_k,
-      rhs.m_i *m_k - m_i * rhs.m_k,
-      m_i * rhs.m_j - rhs.m_i *m_j);
+    return Vector3f(j * rhs.k - rhs.j *k,
+      rhs.i *k - i * rhs.k,
+      i * rhs.j - rhs.i *j);
   }
 
   Vector3f & Vector3f::operator%=(const Vector3f &rhs) {
@@ -93,24 +81,24 @@ namespace Zeni {
   }
 
   Vector3f Vector3f::operator*(const float &rhs) const {
-    return Vector3f(m_i * rhs, m_j * rhs, m_k * rhs);
+    return Vector3f(i * rhs, j * rhs, k * rhs);
   }
 
   Vector3f Vector3f::operator/(const float &rhs) const {
-    return Vector3f(m_i / rhs, m_j / rhs, m_k / rhs);
+    return Vector3f(i / rhs, j / rhs, k / rhs);
   }
 
   Vector3f & Vector3f::operator*=(const float &rhs) {
-    m_i *= rhs;
-    m_j *= rhs;
-    m_k *= rhs;
+    i *= rhs;
+    j *= rhs;
+    k *= rhs;
     return *this;
   }
 
   Vector3f & Vector3f::operator/=(const float &rhs) {
-    m_i /= rhs;
-    m_j /= rhs;
-    m_k /= rhs;
+    i /= rhs;
+    j /= rhs;
+    k /= rhs;
     return *this;
   }
 
@@ -125,29 +113,29 @@ namespace Zeni {
 
   // Vector Addition / Subtraction to a Point
   Point3f operator+(const Point3f &lhs, const Vector3f &rhs) {
-    return Point3f(lhs.x + rhs.i(), lhs.y + rhs.j(), lhs.z + rhs.k());
+    return Point3f(lhs.x + rhs.i, lhs.y + rhs.j, lhs.z + rhs.k);
   }
 
   Point3f & operator+=(Point3f &lhs, const Vector3f &rhs) {
-    lhs.x += rhs.i();
-    lhs.y += rhs.j();
-    lhs.z += rhs.k();
+    lhs.x += rhs.i;
+    lhs.y += rhs.j;
+    lhs.z += rhs.k;
     return lhs;
   }
 
   Point3f operator-(const Point3f &lhs, const Vector3f &rhs) {
-    return Point3f(lhs.x - rhs.i(), lhs.y - rhs.j(), lhs.z - rhs.k());
+    return Point3f(lhs.x - rhs.i, lhs.y - rhs.j, lhs.z - rhs.k);
   }
 
   Point3f & operator-=(Point3f &lhs, const Vector3f &rhs) {
-    lhs.x -= rhs.i();
-    lhs.y -= rhs.j();
-    lhs.z -= rhs.k();
+    lhs.x -= rhs.i;
+    lhs.y -= rhs.j;
+    lhs.z -= rhs.k;
     return lhs;
   }
 
   float Vector3f::magnitude() const {
-    return sqrt(pow(m_i, 2) + pow(m_j, 2) + pow(m_k, 2));
+    return sqrt(pow(i, 2) + pow(j, 2) + pow(k, 2));
   }
 
 }

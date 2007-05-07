@@ -31,6 +31,7 @@
 
 #include <Zeni/Colors.hxx>
 
+#include <iostream>
 #include <fstream>
 
 using namespace std;
@@ -53,8 +54,10 @@ namespace Zeni {
   const Font & Fonts::get_font(const string &font) const {
     map<string, Font *>::const_iterator it = m_fonts.find(font);
 
-    if(it == m_fonts.end())
+    if(it == m_fonts.end()) {
+      std::cerr << "Missing Font: " << font << std::endl;
       throw Font_Not_Found();
+    }
 
     return *it->second;
   }

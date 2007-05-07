@@ -59,6 +59,12 @@ namespace Zeni {
       Color(m_argb).interpolate_to(rhs_part, rhs_c.m_argb).get_argb());
   }
 
+  Vertex2f_Color::Vertex2f_Color(const Point2f &position, const Color &color)
+    : Vertex2f(position),
+    m_argb(color.get_argb())
+  {
+  }
+
   Vertex2f_Color::Vertex2f_Color(const Point2f &position, const long &argb)
     : Vertex2f(position),
     m_argb(argb)
