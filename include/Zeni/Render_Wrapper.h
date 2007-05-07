@@ -157,13 +157,9 @@ namespace Zeni {
 
     virtual Render_Wrapper * get_duplicate() const; ///< Get a duplicate Render_Wrapper
 
-    virtual void optimize_to_follow(const Render_Wrapper &) {} ///< Optimize for application directly after rhs
-    virtual void optimize_to_precede(const Render_Wrapper &) {} ///< Optimize for application directly before rhs
-    virtual void clear_optimization() {} ///< Clear optimization
-
-  private:
-    virtual bool less_than(const Render_Wrapper &rhs) const; ///< Should be overridden in derived classes
-    virtual bool equal_to(const Render_Wrapper &rhs) const; ///< Should be overridden in derived classes
+    void optimize_to_follow(const Render_Wrapper &) {} ///< Optimize for application directly after rhs
+    void optimize_to_precede(const Render_Wrapper &) {} ///< Optimize for application directly before rhs
+    void clear_optimization() {} ///< Clear optimization
   };
 
   class Material_Render_Wrapper : public Render_Wrapper {
@@ -180,13 +176,9 @@ namespace Zeni {
 
     virtual Render_Wrapper * get_duplicate() const;
 
-    virtual void optimize_to_follow(const Render_Wrapper &rhs); ///< Optimize for application directly after rhs
-    virtual void optimize_to_precede(const Render_Wrapper &rhs); ///< Optimize for application directly before rhs
-    virtual void clear_optimization(); ///< Clear optimization
-
-  private:
-    virtual bool less_than(const Render_Wrapper &rhs) const;
-    virtual bool equal_to(const Render_Wrapper &rhs) const;
+    void optimize_to_follow(const Material_Render_Wrapper &rhs); ///< Optimize for application directly after rhs
+    void optimize_to_precede(const Material_Render_Wrapper &rhs); ///< Optimize for application directly before rhs
+    void clear_optimization(); ///< Clear optimization
 
     Material m_material;
     int optimization;

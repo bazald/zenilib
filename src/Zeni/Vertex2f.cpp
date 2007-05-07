@@ -52,11 +52,10 @@ namespace Zeni {
     return m_position;
   }
 
-  Vertex2f * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f &rhs) const {
-    const Vertex2f_Color &rhs_c = dynamic_cast<const Vertex2f_Color &>(rhs);
-    const Point3f position = get_position().interpolate_to(rhs_part, rhs_c.get_position());
+  Vertex2f * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const {
+    const Point3f position = get_position().interpolate_to(rhs_part, rhs.get_position());
     return new Vertex2f_Color(Point2f(position.x, position.y), 
-      Color(m_argb).interpolate_to(rhs_part, rhs_c.m_argb).get_argb());
+      Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
   }
 
   Vertex2f_Color::Vertex2f_Color(const Point2f &position, const Color &color)
@@ -103,11 +102,10 @@ namespace Zeni {
   {
   }
 
-  Vertex2f * Vertex2f_Texture::interpolate_to(const float &rhs_part, const Vertex2f &rhs) const {
-    const Vertex2f_Texture &rhs_t = dynamic_cast<const Vertex2f_Texture &>(rhs);
-    const Point3f position = get_position().interpolate_to(rhs_part, rhs_t.get_position());
+  Vertex2f * Vertex2f_Texture::interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const {
+    const Point3f position = get_position().interpolate_to(rhs_part, rhs.get_position());
     return new Vertex2f_Texture(Point2f(position.x, position.y), 
-      m_texture_coordinate.interpolate_to(rhs_part, rhs_t.m_texture_coordinate));
+      m_texture_coordinate.interpolate_to(rhs_part, rhs.m_texture_coordinate));
   }
 
   Point3f Vertex2f_Texture::get_position() const {

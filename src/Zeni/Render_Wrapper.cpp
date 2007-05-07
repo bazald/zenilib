@@ -49,14 +49,6 @@ namespace Zeni {
     return new Render_Wrapper();
   }
 
-  bool Render_Wrapper::less_than(const Render_Wrapper &rhs) const {
-    return reinterpret_cast<long>(this) < reinterpret_cast<long>(&rhs);
-  }
-
-  bool Render_Wrapper::equal_to(const Render_Wrapper &rhs) const {
-    return this == &rhs;
-  }
-
   Material_Render_Wrapper::Material_Render_Wrapper(const Material &material)
     : m_material(material),
       optimization(0)
@@ -75,17 +67,8 @@ namespace Zeni {
     return new Material_Render_Wrapper(m_material);
   }
 
-  bool Material_Render_Wrapper::less_than(const Render_Wrapper &rhs) const {
-    return !equal_to(rhs) && this < &rhs;///HACK *this < dynamic_cast<const Material_Render_Wrapper &>(rhs);
-  }
-
-  bool Material_Render_Wrapper::equal_to(const Render_Wrapper &rhs) const {
-    return *this == dynamic_cast<const Material_Render_Wrapper &>(rhs);
-  }
-
-  void Material_Render_Wrapper::optimize_to_follow(const Render_Wrapper &rhs) {
-    const Material_Render_Wrapper &mrw = dynamic_cast<const Material_Render_Wrapper &>(rhs);
-    const Material &material = mrw.get_material();
+  void Material_Render_Wrapper::optimize_to_follow(const Material_Render_Wrapper &rhs) {
+    const Material &material = rhs.get_material();
 
     if(m_material.get_ambient() == material.get_ambient())
       optimization |= (1 << 0);
@@ -101,9 +84,8 @@ namespace Zeni {
       optimization |= (1 << 5);
   }
 
-  void Material_Render_Wrapper::optimize_to_precede(const Render_Wrapper &rhs) {
-    const Material_Render_Wrapper &mrw = dynamic_cast<const Material_Render_Wrapper &>(rhs);
-    const Material &material = mrw.get_material();
+  void Material_Render_Wrapper::optimize_to_precede(const Material_Render_Wrapper &rhs) {
+    const Material &material = rhs.get_material();
 
     if(m_material.get_ambient() == material.get_ambient())
       optimization |= (1 << 6);

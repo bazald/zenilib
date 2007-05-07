@@ -73,8 +73,6 @@ namespace Zeni {
     inline void set_position(const Point3f &position);
     inline void set_normal(const Vector3f &normal);
 
-    virtual Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f &rhs) const = 0;
-
     inline void * get_address() const;
     inline unsigned long get_offset() const;
 
@@ -93,7 +91,7 @@ namespace Zeni {
     Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const long &argb);
 
-    virtual Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f &rhs) const; ///< Get a Vertex3f_Color between two vertices; rhs must be a Vertex3f_Color
+    Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs) const; ///< Get a Vertex3f_Color between two vertices; rhs must be a Vertex3f_Color
 
     inline const unsigned long & get_color() const; ///< Get the current Color
     inline void set_color(const long &argb); ///< Set the current Color
@@ -122,7 +120,7 @@ namespace Zeni {
       const Point2f &texture_coordinate = Point2f());
     Vertex3f_Texture(const Point3f &position, const Point2f &texture_coordinate);
 
-    virtual Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture
+    Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture
 
     inline Point2f get_texture_coordinate() const; ///< Get the current Texture coordinate
     inline void set_texture_coordinate(const Point2f &texture_coordinate); ///< Set the current Texture coordinate

@@ -154,33 +154,40 @@ namespace Zeni {
     std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
   }
 
-  template <typename VERTEX>
+  template <typename VERTEX, typename RENDER_WRAPPER>
   static int set_descriptors(vector<Triangle<VERTEX> *> &triangles,
                              vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+                             const RENDER_WRAPPER &,
                              const int &triangles_done) {
     int last = 0;
     if(!triangles.empty()) {
       descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[0]->get_render_wrapper()->get_duplicate(), triangles_done, 1));
-      descriptors[last]->render_wrapper->clear_optimization();
-      for(unsigned int i = 1; i < triangles.size(); ++i)
-        if(*descriptors[last]->render_wrapper == *triangles[i]->get_render_wrapper())
+      RENDER_WRAPPER *rw = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
+      rw->clear_optimization();
+      for(unsigned int i = 1; i < triangles.size(); ++i) {
+        RENDER_WRAPPER *rw2 = const_cast<RENDER_WRAPPER *>(dynamic_cast<const RENDER_WRAPPER * const>(triangles[i]->get_render_wrapper()));
+
+        if(*rw == *rw2)
           ++descriptors[last]->num_elements;
         else {
           descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[i]->get_render_wrapper()->get_duplicate(), triangles_done+i, 1));
           ++last;
-          descriptors[last]->render_wrapper->clear_optimization();
-          descriptors[last]->render_wrapper->optimize_to_follow(*descriptors[last - 1]->render_wrapper);
-          descriptors[last - 1]->render_wrapper->optimize_to_precede(*descriptors[last]->render_wrapper);
+          rw2 = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
+          rw2->clear_optimization();
+          rw2->optimize_to_follow(*rw);
+          rw->optimize_to_precede(*rw2);
+          rw = rw2;
         }
+      }
     }
     return int(triangles.size());
   }
 
   void Vertex_Buffer::set_descriptors() {
     int done = 0;
-    done += Zeni::set_descriptors(m_triangles_c, m_descriptors_c, done);
-    done += Zeni::set_descriptors(m_triangles_cm, m_descriptors_cm, done);
-    done += Zeni::set_descriptors(m_triangles_t, m_descriptors_t, done);
+    done += Zeni::set_descriptors(m_triangles_c, m_descriptors_c, Render_Wrapper(), done);
+    done += Zeni::set_descriptors(m_triangles_cm, m_descriptors_cm, Material_Render_Wrapper(Material()), done);
+    done += Zeni::set_descriptors(m_triangles_t, m_descriptors_t, Material_Render_Wrapper(Material()), done);
   }
 
 #ifndef DISABLE_GL

@@ -287,11 +287,9 @@ namespace Zeni {
     virtual void operator()(const Model &model, Lib3dsNode *node);
   };
 
-  void Model::render_to(Video_DX9 &) const {
+  void Model::render_to(Video_DX9 &vdx) const {
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
-
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
 
     vdx.get_matrix_stack()->Push();
 

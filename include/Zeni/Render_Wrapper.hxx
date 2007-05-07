@@ -34,11 +34,11 @@
 namespace Zeni {
 
   bool Render_Wrapper::operator<(const Render_Wrapper &rhs) const {
-    return less_than(rhs);
+    return this < &rhs;
   }
 
-  bool Render_Wrapper::operator==(const Render_Wrapper &rhs) const {
-    return equal_to(rhs);
+  bool Render_Wrapper::operator==(const Render_Wrapper &) const {
+    return true;
   }
 
   const Material & Material_Render_Wrapper::get_material() const {
