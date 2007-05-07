@@ -282,4 +282,109 @@ namespace Zeni {
     m_state->perform_logic();
   }
 
+  Zeni_Input_ID::Zeni_Input_ID(const Uint8 &type_, const int &subid_, const int &which_)
+    : type(type_),
+    subid(subid_),
+    which(which_)
+  {
+  }
+
+  bool Zeni_Input_ID::operator<(const Zeni_Input_ID &rhs) const {
+    return type < rhs.type ||
+           type == rhs.type && (subid < rhs.subid ||
+           subid == rhs.subid && which < rhs.which);
+  }
+
+  Gamestate_II::Gamestate_II()
+    : m_min_confidence(0.05f),
+    m_max_confidence(1.0f)
+  {
+  }
+
+  void Gamestate_II::on_event(const SDL_Event &event) {
+    Zeni_Input_ID event_ID;
+    float confidence = 0.0f;
+    bool absolute = true;
+
+    switch(event.type) {
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+      event_ID.type = SDL_KEYDOWN;
+      event_ID.subid = event.key.keysym.sym;
+
+      confidence = event.key.state == SDL_PRESSED ? 1.0f : 0.0f;
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+      event_ID.type = SDL_MOUSEBUTTONDOWN;
+      event_ID.subid = event.button.button;
+
+      confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
+      break;
+    case SDL_JOYAXISMOTION:
+      event_ID.type = SDL_JOYAXISMOTION;
+      event_ID.subid = event.jaxis.axis;
+      event_ID.which = event.jaxis.which;
+
+      confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
+      absolute = false;
+      break;
+    case SDL_JOYBUTTONDOWN:
+    case SDL_JOYBUTTONUP:
+      event_ID.type = SDL_JOYBUTTONDOWN;
+      event_ID.subid = event.jbutton.button;
+      event_ID.which = event.jbutton.which;
+
+      confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
+      break;
+    default:
+      Gamestate_Base::on_event(event);
+      return;
+    }
+
+    if(!absolute)
+      if(confidence > 0.0f) {
+        confidence -= m_min_confidence;
+        if(confidence < 0.0f)
+          confidence = 0.0f;
+        else
+          confidence /= m_max_confidence - m_min_confidence;
+        if(confidence > 1.0f)
+          confidence = 1.0f;
+      }
+      else if(confidence < 0.0f) {
+        confidence += m_min_confidence;
+        if(confidence > 0.0f)
+          confidence = 0.0f;
+        else
+          confidence /= m_max_confidence - m_min_confidence;
+        if(confidence < -1.0f)
+          confidence = -1.0f;
+      }
+
+    on_event(event_ID, confidence, get_action(event_ID));
+  }
+
+  void Gamestate_II::on_event(const Zeni_Input_ID &, const float &, const int &) {
+  }
+
+  int Gamestate_II::get_action(const Zeni_Input_ID &event) {
+    std::map<Zeni_Input_ID, int>::const_iterator it = m_ii.find(event);
+    if(it != m_ii.end())
+      return it->second;
+    return 0;
+  }
+
+  Zeni_Input_ID Gamestate_II::get_event(const int &action) {
+    std::map<int, Zeni_Input_ID>::const_iterator it = m_rii.find(action);
+    if(it != m_rii.end())
+      return it->second;
+    return Zeni_Input_ID();
+  }
+
+  void Gamestate_II::set_action(const Zeni_Input_ID &event, const int &action) {
+    m_ii[event] = action;
+    m_rii[action] = event;
+  }
+
 }

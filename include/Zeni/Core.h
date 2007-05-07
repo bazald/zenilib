@@ -62,7 +62,10 @@
 #ifndef ZENI_CORE_H
 #define ZENI_CORE_H
 
+#include <SDL/SDL.h>
+
 #include <string>
+#include <vector>
 
 namespace Zeni {
 
@@ -82,6 +85,9 @@ namespace Zeni {
   public:
     // Get reference to only instance; Might throw Core_Init_Failure
     static Core & get_reference();
+
+  private:
+    std::vector<SDL_Joystick *> joystick;
   };
 
   struct Core_Init_Failure : public Error {

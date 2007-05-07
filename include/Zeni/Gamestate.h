@@ -71,6 +71,7 @@
 #include "Core.h"
 
 #include <SDL/SDL.h>
+#include <map>
 
 namespace Zeni {
 
@@ -90,7 +91,7 @@ namespace Zeni {
     // The control loop
 
     /// First check for events. Called by Game as part of the main gameloop.
-    void on_event(const SDL_Event &event);
+    virtual void on_event(const SDL_Event &event);
     /// Then perform logic.  Called by Game as part of the main gameloop.
     virtual void perform_logic() {}
     /// Then render.  Called by Game as part of the main gameloop.
@@ -144,6 +145,44 @@ namespace Zeni {
 
   private:
     Gamestate_Base *m_state;
+  };
+
+  struct Zeni_Input_ID {
+    Zeni_Input_ID(const Uint8 &type_ = SDL_KEYDOWN, const int &subid_ = 0, const int &which_ = 0);
+
+    Uint8 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
+    int subid; ///< event.keysym.sym, event.button, event.axis; ignored for mouse motion (should be 0)
+    int which; ///< Joystick Identifier; ignored for other events (should be 0)
+
+    bool operator<(const Zeni_Input_ID &rhs) const;
+  };
+
+  class Gamestate_II : Gamestate_Base {
+  public:
+    Gamestate_II();
+
+    // The control loop
+
+    /// First check for events. Called by Game as part of the main gameloop.
+    virtual void on_event(const SDL_Event &event);
+    virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
+
+    void get_min_confidence() const;
+    void get_max_confidence() const;
+
+    float set_min_confidence(const float &min);
+    float set_max_confidence(const float &min);
+
+    virtual int get_action(const Zeni_Input_ID &event);
+    virtual Zeni_Input_ID get_event(const int &action);
+    virtual void set_action(const Zeni_Input_ID &event, const int &action);
+
+  private:
+    float m_min_confidence;
+    float m_max_confidence;
+
+    std::map<Zeni_Input_ID, int> m_ii;
+    std::map<int, Zeni_Input_ID> m_rii;
   };
 
   struct Quit_Event : public Error {

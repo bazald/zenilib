@@ -43,18 +43,29 @@ namespace Zeni {
   static ofstream cerr_file("stderr.txt");
   static ofstream cout_file("stdout.txt");
 
-  Core::Core() {
+  Core::Core()
+    : joystick(0)
+  {
     cerr_bak = cerr.rdbuf();
     cout_bak = cout.rdbuf();
 
     cerr.rdbuf(cerr_file.rdbuf());
     cout.rdbuf(cout_file.rdbuf());
 
-    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
+    if(SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
       throw Core_Init_Failure();
+
+    SDL_JoystickEventState(SDL_ENABLE);
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+      joystick.push_back(SDL_JoystickOpen(i));
   }
 
   Core::~Core() {
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+      SDL_JoystickClose(joystick[i]);
+    joystick.clear();
+    SDL_JoystickEventState(SDL_DISABLE);
+
     SDL_Quit();
 
     cout.rdbuf(cout_bak);
