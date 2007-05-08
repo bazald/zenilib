@@ -46,8 +46,8 @@
 #define ZENI_FONTS_H
 
 #include "Font.h"
+#include "Hash_Map.h"
 
-#include <map>
 #include <string>
 #include <vector>
 
@@ -73,7 +73,7 @@ namespace Zeni {
     void init();
     void uninit();
 
-    std::map<std::string, Font *> m_fonts;
+    stdext::hash_map<std::string, Font *> m_fonts;
 
     static std::string m_filename;
   };

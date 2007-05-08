@@ -41,9 +41,8 @@
 namespace Zeni {
 
 #ifndef DISABLE_GL
-  Texture_GL::Texture_GL(const std::string &name, const std::string &filename, Video_GL &)
-    : Texture(name),
-    m_texture_id(0)
+  Texture_GL::Texture_GL(const std::string &filename, Video_GL &)
+    : m_texture_id(0)
   {
     SDL_Surface *surface = IMG_Load(filename.c_str());
     if(!surface)
@@ -53,8 +52,7 @@ namespace Zeni {
   }
 
   Texture_GL::Texture_GL(SDL_Surface *surface)
-    : Texture(""),
-    m_texture_id(0)
+    : m_texture_id(0)
   {
     build_from_surface(surface);
   }
@@ -140,8 +138,8 @@ namespace Zeni {
 #endif
 
 #ifndef DISABLE_DX9
-  Texture_DX9::Texture_DX9(const std::string &name, const std::string &filename, Video_DX9 &video) 
-    : Texture(name), m_texture(0)
+  Texture_DX9::Texture_DX9(const std::string &filename, Video_DX9 &video) 
+    : m_texture(0)
   {
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > video.get_maximum_anisotropy())

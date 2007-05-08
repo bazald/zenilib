@@ -43,8 +43,8 @@ namespace Zeni {
   }
 
   Textures::~Textures() {
-    for(std::set<Texture *, Texture_Cmp>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
-      delete *it;
+    for(stdext::hash_map<string, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
+      delete it->second;
 
     m_loaded = false;
   }
@@ -58,25 +58,14 @@ namespace Zeni {
     if(!m_loaded)
       reload();
 
-    Texture temp(name);
-    std::set<Texture *, Texture_Cmp>::const_iterator it = m_textures.find(&temp);
+    stdext::hash_map<string, Texture *>::const_iterator it = m_textures.find(name);
 
     if(it == m_textures.end()) {
       std::cerr << "Missing Texture: " << name << std::endl;
       throw Texture_Not_Found();
     }
 
-    (*it)->apply_texture();
-  }
-
-  void Textures::unapply_texture(const string &name) {
-    Texture temp(name);
-    std::set<Texture *, Texture_Cmp>::const_iterator it = m_textures.find(&temp);
-
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
-
-    (*it)->unapply_texture();
+    it->second->apply_texture();
   }
 
   void Textures::set_texturing_mode(const int &anisotropic_filtering_, const bool &bilinear_filtering_, const bool &mipmapping_) {
@@ -115,7 +104,7 @@ namespace Zeni {
 
     string fileName, name;
     while(tdbin >> name >> fileName)
-      m_textures.insert(Video::get_reference().load_Texture(name, fileName));
+      m_textures[name] = Video::get_reference().load_Texture(fileName);
 
     m_loaded = true;
   }

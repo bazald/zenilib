@@ -100,7 +100,7 @@ namespace Zeni {
     virtual void scale_scene(const Vector3f &factor); ///< Scale the scene
 
     // Creation Functions
-    virtual Texture * load_Texture(const std::string &name, const std::string &filename); ///< Function for loading a Texture; used internally by Textures
+    virtual Texture * load_Texture(const std::string &filename); ///< Function for loading a Texture; used internally by Textures
     virtual Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
     virtual Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer

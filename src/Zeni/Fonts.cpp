@@ -52,7 +52,7 @@ namespace Zeni {
   }
 
   const Font & Fonts::get_font(const string &font) const {
-    map<string, Font *>::const_iterator it = m_fonts.find(font);
+    stdext::hash_map<string, Font *>::const_iterator it = m_fonts.find(font);
 
     if(it == m_fonts.end()) {
       std::cerr << "Missing Font: " << font << std::endl;
@@ -97,7 +97,7 @@ namespace Zeni {
   }
 
   void Fonts::uninit() {
-    for(map<string, Font *>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
+    for(stdext::hash_map<string, Font *>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
       delete it->second;
     m_fonts.clear();
     TTF_Quit();

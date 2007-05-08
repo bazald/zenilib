@@ -46,11 +46,15 @@ namespace Zeni {
   Core::Core()
     : joystick(0)
   {
-    cerr_bak = cerr.rdbuf();
-    cout_bak = cout.rdbuf();
+    if(cerr_file.is_open()) {
+      cerr_bak = cerr.rdbuf();
+      cerr.rdbuf(cerr_file.rdbuf());
+    }
 
-    cerr.rdbuf(cerr_file.rdbuf());
-    cout.rdbuf(cout_file.rdbuf());
+    if(cout_file.is_open()) {
+      cout_bak = cout.rdbuf();
+      cout.rdbuf(cout_file.rdbuf());
+    }
 
     if(SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
       throw Core_Init_Failure();
@@ -68,8 +72,10 @@ namespace Zeni {
 
     SDL_Quit();
 
-    cout.rdbuf(cout_bak);
-    cerr.rdbuf(cerr_bak);
+    if(cout_bak)
+      cout.rdbuf(cout_bak);
+    if(cerr_bak)
+      cerr.rdbuf(cerr_bak);
   }
 
   Core & Core::get_reference() {

@@ -259,8 +259,8 @@ namespace Zeni {
 #endif
   }
 
-  Texture * Video_GL::load_Texture(const std::string &name, const std::string &filename) {
-    return new Texture_GL(name, filename, *this);
+  Texture * Video_GL::load_Texture(const std::string &filename) {
+    return new Texture_GL(filename, *this);
   }
 
   Font * Video_GL::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {

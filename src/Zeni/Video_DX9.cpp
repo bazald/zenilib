@@ -247,8 +247,8 @@ namespace Zeni {
     init();
   }
 
-  Texture * Video_DX9::load_Texture(const std::string &name, const std::string &filename) {
-    return new Texture_DX9(name, filename, *this);
+  Texture * Video_DX9::load_Texture(const std::string &filename) {
+    return new Texture_DX9(filename, *this);
   }
 
   Font * Video_DX9::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {

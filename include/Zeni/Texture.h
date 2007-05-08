@@ -63,25 +63,15 @@ namespace Zeni {
 
   class Texture {
   public:
-    Texture(const std::string &name) : m_name(name) {}
     virtual ~Texture() {}
 
-    virtual void apply_texture() const {} ///< Apply a Texture to upcoming polygons
-    virtual void unapply_texture() const {} ///< Unapply a Texture
-
-    /// Provide a total ordering for Textures
-    bool operator<(const Texture &rhs) const {
-      return m_name < rhs.m_name;
-    }
-
-  private:
-    std::string m_name;
+    virtual void apply_texture() const = 0; ///< Apply a Texture to upcoming polygons
   };
 
 #ifndef DISABLE_GL
   class Texture_GL : public Texture {
   public:
-    Texture_GL(const std::string &name, const std::string &filename, Video_GL &video);
+    Texture_GL(const std::string &filename, Video_GL &video);
     Texture_GL(SDL_Surface *surface);
     virtual ~Texture_GL();
 
@@ -97,7 +87,7 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   class Texture_DX9 : public Texture {
   public:
-    Texture_DX9(const std::string &name, const std::string &filename, Video_DX9 &video);
+    Texture_DX9(const std::string &filename, Video_DX9 &video);
     virtual ~Texture_DX9();
 
     virtual void apply_texture() const;
@@ -113,12 +103,6 @@ namespace Zeni {
 
   struct Invalid_Anisotropy_Setting : public Error {
     Invalid_Anisotropy_Setting() : Error("Invalid Anisotropy Setting") {}
-  };
-
-  struct Texture_Cmp {
-    bool operator()(const Texture * const t0, const Texture * const t1) const {
-      return *t0 < *t1;
-    }
   };
 
 }

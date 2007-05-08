@@ -461,6 +461,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\include\Zeni\Hash_Map.h"
+					>
+				</File>
+				<File
 					RelativePath="..\include\Zeni\Light.h"
 					>
 				</File>

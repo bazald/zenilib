@@ -47,8 +47,8 @@
 
 #include "Color.h"
 #include "Core.h"
+#include "Hash_Map.h"
 
-#include <map>
 #include <string>
 
 namespace Zeni {
@@ -75,7 +75,7 @@ namespace Zeni {
     const Color & access_color(const std::string &color) const;
 
     std::string m_colordb;
-    std::map <std::string, Color> m_color;
+    stdext::hash_map<std::string, Color> m_color;
   };
 
   struct Color_Not_Found : public Error {

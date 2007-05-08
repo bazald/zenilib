@@ -68,7 +68,7 @@ namespace Zeni {
   }
 
   const Color & Colors::access_color(const string &color) const {
-    map<string, Color>::const_iterator it = m_color.find(color);
+    stdext::hash_map<string, Color>::const_iterator it = m_color.find(color);
 
     if(it == m_color.end()) {
       std::cerr << "Missing Color: " << color << std::endl;

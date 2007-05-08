@@ -58,11 +58,11 @@
 #define ZENI_SOUNDS_H
 
 #include "Core.h"
+#include "Hash_Map.h"
 #include "Sound.h"
 
 #include <AL/alut.h>
 #include <string>
-#include <map>
 
 namespace Zeni {
 
@@ -86,7 +86,7 @@ namespace Zeni {
     void init();
 
     std::string m_soundsfile;
-    std::map <std::string, Sound_Buffer> m_sounds;
+    stdext::hash_map<std::string, Sound_Buffer> m_sounds;
   };
 
   struct Sound_Effect_Not_Found : public Error {

@@ -55,7 +55,7 @@ namespace Zeni {
   }
 
   const Sound_Buffer & Sounds::get_sound(const string &sound_effect) const {
-    map<std::string, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
+    stdext::hash_map<std::string, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
 
     if(it == m_sounds.end()) {
       std::cerr << "Missing Sound_Buffer: " << sound_effect << std::endl;
