@@ -78,6 +78,11 @@ namespace Zeni {
     void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
+    // Sprite-specific
+    int num_frames(const unsigned long &id); ///< Get the number of frames; returns 0 if it is not a Sprite
+    int get_current_frame(const unsigned long &id); ///< Get the currently selected frame number for a Sprite
+    void set_current_frame(const unsigned long &id, const int &frame_number); ///< Set the frame number for a Sprite
+
     // Initialization Functions
     void reload(const std::string &tdb); ///< (Re)Load a texture database
     void reload(); ///< Reload a texture database
@@ -96,6 +101,10 @@ namespace Zeni {
 
   struct Texture_Not_Found : public Error {
     Texture_Not_Found() : Error("Zeni Texture Not Found") {}
+  };
+
+  struct Sprite_Function_Misapplied : public Error {
+    Sprite_Function_Misapplied() : Error("Sprite Function Misapplied") {}
   };
 
 }

@@ -105,6 +105,13 @@ namespace Zeni {
   }
 
   void Sprite::apply_texture() const {
+    static bool no_recurse = true;
+
+    if(no_recurse)
+      no_recurse = false;
+    else
+      throw Sprite_Containing_Sprite();
+
     if(m_frames.empty() || m_frame < 0 || m_frame >= int(m_frames.size()))
       throw Frame_Out_of_Range();
 
@@ -112,11 +119,20 @@ namespace Zeni {
       Textures::get_reference().apply_texture(m_frames[m_frame].second);
     }
     catch(Texture_Not_Found &) {
-      m_frames[m_frame].second = Textures::get_reference().get_texture_id(m_frames[m_frame].first);
-      if(!m_frames[m_frame].second)
+      try {
+        m_frames[m_frame].second = Textures::get_reference().get_texture_id(m_frames[m_frame].first);
+        Textures::get_reference().apply_texture(m_frames[m_frame].second);
+      }
+      catch(...) {
+        no_recurse = true;
         throw;
-      Textures::get_reference().apply_texture(m_frames[m_frame].second);
+      }
     }
+    catch(...) {
+      no_recurse = true;
+      throw;
+    }
+    no_recurse = true;
   }
 
 #ifndef DISABLE_GL

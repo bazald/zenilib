@@ -115,6 +115,45 @@ namespace Zeni {
 
     it->second->apply_texture();
   }
+  
+  int Textures::num_frames(const unsigned long &id) {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+    
+    if(it == m_textures.end())
+      throw Texture_Not_Found();
+
+    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    if(!sprite)
+      return 0;
+
+    return sprite->num_frames();
+  }
+
+  int Textures::get_current_frame(const unsigned long &id) {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+    
+    if(it == m_textures.end())
+      throw Texture_Not_Found();
+
+    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    if(!sprite)
+      throw Sprite_Function_Misapplied();
+
+    return sprite->get_current_frame();
+  }
+
+  void Textures::set_current_frame(const unsigned long &id, const int &frame_number) {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+    
+    if(it == m_textures.end())
+      throw Texture_Not_Found();
+
+    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    if(!sprite)
+      throw Sprite_Function_Misapplied();
+
+    return sprite->set_current_frame(frame_number);
+  }
 
   void Textures::set_texturing_mode(const int &anisotropic_filtering_, const bool &bilinear_filtering_, const bool &mipmapping_) {
     int af = anisotropic_filtering_;

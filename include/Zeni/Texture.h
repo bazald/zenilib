@@ -130,6 +130,9 @@ namespace Zeni {
     Frame_Out_of_Range() : Error("Frame Choice is Out of Range") {}
   };
 
+  struct Sprite_Containing_Sprite : public Error {
+    Sprite_Containing_Sprite() : Error("Sprite Found Containing Another Sprite; This is Not Allowed") {}
+  };
 
 }
 
