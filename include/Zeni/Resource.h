@@ -26,70 +26,41 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Colors
- *
- * \ingroup Zenilib
- *
- * \brief A Color database read in from a file.
- *
- * One can retrieve colors by name from this singleton class.
- *
- * \note It is more useful to create names based on intended use of a color than it is to create names based on the color itself.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
+#ifndef ZENI_RESOURCE_H
+#define ZENI_RESOURCE_H
 
-#ifndef ZENI_COLORS_H
-#define ZENI_COLORS_H
-
-#include "Color.h"
 #include "Core.h"
 #include "Hash_Map.h"
-#include "Resource.h"
 
 #include <string>
 
 namespace Zeni {
 
-  class Colors {
-    Colors();
+  class Resource {
+    Resource();
 
     // Undefined
-    Colors(const Colors &);
-    Colors & operator=(const Colors &);
+    Resource(const Resource &);
+    Resource & operator=(const Resource &);
 
   public:
     // Get reference to only instance;
-    static Colors & get_reference(); ///< Get access to the singleton.
+    static Resource & get_reference(); ///< Get access to the singleton.
 
-    unsigned long get_color_id(const std::string &color) const; ///< Get a color id by name.
-    Color get_color(const std::string &color) const; ///< Get a color by name.
-    Color get_color(const unsigned long &id) const; ///< Get a color by id.
-
-    // May throw Colors_Init_Failure
-    unsigned long set_color(const std::string &name, const Color &color); ///< Set a color by name.
-    void clear_color(const std::string &name); ///< Clear a color by name.
-    void reload(const std::string &colors = ""); ///< Reload the database or choose a new one.
+    inline unsigned long assign(); ///< Get a value, unique within this run of the program
 
   private:
-    void init();
-
-    std::string m_colordb;
-    stdext::hash_map<std::string, unsigned long> m_color_lookup;
-    stdext::hash_map<unsigned long, Color> m_color;
+    unsigned long m_current;
   };
 
-  struct Color_Not_Found : public Error {
-    Color_Not_Found() : Error("Zeni Color Not Found") {}
-  };
-
-  struct Colors_Init_Failure : public Error {
-    Colors_Init_Failure() : Error("Zeni Colors Failed to Initialize Correctly") {}
+  struct Resource_Init_Failure : public Error {
+    Resource_Init_Failure() : Error("Zeni Resource Failed to Initialize Correctly") {}
   };
 
 }
+
+#ifdef ZENI_INLINES
+#include "Resource.hxx"
+#endif
 
 #endif

@@ -27,6 +27,7 @@
 */
 
 #include <Zeni/Textures.h>
+#include <Zeni/Resource.hxx>
 #include <Zeni/Video.h>
 
 #include <iostream>
@@ -43,7 +44,7 @@ namespace Zeni {
   }
 
   Textures::~Textures() {
-    for(stdext::hash_map<string, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
+    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
       delete it->second;
 
     m_loaded = false;
@@ -53,17 +54,54 @@ namespace Zeni {
     static Textures e_texturedb;
     return e_texturedb;
   }
+  
+  unsigned long Textures::set_texture(const std::string &name, const std::string &filename) {
+    unsigned long id = Resource::get_reference().assign();
+    m_texture_lookup[name] = id;
+    m_textures[id] = Video::get_reference().load_Texture(filename);
+    return id;
+  }
 
-  void Textures::apply_texture(const string &name) {
-    if(!m_loaded)
-      reload();
+  void Textures::clear_texture(const std::string &name) {
+    stdext::hash_map<string, unsigned long>::iterator it = m_texture_lookup.find(name);
 
-    stdext::hash_map<string, Texture *>::const_iterator it = m_textures.find(name);
-
-    if(it == m_textures.end()) {
-      std::cerr << "Missing Texture: " << name << std::endl;
+    if(it == m_texture_lookup.end()) {
+      std::cerr << "Missing texture: " << name << std::endl;
       throw Texture_Not_Found();
     }
+
+    m_textures.erase(it->second);
+    m_texture_lookup.erase(it);
+  }
+
+  unsigned long Textures::get_texture_id(const string &texture) const {
+    stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(texture);
+
+    if(!it->second) {
+      std::cerr << "Missing texture: " << texture << std::endl;
+      throw Texture_Not_Found();
+    }
+
+    return it->second;
+  }
+
+  void Textures::apply_texture(const string &name) {
+    stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(name);
+
+    try {
+      apply_texture(it->second);
+    }
+    catch(Texture_Not_Found &) {
+      std::cerr << "Missing Texture: " << name << std::endl;
+      throw;
+    }
+  }
+
+  void Textures::apply_texture(const unsigned long &id) {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+
+    if(it == m_textures.end())
+      throw Texture_Not_Found();
 
     it->second->apply_texture();
   }
@@ -95,6 +133,7 @@ namespace Zeni {
   }
 
   void Textures::init() {
+    m_texture_lookup.clear();
     m_textures.clear();
 
     ifstream tdbin(m_texturedb.c_str());
@@ -104,7 +143,7 @@ namespace Zeni {
 
     string fileName, name;
     while(tdbin >> name >> fileName)
-      m_textures[name] = Video::get_reference().load_Texture(fileName);
+      set_texture(name, fileName);
 
     m_loaded = true;
   }

@@ -88,7 +88,7 @@ namespace Zeni {
     inline void set_emissive(const Color &emissive); ///< Set the emissive Color
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
-    inline void set_texture(const std::string &texture); ///< Set the texture identifier
+    void set_texture(const std::string &texture); ///< Set the texture identifier
 
 #ifndef DISABLE_GL
     void set(Video_GL &screen, const int &optimization) const;
@@ -110,7 +110,9 @@ namespace Zeni {
     Color m_specular;
     Color m_emissive;
     float m_power;
+
     std::string m_texture;
+    mutable unsigned long m_texture_id;
   };
 
 }

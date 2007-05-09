@@ -94,9 +94,14 @@ namespace Zeni {
   }
 
   void Video_GL::apply_texture(const std::string &name) {
+    Video_GL::apply_texture(Textures::get_reference().get_texture_id(name));
+  }
+
+  void Video_GL::apply_texture(const unsigned long &id) {
+    Textures::get_reference().apply_texture(id);
+
     glEnable(GL_TEXTURE_2D);
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-    Textures::get_reference().apply_texture(name);
   }
 
   void Video_GL::unapply_texture() {

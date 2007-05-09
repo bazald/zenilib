@@ -49,8 +49,10 @@ namespace Zeni {
     m_specular(specular), 
     m_emissive(emissive),
     m_power(power),
-    m_texture(texture)
+    m_texture(""),
+    m_texture_id(0)
   {
+    set_texture(texture);
   }
 
   Material::Material(const string &texture)
@@ -59,8 +61,10 @@ namespace Zeni {
     m_specular(1.0f, 0.2f, 0.2f, 0.2f), 
     m_emissive(1.0f, 0.0f, 0.0f, 0.0f),
     m_power(1.0f),
-    m_texture(texture)
+    m_texture(""),
+    m_texture_id(0)
   {
+    set_texture(texture);
   }
 
   float Material::get_shininess() const {
@@ -71,6 +75,14 @@ namespace Zeni {
     m_power = pow(2.0f, 10.0f * shininess);
     if(m_power > 128.0f)
       m_power = 128.0f;
+  }
+
+  void Material::set_texture(const std::string &texture) {
+    m_texture = texture;
+    if(texture.empty())
+      m_texture_id = 0;
+    else
+      m_texture_id = Textures::get_reference().get_texture_id(texture);
   }
 
 #ifndef DISABLE_GL
@@ -89,8 +101,17 @@ namespace Zeni {
       glMaterialfv(face, GL_SHININESS, &m_power);
 
     if(!(optimization & (1 << 5)) &&
-       !m_texture.empty())
-      Video::get_reference().apply_texture(m_texture);
+       !m_texture.empty()) {
+      try {
+        Video::get_reference().apply_texture(m_texture_id);
+      }
+      catch(Texture_Not_Found &) {
+        m_texture_id = Textures::get_reference().get_texture_id(m_texture);
+        if(!m_texture_id)
+          throw;
+        Video::get_reference().apply_texture(m_texture_id);
+      }
+    }
   }
 
   void Material::unset(Video_GL &, const int &optimization) const {

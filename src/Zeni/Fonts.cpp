@@ -27,9 +27,8 @@
 */
 
 #include <Zeni/Fonts.h>
+#include <Zeni/Resource.h>
 #include <Zeni/Video.h>
-
-#include <Zeni/Colors.hxx>
 
 #include <iostream>
 #include <fstream>
@@ -51,15 +50,47 @@ namespace Zeni {
     return e_fonts;
   }
 
-  const Font & Fonts::get_font(const string &font) const {
-    stdext::hash_map<string, Font *>::const_iterator it = m_fonts.find(font);
+  unsigned long Fonts::get_font_id(const string &font) const {
+    stdext::hash_map<string, unsigned long>::const_iterator it = m_font_lookup.find(font);
 
-    if(it == m_fonts.end()) {
+    if(!it->second) {
       std::cerr << "Missing Font: " << font << std::endl;
       throw Font_Not_Found();
     }
 
+    return it->second;
+  }
+
+  const Font & Fonts::get_font(const string &font) const {
+    return get_font(get_font_id(font));
+  }
+
+  const Font & Fonts::get_font(const unsigned long &font) const {
+    stdext::hash_map<unsigned long, Font *>::const_iterator it = m_fonts.find(font);
+
+    if(it == m_fonts.end())
+      throw Font_Not_Found();
+
     return *it->second;
+  }
+
+  unsigned long Fonts::set_font(const std::string &name, Font * const font) {
+    unsigned long id = Resource::get_reference().assign();
+    m_font_lookup[name] = id;
+    m_fonts[id] = font;
+    return id;
+  }
+
+  void Fonts::clear_font(const std::string &name) {
+    stdext::hash_map<string, unsigned long>::iterator it = m_font_lookup.find(name);
+
+    if(it == m_font_lookup.end()) {
+      std::cerr << "Missing Font: " << name << std::endl;
+      throw Font_Not_Found();
+    }
+
+    m_fonts.erase(it->second);
+    m_font_lookup.erase(it);
   }
 
   void Fonts::reload(const string &filename) {
@@ -87,7 +118,7 @@ namespace Zeni {
         codename.resize(codename.size() - 1);
 
       try {
-        m_fonts[name] = Video::get_reference().create_Font(codename, bold, italic, height);
+        set_font(name, Video::get_reference().create_Font(codename, bold, italic, height));
       }
       catch(...) {
         uninit();
@@ -97,9 +128,10 @@ namespace Zeni {
   }
 
   void Fonts::uninit() {
-    for(stdext::hash_map<string, Font *>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
+    for(stdext::hash_map<unsigned long, Font *>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
       delete it->second;
     m_fonts.clear();
+    m_font_lookup.clear();
     TTF_Quit();
   }
 

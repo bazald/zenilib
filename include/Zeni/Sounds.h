@@ -59,6 +59,7 @@
 
 #include "Core.h"
 #include "Hash_Map.h"
+#include "Resource.h"
 #include "Sound.h"
 
 #include <AL/alut.h>
@@ -78,7 +79,11 @@ namespace Zeni {
     // Get reference to only instance;
     static Sounds & get_reference(); ///< Get access to the singleton.
 
+    unsigned long set_sound(const std::string &name, const std::string &filename); ///< Load a Sound_Effect.
+    void clear_sound(const std::string &name); ///< Clear a sound by name.
+    unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Effect id by name.
     const Sound_Buffer & get_sound(const std::string &sound_effect) const; ///< Get a Sound_Effect
+    const Sound_Buffer & get_sound(const unsigned long &id) const; ///< Get a Sound_Effect
 
     void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Effect database
 
@@ -86,7 +91,8 @@ namespace Zeni {
     void init();
 
     std::string m_soundsfile;
-    stdext::hash_map<std::string, Sound_Buffer> m_sounds;
+    stdext::hash_map<std::string, unsigned long> m_sound_lookup;
+    stdext::hash_map<unsigned long, Sound_Buffer> m_sounds;
   };
 
   struct Sound_Effect_Not_Found : public Error {

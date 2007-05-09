@@ -30,6 +30,7 @@
 
 #include <Zeni/Sound.hxx>
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Resource.hxx>
 
 #include <iostream>
 #include <fstream>
@@ -53,14 +54,46 @@ namespace Zeni {
     static Sounds e_sounds;
     return e_sounds;
   }
+  
+  unsigned long Sounds::set_sound(const std::string &name, const std::string &filename) {
+    unsigned long id = Resource::get_reference().assign();
+    m_sound_lookup[name] = id;
+    m_sounds[id] = Sound_Buffer(filename);
+    return id;
+  }
 
-  const Sound_Buffer & Sounds::get_sound(const string &sound_effect) const {
-    stdext::hash_map<std::string, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
+  void Sounds::clear_sound(const std::string &name) {
+    stdext::hash_map<string, unsigned long>::iterator it = m_sound_lookup.find(name);
 
-    if(it == m_sounds.end()) {
-      std::cerr << "Missing Sound_Buffer: " << sound_effect << std::endl;
+    if(it == m_sound_lookup.end()) {
+      std::cerr << "Missing Sound: " << name << std::endl;
       throw Sound_Effect_Not_Found();
     }
+
+    m_sounds.erase(it->second);
+    m_sound_lookup.erase(it);
+  }
+
+  unsigned long Sounds::get_sound_id(const string &sound) const {
+    stdext::hash_map<string, unsigned long>::const_iterator it = m_sound_lookup.find(sound);
+
+    if(!it->second) {
+      std::cerr << "Missing sound: " << sound << std::endl;
+      throw Sound_Effect_Not_Found();
+    }
+
+    return it->second;
+  }
+
+  const Sound_Buffer & Sounds::get_sound(const string &sound) const {
+    return get_sound(get_sound_id(sound));
+  }
+
+  const Sound_Buffer & Sounds::get_sound(const unsigned long &sound_effect) const {
+    stdext::hash_map<unsigned long, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
+
+    if(it == m_sounds.end())
+      throw Sound_Effect_Not_Found();
 
     return it->second;
   }
@@ -73,6 +106,7 @@ namespace Zeni {
   }
 
   void Sounds::init() {
+    m_sound_lookup.clear();
     m_sounds.clear();
 
     ifstream soundsin(m_soundsfile.c_str());
@@ -83,7 +117,7 @@ namespace Zeni {
     string name, filename;
 
     while(soundsin >> name >> filename)
-      m_sounds[name] = Sound_Buffer(filename);
+      set_sound(name, filename);
   }
 
 }

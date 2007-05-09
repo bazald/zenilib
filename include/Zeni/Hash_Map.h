@@ -26,21 +26,24 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_COLORS_HXX
-#define ZENI_COLORS_HXX
+#ifndef ZENI_HASH_MAP_H
+#define ZENI_HASH_MAP_H
 
-#include "Colors.h"
+#include <string>
 
-namespace Zeni {
-
-  Color Colors::get_color(const std::string &color) const {
-    return access_color(color);
-  }
-
-  void Colors::set_color(const std::string &name, const Color &color) {
-    m_color[name] = color;
-  }
-
+#ifdef __GNUC__
+#include <ext/hash_map>
+#define stdext __gnu_cxx
+namespace __gnu_cxx {
+  template<> struct hash<std::string> {
+    size_t operator()(const std::string& s) const {
+      const std::collate<char>& c = std::use_facet<std::collate<char> >(std::locale::classic());
+      return c.hash(s.c_str(), s.c_str() + s.size());
+    }
+  };
 }
+#else
+#include <hash_map>
+#endif
 
 #endif

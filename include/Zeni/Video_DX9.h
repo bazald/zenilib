@@ -84,6 +84,7 @@ namespace Zeni {
     virtual void set_color_to(const Color &color); ///< Set the current color
     virtual void set_clear_color_to(const Color &color); ///< Set the blank background color
     virtual void apply_texture(const std::string &name); ///< Apply a texture by name
+    virtual void apply_texture(const unsigned long &id); ///< Apply a texture by id
     virtual void unapply_texture(); ///< Unapply a texture
 
     // Lighting and Materials

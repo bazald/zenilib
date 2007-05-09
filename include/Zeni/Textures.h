@@ -44,6 +44,7 @@
 #define ZENI_TEXTURES_H
 
 #include "Hash_Map.h"
+#include "Resource.h"
 #include "Texture.h"
 
 namespace Zeni {
@@ -71,7 +72,11 @@ namespace Zeni {
     // Modifiers
     static void set_texturing_mode(const int &anisotropic_filtering_,
       const bool &bilinear_filtering_, const bool &mipmapping_); ///< Set the texturing mode
+    unsigned long Textures::set_texture(const std::string &name, const std::string &filename); ///< Load a texture
+    void clear_texture(const std::string &name); ///< Clear a texture by name.
+    unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
     void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
+    void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
     // Initialization Functions
     void reload(const std::string &tdb); ///< (Re)Load a texture database
@@ -82,7 +87,8 @@ namespace Zeni {
 
     std::string m_texturedb;
     
-    stdext::hash_map<std::string, Texture *> m_textures;
+    stdext::hash_map<std::string, unsigned long> m_texture_lookup;
+    stdext::hash_map<unsigned long, Texture *> m_textures;
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;

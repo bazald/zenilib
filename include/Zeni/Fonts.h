@@ -65,15 +65,20 @@ namespace Zeni {
     // Get reference to only instance;
     static Fonts & get_reference(); ///< Get access to the singleton.
 
+    unsigned long get_font_id(const std::string &font) const; ///< Get a font id by name.
     const Font & get_font(const std::string &font) const; ///< Get a reference to a font by name.
+    const Font & get_font(const unsigned long &id) const; ///< Get a reference to a font by id.
 
+    unsigned long set_font(const std::string &name, Font * const font); ///< Set a font by name.
+    void clear_font(const std::string &name); ///< Clear a font by name.
     void reload(const std::string &filename = ""); ///< Reload the database or choose a new one.
 
   private:
     void init();
     void uninit();
 
-    stdext::hash_map<std::string, Font *> m_fonts;
+    stdext::hash_map<std::string, unsigned long> m_font_lookup;
+    stdext::hash_map<unsigned long, Font *> m_fonts;
 
     static std::string m_filename;
   };

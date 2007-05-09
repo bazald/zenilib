@@ -98,7 +98,11 @@ namespace Zeni {
   }
 
   void Video_DX9::apply_texture(const std::string &name) {
-    Textures::get_reference().apply_texture(name);
+    Video_DX9::apply_texture(Textures::get_reference().get_texture_id(name));
+  }
+
+  void Video_DX9::apply_texture(const unsigned long &id) {
+    Textures::get_reference().apply_texture(id);
 
     m_textured = true;
 
