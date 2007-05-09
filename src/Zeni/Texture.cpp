@@ -40,6 +40,85 @@
 
 namespace Zeni {
 
+  Sprite::Sprite()
+    : m_frame(0)
+  {
+  }
+
+  void Sprite::append_frame(const std::string &name) {
+    m_frames.push_back(make_pair(name, Textures::get_reference().get_texture_id(name)));
+  }
+
+  int Sprite::find_frame(const std::string &name, const int &starting_point) {
+    if(starting_point < 0)
+      throw Frame_Out_of_Range();
+
+    for(int i = starting_point, end = int(m_frames.size()); i < end; ++i)
+      if(m_frames[i].first == name)
+        return i;
+    return -1;
+  }
+
+  void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, Textures::get_reference().get_texture_id(name));
+    
+    if(at_this_index < 0 || at_this_index > int(m_frames.size()))
+      throw Frame_Out_of_Range();
+
+    m_frames.push_back(new_frame);
+
+    memmove(
+      &m_frames + at_this_index + 1,
+      &m_frames + at_this_index,
+      (m_frames.size() - at_this_index - 1) * sizeof(std::pair<std::string, unsigned long>));
+
+    m_frames[at_this_index] = new_frame;
+  }
+
+  void Sprite::remove_frame(const int &frame_number) {
+    if(frame_number < 0 || frame_number > int(m_frames.size()))
+      throw Frame_Out_of_Range();
+
+    memmove(
+      &m_frames + frame_number,
+      &m_frames + frame_number + 1,
+      (m_frames.size() - frame_number - 1) * sizeof(std::pair<std::string, unsigned long>));
+
+    m_frames.pop_back();
+  }
+
+  int Sprite::num_frames() {
+    return int(m_frames.size());
+  }
+
+  int Sprite::get_current_frame() {
+    if(m_frames.empty())
+      return -1;
+    return m_frame;
+  }
+
+  void Sprite::set_current_frame(const int &frame_number) {
+    if(frame_number < 0 || frame_number > int(m_frames.size()))
+      throw Frame_Out_of_Range();
+
+    m_frame = frame_number;
+  }
+
+  void Sprite::apply_texture() const {
+    if(m_frames.empty() || m_frame < 0 || m_frame >= int(m_frames.size()))
+      throw Frame_Out_of_Range();
+
+    try {
+      Textures::get_reference().apply_texture(m_frames[m_frame].second);
+    }
+    catch(Texture_Not_Found &) {
+      m_frames[m_frame].second = Textures::get_reference().get_texture_id(m_frames[m_frame].first);
+      if(!m_frames[m_frame].second)
+        throw;
+      Textures::get_reference().apply_texture(m_frames[m_frame].second);
+    }
+  }
+
 #ifndef DISABLE_GL
   Texture_GL::Texture_GL(const std::string &filename, Video_GL &)
     : m_texture_id(0)

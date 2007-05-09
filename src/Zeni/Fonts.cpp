@@ -53,7 +53,7 @@ namespace Zeni {
   unsigned long Fonts::get_font_id(const string &font) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_font_lookup.find(font);
 
-    if(!it->second) {
+    if(it == m_font_lookup.end() || !it->second) {
       std::cerr << "Missing Font: " << font << std::endl;
       throw Font_Not_Found();
     }
@@ -75,6 +75,16 @@ namespace Zeni {
   }
 
   unsigned long Fonts::set_font(const std::string &name, Font * const font) {
+    {
+      stdext::hash_map<std::string, unsigned long>::iterator it = m_font_lookup.find(name);
+      if(it != m_font_lookup.end()) {
+        stdext::hash_map<unsigned long, Font *>::iterator jt = m_fonts.find(it->second);
+        delete jt->second;
+        m_fonts.erase(jt);
+        m_font_lookup.erase(it);
+      }
+    }
+
     unsigned long id = Resource::get_reference().assign();
     m_font_lookup[name] = id;
     m_fonts[id] = font;

@@ -57,7 +57,7 @@ namespace Zeni {
   unsigned long Colors::get_color_id(const string &color) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_color_lookup.find(color);
 
-    if(!it->second) {
+    if(it == m_color_lookup.end() || !it->second) {
       std::cerr << "Missing Color: " << color << std::endl;
       throw Color_Not_Found();
     }

@@ -77,7 +77,7 @@ namespace Zeni {
   unsigned long Sounds::get_sound_id(const string &sound) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_sound_lookup.find(sound);
 
-    if(!it->second) {
+    if(it == m_sound_lookup.end() || !it->second) {
       std::cerr << "Missing sound: " << sound << std::endl;
       throw Sound_Effect_Not_Found();
     }

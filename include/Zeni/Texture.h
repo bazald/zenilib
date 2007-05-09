@@ -47,6 +47,7 @@
 
 #include <SDL/SDL_image.h>
 #include <string>
+#include <vector>
 
 #ifndef DISABLE_GL
 #include <GL/gl.h>
@@ -66,6 +67,26 @@ namespace Zeni {
     virtual ~Texture() {}
 
     virtual void apply_texture() const = 0; ///< Apply a Texture to upcoming polygons
+  };
+
+  class Sprite : public Texture {
+  public:
+    Sprite();
+
+    void append_frame(const std::string &name); ///< Add a frame to the Sprite
+    int find_frame(const std::string &name, const int &starting_point = 0); ///< Search for a frame
+    void insert_frame(const std::string &name, const int &at_this_index); ///< Insert a frame
+    void remove_frame(const int &frame_number); ///< Remove a frame
+
+    int num_frames(); ///< Get the number of frames
+    int get_current_frame(); ///< Get the currently selected frame number
+    void set_current_frame(const int &frame_number); ///< Set this frame
+
+    virtual void apply_texture() const; ///< Apply the current Texture frame to upcoming polygons
+
+  private:
+    mutable std::vector<std::pair<std::string, unsigned long> > m_frames;
+    int m_frame;
   };
 
 #ifndef DISABLE_GL
@@ -97,13 +118,18 @@ namespace Zeni {
   };
 #endif
 
+  struct Invalid_Anisotropy_Setting : public Error {
+    Invalid_Anisotropy_Setting() : Error("Invalid Anisotropy Setting") {}
+  };
+
   struct Texture_Init_Failure : public Error {
     Texture_Init_Failure() : Error("Zeni Texture Failed to Initialize Correctly") {}
   };
 
-  struct Invalid_Anisotropy_Setting : public Error {
-    Invalid_Anisotropy_Setting() : Error("Invalid Anisotropy Setting") {}
+  struct Frame_Out_of_Range : public Error {
+    Frame_Out_of_Range() : Error("Frame Choice is Out of Range") {}
   };
+
 
 }
 
