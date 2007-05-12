@@ -27,27 +27,13 @@
 */
 
 /**
- * \class Zeni::Sound_Effect
- *
- * \ingroup Zenilib
- *
- * \brief Stores Sound Data
- *
- * A Sound_Effect stores sound data to be played back by the Sound system.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Sounds
  *
  * \ingroup Zenilib
  *
- * \brief A Sound_Effect Database Singleton
+ * \brief A Sound_Buffer Database Singleton
  *
- * The Sounds Singleton stores Sound_Effects to be played by the Sound system.
+ * The Sounds Singleton stores Sound_Buffers to be played from Sound_Sources.
  *
  * \author bazald
  *

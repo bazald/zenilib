@@ -65,6 +65,26 @@
  * Contact: bazald@zenipex.com
  */
 
+/**
+ * \class Zeni::Gamestate_II
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A new Gamestate base with an Integrated Input technique
+ *
+ * All user input excluding mouse motion and joyhat events are abstracted away.
+ * A keydown, mousebuttondown, or joybuttondown event will yield a specfied action identifier with confidence 1.0f.
+ * The respective up event will yield the same action identifier with confidence 0.0f.
+ * Similarly, joyaxis movement will yield an action identifier with confidence -1.0f to 1.0f.
+ * This makes it easier to treat different types of input nearly identically, and to make it possible to
+ * use different control schemes.  If no action id has been specified for a given input, it will report an
+ * action id of 0.  It is then possible to tie an action to the input or to ignore it.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_GAMESTATE_H
 #define ZENI_GAMESTATE_H
 

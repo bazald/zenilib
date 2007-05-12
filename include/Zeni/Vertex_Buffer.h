@@ -39,27 +39,13 @@
  */
 
 /**
- * \class Zeni::Vertex_Buffer_3FC
+ * \class Zeni::Vertex_Buffer
  *
  * \ingroup Zenilib
  *
- * \brief A Vertex_Buffer that accepts Triangle<Vertex3f_Color>s.
+ * \brief A Vertex_Buffer that accepts both Triangle<Vertex3f_Color>s and Triangle<Vertex3f_Texture>s.
  *
  * \note All Triangles are expected to have either the base Render_Wrapper or a Material_Render_Wrapper.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
- * \class Zeni::Vertex_Buffer_3FT
- *
- * \ingroup Zenilib
- *
- * \brief A Vertex_Buffer that accepts Triangle<Vertex3f_Texture>s.
- *
- * \note All Triangles are expected to have either a Texture_Render_Wrapper or a Multiple_Render_Wrapper containing a Texture_Render_Wrapper and a Material_Render_Wrapper, in that order.
  *
  * \author bazald
  *
@@ -112,8 +98,7 @@ namespace Zeni {
     inline int num_vertices_cm() const;
     inline int num_vertices_t() const;
 
-    // Sort push_no_mat by color
-    // Sort push_mat by color first, material (arbitrary order) second
+    // Sort buffers by Material
     void sort_triangles();
 
     // Generate lists of vertex ranges to be rendered more efficiently

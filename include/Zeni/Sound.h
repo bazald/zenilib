@@ -27,13 +27,46 @@
 */
 
 /**
+ * \class Zeni::Sound_Buffer
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Stores Sound Data
+ *
+ * A Sound_Buffer stores sound data to be played from Sound_Sources.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Sound_Source
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Plays Sound Data
+ *
+ * A Sound_Source plays sound data from a Sound_Buffer.  The term comes
+ * from the idea that OpenAL is built for 3D positional sound.  A Sound_Source
+ * is defined by the Sound_Buffer it is playing as well as its position, 
+ * velocity, and several other factors.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
  * \class Zeni::Sound
  *
  * \ingroup Zenilib
  *
  * \brief The Sound Singleton
  *
- * The Sound Singleton is responsible for playing music and Sound_Effects.
+ * The Sound Singleton is responsible for initializing and uninitializing OpenAL.
+ * It also controls a single Sound_Source that is positioned at the listener's 
+ * current location so as to allow the playing of background music.
  *
  * \author bazald
  *
@@ -55,10 +88,10 @@ namespace Zeni {
   public:
     Sound_Buffer();
     Sound_Buffer(const Sound_Buffer &rhs); ///< Transfers the buffer rather than copying it (auto_ptr semantics)
-    Sound_Buffer(const std::string &filename);
+    Sound_Buffer(const std::string &filename); ///< Load a Sound_Buffer from a file.  Only wav is guaranteed to be supported.
     ~Sound_Buffer();
 
-    inline const ALuint & get_id() const;
+    inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
 
     /// Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer & operator=(const Sound_Buffer &rhs);
@@ -85,31 +118,32 @@ namespace Zeni {
                  const bool &looping = false);
     ~Sound_Source();
 
-    inline void set_buffer(const Sound_Buffer &buffer);
-    inline void set_buffer(const ALuint &buffer);
-    inline void set_pitch(const float &pitch);
-    inline void set_gain(const float &gain);
-    inline void set_position(const Point3f &position);
-    inline void set_velocity(const Point3f &velocity);
-    inline void set_looping(const bool &looping);
-    inline void set_time(const float &time);
+    inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
+    inline void set_buffer(const ALuint &buffer); ///< Set the Sound_Buffer to be played.
+    inline void set_pitch(const float &pitch); ///< Set the pitch.
+    inline void set_gain(const float &gain); ///< Set the gain.
+    inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source.
+    inline void set_velocity(const Point3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
+    inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
+    inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
 
-    inline ALuint get_buffer() const;
-    inline float get_pitch() const;
-    inline float get_gain() const;
-    inline Point3f get_position() const;
-    inline Point3f get_velocity() const;
-    inline bool is_looping() const;
-    inline float get_time() const;
+    inline ALuint get_buffer() const; ///< Get the Sound_Buffer's OpenAL id
+    inline float get_pitch() const; ///< Get the pitch.
+    inline float get_gain() const; ///< Get the gain.
+    inline Point3f get_position() const; ///< Get the position of the Sound_Buffer.
+    inline Point3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
+    inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
+    inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
 
-    inline void play();
-    inline void pause();
-    inline void stop();
+    inline void play(); ///< Begin playing or unpause the Sound_Source.
+    inline void pause(); ///< Pause the Sound_Source.
+    inline void stop(); ///< Stop the Sound_Source.  (Essentially the same as pause but resets the current time.)
 
-    inline bool is_playing();
-    inline bool is_paused();
-    inline bool is_stopped();
+    inline bool is_playing(); ///< Check to see if the Sound_Source is playing.
+    inline bool is_paused(); ///< Check to see if the Sound_Source is paused.
+    inline bool is_stopped(); ///< Check to see if the Sound_Source is stopped.
 
+    /// Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Source & operator=(const Sound_Source &rhs);
 
   private:

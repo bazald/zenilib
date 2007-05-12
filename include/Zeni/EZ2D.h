@@ -37,6 +37,12 @@
 
 namespace Zeni {
 
+  /**
+   * Render an image in 2D by specifying the coordinates of its corners in screenspace.
+   * (0,0) is upper_left, (width, height) is lower_right.
+   *
+   * \note The color_filter will only be applied if lighting is enabled, and then odd effects may result if ambient_lighting is set to anything other than the default.
+   */
   void render_image(
     const std::string &image_name,
     const Point2f &upper_left,
@@ -44,6 +50,14 @@ namespace Zeni {
     const bool &horizontally_flipped = false,
     const Color &color_filter = Color());
 
+  /**
+   * Render an image with rotation and scaling.
+   * 
+   * This works identically to the function with fewer arguments but it takes the
+   * extra step of rotating around and scaling away from a given point.
+   * 
+   * \note The color_filter will only be applied if lighting is enabled, and then odd effects may result if ambient_lighting is set to anything other than the default.
+   */
   void render_image(
     const std::string &image_name,
     const Point2f &upper_left,
@@ -54,19 +68,34 @@ namespace Zeni {
     const bool &horizontally_flipped = false,
     const Color &color_filter = Color());
 
+  /**
+   * Check to see if an image_name refers to a Sprite.
+   */
   bool is_sprite(
     const std::string &image_name);
 
+  /**
+   * Find out how many frames a Sprite has.
+   */
   int sprite_num_frames(
     const std::string &image_name);
 
+  /**
+   * Set the current_frame for a Sprite.
+   */
   void set_sprite_frame(
     const std::string &image_name,
     const int &frame_number);
 
+  /**
+   * Increment the current_frame for a Sprite, with wrap-around.
+   */
   void increment_sprite_frame(
     const std::string &image_name);
 
+  /**
+   * Decrement the current_frame for a Sprite, with wrap-around.
+   */
   void decrement_sprite_frame(
     const std::string &image_name);
 
