@@ -78,6 +78,7 @@
 
 #include "Core.h"
 #include "Coordinate.h"
+#include "Vector3f.h"
 
 #include <AL/alut.h>
 #include <string>
@@ -108,13 +109,13 @@ namespace Zeni {
                  const float &pitch = 1.0f,
                  const float &gain = 1.0f,
                  const Point3f &position = Point3f(),
-                 const Point3f &velocity = Point3f(),
+                 const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
     Sound_Source(const ALuint &buffer,
                  const float &pitch = 1.0f,
                  const float &gain = 1.0f,
                  const Point3f &position = Point3f(),
-                 const Point3f &velocity = Point3f(),
+                 const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
     ~Sound_Source();
 
@@ -123,7 +124,7 @@ namespace Zeni {
     inline void set_pitch(const float &pitch); ///< Set the pitch.
     inline void set_gain(const float &gain); ///< Set the gain.
     inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source.
-    inline void set_velocity(const Point3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
+    inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
 
@@ -131,7 +132,7 @@ namespace Zeni {
     inline float get_pitch() const; ///< Get the pitch.
     inline float get_gain() const; ///< Get the gain.
     inline Point3f get_position() const; ///< Get the position of the Sound_Buffer.
-    inline Point3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
+    inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
     inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
 
@@ -151,7 +152,7 @@ namespace Zeni {
               const float &pitch = 1.0f,
               const float &gain = 1.0f,
               const Point3f &position = Point3f(),
-              const Point3f &velocity = Point3f(),
+              const Vector3f &velocity = Vector3f(),
               const bool &looping = false) const;
 
     mutable ALuint m_source;
@@ -172,17 +173,33 @@ namespace Zeni {
     // Accessors
     inline bool is_enabled() const; ///< Check Sound is currently enabled
 
+    // Listener Functions
+    inline void set_listener_position(const Point3f &position); ///< Set the position of the listener and BGM.
+    inline void set_listener_velocity(const Vector3f &velocity); ///< Set the velocity of the listener and BGM for the doppler effect.
+    inline void set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up); ///< Set the orientation of the listener
+
+    inline Point3f get_listener_position() const; ///< Get the position of the listener and BGM.
+    inline Vector3f get_listener_velocity() const; ///< Get the velocity of the listener and BGM.
+    inline std::pair<Vector3f, Vector3f> get_listener_forward_and_up() const; ///< Set the orientation of the listener
+
     // BackGround Music Functions
     void set_BGM(const std::string &filename); ///< Set BackGround Music
 
     inline bool playing_BGM(); ///< Check to see if BackGround Music is playing
     inline bool paused_BGM(); ///< Check to see if BackGround Music is paused
     inline bool stopped_BGM(); ///< Check to see if BackGround Music is stopped
+    inline float get_BGM_pitch(); ///< Get the pitch.
+    inline float get_BGM_gain(); ///< Get the gain.
+    inline bool is_BGM_looping(); ///< Check to see if the BGM is set to loop back to the start once it is done playing.
+    inline float get_BGM_time(); ///< Get the current position in the BGM, offset in seconds.
 
     inline void play_BGM(); ///< Begin Playing BackGround Music
     inline void pause_BGM(); ///< Pause BackGround Music
     inline void stop_BGM(); ///< Stop BackGround Music
-    inline void loop_BGM(const bool &looping = true); ///< Loop BackGround Music
+    inline void set_BGM_pitch(const float &pitch); ///< Set the pitch.
+    inline void set_BGM_gain(const float &gain); ///< Set the gain.
+    inline void set_BGM_looping(const bool &looping); ///< Set whether the BGM should loop back to the start once it is done playing.
+    inline void set_BGM_time(const float &time); ///< Set the current position in the BGM, offset in seconds.
 
   private:
     void assert_m_bgm();

@@ -62,20 +62,6 @@
  */
 
 /**
- * \class Zeni::Texture_Render_Wrapper
- *
- * \ingroup Zenilib
- *
- * \brief A Render_Wrapper for Textures
- *
- * This Render_Wrapper supports automatic setting and unsetting of Textures.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Material_Render_Wrapper
  *
  * \ingroup Zenilib
@@ -83,26 +69,6 @@
  * \brief A Render_Wrapper for Materials
  *
  * This Render_Wrapper supports automatic setting of Materials.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
- * \class Zeni::Multiple_Render_Wrapper
- *
- * \ingroup Zenilib
- *
- * \brief A Render_Wrapper for combining Render_Wrappers
- *
- * This Render_Wrapper supports combinations of Render_Wrappers.
- *
- * To wrap a Texture_Render_Wrapper and a Material_Render_Wrapper together, one 
- * must create a new Multiple_Render_Wrapper with a Texture_Render_Wrapper first 
- * and a Material_Render_Wrapper second.
- *
- * \warning Wrappers must be in certain orders to be supported by Vertex_Buffer.
  *
  * \author bazald
  *

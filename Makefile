@@ -4,8 +4,8 @@
 DISABLEWGL = -DDISABLEWGL
 DISABLEDX9 = -DDISABLE_DX9
 
-#BUILD = DEBUG
-BUILD = RELEASE
+BUILD = DEBUG
+#BUILD = RELEASE
 
 # MODIFY ABOVE
 # LEAVE THE REST ALONE (unnless you know what you are doing
@@ -35,6 +35,7 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Colors.cpp \
 	src/Zeni/Coordinate.cpp \
 	src/Zeni/Core.cpp \
+	src/Zeni/EZ2D.cpp \
 	src/Zeni/Font.cpp \
 	src/Zeni/Fonts.cpp \
 	src/Zeni/Game.cpp \
@@ -45,6 +46,7 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Model.cpp \
 	src/Zeni/Net.cpp \
 	src/Zeni/Render_Wrapper.cpp \
+	src/Zeni/Resource.cpp \
 	src/Zeni/Sound.cpp \
 	src/Zeni/Sounds.cpp \
 	src/Zeni/Texture.cpp \
@@ -57,15 +59,6 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Video.cpp \
 	src/Zeni/Video_DX9.cpp \
 	src/Zeni/Video_GL.cpp \
-	Character.cpp \
-	Enemy.cpp \
-	Fight.cpp \
-	Instructions.cpp \
-	Level1.cpp \
-	Level2.cpp \
-	Loss.cpp \
-	Title.cpp \
-	Victory.cpp \
 	zeniapp.cpp
 OBJS = $(SRCS:.cpp=.o)
 

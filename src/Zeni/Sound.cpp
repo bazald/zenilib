@@ -104,14 +104,14 @@ namespace Zeni {
   }
 
   Sound_Source::Sound_Source(const Sound_Buffer &buffer, const float &pitch, const float &gain,
-    const Point3f &position, const Point3f &velocity, const bool &looping)
+    const Point3f &position, const Vector3f &velocity, const bool &looping)
     : m_source(AL_NONE)
   {
     init(buffer.get_id(), pitch, gain, position, velocity, looping);
   }
 
   Sound_Source::Sound_Source(const ALuint &buffer, const float &pitch, const float &gain,
-    const Point3f &position, const Point3f &velocity, const bool &looping)
+    const Point3f &position, const Vector3f &velocity, const bool &looping)
     : m_source(AL_NONE)
   {
     init(buffer, pitch, gain, position, velocity, looping);
@@ -123,7 +123,7 @@ namespace Zeni {
   }
 
   void Sound_Source::init(const ALuint &buffer, const float &pitch, const float &gain,
-                          const Point3f &position, const Point3f &velocity, const bool &looping) const {
+                          const Point3f &position, const Vector3f &velocity, const bool &looping) const {
     Sound::get_reference();
 
     alGenSources(1, &m_source);
@@ -188,7 +188,7 @@ namespace Zeni {
     float pitch = m_bgm_source->get_pitch();
     float gain = m_bgm_source->get_gain();
     Point3f position = m_bgm_source->get_position();
-    Point3f velocity = m_bgm_source->get_velocity();
+    Vector3f velocity = m_bgm_source->get_velocity();
     bool looping = m_bgm_source->is_looping();
 
     m_bgm_source->stop();

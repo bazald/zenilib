@@ -43,6 +43,18 @@ Generally speaking, the Zenipex Library is an open source
 project.  For details please refer to the first comment in 
 any given file and refer to the ./COPYING and ./GPL files.
 
+The Runtime GPL allows the use of macros, templates, and
+static linkage without the requirement that your code be
+GPL'd should you choose to release your binaries into the
+wild.  You are free to keep your code closed source, though
+I encourage you to keep it open if you are not obligated to
+keep it closed.
+
+Keep in mind that to fully comply with the GPL, you must
+have a copy of the source of any GPL'd code you use available
+should anyone request it.  You should also make it known that
+you have it available.
+
 
 
 3. Supported Platforms
@@ -51,7 +63,7 @@ any given file and refer to the ./COPYING and ./GPL files.
 This software is known to operate on:
  
 - Windows: XP
-- Linux: {U,Ku}buntu
+- Linux: {Ku,U,Xu}buntu
 
 It should be possible to build it on any platform supporting:
 
@@ -62,16 +74,20 @@ Direct3D 9 [http://www.microsoft.com/windows/directx/]
 OpenGL [http://www.opengl.org/]
         - Required for graphics
 
-SDL_mixer [http://www.libsdl.org/projects/SDL_mixer/] 
+OpenAL [http://www.openal.org/]
         - Required for sound
+
 SDL_image [http://www.libsdl.org/projects/SDL_image/]
         - Required for texture loading for OpenGL
+
 SDL_gfx [http://www.ferzkopp.net/Software/SDL_gfx-2.0/]
         - Possibly required for texture resizing for OpenGL
         - Not required if images loaded are already in the 
           correcty format (both width and height powers of 2)
+
 SDL_ttf [http://www.libsdl.org/projects/SDL_ttf/]
         - Required for text rendering in OpenGL
+
 lib3ds [http://lib3ds.sourceforge.net/]
         - Required for model loading and rendering
 

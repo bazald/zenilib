@@ -57,7 +57,7 @@ namespace Zeni {
     alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
   }
 
-  void Sound_Source::set_velocity(const Point3f &velocity) {
+  void Sound_Source::set_velocity(const Vector3f &velocity) {
     alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
   }
 
@@ -93,8 +93,8 @@ namespace Zeni {
     return position;
   }
 
-  Point3f Sound_Source::get_velocity() const {
-    Point3f velocity;
+  Vector3f Sound_Source::get_velocity() const {
+    Vector3f velocity;
     alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<float *>(&velocity));
     return velocity;
   }
@@ -141,6 +141,69 @@ namespace Zeni {
     return state == AL_STOPPED;
   }
 
+  void Sound::set_listener_position(const Point3f &position) {
+    ALfloat listener_position[3] = {position.x, position.y, position.z};
+    alListenerfv(AL_POSITION, listener_position);
+    m_bgm_source->set_position(position);
+  }
+
+  void Sound::set_listener_velocity(const Vector3f &velocity) {
+    ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
+    alListenerfv(AL_VELOCITY, listener_velocity);
+    m_bgm_source->set_velocity(velocity);
+  }
+
+  void Sound::set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up) {
+    ALfloat listener_forward_and_up[6] = {forward.i, forward.j, forward.k, up.i, up.j, up.k};
+    alListenerfv(AL_ORIENTATION, listener_forward_and_up);
+  }
+
+  Point3f Sound::get_listener_position() const {
+    return m_bgm_source->get_position();
+  }
+
+  Vector3f Sound::get_listener_velocity() const {
+    return m_bgm_source->get_velocity();
+  }
+
+  std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {
+    ALfloat lfau[6];
+    alGetListenerfv(AL_ORIENTATION, lfau);
+    return std::make_pair(Vector3f(lfau[0], lfau[1], lfau[2]), Vector3f(lfau[3], lfau[4], lfau[5]));
+  }
+
+  void Sound::set_BGM_pitch(const float &pitch) {
+    m_bgm_source->set_pitch(pitch);
+  }
+
+  void Sound::set_BGM_gain(const float &gain) {
+    m_bgm_source->set_gain(gain);
+  }
+
+  void Sound::set_BGM_looping(const bool &looping) {
+    m_bgm_source->set_looping(looping);
+  }
+
+  void Sound::set_BGM_time(const float &time) {
+    m_bgm_source->set_time(time);
+  }
+
+  float Sound::get_BGM_pitch() {
+    return m_bgm_source->get_pitch();
+  }
+
+  float Sound::get_BGM_gain() {
+    return m_bgm_source->get_gain();
+  }
+
+  bool Sound::is_BGM_looping() {
+    return m_bgm_source->is_looping();
+  }
+
+  float Sound::get_BGM_time() {
+    return m_bgm_source->get_time();
+  }
+
   bool Sound::playing_BGM() {
     assert_m_bgm();
     return m_bgm_source->is_playing();
@@ -169,11 +232,6 @@ namespace Zeni {
   void Sound::stop_BGM() {
     assert_m_bgm();
     return m_bgm_source->stop();
-  }
-
-  void Sound::loop_BGM(const bool &looping) {
-    assert_m_bgm();
-    return m_bgm_source->set_looping(looping);
   }
 
 }
