@@ -75,11 +75,13 @@ namespace Zeni {
     unsigned long Textures::set_texture(const std::string &name, Texture * const); ///< Load a texture
     void clear_texture(const std::string &name); ///< Clear a texture by name.
     unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
+    Texture * get_texture(const unsigned long &id) const; ///< Get a texture by id.
     void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
     // Sprite-specific
-    int num_frames(const unsigned long &id); ///< Get the number of frames; returns 0 if it is not a Sprite
+    bool is_sprite(const unsigned long &id); ///< Does this id point to a Sprite
+    int get_num_frames(const unsigned long &id); ///< Get the number of frames; returns 0 if it is not a Sprite
     int get_current_frame(const unsigned long &id); ///< Get the currently selected frame number for a Sprite
     void set_current_frame(const unsigned long &id, const int &frame_number); ///< Set the frame number for a Sprite
 

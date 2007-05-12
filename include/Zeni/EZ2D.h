@@ -26,52 +26,49 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_COORDINATE_HXX
-#define ZENI_COORDINATE_HXX
+#ifndef ZENI_EZ2D_H
+#define ZENI_EZ2D_H
 
+#include "Color.h"
 #include "Coordinate.h"
+#include "Vector3f.h"
+
+#include <string>
 
 namespace Zeni {
 
-  Point2i::Point2i(const int &x_, const int &y_)
-    : x(x_), y(y_)
-  {
-  }
+  void render_image(
+    const std::string &image_name,
+    const Point2f &upper_left,
+    const Point2f &lower_right,
+    const bool &horizontally_flipped = false,
+    const Color &color_filter = Color());
 
-  Point2i::Point2i(const Point3i &rhs)
-    : x(rhs.x), y(rhs.y)
-  {
-  }
+  void render_image(
+    const std::string &image_name,
+    const Point2f &upper_left,
+    const Point2f &lower_right,
+    const float &radians_cw,
+    const float &scaling_factor,
+    const Point2f &about,
+    const bool &horizontally_flipped = false,
+    const Color &color_filter = Color());
 
-  Point2f::Point2f(const float &x_, const float &y_)
-    : x(x_), y(y_)
-  {
-  }
+  bool is_sprite(
+    const std::string &image_name);
 
-  Point2f::Point2f(const Point3f &rhs)
-    : x(rhs.x), y(rhs.y)
-  {
-  }
+  int sprite_num_frames(
+    const std::string &image_name);
 
-  Point3i::Point3i(const int &x_, const int &y_, const int &z_)
-    : x(x_), y(y_), z(z_)
-  {
-  }
+  void set_sprite_frame(
+    const std::string &image_name,
+    const int &frame_number);
 
-  Point3i::Point3i(const Point2i &rhs)
-    : x(rhs.x), y(rhs.y), z(0)
-  {
-  }
+  void increment_sprite_frame(
+    const std::string &image_name);
 
-  Point3f::Point3f(const float &x_, const float &y_, const float &z_)
-    : x(x_), y(y_), z(z_)
-  {
-  }
-
-  Point3f::Point3f(const Point2f &rhs)
-    : x(float(rhs.x)), y(float(rhs.y)), z(0.0f)
-  {
-  }
+  void decrement_sprite_frame(
+    const std::string &image_name);
 
 }
 

@@ -318,10 +318,11 @@ namespace Zeni {
     glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
 
     // Finish with a few function calls
-    set_3d(Camera());
-    set_backface_culling(get_backface_culling());
+    set_2d();
+    set_backface_culling(false);
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
+    set_ambient_lighting(Color());
     set_normal_interpolation(get_normal_interpolation());
 
     // Manage extensions

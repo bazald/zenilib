@@ -90,6 +90,16 @@ namespace Zeni {
     Vector3f normalized() const; ///< Get the normalized vector
     inline float magnitude() const; ///< Get the magnitude of the vector
 
+    // Other helpful functions
+    inline Vector3f get_i(); ///< Get just the i-part
+    inline Vector3f get_j(); ///< Get just the j-part
+    inline Vector3f get_k(); ///< Get just the k-part
+    inline Vector3f get_ij(); ///< Get just the i and j parts
+    inline Vector3f get_ik(); ///< Get just the i and k parts
+    inline Vector3f get_jk(); ///< Get just the j and k parts
+    inline Vector3f multiply_by(const Vector3f &rhs); ///< Multiply corresponding members
+    inline Vector3f divide_by(const Vector3f &rhs); ///< Divide corresponding members
+
     // Spherical Accessors and Modifiers
     float theta() const; ///< theta == radians north of vector i
     float phi() const; ///< phi   == radians down from k
@@ -106,6 +116,7 @@ namespace Zeni {
   inline Point3f & operator+=(Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
   inline Point3f operator-(const Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
   inline Point3f & operator-=(Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
+  inline Vector3f operator-(const Point3f &lhs, const Point3f &rhs); ///< Get the translated Point3f
 
 }
 

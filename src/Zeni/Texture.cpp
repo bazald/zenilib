@@ -87,7 +87,7 @@ namespace Zeni {
     m_frames.pop_back();
   }
 
-  int Sprite::num_frames() {
+  int Sprite::get_num_frames() {
     return int(m_frames.size());
   }
 

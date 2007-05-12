@@ -92,11 +92,15 @@ namespace Zeni {
   }
 
   float Vector3f::phi() const {
-    if(i || j)
-      return pi_over_two * atan(k / sqrt(pow(i, 2) + pow(j, 2)));
-    else if(k < 0)
+    const float xy_mag = sqrt(pow(i, 2) + pow(j, 2));
+
+    if(xy_mag > 0.0f)
+      return pi_over_two + atan(-k / xy_mag);
+
+    if(k < 0.0f)
       return pi;
-    return 0;
+
+    return 0.0f;
   }
 
   void Vector3f::set_spherical(const float &theta, const float &phi, const float &magnitude) {

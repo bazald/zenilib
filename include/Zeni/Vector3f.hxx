@@ -134,8 +134,44 @@ namespace Zeni {
     return lhs;
   }
 
+  Vector3f operator-(const Point3f &lhs, const Point3f &rhs) {
+    return Vector3f(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+  }
+
   float Vector3f::magnitude() const {
     return sqrt(pow(i, 2) + pow(j, 2) + pow(k, 2));
+  }
+
+  Vector3f Vector3f::get_i() {
+    return Vector3f(i, 0.0f, 0.0f);
+  }
+
+  Vector3f Vector3f::get_j() {
+    return Vector3f(0.0f, j, 0.0f);
+  }
+
+  Vector3f Vector3f::get_k() {
+    return Vector3f(0.0f, 0.0f, k);
+  }
+
+  Vector3f Vector3f::get_ij() {
+    return Vector3f(i, j, 0.0f);
+  }
+
+  Vector3f Vector3f::get_ik() {
+    return Vector3f(i, 0.0f, k);
+  }
+
+  Vector3f Vector3f::get_jk() {
+    return Vector3f(0.0f, j, k);
+  }
+
+  Vector3f Vector3f::multiply_by(const Vector3f &rhs) {
+    return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k);
+  }
+
+  Vector3f Vector3f::divide_by(const Vector3f &rhs) {
+    return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
   }
 
 }

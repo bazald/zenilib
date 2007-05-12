@@ -66,6 +66,9 @@ namespace Zeni {
       }
     }
 
+    if(!texture)
+      throw Texture_Not_Found();
+
     unsigned long id = Resource::get_reference().assign();
     m_texture_lookup[name] = id;
     m_textures[id] = texture;
@@ -95,6 +98,17 @@ namespace Zeni {
     return it->second;
   }
 
+  Texture * Textures::get_texture(const unsigned long &id) const {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+
+    if(it == m_textures.end() || !it->second) {
+      std::cerr << "Missing texture: " << id << std::endl;
+      throw Texture_Not_Found();
+    }
+
+    return it->second;
+  }
+
   void Textures::apply_texture(const string &name) {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(name);
 
@@ -115,8 +129,17 @@ namespace Zeni {
 
     it->second->apply_texture();
   }
+
+  bool Textures::is_sprite(const unsigned long &id) {
+    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
+    
+    if(it == m_textures.end())
+      throw Texture_Not_Found();
+
+    return dynamic_cast<Sprite *>(it->second) != 0;
+  }
   
-  int Textures::num_frames(const unsigned long &id) {
+  int Textures::get_num_frames(const unsigned long &id) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
     
     if(it == m_textures.end())
@@ -126,7 +149,7 @@ namespace Zeni {
     if(!sprite)
       return 0;
 
-    return sprite->num_frames();
+    return sprite->get_num_frames();
   }
 
   int Textures::get_current_frame(const unsigned long &id) {

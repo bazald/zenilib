@@ -227,6 +227,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\Zeni\EZ2D.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\Zeni\Font.cpp"
 					>
 				</File>
@@ -446,6 +450,10 @@
 				</File>
 				<File
 					RelativePath="..\include\Zeni\Core.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\Zeni\EZ2D.h"
 					>
 				</File>
 				<File

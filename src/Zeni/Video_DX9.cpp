@@ -372,9 +372,10 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, get_multisampling() > 1);
 
     // Finish with a few function calls
-    set_3d(Camera());
-    set_backface_culling();
+    set_2d();
+    set_backface_culling(false);
     set_lighting(false);
+    set_ambient_lighting(Color());
   }
 
   void Video_DX9::uninit() {

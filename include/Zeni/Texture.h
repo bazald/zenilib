@@ -78,7 +78,7 @@ namespace Zeni {
     void insert_frame(const std::string &name, const int &at_this_index); ///< Insert a frame
     void remove_frame(const int &frame_number); ///< Remove a frame
 
-    int num_frames(); ///< Get the number of frames
+    int get_num_frames(); ///< Get the number of frames
     int get_current_frame(); ///< Get the currently selected frame number
     void set_current_frame(const int &frame_number); ///< Set this frame
 
