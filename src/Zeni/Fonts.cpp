@@ -27,8 +27,8 @@
 */
 
 #include <Zeni/Fonts.h>
-#include <Zeni/Resource.h>
 #include <Zeni/Video.h>
+#include <Zeni/Resource.hxx>
 
 #include <iostream>
 #include <fstream>

@@ -16,7 +16,7 @@ ALLBUILDS = -pedantic-errors -Wall -W -Werror $(DISABLEGL) $(DISABLEWGL) $(DISAB
 DEBUG = -ggdb $(ALLBUILDS)
 RELEASE = -O2 $(ALLBUILDS)
 
-LSDLFLAGS = -lSDL_image -lSDL_mixer -lSDL_gfx -lSDL_ttf -lSDL_net
+LSDLFLAGS = -lSDL_image -lSDL_gfx -lSDL_ttf -lSDL_net
 LGLFLAGS = -lGL -lGLU
 WSDLFLAGS = -lSDLmain -lSDL $(LSDLFLAGS)
 WGLFLAGS = -lopengl32 -lglu32
