@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -89,6 +89,10 @@ namespace Zeni {
     return true;
   }
 
+  bool Video_DX9::zwrite_enabled() const {
+    return m_zwrite;
+  }
+
   void Video_DX9::set_color_to(const Color &color) {
     m_color = color;
   }
@@ -148,10 +152,12 @@ namespace Zeni {
       m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
       m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+      m_zwrite = true;
     }
     else {
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
       m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+      m_zwrite = false;
 
       D3DXMATRIX identity;
       D3DXMatrixIdentity(&identity);
@@ -249,6 +255,15 @@ namespace Zeni {
 
     uninit();
     init();
+  }
+
+  void Video_DX9::set_zwrite(const bool &enabled) {
+    m_zwrite = enabled;
+
+    if(m_zwrite)
+      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+    else 
+      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
   }
 
   Texture * Video_DX9::load_Texture(const std::string &filename) {

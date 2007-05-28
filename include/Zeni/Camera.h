@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -85,8 +85,8 @@ namespace Zeni {
     inline void adjust_position(const float &i, const float &j, const float &k); ///< Adjust the position of the camera using ijk values.
 
     void adjust_yaw(const float &theta); ///< Adjust the orientation of the camera: left == positive;
-    void adjust_pitch(const float &phi); ///< Adjust the orientation of the camera: down == positive;
-    void adjust_roll(const float &rho);  ///< Adjust the orientation of the camera: spin left == positive;
+    void adjust_pitch(const float &phi); ///< Adjust the orientation of the camera: up == positive;
+    void adjust_roll(const float &rho);  ///< Adjust the orientation of the camera: spin right == positive;
 
     void move_forward_xy(const float &distance); ///< Move the camera in the forward direction, projected onto the xy-plane.
     void move_left_xy(const float &distance); ///< Move the camera in the left direction, projected onto the xy-plane.

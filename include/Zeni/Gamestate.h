@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -177,7 +177,7 @@ namespace Zeni {
     bool operator<(const Zeni_Input_ID &rhs) const;
   };
 
-  class Gamestate_II : Gamestate_Base {
+  class Gamestate_II : public Gamestate_Base {
   public:
     Gamestate_II();
 
@@ -187,11 +187,11 @@ namespace Zeni {
     virtual void on_event(const SDL_Event &event);
     virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
 
-    void get_min_confidence() const;
-    void get_max_confidence() const;
+    inline float get_min_confidence() const;
+    inline float get_max_confidence() const;
 
-    float set_min_confidence(const float &min);
-    float set_max_confidence(const float &min);
+    inline void set_min_confidence(const float &min);
+    inline void set_max_confidence(const float &max);
 
     virtual int get_action(const Zeni_Input_ID &event);
     virtual Zeni_Input_ID get_event(const int &action);

@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -83,6 +83,10 @@ namespace Zeni {
 
   bool Video_GL::has_vertex_buffers() const {
     return m_vertex_buffers;
+  }
+
+  bool Video_GL::zwrite_enabled() const {
+    return m_zwrite;
   }
 
   void Video_GL::set_color_to(const Color &color) {
@@ -262,6 +266,15 @@ namespace Zeni {
       Video::set_vertical_sync(on);
     }
 #endif
+  }
+
+  void Video_GL::set_zwrite(const bool &enabled) {
+    m_zwrite = enabled;
+
+    if(m_zwrite)
+      glDepthMask(GL_TRUE);
+    else
+      glDepthMask(GL_FALSE);
   }
 
   Texture * Video_GL::load_Texture(const std::string &filename) {

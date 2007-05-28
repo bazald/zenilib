@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -51,12 +51,12 @@ namespace Zeni {
   void Camera::adjust_pitch(const float &phi) {
     float c = cos(phi), s = sin(phi);
     Vector3f up = m_up;
-    m_up = c * m_up - s * m_forward;
-    m_forward = c * m_forward + s * up;
+    m_up = c * m_up + s * m_forward;
+    m_forward = c * m_forward - s * up;
   }
 
   void Camera::adjust_roll(const float &rho) {
-    m_up = cos(rho) * m_up + sin(rho) * get_left();
+    m_up = cos(rho) * m_up - sin(rho) * get_left();
   }
 
   void Camera::move_forward_xy(const float &distance) {

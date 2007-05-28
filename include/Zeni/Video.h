@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -107,6 +107,7 @@ namespace Zeni {
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
     virtual int get_maximum_anisotropy() const = 0; ///< Get the current level of anisotrophy
     virtual bool has_vertex_buffers() const = 0; ///< Determine whether Vertex_Buffers are supported
+    virtual bool zwrite_enabled() const = 0; ///< Determine whether writing to Z-Buffer is enabled
 
     // Modifiers
     void set_2d(); ///< Set a 2D view filling the entire display area
@@ -116,6 +117,7 @@ namespace Zeni {
       const std::pair<Point2i, Point2i> &viewport) = 0; ///< Set a 3D view for a viewport
     virtual void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
     virtual void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
+    virtual void set_zwrite(const bool &enabled) = 0; ///< Enable or disable writing to the Z-Buffer
 
     // Color and Texturing
     virtual void set_color_to(const Color &color) = 0; ///< Set the current color

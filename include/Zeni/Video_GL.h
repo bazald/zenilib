@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -70,12 +70,14 @@ namespace Zeni {
     // Accessors
     virtual int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
     virtual bool has_vertex_buffers() const; ///< Determine whether Vertex_Buffers are supported
+    virtual bool zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
 
     // Modifiers
     virtual void set_3d_view(const Camera &camera, const bool &on, 
       const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
     virtual void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
     virtual void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
+    virtual void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
 
     // Color and Texturing
     virtual void set_color_to(const Color &color); ///< Set the current color
@@ -123,7 +125,7 @@ namespace Zeni {
     PFNGLBUFFERDATAARBPROC m_pglBufferDataARB;
 
     int m_maximum_anisotropy;
-    bool m_vertex_buffers;
+    bool m_vertex_buffers, m_zwrite;
   };
 
 }

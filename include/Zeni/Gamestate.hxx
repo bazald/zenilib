@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -67,6 +67,26 @@ namespace Zeni {
 
   Gamestate_Base & Gamestate::get() {
     return *m_state;
+  }
+  
+  float Gamestate_II::get_min_confidence() const {
+    return m_min_confidence;
+  }
+
+  float Gamestate_II::get_max_confidence() const {
+    return m_max_confidence;
+  }
+
+  void Gamestate_II::set_min_confidence(const float &min) {
+    m_min_confidence = min;
+    if(m_min_confidence < 0.0f || m_min_confidence >= m_max_confidence)
+      m_min_confidence = 0.0f;
+  }
+
+  void Gamestate_II::set_max_confidence(const float &max) {
+    m_max_confidence = max;
+    if(m_max_confidence > 1.0f || m_max_confidence <= m_min_confidence)
+      m_max_confidence = 1.0f;
   }
 
 }
