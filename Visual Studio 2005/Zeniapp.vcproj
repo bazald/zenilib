@@ -259,11 +259,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\Zeni\Matrix4f.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\Zeni\Model.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\Zeni\Net.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\Zeni\Quaternion.cpp"
 					>
 				</File>
 				<File
@@ -365,6 +373,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\include\Zeni\Matrix4f.hxx"
+					>
+				</File>
+				<File
 					RelativePath="..\include\Zeni\Model.hxx"
 					>
 				</File>
@@ -374,6 +386,10 @@
 				</File>
 				<File
 					RelativePath="..\include\Zeni\Quadrilateral.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\include\Zeni\Quaternion.hxx"
 					>
 				</File>
 				<File
@@ -485,6 +501,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\include\Zeni\Matrix4f.h"
+					>
+				</File>
+				<File
 					RelativePath="..\include\Zeni\Model.h"
 					>
 				</File>
@@ -494,6 +514,10 @@
 				</File>
 				<File
 					RelativePath="..\include\Zeni\Quadrilateral.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\Zeni\Quaternion.h"
 					>
 				</File>
 				<File
