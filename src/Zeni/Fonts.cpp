@@ -37,7 +37,9 @@ using namespace std;
 
 namespace Zeni {
 
-  Fonts::Fonts() {
+  Fonts::Fonts()
+    : m_filename("config/fonts.txt")
+  {
     init();
   }
 
@@ -134,6 +136,8 @@ namespace Zeni {
         uninit();
         throw;
       }
+
+      m_loaded = true;
     }
   }
 
@@ -143,8 +147,13 @@ namespace Zeni {
     m_fonts.clear();
     m_font_lookup.clear();
     TTF_Quit();
+    m_loaded = false;
   }
 
-  string Fonts::m_filename = "config/fonts.txt";
+  void Fonts::lose_resources() {
+    uninit();
+  }
+
+  bool Fonts::m_loaded = false;
 
 }

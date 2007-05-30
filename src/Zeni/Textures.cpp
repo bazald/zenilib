@@ -44,10 +44,7 @@ namespace Zeni {
   }
 
   Textures::~Textures() {
-    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
-      delete it->second;
-
-    m_loaded = false;
+    uninit();
   }
 
   Textures & Textures::get_reference() {
@@ -218,6 +215,18 @@ namespace Zeni {
       set_texture(name, Video::get_reference().load_Texture(fileName));
 
     m_loaded = true;
+  }
+
+  void Textures::uninit() {
+    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
+      delete it->second;
+    m_textures.clear();
+    m_texture_lookup.clear();
+    m_loaded = false;
+  }
+
+  void Textures::lose_resources() {
+    uninit();
   }
 
   bool Textures::m_loaded = false;

@@ -89,8 +89,11 @@ namespace Zeni {
     void reload(const std::string &tdb); ///< (Re)Load a texture database
     void reload(); ///< Reload a texture database
 
+    void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
+
   private:
     void init();
+    void uninit();
 
     std::string m_texturedb;
     

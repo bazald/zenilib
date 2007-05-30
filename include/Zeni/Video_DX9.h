@@ -119,18 +119,22 @@ namespace Zeni {
 
   protected:
     virtual void init();
+    virtual void reinit();
     virtual void uninit();
 
   private:
     void set_fvf();
 
     D3DCAPS9 m_d3d_capabilities;
+    D3DPRESENT_PARAMETERS m_d3d_parameters;
+
     LPDIRECT3D9 m_d3d;
     LPDIRECT3DDEVICE9 m_d3d_device;
     LPD3DXMATRIXSTACK m_matrix_stack;
 
     Color m_color;
     Color m_clear_color;
+    Color m_ambient_color;
 
     bool m_textured, m_3d, m_zwrite;
   };

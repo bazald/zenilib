@@ -228,6 +228,8 @@ namespace Zeni {
   }
 
   void Font_DX9::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
+    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+
     D3DCOLOR color2 = D3DCOLOR_ARGB(color.a_ub(),
       color.r_ub(),
       color.g_ub(),
@@ -238,7 +240,7 @@ namespace Zeni {
     float x_scale = 1.0f, y_scale = 1.0f;
 
     D3DVIEWPORT9 vp;
-    if(dynamic_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device()->GetViewport(&vp) == S_OK) {
+    if(vdx.get_d3d_device()->GetViewport(&vp) == S_OK) {
       /*x_scale = float(vp.Width) / Video::get_reference().get_screen_width();*/
       y_scale = float(vp.Height) / Video::get_reference().get_screen_height();
 

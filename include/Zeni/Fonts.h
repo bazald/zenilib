@@ -73,6 +73,8 @@ namespace Zeni {
     void clear_font(const std::string &name); ///< Clear a font by name.
     void reload(const std::string &filename = ""); ///< Reload the database or choose a new one.
 
+    void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
+
   private:
     void init();
     void uninit();
@@ -80,7 +82,8 @@ namespace Zeni {
     stdext::hash_map<std::string, unsigned long> m_font_lookup;
     stdext::hash_map<unsigned long, Font *> m_fonts;
 
-    static std::string m_filename;
+    std::string m_filename;
+    static bool m_loaded;
   };
 
   struct Fonts_Init_Failure : Error {
