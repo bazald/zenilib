@@ -141,53 +141,58 @@ namespace Zeni {
       Video::get_reference().render(*m_triangles_t[i]);
   }
 
-  template <typename VERTEX>
+  template <typename VERTEX, typename RENDER_WRAPPER = Render_Wrapper>
   struct SORTER {
     bool operator()(const Triangle<VERTEX> * const lhs, const Triangle<VERTEX> * const rhs) const {
-      return *lhs->get_render_wrapper() < *rhs->get_render_wrapper();
+      return dynamic_cast<const RENDER_WRAPPER &>(*lhs->get_render_wrapper()) < dynamic_cast<const RENDER_WRAPPER &>(*rhs->get_render_wrapper());
     }
   };
 
   void Vertex_Buffer::sort_triangles() {
     std::sort(m_triangles_c.begin(), m_triangles_c.end(), SORTER<Vertex3f_Color>());
-    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color>());
-    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
+    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color, Material_Render_Wrapper>());
+    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture, Material_Render_Wrapper>());
   }
 
-  template <typename VERTEX, typename RENDER_WRAPPER>
-  static int set_descriptors(vector<Triangle<VERTEX> *> &triangles,
-                             vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
-                             const RENDER_WRAPPER &,
-                             const int &triangles_done) {
-    int last = 0;
-    if(!triangles.empty()) {
-      descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[0]->get_render_wrapper()->get_duplicate(), triangles_done, 1));
-      RENDER_WRAPPER *rw = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
-      rw->clear_optimization();
-      for(unsigned int i = 1; i < triangles.size(); ++i) {
-        RENDER_WRAPPER *rw2 = const_cast<RENDER_WRAPPER *>(dynamic_cast<const RENDER_WRAPPER * const>(triangles[i]->get_render_wrapper()));
+  template <typename VERTEX, typename RENDER_WRAPPER = Render_Wrapper>
+  struct DESCRIBER {
+    bool operator()(vector<Triangle<VERTEX> *> &triangles,
+                    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+                    const int &triangles_done) const {
+      int last = 0;
+      if(!triangles.empty()) {
+        descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[0]->get_render_wrapper()->get_duplicate(), triangles_done, 1));
+        RENDER_WRAPPER *rw = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
+        rw->clear_optimization();
+        for(unsigned int i = 1; i < triangles.size(); ++i) {
+          RENDER_WRAPPER *rw2 = const_cast<RENDER_WRAPPER *>(dynamic_cast<const RENDER_WRAPPER * const>(triangles[i]->get_render_wrapper()));
 
-        if(*rw == *rw2)
-          ++descriptors[last]->num_elements;
-        else {
-          descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[i]->get_render_wrapper()->get_duplicate(), triangles_done+i, 1));
-          ++last;
-          rw2 = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
-          rw2->clear_optimization();
-          rw2->optimize_to_follow(*rw);
-          rw->optimize_to_precede(*rw2);
-          rw = rw2;
+          if(*rw == *rw2)
+            ++descriptors[last]->num_elements;
+          else {
+            descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[i]->get_render_wrapper()->get_duplicate(), triangles_done+i, 1));
+            ++last;
+            rw2 = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
+            rw2->clear_optimization();
+            rw2->optimize_to_follow(*rw);
+            rw->optimize_to_precede(*rw2);
+            rw = rw2;
+          }
         }
       }
+      return triangles.size() > 0;
     }
-    return int(triangles.size());
-  }
+  };
 
   void Vertex_Buffer::set_descriptors() {
-    int done = 0;
-    done += Zeni::set_descriptors(m_triangles_c, m_descriptors_c, Render_Wrapper(), done);
-    done += Zeni::set_descriptors(m_triangles_cm, m_descriptors_cm, Material_Render_Wrapper(Material()), done);
-    done += Zeni::set_descriptors(m_triangles_t, m_descriptors_t, Material_Render_Wrapper(Material()), done);
+    {
+      int done = DESCRIBER<Vertex3f_Color>()(m_triangles_c, m_descriptors_c, 0);
+      DESCRIBER<Vertex3f_Color, Material_Render_Wrapper>()(m_triangles_cm, m_descriptors_cm, done);
+    }
+
+    {
+      DESCRIBER<Vertex3f_Texture, Material_Render_Wrapper>()(m_triangles_t, m_descriptors_t, 0);
+    }
   }
 
 #ifndef DISABLE_GL
@@ -228,13 +233,13 @@ namespace Zeni {
     const unsigned int tbuf_size = t_size * (num_vertices_t());
     
     if(vbuf_c_size) {
-      char *p_verts = reinterpret_cast<char *>(malloc(vbuf_c_size));
-      char *p_normals = reinterpret_cast<char *>(malloc(nbuf_c_size));
-      char *p_colors = reinterpret_cast<char *>(malloc(cbuf_size));
+      unsigned char *p_verts = reinterpret_cast<unsigned char *>(malloc(vbuf_c_size));
+      unsigned char *p_normals = reinterpret_cast<unsigned char *>(malloc(nbuf_c_size));
+      unsigned char *p_colors = reinterpret_cast<unsigned char *>(malloc(cbuf_size));
 
-      char *buffered_verts = p_verts;
-      char *buffered_normals = p_normals;
-      char *buffered_colors = p_colors;
+      unsigned char *buffered_verts = p_verts;
+      unsigned char *buffered_normals = p_normals;
+      unsigned char *buffered_colors = p_colors;
 
       for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(int j = 0; j < 3; ++j) {
@@ -245,6 +250,7 @@ namespace Zeni {
           buffered_normals += n_size;
 
           memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_c[i]->get_vertex(j).get_address())+6, c_size);
+          swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
 
@@ -257,6 +263,7 @@ namespace Zeni {
           buffered_normals += n_size;
 
           memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_cm[i]->get_vertex(j).get_address())+6, c_size);
+          swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
 
@@ -275,13 +282,13 @@ namespace Zeni {
     }
 
     if(vbuf_t_size) {
-      char *p_verts = reinterpret_cast<char *>(malloc(vbuf_t_size));
-      char *p_normals = reinterpret_cast<char *>(malloc(nbuf_t_size));
-      char *p_texels = reinterpret_cast<char *>(malloc(tbuf_size));
+      unsigned char *p_verts = reinterpret_cast<unsigned char *>(malloc(vbuf_t_size));
+      unsigned char *p_normals = reinterpret_cast<unsigned char *>(malloc(nbuf_t_size));
+      unsigned char *p_texels = reinterpret_cast<unsigned char *>(malloc(tbuf_size));
 
-      char *buffered_verts = p_verts;
-      char *buffered_normals = p_normals;
-      char *buffered_texels = p_texels;
+      unsigned char *buffered_verts = p_verts;
+      unsigned char *buffered_normals = p_normals;
+      unsigned char *buffered_texels = p_texels;
 
       for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
         for(int j = 0; j < 3; ++j) {
@@ -360,6 +367,7 @@ namespace Zeni {
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
       vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5]);
       glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
       Zeni::render(m_descriptors_t);
 
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);

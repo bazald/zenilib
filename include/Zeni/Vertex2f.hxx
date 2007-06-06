@@ -53,7 +53,11 @@ namespace Zeni {
     return m_argb;
   }
 
-  void Vertex2f_Color::set_color(const long &argb) {
+  void Vertex2f_Color::set_color(const Color &color) {
+    m_argb = color.get_argb();
+  }
+
+  void Vertex2f_Color::set_color(const unsigned long &argb) {
     m_argb = argb;
   }
 

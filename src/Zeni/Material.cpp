@@ -30,6 +30,7 @@
 
 #include <Zeni/Video.hxx>
 #include <Zeni/Video_DX9.hxx>
+#include <Zeni/Video_GL.h>
 
 #include <Zeni/Textures.hxx>
 
@@ -86,30 +87,32 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  void Material::set(Video_GL &, const int &optimization) const {
-    GLenum face = Video::get_reference().get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
+  void Material::set(Video_GL &vgl, const int &optimization) const {
+    if(vgl.get_lighting()) {
+      GLenum face = vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
 
-    if(!(optimization & (1 << 0)))
-      glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
-    if(!(optimization & (1 << 1)))
-      glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&m_diffuse));
-    if(!(optimization & (1 << 2)))
-      glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&m_specular));
-    if(!(optimization & (1 << 3)))
-      glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&m_emissive));
-    if(!(optimization & (1 << 4)))
-      glMaterialfv(face, GL_SHININESS, &m_power);
+      if(!(optimization & (1 << 0)))
+        glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
+      if(!(optimization & (1 << 1)))
+        glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&m_diffuse));
+      if(!(optimization & (1 << 2)))
+        glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&m_specular));
+      if(!(optimization & (1 << 3)))
+        glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&m_emissive));
+      if(!(optimization & (1 << 4)))
+        glMaterialfv(face, GL_SHININESS, &m_power);
+    }
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty()) {
       try {
-        Video::get_reference().apply_texture(m_texture_id);
+        vgl.apply_texture(m_texture_id);
       }
       catch(Texture_Not_Found &) {
         m_texture_id = Textures::get_reference().get_texture_id(m_texture);
         if(!m_texture_id)
           throw;
-        Video::get_reference().apply_texture(m_texture_id);
+        vgl.apply_texture(m_texture_id);
       }
     }
   }

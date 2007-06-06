@@ -32,6 +32,7 @@
 #include "Quaternion.h"
 
 #include "Coordinate.hxx"
+#include "Vector3f.hxx"
 
 #include <cmath>
 
