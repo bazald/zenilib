@@ -176,6 +176,7 @@ namespace Zeni {
     Uint8 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
     int subid; ///< event.keysym.sym, event.button, event.axis; ignored for mouse motion (should be 0)
     int which; ///< Joystick Identifier; ignored for other events (should be 0)
+    mutable float previous_confidence;
 
     bool operator<(const Zeni_Input_ID &rhs) const;
   };

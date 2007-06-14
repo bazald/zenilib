@@ -54,6 +54,7 @@
 #define ZENI_FONT_H
 
 #include "Color.h"
+#include "Coordinate.h"
 #include "Core.h"
 
 #include <SDL/SDL_ttf.h>
@@ -80,7 +81,8 @@ namespace Zeni {
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
-    inline int get_glyph_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
+    inline int get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
+    virtual int get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
     /// Render text at screen position (x, y), with justification JUSTIFY.  Remember not to clip the screen if you want this to look good in OpenGL.
     virtual void render_text(const std::string &text, const int &x, const int &y, 
@@ -97,18 +99,16 @@ namespace Zeni {
 
     struct Glyph {
       Glyph();
-      Glyph(TTF_Font *font_, const char &c);
-      ~Glyph();
+      Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height);
 
       inline int get_glyph_width() const;
-      inline int get_glyph_height() const;
 
       void render(const int &x, const int &y) const;
 
     private:
-      int m_glyph_width, m_glyph_height;
-      float tex_w, tex_h;
-      Texture *texture;
+      int m_glyph_width;
+      Point2f m_upper_left_point, m_lower_right_point;
+      Point2f m_upper_left_texel, m_lower_right_texel;
     };
 
   public:
@@ -117,11 +117,14 @@ namespace Zeni {
       const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     ~Font_GL();
 
+    virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+
     virtual void render_text(const std::string &text, const int &x, const int &y, 
       const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
 
   private:
     Glyph *m_glyph[num_glyphs];
+    Texture *m_texture;
     int m_font_height;
   };
 #endif
@@ -133,6 +136,8 @@ namespace Zeni {
     Font_DX9(const std::string &codename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     ~Font_DX9();
+
+    virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
     virtual void render_text(const std::string &text, const int &x, const int &y, 
       const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;

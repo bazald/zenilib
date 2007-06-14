@@ -51,6 +51,7 @@ namespace Zeni {
 
       Material material(image_name);
       material.set_ambient(color_filter);
+      material.set_diffuse(color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f)),
@@ -90,6 +91,7 @@ namespace Zeni {
 
       Material material(image_name);
       material.set_ambient(color_filter);
+      material.set_diffuse(color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(about + ulv), Point2f(tx0, 0.0f)),

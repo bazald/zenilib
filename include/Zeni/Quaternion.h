@@ -75,13 +75,21 @@ namespace Zeni {
     inline Quaternion adjoint() const;
 
     // Useful interops
-    inline Vector3f Quaternion::operator*(const Vector3f &rhs) const;
-    inline std::pair<Vector3f, float> get_rotation() const;
-    inline Matrix4f get_matrix() const;
+    inline Vector3f Quaternion::operator*(const Vector3f &rhs) const; ///< Rotate a vector, maintaining constant magnitude
+    inline std::pair<Vector3f, float> get_rotation() const; ///< Get the rotation in radians about an axis
+    inline Matrix4f get_matrix() const; ///< Get the matrix form of the rotation in row-major order
 
     float time;
 	  Vector3f space;
   };
+
+  inline Quaternion operator*(const float &lhs, const Quaternion &rhs) { ///< Get the scalar multiple
+    return rhs * lhs;
+  }
+
+  inline Quaternion operator/(const float &lhs, const Quaternion &rhs) { ///< Get the scalar... something
+    return rhs * lhs;
+  }
 
 }
 

@@ -40,6 +40,7 @@
 #include <Zeni/Color.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Matrix4f.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
@@ -258,6 +259,11 @@ namespace Zeni {
 
   void Video_DX9::scale_scene(const Vector3f &factor) {
     m_matrix_stack->ScaleLocal(factor.i, factor.j, factor.k);
+    m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
+  }
+
+  void Video_DX9::transform_scene(const Matrix4f &transformation) {
+    m_matrix_stack->MultMatrixLocal(reinterpret_cast<const D3DXMATRIX * const>(&transformation));
     m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
   }
 

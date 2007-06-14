@@ -164,7 +164,7 @@ namespace Zeni {
   void Texture_GL::build_from_surface(SDL_Surface *surface) {
     bool width_pow2 = false, height_pow2 = false;
 
-    for(int i = 1; i < 1024; i <<= 1) {
+    for(int i = 1; i; i <<= 1) {
       if(surface->w == i)
         width_pow2 = true;
       if(surface->h == i)

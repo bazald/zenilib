@@ -28,6 +28,7 @@
 
 #include <Zeni/Matrix4f.hxx>
 
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Core.h> // just for Error; should be removed
 
 #include <cmath>
@@ -63,6 +64,37 @@ namespace Zeni {
     m_matrix[3][1] = dx;
     m_matrix[3][2] = dy;
     m_matrix[3][3] = dz;
+  }
+  
+  Matrix4f::Matrix4f(const Vector3f &first, const Vector3f &second, const Vector3f &third, const bool &rows)
+  {
+    m_matrix[0][0] = first.i;
+    m_matrix[1][1] = second.j;
+    m_matrix[2][2] = third.k;
+    m_matrix[0][3] = 0.0f;
+    m_matrix[1][3] = 0.0f;
+    m_matrix[2][3] = 0.0f;
+    m_matrix[3][0] = 0.0f;
+    m_matrix[3][1] = 0.0f;
+    m_matrix[3][2] = 0.0f;
+    m_matrix[3][3] = 1.0f;
+
+    if(rows) {
+      m_matrix[0][1] = first.j;
+      m_matrix[0][2] = first.k;
+      m_matrix[1][0] = second.i;
+      m_matrix[1][2] = second.k;
+      m_matrix[2][0] = third.i;
+      m_matrix[2][1] = third.j;
+    }
+    else {
+      m_matrix[0][1] = second.i;
+      m_matrix[0][2] = third.i;
+      m_matrix[1][0] = first.j;
+      m_matrix[1][2] = third.j;
+      m_matrix[2][0] = first.k;
+      m_matrix[2][1] = second.k;
+    }
   }
 
   Matrix4f::Matrix4f(const Matrix4f &rhs)
@@ -127,5 +159,17 @@ namespace Zeni {
 
 #undef term
 #undef m
+  }
+  
+  Vector3f Matrix4f::operator*(const Vector3f &vector) const {
+    Vector3f rv;
+
+    rv.i = m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3];
+    rv.j = m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3];
+    rv.k = m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3];
+
+    const float scaling_factor = m_matrix[3][0] * vector.i + m_matrix[3][1] * vector.j + m_matrix[3][2] * vector.k + m_matrix[3][3];
+
+    return rv / scaling_factor;
   }
 }

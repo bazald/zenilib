@@ -30,6 +30,8 @@
 
 #include <Zeni/Game.hxx>
 
+#include <cmath>
+
 namespace Zeni {
 
   void Gamestate_Base::on_event(const SDL_Event &event) {
@@ -761,7 +763,8 @@ default: return "SDLK_UNKNOWN";
   Zeni_Input_ID::Zeni_Input_ID(const Uint8 &type_, const int &subid_, const int &which_)
     : type(type_),
     subid(subid_),
-    which(which_)
+    which(which_),
+    previous_confidence(0.0f)
   {
   }
 
@@ -772,7 +775,7 @@ default: return "SDLK_UNKNOWN";
   }
 
   Gamestate_II::Gamestate_II()
-    : m_min_confidence(0.05f),
+    : m_min_confidence(0.1f),
     m_max_confidence(1.0f)
   {
   }
@@ -780,9 +783,30 @@ default: return "SDLK_UNKNOWN";
   void Gamestate_II::on_event(const SDL_Event &event) {
     Zeni_Input_ID event_ID;
     float confidence = 0.0f;
-    bool absolute = true;
 
     switch(event.type) {
+    case SDL_JOYAXISMOTION:
+      event_ID.type = SDL_JOYAXISMOTION;
+      event_ID.subid = event.jaxis.axis;
+      event_ID.which = event.jaxis.which;
+
+      confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
+
+      {
+        const float ac = fabs(confidence);
+        const float nm = confidence / ac;
+        confidence = nm * std::min(std::max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
+      }
+
+      break;
+    case SDL_JOYBUTTONDOWN:
+    case SDL_JOYBUTTONUP:
+      event_ID.type = SDL_JOYBUTTONDOWN;
+      event_ID.subid = event.jbutton.button;
+      event_ID.which = event.jbutton.which;
+
+      confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
+      break;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
       event_ID.type = SDL_KEYDOWN;
@@ -797,48 +821,21 @@ default: return "SDLK_UNKNOWN";
 
       confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
       break;
-    case SDL_JOYAXISMOTION:
-      event_ID.type = SDL_JOYAXISMOTION;
-      event_ID.subid = event.jaxis.axis;
-      event_ID.which = event.jaxis.which;
-
-      confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
-      absolute = false;
-      break;
-    case SDL_JOYBUTTONDOWN:
-    case SDL_JOYBUTTONUP:
-      event_ID.type = SDL_JOYBUTTONDOWN;
-      event_ID.subid = event.jbutton.button;
-      event_ID.which = event.jbutton.which;
-
-      confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
-      break;
     default:
       Gamestate_Base::on_event(event);
       return;
     }
 
-    if(!absolute)
-      if(confidence > 0.0f) {
-        confidence -= m_min_confidence;
-        if(confidence < 0.0f)
-          confidence = 0.0f;
-        else
-          confidence /= m_max_confidence - m_min_confidence;
-        if(confidence > 1.0f)
-          confidence = 1.0f;
+    std::map<Zeni_Input_ID, int>::iterator it = m_ii.find(event_ID);
+    if(it != m_ii.end()) {
+      float &pc = it->first.previous_confidence;
+      if(pc != confidence) {
+        pc = confidence;
+        on_event(event_ID, confidence, it->second);
       }
-      else if(confidence < 0.0f) {
-        confidence += m_min_confidence;
-        if(confidence > 0.0f)
-          confidence = 0.0f;
-        else
-          confidence /= m_max_confidence - m_min_confidence;
-        if(confidence < -1.0f)
-          confidence = -1.0f;
-      }
-
-    on_event(event_ID, confidence, get_action(event_ID));
+    }
+    else
+      on_event(event_ID, confidence, 0);
   }
 
   void Gamestate_II::on_event(const Zeni_Input_ID &, const float &, const int &) {

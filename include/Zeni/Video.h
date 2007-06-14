@@ -71,6 +71,7 @@ namespace Zeni {
   class Font;
   class Light;
   class Material;
+  class Matrix4f;
   class Renderable;
   class Texture;
   class Vertex_Buffer;
@@ -141,6 +142,7 @@ namespace Zeni {
     virtual void translate_scene(const Vector3f &direction) = 0; ///< Translate the scene
     virtual void rotate_scene(const Vector3f &about, const float &radians) = 0; ///< Rotate the scene
     virtual void scale_scene(const Vector3f &factor) = 0; ///< Scale the scene
+    virtual void transform_scene(const Matrix4f &transformation) = 0; ///< Transform the scene
 
     // Window Decorations
     void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message

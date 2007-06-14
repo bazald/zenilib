@@ -33,30 +33,30 @@
 
 namespace Zeni {
 
-  struct Matrix4f {
+  class Matrix4f {
   public:
-    /// The best way to create a Vector3f
     Matrix4f();
     Matrix4f(
       const float &aw, const float &ax, const float &ay, const float &az,
       const float &bw, const float &bx, const float &by, const float &bz,
       const float &cw, const float &cx, const float &cy, const float &cz,
       const float &dw, const float &dx, const float &dy, const float &dz);
+    Matrix4f(const Vector3f &first, const Vector3f &second, const Vector3f &third, const bool &rows = false);
     Matrix4f(const Matrix4f &rhs);
 
-    // Vector addition/subtraction
+    // Matrix addition/subtraction
     inline Matrix4f operator+(const Matrix4f &rhs) const; ///< Get the sum
     inline Matrix4f operator-(const Matrix4f &rhs) const; ///< Get the difference
     inline Matrix4f & operator+=(const Matrix4f &rhs); ///< Set equal to the sum
     inline Matrix4f & operator-=(const Matrix4f &rhs); ///< Set equal to the difference
 
-    // Vector Dot-Product and Cross-Product
+    // Matrix Products
     inline Matrix4f operator*(const Matrix4f &rhs) const; ///< Get the product
     inline Matrix4f operator*=(const Matrix4f &rhs); ///< Get the product
     inline Matrix4f operator/(const Matrix4f &rhs) const; ///< Get the product with the inverse
     inline Matrix4f operator/=(const Matrix4f &rhs); ///< Set equal to the product with the inverse
 
-    // Vector Scalar Multiplication I of II
+    // Matrix Scalar Operations
     inline Matrix4f operator*(const float &rhs) const; ///< Get the scalar multiple
     inline Matrix4f operator/(const float &rhs) const; ///< Get the scalar... something
     inline Matrix4f & operator*=(const float &rhs); ///< Set equal to the scalar multiple
@@ -69,6 +69,8 @@ namespace Zeni {
     Matrix4f & transpose(); ///< Transpose the matrix
     Matrix4f transposed() const; ///< Get the transpose
     float determinant() const; ///< Get the determinant
+
+    Vector3f operator*(const Vector3f &vector) const; ///< Transform a Vector3f
 
   private:
 	  float m_matrix[4][4];

@@ -56,70 +56,42 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   Font_GL::Glyph::Glyph()
-    : m_glyph_width(0),
-    m_glyph_height(0),
-    tex_w(0),
-    tex_h(0),
-    texture(0)
+    : m_glyph_width(0)
   {
   }
 
-  Font_GL::Glyph::Glyph(TTF_Font *font_, const char &c)
-    : m_glyph_width(0),
-    m_glyph_height(TTF_FontHeight(font_)),
-    tex_w(0),
-    tex_h(0),
-    texture(0)
+  Font_GL::Glyph::Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height)
+    : m_glyph_width(0)
   {
-    TTF_GlyphMetrics(font_, c, 0, 0, 0, 0, &m_glyph_width);
-    const int 
-      next_w = int(pow(2.0f, ceil(log(float(m_glyph_width))/log(2.0f)))), 
-      next_h = int(pow(2.0f, ceil(log(float(m_glyph_height))/log(2.0f))));
+    int minx, maxy;
+    TTF_GlyphMetrics(font_, c, &minx, 0, 0, &maxy, &m_glyph_width);
 
-    SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
+    m_upper_left_point.x = float(minx);
+    m_upper_left_point.y = float(TTF_FontAscent(font_) - maxy);
+    m_lower_right_point.x = m_upper_left_point.x + source->w;
+    m_lower_right_point.y = m_upper_left_point.y + source->h;
 
-    char t[2] = {c, '\0'};
-    SDL_Surface *surface = TTF_RenderText_Blended(font_, t, color2);
-    {
-      SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32
-        , 0xff000000
-        , 0x00ff0000
-        , 0x0000ff00
-        , 0x000000ff
-        );
-      if(surf2) {
-        SDL_FillRect(surf2, 0, SDL_MapRGBA(surf2->format, SDL_ALPHA_TRANSPARENT, 255, 255, 255));
+    SDL_Rect dstrect2 = {dstrect.x, dstrect.y, Uint16(source->w), Uint16(source->h)};
 
-        SDL_BlitSurface(surface, 0, surf2, 0);
+    m_upper_left_texel.x = float(dstrect2.x) / float(total_width);
+    m_upper_left_texel.y = float(dstrect2.y) / float(total_width);
+    m_lower_right_texel.x = float(dstrect2.x + source->w) / float(total_width);
+    m_lower_right_texel.y = float(dstrect2.y + source->h) / float(total_height);
 
-        SDL_FreeSurface(surface);
-        surface = surf2;
-      }
-    }
-
-    texture = new Texture_GL(surface);
-
-    tex_w = float(m_glyph_width) / next_w;
-    tex_h = float(m_glyph_height) / next_h;
-  }
-
-  Font_GL::Glyph::~Glyph() {
-    delete texture;
+    SDL_BlitSurface(source, 0, render_target, &dstrect2);
+    SDL_FreeSurface(source);
   }
 
   void Font_GL::Glyph::render(const int &x, const int &y) const {
-    glEnable(GL_TEXTURE_2D);
-    texture->apply_texture();
+    static Video &vr = Video::get_reference();
 
     Quadrilateral<Vertex2f_Texture> rect
-      (Vertex2f_Texture(Point2f(float(x), float(y)), Point2f(0, 0)),
-      Vertex2f_Texture(Point2f(float(x), float(y) + m_glyph_height), Point2f(0, tex_h)),
-      Vertex2f_Texture(Point2f(float(x) + m_glyph_width, float(y) + m_glyph_height), Point2f(tex_w, tex_h)),
-      Vertex2f_Texture(Point2f(float(x) + m_glyph_width, float(y)), Point2f(tex_w, 0)));
+      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel),
+      Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_lower_right_point.y + y), Point2f(m_upper_left_texel.x, m_lower_right_texel.y)),
+      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_lower_right_point.y + y), m_lower_right_texel),
+      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_upper_left_point.y + y), Point2f(m_lower_right_texel.x, m_upper_left_texel.y)));
 
-    Video::get_reference().render(rect);
-
-    glDisable(GL_TEXTURE_2D);
+    vr.render(rect);
   }
 
   Font_GL::Font_GL()
@@ -139,6 +111,8 @@ namespace Zeni {
     if(!font)
       throw Font_Init_Failure();
 
+    /*** Set Style ***/
+
     if(bold && italic)
       TTF_SetFontStyle(font, TTF_STYLE_BOLD | TTF_STYLE_ITALIC);
     else if(bold)
@@ -146,10 +120,46 @@ namespace Zeni {
     else if(italic)
       TTF_SetFontStyle(font, TTF_STYLE_ITALIC);
 
-    for(int i = 0; i < num_glyphs; ++i)
-      m_glyph[i] = new Glyph(font, char(i));
+    /*** Determine Width & Height ***/
 
     m_font_height = TTF_FontHeight(font);
+
+    int font_width = 0;
+    int font_height = 0;
+    SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
+    SDL_Surface *source[256] = {0};
+    for(unsigned char c = 1; c; ++c) {
+      //char t[2] = {c, '\0'};
+      //source[c] = TTF_RenderText_Blended(font, t, color2);
+      source[c] = TTF_RenderGlyph_Blended(font, c, color2);
+      font_width = max(font_width, source[c] ? source[c]->w : 0);
+      font_height = max(font_height, source[c] ? source[c]->h : 0);
+    }
+
+    /*** Initialize Intermediate SDL Surface ***/
+
+    const int 
+      next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
+      next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
+  
+    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+    if(!font_surface)
+      throw Font_Init_Failure();
+
+    SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, SDL_ALPHA_TRANSPARENT, 255, 255, 255));
+
+    /*** Initialize Glyphs ***/
+
+    SDL_Rect dstrect = {0, 0, Uint16(font_width), Uint16(font_height)};
+    for(unsigned char c = 1; c; ++c) {
+      dstrect.x = Sint16((c % 16) * font_width);
+      dstrect.y = Sint16((c / 16) * font_width);
+      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h);
+    }
+
+    /*** Initialize Final Texture ***/
+    
+    m_texture = new Texture_GL(font_surface);
 
     TTF_CloseFont(font);
   }
@@ -158,18 +168,42 @@ namespace Zeni {
     for(int i = 0; i < num_glyphs; ++i)
       delete m_glyph[i];
   }
+  
+  int Font_GL::get_text_width(const std::string &text) const {
+    int max_width = 0, width = 0;
+    unsigned int pos = 0;
+
+    for(; pos < text.size(); ++pos)
+      if(text[pos] != '\r' && text[pos] != '\n')
+        width += m_glyph[int(text[pos])]->get_glyph_width();
+      else {
+        max_width = max(max_width, width);
+        width = 0;
+      }
+
+    return max(max_width, width);
+  }
 
   void Font_GL::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
-    Video::get_reference().set_color_to(color);
+    Video &vr = Video::get_reference();
 
-    int cx = x, x_diff = 0;
+    vr.set_color_to(color);
+    m_texture->apply_texture();
+    glEnable(GL_TEXTURE_2D);
+
+    int cx, x_diff, cy = y, i = 0;
+
+NEXT_LINE:
+
+    cx = x;
+    x_diff = 0;
 
     if(justify != ZENI_LEFT) {
-      for(unsigned int i = 0; i < text.size(); ++i) {
-        if(text[i] == '\r' || text[i] == '\n')
+      for(unsigned int j = i; j < text.size(); ++j) {
+        if(text[j] == '\r' || text[j] == '\n')
           break;
 
-        x_diff -= m_glyph[int(text[i])]->get_glyph_width();
+        x_diff -= m_glyph[int(text[j])]->get_glyph_width();
       }
 
       if(justify == ZENI_CENTER)
@@ -178,18 +212,21 @@ namespace Zeni {
         cx += x_diff;
     }
 
-    for(unsigned int i = 0; i < text.size(); ++i) {
-      m_glyph[int(text[i])]->render(cx, y);
-
-      cx += m_glyph[int(text[i])]->get_glyph_width();
-
-      if(text[i] == '\r' && i+1 < text.size() && text[i+1] == '\n')
+    for(; i < int(text.size()); ++i) {
+      if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
         ++i;
       if(text[i] == '\r' || text[i] == '\n') {
-        render_text(text.substr(i + 1, text.length() - i - 1), x, y + m_font_height, color, justify);
-        break;
+        ++i;
+        cy += m_font_height;
+        goto NEXT_LINE;
+      }
+      else {
+        m_glyph[int(text[i])]->render(cx, cy);
+        cx += m_glyph[int(text[i])]->get_glyph_width();
       }
     }
+
+    glDisable(GL_TEXTURE_2D);
   }
 #endif
 
@@ -225,6 +262,21 @@ namespace Zeni {
       font->Release();
     if(resized)
       resized->Release();
+  }
+  
+  int Font_DX9::get_text_width(const std::string &text) const {
+    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+
+    D3DCOLOR color2 = D3DCOLOR_ARGB(
+      static_cast<unsigned char>(0xFF),
+      static_cast<unsigned char>(0xFF),
+      static_cast<unsigned char>(0xFF),
+      static_cast<unsigned char>(0xFF));
+
+    RECT rect;    
+    font->DrawText(NULL, text.c_str(), -1, &rect, DT_CALCRECT, color2);
+
+    return rect.right - rect.left;
   }
 
   void Font_DX9::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {

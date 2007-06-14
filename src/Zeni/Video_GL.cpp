@@ -40,6 +40,7 @@
 #include <Zeni/Color.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Matrix4f.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
@@ -229,6 +230,11 @@ namespace Zeni {
 
   void Video_GL::scale_scene(const Vector3f &factor) {
     glScalef(factor.i, factor.j, factor.k);
+  }
+
+  void Video_GL::transform_scene(const Matrix4f &transformation) {
+    Matrix4f transpose = transformation.transposed(); // to get column-major matrix
+    glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transpose));
   }
 
   void Video_GL::set_backface_culling(const bool &on) {

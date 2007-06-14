@@ -104,6 +104,7 @@ namespace Zeni {
     virtual void translate_scene(const Vector3f &direction); ///< Translate the scene
     virtual void rotate_scene(const Vector3f &about, const float &radians); ///< Rotate the scene
     virtual void scale_scene(const Vector3f &factor); ///< Scale the scene
+    virtual void transform_scene(const Matrix4f &transformation); ///< Transform the scene
 
     // Creation Functions
     virtual Texture * load_Texture(const std::string &filename); ///< Function for loading a Texture; used internally by Textures

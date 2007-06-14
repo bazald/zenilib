@@ -41,7 +41,7 @@ namespace Zeni {
     return m_italic;
   }
 
-  int Font::get_glyph_height() const {
+  int Font::get_text_height() const {
     return m_glyph_height;
   }
 
@@ -49,10 +49,6 @@ namespace Zeni {
 
   int Font_GL::Glyph::get_glyph_width() const {
     return m_glyph_width;
-  }
-
-  int Font_GL::Glyph::get_glyph_height() const {
-    return m_glyph_height;
   }
 
 #endif
