@@ -157,6 +157,14 @@ namespace Zeni {
 
     return matrix;
   }
+  
+  Vector3f Matrix4f::get_column(const int &column) const {
+    return Vector3f(m_matrix[0][column], m_matrix[1][column], m_matrix[2][column]);
+  }
+
+  Vector3f Matrix4f::get_row(const int &row) const {
+    return Vector3f(m_matrix[row][0], m_matrix[row][1], m_matrix[row][2]);
+  }
 
 }
 

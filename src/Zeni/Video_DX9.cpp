@@ -399,6 +399,14 @@ namespace Zeni {
     D3DXCreateMatrixStack(0, &m_matrix_stack);
     m_matrix_stack->LoadIdentity();
 
+    // Finish with a few function calls
+    set_backface_culling(false);
+    set_lighting(false);
+
+    reinit();
+  }
+
+  void Video_DX9::reinit() {
     // Enable Alpha Blitting
     m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -411,13 +419,7 @@ namespace Zeni {
     // Multisampling
     m_d3d_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, get_multisampling() > 1);
 
-    // Finish with a few function calls
-    set_backface_culling(false);
-    set_lighting(false);
-    reinit();
-  }
-
-  void Video_DX9::reinit() {
+    // More basic stuff
     set_2d();
     set_color_to(m_color);
     set_clear_color_to(m_clear_color);

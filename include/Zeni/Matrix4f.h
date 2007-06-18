@@ -30,6 +30,7 @@
 #define ZENI_MATRIX_H
 
 #include "Vector3f.h"
+#include <vector>
 
 namespace Zeni {
 
@@ -70,6 +71,9 @@ namespace Zeni {
     Matrix4f transposed() const; ///< Get the transpose
     float determinant() const; ///< Get the determinant
 
+    // Vector Functions
+    inline Vector3f get_column(const int &column) const; ///< Get a column of the upper-left 3x3 matrix
+    inline Vector3f get_row(const int &row) const; ///< Get a row of the upper left 3x3 matrix
     Vector3f operator*(const Vector3f &vector) const; ///< Transform a Vector3f
 
   private:

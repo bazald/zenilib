@@ -97,8 +97,8 @@ namespace Zeni {
     inline Vector3f get_ij(); ///< Get just the i and j parts
     inline Vector3f get_ik(); ///< Get just the i and k parts
     inline Vector3f get_jk(); ///< Get just the j and k parts
-    inline Vector3f multiply_by(const Vector3f &rhs); ///< Multiply corresponding members
-    inline Vector3f divide_by(const Vector3f &rhs); ///< Divide corresponding members
+    inline Vector3f multiply_by(const Vector3f &rhs) const; ///< Multiply corresponding members
+    inline Vector3f divide_by(const Vector3f &rhs) const; ///< Divide corresponding members
 
     // Spherical Accessors and Modifiers
     float theta() const; ///< theta == radians north of vector i

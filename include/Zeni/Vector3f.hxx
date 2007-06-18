@@ -166,11 +166,11 @@ namespace Zeni {
     return Vector3f(0.0f, j, k);
   }
 
-  Vector3f Vector3f::multiply_by(const Vector3f &rhs) {
+  Vector3f Vector3f::multiply_by(const Vector3f &rhs) const {
     return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k);
   }
 
-  Vector3f Vector3f::divide_by(const Vector3f &rhs) {
+  Vector3f Vector3f::divide_by(const Vector3f &rhs) const {
     return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
   }
 
