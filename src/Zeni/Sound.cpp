@@ -42,12 +42,14 @@ namespace Zeni {
   {
     Sound::get_reference();
 
+#ifndef DISABLE_AL
     m_buffer = alutCreateBufferHelloWorld();
 
     if(m_buffer == AL_NONE) {
       std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
     }
+#endif
   }
 
   Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
@@ -56,30 +58,40 @@ namespace Zeni {
     Sound::get_reference();
 
     rhs.m_buffer = AL_NONE;
+#ifndef DISABLE_AL
     rhs.m_buffer = alutCreateBufferHelloWorld();
     
     if(rhs.m_buffer == AL_NONE) {
       std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
     }
+#endif
   }
 
-  Sound_Buffer::Sound_Buffer(const string &filename)
+  Sound_Buffer::Sound_Buffer(const string &
+#ifndef DISABLE_AL
+    filename
+#endif
+    )
     : m_buffer(AL_NONE)
   {
     Sound::get_reference();
 
+#ifndef DISABLE_AL
     m_buffer = alutCreateBufferFromFile(filename.c_str());
 
     if(m_buffer == AL_NONE) {
       std::cerr << "ALUT error on '" << filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
     }
+#endif
   }
 
   Sound_Buffer::~Sound_Buffer() {
+#ifndef DISABLE_AL
     if(m_buffer != AL_NONE)
       alDeleteBuffers(1, &m_buffer);
+#endif
   }
   
   Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
@@ -118,14 +130,40 @@ namespace Zeni {
   }
 
   Sound_Source::~Sound_Source() {
+#ifndef DISABLE_AL
     if(m_source != AL_NONE)
       alDeleteSources(1, &m_source);
+#endif
   }
 
-  void Sound_Source::init(const ALuint &buffer, const float &pitch, const float &gain,
-                          const Point3f &position, const Vector3f &velocity, const bool &looping) const {
+  void Sound_Source::init(const ALuint &
+#ifndef DISABLE_AL
+    buffer
+#endif
+    , const float &
+#ifndef DISABLE_AL
+    pitch
+#endif
+    , const float &
+#ifndef DISABLE_AL
+    gain
+#endif
+    , const Point3f &
+#ifndef DISABLE_AL
+    position
+#endif
+    , const Vector3f &
+#ifndef DISABLE_AL
+    velocity
+#endif
+    , const bool &
+#ifndef DISABLE_AL
+    looping
+#endif
+    ) const {
     Sound::get_reference();
 
+#ifndef DISABLE_AL
     alGenSources(1, &m_source);
 
     if(m_source == AL_NONE) {
@@ -139,6 +177,7 @@ namespace Zeni {
     alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
     alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
     alSourcei(m_source, AL_LOOPING, looping);
+#endif
   }
 
   Sound_Source & Sound_Source::operator=(const Sound_Source &rhs) {
@@ -154,6 +193,7 @@ namespace Zeni {
     // Ensure Core is initialized
     Core::get_reference();
 
+#ifndef DISABLE_AL
     if(!alutInit(0, 0))
       throw Sound_Init_Failure();
 
@@ -168,12 +208,15 @@ namespace Zeni {
     alListenerfv(AL_POSITION, listener_position);
     alListenerfv(AL_VELOCITY, listener_velocity);
     alListenerfv(AL_ORIENTATION, listener_forward_and_up);
+#endif
   }
 
   Sound::~Sound() {
+#ifndef DISABLE_AL
     delete m_bgm_source;
     delete m_bgm;
     alutExit();
+#endif
   }
 
   Sound & Sound::get_reference() {
@@ -181,7 +224,12 @@ namespace Zeni {
     return e_sound;
   }
 
-  void Sound::set_BGM(const string &filename) {
+  void Sound::set_BGM(const string &
+#ifndef DISABLE_AL
+    filename
+#endif
+    ) {
+#ifndef DISABLE_AL
     assert_m_bgm();
 
     bool playing = m_bgm_source->is_playing() ? true : false;
@@ -202,9 +250,11 @@ namespace Zeni {
 
     if(playing)
       m_bgm_source->play();
+#endif
   }
 
   void Sound::assert_m_bgm() {
+#ifndef DISABLE_AL
     if(!m_bgm) {
       m_bgm = new Sound_Buffer();
       if(!m_bgm) {
@@ -221,6 +271,7 @@ namespace Zeni {
         throw Sound_Init_Failure();
       }
     }
+#endif
   }
 
 }
