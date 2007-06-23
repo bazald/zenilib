@@ -151,6 +151,7 @@ namespace Zeni {
     /*** Initialize Glyphs ***/
 
     SDL_Rect dstrect = {0, 0, Uint16(font_width), Uint16(font_height)};
+    m_glyph[0] = 0;
     for(unsigned char c = 1; c; ++c) {
       dstrect.x = Sint16((c % 16) * font_width);
       dstrect.y = Sint16((c / 16) * font_width);
@@ -165,7 +166,7 @@ namespace Zeni {
   }
 
   Font_GL::~Font_GL() {
-    for(int i = 0; i < num_glyphs; ++i)
+    for(int i = 1; i < num_glyphs; ++i)
       delete m_glyph[i];
   }
   

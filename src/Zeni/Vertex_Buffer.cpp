@@ -28,6 +28,7 @@
 
 #include <Zeni/Vertex_Buffer.hxx>
 
+#include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Quadrilateral.hxx>

@@ -3,6 +3,7 @@
 #DISABLEGL = -DDISABLE_GL
 DISABLEWGL = -DDISABLEWGL
 DISABLEDX9 = -DDISABLE_DX9
+#DISABLEAL = -DDISABLE_AL
 
 BUILD = DEBUG
 #BUILD = RELEASE
@@ -12,7 +13,7 @@ BUILD = DEBUG
 
 CC = g++
 
-ALLBUILDS = -pedantic-errors -Wall -W -Werror $(DISABLEGL) $(DISABLEWGL) $(DISABLEDX9) -D_CRT_SECURE_NO_DEPRECATE -Iinclude
+ALLBUILDS = -pedantic-errors -Wall -W -Werror $(DISABLEGL) $(DISABLEWGL) $(DISABLEDX9) $(DISABLEAL) -D_CRT_SECURE_NO_DEPRECATE -Iinclude
 DEBUG = -ggdb $(ALLBUILDS)
 RELEASE = -O2 $(ALLBUILDS)
 
@@ -27,7 +28,7 @@ LOALFLAGS = -lalut -lopenal
 
 CFLAGS = $($(BUILD))
 XFLAGS = $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
-LFLAGS = `sdl-config --cflags --static-libs` $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS) $(LOALFLAGS) --static-libgcc
+LFLAGS = `sdl-config --cflags --static-libs` $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS) --static-libgcc
 LD = ld
 
 SRCS =  src/Zeni/Camera.cpp \
@@ -42,9 +43,11 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Gamestate.cpp \
 	src/Zeni/Light.cpp \
 	src/Zeni/main.cpp \
+	src/Zeni/Matrix4f.cpp \
 	src/Zeni/Material.cpp \
 	src/Zeni/Model.cpp \
 	src/Zeni/Net.cpp \
+	src/Zeni/Quaternion.cpp \
 	src/Zeni/Render_Wrapper.cpp \
 	src/Zeni/Resource.cpp \
 	src/Zeni/Sound.cpp \
@@ -62,28 +65,14 @@ SRCS =  src/Zeni/Camera.cpp \
 	zeniapp.cpp
 OBJS = $(SRCS:.cpp=.o)
 
-all: zeniapp.exe
-
-linux: zeniapp
-
-windows: zeniapp.exe
+all: zeniapp
+	
 
 zeniapp: $(OBJS)
+ifeq ($(DISABLEAL),-DDISABLE_AL)
 	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(LFLAGS)
-
-zeniapp.exe: $(OBJS)
-ifeq ($(DISABLEGL),-DDISABLE_GL)
-ifeq ($(DISABLEDX9),-DDISABLE_DX9)
-	echo "No rendering engine compiled.  Try again." > /dev/null
 else
-	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(XFLAGS) $(DX9FLAGS)
-endif
-else
-ifeq ($(DISABLEDX9),-DDISABLE_DX9)
-	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(XFLAGS) $(WGLFLAGS)
-else
-	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(XFLAGS) $(WGLFLAGS) $(DX9FLAGS)
-endif
+	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(LFLAGS) $(LOALFLAGS)
 endif
 
 %.o:
@@ -99,4 +88,4 @@ clean: moreclean
 	rm -f zeniapp zeniapp.exe
 
 package: clean
-	cd ../ && rm -f Zeniapp.7z && 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=off zeniapp.7z zeniapp/
+	cd ../ && rm -f zeniapp.7z && 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=off zeniapp.7z zeniapp/

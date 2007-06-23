@@ -255,15 +255,11 @@ namespace Zeni {
   }
 
   Point3f Sound::get_listener_position() const {
-#ifndef DISABLE_AL
     return m_bgm_source->get_position();
-#endif
   }
 
   Vector3f Sound::get_listener_velocity() const {
-#ifndef DISABLE_AL
     return m_bgm_source->get_velocity();
-#endif
   }
 
   std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {

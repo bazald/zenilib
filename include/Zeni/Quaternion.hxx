@@ -63,7 +63,7 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::operator*=(const Quaternion &rhs) {
-    *this = grassman_product(rhs);
+    return *this = grassman_product(rhs);
   }
 
   Quaternion Quaternion::grassman_product(const Quaternion &rhs) const {

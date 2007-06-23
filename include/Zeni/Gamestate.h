@@ -118,6 +118,12 @@ namespace Zeni {
     /// Then render.  Called by Game as part of the main gameloop.
     virtual void render() {}
 
+    // Converters
+
+    static char to_char(const SDL_keysym &ks); //< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
+    static SDLKey to_sym(const std::string &text_version); //< Convert a text representation to an actual sym
+    static std::string to_text(const SDLKey &sym); //< Convert a sym to a text representation
+
   protected:
     // Event handlers
 
@@ -140,11 +146,6 @@ namespace Zeni {
     virtual void on_video_expose(const SDL_ExposeEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
     // Custom events
     virtual void on_user_event(const SDL_UserEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-
-    // Convert a keysym to the corresponding character
-    static char to_char(const SDL_keysym &ks); //< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
-    static SDLKey to_sym(const std::string &text_version); //< Convert a text representation to an actual sym
-    static std::string to_text(const SDLKey &sym); //< Convert a sym to a text representation
 
   private:
     inline void increment();

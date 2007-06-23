@@ -28,6 +28,7 @@
 
 #include <Zeni/EZ2D.h>
 
+#include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Textures.hxx>
