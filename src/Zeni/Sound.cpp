@@ -31,7 +31,9 @@
 #include <Zeni/Coordinate.hxx>
 
 #include <SDL/SDL.h>
+#include <vorbis/vorbisfile.h>
 #include <iostream>
+#include <vector>
 
 using std::string;
 
@@ -78,7 +80,9 @@ namespace Zeni {
     Sound::get_reference();
 
 #ifndef DISABLE_AL
-    m_buffer = alutCreateBufferFromFile(filename.c_str());
+    m_buffer = load_ogg_vorbis(filename);
+    if(m_buffer == AL_NONE)
+      m_buffer = alutCreateBufferFromFile(filename.c_str());
 
     if(m_buffer == AL_NONE) {
       std::cerr << "ALUT error on '" << filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
@@ -98,6 +102,64 @@ namespace Zeni {
     Sound_Buffer temp(rhs);
     std::swap(m_buffer, temp.m_buffer);
     return *this;
+  }
+
+  ALuint Sound_Buffer::load_ogg_vorbis(const std::string &filename) {
+    /*** Open File Handle ***/
+
+#ifdef WIN32
+    FILE *f = 0;
+    if(fopen_s(&f, filename.c_str(), "rb"))
+      throw Sound_Buffer_Init_Failure();
+#else
+    FILE *f = fopen(filename.c_str(), "rb");
+#endif
+    if(!f)
+      throw Sound_Buffer_Init_Failure();
+
+    /*** Convert File Handle to Something VorbisFile Can Use ***/
+
+    OggVorbis_File oggFile;
+    if(ov_open(f, &oggFile, NULL, 0)) {
+      fclose(f);
+      return AL_NONE;
+    }
+
+    /*** Get Information About the Audio File ***/
+
+    vorbis_info *pInfo = ov_info(&oggFile, -1);
+    const ALenum format = pInfo->channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+    const ALsizei freq = pInfo->rate;
+
+    /*** Load the Audio File ***/
+
+    std::vector<char> buffer;
+    static const int buffer_size = 4096;
+    char array[buffer_size];
+    for(;;) {
+      const long bytes = ov_read(&oggFile, array, buffer_size, 0, 2, 1, 0);
+
+      if(bytes > 0)
+        buffer.insert(buffer.end(), array, array + bytes);
+      else {
+        ov_clear(&oggFile);
+        
+        if(!bytes)
+          break;
+        else {
+          ov_clear(&oggFile);
+          throw Sound_Buffer_Init_Failure();
+        }
+      }
+    }
+
+    /*** Generate Audio Buffer ***/
+
+    ALuint bufferID = AL_NONE;
+    alGenBuffers(1, &bufferID);
+    alBufferData(bufferID, format, &buffer[0], static_cast<ALsizei>(buffer.size()), freq);
+
+    return bufferID;
   }
 
   static Sound_Buffer g_Hello_World_Buffer;

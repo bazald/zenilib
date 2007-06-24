@@ -97,6 +97,9 @@ namespace Zeni {
     /// Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer & operator=(const Sound_Buffer &rhs);
 
+    /// Ogg Vorbis Loader
+    static ALuint load_ogg_vorbis(const std::string &filename);
+
   private:
     mutable ALuint m_buffer;
   };
