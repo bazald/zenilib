@@ -104,7 +104,14 @@ namespace Zeni {
     return *this;
   }
 
-  ALuint Sound_Buffer::load_ogg_vorbis(const std::string &filename) {
+  ALuint Sound_Buffer::load_ogg_vorbis(const std::string &
+#ifndef DISABLE_AL
+    filename
+#endif
+    ) {
+
+#ifndef DISABLE_AL
+
     /*** Open File Handle ***/
 
 #ifdef WIN32
@@ -160,6 +167,13 @@ namespace Zeni {
     alBufferData(bufferID, format, &buffer[0], static_cast<ALsizei>(buffer.size()), freq);
 
     return bufferID;
+    
+#else
+
+    return AL_NONE;
+
+#endif
+
   }
 
   static Sound_Buffer g_Hello_World_Buffer;
