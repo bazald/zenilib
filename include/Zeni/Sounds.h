@@ -48,7 +48,6 @@
 #include "Resource.h"
 #include "Sound.h"
 
-#include <AL/alut.h>
 #include <string>
 
 namespace Zeni {

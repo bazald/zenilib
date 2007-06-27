@@ -192,27 +192,33 @@ namespace Zeni {
   }
 
   bool Sound_Source::is_playing() {
-    ALenum state = AL_STOPPED;
 #ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-#endif
     return state == AL_PLAYING;
+#else
+    return false;
+#endif
   }
 
   bool Sound_Source::is_paused() {
-    ALenum state = AL_STOPPED;
 #ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-#endif
     return state == AL_PAUSED;
+#else
+    return false;
+#endif
   }
 
   bool Sound_Source::is_stopped() {
-    ALenum state = AL_STOPPED;
 #ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-#endif
     return state == AL_STOPPED;
+#else
+    return true;
+#endif
   }
 
   void Sound::set_listener_position(const Point3f &

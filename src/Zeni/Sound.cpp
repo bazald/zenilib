@@ -31,9 +31,12 @@
 #include <Zeni/Coordinate.hxx>
 
 #include <SDL/SDL.h>
-#include <vorbis/vorbisfile.h>
 #include <iostream>
 #include <vector>
+
+#ifndef DISABLE_AL
+#include <vorbis/vorbisfile.h>
+#endif
 
 using std::string;
 
