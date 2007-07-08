@@ -142,27 +142,27 @@ namespace Zeni {
     return sqrt(pow(i, 2) + pow(j, 2) + pow(k, 2));
   }
 
-  Vector3f Vector3f::get_i() {
+  Vector3f Vector3f::get_i() const {
     return Vector3f(i, 0.0f, 0.0f);
   }
 
-  Vector3f Vector3f::get_j() {
+  Vector3f Vector3f::get_j() const {
     return Vector3f(0.0f, j, 0.0f);
   }
 
-  Vector3f Vector3f::get_k() {
+  Vector3f Vector3f::get_k() const {
     return Vector3f(0.0f, 0.0f, k);
   }
 
-  Vector3f Vector3f::get_ij() {
+  Vector3f Vector3f::get_ij() const {
     return Vector3f(i, j, 0.0f);
   }
 
-  Vector3f Vector3f::get_ik() {
+  Vector3f Vector3f::get_ik() const {
     return Vector3f(i, 0.0f, k);
   }
 
-  Vector3f Vector3f::get_jk() {
+  Vector3f Vector3f::get_jk() const {
     return Vector3f(0.0f, j, k);
   }
 

@@ -91,12 +91,12 @@ namespace Zeni {
     inline float magnitude() const; ///< Get the magnitude of the vector
 
     // Other helpful functions
-    inline Vector3f get_i(); ///< Get just the i-part
-    inline Vector3f get_j(); ///< Get just the j-part
-    inline Vector3f get_k(); ///< Get just the k-part
-    inline Vector3f get_ij(); ///< Get just the i and j parts
-    inline Vector3f get_ik(); ///< Get just the i and k parts
-    inline Vector3f get_jk(); ///< Get just the j and k parts
+    inline Vector3f get_i() const; ///< Get just the i-part
+    inline Vector3f get_j() const; ///< Get just the j-part
+    inline Vector3f get_k() const; ///< Get just the k-part
+    inline Vector3f get_ij() const; ///< Get just the i and j parts
+    inline Vector3f get_ik() const; ///< Get just the i and k parts
+    inline Vector3f get_jk() const; ///< Get just the j and k parts
     inline Vector3f multiply_by(const Vector3f &rhs) const; ///< Multiply corresponding members
     inline Vector3f divide_by(const Vector3f &rhs) const; ///< Divide corresponding members
 
