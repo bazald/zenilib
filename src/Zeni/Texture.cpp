@@ -44,6 +44,19 @@ namespace Zeni {
     : m_frame(0)
   {
   }
+  
+  Sprite::Sprite(const Sprite &rhs)
+    : m_frames(rhs.m_frames),
+    m_frame(rhs.m_frame)
+  {
+  }
+
+  Sprite & Sprite::operator=(const Sprite &rhs) {
+    Sprite lhs(rhs);
+    std::swap(lhs.m_frames, m_frames);
+    std::swap(lhs.m_frame, m_frame);
+    return *this;
+  }
 
   void Sprite::append_frame(const std::string &name) {
     m_frames.push_back(make_pair(name, Textures::get_reference().get_texture_id(name)));

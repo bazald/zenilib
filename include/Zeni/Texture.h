@@ -72,6 +72,8 @@ namespace Zeni {
   class Sprite : public Texture {
   public:
     Sprite();
+    Sprite(const Sprite &rhs);
+    Sprite & operator=(const Sprite &rhs);
 
     void append_frame(const std::string &name); ///< Add a frame to the Sprite
     int find_frame(const std::string &name, const int &starting_point = 0); ///< Search for a frame
