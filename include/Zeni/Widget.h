@@ -33,7 +33,16 @@
 #include "Vertex2f.h"
 #include "Video.h"
 
+#include <set>
+
 namespace Zeni {
+
+  class Widget_Callback {
+  public:
+    virtual void operator()() {};
+
+    virtual Widget_Callback * get_duplicate() const {return new Widget_Callback();}
+  };
 
   class Widget {
   public:
@@ -47,18 +56,62 @@ namespace Zeni {
     Widget(const Point2f &upper_left, const Point2f &lower_right);
     virtual ~Widget();
 
+    Widget(const Widget &rhs);
+    Widget & operator=(const Widget &rhs);
+
     const Point2f & get_upper_left() const {return m_upper_left;}
     const Point2f & get_lower_right() const {return m_lower_right;}
     bool is_clicked_down() const {return m_clicked_down;}
+    bool is_clicked_elsewhere() const {return m_clicked_elsewhere;}
+
+    virtual Widget * get_duplicate() const = 0;
+
+    void set_on_mouse_normal(Widget_Callback *callback);
+    void set_on_mouse_hover(Widget_Callback *callback);
+    void set_on_mouse_click(Widget_Callback *callback);
+    void set_on_mouse_unclick(Widget_Callback *callback);
     
     virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
     virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
+
+    virtual void render() const;
+
+  protected:
+    void copy_from(const Widget &widget);
 
   private:
     Point2f m_upper_left, m_lower_right;
 
     bool m_clicked_down;
     bool m_clicked_elsewhere;
+
+    MOUSE_STATE prev_mouse_state;
+    Widget_Callback *on_mouse_normal;
+    Widget_Callback *on_mouse_hover;
+    Widget_Callback *on_mouse_click;
+    Widget_Callback *on_mouse_unclick;
+  };
+
+  class Widgets : public Widget {
+  public:
+    Widgets();
+    virtual ~Widgets();
+
+    Widgets(const Widgets &rhs);
+    Widgets & operator=(const Widgets &rhs);
+
+    virtual void add_Widget(Widget * widget);
+    virtual void remove_Widget(Widget * widget);
+
+    virtual Widget * get_duplicate() const;
+
+    virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
+    virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
+
+    virtual void render() const;
+
+  private:
+    std::set<Widget *> m_widgets;
   };
 
   class Button : public Widget {
@@ -70,11 +123,13 @@ namespace Zeni {
 
     Button(const Button &rhs);
     Button & operator=(const Button &rhs);
+    
+    virtual Widget * get_duplicate() const;
 
     virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
     virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
 
-    void render();
+    virtual void render() const;
 
   private:
     Sprite m_sprite;

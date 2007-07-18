@@ -62,7 +62,7 @@ namespace Zeni {
     m_frames.push_back(make_pair(name, Textures::get_reference().get_texture_id(name)));
   }
 
-  int Sprite::find_frame(const std::string &name, const int &starting_point) {
+  int Sprite::find_frame(const std::string &name, const int &starting_point) const {
     if(starting_point < 0)
       throw Frame_Out_of_Range();
 
@@ -100,11 +100,11 @@ namespace Zeni {
     m_frames.pop_back();
   }
 
-  int Sprite::get_num_frames() {
+  int Sprite::get_num_frames() const {
     return int(m_frames.size());
   }
 
-  int Sprite::get_current_frame() {
+  int Sprite::get_current_frame() const {
     if(m_frames.empty())
       return -1;
     return m_frame;

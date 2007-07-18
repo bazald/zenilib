@@ -39,7 +39,12 @@ namespace Zeni {
 
   Widget::Widget()
     : m_clicked_down(0),
-    m_clicked_elsewhere(0)
+    m_clicked_elsewhere(0),
+    prev_mouse_state(ZENI_MOUSE_NORMAL),
+    on_mouse_normal(new Widget_Callback()),
+    on_mouse_hover(new Widget_Callback()),
+    on_mouse_click(new Widget_Callback()),
+    on_mouse_unclick(new Widget_Callback())
   {
   }
   
@@ -47,12 +52,49 @@ namespace Zeni {
     : m_upper_left(upper_left),
     m_lower_right(lower_right),
     m_clicked_down(0),
-    m_clicked_elsewhere(0)
+    m_clicked_elsewhere(0),
+    prev_mouse_state(ZENI_MOUSE_NORMAL),
+    on_mouse_normal(new Widget_Callback()),
+    on_mouse_hover(new Widget_Callback()),
+    on_mouse_click(new Widget_Callback()),
+    on_mouse_unclick(new Widget_Callback())
   {
   }
 
-  Widget::~Widget()
-  {
+  Widget::~Widget() {
+    delete on_mouse_normal;
+    delete on_mouse_hover;
+    delete on_mouse_click;
+    delete on_mouse_unclick;
+  }
+
+  Widget::Widget(const Widget &rhs) {
+    copy_from(rhs);
+  }
+
+  Widget & Widget::operator=(const Widget &rhs) {
+    copy_from(rhs);
+    return *this;
+  }
+
+  void Widget::set_on_mouse_normal(Widget_Callback *callback) {
+    delete on_mouse_normal; on_mouse_normal = 0;
+    on_mouse_normal = callback;
+  }
+
+  void Widget::set_on_mouse_hover(Widget_Callback *callback) {
+    delete on_mouse_hover; on_mouse_hover = 0;
+    on_mouse_hover = callback;
+  }
+
+  void Widget::set_on_mouse_click(Widget_Callback *callback) {
+    delete on_mouse_click; on_mouse_click = 0;
+    on_mouse_click = callback;
+  }
+
+  void Widget::set_on_mouse_unclick(Widget_Callback *callback) {
+    delete on_mouse_unclick; on_mouse_unclick = 0;
+    on_mouse_unclick = callback;
   }
 
   Widget::MOUSE_STATE Widget::mouse_move(const Point2f &mouse_pos) {
@@ -60,22 +102,177 @@ namespace Zeni {
       mouse_pos.x < m_upper_left.x ||
       mouse_pos.y < m_upper_left.y ||
       mouse_pos.x > m_lower_right.x ||
-      mouse_pos.y > m_lower_right.y)
-      return ZENI_MOUSE_NORMAL;
+      mouse_pos.y > m_lower_right.y) {
+      if(prev_mouse_state != ZENI_MOUSE_NORMAL)
+        (*on_mouse_normal)();
+      return prev_mouse_state = ZENI_MOUSE_NORMAL;
+    }
 
-    return m_clicked_down ? ZENI_MOUSE_CLICKED : ZENI_MOUSE_HOVERING;
+    if(!m_clicked_down) {
+      if(prev_mouse_state != ZENI_MOUSE_HOVERING)
+        (*on_mouse_hover)();
+      return prev_mouse_state = ZENI_MOUSE_HOVERING;
+    }
+
+    return prev_mouse_state = ZENI_MOUSE_CLICKED;
   }
 
   Widget::MOUSE_STATE Widget::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    if(mouse_move(mouse_pos) == ZENI_MOUSE_NORMAL) {
+    if(m_clicked_elsewhere ||
+      mouse_pos.x < m_upper_left.x ||
+      mouse_pos.y < m_upper_left.y ||
+      mouse_pos.x > m_lower_right.x ||
+      mouse_pos.y > m_lower_right.y) {
       m_clicked_elsewhere = down;
       m_clicked_down = false;
-      return ZENI_MOUSE_NORMAL;
+      if(prev_mouse_state != ZENI_MOUSE_NORMAL)
+        (*on_mouse_normal)();
+      return prev_mouse_state = ZENI_MOUSE_NORMAL;
     }
 
     m_clicked_down = down;
     m_clicked_elsewhere = false;
-    return m_clicked_down ? ZENI_MOUSE_CLICKED : ZENI_MOUSE_UNCLICKED;
+
+    if(m_clicked_down) {
+      if(prev_mouse_state != ZENI_MOUSE_CLICKED)
+        (*on_mouse_click)();
+      return prev_mouse_state = ZENI_MOUSE_CLICKED;
+    }
+    
+    if(prev_mouse_state != ZENI_MOUSE_UNCLICKED)
+      (*on_mouse_unclick)();
+    return prev_mouse_state = ZENI_MOUSE_UNCLICKED;
+  }
+
+  void Widget::render() const {
+  }
+
+  void Widget::copy_from(const Widget &widget) {
+    m_upper_left = widget.m_upper_left;
+    m_lower_right = widget.m_lower_right;
+    m_clicked_down = widget.m_clicked_down;
+    m_clicked_elsewhere = widget.m_clicked_elsewhere;
+
+    prev_mouse_state = widget.prev_mouse_state;
+    set_on_mouse_normal(widget.on_mouse_normal->get_duplicate());
+    set_on_mouse_hover(widget.on_mouse_hover->get_duplicate());
+    set_on_mouse_click(widget.on_mouse_click->get_duplicate());
+    set_on_mouse_unclick(widget.on_mouse_unclick->get_duplicate());
+  }
+
+  Widgets::Widgets() {
+  }
+
+  Widgets::~Widgets() {
+    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+      delete *it;
+  }
+
+  Widgets::Widgets(const Widgets &rhs) {
+    copy_from(rhs);
+
+    for(std::set<Widget *>::const_iterator it = rhs.m_widgets.begin(); it != rhs.m_widgets.end(); ++it)
+      m_widgets.insert((*it)->get_duplicate());
+  }
+
+  Widgets & Widgets::operator=(const Widgets &rhs) {
+    copy_from(rhs);
+
+    Widgets lhs(rhs);
+    std::swap(lhs.m_widgets, m_widgets);
+
+    return *this;
+  }
+
+  Widget * Widgets::get_duplicate() const {
+    return new Widgets(*this);
+  }
+
+  void Widgets::add_Widget(Widget * widget) {
+    m_widgets.insert(widget);
+  }
+
+  void Widgets::remove_Widget(Widget * widget) {
+    m_widgets.erase(widget);
+  }
+    
+  Widget::MOUSE_STATE Widgets::mouse_move(const Point2f &mouse_pos) {
+    bool hovering = false;
+    bool clicking = false;
+    bool unclicking = false;
+
+    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+      switch((*it)->mouse_move(mouse_pos)) {
+        case ZENI_MOUSE_NORMAL:
+          break;
+
+        case ZENI_MOUSE_HOVERING:
+          hovering = true;
+          break;
+
+        case ZENI_MOUSE_CLICKED:
+          clicking = true;
+          break;
+
+        case ZENI_MOUSE_UNCLICKED:
+          unclicking = true;
+          break;
+
+        default:
+          throw Error("Internal Error in Widgets::mouse_move.");
+      }
+
+    if(!unclicking)
+      if(!clicking)
+        if(!hovering)
+          return ZENI_MOUSE_NORMAL;
+        else
+          return ZENI_MOUSE_HOVERING;
+      else
+        return ZENI_MOUSE_CLICKED;
+    return ZENI_MOUSE_UNCLICKED;
+  }
+
+  Widget::MOUSE_STATE Widgets::mouse_click(const Point2f &mouse_pos, const bool &down) {
+    bool hovering = false;
+    bool clicking = false;
+    bool unclicking = false;
+
+    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+      switch((*it)->mouse_click(mouse_pos, down)) {
+        case ZENI_MOUSE_NORMAL:
+          break;
+
+        case ZENI_MOUSE_HOVERING:
+          hovering = true;
+          break;
+
+        case ZENI_MOUSE_CLICKED:
+          clicking = true;
+          break;
+
+        case ZENI_MOUSE_UNCLICKED:
+          unclicking = true;
+          break;
+
+        default:
+          throw Error("Internal Error in Widgets::mouse_move.");
+      }
+
+    if(!unclicking)
+      if(!clicking)
+        if(!hovering)
+          return ZENI_MOUSE_NORMAL;
+        else
+          return ZENI_MOUSE_HOVERING;
+      else
+        return ZENI_MOUSE_CLICKED;
+    return ZENI_MOUSE_UNCLICKED;
+  }
+
+  void Widgets::render() const {
+    for(std::set<Widget *>::const_iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+      (*it)->render();
   }
 
   Button::Button()
@@ -111,6 +308,8 @@ namespace Zeni {
   }
 
   Button::Button(const Button &rhs) {
+    copy_from(rhs);
+
     m_sprite = rhs.m_sprite;
     m_sprite_name = rhs.m_sprite_name;
     m_quad = rhs.m_quad ? rhs.m_quad->get_duplicate() : 0;
@@ -118,6 +317,10 @@ namespace Zeni {
 
   Button::~Button() {
     delete m_quad;
+  }
+
+  Widget * Button::get_duplicate() const {
+    return new Button(*this);
   }
 
   Widget::MOUSE_STATE Button::mouse_move(const Point2f &mouse_pos) {
@@ -167,7 +370,7 @@ namespace Zeni {
     return ms;
   }
 
-  void Button::render() {
+  void Button::render() const {
     if(m_quad) {
       Video &vr = Video::get_reference();
       Textures &tex = Textures::get_reference();
@@ -184,10 +387,9 @@ namespace Zeni {
   }
 
   Button & Button::operator=(const Button &rhs) {
-    static_cast<Widget &>(*this) = static_cast<Widget>(rhs);
+    copy_from(rhs);
 
     Button lhs(rhs);
-
     std::swap(m_sprite, lhs.m_sprite);
     std::swap(m_sprite_name, lhs.m_sprite_name);
     std::swap(m_quad, lhs.m_quad);
