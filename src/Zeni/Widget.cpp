@@ -40,7 +40,7 @@ namespace Zeni {
   Widget::Widget()
     : m_clicked_down(0),
     m_clicked_elsewhere(0),
-    prev_mouse_state(ZENI_MOUSE_NORMAL),
+    mouse_state(ZENI_MOUSE_NORMAL),
     on_mouse_normal(new Widget_Callback()),
     on_mouse_hover(new Widget_Callback()),
     on_mouse_click(new Widget_Callback()),
@@ -53,7 +53,7 @@ namespace Zeni {
     m_lower_right(lower_right),
     m_clicked_down(0),
     m_clicked_elsewhere(0),
-    prev_mouse_state(ZENI_MOUSE_NORMAL),
+    mouse_state(ZENI_MOUSE_NORMAL),
     on_mouse_normal(new Widget_Callback()),
     on_mouse_hover(new Widget_Callback()),
     on_mouse_click(new Widget_Callback()),
@@ -97,51 +97,58 @@ namespace Zeni {
     on_mouse_unclick = callback;
   }
 
-  Widget::MOUSE_STATE Widget::mouse_move(const Point2f &mouse_pos) {
+  void Widget::mouse_move(const Point2f &mouse_pos) {
     if(m_clicked_elsewhere ||
       mouse_pos.x < m_upper_left.x ||
       mouse_pos.y < m_upper_left.y ||
       mouse_pos.x > m_lower_right.x ||
       mouse_pos.y > m_lower_right.y) {
-      if(prev_mouse_state != ZENI_MOUSE_NORMAL)
+      if(mouse_state != ZENI_MOUSE_NORMAL) {
+        mouse_state = ZENI_MOUSE_NORMAL;
         (*on_mouse_normal)();
-      return prev_mouse_state = ZENI_MOUSE_NORMAL;
+      }
     }
-
-    if(!m_clicked_down) {
-      if(prev_mouse_state != ZENI_MOUSE_HOVERING)
+    else if(!m_clicked_down) {
+      if(mouse_state != ZENI_MOUSE_HOVERING) {
+        mouse_state = ZENI_MOUSE_HOVERING;
         (*on_mouse_hover)();
-      return prev_mouse_state = ZENI_MOUSE_HOVERING;
+      }
     }
-
-    return prev_mouse_state = ZENI_MOUSE_CLICKED;
+    else
+      mouse_state = ZENI_MOUSE_CLICKED;
   }
 
-  Widget::MOUSE_STATE Widget::mouse_click(const Point2f &mouse_pos, const bool &down) {
+  void Widget::mouse_click(const Point2f &mouse_pos, const bool &down) {
     if(m_clicked_elsewhere ||
       mouse_pos.x < m_upper_left.x ||
       mouse_pos.y < m_upper_left.y ||
       mouse_pos.x > m_lower_right.x ||
       mouse_pos.y > m_lower_right.y) {
+      if(mouse_state != ZENI_MOUSE_NORMAL) {
+        mouse_state = ZENI_MOUSE_NORMAL;
+        (*on_mouse_normal)();
+      }
+
       m_clicked_elsewhere = down;
       m_clicked_down = false;
-      if(prev_mouse_state != ZENI_MOUSE_NORMAL)
-        (*on_mouse_normal)();
-      return prev_mouse_state = ZENI_MOUSE_NORMAL;
     }
+    else {
+      m_clicked_down = down;
+      m_clicked_elsewhere = false;
 
-    m_clicked_down = down;
-    m_clicked_elsewhere = false;
-
-    if(m_clicked_down) {
-      if(prev_mouse_state != ZENI_MOUSE_CLICKED)
-        (*on_mouse_click)();
-      return prev_mouse_state = ZENI_MOUSE_CLICKED;
+      if(m_clicked_down) {
+        if(mouse_state != ZENI_MOUSE_CLICKED) {
+          mouse_state = ZENI_MOUSE_CLICKED;
+          (*on_mouse_click)();
+        }
+      }
+      else {
+        if(mouse_state != ZENI_MOUSE_UNCLICKED) {
+          mouse_state = ZENI_MOUSE_UNCLICKED;
+          (*on_mouse_unclick)();
+        }
+      }
     }
-    
-    if(prev_mouse_state != ZENI_MOUSE_UNCLICKED)
-      (*on_mouse_unclick)();
-    return prev_mouse_state = ZENI_MOUSE_UNCLICKED;
   }
 
   void Widget::render() const {
@@ -153,7 +160,7 @@ namespace Zeni {
     m_clicked_down = widget.m_clicked_down;
     m_clicked_elsewhere = widget.m_clicked_elsewhere;
 
-    prev_mouse_state = widget.prev_mouse_state;
+    mouse_state = widget.mouse_state;
     set_on_mouse_normal(widget.on_mouse_normal->get_duplicate());
     set_on_mouse_hover(widget.on_mouse_hover->get_duplicate());
     set_on_mouse_click(widget.on_mouse_click->get_duplicate());
@@ -196,78 +203,14 @@ namespace Zeni {
     m_widgets.erase(widget);
   }
     
-  Widget::MOUSE_STATE Widgets::mouse_move(const Point2f &mouse_pos) {
-    bool hovering = false;
-    bool clicking = false;
-    bool unclicking = false;
-
+  void Widgets::mouse_move(const Point2f &mouse_pos) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      switch((*it)->mouse_move(mouse_pos)) {
-        case ZENI_MOUSE_NORMAL:
-          break;
-
-        case ZENI_MOUSE_HOVERING:
-          hovering = true;
-          break;
-
-        case ZENI_MOUSE_CLICKED:
-          clicking = true;
-          break;
-
-        case ZENI_MOUSE_UNCLICKED:
-          unclicking = true;
-          break;
-
-        default:
-          throw Error("Internal Error in Widgets::mouse_move.");
-      }
-
-    if(!unclicking)
-      if(!clicking)
-        if(!hovering)
-          return ZENI_MOUSE_NORMAL;
-        else
-          return ZENI_MOUSE_HOVERING;
-      else
-        return ZENI_MOUSE_CLICKED;
-    return ZENI_MOUSE_UNCLICKED;
+      (*it)->mouse_move(mouse_pos);
   }
 
-  Widget::MOUSE_STATE Widgets::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    bool hovering = false;
-    bool clicking = false;
-    bool unclicking = false;
-
+  void Widgets::mouse_click(const Point2f &mouse_pos, const bool &down) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      switch((*it)->mouse_click(mouse_pos, down)) {
-        case ZENI_MOUSE_NORMAL:
-          break;
-
-        case ZENI_MOUSE_HOVERING:
-          hovering = true;
-          break;
-
-        case ZENI_MOUSE_CLICKED:
-          clicking = true;
-          break;
-
-        case ZENI_MOUSE_UNCLICKED:
-          unclicking = true;
-          break;
-
-        default:
-          throw Error("Internal Error in Widgets::mouse_move.");
-      }
-
-    if(!unclicking)
-      if(!clicking)
-        if(!hovering)
-          return ZENI_MOUSE_NORMAL;
-        else
-          return ZENI_MOUSE_HOVERING;
-      else
-        return ZENI_MOUSE_CLICKED;
-    return ZENI_MOUSE_UNCLICKED;
+      (*it)->mouse_click(mouse_pos, down);
   }
 
   void Widgets::render() const {
@@ -323,51 +266,16 @@ namespace Zeni {
     return new Button(*this);
   }
 
-  Widget::MOUSE_STATE Button::mouse_move(const Point2f &mouse_pos) {
-    MOUSE_STATE ms = Widget::mouse_move(mouse_pos);
+  void Button::mouse_move(const Point2f &mouse_pos) {
+    Widget::mouse_move(mouse_pos);
 
-    switch(ms) {
-      case ZENI_MOUSE_NORMAL:
-        m_sprite.set_current_frame(0);
-        break;
-
-      case ZENI_MOUSE_HOVERING:
-        m_sprite.set_current_frame(1);
-        break;
-
-      case ZENI_MOUSE_CLICKED:
-        m_sprite.set_current_frame(2);
-        break;
-
-      default:
-        throw Error("Internal Error in Button::mouse_move.");
-    }
-
-    return ms;
+    set_sprite_frame();
   }
 
-  Widget::MOUSE_STATE Button::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    MOUSE_STATE ms = Widget::mouse_click(mouse_pos, down);
+  void Button::mouse_click(const Point2f &mouse_pos, const bool &down) {
+    Widget::mouse_click(mouse_pos, down);
 
-    switch(ms) {
-      case ZENI_MOUSE_NORMAL:
-        m_sprite.set_current_frame(0);
-        break;
-
-      case ZENI_MOUSE_HOVERING:
-      case ZENI_MOUSE_UNCLICKED:
-        m_sprite.set_current_frame(1);
-        break;
-
-      case ZENI_MOUSE_CLICKED:
-        m_sprite.set_current_frame(2);
-        break;
-
-      default:
-        throw Error("Internal Error in Button::mouse_move.");
-    }
-
-    return ms;
+    set_sprite_frame();
   }
 
   void Button::render() const {
@@ -395,6 +303,26 @@ namespace Zeni {
     std::swap(m_quad, lhs.m_quad);
 
     return *this;
+  }
+
+  void Button::set_sprite_frame() {
+    switch(get_mouse_state()) {
+      case ZENI_MOUSE_NORMAL:
+        m_sprite.set_current_frame(0);
+        break;
+
+      case ZENI_MOUSE_HOVERING:
+      case ZENI_MOUSE_UNCLICKED:
+        m_sprite.set_current_frame(1);
+        break;
+
+      case ZENI_MOUSE_CLICKED:
+        m_sprite.set_current_frame(2);
+        break;
+
+      default:
+        throw Error("Internal Error in Button::mouse_move.");
+    }
   }
 
 }

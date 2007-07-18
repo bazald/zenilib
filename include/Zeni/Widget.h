@@ -45,13 +45,14 @@ namespace Zeni {
   };
 
   class Widget {
-  public:
+  protected:
     enum MOUSE_STATE {
       ZENI_MOUSE_NORMAL = 0,
       ZENI_MOUSE_HOVERING,
       ZENI_MOUSE_CLICKED,
       ZENI_MOUSE_UNCLICKED};
 
+  public:
     Widget();
     Widget(const Point2f &upper_left, const Point2f &lower_right);
     virtual ~Widget();
@@ -71,13 +72,15 @@ namespace Zeni {
     void set_on_mouse_click(Widget_Callback *callback);
     void set_on_mouse_unclick(Widget_Callback *callback);
     
-    virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
-    virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
+    virtual void mouse_move(const Point2f &mouse_pos);
+    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
 
     virtual void render() const;
 
   protected:
     void copy_from(const Widget &widget);
+
+    MOUSE_STATE get_mouse_state() const {return mouse_state;}
 
   private:
     Point2f m_upper_left, m_lower_right;
@@ -85,7 +88,7 @@ namespace Zeni {
     bool m_clicked_down;
     bool m_clicked_elsewhere;
 
-    MOUSE_STATE prev_mouse_state;
+    MOUSE_STATE mouse_state;
     Widget_Callback *on_mouse_normal;
     Widget_Callback *on_mouse_hover;
     Widget_Callback *on_mouse_click;
@@ -105,8 +108,8 @@ namespace Zeni {
 
     virtual Widget * get_duplicate() const;
 
-    virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
-    virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
+    virtual void mouse_move(const Point2f &mouse_pos);
+    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
 
     virtual void render() const;
 
@@ -126,12 +129,14 @@ namespace Zeni {
     
     virtual Widget * get_duplicate() const;
 
-    virtual MOUSE_STATE mouse_move(const Point2f &mouse_pos);
-    virtual MOUSE_STATE mouse_click(const Point2f &mouse_pos, const bool &down);
+    virtual void mouse_move(const Point2f &mouse_pos);
+    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
 
     virtual void render() const;
 
   private:
+    void set_sprite_frame();
+
     Sprite m_sprite;
     std::string m_sprite_name;
 
