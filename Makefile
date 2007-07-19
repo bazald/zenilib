@@ -24,7 +24,7 @@ WGLFLAGS = -lopengl32 -lglu32
 WFLAGS = -mwindows -lmingw32 -lwinmm -lcomctl32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32
 DX9FLAGS = -ld3dx9 -ld3d9 -ld3dxof -ldxguid
 3DSFLAGS = -l3ds
-LOALFLAGS = -lalut -lopenal
+LOALFLAGS = -lalut -lopenal -lvorbisfile
 
 CFLAGS = $($(BUILD))
 XFLAGS = $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
@@ -62,6 +62,7 @@ SRCS =  src/Zeni/Camera.cpp \
 	src/Zeni/Video.cpp \
 	src/Zeni/Video_DX9.cpp \
 	src/Zeni/Video_GL.cpp \
+	src/Zeni/Widget.cpp \
 	zeniapp.cpp
 OBJS = $(SRCS:.cpp=.o)
 
