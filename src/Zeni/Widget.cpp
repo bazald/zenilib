@@ -28,7 +28,8 @@
 
 #include <Zeni/Widget.h>
 
-#include <Zeni/Coordinate.h>
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Resource.hxx>
 #include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Quadrilateral.hxx>
@@ -175,9 +176,9 @@ namespace Zeni {
       delete *it;
   }
 
-  Widgets::Widgets(const Widgets &rhs) {
-    copy_from(rhs);
-
+  Widgets::Widgets(const Widgets &rhs)
+    : Widget(rhs)
+  {
     for(std::set<Widget *>::const_iterator it = rhs.m_widgets.begin(); it != rhs.m_widgets.end(); ++it)
       m_widgets.insert((*it)->get_duplicate());
   }
@@ -238,7 +239,7 @@ namespace Zeni {
 #else
     sprintf
 #endif
-      (buf, "Zeni_%d", Resource::get_reference().assign());
+      (buf, "Zeni_%u", static_cast<unsigned int>(Resource::get_reference().assign()));
     m_sprite_name = buf;
     Textures::get_reference().set_texture(m_sprite_name, new Sprite(m_sprite));
 
@@ -250,9 +251,9 @@ namespace Zeni {
       new Material_Render_Wrapper(Material(m_sprite_name)));
   }
 
-  Button::Button(const Button &rhs) {
-    copy_from(rhs);
-
+  Button::Button(const Button &rhs)
+    : Widget(rhs)
+  {
     m_sprite = rhs.m_sprite;
     m_sprite_name = rhs.m_sprite_name;
     m_quad = rhs.m_quad ? rhs.m_quad->get_duplicate() : 0;

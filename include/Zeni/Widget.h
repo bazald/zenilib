@@ -39,6 +39,8 @@ namespace Zeni {
 
   class Widget_Callback {
   public:
+    virtual ~Widget_Callback() {}
+
     virtual void operator()() {};
 
     virtual Widget_Callback * get_duplicate() const {return new Widget_Callback();}

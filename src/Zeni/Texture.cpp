@@ -46,7 +46,8 @@ namespace Zeni {
   }
   
   Sprite::Sprite(const Sprite &rhs)
-    : m_frames(rhs.m_frames),
+    : Texture(rhs),
+    m_frames(rhs.m_frames),
     m_frame(rhs.m_frame)
   {
   }
