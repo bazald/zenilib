@@ -55,10 +55,8 @@ namespace Zeni {
   unsigned long Fonts::get_font_id(const string &font) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_font_lookup.find(font);
 
-    if(it == m_font_lookup.end() || !it->second) {
-      std::cerr << "Missing Font: " << font << std::endl;
-      throw Font_Not_Found();
-    }
+    if(it == m_font_lookup.end() || !it->second)
+      throw Font_Not_Found(font);
 
     return it->second;
   }
@@ -70,8 +68,16 @@ namespace Zeni {
   const Font & Fonts::get_font(const unsigned long &font) const {
     stdext::hash_map<unsigned long, Font *>::const_iterator it = m_fonts.find(font);
 
-    if(it == m_fonts.end())
-      throw Font_Not_Found();
+    if(it == m_fonts.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(font));
+      throw Font_Not_Found(buf);
+    }
 
     return *it->second;
   }
@@ -96,10 +102,8 @@ namespace Zeni {
   void Fonts::clear_font(const std::string &name) {
     stdext::hash_map<string, unsigned long>::iterator it = m_font_lookup.find(name);
 
-    if(it == m_font_lookup.end()) {
-      std::cerr << "Missing Font: " << name << std::endl;
-      throw Font_Not_Found();
-    }
+    if(it == m_font_lookup.end())
+      throw Font_Not_Found(name);
 
     m_fonts.erase(it->second);
     m_font_lookup.erase(it);

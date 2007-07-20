@@ -105,7 +105,11 @@ namespace Zeni {
   };
 
   struct Texture_Not_Found : public Error {
-    Texture_Not_Found() : Error("Zeni Texture Not Found") {}
+    Texture_Not_Found(const std::string &identifier) : Error("Zeni Texture '" + identifier + "' Not Found") {}
+  };
+
+  struct Null_Texture_Set : public Error {
+    Null_Texture_Set() : Error("Null Texture Added to Textures Database") {}
   };
 
   struct Sprite_Function_Misapplied : public Error {

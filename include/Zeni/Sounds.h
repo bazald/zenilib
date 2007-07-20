@@ -81,7 +81,7 @@ namespace Zeni {
   };
 
   struct Sound_Effect_Not_Found : public Error {
-    Sound_Effect_Not_Found() : Error("Zeni Sound Effect Not Found") {}
+    Sound_Effect_Not_Found(const std::string &identifier) : Error("Zeni Sound Effect '" + identifier + "' Not Found") {}
   };
 
   struct Sounds_Init_Failure : public Error {

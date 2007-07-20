@@ -57,10 +57,8 @@ namespace Zeni {
   unsigned long Colors::get_color_id(const string &color) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_color_lookup.find(color);
 
-    if(it == m_color_lookup.end() || !it->second) {
-      std::cerr << "Missing Color: " << color << std::endl;
-      throw Color_Not_Found();
-    }
+    if(it == m_color_lookup.end() || !it->second)
+      throw Color_Not_Found(color);
 
     return it->second;
   }
@@ -72,8 +70,16 @@ namespace Zeni {
   Color Colors::get_color(const unsigned long &color) const {
     stdext::hash_map<unsigned long, Color>::const_iterator it = m_color.find(color);
 
-    if(it == m_color.end())
-      throw Color_Not_Found();
+    if(it == m_color.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(color));
+      throw Color_Not_Found(buf);
+    }
 
     return it->second;
   }
@@ -88,10 +94,8 @@ namespace Zeni {
   void Colors::clear_color(const std::string &name) {
     stdext::hash_map<string, unsigned long>::iterator it = m_color_lookup.find(name);
 
-    if(it == m_color_lookup.end()) {
-      std::cerr << "Missing Color: " << name << std::endl;
-      throw Color_Not_Found();
-    }
+    if(it == m_color_lookup.end())
+      throw Color_Not_Found(name);
 
     m_color.erase(it->second);
     m_color_lookup.erase(it);

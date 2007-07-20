@@ -91,7 +91,7 @@ namespace Zeni {
   };
 
   struct Font_Not_Found : Error {
-    Font_Not_Found() : Error("Zeni Font not found!") {}
+    Font_Not_Found(const std::string &identifier) : Error("Zeni Font '" + identifier + "' Not Found") {}
   };
 
 }

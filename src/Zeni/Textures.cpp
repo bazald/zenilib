@@ -64,7 +64,7 @@ namespace Zeni {
     }
 
     if(!texture)
-      throw Texture_Not_Found();
+      throw Null_Texture_Set();
 
     unsigned long id = Resource::get_reference().assign();
     m_texture_lookup[name] = id;
@@ -75,10 +75,8 @@ namespace Zeni {
   void Textures::clear_texture(const std::string &name) {
     stdext::hash_map<string, unsigned long>::iterator it = m_texture_lookup.find(name);
 
-    if(it == m_texture_lookup.end()) {
-      std::cerr << "Missing texture: " << name << std::endl;
-      throw Texture_Not_Found();
-    }
+    if(it == m_texture_lookup.end())
+      throw Texture_Not_Found(name);
 
     m_textures.erase(it->second);
     m_texture_lookup.erase(it);
@@ -87,10 +85,8 @@ namespace Zeni {
   unsigned long Textures::get_texture_id(const string &texture) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(texture);
 
-    if(it == m_texture_lookup.end() || !it->second) {
-      std::cerr << "Missing texture: " << texture << std::endl;
-      throw Texture_Not_Found();
-    }
+    if(it == m_texture_lookup.end() || !it->second)
+      throw Texture_Not_Found(texture);
 
     return it->second;
   }
@@ -99,8 +95,14 @@ namespace Zeni {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
 
     if(it == m_textures.end() || !it->second) {
-      std::cerr << "Missing texture: " << id << std::endl;
-      throw Texture_Not_Found();
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
     }
 
     return it->second;
@@ -121,8 +123,16 @@ namespace Zeni {
   void Textures::apply_texture(const unsigned long &id) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
 
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
+    if(it == m_textures.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
+    }
 
     it->second->apply_texture();
   }
@@ -130,8 +140,16 @@ namespace Zeni {
   bool Textures::is_sprite(const unsigned long &id) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
     
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
+    if(it == m_textures.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
+    }
 
     return dynamic_cast<Sprite *>(it->second) != 0;
   }
@@ -139,8 +157,16 @@ namespace Zeni {
   int Textures::get_num_frames(const unsigned long &id) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
     
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
+    if(it == m_textures.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
+    }
 
     Sprite *sprite = dynamic_cast<Sprite *>(it->second);
     if(!sprite)
@@ -152,8 +178,16 @@ namespace Zeni {
   int Textures::get_current_frame(const unsigned long &id) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
     
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
+    if(it == m_textures.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
+    }
 
     Sprite *sprite = dynamic_cast<Sprite *>(it->second);
     if(!sprite)
@@ -165,8 +199,16 @@ namespace Zeni {
   void Textures::set_current_frame(const unsigned long &id, const int &frame_number) {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
     
-    if(it == m_textures.end())
-      throw Texture_Not_Found();
+    if(it == m_textures.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(id));
+      throw Texture_Not_Found(buf);
+    }
 
     Sprite *sprite = dynamic_cast<Sprite *>(it->second);
     if(!sprite)

@@ -65,10 +65,8 @@ namespace Zeni {
   void Sounds::clear_sound(const std::string &name) {
     stdext::hash_map<string, unsigned long>::iterator it = m_sound_lookup.find(name);
 
-    if(it == m_sound_lookup.end()) {
-      std::cerr << "Missing Sound: " << name << std::endl;
-      throw Sound_Effect_Not_Found();
-    }
+    if(it == m_sound_lookup.end())
+      throw Sound_Effect_Not_Found(name);
 
     m_sounds.erase(it->second);
     m_sound_lookup.erase(it);
@@ -77,10 +75,8 @@ namespace Zeni {
   unsigned long Sounds::get_sound_id(const string &sound) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_sound_lookup.find(sound);
 
-    if(it == m_sound_lookup.end() || !it->second) {
-      std::cerr << "Missing sound: " << sound << std::endl;
-      throw Sound_Effect_Not_Found();
-    }
+    if(it == m_sound_lookup.end() || !it->second)
+      throw Sound_Effect_Not_Found(sound);
 
     return it->second;
   }
@@ -92,8 +88,16 @@ namespace Zeni {
   const Sound_Buffer & Sounds::get_sound(const unsigned long &sound_effect) const {
     stdext::hash_map<unsigned long, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
 
-    if(it == m_sounds.end())
-      throw Sound_Effect_Not_Found();
+    if(it == m_sounds.end()) {
+      char buf[64];
+#ifdef WIN32
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(sound_effect));
+      throw Sound_Effect_Not_Found(buf);
+    }
 
     return it->second;
   }

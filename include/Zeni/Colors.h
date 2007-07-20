@@ -83,7 +83,7 @@ namespace Zeni {
   };
 
   struct Color_Not_Found : public Error {
-    Color_Not_Found() : Error("Zeni Color Not Found") {}
+    Color_Not_Found(const std::string &identifier) : Error("Zeni Color '" + identifier + "' Not Found") {}
   };
 
   struct Colors_Init_Failure : public Error {
