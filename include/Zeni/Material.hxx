@@ -29,7 +29,7 @@
 #ifndef ZENI_MATERIAL_HXX
 #define ZENI_MATERIAL_HXX
 
-#include "Material.h"
+#include <Zeni/Material.h>
 
 namespace Zeni {
 

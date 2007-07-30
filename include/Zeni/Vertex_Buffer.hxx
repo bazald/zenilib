@@ -29,7 +29,7 @@
 #ifndef ZENI_VERTEX_BUFFER_HXX
 #define ZENI_VERTEX_BUFFER_HXX
 
-#include "Vertex_Buffer.h"
+#include <Zeni/Vertex_Buffer.h>
 
 namespace Zeni {
 

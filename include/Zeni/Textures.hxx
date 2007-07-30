@@ -29,7 +29,7 @@
 #ifndef ZENI_TEXTURES_HXX
 #define ZENI_TEXTURES_HXX
 
-#include "Textures.h"
+#include <Zeni/Textures.h>
 
 namespace Zeni {
 

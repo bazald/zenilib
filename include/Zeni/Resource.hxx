@@ -29,7 +29,7 @@
 #ifndef ZENI_RESOURCE_HXX
 #define ZENI_REOURCE_HXX
 
-#include "Resource.h"
+#include <Zeni/Resource.h>
 
 namespace Zeni {
 

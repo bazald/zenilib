@@ -160,18 +160,44 @@ namespace Zeni {
   }
 
   Model::Model(const std::string &filename)
-    : m_file(0), 
+    : m_filename(filename),
+    m_file(0), 
+    m_keyframe(0.0f),
     m_unrenderer(0), 
-    m_scale(1, 1, 1), 
-    m_rotate(0, 0, 1), 
-    m_translate(0, 0, 0), 
-    m_rotate_angle(0)
+    m_scale(1.0f, 1.0f, 1.0f), 
+    m_rotate(0.0f, 0.0f, 1.0f), 
+    m_translate(0.0f, 0.0f, 0.0f), 
+    m_rotate_angle(0.0f)
   {
-    m_file = lib3ds_file_load(filename.c_str());
+    m_file = lib3ds_file_load(m_filename.c_str());
     if(!m_file)
       throw Model_Init_Failure();
 
-    set_keyframe(0);
+    set_keyframe(m_keyframe);
+
+    visit_nodes(m_extents);
+
+    m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
+
+    // Flip Textures Vertically - !!HACK!!
+    vflip_texels(*this);
+  }
+
+  Model::Model(const Model &rhs)
+    : m_filename(rhs.m_filename),
+    m_file(0),
+    m_keyframe(rhs.m_keyframe),
+    m_unrenderer(0),
+    m_scale(rhs.m_scale),
+    m_rotate(rhs.m_rotate),
+    m_translate(rhs.m_translate),
+    m_rotate_angle(rhs.m_rotate_angle)
+  {
+    m_file = lib3ds_file_load(m_filename.c_str());
+    if(!m_file)
+      throw Model_Init_Failure();
+
+    set_keyframe(m_keyframe);
 
     visit_nodes(m_extents);
 
@@ -187,6 +213,21 @@ namespace Zeni {
     delete m_unrenderer;
 
     lib3ds_file_free(m_file);
+  }
+
+  Model & Model::operator =(const Model &rhs) {
+    Model lhs(rhs);
+
+    std::swap(m_filename, lhs.m_filename);
+    std::swap(m_file, lhs.m_file);
+    std::swap(m_keyframe, lhs.m_keyframe);
+    std::swap(m_unrenderer, lhs.m_unrenderer);
+    std::swap(m_scale, lhs.m_scale);
+    std::swap(m_rotate, lhs.m_rotate);
+    std::swap(m_translate, lhs.m_translate);
+    std::swap(m_rotate_angle, lhs.m_rotate_angle);
+
+    return *this;
   }
 
   Point3f Model::get_position() const {

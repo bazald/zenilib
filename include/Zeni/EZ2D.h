@@ -29,9 +29,9 @@
 #ifndef ZENI_EZ2D_H
 #define ZENI_EZ2D_H
 
-#include "Color.h"
-#include "Coordinate.h"
-#include "Vector3f.h"
+#include <Zeni/Color.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Vector3f.h>
 
 #include <string>
 

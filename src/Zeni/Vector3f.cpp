@@ -43,16 +43,6 @@ namespace Zeni {
   extern const Vector3f vector_j(0, 1, 0);
   extern const Vector3f vector_k(0, 0, 1);
 
-  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_)
-    : i(i_), j(j_), k(k_)
-  {
-  }
-
-  Vector3f::Vector3f(const Vector3f &rhs)
-    : i(rhs.i), j(rhs.j), k(rhs.k)
-  {
-  }
-
   Vector3f & Vector3f::normalize() {
     float mplier = magnitude();
 

@@ -43,9 +43,9 @@
 #ifndef ZENI_TEXTURES_H
 #define ZENI_TEXTURES_H
 
-#include "Hash_Map.h"
-#include "Resource.h"
-#include "Texture.h"
+#include <Zeni/Hash_Map.h>
+#include <Zeni/Resource.h>
+#include <Zeni/Texture.h>
 
 namespace Zeni {
 
@@ -119,7 +119,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Textures.hxx"
+#include <Zeni/Textures.hxx>
 #endif
 
 #endif

@@ -29,7 +29,7 @@
 #ifndef ZENI_MODEL_HXX
 #define ZENI_MODEL_HXX
 
-#include "Model.h"
+#include <Zeni/Model.h>
 
 namespace Zeni {
 
@@ -59,6 +59,7 @@ namespace Zeni {
   }
 
   void Model::set_keyframe(const float &keyframe) {
+    m_keyframe = keyframe;
     lib3ds_file_eval(m_file, keyframe);
   }
 

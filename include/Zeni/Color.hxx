@@ -29,7 +29,7 @@
 #ifndef ZENI_COLOR_HXX
 #define ZENI_COLOR_HXX
 
-#include "Color.h"
+#include <Zeni/Color.h>
 
 namespace Zeni {
 

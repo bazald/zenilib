@@ -29,9 +29,14 @@
 #ifndef ZENI_COORDINATE_HXX
 #define ZENI_COORDINATE_HXX
 
-#include "Coordinate.h"
+#include <Zeni/Coordinate.h>
 
 namespace Zeni {
+
+  Point2i::Point2i()
+    : x(0), y(0)
+  {
+  }
 
   Point2i::Point2i(const int &x_, const int &y_)
     : x(x_), y(y_)
@@ -40,6 +45,11 @@ namespace Zeni {
 
   Point2i::Point2i(const Point3i &rhs)
     : x(rhs.x), y(rhs.y)
+  {
+  }
+
+  Point2f::Point2f()
+    : x(0.0f), y(0.0f)
   {
   }
 
@@ -53,6 +63,11 @@ namespace Zeni {
   {
   }
 
+  Point3i::Point3i()
+    : x(0), y(0), z(0)
+  {
+  }
+
   Point3i::Point3i(const int &x_, const int &y_, const int &z_)
     : x(x_), y(y_), z(z_)
   {
@@ -60,6 +75,11 @@ namespace Zeni {
 
   Point3i::Point3i(const Point2i &rhs)
     : x(rhs.x), y(rhs.y), z(0)
+  {
+  }
+
+  Point3f::Point3f()
+    : x(0.0f), y(0.0f), z(0.0f)
   {
   }
 

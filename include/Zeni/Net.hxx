@@ -29,7 +29,7 @@
 #ifndef ZENI_NET_HXX
 #define ZENI_NET_HXX
 
-#include "Net.h"
+#include <Zeni/Net.h>
 
 namespace Zeni {
 

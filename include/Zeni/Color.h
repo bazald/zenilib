@@ -80,7 +80,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Color.hxx"
+#include <Zeni/Color.hxx>
 #endif
 
 #endif

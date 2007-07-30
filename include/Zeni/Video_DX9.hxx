@@ -29,7 +29,7 @@
 #ifndef ZENI_VIDEO_DX9_HXX
 #define ZENI_VIDEO_DX9_HXX
 
-#include "Video_DX9.h"
+#include <Zeni/Video_DX9.h>
 
 #ifndef DISABLE_DX9
 

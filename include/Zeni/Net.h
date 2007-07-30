@@ -89,7 +89,7 @@
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 
-#include "Core.h"
+#include <Zeni/Core.h>
 
 #include <SDL/SDL_net.h>
 #include <string>
@@ -174,7 +174,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Net.hxx"
+#include <Zeni/Net.hxx>
 #endif
 
 #endif

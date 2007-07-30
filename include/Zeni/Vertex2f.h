@@ -53,9 +53,9 @@
 #ifndef ZENI_VERTEX2F_H
 #define ZENI_VERTEX2F_H
 
-#include "Color.h"
-#include "Coordinate.h"
-#include "Render_Wrapper.h"
+#include <Zeni/Color.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Render_Wrapper.h>
 
 #include <string>
 
@@ -141,7 +141,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Vertex2f.hxx"
+#include <Zeni/Vertex2f.hxx>
 #endif
 
 #endif

@@ -29,7 +29,7 @@
 #ifndef ZENI_RENDER_WRAPPER_HXX
 #define ZENI_RENDER_WRAPPER_HXX
 
-#include "Render_Wrapper.h"
+#include <Zeni/Render_Wrapper.h>
 
 namespace Zeni {
 

@@ -43,7 +43,7 @@
 #ifndef ZENI_VIDEO_GL_H
 #define ZENI_VIDEO_GL_H
 
-#include "Video.h"
+#include <Zeni/Video.h>
 
 #ifndef DISABLE_GL
 
@@ -134,7 +134,7 @@ namespace Zeni {
 #endif
 
 #ifdef ZENI_INLINES
-#include "Video_GL.hxx"
+#include <Zeni/Video_GL.hxx>
 #endif
 
 #endif

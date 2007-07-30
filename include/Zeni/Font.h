@@ -53,9 +53,9 @@
 #ifndef ZENI_FONT_H
 #define ZENI_FONT_H
 
-#include "Color.h"
-#include "Coordinate.h"
-#include "Core.h"
+#include <Zeni/Color.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Core.h>
 
 #include <SDL/SDL_ttf.h>
 #include <string>
@@ -162,7 +162,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Font.hxx"
+#include <Zeni/Font.hxx>
 #endif
 
 #endif

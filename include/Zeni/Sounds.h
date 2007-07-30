@@ -43,10 +43,10 @@
 #ifndef ZENI_SOUNDS_H
 #define ZENI_SOUNDS_H
 
-#include "Core.h"
-#include "Hash_Map.h"
-#include "Resource.h"
-#include "Sound.h"
+#include <Zeni/Core.h>
+#include <Zeni/Hash_Map.h>
+#include <Zeni/Resource.h>
+#include <Zeni/Sound.h>
 
 #include <string>
 

@@ -55,9 +55,9 @@
 #ifndef ZENI_VERTEX_BUFFER_H
 #define ZENI_VERTEX_BUFFER_H
 
-#include "Triangle.h"
-#include "Quadrilateral.h"
-#include "Vertex3f.h"
+#include <Zeni/Triangle.h>
+#include <Zeni/Quadrilateral.h>
+#include <Zeni/Vertex3f.h>
 
 #include <vector>
 
@@ -163,7 +163,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Vertex_Buffer.hxx"
+#include <Zeni/Vertex_Buffer.hxx>
 #endif
 
 #endif

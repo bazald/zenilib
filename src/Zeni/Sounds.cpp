@@ -120,8 +120,15 @@ namespace Zeni {
 
     string name, filename;
 
-    while(soundsin >> name >> filename)
-      set_sound(name, filename);
+    while(soundsin >> name >> filename) {
+      try {
+        set_sound(name, filename);
+      }
+      catch(Sound_Buffer_Init_Failure &) {
+        cerr << "Sounds: Error Loading '" << name << "' from '" << filename << "'\n";
+        throw;
+      }
+    }
   }
 
 }

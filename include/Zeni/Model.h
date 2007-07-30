@@ -75,8 +75,8 @@
 #ifndef ZENI_MODEL_H
 #define ZENI_MODEL_H
 
-#include "Coordinate.h"
-#include "Render_Wrapper.h"
+#include <Zeni/Coordinate.h>
+#include <Zeni/Render_Wrapper.h>
 
 #include <lib3ds/file.h>
 #include <lib3ds/node.h>
@@ -108,7 +108,10 @@ namespace Zeni {
   public:
     /// The only way to create a Model
     Model(const std::string &filename);
+    Model(const Model &rhs);
     ~Model();
+
+    Model & operator =(const Model &rhs);
 
     // Accessors
     inline Lib3dsFile * get_file() const; ///< Get the full 3ds file info
@@ -134,7 +137,9 @@ namespace Zeni {
 #endif
 
   private:
+    std::string m_filename;
     Lib3dsFile *m_file;
+    float m_keyframe;
 
     mutable Model_Visitor *m_unrenderer;
 
@@ -156,7 +161,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Model.hxx"
+#include <Zeni/Model.hxx>
 #endif
 
 #endif

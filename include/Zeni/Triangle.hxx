@@ -29,10 +29,10 @@
 #ifndef ZENI_TRIANGLE_HXX
 #define ZENI_TRIANGLE_HXX
 
-#include "Triangle.h"
-#include "Vector3f.h"
+#include <Zeni/Triangle.h>
+#include <Zeni/Vector3f.h>
 
-#include "Video_DX9.hxx"
+#include <Zeni/Video_DX9.hxx>
 
 #include <GL/gl.h>
 

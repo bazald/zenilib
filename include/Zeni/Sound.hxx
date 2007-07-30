@@ -29,7 +29,7 @@
 #ifndef ZENI_SOUND_HXX
 #define ZENI_SOUND_HXX
 
-#include "Sound.h"
+#include <Zeni/Sound.h>
 
 namespace Zeni {
 
@@ -116,6 +116,36 @@ namespace Zeni {
     alSourcef(m_source, AL_SEC_OFFSET, time);
 #endif
   }
+  
+  void Sound_Source::set_near_clip(const float &
+#ifndef DISABLE_AL
+    near_clip
+#endif
+    ) {
+#ifndef DISABLE_AL
+    alSourcef(m_source, AL_REFERENCE_DISTANCE, near_clip);
+#endif
+  }
+
+  void Sound_Source::set_far_clip(const float &
+#ifndef DISABLE_AL
+    far_clip
+#endif
+    ) {
+#ifndef DISABLE_AL
+    alSourcef(m_source, AL_MAX_DISTANCE, far_clip);
+#endif
+  }
+
+  void Sound_Source::set_rolloff(const float &
+#ifndef DISABLE_AL
+    rolloff
+#endif
+    ) {
+#ifndef DISABLE_AL
+    alSourcef(m_source, AL_ROLLOFF_FACTOR, rolloff);
+#endif
+  }
 
   ALuint Sound_Source::get_buffer() const {
     ALint buffer = 0;
@@ -171,6 +201,30 @@ namespace Zeni {
     alGetSourcef(m_source, AL_SEC_OFFSET, &time);
 #endif
     return time;
+  }
+  
+  float Sound_Source::get_near_clip() const {
+    float near_clip = 10.0f;
+#ifndef DISABLE_AL
+    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clip);
+#endif
+    return near_clip;
+  }
+
+  float Sound_Source::get_far_clip() const {
+    float far_clip = 1000.0f;
+#ifndef DISABLE_AL
+    alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clip);
+#endif
+    return far_clip;
+  }
+
+  float Sound_Source::get_rolloff() const {
+    float rolloff = 1.0f;
+#ifndef DISABLE_AL
+    alGetSourcef(m_source, AL_ROLLOFF_FACTOR, &rolloff);
+#endif
+    return rolloff;
   }
 
   void Sound_Source::play() {
@@ -229,6 +283,8 @@ namespace Zeni {
 #ifndef DISABLE_AL
     ALfloat listener_position[3] = {position.x, position.y, position.z};
     alListenerfv(AL_POSITION, listener_position);
+
+    assert_m_bgm();
     m_bgm_source->set_position(position);
 #endif
   }
@@ -241,6 +297,8 @@ namespace Zeni {
 #ifndef DISABLE_AL
     ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
     alListenerfv(AL_VELOCITY, listener_velocity);
+
+    assert_m_bgm();
     m_bgm_source->set_velocity(velocity);
 #endif
   }
@@ -262,10 +320,19 @@ namespace Zeni {
 
   Point3f Sound::get_listener_position() const {
     return m_bgm_source->get_position();
+    ALfloat listener_position[3] = {0.0f, 0.0f, 0.0f};
+#ifndef DISABLE_AL
+    alGetListenerfv(AL_POSITION, listener_position);
+#endif
+    return Point3f(listener_position[0], listener_position[1], listener_position[2]);
   }
 
   Vector3f Sound::get_listener_velocity() const {
-    return m_bgm_source->get_velocity();
+    ALfloat listener_velocity[3] = {0.0f, 0.0f, 0.0f};
+#ifndef DISABLE_AL
+    alGetListenerfv(AL_VELOCITY, listener_velocity);
+#endif
+    return Vector3f(listener_velocity[0], listener_velocity[1], listener_velocity[2]);
   }
 
   std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {

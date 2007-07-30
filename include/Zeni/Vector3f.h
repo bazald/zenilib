@@ -45,9 +45,10 @@
 #ifndef ZENI_VECTOR3F_H
 #define ZENI_VECTOR3F_H
 
+#include <Zeni/Coordinate.h>
+
 namespace Zeni {
 
-  struct Point3f;
   struct Vector3f;
 
   extern const float pi; ///< pi == 3.1415926...
@@ -62,10 +63,14 @@ namespace Zeni {
   extern const Vector3f vector_k; ///< k == Vector3f(0, 0, 1)
 
   struct Vector3f {
-  public:
     /// The best way to create a Vector3f
-    Vector3f(const float &i_ = 0, const float &j_ = 0, const float &k_ = 0);
-    Vector3f(const Vector3f &rhs);
+    inline Vector3f();
+    inline Vector3f(const float &i_, const float &j_, const float &k_);
+    inline Vector3f(const Vector3f &rhs);
+
+    /// To/From a Point3f
+    inline explicit Vector3f(const Point3f &rhs);
+    inline operator const Point3f & () const;
 
     // Vector addition/subtraction
     inline Vector3f operator+(const Vector3f &rhs) const; ///< Get the sum
@@ -121,7 +126,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Vector3f.hxx"
+#include <Zeni/Vector3f.hxx>
 #endif
 
 #endif

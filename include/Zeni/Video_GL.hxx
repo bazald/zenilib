@@ -29,7 +29,7 @@
 #ifndef ZENI_VIDEO_GL_HXX
 #define ZENI_VIDEO_GL_HXX
 
-#include "Video_GL.h"
+#include <Zeni/Video_GL.h>
 
 #ifndef DISABLE_GL
 

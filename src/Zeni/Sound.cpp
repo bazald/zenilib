@@ -191,7 +191,7 @@ namespace Zeni {
     : m_source(rhs.m_source)
   {
     rhs.m_source = AL_NONE;
-    rhs.init(g_Hello_World_Buffer.get_id());
+    const_cast<Sound_Source &>(rhs).init(g_Hello_World_Buffer.get_id());
   }
 
   Sound_Source::Sound_Source(const Sound_Buffer &buffer, const float &pitch, const float &gain,
@@ -239,7 +239,7 @@ namespace Zeni {
 #ifndef DISABLE_AL
     looping
 #endif
-    ) const {
+    ) {
     Sound::get_reference();
 
 #ifndef DISABLE_AL
@@ -257,6 +257,9 @@ namespace Zeni {
     alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
     alSourcei(m_source, AL_LOOPING, looping);
 #endif
+
+    set_near_clip();
+    set_far_clip();
   }
 
   Sound_Source & Sound_Source::operator=(const Sound_Source &rhs) {
@@ -282,7 +285,7 @@ namespace Zeni {
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
     ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
-    ALfloat listener_forward_and_up[] = {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    ALfloat listener_forward_and_up[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
     alListenerfv(AL_POSITION, listener_position);
     alListenerfv(AL_VELOCITY, listener_velocity);

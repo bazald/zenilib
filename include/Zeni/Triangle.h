@@ -43,7 +43,7 @@
 #ifndef ZENI_TRIANGLE_H
 #define ZENI_TRIANGLE_H
 
-#include "Render_Wrapper.h"
+#include <Zeni/Render_Wrapper.h>
 
 #include <memory>
 
@@ -86,7 +86,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Triangle.hxx"
+#include <Zeni/Triangle.hxx>
 #endif
 
 #endif

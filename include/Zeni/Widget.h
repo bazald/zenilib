@@ -26,12 +26,12 @@
 * the GNU General Public License.
 */
 
-#include "Coordinate.h"
-#include "Texture.h"
-#include "Textures.h"
-#include "Quadrilateral.h"
-#include "Vertex2f.h"
-#include "Video.h"
+#include <Zeni/Coordinate.h>
+#include <Zeni/Texture.h>
+#include <Zeni/Textures.h>
+#include <Zeni/Quadrilateral.h>
+#include <Zeni/Vertex2f.h>
+#include <Zeni/Video.h>
 
 #include <set>
 

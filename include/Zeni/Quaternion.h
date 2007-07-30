@@ -31,8 +31,8 @@
 
 #include <string>
 
-#include "Vector3f.h"
-#include "Matrix4f.h"
+#include <Zeni/Vector3f.h>
+#include <Zeni/Matrix4f.h>
 
 namespace Zeni {
 
@@ -94,7 +94,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Quaternion.hxx"
+#include <Zeni/Quaternion.hxx>
 #endif
 
 #endif

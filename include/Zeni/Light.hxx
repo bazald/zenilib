@@ -29,7 +29,7 @@
 #ifndef ZENI_LIGHT_HXX
 #define ZENI_LIGHT_HXX
 
-#include "Light.h"
+#include <Zeni/Light.h>
 
 namespace Zeni {
 

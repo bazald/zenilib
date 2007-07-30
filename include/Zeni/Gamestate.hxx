@@ -29,7 +29,7 @@
 #ifndef ZENI_GAMESTATE_HXX
 #define ZENI_GAMESTATE_HXX
 
-#include "Gamestate.h"
+#include <Zeni/Gamestate.h>
 
 namespace Zeni {
 

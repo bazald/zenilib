@@ -88,7 +88,7 @@
 #ifndef ZENI_GAMESTATE_H
 #define ZENI_GAMESTATE_H
 
-#include "Core.h"
+#include <Zeni/Core.h>
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_keysym.h>
@@ -217,7 +217,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Gamestate.hxx"
+#include <Zeni/Gamestate.hxx>
 #endif
 
 #endif

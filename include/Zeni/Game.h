@@ -45,7 +45,7 @@
 #ifndef ZENI_GAME_H
 #define ZENI_GAME_H
 
-#include "Gamestate.h"
+#include <Zeni/Gamestate.h>
 
 #include <stack>
 #include <string>
@@ -89,7 +89,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Game.hxx"
+#include <Zeni/Game.hxx>
 #endif
 
 #endif

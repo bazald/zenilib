@@ -29,7 +29,7 @@
 #ifndef ZENI_VERTEX3F_HXX
 #define ZENI_VERTEX3F_HXX
 
-#include "Vertex3f.h"
+#include <Zeni/Vertex3f.h>
 
 namespace Zeni {
 

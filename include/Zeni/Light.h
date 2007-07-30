@@ -45,9 +45,9 @@
 #ifndef ZENI_LIGHT_H
 #define ZENI_LIGHT_H
 
-#include "Color.h"
-#include "Coordinate.h"
-#include "Vector3f.h"
+#include <Zeni/Color.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Vector3f.h>
 
 #ifndef DISABLE_GL
 #include <GL/gl.h>
@@ -129,7 +129,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Light.hxx"
+#include <Zeni/Light.hxx>
 #endif
 
 #endif

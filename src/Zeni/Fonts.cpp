@@ -136,8 +136,9 @@ namespace Zeni {
       try {
         set_font(name, Video::get_reference().create_Font(codename, bold, italic, height));
       }
-      catch(...) {
+      catch(Font_Init_Failure &) {
         uninit();
+        cerr << "Fonts: Error Loading '" << name << "' from '" << codename << "'\n";
         throw;
       }
 

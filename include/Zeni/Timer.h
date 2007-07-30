@@ -102,7 +102,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Timer.hxx"
+#include <Zeni/Timer.hxx>
 #endif
 
 #endif

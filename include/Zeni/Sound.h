@@ -76,9 +76,9 @@
 #ifndef ZENI_SOUND_H
 #define ZENI_SOUND_H
 
-#include "Core.h"
-#include "Coordinate.h"
-#include "Vector3f.h"
+#include <Zeni/Core.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Vector3f.h>
 
 #include <string>
 
@@ -138,12 +138,15 @@ namespace Zeni {
 
     inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
     inline void set_buffer(const ALuint &buffer); ///< Set the Sound_Buffer to be played.
-    inline void set_pitch(const float &pitch); ///< Set the pitch.
-    inline void set_gain(const float &gain); ///< Set the gain.
+    inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
+    inline void set_gain(const float &gain = 1.0f); ///< Set the gain.
     inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source.
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
+    inline void set_near_clip(const float &near_clip = 10.0f); // Set the near clipping distance
+    inline void set_far_clip(const float &far_clip = 1000.0f); // Set the far clipping distance
+    inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
 
     inline ALuint get_buffer() const; ///< Get the Sound_Buffer's OpenAL id
     inline float get_pitch() const; ///< Get the pitch.
@@ -152,6 +155,9 @@ namespace Zeni {
     inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
     inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
+    inline float get_near_clip() const; // Get the near clipping distance
+    inline float get_far_clip() const; // Get the far clipping distance
+    inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
 
     inline void play(); ///< Begin playing or unpause the Sound_Source.
     inline void pause(); ///< Pause the Sound_Source.
@@ -170,7 +176,7 @@ namespace Zeni {
               const float &gain = 1.0f,
               const Point3f &position = Point3f(),
               const Vector3f &velocity = Vector3f(),
-              const bool &looping = false) const;
+              const bool &looping = false);
 
     mutable ALuint m_source;
   };
@@ -187,9 +193,6 @@ namespace Zeni {
     // Get reference to only instance; Might throw Sound_Init_Failure
     static Sound & get_reference();
 
-    // Accessors
-    inline bool is_enabled() const; ///< Check Sound is currently enabled
-
     // Listener Functions
     inline void set_listener_position(const Point3f &position); ///< Set the position of the listener and BGM.
     inline void set_listener_velocity(const Vector3f &velocity); ///< Set the velocity of the listener and BGM for the doppler effect.
@@ -202,6 +205,7 @@ namespace Zeni {
     // BackGround Music Functions
     void set_BGM(const std::string &filename); ///< Set BackGround Music
 
+    // BackGround Music Getter Functions
     inline bool playing_BGM(); ///< Check to see if BackGround Music is playing
     inline bool paused_BGM(); ///< Check to see if BackGround Music is paused
     inline bool stopped_BGM(); ///< Check to see if BackGround Music is stopped
@@ -210,6 +214,7 @@ namespace Zeni {
     inline bool is_BGM_looping(); ///< Check to see if the BGM is set to loop back to the start once it is done playing.
     inline float get_BGM_time(); ///< Get the current position in the BGM, offset in seconds.
 
+    // BackGround Music Setter Functions
     inline void play_BGM(); ///< Begin Playing BackGround Music
     inline void pause_BGM(); ///< Pause BackGround Music
     inline void stop_BGM(); ///< Stop BackGround Music
@@ -241,7 +246,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Sound.hxx"
+#include <Zeni/Sound.hxx>
 #endif
 
 #endif

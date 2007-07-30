@@ -29,9 +29,9 @@
 #ifndef ZENI_MATRIX4F_HXX
 #define ZENI_MATRIX4F_HXX
 
-#include "Matrix4f.h"
+#include <Zeni/Matrix4f.h>
 
-#include "Coordinate.hxx"
+#include <Zeni/Coordinate.hxx>
 
 #include <cmath>
 

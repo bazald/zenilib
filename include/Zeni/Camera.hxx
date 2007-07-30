@@ -29,7 +29,7 @@
 #ifndef ZENI_CAMERA_HXX
 #define ZENI_CAMERA_HXX
 
-#include "Camera.h"
+#include <Zeni/Camera.h>
 
 namespace Zeni {
 

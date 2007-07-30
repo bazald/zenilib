@@ -29,13 +29,37 @@
 #ifndef ZENI_VECTOR3F_HXX
 #define ZENI_VECTOR3F_HXX
 
-#include "Vector3f.h"
+#include <Zeni/Vector3f.h>
 
-#include "Coordinate.hxx"
+#include <Zeni/Coordinate.hxx>
 
 #include <cmath>
 
 namespace Zeni {
+
+  Vector3f::Vector3f()
+    : i(0.0f), j(0.0f), k(0.0f)
+  {
+  }
+
+  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_)
+    : i(i_), j(j_), k(k_)
+  {
+  }
+
+  Vector3f::Vector3f(const Vector3f &rhs)
+    : i(rhs.i), j(rhs.j), k(rhs.k)
+  {
+  }
+
+  Vector3f::Vector3f(const Point3f &rhs)
+    : i(rhs.x), j(rhs.y), k(rhs.z)
+  {
+  }
+
+  Vector3f::operator const Point3f & () const {
+    return static_cast<const Point3f &>(*this);
+  }
 
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {
     return Vector3f(i + rhs.i,

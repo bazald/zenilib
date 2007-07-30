@@ -45,8 +45,8 @@
 #ifndef ZENI_FONTS_H
 #define ZENI_FONTS_H
 
-#include "Font.h"
-#include "Hash_Map.h"
+#include <Zeni/Font.h>
+#include <Zeni/Hash_Map.h>
 
 #include <string>
 #include <vector>

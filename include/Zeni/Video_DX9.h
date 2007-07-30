@@ -43,8 +43,8 @@
 #ifndef ZENI_VIDEO_DX9_H
 #define ZENI_VIDEO_DX9_H
 
-#include "Color.h"
-#include "Video.h"
+#include <Zeni/Color.h>
+#include <Zeni/Video.h>
 
 #ifndef DISABLE_DX9
 
@@ -145,7 +145,7 @@ namespace Zeni {
 #endif
 
 #ifdef ZENI_INLINES
-#include "Video_DX9.hxx"
+#include <Zeni/Video_DX9.hxx>
 #endif
 
 #endif

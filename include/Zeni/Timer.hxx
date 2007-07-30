@@ -29,7 +29,7 @@
 #ifndef ZENI_TIMER_HXX
 #define ZENI_TIMER_HXX
 
-#include "Timer.h"
+#include <Zeni/Timer.h>
 
 #include <SDL/SDL.h>
 

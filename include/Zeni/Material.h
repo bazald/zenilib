@@ -45,8 +45,8 @@
 #ifndef ZENI_MATERIAL_H
 #define ZENI_MATERIAL_H
 
-#include "Color.h"
-#include "Texture.h"
+#include <Zeni/Color.h>
+#include <Zeni/Texture.h>
 
 #include <string>
 
@@ -118,7 +118,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Material.hxx"
+#include <Zeni/Material.hxx>
 #endif
 
 #endif

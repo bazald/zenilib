@@ -45,10 +45,10 @@
 #ifndef ZENI_COLORS_H
 #define ZENI_COLORS_H
 
-#include "Color.h"
-#include "Core.h"
-#include "Hash_Map.h"
-#include "Resource.h"
+#include <Zeni/Color.h>
+#include <Zeni/Core.h>
+#include <Zeni/Hash_Map.h>
+#include <Zeni/Resource.h>
 
 #include <string>
 

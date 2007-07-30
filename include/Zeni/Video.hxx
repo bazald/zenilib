@@ -29,7 +29,7 @@
 #ifndef ZENI_VIDEO_HXX
 #define ZENI_VIDEO_HXX
 
-#include "Video.h"
+#include <Zeni/Video.h>
 
 namespace Zeni {
 

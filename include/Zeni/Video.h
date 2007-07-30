@@ -48,8 +48,8 @@
 #ifndef ZENI_VIDEO_H
 #define ZENI_VIDEO_H
 
-#include "Core.h"
-#include "Coordinate.h"
+#include <Zeni/Core.h>
+#include <Zeni/Coordinate.h>
 
 #include <SDL/SDL.h>
 #include <string>
@@ -212,7 +212,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Video.hxx"
+#include <Zeni/Video.hxx>
 #endif
 
 #endif

@@ -47,8 +47,8 @@
 #ifndef ZENI_CAMERA_H
 #define ZENI_CAMERA_H
 
-#include "Coordinate.hxx"
-#include "Vector3f.h"
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Vector3f.h>
 
 namespace Zeni {
 
@@ -101,7 +101,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Camera.hxx"
+#include <Zeni/Camera.hxx>
 #endif
 
 #endif

@@ -29,7 +29,7 @@
 #ifndef ZENI_FONT_HXX
 #define ZENI_FONT_HXX
 
-#include "Font.h"
+#include <Zeni/Font.h>
 
 namespace Zeni {
 

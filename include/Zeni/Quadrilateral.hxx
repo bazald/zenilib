@@ -29,9 +29,9 @@
 #ifndef ZENI_Quadrilateral_HXX
 #define ZENI_Quadrilateral_HXX
 
-#include "Quadrilateral.h"
+#include <Zeni/Quadrilateral.h>
 
-#include "Triangle.hxx"
+#include <Zeni/Triangle.hxx>
 
 #include <GL/gl.h>
 

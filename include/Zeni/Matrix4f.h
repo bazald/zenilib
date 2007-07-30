@@ -29,7 +29,7 @@
 #ifndef ZENI_MATRIX_H
 #define ZENI_MATRIX_H
 
-#include "Vector3f.h"
+#include <Zeni/Vector3f.h>
 #include <vector>
 
 namespace Zeni {
@@ -83,7 +83,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Matrix4f.hxx"
+#include <Zeni/Matrix4f.hxx>
 #endif
 
 #endif

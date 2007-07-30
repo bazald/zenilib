@@ -78,8 +78,8 @@
 #ifndef ZENI_RENDER_WRAPPER_H
 #define ZENI_RENDER_WRAPPER_H
 
-#include "Core.h"
-#include "Material.h"
+#include <Zeni/Core.h>
+#include <Zeni/Material.h>
 
 #include <string>
 
@@ -157,7 +157,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Render_Wrapper.hxx"
+#include <Zeni/Render_Wrapper.hxx>
 #endif
 
 #endif

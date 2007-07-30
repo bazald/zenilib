@@ -53,10 +53,10 @@
 #ifndef ZENI_VERTEX3F_H
 #define ZENI_VERTEX3F_H
 
-#include "Color.h"
-#include "Coordinate.h"
-#include "Render_Wrapper.h"
-#include "Vector3f.h"
+#include <Zeni/Color.h>
+#include <Zeni/Coordinate.h>
+#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Vector3f.h>
 
 #include <string>
 
@@ -149,7 +149,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Vertex3f.hxx"
+#include <Zeni/Vertex3f.hxx>
 #endif
 
 #endif

@@ -29,7 +29,7 @@
 #ifndef ZENI_GAME_HXX
 #define ZENI_GAME_HXX
 
-#include "Game.h"
+#include <Zeni/Game.h>
 
 namespace Zeni {
 

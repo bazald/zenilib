@@ -43,7 +43,7 @@
 #ifndef ZENI_TEXTURE_H
 #define ZENI_TEXTURE_H
 
-#include "Core.h"
+#include <Zeni/Core.h>
 
 #include <SDL/SDL_image.h>
 #include <string>

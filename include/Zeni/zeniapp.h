@@ -72,8 +72,8 @@
 #ifndef ZENIAPP_H
 #define ZENIAPP_H
 
-#include "Game.h"
-#include "Video.h"
+#include <Zeni/Game.h>
+#include <Zeni/Video.h>
 
 #include <string>
 #include <iosfwd>

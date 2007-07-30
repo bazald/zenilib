@@ -29,8 +29,8 @@
 #ifndef ZENI_RESOURCE_H
 #define ZENI_RESOURCE_H
 
-#include "Core.h"
-#include "Hash_Map.h"
+#include <Zeni/Core.h>
+#include <Zeni/Hash_Map.h>
 
 #include <string>
 
@@ -60,7 +60,7 @@ namespace Zeni {
 }
 
 #ifdef ZENI_INLINES
-#include "Resource.hxx"
+#include <Zeni/Resource.hxx>
 #endif
 
 #endif
