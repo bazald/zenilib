@@ -133,6 +133,14 @@ namespace Zeni {
     set_fvf();
   }
 
+  void Video_DX9::apply_texture(const Texture &texture) {
+    texture.apply_texture();
+
+    m_textured = true;
+
+    set_fvf();
+  }
+
   void Video_DX9::unapply_texture() {
     m_textured = false;
 

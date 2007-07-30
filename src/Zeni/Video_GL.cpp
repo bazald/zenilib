@@ -109,6 +109,13 @@ namespace Zeni {
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   }
 
+  void Video_GL::apply_texture(const Texture &texture) {
+    texture.apply_texture();
+
+    glEnable(GL_TEXTURE_2D);
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+  }
+
   void Video_GL::unapply_texture() {
     glDisable(GL_TEXTURE_2D);
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
