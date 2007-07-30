@@ -57,8 +57,8 @@ namespace Zeni {
   {
   }
 
-  Vector3f::operator const Point3f & () const {
-    return static_cast<const Point3f &>(*this);
+  Vector3f::operator Point3f() const {
+    return Point3f(i, j, k);
   }
 
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {

@@ -70,7 +70,7 @@ namespace Zeni {
 
     /// To/From a Point3f
     inline explicit Vector3f(const Point3f &rhs);
-    inline operator const Point3f & () const;
+    inline operator Point3f() const;
 
     // Vector addition/subtraction
     inline Vector3f operator+(const Vector3f &rhs) const; ///< Get the sum
