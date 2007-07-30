@@ -26,6 +26,7 @@
 * the GNU General Public License.
 */
 
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Video_DX9.h>

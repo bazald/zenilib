@@ -29,6 +29,7 @@
 #include <Zeni/Sound.hxx>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Vector3f.hxx>
 
 #include <SDL/SDL.h>
 #include <iostream>

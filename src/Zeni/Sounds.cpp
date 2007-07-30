@@ -31,6 +31,7 @@
 #include <Zeni/Sound.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Resource.hxx>
+#include <Zeni/Vector3f.hxx>
 
 #include <iostream>
 #include <fstream>

@@ -33,6 +33,7 @@
 #include <Zeni/Material.hxx>
 #include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Vertex3f.hxx>
 #include <Zeni/Video_GL.hxx>
 

@@ -29,6 +29,7 @@
 #include <Zeni/Light.h>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Video_DX9.hxx>
 
 #ifndef DISABLE_GL

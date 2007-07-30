@@ -32,6 +32,7 @@
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Color.hxx>
 #include <Zeni/Material.hxx>
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Video_DX9.hxx>
 
 #include <lib3ds/mesh.h>
@@ -184,7 +185,8 @@ namespace Zeni {
   }
 
   Model::Model(const Model &rhs)
-    : m_filename(rhs.m_filename),
+    : Renderable(rhs),
+    m_filename(rhs.m_filename),
     m_file(0),
     m_keyframe(rhs.m_keyframe),
     m_unrenderer(0),
@@ -407,23 +409,24 @@ namespace Zeni {
     if(!mesh)
       return;
 
-    for(Lib3dsPoint *point=&mesh->pointL[0], *end=point+mesh->points; point != end; ++point) {
-      if(lower_bound.x > point->pos[0] || !started)
-        lower_bound.x = point->pos[0];
-      if(lower_bound.y > point->pos[1] || !started)
-        lower_bound.y = point->pos[1];
-      if(lower_bound.z > point->pos[2] || !started)
-        lower_bound.z = point->pos[2];
+    for(Lib3dsPoint *point=&mesh->pointL[0], *end=point+mesh->points; point != end; ++point)
+      if(point) {
+        if(lower_bound.x > point->pos[0] || !started)
+          lower_bound.x = point->pos[0];
+        if(lower_bound.y > point->pos[1] || !started)
+          lower_bound.y = point->pos[1];
+        if(lower_bound.z > point->pos[2] || !started)
+          lower_bound.z = point->pos[2];
 
-      if(upper_bound.x < point->pos[0] || !started)
-        upper_bound.x = point->pos[0];
-      if(upper_bound.y < point->pos[1] || !started)
-        upper_bound.y = point->pos[1];
-      if(upper_bound.z < point->pos[2] || !started)
-        upper_bound.z = point->pos[2];
+        if(upper_bound.x < point->pos[0] || !started)
+          upper_bound.x = point->pos[0];
+        if(upper_bound.y < point->pos[1] || !started)
+          upper_bound.y = point->pos[1];
+        if(upper_bound.z < point->pos[2] || !started)
+          upper_bound.z = point->pos[2];
 
-      started = true;
-    } 
+        started = true;
+      }
   }
 
 }
