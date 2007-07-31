@@ -259,8 +259,8 @@ namespace Zeni {
     alSourcei(m_source, AL_LOOPING, looping);
 #endif
 
-    set_near_clip();
-    set_far_clip();
+    set_near_clamp();
+    set_far_clamp();
   }
 
   Sound_Source & Sound_Source::operator=(const Sound_Source &rhs) {

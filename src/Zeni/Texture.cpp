@@ -199,10 +199,29 @@ namespace Zeni {
       }
     }
 
-    GLint mode;
+    GLint mode1;
+    GLint mode2;
     switch(surface->format->BytesPerPixel) {
-    case 3:  mode = GL_RGB;  break;
-    case 4:  mode = GL_RGBA; break;
+    case 3:
+      mode1 = GL_RGB;
+      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
+        mode2 = GL_RGB;
+      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
+        mode2 = GL_BGR;
+      else
+        throw Texture_Init_Failure();
+      break;
+
+    case 4:
+      mode1 = GL_RGBA;
+      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
+        mode2 = GL_RGBA;
+      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
+        mode2 = GL_BGRA;
+      else
+        throw Texture_Init_Failure();
+      break;
+
     default:
       throw Texture_Init_Failure();
     }
@@ -238,9 +257,9 @@ namespace Zeni {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     if(Textures::get_mipmapping())
-      gluBuild2DMipmaps(GL_TEXTURE_2D, mode, surface->w, surface->h, mode, GL_UNSIGNED_BYTE, surface->pixels);
+      gluBuild2DMipmaps(GL_TEXTURE_2D, mode1, surface->w, surface->h, mode2, GL_UNSIGNED_BYTE, surface->pixels);
     else
-      glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
+      glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
 
     SDL_FreeSurface(surface);
   }

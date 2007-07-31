@@ -144,8 +144,8 @@ namespace Zeni {
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clip(const float &near_clip = 10.0f); // Set the near clipping distance
-    inline void set_far_clip(const float &far_clip = 1000.0f); // Set the far clipping distance
+    inline void set_near_clamp(const float &near_clip = 10.0f); // Set the near clipping distance
+    inline void set_far_clamp(const float &far_clip = 1000.0f); // Set the far clipping distance
     inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
 
     inline ALuint get_buffer() const; ///< Get the Sound_Buffer's OpenAL id
@@ -155,8 +155,8 @@ namespace Zeni {
     inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
     inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
-    inline float get_near_clip() const; // Get the near clipping distance
-    inline float get_far_clip() const; // Get the far clipping distance
+    inline float get_near_clamp() const; // Get the near clipping distance
+    inline float get_far_clamp() const; // Get the far clipping distance
     inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
 
     inline void play(); ///< Begin playing or unpause the Sound_Source.

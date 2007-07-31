@@ -117,23 +117,23 @@ namespace Zeni {
 #endif
   }
   
-  void Sound_Source::set_near_clip(const float &
+  void Sound_Source::set_near_clamp(const float &
 #ifndef DISABLE_AL
-    near_clip
+    near_clamp
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcef(m_source, AL_REFERENCE_DISTANCE, near_clip);
+    alSourcef(m_source, AL_REFERENCE_DISTANCE, near_clamp);
 #endif
   }
 
-  void Sound_Source::set_far_clip(const float &
+  void Sound_Source::set_far_clamp(const float &
 #ifndef DISABLE_AL
-    far_clip
+    far_clamp
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcef(m_source, AL_MAX_DISTANCE, far_clip);
+    alSourcef(m_source, AL_MAX_DISTANCE, far_clamp);
 #endif
   }
 
@@ -203,20 +203,20 @@ namespace Zeni {
     return time;
   }
   
-  float Sound_Source::get_near_clip() const {
-    float near_clip = 10.0f;
+  float Sound_Source::get_near_clamp() const {
+    float near_clamp = 10.0f;
 #ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clip);
+    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clamp);
 #endif
-    return near_clip;
+    return near_clamp;
   }
 
-  float Sound_Source::get_far_clip() const {
-    float far_clip = 1000.0f;
+  float Sound_Source::get_far_clamp() const {
+    float far_clamp = 1000.0f;
 #ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clip);
+    alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clamp);
 #endif
-    return far_clip;
+    return far_clamp;
   }
 
   float Sound_Source::get_rolloff() const {
