@@ -60,10 +60,10 @@ namespace Zeni {
   }
 
   bool Color::operator<(const Color &rhs) const {
-    return rgba[0] < rhs.rgba[0] ||
-      rgba[1] < rhs.rgba[1] ||
-      rgba[2] < rhs.rgba[2] ||
-      rgba[3] < rhs.rgba[3];
+    return rgba[0] < rhs.rgba[0] || rgba[0] == rhs.rgba[0] &&
+      (rgba[1] < rhs.rgba[1] || rgba[1] == rhs.rgba[1] &&
+      (rgba[2] < rhs.rgba[2] || rgba[2] == rhs.rgba[2] &&
+      rgba[3] < rhs.rgba[3]));
   }
 
   bool Color::operator==(const Color &rhs) const {
