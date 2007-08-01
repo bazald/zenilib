@@ -214,7 +214,8 @@ namespace Zeni {
 
     case 4:
       mode1 = GL_RGBA;
-      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
+      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24 ||
+        surface->format->Rshift == 24 && surface->format->Gshift == 16 && surface->format->Bshift == 8 && surface->format->Ashift == 0)
         mode2 = GL_RGBA;
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
         mode2 = GL_BGRA;
