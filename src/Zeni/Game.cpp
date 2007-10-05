@@ -30,11 +30,12 @@
 #include <Zeni/zeniapp.h>
 
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Timer.hxx>
 
 namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
-    : fps(0x36)
+    : time(0), ticks_passed(0), fps(0x36), fps_next(0)
   {
     // Ensure Core is initialized
     Core::get_reference();
@@ -48,31 +49,12 @@ namespace Zeni {
   }
 
   void Game::calculate_fps() {
-    static unsigned int
-      frames_output = 0, frames_passed = 0,
-      ticks_output = 0,  ticks_passed = 0,  ticks_prev = 0;
-
-    ticks_passed = SDL_GetTicks();
-
-    static bool first_time = true;
-    if(first_time) {
-      ticks_output = ticks_passed;
-      first_time = false;
-    }
-    else
-      ++frames_passed;
-
-    if((ticks_passed - ticks_output) > 1000) {
-      fps =  (frames_passed - frames_output) * 1000 / (ticks_passed - ticks_output);
-
-      frames_output = frames_passed;
-      ticks_output =  ticks_passed;
-    }
-
-    if((ticks_passed - ticks_prev) < 10) {
-      SDL_Delay(5);
-    }
-    ticks_prev = ticks_passed;
+    ++fps_next;
+    if(time.get_ticks_passed() < ticks_passed)
+      return;
+    ticks_passed = time.get_ticks_passed() + 1000;
+    fps = fps_next;
+    fps_next = 0;
   }
 
 }

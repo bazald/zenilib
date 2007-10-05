@@ -46,6 +46,7 @@
 #define ZENI_GAME_H
 
 #include <Zeni/Gamestate.h>
+#include <Zeni/Timer.h>
 
 #include <stack>
 #include <string>
@@ -79,7 +80,9 @@ namespace Zeni {
     void calculate_fps();
 
     std::stack<Gamestate> m_states;
-    int fps;
+
+    Time time;
+    int ticks_passed, fps, fps_next;
   };
 
   struct Zero_Gamestate : public Error {
