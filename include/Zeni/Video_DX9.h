@@ -119,6 +119,10 @@ namespace Zeni {
     inline LPDIRECT3DDEVICE9 & get_d3d_device(); ///< See DirectX Documentation for details
     inline LPD3DXMATRIXSTACK & get_matrix_stack(); ///< Get access to a matrix stack stored by this class
 
+    // Manual 3D Flips
+    bool get_3d() const;
+    void set_3d(const bool &on);
+
   protected:
     virtual void init();
     virtual void reinit();

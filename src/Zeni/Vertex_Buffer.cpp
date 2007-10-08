@@ -34,6 +34,7 @@
 #include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Render_Wrapper.hxx>
 #include <Zeni/Vector3f.hxx>
+#include <Zeni/Vertex2f.hxx>
 #include <Zeni/Vertex3f.hxx>
 #include <Zeni/Video_GL.hxx>
 
@@ -65,6 +66,78 @@ namespace Zeni {
     clear_triangles(m_triangles_c);
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
+  }
+
+  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Color> *triangle) {
+    std::auto_ptr<Renderable> to_delete(triangle);
+
+    if(!triangle)
+      throw VBuf_Init_Failure();
+
+    const Vertex2f_Color &v0 = triangle->get_vertex(0);
+    const Vertex2f_Color &v1 = triangle->get_vertex(1);
+    const Vertex2f_Color &v2 = triangle->get_vertex(2);
+
+    add_triangle(new Triangle<Vertex3f_Color>(
+      Vertex3f_Color(v0.get_position(), v0.get_color()),
+      Vertex3f_Color(v1.get_position(), v1.get_color()),
+      Vertex3f_Color(v2.get_position(), v2.get_color()),
+      triangle->get_render_wrapper()->get_duplicate()));
+  }
+
+  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Texture> *triangle) {
+    std::auto_ptr<Renderable> to_delete(triangle);
+
+    if(!triangle)
+      throw VBuf_Init_Failure();
+
+    const Vertex2f_Texture &v0 = triangle->get_vertex(0);
+    const Vertex2f_Texture &v1 = triangle->get_vertex(1);
+    const Vertex2f_Texture &v2 = triangle->get_vertex(2);
+
+    add_triangle(new Triangle<Vertex3f_Texture>(
+      Vertex3f_Texture(v0.get_position(), v0.get_texture_coordinate()),
+      Vertex3f_Texture(v1.get_position(), v1.get_texture_coordinate()),
+      Vertex3f_Texture(v2.get_position(), v2.get_texture_coordinate()),
+      triangle->get_render_wrapper()->get_duplicate()));
+  }
+
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Color> *quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+
+    if(!quad)
+      throw VBuf_Init_Failure();
+
+    const Vertex2f_Color &v0 = quad->get_vertex(0);
+    const Vertex2f_Color &v1 = quad->get_vertex(1);
+    const Vertex2f_Color &v2 = quad->get_vertex(2);
+    const Vertex2f_Color &v3 = quad->get_vertex(3);
+
+    add_quadrilateral(new Quadrilateral<Vertex3f_Color>(
+      Vertex3f_Color(v0.get_position(), v0.get_color()),
+      Vertex3f_Color(v1.get_position(), v1.get_color()),
+      Vertex3f_Color(v2.get_position(), v2.get_color()),
+      Vertex3f_Color(v3.get_position(), v3.get_color()),
+      quad->get_render_wrapper()->get_duplicate()));
+  }
+
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+
+    if(!quad)
+      throw VBuf_Init_Failure();
+
+    const Vertex2f_Texture &v0 = quad->get_vertex(0);
+    const Vertex2f_Texture &v1 = quad->get_vertex(1);
+    const Vertex2f_Texture &v2 = quad->get_vertex(2);
+    const Vertex2f_Texture &v3 = quad->get_vertex(3);
+
+    add_quadrilateral(new Quadrilateral<Vertex3f_Texture>(
+      Vertex3f_Texture(v0.get_position(), v0.get_texture_coordinate()),
+      Vertex3f_Texture(v1.get_position(), v1.get_texture_coordinate()),
+      Vertex3f_Texture(v2.get_position(), v2.get_texture_coordinate()),
+      Vertex3f_Texture(v3.get_position(), v3.get_texture_coordinate()),
+      quad->get_render_wrapper()->get_duplicate()));
   }
 
   void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Color> *triangle) {
@@ -482,6 +555,11 @@ namespace Zeni {
 
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
 
+    bool flip_3d = !vdx.get_3d();
+
+    if(flip_3d)
+      vdx.set_3d(true);
+
     if(m_buf_c) {
       vdx.get_d3d_device()->SetStreamSource(0, m_buf_c, 0, vertex_c_size());
       Zeni::render(m_descriptors_c, vdx);
@@ -491,6 +569,9 @@ namespace Zeni {
       vdx.get_d3d_device()->SetStreamSource(0, m_buf_t, 0, vertex_t_size());
       Zeni::render(m_descriptors_t, vdx);
     }
+
+    if(flip_3d)
+      vdx.set_3d(false);
   }
 
 #endif

@@ -57,6 +57,7 @@
 
 #include <Zeni/Triangle.h>
 #include <Zeni/Quadrilateral.h>
+#include <Zeni/Vertex2f.h>
 #include <Zeni/Vertex3f.h>
 
 #include <vector>
@@ -81,6 +82,11 @@ namespace Zeni {
 
     Vertex_Buffer();
     virtual ~Vertex_Buffer();
+
+    void add_triangle(Triangle<Vertex2f_Color> *triangle); ///< Add a Triangle to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex2f_Texture> *triangle); ///< Add a Triangle to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex2f_Color> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
 
     void add_triangle(Triangle<Vertex3f_Color> *triangle); ///< Add a Triangle to the Vertex_Buffer
     void add_triangle(Triangle<Vertex3f_Texture> *triangle); ///< Add a Triangle to the Vertex_Buffer

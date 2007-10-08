@@ -262,7 +262,8 @@ namespace Zeni {
   }
 
 #ifdef DISABLEWGL
-  void Video_GL::set_vertical_sync(const bool &) {
+  void Video_GL::set_vertical_sync(const bool &on) {
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #else
   void Video_GL::set_vertical_sync(const bool &on) {
     typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);

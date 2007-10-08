@@ -117,27 +117,27 @@ namespace Zeni {
     }
   }
 
-  void Material::unset(Video_GL &, const int &optimization) const {
+  void Material::unset(Video_GL &vgl, const int &optimization) const {
     if(!(optimization & (1 << 11)) &&
        !m_texture.empty())
-      Video::get_reference().unapply_texture();
+      vgl.unapply_texture();
   }
 #endif
 
 #ifndef DISABLE_DX9
-  void Material::set(Video_DX9 &screen, const int &optimization) const {
+  void Material::set(Video_DX9 &vdx, const int &optimization) const {
     if(!(optimization & ((1 << 5) - 1)))
-      screen.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
+      vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty())
-      Video::get_reference().apply_texture(m_texture);
+      vdx.apply_texture(m_texture);
   }
 
-  void Material::unset(Video_DX9 &, const int &optimization) const {
+  void Material::unset(Video_DX9 &vdx, const int &optimization) const {
     if(!(optimization & (1 << 11)) &&
        !m_texture.empty())
-      Video::get_reference().unapply_texture();
+      vdx.unapply_texture();
   }
 #endif
 

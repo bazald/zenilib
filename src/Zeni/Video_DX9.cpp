@@ -463,6 +463,16 @@ namespace Zeni {
 
     m_d3d_device->SetFVF(fvf);
   }
+  
+  bool Video_DX9::get_3d() const {
+    return m_3d;
+  }
+
+  void Video_DX9::set_3d(const bool &on) {
+    m_3d = on;
+
+    set_fvf();
+  }
 
 }
 
