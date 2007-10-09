@@ -26,6 +26,9 @@
 * the GNU General Public License.
 */
 
+#ifndef ZENI_WIDGET_H
+#define ZENI_WIDGET_H
+
 #include <Zeni/Coordinate.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
@@ -146,3 +149,5 @@ namespace Zeni {
   };
 
 }
+
+#endif

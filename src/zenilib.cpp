@@ -26,22 +26,37 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_RESOURCE_HXX
-#define ZENI_RESOURCE_HXX
+#include "zenilib.h"
 
-#include <Zeni/Resource.h>
-
-namespace Zeni {
-
-  unsigned long Resource::assign() {
-    unsigned long rv = ++m_current;
-    if(!rv) {
-      --m_current;
-      throw Resource_Init_Failure();
-    }
-    return rv;
-  }
-
-}
-
-#endif
+#include "Zeni/Camera.cpp"
+#include "Zeni/Color.cpp"
+#include "Zeni/Colors.cpp"
+#include "Zeni/Coordinate.cpp"
+#include "Zeni/Core.cpp"
+#include "Zeni/EZ2D.cpp"
+#include "Zeni/Font.cpp"
+#include "Zeni/Fonts.cpp"
+#include "Zeni/Game.cpp"
+#include "Zeni/Gamestate.cpp"
+#include "Zeni/Light.cpp"
+#include "Zeni/main.cpp"
+#include "Zeni/Material.cpp"
+#include "Zeni/Matrix4f.cpp"
+#include "Zeni/Model.cpp"
+#include "Zeni/Net.cpp"
+#include "Zeni/Quaternion.cpp"
+#include "Zeni/Render_Wrapper.cpp"
+#include "Zeni/Resource.cpp"
+#include "Zeni/Sound.cpp"
+#include "Zeni/Sounds.cpp"
+#include "Zeni/Texture.cpp"
+#include "Zeni/Textures.cpp"
+#include "Zeni/Timer.cpp"
+#include "Zeni/Vector3f.cpp"
+#include "Zeni/Vertex2f.cpp"
+#include "Zeni/Vertex3f.cpp"
+#include "Zeni/Vertex_Buffer.cpp"
+#include "Zeni/Video.cpp"
+#include "Zeni/Video_DX9.cpp"
+#include "Zeni/Video_GL.cpp"
+#include "Zeni/Widget.cpp"

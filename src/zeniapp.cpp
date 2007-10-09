@@ -4,11 +4,7 @@
 * This source file is simply under the public domain.
 */
 
-#define ZENI_INLINES
-
-#include <Zeni/zeniapp.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Video.h>
+#include "zenilib.h"
 
 #include <iostream>
 #include <fstream>

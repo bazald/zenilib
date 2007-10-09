@@ -1,0 +1,53 @@
+Terminology:
+
+hex	2-digit hex value (e.g. FF)
+
+int	integer
+
+rol	rest of line
+
+token	arbitrary name for something
+	cannot contain spaces
+
+================================================================================
+colors.txt
+================================================================================
+
+token	hex	hex	hex	hex
+
+token	name for color
+hex	how much opacity (00 being none, FF being all)
+hex	how much red
+hex	how much green
+hex	how much blue
+
+================================================================================
+fonts.txt
+================================================================================
+
+token	int	int	int	rol
+
+token	name for font
+int	should be bolded (1 for true, 0 for false - deprecated)
+int	should be italicized (1 for true, 0 for false - deprecated)
+int	font size (pt)
+rol	font name (e.g. Arial - must be installed name
+                                must have $(token).ttf in zenilib/fonts/)
+
+================================================================================
+sounds.txt
+================================================================================
+
+token	token
+
+token	name for sound
+token	filepath (cannot contain spaces)
+
+================================================================================
+textures.txt
+================================================================================
+
+token	token
+
+token	name for image
+token	filepath (cannot contain spaces)

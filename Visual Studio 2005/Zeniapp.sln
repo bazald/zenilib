@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zeniapp", "Zeniapp.vcproj", "{DFC46808-04A8-43EE-AADB-0E6277BA50C9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A690D67-1B22-41F1-A729-C46016EC83DC} = {2A690D67-1B22-41F1-A729-C46016EC83DC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zenilib", "Zenilib.vcproj", "{2A690D67-1B22-41F1-A729-C46016EC83DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{DFC46808-04A8-43EE-AADB-0E6277BA50C9}.Debug|Win32.Build.0 = Debug|Win32
 		{DFC46808-04A8-43EE-AADB-0E6277BA50C9}.Release|Win32.ActiveCfg = Release|Win32
 		{DFC46808-04A8-43EE-AADB-0E6277BA50C9}.Release|Win32.Build.0 = Release|Win32
+		{2A690D67-1B22-41F1-A729-C46016EC83DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2A690D67-1B22-41F1-A729-C46016EC83DC}.Debug|Win32.Build.0 = Debug|Win32
+		{2A690D67-1B22-41F1-A729-C46016EC83DC}.Release|Win32.ActiveCfg = Release|Win32
+		{2A690D67-1B22-41F1-A729-C46016EC83DC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

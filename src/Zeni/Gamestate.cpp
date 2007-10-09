@@ -795,7 +795,7 @@ default: return "SDLK_UNKNOWN";
       {
         const float ac = fabs(confidence);
         const float nm = confidence / ac;
-        confidence = nm * std::min(std::max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
+        confidence = nm * min(max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
       }
 
       break;
