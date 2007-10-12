@@ -5,8 +5,8 @@ DISABLEWGL = -DDISABLEWGL
 DISABLEDX9 = -DDISABLE_DX9
 #DISABLEAL = -DDISABLE_AL
 
-BUILD = DEBUG
-#BUILD = RELEASE
+#BUILD = DEBUG
+BUILD = RELEASE
 
 # MODIFY ABOVE
 # LEAVE THE REST ALONE (unnless you know what you are doing
@@ -31,39 +31,8 @@ XFLAGS = $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
 LFLAGS = `sdl-config --cflags --static-libs` $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS) --static-libgcc
 LD = ld
 
-SRCS =  src/Zeni/Camera.cpp \
-	src/Zeni/Color.cpp \
-	src/Zeni/Colors.cpp \
-	src/Zeni/Coordinate.cpp \
-	src/Zeni/Core.cpp \
-	src/Zeni/EZ2D.cpp \
-	src/Zeni/Font.cpp \
-	src/Zeni/Fonts.cpp \
-	src/Zeni/Game.cpp \
-	src/Zeni/Gamestate.cpp \
-	src/Zeni/Light.cpp \
-	src/Zeni/main.cpp \
-	src/Zeni/Matrix4f.cpp \
-	src/Zeni/Material.cpp \
-	src/Zeni/Model.cpp \
-	src/Zeni/Net.cpp \
-	src/Zeni/Quaternion.cpp \
-	src/Zeni/Render_Wrapper.cpp \
-	src/Zeni/Resource.cpp \
-	src/Zeni/Sound.cpp \
-	src/Zeni/Sounds.cpp \
-	src/Zeni/Texture.cpp \
-	src/Zeni/Textures.cpp \
-	src/Zeni/Timer.cpp \
-	src/Zeni/Vector3f.cpp \
-	src/Zeni/Vertex2f.cpp \
-	src/Zeni/Vertex3f.cpp \
-	src/Zeni/Vertex_Buffer.cpp \
-	src/Zeni/Video.cpp \
-	src/Zeni/Video_DX9.cpp \
-	src/Zeni/Video_GL.cpp \
-	src/Zeni/Widget.cpp \
-	zeniapp.cpp
+SRCS =  src/zenilib.o \
+	src/zeniapp.o
 OBJS = $(SRCS:.cpp=.o)
 
 all: zeniapp

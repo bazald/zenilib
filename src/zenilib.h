@@ -26,8 +26,8 @@
 * the GNU General Public License.
 */
 
-#ifndef STDAFX_H
-#define STDAFX_H
+#ifndef ZENILIB_H
+#define ZENILIB_H
 
 #define ZENI_INLINES
 
