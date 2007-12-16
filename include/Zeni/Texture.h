@@ -94,14 +94,14 @@ namespace Zeni {
 #ifndef DISABLE_GL
   class Texture_GL : public Texture {
   public:
-    Texture_GL(const std::string &filename, Video_GL &video);
-    Texture_GL(SDL_Surface *surface);
+    Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_GL &video);
+    Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
     virtual ~Texture_GL();
 
     virtual void apply_texture() const;
 
   private:
-    void build_from_surface(SDL_Surface *surface);
+    void build_from_surface(SDL_Surface *surface, const bool &repeat);
 
     GLuint m_texture_id;
   };
@@ -110,7 +110,7 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   class Texture_DX9 : public Texture {
   public:
-    Texture_DX9(const std::string &filename, Video_DX9 &video);
+    Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_DX9 &video);
     virtual ~Texture_DX9();
 
     virtual void apply_texture() const;

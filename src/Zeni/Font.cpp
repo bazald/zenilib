@@ -160,7 +160,7 @@ namespace Zeni {
 
     /*** Initialize Final Texture ***/
     
-    m_texture = new Texture_GL(font_surface);
+    m_texture = new Texture_GL(font_surface, false);
 
     TTF_CloseFont(font);
   }

@@ -125,6 +125,8 @@ namespace Zeni {
 
     TTF_Init();
 
+    Video &vr = Video::get_reference();
+    
     string name, codename, color;
     bool bold, italic;
     int height;
@@ -134,7 +136,7 @@ namespace Zeni {
         codename.resize(codename.size() - 1);
 
       try {
-        set_font(name, Video::get_reference().create_Font(codename, bold, italic, height));
+        set_font(name, vr.create_Font(codename, bold, italic, height));
       }
       catch(Font_Init_Failure &) {
         uninit();

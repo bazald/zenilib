@@ -141,7 +141,34 @@ namespace Zeni {
   }
 
   Vector3f Quaternion::operator*(const Vector3f &rhs) const {
-    return (*this * (Quaternion(0.0f, rhs.normalized()) * conjugate())).space.normalized() * rhs.magnitude();
+    const float &a = time;
+    const float &b = space.i;
+    const float &c = space.j;
+    const float &d = space.k;
+    const float &v1 = rhs.i;
+    const float &v2 = rhs.j;
+    const float &v3 = rhs.k;
+    
+    // http://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+    // dependent on Quaternion being pre-normalized
+    
+    const float t2 = a * b;
+    const float t3 = a * c;
+    const float t4 = a * d;
+    const float t5 = -b * b;
+    const float t6 = b * c;
+    const float t7 = b * d;
+    const float t8 = -c * c;
+    const float t9 = c * d;
+    const float t10 = -d * d;
+    
+    const float v1new = 2.0f * ((t8 + t10) * v1 + (t6 -  t4) * v2 + (t3 + t7) * v3) + v1;
+    const float v2new = 2.0f * ((t4 + t6) * v1 + (t5 + t10) * v2 + (t9 - t2) * v3) + v2;
+    const float v3new = 2.0f * ((t7 - t3) * v1 + (t2 +  t9) * v2 + (t5 + t8) * v3) + v3;
+    
+    return Vector3f(v1new, v2new, v3new);
+    
+//     return (*this * (Quaternion(0.0f, rhs.normalized()) * conjugate())).space.normalized() * rhs.magnitude();
   }
 
   std::pair<Vector3f, float> Quaternion::get_rotation() const {

@@ -359,7 +359,8 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    m_bgm_source->set_gain(gain);
+    if(m_bgm_source)
+      m_bgm_source->set_gain(gain);
 #endif
   }
 
@@ -369,7 +370,8 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    m_bgm_source->set_looping(looping);
+    if(m_bgm_source)
+      m_bgm_source->set_looping(looping);
 #endif
   }
 
@@ -379,7 +381,8 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    m_bgm_source->set_time(time);
+    if(m_bgm_source)
+      m_bgm_source->set_time(time);
 #endif
   }
 

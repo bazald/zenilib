@@ -123,9 +123,15 @@ namespace Zeni {
     ~TCP_Socket();
 
     IPaddress peer_address() const;
+    int check_socket();
+    
+    /// Send data
+    void send(const void * const &data, const int &num_bytes); 
+    void send(const std::string &data);
 
-    void send(const std::string &data); ///< Send data
-    std::string receive(const int &num_bytes); ///< Receive up to num_bytes
+    /// Receive up to num_bytes
+    int receive(void * const &data, const int &num_bytes);
+    int receive(std::string &data, const int &num_bytes);
 
   private:
     TCPsocket sock;
@@ -137,7 +143,7 @@ namespace Zeni {
     TCP_Listener(const unsigned short &port);
     ~TCP_Listener();
 
-    TCP_Socket accept(); ///< Will cause an error to be thrown if there exists nothing to listen to; Expect to catch it
+    TCPsocket accept(); ///< Will cause an error to be thrown if there exists nothing to listen to; Expect to catch it
 
   private:
     TCPsocket sock;
@@ -147,9 +153,16 @@ namespace Zeni {
   public:
     UDP_Socket(const unsigned short &port);
     ~UDP_Socket();
+    
+    IPaddress peer_address() const; ///< Apparently only works if the port was explicitly specified
 
-    void send(const std::string &data, IPaddress ip); ///< Send data to an IPaddress
-    IPaddress receive(std::string &data); ///< Receive data of up to data.size() from the returned IPaddress; Will error if data.size() is too low
+    /// Send data to an IPaddress
+    void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
+    void send(const IPaddress &ip, const std::string &data);
+    
+    /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
+    int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
+    int receive(IPaddress &ip, std::string &data);
     
   private:
     UDPsocket sock;

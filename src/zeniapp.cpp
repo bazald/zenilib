@@ -11,9 +11,11 @@
 
 using namespace std;
 
+static vector<string> g_args;
+
 namespace Zeni {
 
-  Gamestate_One::Gamestate_One(const vector<string> * const) {
+  Gamestate_One::Gamestate_One(const vector<string> * const args) {
     Video_Options vopts = {Video::get_video_mode(),
       Textures::get_anisotropic_filtering(),
       Video::get_multisampling(), 
@@ -53,15 +55,24 @@ namespace Zeni {
       Video::get_reference().set_vertical_sync(vopts.vsync);
     Textures::set_texturing_mode(vopts.anisotropy, vopts.bilinear, vopts.mipmapping);
 
-    SDL_WM_GrabInput(SDL_GRAB_ON);
+    //SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(0);
+    
+    if(args)
+      g_args = *args;
+  
+    Video::get_reference();
+    Sound::get_reference();
+    Textures::get_reference();
+    Fonts::get_reference();
+    Sounds::get_reference();
   }
 
   Gamestate_One::~Gamestate_One() {
   }
 
   void Gamestate_One::perform_logic() {
-    SDL_Delay(5); // To prevent this useless example from overloading your CPU
+    SDL_Delay(5); // TODO: Parse commandline arguments and bootstrap into titlestate or other gamestate
   }
 
   void Gamestate_One::render() {

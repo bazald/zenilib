@@ -150,20 +150,20 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  Texture_GL::Texture_GL(const std::string &filename, Video_GL &)
+  Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, Video_GL &)
     : m_texture_id(0)
   {
     SDL_Surface *surface = IMG_Load(filename.c_str());
     if(!surface)
       throw Texture_Init_Failure();
 
-    build_from_surface(surface);
+    build_from_surface(surface, repeat);
   }
 
-  Texture_GL::Texture_GL(SDL_Surface *surface)
+  Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
     : m_texture_id(0)
   {
-    build_from_surface(surface);
+    build_from_surface(surface, repeat);
   }
 
   Texture_GL::~Texture_GL() {
@@ -175,7 +175,7 @@ namespace Zeni {
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 
-  void Texture_GL::build_from_surface(SDL_Surface *surface) {
+  void Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
     bool width_pow2 = false, height_pow2 = false;
 
     for(int i = 1; i; i <<= 1) {
@@ -232,8 +232,8 @@ namespace Zeni {
     glGenTextures(1, &m_texture_id);
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST);
 
@@ -267,9 +267,12 @@ namespace Zeni {
 #endif
 
 #ifndef DISABLE_DX9
-  Texture_DX9::Texture_DX9(const std::string &filename, Video_DX9 &video) 
+  Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat, Video_DX9 &video) 
     : m_texture(0)
   {
+    video.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+    video.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+    
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > video.get_maximum_anisotropy())
         throw Invalid_Anisotropy_Setting();

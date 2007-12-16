@@ -97,27 +97,40 @@ namespace Zeni {
   IPaddress TCP_Socket::peer_address() const {
     return *SDLNet_TCP_GetPeerAddress(sock);
   }
-
-  void TCP_Socket::send(const string &data) {
-    int data_len = int(data.size());
-    if(SDLNet_TCP_Send(sock, const_cast<char *>(data.c_str()), data_len) < data_len)
-      throw Socket_Closed();
-  }
-
-  string TCP_Socket::receive(const int &num_bytes) {
-    string data;
-    data.resize(num_bytes);
-
+  
+  int TCP_Socket::check_socket() {
     int retval = SDLNet_CheckSockets(sockset, 0);
     if(retval == -1)
       throw Socket_Closed();
-    else if(retval) {
-      retval = SDLNet_TCP_Recv(sock, const_cast<char *>(data.c_str()), num_bytes);
+    return retval;
+  }
+
+  void TCP_Socket::send(const void * const &data, const int &num_bytes) {
+    if(SDLNet_TCP_Send(sock, const_cast<void *>(data), num_bytes) < num_bytes)
+      throw Socket_Closed();
+  }
+
+  void TCP_Socket::send(const string &data) {
+    send(data.c_str(), int(data.size()));
+  }
+
+  int TCP_Socket::receive(void * const &data, const int &num_bytes) {
+    int retval = check_socket();
+    
+    if(retval) {
+      retval = SDLNet_TCP_Recv(sock, data, num_bytes);
       if(retval <= 0)
         throw Socket_Closed();
     }
 
-    return data.substr(0, retval);
+    return retval;
+  }
+
+  int TCP_Socket::receive(string &data, const int &num_bytes) {
+    data.resize(num_bytes);
+    const int retval = receive(const_cast<char *>(data.c_str()), num_bytes);
+    data.resize(retval);
+    return retval;
   }
 
   TCP_Listener::TCP_Listener(const unsigned short &port)
@@ -137,7 +150,7 @@ namespace Zeni {
     SDLNet_TCP_Close(sock);
   }
 
-  TCP_Socket TCP_Listener::accept() {
+  TCPsocket TCP_Listener::accept() {
     return SDLNet_TCP_Accept(sock);
   }
 
@@ -154,16 +167,18 @@ namespace Zeni {
   UDP_Socket::~UDP_Socket() {
     SDLNet_UDP_Close(sock);
   }
-
-  void UDP_Socket::send(const std::string &data, IPaddress ip) {
-    int data_len = int(data.size());
-
+  
+  IPaddress UDP_Socket::peer_address() const {
+    return *SDLNet_UDP_GetPeerAddress(sock, -1);
+  }
+  
+  void UDP_Socket::send(const IPaddress &ip, const void * const &data, const int &num_bytes) {
     UDPpacket packet =
     {
       -1,
-      reinterpret_cast<Uint8 *>(const_cast<char *>(data.c_str())),
-      data_len,
-      data_len,
+      reinterpret_cast<Uint8 *>(const_cast<void *>(data)),
+      num_bytes,
+      num_bytes,
       0, // Will == -1 on error after UDP_Send, otherwise == # of bytes sent
       ip
     };
@@ -171,16 +186,20 @@ namespace Zeni {
     if(!SDLNet_UDP_Send(sock, -1, &packet))
       throw Socket_Closed();
   }
+  
+  void UDP_Socket::send(const IPaddress &ip, const std::string &data) {
+    send(ip, data.c_str(), int(data.size()));
+  }
 
-  IPaddress UDP_Socket::receive(std::string &data) {
+  int UDP_Socket::receive(IPaddress &ip, const void * const &data, const int &num_bytes) {
     IPaddress ipaddress = {0, 0};
 
     UDPpacket packet =
     {
       -1,
-      reinterpret_cast<Uint8 *>(const_cast<char *>(data.c_str())),
+      reinterpret_cast<Uint8 *>(const_cast<void *>(data)),
       0,
-      int(data.length()),
+      num_bytes,
       0,
       ipaddress
     };
@@ -189,14 +208,24 @@ namespace Zeni {
     if(retval == -1)
       throw Socket_Closed();
     else if(!retval) {
-      data.clear();
       packet.address.host = 0;
       packet.address.port = 0;
     }
-    else
-      data.resize(packet.len);
 
-    return packet.address;
+    ip = packet.address;
+    
+    return packet.len;
+  }
+  
+  int UDP_Socket::receive(IPaddress &ip, std::string &data) {
+    int retval = receive(ip, data.c_str(), int(data.size()));
+    
+    if(int(data.size()) > retval) {
+      data[retval] = '\0';
+      data.resize(retval);
+    }
+    
+    return retval;
   }
 
 }

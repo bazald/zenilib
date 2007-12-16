@@ -157,7 +157,7 @@ namespace Zeni {
       return;
 
     for(Lib3dsTexel *texel=&mesh->texelL[0], *end=texel+mesh->texels; texel != end; ++texel)
-      (*texel)[1] *= -1;
+      (*texel)[1] = 1.0f - (*texel)[1];
   }
 
   Model::Model(const std::string &filename)

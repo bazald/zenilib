@@ -47,7 +47,8 @@ token	filepath (cannot contain spaces)
 textures.txt
 ================================================================================
 
-token	token
+token	token	int
 
 token	name for image
 token	filepath (cannot contain spaces)
+int	non-zero for a repeating texture, zero for a clamped texture

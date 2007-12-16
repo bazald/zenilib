@@ -291,8 +291,8 @@ namespace Zeni {
       glDepthMask(GL_FALSE);
   }
 
-  Texture * Video_GL::load_Texture(const std::string &filename) {
-    return new Texture_GL(filename, *this);
+  Texture * Video_GL::load_Texture(const std::string &filename, const bool &repeat) {
+    return new Texture_GL(filename, repeat, *this);
   }
 
   Font * Video_GL::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {

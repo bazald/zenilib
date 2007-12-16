@@ -253,9 +253,10 @@ namespace Zeni {
       throw Texture_Init_Failure();
 
     string fileName, name;
-    while(tdbin >> name >> fileName) {
+    bool repeat;
+    while(tdbin >> name >> fileName >> repeat) {
       try {
-        set_texture(name, Video::get_reference().load_Texture(fileName));
+        set_texture(name, Video::get_reference().load_Texture(fileName, repeat));
       }
       catch(Texture_Init_Failure &) {
         cerr << "Textures: Error Loading '" << name << "' from '" << fileName << "'\n";

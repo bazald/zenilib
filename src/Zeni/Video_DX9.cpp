@@ -300,8 +300,8 @@ namespace Zeni {
       m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
   }
 
-  Texture * Video_DX9::load_Texture(const std::string &filename) {
-    return new Texture_DX9(filename, *this);
+  Texture * Video_DX9::load_Texture(const std::string &filename, const bool &repeat) {
+    return new Texture_DX9(filename, repeat, *this);
   }
 
   Font * Video_DX9::create_Font(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
@@ -432,6 +432,7 @@ namespace Zeni {
     set_color_to(m_color);
     set_clear_color_to(m_clear_color);
     set_ambient_lighting(m_ambient_color);
+    set_backface_culling(get_backface_culling());
   }
 
   void Video_DX9::uninit() {

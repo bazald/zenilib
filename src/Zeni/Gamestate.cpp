@@ -117,15 +117,15 @@ namespace Zeni {
   void Gamestate_Base::on_system_wm_event(const SDL_SysWMEvent &) {
   }
 
-  void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
-    if(event.gain) {
-      SDL_WM_GrabInput(SDL_GRAB_ON);
-      SDL_ShowCursor(false);
-    }
-    else {
-      SDL_WM_GrabInput(SDL_GRAB_OFF);
-      SDL_ShowCursor(true);
-    }
+  void Gamestate_Base::on_active(const SDL_ActiveEvent &/*event*/) {
+    //if(event.gain) {
+    //  SDL_WM_GrabInput(SDL_GRAB_ON);
+    //  SDL_ShowCursor(false);
+    //}
+    //else {
+    //  SDL_WM_GrabInput(SDL_GRAB_OFF);
+    //  SDL_ShowCursor(true);
+    //}
   }
 
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &) {
@@ -809,6 +809,13 @@ default: return "SDLK_UNKNOWN";
       break;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
+      {
+        const SDL_KeyboardEvent &e = event.key;
+        const SDL_keysym &s = e.keysym;
+        if(e.state == SDL_PRESSED && s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
+          throw Quit_Event();
+      }
+      
       event_ID.type = SDL_KEYDOWN;
       event_ID.subid = event.key.keysym.sym;
 
