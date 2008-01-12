@@ -242,6 +242,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Net_Primitives.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Quadrilateral.h"
 				>
 			</File>

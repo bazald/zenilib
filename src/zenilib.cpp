@@ -44,6 +44,7 @@
 #include "Zeni/Matrix4f.cpp"
 #include "Zeni/Model.cpp"
 #include "Zeni/Net.cpp"
+#include "Zeni/Net_Primitives.cpp"
 #include "Zeni/Quaternion.cpp"
 #include "Zeni/Render_Wrapper.cpp"
 #include "Zeni/Resource.cpp"
