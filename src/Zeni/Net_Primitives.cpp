@@ -26,8 +26,6 @@
 * the GNU General Public License.
 */
 
-#include "zenilib.h"
-
 #include <Zeni/Net_Primitives.h>
 
 using namespace std;

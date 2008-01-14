@@ -35,7 +35,11 @@
 #include "Vector3f.h"
 #include "Quaternion.h"
 
+#include "Vector3f.hxx"
+#include "Quaternion.hxx"
+
 #include <string>
+#include <sstream>
   
 /*** IPaddress functions ***/
 
@@ -137,7 +141,7 @@ namespace Zeni {
 
   template <typename TYPE>
   std::ostream & serialize(std::ostream &os, const std::vector<TYPE> &v) {
-    Zeni::serialize(os, unsigned short(v.size()));
+    Zeni::serialize(os, static_cast<unsigned short>(v.size()));
     for(typename std::vector<TYPE>::const_iterator it = v.begin(); it != v.end(); ++it)
       if(!serialize(os, *it))
         break;
@@ -187,8 +191,8 @@ namespace Zeni {
   template <typename TYPE>
   class Local_Datum : public Net_Datum<TYPE> {
   public:
-    Local_Datum(const TYPE &rhs = TYPE()) : Net_Datum(rhs) {}
-    Local_Datum(const VLUID &sauid, const TYPE &rhs = TYPE()) : Net_Datum(sauid, rhs) {}
+    Local_Datum(const TYPE &rhs = TYPE()) : Net_Datum<TYPE>(rhs) {}
+    Local_Datum(const VLUID &sauid, const TYPE &rhs = TYPE()) : Net_Datum<TYPE>(sauid, rhs) {}
 
     virtual std::istream & recv(std::istream &is) {return is;}
     
@@ -196,16 +200,16 @@ namespace Zeni {
       std::ostringstream oss;
       oss << this->m_sauid << this->m_nonce << this->m_datum;
       const std::string &str = oss.str();
-      Short size = str.size();
-      return os << size << str;
+      short size = str.size();
+      return serialize(os, size) << str;
     }
   };
 
   template <typename TYPE>
   class Remote_Datum : public Net_Datum<TYPE> {
   public:
-    Remote_Datum(const TYPE &rhs = TYPE()) : Net_Datum(rhs) {}
-    Remote_Datum(const VLUID &sauid, const TYPE &rhs = TYPE()) : Net_Datum(sauid, rhs) {}
+    Remote_Datum(const TYPE &rhs = TYPE()) : Net_Datum<TYPE>(rhs) {}
+    Remote_Datum(const VLUID &sauid, const TYPE &rhs = TYPE()) : Net_Datum<TYPE>(sauid, rhs) {}
 
     /**  This recv function assumes that
       *    -the size has already been read in
