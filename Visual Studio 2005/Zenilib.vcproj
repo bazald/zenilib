@@ -226,6 +226,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Line.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Material.h"
 				>
 			</File>
@@ -352,6 +356,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Light.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Line.hxx"
 				>
 			</File>
 			<File
