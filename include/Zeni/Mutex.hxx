@@ -26,62 +26,67 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Line<VERTEX>
- *
- * \ingroup Zenilib
- *
- * \brief An Abstraction of a Line
- *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Line is rendered.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
+#ifndef ZENI_MUTEX_HXX
+#define ZENI_MUTEX_HXX
 
-#ifndef ZENI_LINE_H
-#define ZENI_LINE_H
-
-#include <Zeni/Render_Wrapper.h>
-
-#include <memory>
+#include <Zeni/Mutex.h>
 
 namespace Zeni {
-
-  template <typename VERTEX>
-  class Line : public Renderable {
-  public:
-    /// The best way to create a Line
-    Line(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      Render_Wrapper *render_wrapper = new Render_Wrapper());
-
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the aveage of all vertices
-
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
-#endif
-
-#ifndef DISABLE_DX9
-    virtual void render_to(Video_DX9 &screen) const;
-#endif
-
-    const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
-    Line<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
-
-  private:
-    VERTEX m_vertex[2];
-    std::auto_ptr<Render_Wrapper> m_render_wrapper;
-  };
+  
+  void Mutex::lock() {
+    if(SDL_mutexP(m_impl))
+      throw Mutex_Lock_Failure();
+  }
+  
+  void Mutex::unlock() {
+    if(SDL_mutexV(m_impl))
+      throw Mutex_Unlock_Failure();
+  }
+  
+  void Semaphore::down() {
+    if(SDL_SemWait(m_impl))
+      throw Semaphore_Down_Failure();
+  }
+  
+  void Semaphore::try_down() {
+    if(SDL_SemTryWait(m_impl))
+      throw Semaphore_Try_Down_Failure();
+  }
+  
+  void Semaphore::down_timeout(const unsigned int &ms) {
+    if(SDL_SemWaitTimeout(m_impl, ms))
+      throw Semaphore_Down_Timeout_Failure();
+  }
+  
+  void Semaphore::up() {
+    if(SDL_SemPost(m_impl))
+      throw Semaphore_Up_Failure();
+  }
+  
+  unsigned int Semaphore::count() const {
+    return SDL_SemValue(m_impl);
+  }
+  
+  void Condition_Variable::signal() {
+    if(SDL_CondSignal(m_impl))
+      throw CV_Signal_Failure();
+  }
+  
+  void Condition_Variable::broadcast() {
+    if(SDL_CondBroadcast(m_impl))
+      throw CV_Broadcast_Failure();
+  }
+  
+  void Condition_Variable::wait(Mutex::Lock &mutex_lock) {
+    if(SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl))
+      throw CV_Wait_Failure();
+  }
+  
+  void Condition_Variable::wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms) {
+    if(SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms))
+      throw CV_Wait_Timeout_Failure();
+  }
 
 }
-
-#ifdef ZENI_INLINES
-#include <Zeni/Line.hxx>
-#endif
 
 #endif

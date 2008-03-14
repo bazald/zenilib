@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2008 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -26,47 +26,52 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#include <Zeni/Mutex.hxx>
 
-#define ZENI_INLINES
+namespace Zeni {
 
-#include <Zeni/Camera.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Light.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Render_Wrapper.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
-#include <Zeni/zeniapp.h>
+  Mutex::Mutex()
+    : m_impl(SDL_CreateMutex()) {
+  }
+  
+  Mutex::~Mutex() {
+    SDL_DestroyMutex(m_impl);
+  }
 
-#endif
+  Mutex::Lock::Lock(Mutex &mutex)
+    : m_mutex(mutex)
+  {
+    m_mutex.lock();
+  }
+  
+  Mutex::Lock::~Lock() {
+    m_mutex.unlock();
+  }
+
+  Semaphore::Semaphore(const unsigned int &count)
+    : m_impl(SDL_CreateSemaphore(count))
+  {
+  }
+  
+  Semaphore::~Semaphore() {
+    SDL_DestroySemaphore(m_impl);
+  }
+
+  Semaphore::Down::Down(Semaphore &semaphore) : m_semaphore(semaphore) {
+    m_semaphore.down();
+  }
+  
+  Semaphore::Down::~Down() {
+    m_semaphore.up();
+  }
+
+  Condition_Variable::Condition_Variable()
+    : m_impl(SDL_CreateCond())
+  {
+  }
+  
+  Condition_Variable::~Condition_Variable() {
+    SDL_DestroyCond(m_impl);
+  }
+  
+}

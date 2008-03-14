@@ -242,6 +242,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Mutex.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Net.h"
 				>
 			</File>
@@ -279,6 +283,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Textures.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Thread.h"
 				>
 			</File>
 			<File
@@ -372,6 +380,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Model.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Mutex.hxx"
 				>
 			</File>
 			<File

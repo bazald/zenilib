@@ -79,6 +79,7 @@
 #include <Zeni/Core.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
+#include <Zeni/Thread.h>
 
 #include <string>
 
@@ -105,6 +106,8 @@ namespace Zeni {
     Sound_Buffer(const Sound_Buffer &rhs); ///< Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer(const std::string &filename); ///< Load a Sound_Buffer from a file.  Only wav is guaranteed to be supported.
     ~Sound_Buffer();
+    
+    inline bool loaded() const; ///< Test to see if the Sound_Buffer is done loading
 
     inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
 
@@ -116,6 +119,25 @@ namespace Zeni {
 
   private:
     mutable ALuint m_buffer;
+    
+    class Loader : public Task {
+      Loader(const Loader &);
+      Loader & operator=(const Loader &);
+    
+    public:
+      Loader(const std::string &filename);
+      
+      virtual int run();
+      
+      ALuint m_buffer;
+      const std::string m_filename;
+      bool done;
+    };
+    
+    void finish_loading() const;
+    
+    mutable Loader *m_loader;
+    mutable Thread *m_thread;
   };
 
   class Sound_Source {

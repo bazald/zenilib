@@ -44,7 +44,9 @@ using std::string;
 namespace Zeni {
 
   Sound_Buffer::Sound_Buffer()
-    : m_buffer(AL_NONE)
+    : m_buffer(AL_NONE),
+      m_loader(0),
+      m_thread(0)
   {
     Sound::get_reference();
 
@@ -59,43 +61,41 @@ namespace Zeni {
   }
 
   Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
-    : m_buffer(rhs.m_buffer)
+    : m_buffer(0),
+      m_loader(0),
+      m_thread(0)
   {
     Sound::get_reference();
-
-    rhs.m_buffer = AL_NONE;
-#ifndef DISABLE_AL
-    rhs.m_buffer = alutCreateBufferHelloWorld();
     
-    if(rhs.m_buffer == AL_NONE) {
+#ifndef DISABLE_AL
+    m_buffer = alutCreateBufferHelloWorld();
+    
+    if(m_buffer == AL_NONE) {
       std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
     }
 #endif
+
+    std::swap(m_buffer, rhs.m_buffer);
+    std::swap(m_loader, rhs.m_loader);
+    std::swap(m_thread, rhs.m_thread);
   }
 
-  Sound_Buffer::Sound_Buffer(const string &
-#ifndef DISABLE_AL
-    filename
-#endif
-    )
-    : m_buffer(AL_NONE)
+  Sound_Buffer::Sound_Buffer(const string &filename)
+    : m_buffer(AL_NONE),
+      m_loader(0),
+      m_thread(0)
   {
     Sound::get_reference();
-
-#ifndef DISABLE_AL
-    m_buffer = load_ogg_vorbis(filename);
-    if(m_buffer == AL_NONE)
-      m_buffer = alutCreateBufferFromFile(filename.c_str());
-
-    if(m_buffer == AL_NONE) {
-      std::cerr << "ALUT error on '" << filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
-      throw Sound_Buffer_Init_Failure();
-    }
-#endif
+    
+    m_loader = new Loader(filename);
+    m_thread = new Thread(*m_loader);
   }
 
   Sound_Buffer::~Sound_Buffer() {
+    delete m_thread;
+    delete m_loader;
+    
 #ifndef DISABLE_AL
     if(m_buffer != AL_NONE)
       alDeleteBuffers(1, &m_buffer);
@@ -105,6 +105,8 @@ namespace Zeni {
   Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
     Sound_Buffer temp(rhs);
     std::swap(m_buffer, temp.m_buffer);
+    std::swap(m_loader, temp.m_loader);
+    std::swap(m_thread, temp.m_thread);
     return *this;
   }
 
@@ -178,6 +180,43 @@ namespace Zeni {
 
 #endif
 
+  }
+  
+  Sound_Buffer::Loader::Loader(const std::string &filename)
+    : m_filename(filename),
+      done(false)
+  {
+  }
+  
+  int Sound_Buffer::Loader::run() {
+#ifndef DISABLE_AL
+    m_buffer = load_ogg_vorbis(m_filename);
+    if(m_buffer == AL_NONE)
+      m_buffer = alutCreateBufferFromFile(m_filename.c_str());
+
+    if(m_buffer == AL_NONE) {
+      std::cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
+      return -1;
+    }
+#endif
+
+    done = true;
+
+    return 0;
+  }
+
+  void Sound_Buffer::finish_loading() const {
+    delete m_thread;
+    m_thread = 0;
+    
+    const int status = m_loader->status;
+    m_buffer = m_loader->m_buffer;
+    
+    delete m_loader;
+    m_loader = 0;
+    
+    if(status)
+      throw Sound_Buffer_Init_Failure();
   }
 
   static Sound_Buffer g_Hello_World_Buffer;

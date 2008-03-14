@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2007 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2008 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -26,47 +26,36 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#ifndef ZENI_THREAD_H
+#define ZENI_THREAD_H
 
-#define ZENI_INLINES
+namespace Zeni {
 
-#include <Zeni/Camera.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Light.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Render_Wrapper.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
-#include <Zeni/zeniapp.h>
+  extern int run_task(void *task_ptr);
+
+  class Task {
+  public:
+    virtual ~Task() {}
+    
+    virtual int run() = 0;
+    
+    int status;
+  };
+
+  class Thread {
+    Thread(const Thread &rhs);
+    Thread & operator=(const Thread &rhs);
+    
+  public:
+    Thread(int (SDLCALL *fn)(void *), void *data, int * const status = 0) : m_impl(SDL_CreateThread(fn, data)), m_status(status) {}
+    Thread(Task &task) : m_impl(SDL_CreateThread(run_task, &task)), m_status(&task.status) {}
+    ~Thread() {SDL_WaitThread(m_impl, m_status);}
+
+  private:
+    SDL_Thread *m_impl;
+    int * m_status;
+  };
+
+}
 
 #endif

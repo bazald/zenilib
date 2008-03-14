@@ -71,6 +71,8 @@ namespace Zeni {
     const Sound_Buffer & get_sound(const unsigned long &id) const; ///< Get a Sound_Effect
 
     void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Effect database
+    
+    float percent_loaded() const; ///< Check Sounds are loaded
 
   private:
     void init();
@@ -78,6 +80,8 @@ namespace Zeni {
     std::string m_soundsfile;
     stdext::hash_map<std::string, unsigned long> m_sound_lookup;
     stdext::hash_map<unsigned long, Sound_Buffer> m_sounds;
+    
+    mutable bool m_all_loaded;
   };
 
   struct Sound_Effect_Not_Found : public Error {

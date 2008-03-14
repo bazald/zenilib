@@ -41,7 +41,8 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : m_soundsfile("config/sounds.txt")
+    : m_soundsfile("config/sounds.txt"),
+      m_all_loaded(true)
   {
     // Ensure Sound is initialized
     Sound::get_reference();
@@ -60,6 +61,7 @@ namespace Zeni {
     unsigned long id = Resource::get_reference().assign();
     m_sound_lookup[name] = id;
     m_sounds[id] = Sound_Buffer(filename);
+    m_all_loaded = false;
     return id;
   }
 
@@ -130,6 +132,29 @@ namespace Zeni {
         throw;
       }
     }
+  }
+  
+  float Sounds::percent_loaded() const {
+    if(m_all_loaded)
+      return 100.0f;
+    
+    int yes = 0;
+    int no = 0;
+    
+    for(stdext::hash_map<unsigned long, Sound_Buffer>::const_iterator it = m_sounds.begin();
+        it != m_sounds.end();
+        ++it)
+      if(it->second.loaded())
+        ++yes;
+      else
+        ++no;
+    
+    if(!no) {
+      m_all_loaded = true;
+      return 100.0f;
+    }
+    
+    return 100.0f * yes / (yes + no);
   }
 
 }

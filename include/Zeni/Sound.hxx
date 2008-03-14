@@ -34,7 +34,22 @@
 namespace Zeni {
 
   const ALuint & Sound_Buffer::get_id() const {
+    if(m_loader)
+      finish_loading();
+    
     return m_buffer;
+  }
+
+  bool Sound_Buffer::loaded() const {
+    if(m_loader)
+      if(m_loader->done) {
+        finish_loading();
+        return true;
+      }
+      else
+        return false;
+    
+    return true;
   }
 
   void Sound_Source::set_buffer(const Sound_Buffer &
