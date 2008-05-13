@@ -118,25 +118,11 @@ namespace Zeni {
 
 #ifndef DISABLE_AL
 
-    /*** Open File Handle ***/
-
-#ifdef WIN32
-    FILE *f = 0;
-    if(fopen_s(&f, filename.c_str(), "rb"))
-      throw Sound_Buffer_Init_Failure();
-#else
-    FILE *f = fopen(filename.c_str(), "rb");
-#endif
-    if(!f)
-      throw Sound_Buffer_Init_Failure();
-
-    /*** Convert File Handle to Something VorbisFile Can Use ***/
+    /*** Open VorbisFile ***/
 
     OggVorbis_File oggFile;
-    if(ov_open(f, &oggFile, NULL, 0)) {
-      fclose(f);
+    if(ov_fopen(const_cast<char *>(filename.c_str()), &oggFile))
       return AL_NONE;
-    }
 
     /*** Get Information About the Audio File ***/
 
