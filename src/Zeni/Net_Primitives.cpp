@@ -73,7 +73,7 @@ namespace Zeni {
 
   string uitoa(const unsigned int &number) {
     char buf[64];
-  #ifdef WIN32
+  #ifdef _WINDOWS
     sprintf_s
   #else
     sprintf
@@ -84,7 +84,7 @@ namespace Zeni {
 
   string itoa(const int &number) {
     char buf[64];
-  #ifdef WIN32
+  #ifdef _WINDOWS
     sprintf_s
   #else
     sprintf
@@ -95,7 +95,7 @@ namespace Zeni {
 
   string ftoa(const float &number) {
     char buf[64];
-  #ifdef WIN32
+  #ifdef _WINDOWS
     sprintf_s
   #else
     sprintf

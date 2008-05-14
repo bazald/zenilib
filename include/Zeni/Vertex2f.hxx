@@ -49,7 +49,7 @@ namespace Zeni {
     return reinterpret_cast<unsigned long>(&m_position) - reinterpret_cast<unsigned long>(this);
   }
 
-  const unsigned long & Vertex2f_Color::get_color() const {
+  const Uint32 & Vertex2f_Color::get_color() const {
     return m_argb;
   }
 
@@ -57,7 +57,7 @@ namespace Zeni {
     m_argb = color.get_argb();
   }
 
-  void Vertex2f_Color::set_color(const unsigned long &argb) {
+  void Vertex2f_Color::set_color(const Uint32 &argb) {
     m_argb = argb;
   }
 

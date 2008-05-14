@@ -234,7 +234,7 @@ namespace Zeni {
     m_sprite.append_frame(click_down);
 
     char buf[64];
-#ifdef WIN32
+#ifdef _WINDOWS
     sprintf_s
 #else
     sprintf

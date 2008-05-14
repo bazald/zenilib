@@ -70,7 +70,7 @@ namespace Zeni {
 
     if(it == m_fonts.end()) {
       char buf[64];
-#ifdef WIN32
+#ifdef _WINDOWS
       sprintf_s
 #else
       sprintf

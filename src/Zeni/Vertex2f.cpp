@@ -64,7 +64,7 @@ namespace Zeni {
   {
   }
 
-  Vertex2f_Color::Vertex2f_Color(const Point2f &position, const long &argb)
+  Vertex2f_Color::Vertex2f_Color(const Point2f &position, const Uint32 &argb)
     : Vertex2f(position),
     m_argb(argb)
   {

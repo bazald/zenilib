@@ -45,6 +45,8 @@
 #ifndef ZENI_COLOR_H
 #define ZENI_COLOR_H
 
+#include <SDL/SDL_stdinc.h>
+
 namespace Zeni {
 
   class Color {
@@ -64,8 +66,8 @@ namespace Zeni {
     inline unsigned char g_ub() const; ///< Get the green channel [0x00, 0xFF]
     inline unsigned char b_ub() const; ///< Get the blue channel [0x00, 0xFF]
 
-    inline unsigned long get_rgba() const; ///< Get a Uint32 representation of 0xRRGGBBAA
-    inline unsigned long get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB
+    inline Uint32 get_rgba() const; ///< Get a Uint32 representation of 0xRRGGBBAA
+    inline Uint32 get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB
 
     Color interpolate_to(const float &rhs_part, const Color &rhs) const; ///< Get a color that is inbetween this color and another color.
 

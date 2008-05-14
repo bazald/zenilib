@@ -65,11 +65,11 @@ namespace Zeni {
     return static_cast<unsigned char>(rgba[3]*0xFF);
   }
 
-  unsigned long Color::get_rgba() const {
+  Uint32 Color::get_rgba() const {
     return (r_ub() << 24) | (g_ub() << 16) | (b_ub() << 8) | a_ub();
   }
 
-  unsigned long Color::get_argb() const {
+  Uint32 Color::get_argb() const {
     return (a_ub() << 24) | (r_ub() << 16) | (g_ub() << 8) | b_ub();
   }
 

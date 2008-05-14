@@ -75,18 +75,20 @@ namespace Zeni {
     const bool &horizontally_flipped,
     const Color &color_filter) {
 
+      const Point3f about3 = Point3f(about);
+
       Vector3f 
-        ulv = Point3f(upper_left) - about,
-        llv = Point3f(upper_left.x, lower_right.y, 0.0f) - about,
-        lrv = Point3f(lower_right) - about,
-        urv = Point3f(lower_right.x, upper_left.y, 0.0f) - about;
+        ulv = Point3f(upper_left) - about3,
+        llv = Point3f(upper_left.x, lower_right.y, 0.0f) - about3,
+        lrv = Point3f(lower_right) - about3,
+        urv = Point3f(lower_right.x, upper_left.y, 0.0f) - about3;
 
       ulv.set_spherical(ulv.theta() + radians_cw, ulv.phi(), ulv.magnitude() * scaling_factor);
       llv.set_spherical(llv.theta() + radians_cw, llv.phi(), llv.magnitude() * scaling_factor);
       lrv.set_spherical(lrv.theta() + radians_cw, lrv.phi(), lrv.magnitude() * scaling_factor);
       urv.set_spherical(urv.theta() + radians_cw, urv.phi(), urv.magnitude() * scaling_factor);
 
-      float
+      const float
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
         tx1 = 1.0f - tx0;
 
@@ -95,10 +97,10 @@ namespace Zeni {
       material.set_diffuse(color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
-        Vertex2f_Texture(Point2f(about + ulv), Point2f(tx0, 0.0f)),
-        Vertex2f_Texture(Point2f(about + llv), Point2f(tx0, 1.0f)),
-        Vertex2f_Texture(Point2f(about + lrv), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(about + urv), Point2f(tx1, 0.0f)),
+        Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f)),
+        Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f)),
+        Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f)),
+        Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f)),
         new Material_Render_Wrapper(material));
 
       Video::get_reference().render(q);

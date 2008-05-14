@@ -75,6 +75,9 @@ namespace Zeni {
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 
   private:
+#ifdef X64
+    float m_alignment_rubbish;
+#endif
     Point3f m_position;
   };
 
@@ -82,13 +85,13 @@ namespace Zeni {
   public:
     /// Initialize the Vertex2f_Color
     Vertex2f_Color(const Point2f &position = Point2f(), const Color &color = Color());
-    Vertex2f_Color(const Point2f &position, const long &argb);
+    Vertex2f_Color(const Point2f &position, const Uint32 &argb);
 
     Vertex2f * interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const; ///< Get a Vertex2f_Color between two vertices; rhs must be a Vertex2f_Color
 
-    inline const unsigned long & get_color() const; ///< Get the current Color
+    inline const Uint32 & get_color() const; ///< Get the current Color
     inline void set_color(const Color &color); ///< Set the current Color
-    inline void set_color(const unsigned long &argb); ///< Set the current Color
+    inline void set_color(const Uint32 &argb); ///< Set the current Color
 
     // Begin rendering functions
 
@@ -104,7 +107,7 @@ namespace Zeni {
 #endif
 
   private:
-    unsigned long m_argb;
+    Uint32 m_argb;
   };
 
   class Vertex2f_Texture : public Renderable, public Vertex2f {
