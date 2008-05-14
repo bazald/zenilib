@@ -145,6 +145,10 @@ namespace Zeni {
     bool m_textured, m_3d, m_zwrite;
   };
 
+  struct Video_Device_Failure : public Error {
+    Video_Device_Failure() : Error("Zeni Video Device Failed") {}
+  };
+
 }
 
 #endif

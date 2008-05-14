@@ -75,6 +75,8 @@ namespace Zeni {
     inline void render(); ///< Called in main, calls the function by the same name in the current Gamestate.
 
     inline int get_fps() const; ///< Get the current approximation of the frames displayed per second.
+    
+    void run();
 
   private:
     void calculate_fps();

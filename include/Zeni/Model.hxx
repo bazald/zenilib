@@ -34,33 +34,51 @@
 namespace Zeni {
 
   Lib3dsFile * Model::get_file() const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    return m_file;
+    GUARANTEED_FINISHED_END();
+  }
+
+  Lib3dsFile * Model::thun_get_file() const {
     return m_file;
   }
 
   Model_Extents Model::get_extents() const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_extents;
+    GUARANTEED_FINISHED_END();
   }
 
   float Model::get_keyframes() const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     return float(m_file->frames);
+    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_scale(const Point3f &multiplier) {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_scale = multiplier;
+    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_rotate(const float &angle, const Point3f &ray) {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_rotate_angle = angle;
     m_rotate = ray;
+    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_translate(const Point3f &vector) {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_translate = vector;
+    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_keyframe(const float &keyframe) {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_keyframe = keyframe;
     lib3ds_file_eval(m_file, keyframe);
+    GUARANTEED_FINISHED_END();
   }
 
 }

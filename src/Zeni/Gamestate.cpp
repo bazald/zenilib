@@ -30,7 +30,15 @@
 
 #include <Zeni/Game.hxx>
 
+#include <algorithm>
 #include <cmath>
+
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
 
 namespace Zeni {
 
@@ -749,15 +757,8 @@ default: return "SDLK_UNKNOWN";
   }
 
   Gamestate::~Gamestate() {
-    m_state->decrement();
-  }
-
-  void Gamestate::on_event(const SDL_Event &event) {
-    m_state->on_event(event);
-  }
-
-  void Gamestate::perform_logic() {
-    m_state->perform_logic();
+    if(m_state)
+      m_state->decrement();
   }
 
   Zeni_Input_ID::Zeni_Input_ID(const Uint8 &type_, const int &subid_, const int &which_)
@@ -795,7 +796,7 @@ default: return "SDLK_UNKNOWN";
       {
         const float ac = fabs(confidence);
         const float nm = confidence / ac;
-        confidence = nm * min(max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
+        confidence = nm * std::min(std::max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
       }
 
       break;

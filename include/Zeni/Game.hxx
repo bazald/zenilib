@@ -34,6 +34,9 @@
 namespace Zeni {
 
   Gamestate_Base & Game::get_current_state() {
+    if(m_states.empty())
+      throw Zero_Gamestate();
+    
     return m_states.top().get();
   }
 
@@ -42,34 +45,58 @@ namespace Zeni {
   }
 
   Gamestate Game::pop_state() {
-    if(m_states.empty())
-      throw Zero_Gamestate();
+    Gamestate gs;
+    
+    {
+      if(m_states.empty())
+        throw Zero_Gamestate();
 
-    Gamestate top = m_states.top();
-    m_states.pop();
+      gs = m_states.top();
+      m_states.pop();
+    }
 
-    return top;
+    return gs;
   }
 
   void Game::on_event(const SDL_Event &event) {
-    if(m_states.empty())
-      throw Zero_Gamestate();
+    Gamestate gs;
+    
+    {
+      if(m_states.empty())
+        throw Zero_Gamestate();
 
-    m_states.top().on_event(event);
+      gs = m_states.top();
+    }
+    
+    gs.on_event(event);
   }
 
   void Game::perform_logic() {
-    if(m_states.empty())
-      throw Zero_Gamestate();
+    Gamestate gs;
+    
+    {
+      if(m_states.empty())
+        throw Zero_Gamestate();
 
-    m_states.top().perform_logic();
+      gs = m_states.top();
+    }
+    
+    gs.perform_logic();
   }
 
   void Game::render() {
-    if(m_states.empty())
-      throw Zero_Gamestate();
+    {
+      Gamestate gs;
+      
+      {
+        if(m_states.empty())
+          throw Zero_Gamestate();
 
-    m_states.top().render();
+        gs = m_states.top();
+      }
+      
+      gs.render();
+    }
 
     calculate_fps();
   }

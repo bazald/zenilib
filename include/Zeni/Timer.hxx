@@ -60,19 +60,24 @@ namespace Zeni {
     m_ticks = Timer::get_reference().get_ticks();
   }
 
-  int Timer::get_ticks() const {
+  int Timer::get_ticks() {
+    Mutex::Lock lock(ticks_mutex);
+    m_ticks = SDL_GetTicks();
     return m_ticks;
   }
 
-  float Timer::get_seconds() const {
+  float Timer::get_seconds() {
     return get_ticks() * 0.001f;
   }
 
-  Time Timer::get_time() const {
+  Time Timer::get_time() {
+    Mutex::Lock lock(ticks_mutex);
+    m_ticks = SDL_GetTicks();
     return Time(m_ticks);
   }
 
   void Timer::update() {
+    Mutex::Lock lock(ticks_mutex);
     m_ticks = SDL_GetTicks();
   }
 

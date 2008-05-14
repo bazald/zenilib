@@ -27,7 +27,7 @@
 */
 
 #include <Zeni/Fonts.h>
-#include <Zeni/Video.h>
+#include <Zeni/Video_GL.h>
 #include <Zeni/Resource.hxx>
 
 #include <iostream>
@@ -110,10 +110,11 @@ namespace Zeni {
   }
 
   void Fonts::reload(const string &filename) {
-    if(filename.length() != 0)
+    if(filename.length()) {
       m_filename = filename;
-
-    uninit();
+    }
+    
+    lose_resources();
     init();
   }
 
@@ -136,15 +137,17 @@ namespace Zeni {
         codename.resize(codename.size() - 1);
 
       try {
-        set_font(name, vr.create_Font(codename, bold, italic, height));
+        Font *font = vr.create_Font(codename, bold, italic, height);
+
+        unsigned long id = Resource::get_reference().assign();
+        m_font_lookup[name] = id;
+        m_fonts[id] = font;
       }
       catch(Font_Init_Failure &) {
         uninit();
         cerr << "Fonts: Error Loading '" << name << "' from '" << codename << "'\n";
         throw;
       }
-
-      m_loaded = true;
     }
   }
 
@@ -154,13 +157,10 @@ namespace Zeni {
     m_fonts.clear();
     m_font_lookup.clear();
     TTF_Quit();
-    m_loaded = false;
   }
 
   void Fonts::lose_resources() {
     uninit();
   }
-
-  bool Fonts::m_loaded = false;
 
 }

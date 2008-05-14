@@ -41,30 +41,47 @@ namespace Zeni {
     if(!--m_count)
       delete this;
   }
+  
+  Gamestate::Gamestate()
+    : m_state(0)
+  {
+  }
 
   Gamestate::Gamestate(Gamestate_Base *state)
     : m_state(state)
   {
-    m_state->increment();
+    if(m_state)
+      m_state->increment();
   }
 
   Gamestate::Gamestate(const Gamestate &state)
     : m_state(state.m_state)
   {
-    m_state->increment();
+    if(m_state)
+      m_state->increment();
   }
 
   Gamestate & Gamestate::operator=(const Gamestate &state) {
-    m_state->decrement();
+    if(m_state)
+      m_state->decrement();
     m_state=state.m_state;
-    m_state->increment();
+    if(m_state)
+      m_state->increment();
     return *this;
+  }
+
+  void Gamestate::on_event(const SDL_Event &event) {
+    m_state->on_event(event);
+  }
+
+  void Gamestate::perform_logic() {
+    m_state->perform_logic();
   }
 
   void Gamestate::render() {
     m_state->render();
   }
-
+  
   Gamestate_Base & Gamestate::get() {
     return *m_state;
   }

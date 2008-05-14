@@ -31,6 +31,7 @@
 
 #include <Zeni/Core.h>
 #include <Zeni/Hash_Map.h>
+#include <Zeni/Mutex.h>
 
 #include <string>
 
@@ -50,6 +51,7 @@ namespace Zeni {
     inline unsigned long assign(); ///< Get a value, unique within this run of the program
 
   private:
+    Mutex m_mutex;
     unsigned long m_current;
   };
 

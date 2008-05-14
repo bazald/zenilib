@@ -27,8 +27,9 @@
 */
 
 #include <Zeni/Textures.h>
-#include <Zeni/Resource.hxx>
 #include <Zeni/Video.h>
+
+#include <Zeni/Resource.hxx>
 
 #include <iostream>
 #include <fstream>
@@ -218,45 +219,58 @@ namespace Zeni {
   }
 
   void Textures::set_texturing_mode(const int &anisotropic_filtering_, const bool &bilinear_filtering_, const bool &mipmapping_) {
-    int af = anisotropic_filtering_;
-    if(af == -1)
-      af = Video::get_reference().get_maximum_anisotropy();
-
-    bool reload_ = ((af != m_anisotropic_filtering) | (bilinear_filtering_ ^ m_bilinear_filtering) | (mipmapping_ ^ m_mipmapping)) != 0;
-
-    m_anisotropic_filtering = af;
-    m_bilinear_filtering = bilinear_filtering_;
-    m_mipmapping = mipmapping_;
-
-    if(m_loaded && reload_)
-      get_reference().reload();
+    const int af = anisotropic_filtering_ == -1 ? Video::get_reference().get_maximum_anisotropy() : anisotropic_filtering_;
+    
+    if(m_loaded && ((af != m_anisotropic_filtering) | (bilinear_filtering_ ^ m_bilinear_filtering) | (mipmapping_ ^ m_mipmapping))) {
+      Textures &tr = get_reference();
+      
+      tr.uninit();
+      
+      m_anisotropic_filtering = af;
+      m_bilinear_filtering = bilinear_filtering_;
+      m_mipmapping = mipmapping_;
+      
+      tr.init();
+    }
+    else {
+      m_anisotropic_filtering = af;
+      m_bilinear_filtering = bilinear_filtering_;
+      m_mipmapping = mipmapping_;
+    }
   }
 
   void Textures::reload(const string &texturedb) {
     if(texturedb.length())
       m_texturedb = texturedb;
 
-    init();
+    reload();
   }
 
   void Textures::reload() {
+    lose_resources();
     init();
   }
 
   void Textures::init() {
     m_texture_lookup.clear();
     m_textures.clear();
-
+    
     ifstream tdbin(m_texturedb.c_str());
 
     if(!tdbin)
       throw Texture_Init_Failure();
+    
+    Video &vr = Video::get_reference();
 
     string fileName, name;
     bool repeat;
     while(tdbin >> name >> fileName >> repeat) {
       try {
-        set_texture(name, Video::get_reference().load_Texture(fileName, repeat));
+        Texture * const texture = vr.load_Texture(fileName, repeat);
+            
+        const unsigned long id = Resource::get_reference().assign();
+        m_texture_lookup[name] = id;
+        m_textures[id] = texture;
       }
       catch(Texture_Init_Failure &) {
         cerr << "Textures: Error Loading '" << name << "' from '" << fileName << "'\n";
@@ -276,7 +290,24 @@ namespace Zeni {
   }
 
   void Textures::lose_resources() {
-    uninit();
+    stdext::hash_map<std::string, unsigned long> texture_lookup;
+    stdext::hash_map<unsigned long, Texture *> textures;
+    
+    texture_lookup.swap(m_texture_lookup);
+    textures.swap(m_textures);
+    
+    for(stdext::hash_map<std::string, unsigned long>::iterator it = texture_lookup.begin();
+        it != texture_lookup.end();
+        ++it) {
+      stdext::hash_map<unsigned long, Texture *>::iterator jt = textures.find(it->second);
+      
+      if(dynamic_cast<Sprite *>(jt->second))
+        set_texture(it->first, jt->second);
+      else
+        delete jt->second;
+    }
+    
+    m_loaded = false;
   }
 
   bool Textures::m_loaded = false;

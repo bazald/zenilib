@@ -89,6 +89,8 @@
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 
+#include "Net_Primitives.h"
+
 #include <Zeni/Core.h>
 
 #include <SDL/SDL_net.h>
@@ -117,6 +119,9 @@ namespace Zeni {
   };
 
   class TCP_Socket {
+    TCP_Socket(const TCP_Socket &);
+    TCP_Socket & operator=(const TCP_Socket &);
+    
   public:
     TCP_Socket(IPaddress ip); ///< For outgoing connections
     TCP_Socket(TCPsocket sock); ///< For incoming connections
@@ -139,6 +144,9 @@ namespace Zeni {
   };
 
   class TCP_Listener {
+    TCP_Listener(const TCP_Listener &);
+    TCP_Listener & operator=(const TCP_Listener &);
+    
   public:
     TCP_Listener(const unsigned short &port);
     ~TCP_Listener();
@@ -150,6 +158,9 @@ namespace Zeni {
   };
 
   class UDP_Socket {
+    UDP_Socket(const UDP_Socket &);
+    UDP_Socket & operator=(const UDP_Socket &);
+    
   public:
     UDP_Socket(const unsigned short &port);
     ~UDP_Socket();
@@ -157,15 +168,106 @@ namespace Zeni {
     IPaddress peer_address() const; ///< Apparently only works if the port was explicitly specified
 
     /// Send data to an IPaddress
-    void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
-    void send(const IPaddress &ip, const std::string &data);
+    virtual void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual void send(const IPaddress &ip, const std::string &data);
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
-    int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
-    int receive(IPaddress &ip, std::string &data);
+    virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual int receive(IPaddress &ip, std::string &data);
     
   private:
     UDPsocket sock;
+  };
+  
+  class Split_UDP_Socket : public UDP_Socket {
+    Split_UDP_Socket(const Split_UDP_Socket &);
+    Split_UDP_Socket & operator=(const Split_UDP_Socket &);
+    
+    struct Chunk {
+      Chunk() : size(0), data(0) {}
+      ~Chunk() {delete [] data;}
+      
+      Chunk(const Chunk &rhs)
+        : size(rhs.size),
+          data(rhs.data)
+      {
+        rhs.size = 0;
+        rhs.data = 0;
+      }
+      
+      Chunk & operator=(Chunk &rhs) {
+        size = rhs.size;
+        data = rhs.data;
+        
+        rhs.size = 0;
+        rhs.data = 0;
+        
+        return *this;
+      }
+      
+      mutable size_t size;
+      mutable void * data;
+    };
+    
+    class Chunk_Set {
+      Chunk_Set(const Chunk_Set &);
+      Chunk_Set operator=(const Chunk_Set &);
+    
+    public:
+      IPaddress ip;
+      Nonce nonce;
+      std::vector<Chunk> chunks;
+      
+      Chunk_Set() {}
+      
+      Chunk_Set(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      
+      bool add_chunk(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      bool complete() const;
+      
+      Chunk receive() const;
+    };
+    
+    class Chunk_Collector {
+      Chunk_Collector(const Chunk_Collector &);
+      Chunk_Collector operator=(const Chunk_Collector &);
+      
+    public:
+      Chunk_Collector(const int &size = 64)
+        : m_size(size)
+      {
+        assert(m_size);
+      }
+      
+      ~Chunk_Collector() {
+        for(std::list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it)
+          delete *it;
+      }
+      
+      const Chunk_Set * add_chunk(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      
+    private:
+      std::list<Chunk_Set *> chunk_sets;
+      int m_size;
+    };
+    
+  public:
+    Split_UDP_Socket(const unsigned short &port, const unsigned short &chunk_sets = 64, const unsigned short &chunk_size = 960);
+
+    /// Send data to an IPaddress
+    virtual void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual void send(const IPaddress &ip, const std::string &data);
+    
+    /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
+    virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual int receive(IPaddress &ip, std::string &data);
+    
+  private:
+    unsigned short m_chunk_size;
+    
+    Chunk_Collector m_chunk_collector;
+    
+    Nonce m_nonce_send;
   };
 
   struct Net_Init_Failure : public Error {

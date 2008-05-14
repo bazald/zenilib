@@ -155,14 +155,15 @@ namespace Zeni {
 
   class Gamestate {
   public:
+    inline Gamestate();
     inline Gamestate(Gamestate_Base *state);
-    virtual ~Gamestate();
+    ~Gamestate();
 
     inline Gamestate(const Gamestate &state);
     inline Gamestate & operator=(const Gamestate &state);
 
-    virtual void on_event(const SDL_Event &event);
-    virtual void perform_logic();
+    inline void on_event(const SDL_Event &event);
+    inline void perform_logic();
     inline void render();
 
     inline Gamestate_Base & get();

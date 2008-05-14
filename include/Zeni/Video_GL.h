@@ -116,6 +116,11 @@ namespace Zeni {
     inline void pglGenBuffersARB(const GLsizei n, GLuint * const buffers) const; ///< The glGenBuffersARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
     inline void pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, 
       const GLenum usage) const; ///< The glBufferDataARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
+    
+    PFNGLBINDBUFFERARBPROC get_pglBindBufferARB() const {return m_pglBindBufferARB;}
+    PFNGLDELETEBUFFERSARBPROC get_pglDeleteBuffersARB() const {return m_pglDeleteBuffersARB;}
+    PFNGLGENBUFFERSARBPROC get_pglGenBuffersARB() const {return m_pglGenBuffersARB;}
+    PFNGLBUFFERDATAARBPROC get_pglBufferDataARB() const {return m_pglBufferDataARB;}
 
   protected:
     virtual void init();
@@ -128,6 +133,10 @@ namespace Zeni {
 
     int m_maximum_anisotropy;
     bool m_vertex_buffers, m_zwrite;
+    
+    Time m_buffer_swap_end_time;
+    float m_time_taken;
+    float m_weight_new;
   };
 
 }

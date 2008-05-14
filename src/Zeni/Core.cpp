@@ -40,12 +40,12 @@ namespace Zeni {
   static streambuf * cerr_bak = 0;
   static streambuf * cout_bak = 0;
 
-  static ofstream cerr_file("stderr.txt");
-  static ofstream cout_file("stdout.txt");
-
   Core::Core()
     : joystick(0)
   {
+    static ofstream cerr_file("stderr.txt");
+    static ofstream cout_file("stdout.txt");
+    
     if(cerr_file.is_open()) {
       cerr_bak = cerr.rdbuf();
       cerr.rdbuf(cerr_file.rdbuf());

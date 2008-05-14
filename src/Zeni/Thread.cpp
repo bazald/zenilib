@@ -28,11 +28,114 @@
 
 #include <Zeni/Thread.h>
 
+#include <Zeni/Gamestate.h>
+
+#include <Zeni/Mutex.hxx>
+
 namespace Zeni {
 
   int run_task(void *task_ptr) {
-    Zeni::Task &task = *reinterpret_cast<Zeni::Task *>(task_ptr);
-    return task.status = task.run();
+    Task &task = *reinterpret_cast<Task *>(task_ptr);
+    Recursive_Mutex::Lock lock(task.m_done_mutex);
+    
+    try {
+      task.status = task.run();
+      task.m_done = true;
+    }
+    catch(Quit_Event &nonerror) {
+      task.status = 0;
+      task.msg = nonerror.msg;
+    }
+    catch(Error &error) {
+      task.status = 0x32202;
+      task.msg = error.msg;
+    }
+    catch(...) {
+      task.status = -1;
+      task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
+    }
+    
+    return task.status;
+  }
+  
+  int run_repeatable_task(void *task_ptr) {
+    Repeatable_Task &task = *reinterpret_cast<Repeatable_Task *>(task_ptr);
+    Recursive_Mutex::Lock lock(task.m_done_mutex);
+    
+    while(!task.status && !task.m_terminated) {
+      if(task.m_done) {
+        task.m_continue_condition.wait(lock);
+        continue;
+      }
+      
+      try {
+        task.status = task.run();
+      }
+      catch(Quit_Event &nonerror) {
+        task.m_done = task.m_terminated = true;
+        task.status = 0;
+        task.msg = nonerror.msg;
+        return task.status;
+      }
+      catch(Error &error) {
+        task.m_done = task.m_terminated = true;
+        task.status = 0x32202;
+        task.msg = error.msg;
+        return task.status;
+      }
+      catch(...) {
+        task.m_done = task.m_terminated = true;
+        task.status = -1;
+        task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
+        return task.status;
+      }
+      
+      if(task.status || task.m_terminated)
+        break;
+      
+      task.m_done = true;
+      task.m_done_condition.broadcast();
+    }
+    
+    task.m_done = task.m_terminated = true;
+    task.m_done_condition.broadcast();
+    
+    return task.status;
+  }
+
+  Thread::Thread(int (SDLCALL *fn)(void *), void *data, int * const status)
+    : m_impl(0), m_status(status)
+  {
+    // Ensure Core is initialized
+    Core::get_reference();
+    
+    m_impl = SDL_CreateThread(fn, data);
+  }
+  
+  Thread::Thread(Task &task)
+    : m_impl(0), m_status(&task.status)
+  {
+    // Ensure Core is initialized
+    Core::get_reference();
+    
+    m_impl = SDL_CreateThread(run_task, &task);
+  }
+  
+  Thread::Thread(Repeatable_Task &task)
+    : m_impl(0), m_status(&task.status)
+  {
+    // Ensure Core is initialized
+    Core::get_reference();
+    
+    m_impl = SDL_CreateThread(run_repeatable_task, &task);
+  }
+  
+  Thread::~Thread() {
+    SDL_WaitThread(m_impl, m_status);
+  }
+  
+  unsigned int Thread::get_id() {
+    return SDL_GetThreadID(m_impl);
   }
   
 }

@@ -31,11 +31,40 @@
 namespace Zeni {
 
   Mutex::Mutex()
-    : m_impl(SDL_CreateMutex()) {
+    : m_impl(0)
+#ifndef NDEBUG
+    , self_lock(1)
+    , locking_thread(0)
+#endif
+  {
+#ifdef NDEBUG
+    // Ensure Core is initialized
+    Core::get_reference();
+#endif
+    
+    m_impl = SDL_CreateMutex();
   }
   
   Mutex::~Mutex() {
     SDL_DestroyMutex(m_impl);
+  }
+  
+  void Mutex::lock() {
+#ifndef NDEBUG
+    const unsigned int current_thread = SDL_ThreadID();
+    
+    {
+      Semaphore::Down down(self_lock);
+      assert(locking_thread != current_thread);
+    }
+#endif
+    
+    if(SDL_mutexP(m_impl))
+      throw Mutex_Lock_Failure();
+    
+#ifndef NDEBUG
+    locking_thread = current_thread;
+#endif
   }
 
   Mutex::Lock::Lock(Mutex &mutex)
@@ -48,9 +77,69 @@ namespace Zeni {
     m_mutex.unlock();
   }
 
-  Semaphore::Semaphore(const unsigned int &count)
-    : m_impl(SDL_CreateSemaphore(count))
+  Recursive_Mutex::Recursive_Mutex()
+    : m_impl(0)
+    , self_lock(1)
+    , locking_thread(0)
+    , count(0)
   {
+    m_impl = SDL_CreateMutex();
+  }
+  
+  Recursive_Mutex::~Recursive_Mutex() {
+    SDL_DestroyMutex(m_impl);
+  }
+  
+  void Recursive_Mutex::lock() {
+    const unsigned int current_thread = SDL_ThreadID();
+    
+    {
+      Semaphore::Down down(self_lock);
+      
+      if(locking_thread == current_thread) {
+        ++count;
+        return;
+      }
+    }
+    
+    if(SDL_mutexP(m_impl))
+      throw Mutex_Lock_Failure();
+      
+    locking_thread = current_thread;
+    count = 1u;
+  }
+  
+  void Recursive_Mutex::unlock() {
+    Semaphore::Down down(self_lock);
+    
+    assert(locking_thread == SDL_ThreadID() && count);
+    
+    if(--count)
+      return;
+    
+    locking_thread = 0;
+
+    if(SDL_mutexV(m_impl))
+      throw Mutex_Unlock_Failure();
+  }
+
+  Recursive_Mutex::Lock::Lock(Recursive_Mutex &mutex)
+    : m_mutex(mutex)
+  {
+    m_mutex.lock();
+  }
+  
+  Recursive_Mutex::Lock::~Lock() {
+    m_mutex.unlock();
+  }
+
+  Semaphore::Semaphore(const unsigned int &count)
+    : m_impl(0)
+  {
+    // Ensure Core is initialized
+    Core::get_reference();
+    
+    m_impl = SDL_CreateSemaphore(count);
   }
   
   Semaphore::~Semaphore() {
@@ -66,12 +155,72 @@ namespace Zeni {
   }
 
   Condition_Variable::Condition_Variable()
-    : m_impl(SDL_CreateCond())
+    : m_impl(0)
   {
+    // Ensure Core is initialized
+    Core::get_reference();
+    
+    m_impl = SDL_CreateCond();
   }
   
   Condition_Variable::~Condition_Variable() {
     SDL_DestroyCond(m_impl);
+  }
+  
+  void Condition_Variable::wait(Recursive_Mutex::Lock &mutex_lock) {
+    Recursive_Mutex &mutex = mutex_lock.m_mutex;
+    unsigned int &locking_thread = mutex.locking_thread;
+    unsigned int &count = mutex.count;
+    
+    const unsigned int current_thread = SDL_ThreadID();
+    const unsigned int current_count = count;
+    
+    assert(locking_thread == current_thread && count);
+    
+    {
+      Semaphore::Down down(mutex.self_lock);
+      locking_thread = 0;
+      count = 0;
+    }
+    
+    const int result = SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl);
+    
+    {
+      Semaphore::Down down(mutex.self_lock);
+      locking_thread = current_thread;
+      count = current_count;
+    }
+    
+    if(result)
+      throw CV_Wait_Failure();
+  }
+  
+  void Condition_Variable::wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms) {
+    Recursive_Mutex &mutex = mutex_lock.m_mutex;
+    unsigned int &locking_thread = mutex.locking_thread;
+    unsigned int &count = mutex.count;
+    
+    const unsigned int current_thread = SDL_ThreadID();
+    const unsigned int current_count = count;
+    
+    assert(locking_thread == current_thread && count);
+    
+    {
+      Semaphore::Down down(mutex.self_lock);
+      locking_thread = 0;
+      count = 0;
+    }
+    
+    const int result = SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms);
+    
+    {
+      Semaphore::Down down(mutex.self_lock);
+      locking_thread = current_thread;
+      count = current_count;
+    }
+    
+    if(result)
+      throw CV_Wait_Timeout_Failure();
   }
   
 }

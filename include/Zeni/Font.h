@@ -71,16 +71,17 @@ namespace Zeni {
   class Video_DX9;
   class Texture;
 
-  enum JUSTIFY {ZENI_LEFT, ZENI_RIGHT, ZENI_CENTER};
+  enum JUSTIFY {ZENI_LEFT = 0, ZENI_CENTER = 1, ZENI_RIGHT = 2};
 
   class Font {
   public:
     Font(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
-    Font(const bool &bold, const bool &italic, const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
     virtual ~Font() {}
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
+    inline const std::string & get_font_name() const; ///< Get the name of the font.
     inline int get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
     virtual int get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
@@ -91,6 +92,7 @@ namespace Zeni {
   private:
     bool m_bold, m_italic;
     int m_glyph_height;
+    std::string m_font_name;
   };
 
 #ifndef DISABLE_GL

@@ -29,40 +29,11 @@
 #ifndef ZENI_MUTEX_H
 #define ZENI_MUTEX_H
 
+#include <Zeni/Core.h>
+
+#include <SDL/SDL_mutex.h>
+
 namespace Zeni {
-
-  class Mutex {
-    friend class Condition_Variable;
-    
-    Mutex(const Mutex &rhs);
-    Mutex & operator=(const Mutex &rhs);
-    
-  public:
-    Mutex();
-    ~Mutex();
-    
-    inline void lock();
-    
-    inline void unlock();
-
-  private:
-    SDL_mutex *m_impl;
-  
-  public:
-    class Lock {
-      friend class Condition_Variable;
-      
-      Lock(const Lock &rhs);
-      Lock & operator=(const Lock &rhs);
-      
-    public:
-      Lock(Mutex &mutex);
-      ~Lock();
-      
-    private:
-      Mutex &m_mutex;
-    };
-  };
 
   class Semaphore {
     Semaphore(const Semaphore &rhs);
@@ -97,6 +68,81 @@ namespace Zeni {
     };
   };
 
+  class Mutex {
+    friend class Condition_Variable;
+    
+    Mutex(const Mutex &rhs);
+    Mutex & operator=(const Mutex &rhs);
+    
+  public:
+    Mutex();
+    ~Mutex();
+    
+    void lock();
+    
+    inline void unlock();
+
+  private:
+    SDL_mutex *m_impl;
+    
+#ifndef NDEBUG
+    Semaphore self_lock;
+    unsigned int locking_thread;
+#endif
+  
+  public:
+    class Lock {
+      friend class Condition_Variable;
+      
+      Lock(const Lock &rhs);
+      Lock & operator=(const Lock &rhs);
+      
+    public:
+      Lock(Mutex &mutex);
+      ~Lock();
+      
+    private:
+      Mutex &m_mutex;
+    };
+  };
+
+  class Recursive_Mutex {
+    friend class Condition_Variable;
+    
+    Recursive_Mutex(const Recursive_Mutex &rhs);
+    Recursive_Mutex & operator=(const Recursive_Mutex &rhs);
+    
+  public:
+    Recursive_Mutex();
+    ~Recursive_Mutex();
+    
+    void lock();
+    
+    void unlock();
+
+  private:
+    SDL_mutex *m_impl;
+    
+    Semaphore self_lock;
+    unsigned int locking_thread;
+    unsigned int count;
+  
+  public:
+    class Lock {
+      friend class Condition_Variable;
+      
+      Lock(const Lock &rhs);
+      Lock & operator=(const Lock &rhs);
+      
+    public:
+      Lock(Recursive_Mutex &mutex);
+      ~Lock();
+      
+    private:
+      Recursive_Mutex &m_mutex;
+    };
+  };
+
   class Condition_Variable {
     Condition_Variable(const Condition_Variable &rhs);
     Condition_Variable & operator=(const Condition_Variable &rhs);
@@ -110,6 +156,8 @@ namespace Zeni {
     
     inline void wait(Mutex::Lock &mutex_lock);
     inline void wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms);
+    void wait(Recursive_Mutex::Lock &mutex_lock);
+    void wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms);
 
   private:
     SDL_cond *m_impl;

@@ -44,6 +44,9 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
+#include <SDL/SDL_syswm.h>
+
+#include <cassert>
 #include <iostream>
 
 using namespace std;
@@ -71,30 +74,49 @@ namespace Zeni {
     static bool reset = false;
 
     if(reset) {
-      if(FAILED(m_d3d_device->Reset(&m_d3d_parameters)))
-        return;
-      reset = false;
+      {
+        const HRESULT result = m_d3d_device->TestCooperativeLevel();
+        
+        if(result == D3DERR_DEVICELOST)
+          return;
+        else if(result == D3DERR_DRIVERINTERNALERROR)
+          throw Video_Device_Failure();
+        
+        assert(result == D3DERR_DEVICENOTRESET);
+        
+        if(FAILED(m_d3d_device->Reset(&m_d3d_parameters)))
+          throw Video_Device_Failure(); //return;
+      
+        reset = false;
 
-      reinit();
+        reinit();
+      }
 
       Textures::get_reference().reload();
       Fonts::get_reference().reload();
     }
-    else if(m_d3d_device->Present(0, 0, 0, 0) == D3DERR_DEVICELOST) {
+    
+    HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
+    
+    if(result == S_OK) {
+      D3DVIEWPORT9 vp = {0, 0, get_screen_width(), get_screen_height(), 0, 1};
+      m_d3d_device->SetViewport(&vp);
+      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_clear_color.r_ub(), m_clear_color.g_ub(), m_clear_color.b_ub()), 1.0f, 0);
+      m_d3d_device->BeginScene();
+
+      Game::get_reference().render();
+      
+      m_d3d_device->EndScene();
+    }
+    else if(result == D3DERR_DEVICELOST) {
       reset = true;
-      Fonts::get_reference().lose_resources();
-      Textures::get_reference().lose_resources();
       return;
     }
+    else {
+      assert(result == D3DERR_DEVICEREMOVED);
+      throw Video_Device_Failure();
+    }
 
-    D3DVIEWPORT9 vp = {0, 0, get_screen_width(), get_screen_height(), 0, 1};
-    m_d3d_device->SetViewport(&vp);
-    m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_clear_color.r_ub(), m_clear_color.g_ub(), m_clear_color.b_ub()), 1.0f, 0);
-    m_d3d_device->BeginScene();
-
-    Game::get_reference().render();
-
-    m_d3d_device->EndScene();
   }
 
   void Video_DX9::render(const Renderable &renderable) {
@@ -326,14 +348,18 @@ namespace Zeni {
 
     ZeroMemory(&m_d3d_parameters, sizeof(m_d3d_parameters));
 
-    m_d3d_parameters.hDeviceWindow = GetActiveWindow();
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWMInfo(&wmInfo);
+    m_d3d_parameters.hDeviceWindow = wmInfo.window;
+    
     m_d3d_parameters.Windowed = !is_fullscreen();
     m_d3d_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
     m_d3d_parameters.BackBufferCount = 1;
     m_d3d_parameters.BackBufferWidth = get_screen_width();
     m_d3d_parameters.BackBufferHeight = get_screen_height();
-    m_d3d_parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
+    m_d3d_parameters.BackBufferFormat = m_d3d_parameters.Windowed ? D3DFMT_UNKNOWN : D3DFMT_A8R8G8B8;
     m_d3d_parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     m_d3d_parameters.PresentationInterval = get_vertical_sync() ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
     m_d3d_parameters.Flags = 0;//D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;

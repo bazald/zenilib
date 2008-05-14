@@ -77,6 +77,7 @@
 
 #include <Zeni/Coordinate.h>
 #include <Zeni/Render_Wrapper.h>
+#include <Zeni/Thread.h>
 
 #include <lib3ds/file.h>
 #include <lib3ds/node.h>
@@ -136,6 +137,9 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
+    // Thread-Unsafe versions
+    inline Lib3dsFile * thun_get_file() const; ///< Get the full 3ds file info - Thread Unsafe Version
+
   private:
     std::string m_filename;
     Lib3dsFile *m_file;
@@ -148,6 +152,24 @@ namespace Zeni {
 
     Point3f m_scale, m_rotate, m_translate;
     float m_rotate_angle;
+    
+    class Loader : public Task {
+      Loader(const Loader &);
+      Loader & operator=(const Loader &);
+      
+    public:
+      Loader(Model &model) : m_model(model) {}
+      
+      int function();
+      
+    private:
+      Model &m_model;
+    };
+    
+    void load();
+    
+    mutable Loader m_loader;
+    mutable Runonce_Computation m_loader_op;
   };
 
   struct Model_Init_Failure : public Error {

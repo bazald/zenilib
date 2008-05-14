@@ -47,10 +47,11 @@ namespace Zeni {
   {
   }
 
-  Font::Font(const bool &bold, const bool &italic, const int &glyph_height)
+  Font::Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name)
     : m_bold(bold),
     m_italic(italic),
-    m_glyph_height(glyph_height)
+    m_glyph_height(glyph_height),
+    m_font_name(font_name)
   {
   }
 
@@ -101,7 +102,7 @@ namespace Zeni {
   }
 
   Font_GL::Font_GL(const std::string &codename, const bool &bold, const bool &italic, const int &glyph_height)
-    : Font(bold, italic, glyph_height),
+    : Font(bold, italic, glyph_height, codename),
     m_font_height(0)
   {
     static const string directory = "fonts/", extension = ".ttf";
@@ -238,22 +239,22 @@ NEXT_LINE:
   }
 
   Font_DX9::Font_DX9(const std::string &codename, const bool &bold, const bool &italic, const int &glyph_height)
-    : Font(bold, italic, glyph_height), 
+    : Font(bold, italic, glyph_height, codename), 
     font(0), 
     resized(0), 
     ratio(0)
   {
     if(FAILED(D3DXCreateFont(dynamic_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device(),
-      glyph_height,
+      get_text_height() * 25 / 18, // !!HACK!! Converting 72 DPI to 100 DPI?
       0,
-      bold ? FW_BOLD : FW_REGULAR,
+      is_bold() ? FW_BOLD : FW_REGULAR,
       0,
-      italic ? TRUE : FALSE,
+      is_italic() ? TRUE : FALSE,
       DEFAULT_CHARSET,
-      OUT_DEFAULT_PRECIS,
-      DEFAULT_QUALITY,
+      OUT_TT_ONLY_PRECIS, //OUT_DEFAULT_PRECIS,
+      ANTIALIASED_QUALITY, //DEFAULT_QUALITY,
       DEFAULT_PITCH | FF_DONTCARE,
-      codename.c_str(),
+      get_font_name().c_str(),
       &font)))
       throw Font_Init_Failure();
   }
@@ -290,14 +291,16 @@ NEXT_LINE:
 
     LPD3DXFONT ptr = font;
     int x_diff = 0, y_diff = 0;
-    float x_scale = 1.0f, y_scale = 1.0f;
+    
+    // !!FIXME!!
 
     D3DVIEWPORT9 vp;
-    if(vdx.get_d3d_device()->GetViewport(&vp) == S_OK) {
-      /*x_scale = float(vp.Width) / Video::get_reference().get_screen_width();*/
-      y_scale = float(vp.Height) / Video::get_reference().get_screen_height();
+    if(FAILED(vdx.get_d3d_device()->GetViewport(&vp)))
+      throw Font_Init_Failure();
+    else {
+      const float y_scale = float(vp.Height) / Video::get_reference().get_screen_height();
 
-      if(/*x_scale != 1.0f ||*/ y_scale != 1.0f) {
+      if(y_scale != 1.0f) {
         if(ratio == y_scale)
           ptr = resized;
         else {
@@ -306,11 +309,31 @@ NEXT_LINE:
 
           ratio = y_scale;
 
-          D3DXFONT_DESCA desc;
-          font->GetDesc(&desc);
-          desc.Height = int(desc.Height * ratio);
-
-          if(FAILED(D3DXCreateFontIndirect(dynamic_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device(), &desc, &resized))) {
+//#ifdef UNICODE
+//          D3DXFONT_DESCW desc;
+//#else
+//          D3DXFONT_DESCA desc;
+//#endif
+//          if(FAILED(font->GetDesc(&desc))) {
+//            ratio = 0;
+//            resized = 0;
+//            throw Font_Init_Failure();
+//          }
+//          desc.Height = int(desc.Height * ratio);
+//
+//          if(FAILED(D3DXCreateFontIndirect(vdx.get_d3d_device(), &desc, &resized))) {
+            if(FAILED(D3DXCreateFont(vdx.get_d3d_device(),
+                  get_text_height() * 25 / 18, // !!HACK!! Converting 72 DPI to 100 DPI?
+                  0,
+                  is_bold() ? FW_BOLD : FW_REGULAR,
+                  0,
+                  is_italic() ? TRUE : FALSE,
+                  DEFAULT_CHARSET,
+                  OUT_TT_ONLY_PRECIS, //OUT_DEFAULT_PRECIS,
+                  ANTIALIASED_QUALITY, //DEFAULT_QUALITY,
+                  DEFAULT_PITCH | FF_DONTCARE,
+                  get_font_name().c_str(),
+                  &resized))) {
             ratio = 0;
             resized = 0;
             throw Font_Init_Failure();
@@ -320,28 +343,14 @@ NEXT_LINE:
         }
       }
 
-      x_diff += vp.X;
-      y_diff += vp.Y;
+      x_diff = vp.X + int(x * y_scale);
+      y_diff = vp.Y + int(y * y_scale);
     }
 
-    RECT rect;    
+    RECT rect = {0, 0, 0, 0};
     ptr->DrawText(NULL, text.c_str(), -1, &rect, DT_CALCRECT, color2);
 
-    int x_scaled = int(x * x_scale), y_scaled = int(y * y_scale);
-    switch(justify) {
-    case ZENI_CENTER:
-      x_diff += x_scaled - (rect.left + rect.right) / 2;
-      y_diff += y_scaled - rect.top;
-      break;
-    case ZENI_RIGHT:
-      x_diff += x_scaled - rect.right;
-      y_diff += y_scaled - rect.top;
-      break;
-    case ZENI_LEFT:
-    default:
-      x_diff += x_scaled - rect.left;
-      y_diff += y_scaled - rect.top;
-    }
+    x_diff -= rect.right * justify / 2;
 
     rect.left += x_diff;
     rect.right += x_diff;

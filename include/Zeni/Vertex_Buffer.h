@@ -59,6 +59,7 @@
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Vertex3f.h>
+#include <Zeni/Video_GL.h>
 
 #include <vector>
 
@@ -95,10 +96,10 @@ namespace Zeni {
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
-    virtual void prerender() = 0; ///< Create the vertex buffer in the GPU/VPU
     virtual void render() = 0; ///< Render the Vertex_Buffer
 
   protected:
+    virtual void prerender() = 0; ///< Create the vertex buffer in the GPU/VPU
 
     inline int num_vertices_c() const;
     inline int num_vertices_cm() const;
@@ -126,16 +127,19 @@ namespace Zeni {
     Vertex_Buffer_GL();
     virtual ~Vertex_Buffer_GL();
 
-    virtual void prerender();
     virtual void render();
 
   private:
+    virtual void prerender();
+    
     inline int vertex_size() const;
     inline int normal_size() const;
     inline int color_size() const;
     inline int texel_size() const;
 
     GLuint m_vbuf[6];
+    
+    static PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
   };
 
 #endif
@@ -146,10 +150,11 @@ namespace Zeni {
     Vertex_Buffer_DX9();
     virtual ~Vertex_Buffer_DX9();
 
-    virtual void prerender();
     virtual void render();
 
   private:
+    virtual void prerender();
+    
     inline int vertex_c_size() const;
     inline int vertex_t_size() const;
 

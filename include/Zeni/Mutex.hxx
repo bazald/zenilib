@@ -30,15 +30,21 @@
 #define ZENI_MUTEX_HXX
 
 #include <Zeni/Mutex.h>
+#include <cassert>
 
 namespace Zeni {
   
-  void Mutex::lock() {
-    if(SDL_mutexP(m_impl))
-      throw Mutex_Lock_Failure();
-  }
-  
   void Mutex::unlock() {
+#ifndef NDEBUG
+    {
+      Semaphore::Down down(self_lock);
+      
+      assert(locking_thread == SDL_ThreadID());
+    
+      locking_thread = 0;
+    }
+#endif
+
     if(SDL_mutexV(m_impl))
       throw Mutex_Unlock_Failure();
   }

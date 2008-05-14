@@ -36,6 +36,10 @@ namespace Zeni {
   bool Font::is_bold() const {
     return m_bold;
   }
+  
+  const std::string & Font::get_font_name() const {
+    return m_font_name;
+  }
 
   bool Font::is_italic() const {
     return m_italic;

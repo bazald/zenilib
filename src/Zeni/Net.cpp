@@ -188,7 +188,7 @@ namespace Zeni {
   }
   
   void UDP_Socket::send(const IPaddress &ip, const std::string &data) {
-    send(ip, data.c_str(), int(data.size()));
+    UDP_Socket::send(ip, data.c_str(), int(data.size()));
   }
 
   int UDP_Socket::receive(IPaddress &ip, const void * const &data, const int &num_bytes) {
@@ -218,6 +218,194 @@ namespace Zeni {
   }
   
   int UDP_Socket::receive(IPaddress &ip, std::string &data) {
+    int retval = UDP_Socket::receive(ip, data.c_str(), int(data.size()));
+    
+    if(int(data.size()) > retval) {
+      data[retval] = '\0';
+      data.resize(retval);
+    }
+    
+    return retval;
+  }
+  
+  Split_UDP_Socket::Chunk_Set::Chunk_Set(const IPaddress &sender,
+                                         const Nonce &incoming,
+                                         const unsigned short &num_chunks,
+                                         const unsigned short &which,
+                                         Chunk &chunk)
+    : ip(sender),
+      nonce(incoming),
+      chunks(num_chunks)
+  {
+    assert(num_chunks > which);
+    
+    if(num_chunks > which)
+      chunks[which] = chunk;
+  }
+  
+  bool Split_UDP_Socket::Chunk_Set::add_chunk(const IPaddress &sender,
+                                              const Nonce &incoming,
+                                              const unsigned short &num_chunks,
+                                              const unsigned short &which,
+                                              Chunk &chunk) {
+    if(ip == sender &&
+       nonce == incoming &&
+       chunks.size() == num_chunks &&
+       chunks.size() > which) {
+      if(!chunks[which].data)
+        chunks[which] = chunk;
+      return true;
+    }
+    
+    return false;
+  }
+  
+  bool Split_UDP_Socket::Chunk_Set::complete() const {
+    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
+      if(!it->data)
+        return false;
+    
+    return true;
+  }
+  
+  Split_UDP_Socket::Chunk Split_UDP_Socket::Chunk_Set::receive() const {
+    Chunk packet;
+    
+    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
+      packet.size += it->size;
+    
+    char * dst = new char [packet.size];
+    packet.data = dst;
+    
+    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it) {
+      memcpy(dst, it->data, it->size);
+      dst += it->size;
+    }
+    
+    return packet;
+  }
+  
+  const Split_UDP_Socket::Chunk_Set * Split_UDP_Socket::Chunk_Collector::add_chunk(const IPaddress &sender,
+                                                                                   const Nonce &incoming,
+                                                                                   const unsigned short &num_chunks,
+                                                                                   const unsigned short &which,
+                                                                                   Chunk &chunk) {
+    // Attempt to complete an existing partial packet
+    for(list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it) {
+      if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk))
+        if((*it)->complete())
+          return *it;
+        else
+          return 0;
+    }
+    
+    if(int(chunk_sets.size()) == m_size) // LRU Eviction
+      chunk_sets.pop_back();
+    
+    {// Receive fresh chunk
+      Chunk_Set *cs = new Chunk_Set(sender, incoming, num_chunks, which, chunk);
+      chunk_sets.push_front(cs);
+      if(cs->complete())
+        return cs;
+    }
+    
+    return 0;
+  }
+  
+  Split_UDP_Socket::Split_UDP_Socket(const unsigned short &port, const unsigned short &chunk_sets, const unsigned short &chunk_size)
+    : UDP_Socket(port),
+      m_chunk_collector(chunk_sets),
+      m_chunk_size(chunk_size)
+  {
+    assert(chunk_size);
+  }
+  
+  void Split_UDP_Socket::send(const IPaddress &ip, const void * const &data, const int &num_bytes) {
+    ++m_nonce_send;
+    
+    const unsigned short offset = static_cast<unsigned short>(m_nonce_send.size()) + 2u * sizeof(unsigned short);
+    const unsigned short split_size = m_chunk_size - offset;
+    const unsigned short num_full_chunks = static_cast<unsigned short>(num_bytes) / split_size;
+    const unsigned short partial_chunk = static_cast<unsigned short>(num_bytes) % split_size;
+    const unsigned short num_chunks = num_full_chunks + (partial_chunk ? 1u : 0u);
+    
+    const char *ptr = reinterpret_cast<const char *>(data);
+    for(unsigned short chunk = 0; chunk < num_full_chunks; ++chunk, ptr += split_size) {
+      string s;
+      
+      {
+        ostringstream os;
+        serialize(serialize(m_nonce_send.serialize(os), num_chunks), chunk);
+        s = os.str();
+      }
+      
+      s.resize(m_chunk_size);
+      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, split_size);
+      
+      UDP_Socket::send(ip, s);
+    }
+    
+    if(partial_chunk) {
+      string s;
+      
+      {
+        ostringstream os;
+        serialize(serialize(m_nonce_send.serialize(os), num_chunks), num_full_chunks);
+        s = os.str();
+      }
+      
+      s.resize(offset + partial_chunk);
+      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
+      
+      UDP_Socket::send(ip, s);
+    }
+  }
+  
+  void Split_UDP_Socket::send(const IPaddress &ip, const std::string &data) {
+    send(ip, data.c_str(), int(data.size()));
+  }
+
+  int Split_UDP_Socket::receive(IPaddress &ip, const void * const &data, const int &num_bytes) {
+    for(int retval = -1; retval;) {
+      string s;
+      s.resize(m_chunk_size);
+      
+      retval = UDP_Socket::receive(ip, s);
+      if(retval) {
+        Nonce nonce;
+        unsigned short num_chunks;
+        unsigned short which;
+        Chunk chunk;
+        
+        {
+          istringstream is(s);
+          unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
+          
+          const unsigned short offset = static_cast<unsigned short>(nonce.size()) + 2u * sizeof(unsigned short);
+          
+          chunk.size = s.size() - offset;
+          chunk.data = new char [chunk.size];
+          memcpy(chunk.data, s.c_str() + offset, chunk.size);
+        }
+        
+        const Chunk_Set * cs = m_chunk_collector.add_chunk(ip, nonce, num_chunks, which, chunk);
+        if(!cs)
+          continue;
+        
+        Chunk packet = cs->receive();
+        if(num_bytes >= int(packet.size)) {
+          memcpy(const_cast<void *>(data), packet.data, packet.size);
+          return int(packet.size);
+        }
+        
+        return 0;
+      }
+    }
+    
+    return 0;
+  }
+  
+  int Split_UDP_Socket::receive(IPaddress &ip, std::string &data) {
     int retval = receive(ip, data.c_str(), int(data.size()));
     
     if(int(data.size()) > retval) {
@@ -227,5 +415,5 @@ namespace Zeni {
     
     return retval;
   }
-
+  
 }

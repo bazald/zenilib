@@ -29,14 +29,14 @@
 #ifndef ZENI_NET_PRIMITIVES_H
 #define ZENI_NET_PRIMITIVES_H
 
-#include "Net.h"
-
 #include "Coordinate.h"
 #include "Vector3f.h"
 #include "Quaternion.h"
 
 #include "Vector3f.hxx"
 #include "Quaternion.hxx"
+
+#include <SDL/SDL_net.h>
 
 #include <string>
 #include <sstream>

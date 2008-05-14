@@ -93,6 +93,9 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   class Texture_GL : public Texture {
+    Texture_GL(const Texture_GL &);
+    Texture_GL & operator=(const Texture_GL &);
+    
   public:
     Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_GL &video);
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
@@ -101,9 +104,14 @@ namespace Zeni {
     virtual void apply_texture() const;
 
   private:
-    void build_from_surface(SDL_Surface *surface, const bool &repeat);
+    static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat);
 
-    GLuint m_texture_id;
+    mutable GLuint m_texture_id;
+    
+    void load(const std::string &filename, const bool &repeat) const;
+    
+    const std::string m_filename;
+    const bool m_repeat;
   };
 #endif
 
@@ -116,7 +124,9 @@ namespace Zeni {
     virtual void apply_texture() const;
 
   private:
-    IDirect3DTexture9 *m_texture;
+    mutable IDirect3DTexture9 *m_texture;
+    
+    void load(const std::string &filename, const bool &repeat) const;
   };
 #endif
 

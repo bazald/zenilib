@@ -56,10 +56,13 @@
 #ifndef ZENI_TIMER_H
 #define ZENI_TIMER_H
 
+#include <Zeni/Mutex.h>
+
 namespace Zeni {
 
   class Time {
   public:
+    Time(); ///< Initialize to the current time
     Time(const int &ticks);
     inline Time & operator=(const int &ticks);
 
@@ -89,13 +92,14 @@ namespace Zeni {
     static Timer & get_reference(); ///< Get access to the singleton
 
     // Accessors
-    inline int get_ticks() const; ///< Get the number of ticks passed since instantiation
-    inline float get_seconds() const; ///< Get the number of seconds passed since instantiation
-    inline Time get_time() const; ///< Get the current Time
+    inline int get_ticks(); ///< Get the number of ticks passed since instantiation
+    inline float get_seconds(); ///< Get the number of seconds passed since instantiation
+    inline Time get_time(); ///< Get the current Time
 
   private:
     inline void update();
 
+    Mutex ticks_mutex;
     int m_ticks; // Wraps at around 49 days
   };
 

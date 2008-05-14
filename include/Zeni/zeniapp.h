@@ -86,24 +86,6 @@ namespace Zeni {
     virtual ~Gamestate_One(); ///< Your last destructor, excluding statics, globals, ...
 
     virtual void perform_logic(); ///< Your game logic, on a frame by frame basis; Should probably be used to instantiate other game states, using some sort of static/global counter
-
-  private:
-    virtual void render(); ///< Your frame rendering function; It can be left blank if the sole purpose of this class is to instantiate one or more other classes
-
-    /// Video_Options stores information used to control the creation of the Video system and Textures
-    struct Video_Options {
-      VIDEO_MODE vm;
-      int anisotropy, multisampling;
-      bool vsync, bilinear, mipmapping, fullscreen;
-      int width, height;
-    };
-
-    /// A basic INI parser for Video_Options
-    Video_Options handle_video_options(std::istream &is);
-  };
-
-  struct Corrupt_INI : public Error {
-    Corrupt_INI() : Error("Corrupt INI file could not be parsed!") {}
   };
 
 }

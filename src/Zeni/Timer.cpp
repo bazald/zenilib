@@ -37,6 +37,11 @@ namespace Zeni {
   {
   }
 
+  Time::Time()
+    : m_ticks(Timer::get_reference().get_ticks())
+  {
+  }
+
   Timer::Timer() {
     // Ensure Core is initialized
     Core::get_reference();
@@ -44,7 +49,6 @@ namespace Zeni {
 
   Timer & Timer::get_reference() {
     static Timer timer;
-    timer.update();
     return timer;
   }
 }

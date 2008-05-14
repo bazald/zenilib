@@ -106,8 +106,6 @@ namespace Zeni {
     Sound_Buffer(const Sound_Buffer &rhs); ///< Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer(const std::string &filename); ///< Load a Sound_Buffer from a file.  Only wav is guaranteed to be supported.
     ~Sound_Buffer();
-    
-    inline bool loaded() const; ///< Test to see if the Sound_Buffer is done loading
 
     inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
 
@@ -127,11 +125,10 @@ namespace Zeni {
     public:
       Loader(const std::string &filename);
       
-      virtual int run();
+      virtual int function();
       
       ALuint m_buffer;
       const std::string m_filename;
-      bool done;
     };
     
     void finish_loading() const;

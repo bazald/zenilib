@@ -76,6 +76,7 @@ namespace Zeni {
     void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
 
   private:
+    
     void init();
     void uninit();
 
@@ -83,7 +84,6 @@ namespace Zeni {
     stdext::hash_map<unsigned long, Font *> m_fonts;
 
     std::string m_filename;
-    static bool m_loaded;
   };
 
   struct Fonts_Init_Failure : Error {

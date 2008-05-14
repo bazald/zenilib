@@ -80,7 +80,7 @@ namespace Zeni {
 
       Lib3dsMaterial *material = 0;
       if(face->material[0]) {
-        material=lib3ds_file_material_by_name(model.get_file(), face->material);
+        material=lib3ds_file_material_by_name(model.thun_get_file(), face->material);
         if(!material)
           throw Model_Render_Failure();
       }
@@ -140,9 +140,9 @@ namespace Zeni {
     }
   }
 
-  static void vflip_texels(const Model &model, Lib3dsNode *node = 0) {
+  void vflip_texels(const Model &model, Lib3dsNode *node = 0) {
     if(!node) {
-      for(node=model.get_file()->nodes; node; node=node->next)
+      for(node=model.thun_get_file()->nodes; node; node=node->next)
         vflip_texels(model, node);
       return;
     }
@@ -152,7 +152,7 @@ namespace Zeni {
 
     // End recursion // Begin vflip
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.get_file(), node->name);
+    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
     if(!mesh)
       return;
 
@@ -160,6 +160,10 @@ namespace Zeni {
       (*texel)[1] = 1.0f - (*texel)[1];
   }
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4355 )
+#endif
   Model::Model(const std::string &filename)
     : m_filename(filename),
     m_file(0), 
@@ -168,20 +172,10 @@ namespace Zeni {
     m_scale(1.0f, 1.0f, 1.0f), 
     m_rotate(0.0f, 0.0f, 1.0f), 
     m_translate(0.0f, 0.0f, 0.0f), 
-    m_rotate_angle(0.0f)
+    m_rotate_angle(0.0f),
+    m_loader(*this),
+    m_loader_op(m_loader)
   {
-    m_file = lib3ds_file_load(m_filename.c_str());
-    if(!m_file)
-      throw Model_Init_Failure();
-
-    set_keyframe(m_keyframe);
-
-    visit_nodes(m_extents);
-
-    m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
-
-    // Flip Textures Vertically - !!HACK!!
-    vflip_texels(*this);
   }
 
   Model::Model(const Model &rhs)
@@ -193,23 +187,18 @@ namespace Zeni {
     m_scale(rhs.m_scale),
     m_rotate(rhs.m_rotate),
     m_translate(rhs.m_translate),
-    m_rotate_angle(rhs.m_rotate_angle)
+    m_rotate_angle(rhs.m_rotate_angle),
+    m_loader(*this),
+    m_loader_op(m_loader)
   {
-    m_file = lib3ds_file_load(m_filename.c_str());
-    if(!m_file)
-      throw Model_Init_Failure();
-
-    set_keyframe(m_keyframe);
-
-    visit_nodes(m_extents);
-
-    m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
-
-    // Flip Textures Vertically - !!HACK!!
-    vflip_texels(*this);
   }
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
   Model::~Model() {
+    m_loader.finish();
+    
     if(m_unrenderer)
       visit_nodes(*m_unrenderer);
     delete m_unrenderer;
@@ -218,18 +207,35 @@ namespace Zeni {
   }
 
   Model & Model::operator =(const Model &rhs) {
-    Model lhs(rhs);
+    Model *lhs = 0;
+    
+    try {
+      GUARANTEED_FINISHED_BEGIN(rhs.m_loader);
+      lhs = new Model(rhs);
+      GUARANTEED_FINISHED_END();
 
-    std::swap(m_filename, lhs.m_filename);
-    std::swap(m_file, lhs.m_file);
-    std::swap(m_keyframe, lhs.m_keyframe);
-    std::swap(m_unrenderer, lhs.m_unrenderer);
-    std::swap(m_scale, lhs.m_scale);
-    std::swap(m_rotate, lhs.m_rotate);
-    std::swap(m_translate, lhs.m_translate);
-    std::swap(m_rotate_angle, lhs.m_rotate_angle);
+      GUARANTEED_FINISHED_BEGIN(lhs->m_loader);
+      GUARANTEED_FINISHED_BEGIN(m_loader);
+      std::swap(m_filename, lhs->m_filename);
+      std::swap(m_file, lhs->m_file);
+      std::swap(m_keyframe, lhs->m_keyframe);
+      std::swap(m_unrenderer, lhs->m_unrenderer);
+      std::swap(m_scale, lhs->m_scale);
+      std::swap(m_rotate, lhs->m_rotate);
+      std::swap(m_translate, lhs->m_translate);
+      std::swap(m_rotate_angle, lhs->m_rotate_angle);
+      GUARANTEED_FINISHED_END();
+      GUARANTEED_FINISHED_END();
+    }
+    catch(...) {
+      delete lhs;
+      throw;
+    }
+    
+    delete lhs;
 
     return *this;
+    
   }
 
   Point3f Model::get_position() const {
@@ -259,6 +265,8 @@ namespace Zeni {
   };
 
   void Model::render_to(Video_GL &) const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
@@ -276,6 +284,8 @@ namespace Zeni {
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+    
+    GUARANTEED_FINISHED_END();
   }
 
   void Model_Renderer_GL::operator()(const Model &model, Lib3dsNode *node) {
@@ -283,7 +293,7 @@ namespace Zeni {
       !strcmp(node->name, "$$$DUMMY"))
       return;
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.get_file(), node->name);
+    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
     if(!mesh)
       throw Model_Render_Failure();
 
@@ -331,6 +341,8 @@ namespace Zeni {
   };
 
   void Model::render_to(Video_DX9 &vdx) const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
@@ -349,6 +361,8 @@ namespace Zeni {
 
     vdx.get_matrix_stack()->Pop();
     vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
+    
+    GUARANTEED_FINISHED_END();
   }
 
   void Model_Renderer_DX9::operator()(const Model &model, Lib3dsNode *node) {
@@ -356,7 +370,7 @@ namespace Zeni {
       !strcmp(node->name, "$$$DUMMY"))
       return;
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.get_file(), node->name);
+    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
     if(!mesh)
       throw Model_Render_Failure();
 
@@ -404,7 +418,7 @@ namespace Zeni {
       !strcmp(node->name, "$$$DUMMY"))
       return;
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.get_file(), node->name);
+    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
 
     if(!mesh)
       return;
@@ -427,6 +441,26 @@ namespace Zeni {
 
         started = true;
       }
+  }
+  
+  int Model::Loader::function() {
+    m_model.load();
+    return 0;
+  }
+  
+  void Model::load() {
+    m_file = lib3ds_file_load(m_filename.c_str());
+    if(!m_file)
+      throw Model_Init_Failure();
+
+    lib3ds_file_eval(m_file, m_keyframe);
+
+    visit_nodes(m_extents);
+
+    m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
+
+    // Flip Textures Vertically - !!HACK!!
+    vflip_texels(*this);
   }
 
 }

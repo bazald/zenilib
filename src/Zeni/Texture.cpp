@@ -151,31 +151,34 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, Video_GL &)
-    : m_texture_id(0)
+    : m_texture_id(0),
+      m_filename(filename),
+      m_repeat(repeat)
   {
-    SDL_Surface *surface = IMG_Load(filename.c_str());
-    if(!surface)
-      throw Texture_Init_Failure();
-
-    build_from_surface(surface, repeat);
+    //load(m_filename, m_repeat);
   }
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
-    : m_texture_id(0)
+    : m_texture_id(build_from_surface(surface, repeat)),
+      m_repeat(repeat)
   {
-    build_from_surface(surface, repeat);
   }
 
   Texture_GL::~Texture_GL() {
-    glDeleteTextures(1, &m_texture_id);
+    if(m_texture_id)
+      glDeleteTextures(1, &m_texture_id);
   }
 
   void Texture_GL::apply_texture() const {
+    if(!m_texture_id)
+      load(m_filename, m_repeat);
+    
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 
-  void Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+  GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+    GLuint texture_id = 0;
     bool width_pow2 = false, height_pow2 = false;
 
     for(int i = 1; i; i <<= 1) {
@@ -229,8 +232,8 @@ namespace Zeni {
 
     // Allocate a unique id for the texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glGenTextures(1, &m_texture_id);
-    glBindTexture(GL_TEXTURE_2D, m_texture_id);
+    glGenTextures(1, &texture_id);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
@@ -263,41 +266,34 @@ namespace Zeni {
       glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
 
     SDL_FreeSurface(surface);
+    
+    return texture_id;
   }
+  
+  void Texture_GL::load(const std::string &filename, const bool &repeat) const {
+    SDL_Surface *surface;
+    
+    {
+      surface = IMG_Load(filename.c_str());
+      if(!surface)
+        throw Texture_Init_Failure();
+    }
+    
+    m_texture_id = build_from_surface(surface, repeat);
+  }
+  
 #endif
 
 #ifndef DISABLE_DX9
-  Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat, Video_DX9 &video) 
+  Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat, Video_DX9 &) 
     : m_texture(0)
   {
-    video.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-    video.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-    
-    if(Textures::get_anisotropic_filtering()) {
-      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > video.get_maximum_anisotropy())
-        throw Invalid_Anisotropy_Setting();
-
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, int(Textures::get_anisotropic_filtering()));
-    }
-    else if(Textures::get_bilinear_filtering()) {
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-    }
-    else {
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-      video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-    }
-
-    video.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
-
-    if(FAILED(D3DXCreateTextureFromFile(static_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device(), filename.c_str(), &m_texture)))
-      throw Texture_Init_Failure();
+    load(filename, repeat);
   }
 
   Texture_DX9::~Texture_DX9() {
-    m_texture->Release();
+    if(m_texture)
+      m_texture->Release();
   }
 
   void Texture_DX9::apply_texture() const {
@@ -320,6 +316,35 @@ namespace Zeni {
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 
     vdx.get_d3d_device()->SetTexture(0, m_texture);
+  }
+  
+  void Texture_DX9::load(const std::string &filename, const bool &repeat) const {
+    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    
+    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+    
+    if(Textures::get_anisotropic_filtering()) {
+      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
+        throw Invalid_Anisotropy_Setting();
+
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, int(Textures::get_anisotropic_filtering()));
+    }
+    else if(Textures::get_bilinear_filtering()) {
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+    }
+    else {
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+    }
+
+    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
+
+    if(FAILED(D3DXCreateTextureFromFile(vr.get_d3d_device(), filename.c_str(), &m_texture)))
+      throw Texture_Init_Failure();
   }
 #endif
 

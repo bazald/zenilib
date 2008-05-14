@@ -278,12 +278,10 @@ namespace Zeni {
   }
 
   Vertex_Buffer_GL::~Vertex_Buffer_GL() {
-    Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
-
     if(m_vbuf[0])
-      vgl.pglDeleteBuffersARB(3, m_vbuf);
+      m_pglDeleteBuffersARB(3, m_vbuf);
     if(m_vbuf[3])
-      vgl.pglDeleteBuffersARB(3, m_vbuf+3);
+      m_pglDeleteBuffersARB(3, m_vbuf+3);
   }
 
   void Vertex_Buffer_GL::prerender() {
@@ -354,6 +352,9 @@ namespace Zeni {
       free(p_verts);
       free(p_normals);
       free(p_colors);
+      
+      if(!m_pglDeleteBuffersARB)
+        m_pglDeleteBuffersARB = vgl.get_pglDeleteBuffersARB();
     }
 
     if(vbuf_t_size) {
@@ -451,6 +452,8 @@ namespace Zeni {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
   }
+  
+  PFNGLDELETEBUFFERSARBPROC Vertex_Buffer_GL::m_pglDeleteBuffersARB = 0;
 
 #endif
 #ifndef DISABLE_DX9

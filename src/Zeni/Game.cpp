@@ -26,7 +26,8 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Game.h>
+#include <Zeni/Game.hxx>
+
 #include <Zeni/zeniapp.h>
 
 #include <Zeni/Gamestate.hxx>
@@ -35,17 +36,27 @@
 namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
-    : time(0), ticks_passed(0), fps(0x36), fps_next(0)
+    : time(Timer::get_reference().get_time()), ticks_passed(0), fps(0x36), fps_next(0)
   {
-    // Ensure Core is initialized
-    Core::get_reference();
-
     m_states.push(Gamestate(new Gamestate_One(args)));
   }
 
   Game & Game::get_reference(const std::vector<std::string> * const args) {
     static Game e_game(args);
     return e_game;
+  }
+  
+  void Game::run() {
+    Video &vr = Video::get_reference();
+    
+    for(;;) {
+      for(SDL_Event event; SDL_PollEvent(&event);)
+        on_event(event);
+      
+      perform_logic();
+      
+      vr.render_all();
+    }
   }
 
   void Game::calculate_fps() {

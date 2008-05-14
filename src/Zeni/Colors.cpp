@@ -111,8 +111,11 @@ namespace Zeni {
     Color tmp;
     short a, r, g, b;
     string name;
-    while(colorin >> name >> hex >> a >> r >> g >> b)
-      set_color(name, Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f));
+    while(colorin >> name >> hex >> a >> r >> g >> b) {
+      unsigned long id = Resource::get_reference().assign();
+      m_color_lookup[name] = id;
+      m_color[id] = Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f);
+    }
   }
 
 }

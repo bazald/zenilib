@@ -40,18 +40,6 @@ namespace Zeni {
     return m_buffer;
   }
 
-  bool Sound_Buffer::loaded() const {
-    if(m_loader)
-      if(m_loader->done) {
-        finish_loading();
-        return true;
-      }
-      else
-        return false;
-    
-    return true;
-  }
-
   void Sound_Source::set_buffer(const Sound_Buffer &
 #ifndef DISABLE_AL
     buffer

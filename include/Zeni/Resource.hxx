@@ -34,6 +34,8 @@
 namespace Zeni {
 
   unsigned long Resource::assign() {
+    Mutex::Lock lock(m_mutex);
+    
     unsigned long rv = ++m_current;
     if(!rv) {
       --m_current;

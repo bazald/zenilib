@@ -169,12 +169,11 @@ namespace Zeni {
   }
   
   Sound_Buffer::Loader::Loader(const std::string &filename)
-    : m_filename(filename),
-      done(false)
+    : m_filename(filename)
   {
   }
   
-  int Sound_Buffer::Loader::run() {
+  int Sound_Buffer::Loader::function() {
 #ifndef DISABLE_AL
     m_buffer = load_ogg_vorbis(m_filename);
     if(m_buffer == AL_NONE)
@@ -185,8 +184,6 @@ namespace Zeni {
       return -1;
     }
 #endif
-
-    done = true;
 
     return 0;
   }
@@ -205,19 +202,20 @@ namespace Zeni {
       throw Sound_Buffer_Init_Failure();
   }
 
-  static Sound_Buffer g_Hello_World_Buffer;
-
   Sound_Source::Sound_Source()
     : m_source(AL_NONE)
   {
-    init(g_Hello_World_Buffer.get_id());
+    static Sound_Buffer hello_world_buffer;
+    init(hello_world_buffer.get_id());
   }
 
   Sound_Source::Sound_Source(const Sound_Source &rhs)
     : m_source(rhs.m_source)
   {
     rhs.m_source = AL_NONE;
-    const_cast<Sound_Source &>(rhs).init(g_Hello_World_Buffer.get_id());
+    
+    static Sound_Buffer hello_world_buffer;
+    const_cast<Sound_Source &>(rhs).init(hello_world_buffer.get_id());
   }
 
   Sound_Source::Sound_Source(const Sound_Buffer &buffer, const float &pitch, const float &gain,
