@@ -30,6 +30,7 @@
 #define ZENI_NET_PRIMITIVES_H
 
 #include "Coordinate.h"
+#include "Core.h"
 #include "Vector3f.h"
 #include "Quaternion.h"
 

@@ -30,6 +30,7 @@
 
 #include <Zeni/Sound.hxx>
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Mutex.hxx>
 #include <Zeni/Resource.hxx>
 #include <Zeni/Vector3f.hxx>
 

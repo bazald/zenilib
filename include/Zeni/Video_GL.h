@@ -133,10 +133,12 @@ namespace Zeni {
 
     int m_maximum_anisotropy;
     bool m_vertex_buffers, m_zwrite;
-    
+
+#ifdef MANUAL_GL_VSYNC_DELAY
     Time m_buffer_swap_end_time;
     float m_time_taken;
     float m_weight_new;
+#endif
   };
 
 }

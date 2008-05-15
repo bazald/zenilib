@@ -27,11 +27,13 @@
 */
 
 #include <Zeni/Model.hxx>
+
 #include <Zeni/Vertex_Buffer.h>
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Color.hxx>
 #include <Zeni/Material.hxx>
+#include <Zeni/Mutex.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video_DX9.hxx>
 

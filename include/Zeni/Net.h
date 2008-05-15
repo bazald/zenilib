@@ -94,7 +94,9 @@
 #include <Zeni/Core.h>
 
 #include <SDL/SDL_net.h>
+#include <cassert>
 #include <string>
+#include <list>
 
 struct SDL_Thread;
 
@@ -206,7 +208,7 @@ namespace Zeni {
       }
       
       mutable size_t size;
-      mutable void * data;
+      mutable char * data;
     };
     
     class Chunk_Set {

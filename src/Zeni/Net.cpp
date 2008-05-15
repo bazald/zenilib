@@ -29,8 +29,10 @@
 #include <Zeni/Net.hxx>
 
 #include <SDL/SDL.h>
+#include <vector>
+#include <list>
 
-using std::string;
+using namespace std;
 
 namespace Zeni {
 
@@ -314,8 +316,8 @@ namespace Zeni {
   
   Split_UDP_Socket::Split_UDP_Socket(const unsigned short &port, const unsigned short &chunk_sets, const unsigned short &chunk_size)
     : UDP_Socket(port),
-      m_chunk_collector(chunk_sets),
-      m_chunk_size(chunk_size)
+      m_chunk_size(chunk_size),
+      m_chunk_collector(chunk_sets)
   {
     assert(chunk_size);
   }
