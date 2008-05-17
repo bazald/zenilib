@@ -125,7 +125,9 @@ namespace Zeni {
 
   protected:
     virtual void init();
-    virtual void reinit();
+    bool init_device();
+    void init_context();
+    void destroy_device();
     virtual void uninit();
 
   private:

@@ -206,7 +206,7 @@ namespace Zeni {
   bool Video::g_screen_full = false;
   bool Video::g_screen_show_frame = true;
   bool Video::g_initialized = false;
-  bool Video::g_backface_culling = true;
+  bool Video::g_backface_culling = false;
   bool Video::g_lighting = false;
   bool Video::g_normal_interp = false;
   bool Video::g_vertical_sync = false;

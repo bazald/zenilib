@@ -385,7 +385,7 @@ namespace Zeni {
 
     // Finish with a few function calls
     set_2d();
-    set_backface_culling(false);
+    set_backface_culling(get_backface_culling());
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
     set_ambient_lighting(Color());

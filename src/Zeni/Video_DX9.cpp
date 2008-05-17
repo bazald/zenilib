@@ -74,26 +74,24 @@ namespace Zeni {
     static bool reset = false;
 
     if(reset) {
-      {
-        const HRESULT result = m_d3d_device->TestCooperativeLevel();
-        
-        if(result == D3DERR_DEVICELOST)
-          return;
-        else if(result == D3DERR_DRIVERINTERNALERROR)
-          throw Video_Device_Failure();
-        
-        assert(result == D3DERR_DEVICENOTRESET);
-        
+      const HRESULT result = m_d3d_device->TestCooperativeLevel();
+      
+      if(result == D3DERR_DEVICELOST)
+        return;
+      else if(result == D3DERR_DRIVERINTERNALERROR)
+        throw Video_Device_Failure();
+      
+      if(result == D3DERR_DEVICENOTRESET) {
         if(FAILED(m_d3d_device->Reset(&m_d3d_parameters)))
-          throw Video_Device_Failure(); //return;
+          throw Video_Device_Failure();
       
         reset = false;
 
-        reinit();
+        init_context();
+        
+        Textures::get_reference().reload();
+        Fonts::get_reference().reload();
       }
-
-      Textures::get_reference().reload();
-      Fonts::get_reference().reload();
     }
     
     HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
@@ -112,8 +110,7 @@ namespace Zeni {
       reset = true;
       return;
     }
-    else {
-      assert(result == D3DERR_DEVICEREMOVED);
+    else if(result == D3DERR_DEVICEREMOVED) {
       throw Video_Device_Failure();
     }
 
@@ -341,8 +338,10 @@ namespace Zeni {
     cout << "Initializing DirectX 9" << endl;
 
     m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
-    if(!m_d3d)
+    if(!m_d3d) {
+      uninit();
       throw Video_Init_Failure();
+    }
 
     m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
 
@@ -392,6 +391,15 @@ namespace Zeni {
       m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE;
     m_d3d_parameters.MultiSampleQuality = 0;
 
+    // Initialize the D3D device
+    if(!init_device())
+      throw Video_Init_Failure();
+
+    // Initialize the rendering context
+    init_context();
+  }
+  
+  bool Video_DX9::init_device() {
     DWORD num_quality_levels;
     while(FAILED(m_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, m_d3d_parameters.Windowed, m_d3d_parameters.MultiSampleType, &num_quality_levels))) {
       if(m_d3d_parameters.MultiSampleType <= D3DMULTISAMPLE_2_SAMPLES) {
@@ -414,7 +422,7 @@ namespace Zeni {
       case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; break;
       case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; break;
       case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; break;
-      default: throw Video_Init_Failure();
+      default: return false;
       }
     }
 
@@ -424,23 +432,17 @@ namespace Zeni {
 
         // HARDWARE, MIXED, and SOFTWARE all failed
 
-        uninit();
-
-        throw Video_Init_Failure();
+        return false;
     }
 
     // Set Up Matrix Stack
     D3DXCreateMatrixStack(0, &m_matrix_stack);
     m_matrix_stack->LoadIdentity();
 
-    // Finish with a few function calls
-    set_backface_culling(false);
-    set_lighting(false);
-
-    reinit();
+    return true;
   }
 
-  void Video_DX9::reinit() {
+  void Video_DX9::init_context() {
     // Enable Alpha Blitting
     m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -459,9 +461,10 @@ namespace Zeni {
     set_clear_color_to(m_clear_color);
     set_ambient_lighting(m_ambient_color);
     set_backface_culling(get_backface_culling());
+    set_lighting(get_lighting());
   }
 
-  void Video_DX9::uninit() {
+  void Video_DX9::destroy_device() {
     if(m_matrix_stack)
       m_matrix_stack->Release();
     m_matrix_stack = 0;
@@ -469,6 +472,10 @@ namespace Zeni {
     if(m_d3d_device)
       m_d3d_device->Release();
     m_d3d_device = 0;
+  }
+
+  void Video_DX9::uninit() {
+    destroy_device();
 
     if(m_d3d)
       m_d3d->Release();
