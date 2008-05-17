@@ -81,6 +81,8 @@
 #ifndef ZENI_COORDINATE_H
 #define ZENI_COORDINATE_H
 
+#include <SDL/SDL_stdinc.h>
+
 namespace Zeni {
 
   struct Point2i;
@@ -95,8 +97,8 @@ namespace Zeni {
 
     Point2i interpolate_to(const float &rhs_part, const Point2i &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
-    int x, y;
-    static const int z;
+    Sint32 x, y;
+    static const Sint32 z;
   };
 
   struct Point2f {
@@ -117,7 +119,7 @@ namespace Zeni {
 
     Point3i interpolate_to(const float &rhs_part, const Point3i &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
-    int x, y, z;
+    Sint32 x, y, z;
   };
 
   struct Point3f {

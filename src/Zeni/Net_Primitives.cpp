@@ -105,8 +105,8 @@ namespace Zeni {
   }
 
   string iptoa(const IPaddress &address) {
-    unsigned int host = SDLNet_Read32(&address.host);
-    unsigned short port = SDLNet_Read16(&address.port);
+    Uint32 host = SDLNet_Read32(&address.host);
+    Uint16 port = SDLNet_Read16(&address.port);
 
     return uitoa(host >> 24 & 0xFF) + '.' +
            uitoa(host >> 16 & 0xFF) + '.' +
@@ -151,7 +151,7 @@ namespace Zeni {
     else if(rhs.m_size > m_size)
       return -1;
     
-    int index = m_size - 1;
+    Sint32 index = m_size - 1;
     for(; index > -1; --index) {
       const char &c = m_uid[index];
       const char &rhs_c = rhs.m_uid[index];
@@ -166,7 +166,7 @@ namespace Zeni {
   }
 
   VLUID & VLUID::operator++() { //prefix
-    int index = 0;
+    Uint16 index = 0;
     for(; index < m_size; ++index)
       if(++m_uid[index])
         break;
@@ -209,40 +209,56 @@ namespace Zeni {
 
   /*** Stand-Alone serialization/unserialization functions ***/
   
-  std::ostream & serialize(std::ostream &os, const int &value) {
-    char buf[sizeof(int)];
+  std::ostream & serialize(std::ostream &os, const Sint32 &value) {
+    char buf[sizeof(Sint32)];
     
     SDLNet_Write32(value, buf);
     
-    return os.write(buf, sizeof(int));
+    return os.write(buf, sizeof(Sint32));
   }
   
-  std::ostream & serialize(std::ostream &os, const unsigned int &value) {
-    char buf[sizeof(unsigned int)];
+  std::ostream & serialize(std::ostream &os, const Uint32 &value) {
+    char buf[sizeof(Uint32)];
     
-    SDLNet_Write32(reinterpret_cast<const int &>(value), buf);
+    SDLNet_Write32(reinterpret_cast<const Sint32 &>(value), buf);
     
-    return os.write(buf, sizeof(unsigned int));
+    return os.write(buf, sizeof(Uint32));
   }
   
-  std::ostream & serialize(std::ostream &os, const short &value) {
-    char buf[sizeof(short)];
+  std::ostream & serialize(std::ostream &os, const Sint16 &value) {
+    char buf[sizeof(Sint16)];
     
     SDLNet_Write16(value, buf);
     
-    return os.write(buf, sizeof(short));
+    return os.write(buf, sizeof(Sint16));
   }
   
-  std::ostream & serialize(std::ostream &os, const unsigned short &value) {
-    char buf[sizeof(unsigned short)];
+  std::ostream & serialize(std::ostream &os, const Uint16 &value) {
+    char buf[sizeof(Uint16)];
     
-    SDLNet_Write16(reinterpret_cast<const short &>(value), buf);
+    SDLNet_Write16(reinterpret_cast<const Sint16 &>(value), buf);
     
-    return os.write(buf, sizeof(unsigned short));
+    return os.write(buf, sizeof(Uint16));
+  }
+  
+  std::ostream & serialize(std::ostream &os, const Sint8 &value) {
+    return os.write(reinterpret_cast<const char *>(&value), 1);
+  }
+  
+  std::ostream & serialize(std::ostream &os, const char &value) {
+    return os.write(&value, 1);
+  }
+  
+  std::ostream & serialize(std::ostream &os, const unsigned char &value) {
+    return os.write(reinterpret_cast<const char *>(&value), 1);
   }
   
   std::ostream & serialize(std::ostream &os, const float &value) {
     return os.write(reinterpret_cast<const char * const>(&value), sizeof(float));
+  }
+  
+  std::ostream & serialize(std::ostream &os, const double &value) {
+    return os.write(reinterpret_cast<const char * const>(&value), sizeof(double));
   }
   
   std::ostream & serialize(std::ostream &os, const bool &value) {
@@ -280,48 +296,67 @@ namespace Zeni {
     return os.write(buf, sizeof(IPaddress));
   }
   
-  std::istream & unserialize(std::istream &is, int &value) {
-    char buf[sizeof(int)];
+  std::istream & unserialize(std::istream &is, Sint32 &value) {
+    char buf[sizeof(Sint32)];
     
-    if(is.read(buf, sizeof(int)))
+    if(is.read(buf, sizeof(Sint32)))
       value = SDLNet_Read32(buf);
     
     return is;
   }
   
-  std::istream & unserialize(std::istream &is, unsigned int &value) {
-    char buf[sizeof(unsigned int)];
+  std::istream & unserialize(std::istream &is, Uint32 &value) {
+    char buf[sizeof(Uint32)];
     
-    if(is.read(buf, sizeof(unsigned int))) {
-      const int s_value = SDLNet_Read32(buf);
-      value = reinterpret_cast<const unsigned int &>(s_value);
+    if(is.read(buf, sizeof(Uint32))) {
+      const Sint32 s_value = SDLNet_Read32(buf);
+      value = reinterpret_cast<const Uint32 &>(s_value);
     }
     
     return is;
   }
   
-  std::istream & unserialize(std::istream &is, short &value) {
-    char buf[sizeof(short)];
+  std::istream & unserialize(std::istream &is, Sint16 &value) {
+    char buf[sizeof(Sint16)];
     
-    if(is.read(buf, sizeof(short)))
+    if(is.read(buf, sizeof(Sint16)))
       value = SDLNet_Read16(buf);
     
     return is;
   }
   
-  std::istream & unserialize(std::istream &is, unsigned short &value) {
-    char buf[sizeof(unsigned short)];
+  std::istream & unserialize(std::istream &is, Uint16 &value) {
+    char buf[sizeof(Uint16)];
     
-    if(is.read(buf, sizeof(unsigned short))) {
-      const short s_value = SDLNet_Read16(buf);
-      value = reinterpret_cast<const unsigned short &>(s_value);
+    if(is.read(buf, sizeof(Uint16))) {
+      const Sint16 s_value = SDLNet_Read16(buf);
+      value = reinterpret_cast<const Uint16 &>(s_value);
     }
     
     return is;
   }
   
+  std::istream & unserialize(std::istream &is, Sint8 &value) {
+    is.read(reinterpret_cast<char *>(&value), 1);
+    return is;
+  }
+  
+  std::istream & unserialize(std::istream &is, char &value) {
+    is.read(&value, 1);
+    return is;
+  }
+  
+  std::istream & unserialize(std::istream &is, unsigned char &value) {
+    is.read(reinterpret_cast<char *>(&value), 1);
+    return is;
+  }
+  
   std::istream & unserialize(std::istream &is, float &value) {
     return is.read(reinterpret_cast<char * const>(&value), sizeof(float));
+  }
+  
+  std::istream & unserialize(std::istream &is, double &value) {
+    return is.read(reinterpret_cast<char * const>(&value), sizeof(double));
   }
   
   std::istream & unserialize(std::istream &is, bool &value) {

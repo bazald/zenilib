@@ -222,9 +222,9 @@ namespace Zeni {
       
       Chunk_Set() {}
       
-      Chunk_Set(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      Chunk_Set(const IPaddress &sender, const Nonce &incoming, const Uint16 &num_chunks, const Uint16 &which, Chunk &chunk);
       
-      bool add_chunk(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      bool add_chunk(const IPaddress &sender, const Nonce &incoming, const Uint16 &num_chunks, const Uint16 &which, Chunk &chunk);
       bool complete() const;
       
       Chunk receive() const;
@@ -235,7 +235,7 @@ namespace Zeni {
       Chunk_Collector operator=(const Chunk_Collector &);
       
     public:
-      Chunk_Collector(const int &size = 64)
+      Chunk_Collector(const Uint16 &size = 64)
         : m_size(size)
       {
         assert(m_size);
@@ -246,26 +246,26 @@ namespace Zeni {
           delete *it;
       }
       
-      const Chunk_Set * add_chunk(const IPaddress &sender, const Nonce &incoming, const unsigned short &num_chunks, const unsigned short &which, Chunk &chunk);
+      const Chunk_Set * add_chunk(const IPaddress &sender, const Nonce &incoming, const Uint16 &num_chunks, const Uint16 &which, Chunk &chunk);
       
     private:
       std::list<Chunk_Set *> chunk_sets;
-      int m_size;
+      Uint16 m_size;
     };
     
   public:
-    Split_UDP_Socket(const unsigned short &port, const unsigned short &chunk_sets = 64, const unsigned short &chunk_size = 960);
+    Split_UDP_Socket(const unsigned short &port, const Uint16 &chunk_sets = 64, const Uint16 &chunk_size = 960);
 
     /// Send data to an IPaddress
-    virtual void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
     virtual void send(const IPaddress &ip, const std::string &data);
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
-    virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual int receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
     virtual int receive(IPaddress &ip, std::string &data);
     
   private:
-    unsigned short m_chunk_size;
+    Uint16 m_chunk_size;
     
     Chunk_Collector m_chunk_collector;
     

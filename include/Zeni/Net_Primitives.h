@@ -67,13 +67,13 @@ namespace Zeni {
     Serializable() : m_size(0) {}
     virtual ~Serializable() {}
     
-    virtual size_t size() const {return sizeof(m_size) + m_size;}
+    virtual Uint16 size() const {return sizeof(m_size) + m_size;}
     
     virtual std::ostream & serialize(std::ostream &os) const = 0;
     virtual std::istream & unserialize(std::istream &is) = 0;
     
   protected:
-    unsigned short m_size;
+    Uint16 m_size;
   };
 
   /*** VLUID class ***/
@@ -95,7 +95,7 @@ namespace Zeni {
     VLUID & operator++(); // prefix
     VLUID operator++(int); // postfix
     
-    size_t size() const {return sizeof(Serializable) + m_size;}
+    Uint16 size() const {return sizeof(Serializable::m_size) + m_size;}
     
     const unsigned char & operator[](const int &index) const {return reinterpret_cast<const unsigned char &>(m_uid[index]);}
     
@@ -111,11 +111,16 @@ namespace Zeni {
   /*** Stand-Alone serialization/unserialization functions ***/
   
   inline std::ostream & serialize(std::ostream &os, const Serializable &value) {return value.serialize(os);}
-  std::ostream & serialize(std::ostream &os, const int &value);
-  std::ostream & serialize(std::ostream &os, const unsigned int &value);
-  std::ostream & serialize(std::ostream &os, const short &value);
-  std::ostream & serialize(std::ostream &os, const unsigned short &value);
+
+  std::ostream & serialize(std::ostream &os, const Sint32 &value);
+  std::ostream & serialize(std::ostream &os, const Uint32 &value);
+  std::ostream & serialize(std::ostream &os, const Sint16 &value);
+  std::ostream & serialize(std::ostream &os, const Uint16 &value);
+  std::ostream & serialize(std::ostream &os, const Sint8 &value);
+  std::ostream & serialize(std::ostream &os, const char &value);
+  std::ostream & serialize(std::ostream &os, const unsigned char &value);
   std::ostream & serialize(std::ostream &os, const float &value);
+  std::ostream & serialize(std::ostream &os, const double &value);
   std::ostream & serialize(std::ostream &os, const bool &value);
   std::ostream & serialize(std::ostream &os, const Point2i &value);
   std::ostream & serialize(std::ostream &os, const Point2f &value);
@@ -126,11 +131,16 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const IPaddress &address);
   
   inline std::istream & unserialize(std::istream &is, Serializable &value) {return value.unserialize(is);}
-  std::istream & unserialize(std::istream &is, int &value);
-  std::istream & unserialize(std::istream &is, unsigned int &value);
-  std::istream & unserialize(std::istream &is, short &value);
-  std::istream & unserialize(std::istream &is, unsigned short &value);
+
+  std::istream & unserialize(std::istream &is, Sint32 &value);
+  std::istream & unserialize(std::istream &is, Uint32 &value);
+  std::istream & unserialize(std::istream &is, Sint16 &value);
+  std::istream & unserialize(std::istream &is, Uint16 &value);
+  std::istream & unserialize(std::istream &is, Sint8 &value);
+  std::istream & unserialize(std::istream &is, char &value);
+  std::istream & unserialize(std::istream &is, unsigned char &value);
   std::istream & unserialize(std::istream &is, float &value);
+  std::istream & unserialize(std::istream &is, double &value);
   std::istream & unserialize(std::istream &is, bool &value);
   std::istream & unserialize(std::istream &is, Point2i &value);
   std::istream & unserialize(std::istream &is, Point2f &value);
@@ -142,7 +152,7 @@ namespace Zeni {
 
   template <typename TYPE>
   std::ostream & serialize(std::ostream &os, const std::vector<TYPE> &v) {
-    Zeni::serialize(os, static_cast<unsigned short>(v.size()));
+    Zeni::serialize(os, static_cast<Uint16>(v.size()));
     for(typename std::vector<TYPE>::const_iterator it = v.begin(); it != v.end(); ++it)
       if(!serialize(os, *it))
         break;
@@ -151,7 +161,7 @@ namespace Zeni {
     
   template <typename TYPE>
   std::istream & unserialize(std::istream &is, std::vector<TYPE> &v) {
-    unsigned short size;
+    Uint16 size;
     if(Zeni::unserialize(is, size)) {
       v.resize(size, TYPE());
       for(typename std::vector<TYPE>::iterator it = v.begin(); it != v.end(); ++it)
@@ -201,7 +211,7 @@ namespace Zeni {
       std::ostringstream oss;
       oss << this->m_sauid << this->m_nonce << this->m_datum;
       const std::string &str = oss.str();
-      short size = str.size();
+      Uint16 size = str.size();
       return serialize(os, size) << str;
     }
   };
