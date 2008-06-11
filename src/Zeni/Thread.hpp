@@ -43,7 +43,7 @@ namespace Zeni {
       task.m_done = true;
     }
     catch(Quit_Event &nonerror) {
-      task.status = 0;
+      task.status = 1;
       task.msg = nonerror.msg;
     }
     catch(Error &error) {
