@@ -45,14 +45,17 @@ namespace Zeni {
     catch(Quit_Event &nonerror) {
       task.status = 1;
       task.msg = nonerror.msg;
+      task.m_done = true;
     }
     catch(Error &error) {
       task.status = 0x32202;
       task.msg = error.msg;
+      task.m_done = true;
     }
     catch(...) {
       task.status = -1;
       task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
+      task.m_done = true;
     }
     
     return task.status;
@@ -72,21 +75,21 @@ namespace Zeni {
         task.status = task.run();
       }
       catch(Quit_Event &nonerror) {
-        task.m_done = task.m_terminated = true;
-        task.status = 0;
+        task.status = 1;
         task.msg = nonerror.msg;
+        task.m_done = task.m_terminated = true;
         return task.status;
       }
       catch(Error &error) {
-        task.m_done = task.m_terminated = true;
         task.status = 0x32202;
         task.msg = error.msg;
+        task.m_done = task.m_terminated = true;
         return task.status;
       }
       catch(...) {
-        task.m_done = task.m_terminated = true;
         task.status = -1;
         task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
+        task.m_done = task.m_terminated = true;
         return task.status;
       }
       
