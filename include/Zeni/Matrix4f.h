@@ -36,6 +36,17 @@ namespace Zeni {
 
   class Matrix4f {
   public:
+    class Matrix4f_Row {
+    public:
+      inline Matrix4f_Row(float * const &row_);
+
+      inline const float & operator[](const int &index) const; ///< Get 'index'
+      inline float & operator[](const int &index); ///< Get 'index'
+
+    private:
+      float *row;
+    };
+
     Matrix4f();
     Matrix4f(
       const float &aw, const float &ax, const float &ay, const float &az,
@@ -44,6 +55,10 @@ namespace Zeni {
       const float &dw, const float &dx, const float &dy, const float &dz);
     Matrix4f(const Vector3f &first, const Vector3f &second, const Vector3f &third, const bool &rows = false);
     Matrix4f(const Matrix4f &rhs);
+
+    // Indexing
+    inline const Matrix4f_Row operator[](const int &index) const; ///< Get row 'index'
+    inline Matrix4f_Row operator[](const int &index); ///< Get row 'index'
 
     // Matrix addition/subtraction
     inline Matrix4f operator+(const Matrix4f &rhs) const; ///< Get the sum

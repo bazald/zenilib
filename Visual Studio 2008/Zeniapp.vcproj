@@ -391,11 +391,25 @@
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			Filter="h;hm;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath="..\src\zenilib.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Include Files"
+			Filter="hxx;inl;inc"
+			>
+		</Filter>
+		<Filter
+			Name="Intermediate Source Files"
+			Filter="hpp"
+			>
+			<File
+				RelativePath="..\src\Gamestate_One.hpp"
 				>
 			</File>
 		</Filter>

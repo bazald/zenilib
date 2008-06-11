@@ -35,6 +35,7 @@
 #include <Zeni/Video_DX9.hxx>
 
 #include <GL/gl.h>
+#include <cassert>
 
 namespace Zeni {
 
@@ -49,15 +50,13 @@ namespace Zeni {
 
   template <typename VERTEX>
   const VERTEX & Triangle<VERTEX>::get_vertex(const int &index) const {
-    if(index < 0 || index > 2)
-      throw Invalid_Vertex_Index();
+    assert(-1 < index && index < 3);
     return m_vertex[index];
   }
 
   template <typename VERTEX>
   void Triangle<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
-    if(index < 0 || index > 2)
-      throw Invalid_Vertex_Index();
+    assert(-1 < index && index < 3);
     m_vertex[index] = vertex;
   }
 

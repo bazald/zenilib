@@ -64,8 +64,8 @@ namespace Zeni {
     inline const Vector3f & get_forward() const; ///< Get the vector indicating the direction in which the camera is pointing.
     inline const Vector3f & get_up() const; ///< Get the vector indicating what is "up" from the perspective of the camera.
     inline Vector3f get_left() const; ///< Get the vector indicating what is "left" from the perspective of the camera.
-    inline float get_near_clip() const; ///< Get the near clipping plane.
-    inline float get_far_clip() const; ///< Get the far clipping plane.
+    inline float get_near_clip() const; ///< Get the near clipping distance.
+    inline float get_far_clip() const; ///< Get the far clipping distance.
     inline float get_fov_deg() const; ///< Get the field of view (in the y-axis) in degrees.
     inline float get_fov_rad() const; ///< Get the field of view (in the y-axis) in radians.
 
@@ -76,8 +76,8 @@ namespace Zeni {
     inline void set_forward(const float &i, const float &j, const float &k); ///< Set the vector indicating what is "forward" from the perspective of the camera.
     inline void set_up(const Vector3f &up); ///< Set the vector indicating what is "up" from the perspective of the camera.
     inline void set_up(const float &i, const float &j, const float &k); ///< Set the vector indicating what is "up" from the perspective of the camera.
-    inline void set_near_clip(const float &distance); ///< Set the near clipping plane.  Must be non-zero.  Should be greater than or equal to 1.0f
-    inline void set_far_clip(const float &distance); ///< Set the far clipping plane.  Must not equal the near-clipping value.
+    inline void set_near_clip(const float &distance); ///< Set the near clipping distance.  Must be non-zero.  Should be greater than or equal to 1.0f
+    inline void set_far_clip(const float &distance); ///< Set the far clipping distance.  Must not equal the near-clipping value.
     inline void set_fov_deg(const float &degrees); ///< Set the field of view (in the y-axis) in degrees.
     inline void set_fov_rad(const float &radians); ///< Set the field of view (in the y-axis) in radians.
 

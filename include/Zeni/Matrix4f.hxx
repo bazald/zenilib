@@ -33,9 +33,35 @@
 
 #include <Zeni/Coordinate.hxx>
 
+#include <cassert>
 #include <cmath>
 
 namespace Zeni {
+
+  Matrix4f::Matrix4f_Row::Matrix4f_Row(float * const &row_)
+    : row(row_)
+  {
+  }
+
+  const float & Matrix4f::Matrix4f_Row::operator[](const int &index) const {
+    assert(-1 < index && index < 4);
+    return row[index];
+  }
+
+  float & Matrix4f::Matrix4f_Row::operator[](const int &index) {
+    assert(-1 < index && index < 4);
+    return row[index];
+  }
+
+  const Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) const {
+    assert(-1 < index && index < 4);
+    return Matrix4f_Row(const_cast<float *>(m_matrix[index]));
+  }
+
+  Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) {
+    assert(-1 < index && index < 4);
+    return Matrix4f_Row(m_matrix[index]);
+  }
 
   Matrix4f Matrix4f::operator+(const Matrix4f &rhs) const {
     Matrix4f matrix;
@@ -159,10 +185,12 @@ namespace Zeni {
   }
   
   Vector3f Matrix4f::get_column(const int &column) const {
+    assert(-1 < column && column < 3);
     return Vector3f(m_matrix[0][column], m_matrix[1][column], m_matrix[2][column]);
   }
 
   Vector3f Matrix4f::get_row(const int &row) const {
+    assert(-1 < row && row < 3);
     return Vector3f(m_matrix[row][0], m_matrix[row][1], m_matrix[row][2]);
   }
 

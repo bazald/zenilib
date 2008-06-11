@@ -32,6 +32,7 @@
 #define ZENI_INLINES
 
 #include <Zeni/Camera.h>
+#include <Zeni/Collision.h>
 #include <Zeni/Color.h>
 #include <Zeni/Colors.h>
 #include <Zeni/Coordinate.h>
@@ -41,8 +42,10 @@
 #include <Zeni/Fonts.h>
 #include <Zeni/Game.h>
 #include <Zeni/Gamestate.h>
+#include <Zeni/Gamestate_One.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/Light.h>
+#include <Zeni/Line_Segment.h>
 #include <Zeni/Material.h>
 #include <Zeni/Matrix4f.h>
 #include <Zeni/Model.h>
@@ -67,6 +70,5 @@
 #include <Zeni/Video_DX9.h>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Widget.h>
-#include <Zeni/zeniapp.h>
 
 #endif

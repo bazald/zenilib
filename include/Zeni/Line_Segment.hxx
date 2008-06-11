@@ -26,55 +26,55 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_Quadrilateral_HXX
-#define ZENI_Quadrilateral_HXX
+#ifndef ZENI_LINE_SEGMENT_HXX
+#define ZENI_LINE_SEGMENT_HXX
 
-#include <Zeni/Quadrilateral.h>
+#include <Zeni/Line_Segment.h>
+#include <Zeni/Vector3f.h>
 
-#include <Zeni/Triangle.hxx>
+#include <Zeni/Video_DX9.hxx>
 
 #include <GL/gl.h>
-#include <cassert>
 
 namespace Zeni {
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper *render_wrapper)
+  Line_Segment<VERTEX>::Line_Segment(const VERTEX &vertex0, const VERTEX &vertex1, Render_Wrapper *render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     m_vertex[0] = vertex0;
     m_vertex[1] = vertex1;
-    m_vertex[2] = vertex2;
-    m_vertex[3] = vertex3;
   }
 
   template <typename VERTEX>
-  const VERTEX & Quadrilateral<VERTEX>::get_vertex(const int &index) const {
-    assert(-1 < index && index < 4);
+  const VERTEX & Line_Segment<VERTEX>::get_vertex(const int &index) const {
+    if(index < 0 || index > 1)
+      throw Invalid_Vertex_Index();
     return m_vertex[index];
   }
 
   template <typename VERTEX>
-  void Quadrilateral<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
-    assert(-1 < index && index < 4);
+  void Line_Segment<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
+    if(index < 0 || index > 1)
+      throw Invalid_Vertex_Index();
     m_vertex[index] = vertex;
   }
 
   template <typename VERTEX>
-  Point3f Quadrilateral<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x + m_vertex[3].get_position().x) * 0.25f,
-      (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y + m_vertex[3].get_position().y) * 0.25f,
-      (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z + m_vertex[3].get_position().z) * 0.25f);
+  Point3f Line_Segment<VERTEX>::get_position() const {
+    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x) * 0.5f,
+      (m_vertex[0].get_position().y + m_vertex[1].get_position().y) * 0.5f,
+      (m_vertex[0].get_position().z + m_vertex[1].get_position().z) * 0.5f);
   }
 
 #ifndef DISABLE_GL
   template <typename VERTEX>
-  void Quadrilateral<VERTEX>::render_to(Video_GL &screen) const {
+  void Line_Segment<VERTEX>::render_to(Video_GL &screen) const {
     m_render_wrapper->prerender();
 
-    glBegin(GL_TRIANGLE_FAN);
-    for(int i = 0; i < 4; ++i)
-      m_vertex[i].subrender_to(screen);
+    glBegin(GL_LINES);
+    m_vertex[0].subrender_to(screen);
+    m_vertex[1].subrender_to(screen);
     glEnd();
 
     m_render_wrapper->postrender();
@@ -83,31 +83,21 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
-  void Quadrilateral<VERTEX>::render_to(Video_DX9 &screen) const {
+  void Line_Segment<VERTEX>::render_to(Video_DX9 &screen) const {
     m_render_wrapper->prerender();
-    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, m_vertex[0].get_address(), sizeof(VERTEX));
+    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_LINELIST, 1, m_vertex[0].get_address(), sizeof(VERTEX));
     m_render_wrapper->postrender();
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * const Quadrilateral<VERTEX>::get_render_wrapper() const {
+  const Render_Wrapper * const Line_Segment<VERTEX>::get_render_wrapper() const {
     return m_render_wrapper.get();
   }
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX> * Quadrilateral<VERTEX>::get_duplicate() const {
-    return new Quadrilateral<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
-  }
-
-  template <typename VERTEX>
-  Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t0() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_render_wrapper->get_duplicate());
-  }
-
-  template <typename VERTEX>
-  Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t1() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
+  Line_Segment<VERTEX> * Line_Segment<VERTEX>::get_duplicate() const {
+    return new Line_Segment<VERTEX>(m_vertex[0], m_vertex[1], m_render_wrapper->get_duplicate());
   }
 
 }

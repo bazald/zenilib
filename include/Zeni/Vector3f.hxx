@@ -33,6 +33,7 @@
 
 #include <Zeni/Coordinate.hxx>
 
+#include <cassert>
 #include <cmath>
 
 namespace Zeni {
@@ -196,6 +197,18 @@ namespace Zeni {
 
   Vector3f Vector3f::divide_by(const Vector3f &rhs) const {
     return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
+  }
+  
+  const float Vector3f::operator[](const int &index) const {
+    assert(-1 < index && index < 3);
+    const float * const ptr = &i;
+    return ptr[index];
+  }
+   
+  float & Vector3f::operator[](const int &index) {
+    assert(-1 < index && index < 3);
+    float * const ptr = &i;
+    return ptr[index];
   }
 
 }

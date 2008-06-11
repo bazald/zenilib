@@ -105,6 +105,10 @@ namespace Zeni {
     inline Vector3f multiply_by(const Vector3f &rhs) const; ///< Multiply corresponding members
     inline Vector3f divide_by(const Vector3f &rhs) const; ///< Divide corresponding members
 
+    // Indexing
+    inline const float operator[](const int &index) const; ///< Get 'index'
+    inline float & operator[](const int &index); ///< Get 'index'
+
     // Spherical Accessors and Modifiers
     float theta() const; ///< theta == radians north of vector i
     float phi() const; ///< phi   == radians down from k
