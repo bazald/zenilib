@@ -174,11 +174,15 @@
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hm;inl;inc;xsd"
+			Filter="h;hm;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath="..\include\Zeni\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Collision.h"
 				>
 			</File>
 			<File
@@ -227,6 +231,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Line.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Line_Segment.h"
 				>
 			</File>
 			<File
@@ -336,10 +344,14 @@
 		</Filter>
 		<Filter
 			Name="Include Files"
-			Filter="hxx"
+			Filter="hxx;inl;inc"
 			>
 			<File
 				RelativePath="..\include\Zeni\Camera.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Collision.hxx"
 				>
 			</File>
 			<File
@@ -368,6 +380,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Line.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Line_Segment.hxx"
 				>
 			</File>
 			<File
@@ -452,6 +468,155 @@
 			</File>
 			<File
 				RelativePath="..\src\zenilib.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Intermediate Source Files"
+			Filter="hpp"
+			>
+			<File
+				RelativePath="..\src\Zeni\Camera.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Collision.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Color.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Colors.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Coordinate.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Core.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\EZ2D.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Font.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Fonts.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Game.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Gamestate.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Light.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\main.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Material.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Matrix4f.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Model.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Mutex.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Net.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Net_Primitives.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Quaternion.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Render_Wrapper.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Resource.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Sound.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Sounds.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Texture.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Textures.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Thread.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Timer.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Vector3f.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Vertex2f.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Vertex3f.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Vertex_Buffer.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Video.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Video_DX9.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Video_GL.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Widget.hpp"
 				>
 			</File>
 		</Filter>
