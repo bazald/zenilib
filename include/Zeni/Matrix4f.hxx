@@ -88,10 +88,11 @@ namespace Zeni {
     const Vector3f s = (l % up).normalized();
     const Vector3f u = s % l;
 
-    return Matrix4f(s.i, s.j, s.k, 0.0f,
+    return Translate(-Vector3f(position)).transposed() * 
+           Matrix4f(s.i, s.j, s.k, 0.0f,
                     u.i, u.j, u.k, 0.0f,
                     -l.i, -l.j, -l.k, 0.0f,
-                    -position.x, -position.y, -position.z, 1.0f);
+                    0.0f, 0.0f, 0.0f, 1.0f);
   }
 
   Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far) {

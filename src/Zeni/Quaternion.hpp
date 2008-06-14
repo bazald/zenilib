@@ -39,7 +39,7 @@ namespace Zeni {
   }
 
   Quaternion::Quaternion(const Vector3f &v, const float &theta) {
-    const float half_theta = 0.5f * theta;
+    const float half_theta = -0.5f * theta;
 
     time = cos(half_theta);
     space = sin(half_theta) * v;

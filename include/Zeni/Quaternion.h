@@ -39,7 +39,7 @@ namespace Zeni {
   struct Quaternion {
     /// The best way to create a Quaternion
     Quaternion(const float &time = 0.0f, const Vector3f &space = Vector3f());
-    Quaternion(const Vector3f &v, const float &theta);
+    Quaternion(const Vector3f &v, const float &theta); ///< Set the rotation in radians left about an axis;
     Quaternion(const float &yaw, const float &pitch, const float &roll);
     Quaternion(const Quaternion &rhs);
 
@@ -76,7 +76,7 @@ namespace Zeni {
 
     // Useful interops
     inline Vector3f operator*(const Vector3f &rhs) const; ///< Rotate a vector, maintaining constant magnitude
-    inline std::pair<Vector3f, float> get_rotation() const; ///< Get the rotation in radians about an axis
+    inline std::pair<Vector3f, float> get_rotation() const; ///< Get the rotation in radians left about an axis
     inline Matrix4f get_matrix() const; ///< Get the matrix form of the rotation in row-major order
 
     float time;

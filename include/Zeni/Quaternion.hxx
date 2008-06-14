@@ -175,7 +175,7 @@ namespace Zeni {
     float macos = acos(time);
     if(!(macos < 32.0f)) /// Hack & imperfect
       macos = 0.0f;
-    return std::make_pair(space.normalized(), 2.0f * macos);
+    return std::make_pair(space.normalized(), -2.0f * macos);
   }
 
   Matrix4f Quaternion::get_matrix() const {
