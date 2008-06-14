@@ -62,8 +62,12 @@ namespace Zeni {
 
   int Timer::get_ticks() {
     Mutex::Lock lock(ticks_mutex);
-    m_ticks = SDL_GetTicks();
+    update();
     return m_ticks;
+  }
+
+  int Timer::get_ticks_per_second() {
+    return 1000;
   }
 
   float Timer::get_seconds() {
@@ -72,13 +76,93 @@ namespace Zeni {
 
   Time Timer::get_time() {
     Mutex::Lock lock(ticks_mutex);
-    m_ticks = SDL_GetTicks();
+    update();
     return Time(m_ticks);
   }
 
   void Timer::update() {
-    Mutex::Lock lock(ticks_mutex);
     m_ticks = SDL_GetTicks();
+  }
+
+  Time_HQ & Time_HQ::operator=(const HQ_Tick_Type &ticks) {
+    m_ticks = ticks;
+    m_ticks_per_second = Timer_HQ::get_reference().get_ticks_per_second();
+    return *this;
+  }
+
+  HQ_Tick_Type Time_HQ::get_ticks_passed() const {
+#ifdef _WINDOWS
+    return Timer_HQ::get_reference().get_ticks() - m_ticks;
+#else
+    return subtract(Timer_HQ::get_reference().get_ticks(), m_ticks);
+#endif
+  }
+
+  double Time_HQ::get_seconds_passed() const {
+#ifdef _WINDOWS
+    return double(get_ticks_passed()) / m_ticks_per_second;
+#else
+    return to_seconds(m_ticks);
+#endif
+  }
+
+  HQ_Tick_Type Time_HQ::get_ticks_since(const Time_HQ &time) const {
+#ifdef _WINDOWS
+    return m_ticks - time.m_ticks;
+#else
+    return subtract(m_ticks, time.m_ticks);
+#endif
+  }
+
+  double Time_HQ::get_seconds_since(const Time_HQ &time) const {
+#ifdef _WINDOWS
+    return double(get_ticks_since(time)) / m_ticks_per_second;
+#else
+    return to_seconds(get_ticks_since(time));
+#endif
+  }
+
+  void Time_HQ::update() {
+    m_ticks = Timer_HQ::get_reference().get_ticks();
+  }
+
+  HQ_Tick_Type Timer_HQ::get_ticks() {
+    Mutex::Lock lock(ticks_mutex);
+    update();
+    return m_ticks;
+  }
+
+  unsigned long Timer_HQ::get_ticks_per_second() {
+    return m_ticks_per_second;
+  }
+
+  double Timer_HQ::get_seconds() {
+#ifdef _WINDOWS
+    return double(get_ticks()) / m_ticks_per_second;
+#else
+    return to_seconds(get_ticks());
+#endif
+  }
+
+  Time_HQ Timer_HQ::get_time() {
+    Mutex::Lock lock(ticks_mutex);
+    update();
+    return Time_HQ(m_ticks, m_ticks_per_second);
+  }
+
+  void Timer_HQ::update() {
+#ifdef _WINDOWS
+    if(m_available) {
+      LARGE_INTEGER lpPerformanceCount;
+      QueryPerformanceCounter(&lpPerformanceCount);
+
+      m_ticks = lpPerformanceCount.QuadPart;
+    }
+    else
+      m_ticks = SDL_GetTicks();
+#else
+    gettimeofday(&m_ticks, 0);
+#endif
   }
 
 }

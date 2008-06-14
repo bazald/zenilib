@@ -165,7 +165,7 @@ namespace Zeni {
     
   public:
     UDP_Socket(const unsigned short &port);
-    ~UDP_Socket();
+    virtual ~UDP_Socket();
     
     IPaddress peer_address() const; ///< Apparently only works if the port was explicitly specified
 

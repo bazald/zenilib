@@ -193,13 +193,13 @@ int main(int argc, char *argv[]) {
 #pragma warning( disable : 4130 )
 #endif
   catch(Error &error) {
-    assert("Error caught in main - Please see stderr.txt" == 0);
     cerr << error.msg << endl;
+    assert("Error caught in main - Please see stderr.txt" == 0);
     return 1;
   }
   catch(...) {
-    assert("Unknown Error caught in main" == 0);
     cerr << "Unknown Error (Not of Type 'Zeni::Error')";
+    assert("Unknown Error caught in main" == 0);
     return -1;
   }
 #ifdef _WINDOWS
