@@ -62,14 +62,14 @@ namespace Zeni {
       retval.tv_usec -= rhs.tv_usec;
     else {
       --retval.tv_sec;
-      retval.tv_usec = 1000000000 - (rhs.tv_usec - retval.tv_usec);
+      retval.tv_usec = 1000000 - (rhs.tv_usec - retval.tv_usec);
     }
 
     return retval;
   }
 
   double to_seconds(const timeval &ticks) {
-    return ticks.tv_sec + ticks.tv_usec / 1000000000.0;
+    return ticks.tv_sec + ticks.tv_usec / 1000000.0;
   }
 #endif
 
@@ -104,7 +104,7 @@ namespace Zeni {
       Core::get_reference();
 #else
     m_available = true;
-    m_ticks_per_second = 1000000000;
+    m_ticks_per_second = 1000000;
 #endif
   }
 
