@@ -91,35 +91,19 @@ namespace Zeni {
   }
 
   HQ_Tick_Type Time_HQ::get_ticks_passed() const {
-#ifdef _WINDOWS
     return Timer_HQ::get_reference().get_ticks() - m_ticks;
-#else
-    return subtract(Timer_HQ::get_reference().get_ticks(), m_ticks);
-#endif
   }
 
-  double Time_HQ::get_seconds_passed() const {
-#ifdef _WINDOWS
-    return double(get_ticks_passed()) / m_ticks_per_second;
-#else
-    return to_seconds(m_ticks);
-#endif
+  long double Time_HQ::get_seconds_passed() const {
+    return static_cast<long double>(get_ticks_passed()) / m_ticks_per_second;
   }
 
   HQ_Tick_Type Time_HQ::get_ticks_since(const Time_HQ &time) const {
-#ifdef _WINDOWS
     return m_ticks - time.m_ticks;
-#else
-    return subtract(m_ticks, time.m_ticks);
-#endif
   }
 
-  double Time_HQ::get_seconds_since(const Time_HQ &time) const {
-#ifdef _WINDOWS
-    return double(get_ticks_since(time)) / m_ticks_per_second;
-#else
-    return to_seconds(get_ticks_since(time));
-#endif
+  long double Time_HQ::get_seconds_since(const Time_HQ &time) const {
+    return static_cast<long double>(get_ticks_since(time)) / m_ticks_per_second;
   }
 
   void Time_HQ::update() {
@@ -129,25 +113,21 @@ namespace Zeni {
   HQ_Tick_Type Timer_HQ::get_ticks() {
     Mutex::Lock lock(ticks_mutex);
     update();
-    return m_ticks;
+    return to_useconds(m_ticks);
   }
 
-  unsigned long Timer_HQ::get_ticks_per_second() {
+  HQ_Tick_Type Timer_HQ::get_ticks_per_second() {
     return m_ticks_per_second;
   }
 
-  double Timer_HQ::get_seconds() {
-#ifdef _WINDOWS
-    return double(get_ticks()) / m_ticks_per_second;
-#else
-    return to_seconds(get_ticks());
-#endif
+  long double Timer_HQ::get_seconds() {
+    return static_cast<long double>(double(get_ticks())) / m_ticks_per_second;
   }
 
   Time_HQ Timer_HQ::get_time() {
     Mutex::Lock lock(ticks_mutex);
     update();
-    return Time_HQ(m_ticks, m_ticks_per_second);
+    return Time_HQ(to_useconds(m_ticks), m_ticks_per_second);
   }
 
   void Timer_HQ::update() {

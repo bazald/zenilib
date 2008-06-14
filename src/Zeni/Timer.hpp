@@ -68,8 +68,12 @@ namespace Zeni {
     return retval;
   }
 
-  double to_seconds(const timeval &ticks) {
+  long double to_seconds(const timeval &ticks) {
     return ticks.tv_sec + ticks.tv_usec / 1000000.0;
+  }
+
+  long double to_useconds(const timeval &ticks) {
+    return 1000000.0 * ticks.tv_sec + ticks.tv_usec;
   }
 #endif
 
@@ -79,7 +83,7 @@ namespace Zeni {
   {
   }
 
-  Time_HQ::Time_HQ(const HQ_Tick_Type &ticks, const unsigned long &ticks_per_second)
+  Time_HQ::Time_HQ(const HQ_Tick_Type &ticks, const HQ_Tick_Type &ticks_per_second)
     : m_ticks(ticks),
     m_ticks_per_second(ticks_per_second)
   {

@@ -56,7 +56,11 @@ namespace Zeni {
 
   std::string uitoa(const unsigned int &number);
   std::string itoa(const int &number);
+  std::string ultoa(const unsigned long &number);
+  std::string ltoa(const long &number);
   std::string ftoa(const float &number);
+  std::string dtoa(const double &number);
+  std::string ldtoa(const long double &number);
   std::string iptoa(const IPaddress &address);
 
   int grab_bytes(std::istream &is, char * const &store, const int &num_bytes);

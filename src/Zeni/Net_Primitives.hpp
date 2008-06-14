@@ -93,6 +93,28 @@ namespace Zeni {
     return buf;
   }
 
+  string ultoa(const unsigned long &number) {
+    char buf[64];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%lu", number);
+    return buf;
+  }
+
+  string ltoa(const long &number) {
+    char buf[64];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%ld", number);
+    return buf;
+  }
+
   string ftoa(const float &number) {
     char buf[64];
   #ifdef _WINDOWS
@@ -101,6 +123,28 @@ namespace Zeni {
     sprintf
   #endif
       (buf, "%f", number);
+    return buf;
+  }
+
+  string dtoa(const double &number) {
+    char buf[64];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%f", number);
+    return buf;
+  }
+
+  string ldtoa(const long double &number) {
+    char buf[64];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%Lf", number);
     return buf;
   }
 

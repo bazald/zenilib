@@ -32,6 +32,7 @@
 #include <Zeni/Camera.h>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Matrix4f.hxx>
 
 namespace Zeni {
 

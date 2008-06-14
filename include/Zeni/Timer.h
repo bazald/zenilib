@@ -113,10 +113,11 @@ namespace Zeni {
 #ifdef _WINDOWS
   typedef LONGLONG HQ_Tick_Type;
 #else
-  typedef timeval HQ_Tick_Type;
+  typedef long double HQ_Tick_Type;
 
   timeval subtract(const timeval &lhs, const timeval &rhs);
-  double to_seconds(const timeval &ticks);
+  long double to_seconds(const timeval &ticks);
+  long double to_useconds(const timeval &ticks);
 #endif
 
   class Time_HQ {
@@ -124,22 +125,22 @@ namespace Zeni {
 
     Time_HQ(); ///< Initialize to the current time
     Time_HQ(const HQ_Tick_Type &ticks);
-    Time_HQ(const HQ_Tick_Type &ticks, const unsigned long &ticks_per_second);
+    Time_HQ(const HQ_Tick_Type &ticks, const HQ_Tick_Type &ticks_per_second);
     inline Time_HQ & operator=(const HQ_Tick_Type &ticks);
 
     // Accessors
     // Time passed since last updated
     inline HQ_Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since current Time
-    inline double get_seconds_passed() const; ///< Get the number of seconds passed since current Time
+    inline long double get_seconds_passed() const; ///< Get the number of seconds passed since current Time
     // From a specific time
     inline HQ_Tick_Type get_ticks_since(const Time_HQ &time) const; ///< Get the number of clock ticks passed since this Time
-    inline double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed since this Time
+    inline long double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed since this Time
 
     // Modifiers
     inline void update(); ///< Update to current Time
   private:
     HQ_Tick_Type m_ticks;
-    unsigned long m_ticks_per_second;
+    HQ_Tick_Type m_ticks_per_second;
   };
 
   class Timer_HQ {
@@ -155,16 +156,16 @@ namespace Zeni {
 
     // Accessors
     inline HQ_Tick_Type get_ticks(); ///< Get the number of ticks passed since instantiation
-    inline unsigned long get_ticks_per_second(); ///< Get the number of ticks per second
-    inline double get_seconds(); ///< Get the number of seconds passed since instantiation
+    inline HQ_Tick_Type get_ticks_per_second(); ///< Get the number of ticks per second
+    inline long double get_seconds(); ///< Get the number of seconds passed since instantiation
     inline Time_HQ get_time(); ///< Get the current Time
 
   private:
     inline void update();
 
     Mutex ticks_mutex;
-    HQ_Tick_Type m_ticks;
-    unsigned long m_ticks_per_second;
+    timeval m_ticks;
+    HQ_Tick_Type m_ticks_per_second;
 
     bool m_available;
   };

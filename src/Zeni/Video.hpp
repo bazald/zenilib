@@ -38,10 +38,7 @@
 #include <SDL/SDL_image.h>
 #include <iostream>
 
-using std::string;
-using std::cerr;
-using std::cout;
-using std::endl;
+using namespace std;
 
 namespace Zeni {
 

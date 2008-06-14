@@ -49,7 +49,9 @@
 #define ZENI_VIDEO_H
 
 #include <Zeni/Core.h>
+#include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
+#include <Zeni/Matrix4f.h>
 
 #include <SDL/SDL.h>
 #include <string>
@@ -67,15 +69,12 @@ namespace Zeni {
   };
 
   class Camera;
-  class Color;
   class Font;
   class Light;
   class Material;
-  class Matrix4f;
   class Renderable;
   class Texture;
   class Vertex_Buffer;
-  struct Vector3f;
 
   class Video {
   protected:
