@@ -164,7 +164,11 @@ namespace Zeni {
     inline void update();
 
     Mutex ticks_mutex;
+#ifdef _WINDOWS
+    HQ_Tick_Type m_ticks;
+#else
     timeval m_ticks;
+#endif
     HQ_Tick_Type m_ticks_per_second;
 
     bool m_available;

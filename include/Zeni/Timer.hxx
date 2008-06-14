@@ -113,7 +113,11 @@ namespace Zeni {
   HQ_Tick_Type Timer_HQ::get_ticks() {
     Mutex::Lock lock(ticks_mutex);
     update();
+#ifdef _WINDOWS
+    return m_ticks;
+#else
     return to_useconds(m_ticks);
+#endif
   }
 
   HQ_Tick_Type Timer_HQ::get_ticks_per_second() {
@@ -127,7 +131,11 @@ namespace Zeni {
   Time_HQ Timer_HQ::get_time() {
     Mutex::Lock lock(ticks_mutex);
     update();
+#ifdef _WINDOWS
+    return Time_HQ(m_ticks, m_ticks_per_second);
+#else
     return Time_HQ(to_useconds(m_ticks), m_ticks_per_second);
+#endif
   }
 
   void Timer_HQ::update() {
