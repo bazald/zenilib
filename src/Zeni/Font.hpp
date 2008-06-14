@@ -189,7 +189,9 @@ namespace Zeni {
   void Font_GL::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
     Video &vr = Video::get_reference();
 
-    vr.set_color_to(color);
+    const Color previous_color = vr.get_color();
+
+    vr.set_color(color);
     m_texture->apply_texture();
     glEnable(GL_TEXTURE_2D);
 
@@ -229,6 +231,8 @@ NEXT_LINE:
     }
 
     glDisable(GL_TEXTURE_2D);
+
+    vr.set_color(previous_color);
   }
 #endif
 
@@ -244,8 +248,10 @@ NEXT_LINE:
     resized(0), 
     ratio(0)
   {
-    if(FAILED(D3DXCreateFont(dynamic_cast<Video_DX9 &>(Video::get_reference()).get_d3d_device(),
-      get_text_height() * 25 / 18, // !!HACK!! Converting 72 DPI to 100 DPI?
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+
+    if(FAILED(D3DXCreateFont(vdx.get_d3d_device(),
+      get_text_height(),
       0,
       is_bold() ? FW_BOLD : FW_REGULAR,
       0,
@@ -323,7 +329,7 @@ NEXT_LINE:
 //
 //          if(FAILED(D3DXCreateFontIndirect(vdx.get_d3d_device(), &desc, &resized))) {
             if(FAILED(D3DXCreateFont(vdx.get_d3d_device(),
-                  get_text_height() * 25 / 18, // !!HACK!! Converting 72 DPI to 100 DPI?
+                  get_text_height(),
                   0,
                   is_bold() ? FW_BOLD : FW_REGULAR,
                   0,

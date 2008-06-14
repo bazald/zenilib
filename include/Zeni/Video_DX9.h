@@ -73,18 +73,16 @@ namespace Zeni {
     // Accessors
     virtual int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
     virtual bool has_vertex_buffers() const; ///< Determine whether Vertex_Buffers are supported
-    virtual bool zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
 
     // Modifiers
-    virtual void set_3d_view(const Camera &camera, const bool &on, 
-      const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
+    virtual void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
+    virtual void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
     virtual void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
     virtual void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
     virtual void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
+    virtual void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
 
     // Color and Texturing
-    virtual void set_color_to(const Color &color); ///< Set the current color
-    virtual void set_clear_color_to(const Color &color); ///< Set the blank background color
     virtual void apply_texture(const std::string &name); ///< Apply a texture by name
     virtual void apply_texture(const unsigned long &id); ///< Apply a texture by id
     virtual void apply_texture(const Texture &texture); ///< Apply a texture by id
@@ -98,7 +96,7 @@ namespace Zeni {
     virtual void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
     virtual void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
 
-    // Model Stack Functions
+    // Model/World Transformation Stack Functions
     virtual void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     virtual void push_world_stack(); ///< Push a model view matrix onto the stack
     virtual void pop_world_stack(); ///< Pop a model view matrix off the stack
@@ -106,6 +104,11 @@ namespace Zeni {
     virtual void rotate_scene(const Vector3f &about, const float &radians); ///< Rotate the scene
     virtual void scale_scene(const Vector3f &factor); ///< Scale the scene
     virtual void transform_scene(const Matrix4f &transformation); ///< Transform the scene
+
+    // View+Projection Matrix Functions
+    virtual void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
+    virtual void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
+    virtual void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
 
     // Creation Functions
     virtual Texture * load_Texture(const std::string &filename, const bool &repeat); ///< Function for loading a Texture; used internally by Textures
@@ -118,6 +121,8 @@ namespace Zeni {
     inline LPDIRECT3D9 & get_d3d(); ///< See DirectX Documentation for details
     inline LPDIRECT3DDEVICE9 & get_d3d_device(); ///< See DirectX Documentation for details
     inline LPD3DXMATRIXSTACK & get_matrix_stack(); ///< Get access to a matrix stack stored by this class
+    inline const int & get_dpi(); ///< Get the screen's DPI
+    inline float get_dpi_ratio(); ///< Get the ratio of the screen's DPI to the normal DPI
 
     // Manual 3D Flips
     bool get_3d() const;
@@ -139,12 +144,11 @@ namespace Zeni {
     LPDIRECT3D9 m_d3d;
     LPDIRECT3DDEVICE9 m_d3d_device;
     LPD3DXMATRIXSTACK m_matrix_stack;
+    int m_dpi;
 
-    Color m_color;
-    Color m_clear_color;
     Color m_ambient_color;
 
-    bool m_textured, m_3d, m_zwrite;
+    bool m_textured, m_3d;
   };
 
   struct Video_Device_Failure : public Error {

@@ -73,6 +73,22 @@ namespace Zeni {
     return g_multisampling;
   }
 
+  const bool & Video::zwrite_enabled() const {
+    return m_zwrite;
+  }
+
+  const bool & Video::ztest_enabled() const {
+    return m_ztest;
+  }
+
+  const Color & Video::get_color() const {
+    return m_color;
+  }
+
+  const Color & Video::get_clear_color() const {
+    return m_clear_color;
+  }
+
   const bool & Video::is_initialized() {
     return g_initialized;
   }
@@ -87,6 +103,26 @@ namespace Zeni {
 
   void Video::set_opengl_flag(const bool &on) {
     m_opengl_flag = on;
+  }
+
+  const Matrix4f & Video::get_view_matrix() {
+    return m_view;
+  }
+
+  const Matrix4f & Video::get_projection_matrix() {
+    return m_projection;
+  }
+
+  const std::pair<Point2i, Point2i> & Video::get_viewport() const {
+    return m_viewport;
+  }
+
+  const Matrix4f & Video::get_world_to_screen_matrix() const {
+    return m_world_to_screen;
+  }
+
+  const Matrix4f & Video::get_screen_to_world_matrix() const {
+    return m_screen_to_world;
   }
 
 }

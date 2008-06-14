@@ -47,8 +47,9 @@
 #ifndef ZENI_CAMERA_H
 #define ZENI_CAMERA_H
 
-#include <Zeni/Coordinate.hxx>
+#include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
+#include <Zeni/Matrix4f.h>
 
 namespace Zeni {
 
@@ -59,7 +60,7 @@ namespace Zeni {
       const Vector3f &up = Vector3f(0, 0, 1), const float &near_clip = 10.0f, 
       const float &far_clip = 1000.0f, const float &fov_rad_ = pi/2);
 
-    // Accessor
+    // Accessors
     inline const Point3f & get_position() const; ///< Get the current position of the camera.
     inline const Vector3f & get_forward() const; ///< Get the vector indicating the direction in which the camera is pointing.
     inline const Vector3f & get_up() const; ///< Get the vector indicating what is "up" from the perspective of the camera.
@@ -80,6 +81,11 @@ namespace Zeni {
     inline void set_far_clip(const float &distance); ///< Set the far clipping distance.  Must not equal the near-clipping value.
     inline void set_fov_deg(const float &degrees); ///< Set the field of view (in the y-axis) in degrees.
     inline void set_fov_rad(const float &radians); ///< Set the field of view (in the y-axis) in radians.
+
+    // Convenience Functions
+
+    inline Matrix4f get_view_matrix() const; ///< Equivalent to gluLookAt
+    inline Matrix4f get_projection_matrix(const std::pair<Point2f, Point2f> &viewport) const; ///< Equivalent to glOrtho
 
     inline void adjust_position(const Vector3f &by); ///< Adjust the position of the camera using a vector.
     inline void adjust_position(const float &i, const float &j, const float &k); ///< Adjust the position of the camera using ijk values.

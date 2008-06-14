@@ -34,6 +34,8 @@
 
 namespace Zeni {
 
+  struct Quaternion;
+
   class Matrix4f {
   public:
     class Matrix4f_Row {
@@ -59,6 +61,16 @@ namespace Zeni {
     // Indexing
     inline const Matrix4f_Row operator[](const int &index) const; ///< Get row 'index'
     inline Matrix4f_Row operator[](const int &index); ///< Get row 'index'
+
+    // Fundamental Matrix Constructors
+    inline static Matrix4f Zero();
+    inline static Matrix4f Identity();
+    inline static Matrix4f Scale(const Vector3f &scaling_factor);
+    inline static Matrix4f Rotate(const Quaternion &rotation);
+    inline static Matrix4f Translate(const Vector3f &translation_factor);
+    inline static Matrix4f View(const Point3f &position, const Vector3f &forward, const Vector3f &up);
+    inline static Matrix4f Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far);
+    inline static Matrix4f Perspective(const float &fov_rad_y, const float &aspect, const float &near, const float &far);
 
     // Matrix addition/subtraction
     inline Matrix4f operator+(const Matrix4f &rhs) const; ///< Get the sum

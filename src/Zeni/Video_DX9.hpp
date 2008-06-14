@@ -56,9 +56,7 @@ namespace Zeni {
   Video_DX9::Video_DX9()
     : m_d3d(0),
     m_d3d_device(0),
-    m_matrix_stack(0), 
-    m_color(1.0f, 1.0f, 1.0f, 1.0f),
-    m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
+    m_matrix_stack(0),
     m_ambient_color(1.0f, 1.0f, 1.0f, 1.0f),
     m_textured(false),
     m_3d(false)
@@ -99,7 +97,7 @@ namespace Zeni {
     if(result == S_OK) {
       D3DVIEWPORT9 vp = {0, 0, get_screen_width(), get_screen_height(), 0, 1};
       m_d3d_device->SetViewport(&vp);
-      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_clear_color.r_ub(), m_clear_color.g_ub(), m_clear_color.b_ub()), 1.0f, 0);
+      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);
       m_d3d_device->BeginScene();
 
       Game::get_reference().render();
@@ -126,18 +124,6 @@ namespace Zeni {
 
   bool Video_DX9::has_vertex_buffers() const {
     return true;
-  }
-
-  bool Video_DX9::zwrite_enabled() const {
-    return m_zwrite;
-  }
-
-  void Video_DX9::set_color_to(const Color &color) {
-    m_color = color;
-  }
-
-  void Video_DX9::set_clear_color_to(const Color &color) {
-    m_clear_color = color;
   }
 
   void Video_DX9::apply_texture(const std::string &name) {
@@ -169,60 +155,30 @@ namespace Zeni {
     set_fvf();
   }
 
-  void Video_DX9::set_3d_view(const Camera &camera, const bool &on, const std::pair<Point2i, Point2i> &viewport) {
-    m_3d = on;
-    if(m_3d) {
-      // Set Camera
-      const Point3f &position = camera.get_position();
-      const Vector3f &forward = camera.get_forward().normalized(),
-        up = camera.get_up().normalized();
-      const float
-        &x = position.x, &y = position.y, &z = position.z,
-        &i = forward.i, &j = forward.j, &k = forward.k;
+  void Video_DX9::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_2d_view(camera2d, viewport);
 
-      D3DXMATRIX world, scale, rot, trans;
-      D3DXMatrixIdentity(&world);
-      m_d3d_device->SetTransform(D3DTS_WORLD, &world);
+    m_3d = false;
 
-      D3DXVECTOR3 initial(x, y, z), 
-        terminal(x + i, y + j, z + k),
-        cross(up.i, up.j, up.k);
-      D3DXMATRIX view;
-      D3DXMatrixLookAtRH(&view, &initial, &terminal, &cross);
-      m_d3d_device->SetTransform(D3DTS_VIEW, &view);
+    Matrix4f world = Matrix4f::Identity();
+    D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
-      D3DXMATRIX projection;
-      D3DXMatrixPerspectiveFovRH(&projection, camera.get_fov_rad(), float(viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y), camera.get_near_clip(), camera.get_far_clip());
-      m_d3d_device->SetTransform(D3DTS_PROJECTION, &projection);
+    m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
+    m_matrix_stack->LoadMatrix(world_ptr);
 
-      // Enable Depth Buffer
-      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
-      m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-      m_zwrite = true;
-    }
-    else {
-      m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
-      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-      m_zwrite = false;
+    set_fvf();
+  }
 
-      D3DXMATRIX identity;
-      D3DXMatrixIdentity(&identity);
+  void Video_DX9::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_3d_view(camera, viewport);
 
-      m_d3d_device->SetTransform(D3DTS_WORLD, &identity);
+    m_3d = true;
 
-      m_d3d_device->SetTransform(D3DTS_VIEW, &identity);
+    Matrix4f world = Matrix4f::Identity();
+    D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
-      D3DXMatrixOrthoOffCenterRH(&identity, 0, float(get_screen_width()), float(get_screen_height()), 0, 0, 1);
-      m_d3d_device->SetTransform(D3DTS_PROJECTION, &identity);
-    }
-
-    D3DVIEWPORT9 vp = {viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y, 0, 1};
-    m_d3d_device->SetViewport(&vp);
-
-    D3DXMATRIX world;
-    m_d3d_device->GetTransform(D3DTS_WORLD, &world);
-    m_matrix_stack->LoadMatrix(&world);
+    m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
+    m_matrix_stack->LoadMatrix(world_ptr);
 
     set_fvf();
   }
@@ -311,12 +267,35 @@ namespace Zeni {
   }
 
   void Video_DX9::set_zwrite(const bool &enabled) {
-    m_zwrite = enabled;
+    Video::set_zwrite(enabled);
+    m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, enabled);
+  }
 
-    if(m_zwrite)
-      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    else 
-      m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+  void Video_DX9::set_ztest(const bool &enabled) {
+    Video::set_ztest(enabled);
+
+    if(enabled) {
+      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
+      m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+    }
+    else
+      m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+  }
+
+  void Video_DX9::set_view_matrix(const Matrix4f &view) {
+    Video::set_view_matrix(view);
+    m_d3d_device->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DXMATRIX *>(const_cast<Matrix4f *>(&view)));
+  }
+
+  void Video_DX9::set_projection_matrix(const Matrix4f &projection) {
+    Video::set_projection_matrix(projection);
+    m_d3d_device->SetTransform(D3DTS_PROJECTION, reinterpret_cast<D3DXMATRIX *>(const_cast<Matrix4f *>(&projection)));
+  }
+
+  void Video_DX9::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_viewport(viewport);
+    D3DVIEWPORT9 vp = {viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y, 0, 1};
+    m_d3d_device->SetViewport(&vp);
   }
 
   Texture * Video_DX9::load_Texture(const std::string &filename, const bool &repeat) {
@@ -334,6 +313,10 @@ namespace Zeni {
   void Video_DX9::init() {
     set_opengl_flag(false);
     Video::init();
+    
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWMInfo(&wmInfo);
 
     cout << "Initializing DirectX 9" << endl;
 
@@ -345,11 +328,10 @@ namespace Zeni {
 
     m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
 
+    m_dpi = GetDeviceCaps(GetDC(wmInfo.window), LOGPIXELSY);
+
     ZeroMemory(&m_d3d_parameters, sizeof(m_d3d_parameters));
 
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
-    SDL_GetWMInfo(&wmInfo);
     m_d3d_parameters.hDeviceWindow = wmInfo.window;
     
     m_d3d_parameters.Windowed = !is_fullscreen();
@@ -457,11 +439,11 @@ namespace Zeni {
 
     // More basic stuff
     set_2d();
-    set_color_to(m_color);
-    set_clear_color_to(m_clear_color);
-    set_ambient_lighting(m_ambient_color);
+    set_color(get_color());
+    set_clear_color(get_clear_color());
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
+    set_ambient_lighting(m_ambient_color);
   }
 
   void Video_DX9::destroy_device() {

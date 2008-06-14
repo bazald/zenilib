@@ -108,21 +108,25 @@ namespace Zeni {
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
     virtual int get_maximum_anisotropy() const = 0; ///< Get the current level of anisotrophy
     virtual bool has_vertex_buffers() const = 0; ///< Determine whether Vertex_Buffers are supported
-    virtual bool zwrite_enabled() const = 0; ///< Determine whether writing to Z-Buffer is enabled
+    inline const bool & zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
+    inline const bool & ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
 
     // Modifiers
-    void set_2d(); ///< Set a 2D view filling the entire display area
-    void set_2d_view(const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
-    void set_3d(const Camera &camera, const bool &on = true); ///< Set a 3D view filling the entire display area
-    virtual void set_3d_view(const Camera &camera, const bool &on, 
-      const std::pair<Point2i, Point2i> &viewport) = 0; ///< Set a 3D view for a viewport
+    void set_2d(); ///< Set the default 2D view filling the entire display area
+    void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
+    void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
+    virtual void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
+    virtual void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
     virtual void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
     virtual void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
-    virtual void set_zwrite(const bool &enabled) = 0; ///< Enable or disable writing to the Z-Buffer
+    virtual void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
+    virtual void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
 
     // Color and Texturing
-    virtual void set_color_to(const Color &color) = 0; ///< Set the current color
-    virtual void set_clear_color_to(const Color &color) = 0; ///< Set the blank background color
+    inline const Color & get_color() const; ///< Get the current color
+    inline const Color & get_clear_color() const; ///< Get the blank background color
+    virtual void set_color(const Color &color); ///< Set the current color
+    virtual void set_clear_color(const Color &color); ///< Set the blank background color
     virtual void apply_texture(const std::string &name) = 0; ///< Apply a texture by name
     virtual void apply_texture(const unsigned long &id) = 0; ///< Apply a texture by id
     virtual void apply_texture(const Texture &texture) = 0; ///< Apply a texture by id
@@ -136,7 +140,7 @@ namespace Zeni {
     virtual void set_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
     virtual void unset_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
 
-    // Model Stack Functions
+    // Model/World Transformation Stack Functions
     virtual void select_world_matrix() = 0; ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     virtual void push_world_stack() = 0; ///< Push a model view matrix onto the stack
     virtual void pop_world_stack() = 0; ///< Pop a model view matrix off the stack
@@ -144,6 +148,16 @@ namespace Zeni {
     virtual void rotate_scene(const Vector3f &about, const float &radians) = 0; ///< Rotate the scene
     virtual void scale_scene(const Vector3f &factor) = 0; ///< Scale the scene
     virtual void transform_scene(const Matrix4f &transformation) = 0; ///< Transform the scene
+
+    // View+Projection Matrix Functions
+    inline const Matrix4f & get_view_matrix(); ///< Get the view Matrix4f
+    inline const Matrix4f & get_projection_matrix(); ///< Get the projection Matrix4f
+    inline const std::pair<Point2i, Point2i> & get_viewport() const; ///< Get the viewport
+    inline const Matrix4f & get_world_to_screen_matrix() const; ///< For manual projection
+    inline const Matrix4f & get_screen_to_world_matrix() const; ///< For picking
+    virtual void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
+    virtual void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
+    virtual void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
 
     // Window Decorations
     void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message
@@ -181,6 +195,8 @@ namespace Zeni {
     // Set icon
     bool set_icon();
 
+    void regenerate_compound_matrices();
+
     SDL_Surface *m_display_surface, *m_icon_surface;
 
     static VIDEO_MODE g_video_mode;
@@ -200,6 +216,19 @@ namespace Zeni {
     std::string m_title;
     std::string m_taskmsg;
     std::string m_icon;
+
+    Color m_color;
+    Color m_clear_color;
+
+    const Matrix4f m_preview;
+    Matrix4f m_view;
+    Matrix4f m_projection;
+    Matrix4f m_world_to_screen;
+    Matrix4f m_screen_to_world;
+    std::pair<Point2i, Point2i> m_viewport;
+
+    bool m_zwrite;
+    bool m_ztest;
   };
 
   struct Video_Init_Failure : public Error {

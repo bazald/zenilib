@@ -50,6 +50,14 @@ namespace Zeni {
   LPD3DXMATRIXSTACK & Video_DX9::get_matrix_stack() {
     return m_matrix_stack;
   }
+  
+  const int & Video_DX9::get_dpi() {
+    return m_dpi;
+  }
+
+  float Video_DX9::get_dpi_ratio() {
+    return m_dpi / 96.0f;
+  }
 
 }
 

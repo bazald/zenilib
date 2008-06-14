@@ -125,15 +125,13 @@ namespace Zeni {
     return m_vertex_buffers;
   }
 
-  bool Video_GL::zwrite_enabled() const {
-    return m_zwrite;
-  }
-
-  void Video_GL::set_color_to(const Color &color) {
+  void Video_GL::set_color(const Color &color) {
+    Video::set_color(color);
     glColor4f(color.r(), color.g(), color.b(), color.a());
   }
 
-  void Video_GL::set_clear_color_to(const Color &color) {
+  void Video_GL::set_clear_color(const Color &color) {
+    Video::set_clear_color(color);
     glClearColor(color.r(), color.g(), color.b(), 0.0f);
   }
 
@@ -158,47 +156,6 @@ namespace Zeni {
   void Video_GL::unapply_texture() {
     glDisable(GL_TEXTURE_2D);
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
-  }
-
-  void Video_GL::set_3d_view(const Camera &camera, const bool &on, const std::pair<Point2i, Point2i> &viewport) {
-    if(on) {
-      // Set Camera
-      const Point3f &position = camera.get_position();
-      const Vector3f &forward = camera.get_forward().normalized(),
-        up = camera.get_up().normalized();
-      const float
-        &x = position.x, &y = position.y, &z = position.z,
-        &i = forward.i, &j = forward.j, &k = forward.k;
-
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-      gluLookAt(x, y, z,
-        x + i, y + j, z + k,
-        up.i, up.j, up.k);
-
-      // Enable Depth Buffer
-      glEnable(GL_DEPTH_TEST);
-      glDepthFunc(GL_LESS);
-      glDepthMask(GL_TRUE);
-
-      // Initialize Projection Matrix
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      gluPerspective(camera.get_fov_deg(), float(viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y), camera.get_near_clip(), camera.get_far_clip());
-    }
-    else {
-      glDisable(GL_DEPTH_TEST);
-      glDepthMask(GL_FALSE);
-
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      gluOrtho2D(0, get_screen_width(), get_screen_height(), 0);
-
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-    }
-
-    glViewport(viewport.first.x, get_screen_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
   }
 
   void Video_GL::set_lighting(const bool &on) {
@@ -322,12 +279,36 @@ namespace Zeni {
   }
 
   void Video_GL::set_zwrite(const bool &enabled) {
-    m_zwrite = enabled;
+    Video::set_zwrite(enabled);
+    glDepthMask(enabled);
+  }
 
-    if(m_zwrite)
-      glDepthMask(GL_TRUE);
+  void Video_GL::set_ztest(const bool &enabled) {
+    Video::set_ztest(enabled);
+
+    if(enabled) {
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LESS);
+    }
     else
-      glDepthMask(GL_FALSE);
+      glDisable(GL_DEPTH_TEST);
+  }
+
+  void Video_GL::set_view_matrix(const Matrix4f &view) {
+    Video::set_view_matrix(view);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&view)));
+  }
+
+  void Video_GL::set_projection_matrix(const Matrix4f &projection) {
+    Video::set_projection_matrix(projection);
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&projection)));
+  }
+
+  void Video_GL::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_viewport(viewport);
+    glViewport(viewport.first.x, get_screen_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
   }
 
   Texture * Video_GL::load_Texture(const std::string &filename, const bool &repeat) {
@@ -385,6 +366,8 @@ namespace Zeni {
 
     // Finish with a few function calls
     set_2d();
+    set_color(get_color());
+    set_clear_color(get_clear_color());
     set_backface_culling(get_backface_culling());
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());

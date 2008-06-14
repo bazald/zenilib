@@ -28,6 +28,7 @@
 
 #include <Zeni/Camera.hxx>
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Quaternion.hxx>
 #include <Zeni/Vector3f.hxx>
 
 #include <cmath>
@@ -45,18 +46,19 @@ namespace Zeni {
   }
 
   void Camera::adjust_yaw(const float &theta) {
-    m_forward = cos(theta) * m_forward + sin(theta) * get_left();
+    m_forward = Quaternion(get_up(), theta) * m_forward;
+    // left changes implicitly
   }
 
   void Camera::adjust_pitch(const float &phi) {
-    float c = cos(phi), s = sin(phi);
-    Vector3f up = m_up;
-    m_up = c * m_up + s * m_forward;
-    m_forward = c * m_forward - s * up;
+    const Quaternion rot(get_left(), phi);
+    m_forward = rot * m_forward;
+    m_up = rot * m_up;
   }
 
   void Camera::adjust_roll(const float &rho) {
-    m_up = cos(rho) * m_up - sin(rho) * get_left();
+    m_up = Quaternion(get_forward(), rho) * m_up;
+    // left changes implicitly
   }
 
   void Camera::move_forward_xy(const float &distance) {
@@ -69,17 +71,9 @@ namespace Zeni {
   }
 
   void Camera::turn_left_xy(const float &theta) {
-    float c = cos(theta), s = sin(theta);
-
-    Vector3f
-      xy_forward(m_forward.i, m_forward.j, 0.0f),
-      xy_up(m_up.i, m_up.j, 0.0f);
-
-    xy_forward = c * xy_forward + s * (vector_k % xy_forward);
-    xy_up = c * xy_up + s * (vector_k % xy_up);
-
-    m_forward = Vector3f(xy_forward.i, xy_forward.j, m_forward.k);
-    m_up = Vector3f(xy_up.i, xy_up.j, m_up.k);
+    const Quaternion rot(Vector3f(0.0f, 0.0f, 1.0f), theta);
+    m_forward = rot * m_forward;
+    m_up = rot * m_up;
   }
 
 }

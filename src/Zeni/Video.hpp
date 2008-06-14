@@ -26,13 +26,14 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
+
+#include <Zeni/Camera.hxx>
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Matrix4f.hxx>
+#include <Zeni/Vector3f.hxx>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Video_DX9.h>
-#include <Zeni/Camera.h>
-
-#include <Zeni/Coordinate.hxx>
 
 #include <SDL/SDL_image.h>
 #include <iostream>
@@ -50,7 +51,10 @@ namespace Zeni {
     m_opengl_flag(0), 
     m_title("Zenipex Library Application"), 
     m_taskmsg("Zenipex Library Application"), 
-    m_icon("icons/icon.gif")
+    m_icon("icons/icon.gif"),
+    m_color(1.0f, 1.0f, 1.0f, 1.0f),
+    m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
+    m_preview(Matrix4f::Scale(Vector3f(0.5f, -0.5f, -1.0f)) * Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f)))
   {
   }
 
@@ -79,17 +83,44 @@ namespace Zeni {
   }
 
   void Video::set_2d() {
-    static const Camera camera;
-    set_3d(camera, false);
+    set_2d_view(make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_screen_width()), float(get_screen_height()))),
+                make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
   }
 
-  void Video::set_2d_view(const std::pair<Point2i, Point2i> &viewport) {
-    static const Camera camera;
-    set_3d_view(camera, false, viewport);
+  void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d) {
+    set_2d_view(camera2d,
+                make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
   }
 
-  void Video::set_3d(const Camera &camera, const bool &on) {
-    set_3d_view(camera, on, std::pair<Point2i, Point2i>(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+  void Video::set_3d(const Camera &camera) {
+    set_3d_view(camera,
+                make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+  }
+
+  void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
+    set_zwrite(false);
+    set_ztest(false);
+
+    const Matrix4f view = Matrix4f::Identity();
+    set_view_matrix(view);
+
+    const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, 0.0f, 1.0f);
+    set_projection_matrix(projection);
+
+    set_viewport(viewport);
+  }
+
+  void Video::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
+    set_zwrite(true);
+    set_ztest(true);
+
+    const Matrix4f view = camera.get_view_matrix();
+    set_view_matrix(view);
+
+    Matrix4f projection = camera.get_projection_matrix(make_pair(Point2f(float(viewport.first.x), float(viewport.first.y)), Point2f(float(viewport.second.x), float(viewport.second.y))));
+    set_projection_matrix(projection);
+
+    set_viewport(viewport);
   }
 
   void Video::set_backface_culling(const bool &on) {
@@ -98,6 +129,22 @@ namespace Zeni {
 
   void Video::set_vertical_sync(const bool &on) {
     g_vertical_sync = on;
+  }
+  
+  void Video::set_zwrite(const bool &enabled) {
+    m_zwrite = enabled;
+  }
+
+  void Video::set_ztest(const bool &enabled) {
+    m_ztest = enabled;
+  }
+
+  void Video::set_color(const Color &color) {
+    m_color = color;
+  }
+
+  void Video::set_clear_color(const Color &color) {
+    m_clear_color = color;
   }
 
   void Video::set_lighting(const bool &on) {
@@ -176,6 +223,20 @@ namespace Zeni {
     m_display_surface = 0;
     g_initialized = false;
   }
+  
+  void Video::set_view_matrix(const Matrix4f &view) {
+    m_view = view;
+    regenerate_compound_matrices();
+  }
+
+  void Video::set_projection_matrix(const Matrix4f &projection) {
+    m_projection = projection;
+    regenerate_compound_matrices();
+  }
+
+  void Video::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
+    m_viewport = viewport;
+  }
 
   void Video::set_tt() {
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
@@ -197,6 +258,11 @@ namespace Zeni {
 
     SDL_WM_SetIcon(m_icon_surface, NULL);
     return true;
+  }
+
+  void Video::regenerate_compound_matrices() {
+    m_world_to_screen = m_preview * m_view * m_projection;
+    m_screen_to_world = m_world_to_screen.inverted();
   }
 
   Video *Video::e_video = 0;

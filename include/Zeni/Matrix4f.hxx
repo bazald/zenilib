@@ -32,6 +32,7 @@
 #include <Zeni/Matrix4f.h>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Quaternion.hxx>
 
 #include <cassert>
 #include <cmath>
@@ -51,6 +52,71 @@ namespace Zeni {
   float & Matrix4f::Matrix4f_Row::operator[](const int &index) {
     assert(-1 < index && index < 4);
     return row[index];
+  }
+
+  Matrix4f Matrix4f::Zero() {
+    return Matrix4f();
+  }
+
+  Matrix4f Matrix4f::Identity() {
+    return Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+  }
+
+  Matrix4f Matrix4f::Scale(const Vector3f &scaling_factor) {
+    return Matrix4f(scaling_factor.i, 0.0f, 0.0f, 0.0f,
+                    0.0f, scaling_factor.j, 0.0f, 0.0f,
+                    0.0f, 0.0f, scaling_factor.k, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+  }
+
+  Matrix4f Matrix4f::Rotate(const Quaternion &rotation) {
+    return rotation.get_matrix();
+  }
+  
+  Matrix4f Matrix4f::Translate(const Vector3f &translation_factor) {
+    return Matrix4f(1.0f, 0.0f, 0.0f, translation_factor.i,
+                    0.0f, 1.0f, 0.0f, translation_factor.j,
+                    0.0f, 0.0f, 1.0f, translation_factor.k,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+  }
+  
+  Matrix4f Matrix4f::View(const Point3f &position, const Vector3f &forward, const Vector3f &up) {
+    const Vector3f l = forward.normalized();
+    const Vector3f s = (l % up).normalized();
+    const Vector3f u = s % l;
+
+    return Matrix4f(s.i, s.j, s.k, 0.0f,
+                    u.i, u.j, u.k, 0.0f,
+                    -l.i, -l.j, -l.k, 0.0f,
+                    -position.x, -position.y, -position.z, 1.0f);
+  }
+
+  Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far) {
+    const float denom_x = left - right;
+    const float denom_y = bottom - top;
+    const float denom_z = near - far;
+
+    const float t_x = (left + right) / denom_x;
+    const float t_y = (bottom + top) / denom_y;
+    const float t_z = (near + far) / denom_z;
+
+    return Matrix4f(-2.0f / denom_x, 0.0f, 0.0f, 0.0f,
+                    0.0f, -2.0f / denom_y, 0.0f, 0.0f,
+                    0.0f, 0.0f, 2.0f / denom_z, 0.0f,
+                    t_x, t_y, t_z, 1.0f);
+  }
+
+  Matrix4f Matrix4f::Perspective(const float &fov_rad_y, const float &aspect, const float &near, const float &far) {
+    const float f = atan(fov_rad_y);
+    const float denom = near - far;
+
+    return Matrix4f(f / aspect, 0.0f, 0.0f, 0.0f,
+                    0.0f, f, 0.0f, 0.0f,
+                    0.0f, 0.0f, (far + near) / denom, -1.0f,
+                    0.0f, 0.0f, 2.0f * far * near / denom, 0.0f);
   }
 
   const Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) const {
