@@ -58,6 +58,9 @@ namespace Zeni {
       task.m_done = true;
     }
     
+    task.m_done = true;
+    task.m_done_condition.broadcast();
+    
     return task.status;
   }
   
