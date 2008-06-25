@@ -26,4 +26,77 @@
 * the GNU General Public License.
 */
 
-#include "Vector3f.hpp"
+#include <Zeni/Vector3f.hxx>
+
+#include <cmath>
+
+namespace Zeni {
+
+  const float pi = acos(-1.0f);
+  const float pi_over_two = acos(-1.0f) / 2.0f;
+  const float three_pi_over_two = 3.0f * acos(-1.0f) / 2.0f;
+  const float over_three = 1.0f / 3.0f;
+  const float sqrt_two = sqrt(2.0f);
+  const float sqrt_three = sqrt(3.0f);
+
+  extern const Vector3f vector_i(1, 0, 0);
+  extern const Vector3f vector_j(0, 1, 0);
+  extern const Vector3f vector_k(0, 0, 1);
+
+  Vector3f & Vector3f::normalize() {
+    float mplier = magnitude();
+
+    if(!mplier)
+      return *this;
+
+    mplier = 1 / mplier;
+
+    i *= mplier;
+    j *= mplier;
+    k *= mplier;
+
+    return *this;
+  }
+
+  Vector3f Vector3f::normalized() const {
+    float mplier = magnitude();
+
+    if(!mplier)
+      return *this;
+
+    mplier = 1 / mplier;
+
+    return Vector3f(i * mplier, j * mplier, k * mplier);
+  }
+
+  float Vector3f::theta() const {
+    if(i > 0)
+      return atan(j/i);
+    else if(i < 0)
+      return atan(j/i) + pi;
+    else if(j > 0)
+      return pi_over_two;
+    else if(j < 0)
+      return three_pi_over_two;
+    return 0;
+  }
+
+  float Vector3f::phi() const {
+    const float xy_mag = sqrt(pow(i, 2) + pow(j, 2));
+
+    if(xy_mag > 0.0f)
+      return pi_over_two + atan(-k / xy_mag);
+
+    if(k < 0.0f)
+      return pi;
+
+    return 0.0f;
+  }
+
+  void Vector3f::set_spherical(const float &theta, const float &phi, const float &magnitude) {
+    i = sin(phi) * magnitude;
+    j = sin(theta) * i;
+    i *= cos(theta);
+    k = cos(phi) * magnitude;
+  }
+}

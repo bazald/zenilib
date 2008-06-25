@@ -26,4 +26,51 @@
 * the GNU General Public License.
 */
 
-#include "Color.hpp"
+#include <Zeni/Color.h>
+
+namespace Zeni {
+
+  Color::Color() {
+    rgba[0] = 1.0f;
+    rgba[1] = 1.0f;
+    rgba[2] = 1.0f;
+    rgba[3] = 1.0f;
+  }
+
+  Color::Color(const float &a, const float &r, const float g, const float &b) {
+    rgba[0] = r;
+    rgba[1] = g;
+    rgba[2] = b;
+    rgba[3] = a;
+  }
+
+  Color::Color(const unsigned long &argb) {
+    rgba[0] = ((argb >> 16) & 0xFF) / 256.0f;
+    rgba[1] = ((argb >> 8) & 0xFF) / 256.0f;
+    rgba[2] = (argb & 0xFF) / 256.0f;
+    rgba[3] = ((argb >> 24) & 0xFF) / 256.0f;
+  }
+
+  Color Color::interpolate_to(const float &rhs_part, const Color &rhs) const {
+    float lhs_part = 1.0f - rhs_part;
+    return Color(lhs_part * rgba[0] + rhs_part * rhs.rgba[0], 
+      lhs_part * rgba[1] + rhs_part * rhs.rgba[1], 
+      lhs_part * rgba[2] + rhs_part * rhs.rgba[2], 
+      lhs_part * rgba[3] + rhs_part * rhs.rgba[3]);
+  }
+
+  bool Color::operator<(const Color &rhs) const {
+    return rgba[0] < rhs.rgba[0] || rgba[0] == rhs.rgba[0] &&
+      (rgba[1] < rhs.rgba[1] || rgba[1] == rhs.rgba[1] &&
+      (rgba[2] < rhs.rgba[2] || rgba[2] == rhs.rgba[2] &&
+      rgba[3] < rhs.rgba[3]));
+  }
+
+  bool Color::operator==(const Color &rhs) const {
+    return rgba[0] == rhs.rgba[0] &&
+      rgba[1] == rhs.rgba[1] &&
+      rgba[2] == rhs.rgba[2] &&
+      rgba[3] == rhs.rgba[3];
+  }
+
+}

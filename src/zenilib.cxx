@@ -26,37 +26,41 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Coordinate.hxx>
+#include "zenilib.h"
 
-namespace Zeni {
-
-  Point2i Point2i::interpolate_to(const float &rhs_part, const Point2i &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Point2i(int(lhs_part * x + rhs_part * rhs.x), 
-      int(lhs_part * y + rhs_part * rhs.y));
-  }
-
-  Point2f Point2f::interpolate_to(const float &rhs_part, const Point2f &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Point2f(lhs_part * x + rhs_part * rhs.x, 
-      lhs_part * y + rhs_part * rhs.y);
-  }
-
-  Point3i Point3i::interpolate_to(const float &rhs_part, const Point3i &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Point3i(int(lhs_part * x + rhs_part * rhs.x), 
-      int(lhs_part * y + rhs_part * rhs.y), 
-      int(lhs_part * z + rhs_part * rhs.z));
-  }
-
-  Point3f Point3f::interpolate_to(const float &rhs_part, const Point3f &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Point3f(lhs_part * x + rhs_part * rhs.x, 
-      lhs_part * y + rhs_part * rhs.y, 
-      lhs_part * z + rhs_part * rhs.z);
-  }
-
-  const int Point2i::z = 0;
-  const float Point2f::z = 0;
-
-}
+#include "Zeni/Camera.cpp"
+#include "Zeni/Collision.cpp"
+#include "Zeni/Color.cpp"
+#include "Zeni/Colors.cpp"
+#include "Zeni/Coordinate.cpp"
+#include "Zeni/Core.cpp"
+#include "Zeni/EZ2D.cpp"
+#include "Zeni/Font.cpp"
+#include "Zeni/Fonts.cpp"
+#include "Zeni/Game.cpp"
+#include "Zeni/Gamestate.cpp"
+#include "Zeni/Light.cpp"
+#include "Zeni/main.cpp"
+#include "Zeni/Material.cpp"
+#include "Zeni/Matrix4f.cpp"
+#include "Zeni/Model.cpp"
+#include "Zeni/Mutex.cpp"
+#include "Zeni/Net.cpp"
+#include "Zeni/Net_Primitives.cpp"
+#include "Zeni/Quaternion.cpp"
+#include "Zeni/Render_Wrapper.cpp"
+#include "Zeni/Resource.cpp"
+#include "Zeni/Sound.cpp"
+#include "Zeni/Sounds.cpp"
+#include "Zeni/Texture.cpp"
+#include "Zeni/Textures.cpp"
+#include "Zeni/Thread.cpp"
+#include "Zeni/Timer.cpp"
+#include "Zeni/Vector3f.cpp"
+#include "Zeni/Vertex2f.cpp"
+#include "Zeni/Vertex3f.cpp"
+#include "Zeni/Vertex_Buffer.cpp"
+#include "Zeni/Video.cpp"
+#include "Zeni/Video_DX9.cpp"
+#include "Zeni/Video_GL.cpp"
+#include "Zeni/Widget.cpp"

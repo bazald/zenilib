@@ -95,14 +95,14 @@ namespace Zeni {
                     0.0f, 0.0f, 0.0f, 1.0f);
   }
 
-  Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far) {
+  Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near_, const float &far_) {
     const float denom_x = left - right;
     const float denom_y = bottom - top;
-    const float denom_z = near - far;
+    const float denom_z = near_ - far_;
 
     const float t_x = (left + right) / denom_x;
     const float t_y = (bottom + top) / denom_y;
-    const float t_z = (near + far) / denom_z;
+    const float t_z = (near_ + far_) / denom_z;
 
     return Matrix4f(-2.0f / denom_x, 0.0f, 0.0f, 0.0f,
                     0.0f, -2.0f / denom_y, 0.0f, 0.0f,
@@ -110,14 +110,14 @@ namespace Zeni {
                     t_x, t_y, t_z, 1.0f);
   }
 
-  Matrix4f Matrix4f::Perspective(const float &fov_rad_y, const float &aspect, const float &near, const float &far) {
+  Matrix4f Matrix4f::Perspective(const float &fov_rad_y, const float &aspect, const float &near_, const float &far_) {
     const float f = atan(fov_rad_y);
-    const float denom = near - far;
+    const float denom = near_ - far_;
 
     return Matrix4f(f / aspect, 0.0f, 0.0f, 0.0f,
                     0.0f, f, 0.0f, 0.0f,
-                    0.0f, 0.0f, (far + near) / denom, -1.0f,
-                    0.0f, 0.0f, 2.0f * far * near / denom, 0.0f);
+                    0.0f, 0.0f, (far_ + near_) / denom, -1.0f,
+                    0.0f, 0.0f, 2.0f * far_ * near_ / denom, 0.0f);
   }
 
   const Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) const {

@@ -26,4 +26,54 @@
 * the GNU General Public License.
 */
 
-#include "Camera.hpp"
+#include <Zeni/Camera.hxx>
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Quaternion.hxx>
+#include <Zeni/Vector3f.hxx>
+
+#include <cmath>
+
+namespace Zeni {
+
+  Camera::Camera(const Point3f &position, const Vector3f &forward, const Vector3f &up, const float &near_clip, const float &far_clip, const float &fov_rad_)
+    : m_position(position),
+    m_forward(forward),
+    m_up(up),
+    m_near_clip(near_clip),
+    m_far_clip(far_clip),
+    m_fov_rad(fov_rad_)
+  {
+  }
+
+  void Camera::adjust_yaw(const float &theta) {
+    m_forward = Quaternion(get_up(), theta) * m_forward;
+    // left changes implicitly
+  }
+
+  void Camera::adjust_pitch(const float &phi) {
+    const Quaternion rot(get_left(), phi);
+    m_forward = rot * m_forward;
+    m_up = rot * m_up;
+  }
+
+  void Camera::adjust_roll(const float &rho) {
+    m_up = Quaternion(get_forward(), rho) * m_up;
+    // left changes implicitly
+  }
+
+  void Camera::move_forward_xy(const float &distance) {
+    m_position += Vector3f(m_up.k * m_forward.i, m_up.k * m_forward.j, 0.0f).normalized() * distance;
+  }
+
+  void Camera::move_left_xy(const float &distance) {
+    Vector3f xy_left = get_left();
+    m_position += Vector3f(xy_left.i, xy_left.j, 0.0f).normalized() * distance;
+  }
+
+  void Camera::turn_left_xy(const float &theta) {
+    const Quaternion rot(Vector3f(0.0f, 0.0f, 1.0f), theta);
+    m_forward = rot * m_forward;
+    m_up = rot * m_up;
+  }
+
+}

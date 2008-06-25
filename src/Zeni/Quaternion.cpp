@@ -26,4 +26,48 @@
 * the GNU General Public License.
 */
 
-#include "Quaternion.hpp"
+#include <Zeni/Quaternion.hxx>
+
+#include <cmath>
+
+namespace Zeni {
+
+  Quaternion::Quaternion(const float &t, const Vector3f &s)
+    : time(t),
+    space(s)
+  {
+  }
+
+  Quaternion::Quaternion(const Vector3f &v, const float &theta) {
+    const float half_theta = -0.5f * theta;
+
+    time = cos(half_theta);
+    space = sin(half_theta) * v;
+  }
+
+  Quaternion::Quaternion(const float &yaw, const float &pitch, const float &roll) {
+    const float half_yaw = 0.5f * yaw;
+    const float half_pitch = 0.5f * pitch;
+    const float half_roll = 0.5f * roll;
+   
+	  const float shy = sin(half_yaw);
+	  const float shp = sin(half_pitch);
+	  const float shr = sin(half_roll);
+	  const float chy = cos(half_yaw);
+	  const float chp = cos(half_pitch);
+	  const float chr = cos(half_roll);
+   
+	  time = chr * chp * chy + shr * shp * shy;
+	  space.i = shr * chp * chy - chr * shp * shy;
+	  space.j = chr * shp * chy + shr * chp * shy;
+	  space.k = chr * chp * shy - shr * shp * chy;
+   
+	  *this = norm();
+  }
+
+  Quaternion::Quaternion(const Quaternion &rhs)
+  {
+    *this = rhs;
+  }
+
+}

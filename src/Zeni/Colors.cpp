@@ -26,4 +26,96 @@
 * the GNU General Public License.
 */
 
-#include "Colors.hpp"
+#include <Zeni/Colors.h>
+#include <Zeni/Resource.hxx>
+
+#include <iomanip>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+namespace Zeni {
+
+  Colors::Colors()
+    : m_colordb("config/colors.txt")
+  {
+    init();
+  }
+
+  Colors & Colors::get_reference() {
+    static Colors e_color;
+    return e_color;
+  }
+
+  void Colors::reload(const std::string &color) {
+    if(color.length())
+      m_colordb = color;
+    init();
+  }
+
+  Uint32 Colors::get_color_id(const string &color) const {
+    stdext::hash_map<string, unsigned long>::const_iterator it = m_color_lookup.find(color);
+
+    if(it == m_color_lookup.end() || !it->second)
+      throw Color_Not_Found(color);
+
+    return it->second;
+  }
+
+  Color Colors::get_color(const string &color) const {
+    return get_color(get_color_id(color));
+  }
+
+  Color Colors::get_color(const Uint32 &color) const {
+    stdext::hash_map<unsigned long, Color>::const_iterator it = m_color.find(color);
+
+    if(it == m_color.end()) {
+      char buf[64];
+#ifdef _WINDOWS
+      sprintf_s
+#else
+      sprintf
+#endif
+        (buf, "ID = %u", static_cast<unsigned int>(color));
+      throw Color_Not_Found(buf);
+    }
+
+    return it->second;
+  }
+
+  Uint32 Colors::set_color(const std::string &name, const Color &color) {
+    Uint32 id = Resource::get_reference().assign();
+    m_color_lookup[name] = id;
+    m_color[id] = color;
+    return id;
+  }
+
+  void Colors::clear_color(const std::string &name) {
+    stdext::hash_map<string, unsigned long>::iterator it = m_color_lookup.find(name);
+
+    if(it == m_color_lookup.end())
+      throw Color_Not_Found(name);
+
+    m_color.erase(it->second);
+    m_color_lookup.erase(it);
+  }
+
+  void Colors::init() {
+    m_color.clear();
+    ifstream colorin(m_colordb.c_str());
+
+    if(!colorin)
+      throw Colors_Init_Failure();
+
+    Color tmp;
+    short a, r, g, b;
+    string name;
+    while(colorin >> name >> hex >> a >> r >> g >> b) {
+      unsigned long id = Resource::get_reference().assign();
+      m_color_lookup[name] = id;
+      m_color[id] = Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f);
+    }
+  }
+
+}

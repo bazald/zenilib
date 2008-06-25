@@ -31,6 +31,7 @@
 
 #include <Zeni/Video.h>
 
+#include <Zeni/Camera.hxx>
 #include <Zeni/Textures.hxx>
 
 namespace Zeni {

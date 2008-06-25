@@ -26,4 +26,162 @@
 * the GNU General Public License.
 */
 
-#include "Video.hpp"
+#include <Zeni/Video.hxx>
+
+#include <Zeni/Camera.hxx>
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Matrix4f.hxx>
+#include <Zeni/Vector3f.hxx>
+#include <Zeni/Video_GL.h>
+#include <Zeni/Video_DX9.h>
+
+#include <SDL/SDL_image.h>
+#include <iostream>
+
+using namespace std;
+
+namespace Zeni {
+
+  Video::Video(const Video_Base::VIDEO_MODE &vtype_)
+    : Video_Base::IV(vtype_),
+    m_display_surface(0), 
+    m_icon_surface(0),
+    m_opengl_flag(0), 
+    m_title("Zenipex Library Application"), 
+    m_taskmsg("Zenipex Library Application"), 
+    m_icon("icons/icon.gif"),
+    m_color(1.0f, 1.0f, 1.0f, 1.0f),
+    m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
+    m_preview(Matrix4f::Scale(Vector3f(0.5f, -0.5f, -1.0f)) * Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f)))
+  {
+  }
+
+  Video::~Video() {
+  }
+
+  Video & Video::get_reference() {
+    if(!e_video)
+      switch(g_video_mode) {
+      case Video_Base::ZENI_VIDEO_ANY:
+#ifndef DISABLE_GL
+      case Video_Base::ZENI_VIDEO_GL:
+        e_video = new Video_GL();
+        break;
+#endif
+#ifndef DISABLE_DX9
+      case Video_Base::ZENI_VIDEO_DX9:
+        e_video = new Video_DX9();
+        break;
+#endif
+      default:
+        throw Video_Init_Failure();
+    }
+
+    return *e_video;
+  }
+
+  void Video::preinit(const Video_Base::VIDEO_MODE &vm, const int &w, const int &h, const bool &full, const int &multisampling, const bool &show_frame_) {
+    if(g_initialized)
+      throw Video_Initialized();
+
+    g_video_mode = vm;
+    g_screen_width = w;
+    g_screen_height = h;
+    g_screen_full = full;
+    g_multisampling = multisampling;
+    g_screen_show_frame = show_frame_;
+  }
+
+  void Video::set_tt(const string &title, const string &taskmsg) {
+    m_title = title;
+    m_taskmsg = taskmsg;
+    set_tt();
+  }
+
+  void Video::set_title(const string &title) {
+    m_title = title;
+    set_tt();
+  }
+
+  void Video::set_taskmsg(const string &taskmsg) {
+    m_taskmsg = taskmsg;
+    set_tt();
+  }
+
+  const bool Video::set_icon(const string &filename) {
+    m_icon = filename;
+    return set_icon();
+  }
+
+  void Video::init() {
+    // Ensure Core is initialized
+    Core::get_reference();
+    g_initialized = true;
+
+    // Initialize SDL + Variablse
+    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+
+    set_tt();
+    set_icon();
+
+    if(g_screen_width == -1)
+      g_screen_width = 0;
+    if(g_screen_height == -1)
+      g_screen_height = 0;
+
+    // Initialize Window
+    m_display_surface = SDL_SetVideoMode(g_screen_width, g_screen_height, 32,
+      (get_opengl_flag() ? SDL_OPENGL : 0) | 
+      (g_screen_full ? SDL_FULLSCREEN : 
+      (VideoInfo->wm_available && g_screen_show_frame ? 0 : SDL_NOFRAME)));
+
+    if(!m_display_surface) {
+      g_initialized = false;
+      throw Video_Init_Failure();
+    }
+
+    g_screen_width = m_display_surface->w;
+    g_screen_height = m_display_surface->h;
+  }
+
+  void Video::set_tt() {
+    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+    if(VideoInfo->wm_available)
+      SDL_WM_SetCaption(m_title.c_str(), m_taskmsg.c_str());
+  }
+
+  bool Video::set_icon() {
+    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+    if(!VideoInfo->wm_available)
+      return false;
+
+    m_icon_surface = IMG_Load(m_icon.c_str());
+
+    if(!m_icon_surface) {
+      cerr << "Could not load display window icon\n";
+      return false;
+    }
+
+    SDL_WM_SetIcon(m_icon_surface, NULL);
+    return true;
+  }
+
+  void Video::regenerate_compound_matrices() {
+    m_world_to_screen = m_preview * m_view * m_projection;
+    m_screen_to_world = m_world_to_screen.inverted();
+  }
+
+  Video *Video::e_video = 0;
+  Video_Base::VIDEO_MODE Video::g_video_mode = Video_Base::ZENI_VIDEO_ANY;
+  int Video::g_screen_width = 0;
+  int Video::g_screen_height = 0;
+  bool Video::g_screen_full = false;
+  bool Video::g_screen_show_frame = true;
+  bool Video::g_initialized = false;
+  bool Video::g_backface_culling = false;
+  bool Video::g_lighting = false;
+  bool Video::g_normal_interp = false;
+  bool Video::g_vertical_sync = false;
+  int Video::g_multisampling = 1;
+
+}

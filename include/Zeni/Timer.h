@@ -58,7 +58,9 @@
 
 #include <Zeni/Mutex.h>
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+#include <Windows.h>
+#else
 #include <sys/time.h>
 #endif
 

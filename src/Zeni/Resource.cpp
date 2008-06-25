@@ -26,4 +26,20 @@
 * the GNU General Public License.
 */
 
-#include "Resource.hpp"
+#include <Zeni/Resource.hxx>
+
+using namespace std;
+
+namespace Zeni {
+
+  Resource::Resource()
+    : m_current(0)
+  {
+  }
+
+  Resource & Resource::get_reference() {
+    static Resource e_reference;
+    return e_reference;
+  }
+
+}

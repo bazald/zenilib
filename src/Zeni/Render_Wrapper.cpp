@@ -26,4 +26,83 @@
 * the GNU General Public License.
 */
 
-#include "Render_Wrapper.hpp"
+#include <Zeni/Render_Wrapper.hxx>
+
+#include <Zeni/Coordinate.h>
+
+#include <Zeni/Material.hxx>
+#include <Zeni/Video.hxx>
+
+namespace Zeni {
+
+  float Renderable::get_distance(const Renderable &renderable) const {
+    return get_distance(renderable.get_position());
+  }
+
+  float Renderable::get_distance(const Point3f &position) const {
+    Point3f point[2] = {get_position(), position};
+
+    return sqrt(pow(point[0].x - point[1].x, 2) + pow(point[0].y - point[1].y, 2) + pow(point[0].z - point[1].z, 2));
+  }
+
+  Render_Wrapper * Render_Wrapper::get_duplicate() const {
+    return new Render_Wrapper();
+  }
+
+  Material_Render_Wrapper::Material_Render_Wrapper(const Material &material)
+    : m_material(material),
+      optimization(0)
+  {
+  }
+
+  void Material_Render_Wrapper::prerender() const {
+    Video::get_reference().set_material(m_material, optimization);
+  }
+
+  void Material_Render_Wrapper::postrender() const {
+    Video::get_reference().unset_material(m_material, optimization);
+  }
+
+  Render_Wrapper * Material_Render_Wrapper::get_duplicate() const {
+    return new Material_Render_Wrapper(m_material);
+  }
+
+  void Material_Render_Wrapper::optimize_to_follow(const Material_Render_Wrapper &rhs) {
+    const Material &material = rhs.get_material();
+
+    if(m_material.get_ambient() == material.get_ambient())
+      optimization |= (1 << 0);
+    if(m_material.get_diffuse() == material.get_diffuse())
+      optimization |= (1 << 1);
+    if(m_material.get_specular() == material.get_specular())
+      optimization |= (1 << 2);
+    if(m_material.get_emissive() == material.get_emissive())
+      optimization |= (1 << 3);
+    if(m_material.get_power() == material.get_power())
+      optimization |= (1 << 4);
+    if(m_material.get_texture() == material.get_texture())
+      optimization |= (1 << 5);
+  }
+
+  void Material_Render_Wrapper::optimize_to_precede(const Material_Render_Wrapper &rhs) {
+    const Material &material = rhs.get_material();
+
+    if(m_material.get_ambient() == material.get_ambient())
+      optimization |= (1 << 6);
+    if(m_material.get_diffuse() == material.get_diffuse())
+      optimization |= (1 << 7);
+    if(m_material.get_specular() == material.get_specular())
+      optimization |= (1 << 8);
+    if(m_material.get_emissive() == material.get_emissive())
+      optimization |= (1 << 9);
+    if(m_material.get_power() == material.get_power())
+      optimization |= (1 << 10);
+    if(m_material.get_texture() == material.get_texture())
+      optimization |= (1 << 11);
+  }
+
+  void Material_Render_Wrapper::clear_optimization() {
+    optimization = 0;
+  }
+
+}
