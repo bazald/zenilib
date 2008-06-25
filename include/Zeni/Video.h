@@ -51,6 +51,7 @@
 #include <Zeni/Core.h>
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
+#include <Zeni/IV.h>
 #include <Zeni/Matrix4f.h>
 
 #include <SDL/SDL.h>
@@ -58,15 +59,6 @@
 #include <cmath>
 
 namespace Zeni {
-
-  enum VIDEO_MODE {ZENI_VIDEO_ANY
-#ifndef DISABLE_GL
-    , ZENI_VIDEO_GL
-#endif
-#ifndef DISABLE_DX9
-    , ZENI_VIDEO_DX9
-#endif
-  };
 
   class Camera;
   class Font;
@@ -76,10 +68,24 @@ namespace Zeni {
   class Texture;
   class Vertex_Buffer;
 
-  class Video {
+  class Video_Base {
+  public:
+    enum VIDEO_MODE {ZENI_VIDEO_ANY
+#ifndef DISABLE_GL
+      , ZENI_VIDEO_GL
+#endif
+#ifndef DISABLE_DX9
+      , ZENI_VIDEO_DX9
+#endif
+    };
+
+    typedef IV<Video_Base, VIDEO_MODE> IV;
+  };
+
+  class Video : public Video_Base::IV {
   protected:
-    Video();
-    virtual ~Video();
+    Video(const Video_Base::VIDEO_MODE &vtype_);
+    virtual ~Video() = 0;
 
   private:
     // Undefined
@@ -91,11 +97,11 @@ namespace Zeni {
     static Video & get_reference(); ///< Get access to the singleton
 
     // Rendering functions
-    virtual void render_all() = 0; ///< Render the scene
-    virtual void render(const Renderable &renderable) = 0; ///< Render a Renderable
+    inline void render_all(); ///< Render the scene
+    inline void render(const Renderable &renderable); ///< Render a Renderable
 
     // Accessors
-    inline static const VIDEO_MODE & get_video_mode(); ///< Get the current VIDEO_MODE
+    inline static const Video_Base::VIDEO_MODE & get_video_mode(); ///< Get the current VIDEO_MODE
     inline static const int & get_screen_width(); ///< Get the width of the screen
     inline static const int & get_screen_height(); ///< Get the height of the screen
     inline static const bool & is_fullscreen(); ///< Determine whether the screen is windowed or full screen
@@ -105,58 +111,58 @@ namespace Zeni {
     inline static const bool & get_normal_interpolation(); ///< Determine whether normal interpolation is enabled
     inline static const bool & get_vertical_sync(); ///< Determine whether vertical sync is enabled
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
-    virtual int get_maximum_anisotropy() const = 0; ///< Get the current level of anisotrophy
-    virtual bool has_vertex_buffers() const = 0; ///< Determine whether Vertex_Buffers are supported
+    inline int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
+    inline bool has_vertex_buffers() const; ///< Determine whether Vertex_Buffers are supported
     inline const bool & zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
     inline const bool & ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
 
     // Modifiers
-    void set_2d(); ///< Set the default 2D view filling the entire display area
-    void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
-    void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
-    virtual void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
-    virtual void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
-    virtual void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
-    virtual void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
-    virtual void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
-    virtual void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
+    inline void set_2d(); ///< Set the default 2D view filling the entire display area
+    inline void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
+    inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
+    inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
+    inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
+    inline void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
+    inline void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
+    inline void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
+    inline void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
 
     // Color and Texturing
     inline const Color & get_color() const; ///< Get the current color
     inline const Color & get_clear_color() const; ///< Get the blank background color
-    virtual void set_color(const Color &color); ///< Set the current color
-    virtual void set_clear_color(const Color &color); ///< Set the blank background color
-    virtual void apply_texture(const std::string &name) = 0; ///< Apply a texture by name
-    virtual void apply_texture(const unsigned long &id) = 0; ///< Apply a texture by id
-    virtual void apply_texture(const Texture &texture) = 0; ///< Apply a texture by id
-    virtual void unapply_texture() = 0; ///< Unapply a texture
+    inline void set_color(const Color &color); ///< Set the current color
+    inline void set_clear_color(const Color &color); ///< Set the blank background color
+    inline void apply_texture(const std::string &name); ///< Apply a texture by name
+    inline void apply_texture(const unsigned long &id); ///< Apply a texture by id
+    inline void apply_texture(const Texture &texture); ///< Apply a texture by id
+    inline void unapply_texture(); ///< Unapply a texture
 
     // Lighting and Materials
-    virtual void set_lighting(const bool &on = true); ///< Set lighting on/off
-    virtual void set_normal_interpolation(const bool &on = true); ///< Set normal interpolation on/off
-    virtual void set_ambient_lighting(const Color &color) = 0; ///< Set ambient lighting on/off
-    virtual void set_light(const int &number, const Light * const light = 0) = 0; ///< Set a particular Light
-    virtual void set_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
-    virtual void unset_material(const Material &material, const int &optimization = 0) = 0; ///< Set a Material
+    inline void set_lighting(const bool &on = true); ///< Set lighting on/off
+    inline void set_normal_interpolation(const bool &on = true); ///< Set normal interpolation on/off
+    inline void set_ambient_lighting(const Color &color); ///< Set ambient lighting on/off
+    inline void set_light(const int &number, const Light * const light = 0); ///< Set a particular Light
+    inline void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
+    inline void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
 
     // Model/World Transformation Stack Functions
-    virtual void select_world_matrix() = 0; ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
-    virtual void push_world_stack() = 0; ///< Push a model view matrix onto the stack
-    virtual void pop_world_stack() = 0; ///< Pop a model view matrix off the stack
-    virtual void translate_scene(const Vector3f &direction) = 0; ///< Translate the scene
-    virtual void rotate_scene(const Vector3f &about, const float &radians) = 0; ///< Rotate the scene
-    virtual void scale_scene(const Vector3f &factor) = 0; ///< Scale the scene
-    virtual void transform_scene(const Matrix4f &transformation) = 0; ///< Transform the scene
+    inline void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
+    inline void push_world_stack(); ///< Push a model view matrix onto the stack
+    inline void pop_world_stack(); ///< Pop a model view matrix off the stack
+    inline void translate_scene(const Vector3f &direction); ///< Translate the scene
+    inline void rotate_scene(const Vector3f &about, const float &radians); ///< Rotate the scene
+    inline void scale_scene(const Vector3f &factor); ///< Scale the scene
+    inline void transform_scene(const Matrix4f &transformation); ///< Transform the scene
 
     // View+Projection Matrix Functions
-    inline const Matrix4f & get_view_matrix(); ///< Get the view Matrix4f
-    inline const Matrix4f & get_projection_matrix(); ///< Get the projection Matrix4f
+    inline const Matrix4f & get_view_matrix() const; ///< Get the view Matrix4f
+    inline const Matrix4f & get_projection_matrix() const; ///< Get the projection Matrix4f
     inline const std::pair<Point2i, Point2i> & get_viewport() const; ///< Get the viewport
     inline const Matrix4f & get_world_to_screen_matrix() const; ///< For manual projection
     inline const Matrix4f & get_screen_to_world_matrix() const; ///< For picking
-    virtual void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
-    virtual void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
-    virtual void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
+    inline void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
+    inline void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
+    inline void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
 
     // Window Decorations
     void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message
@@ -165,15 +171,15 @@ namespace Zeni {
     const bool set_icon(const std::string &filename); ///< Set the window icon
 
     // Creation Functions
-    virtual Texture * load_Texture(const std::string &filename, const bool &repeat) = 0; ///< Function for loading a Texture; used internally by Textures
-    virtual Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-      const int &glyph_height) = 0; ///< Function for creating a Font; used internally by Fonts
-    virtual Vertex_Buffer * create_Vertex_Buffer() = 0; ///< Function for creating a Vertex_Buffer
+    inline Texture * load_Texture(const std::string &filename, const bool &repeat); ///< Function for loading a Texture; used internally by Textures
+    inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
+      const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
+    inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
 
     // Initialization Checks and Changes
     inline static const bool & is_initialized(); ///< Determine whether Video is already initialized
     // Call before any other Video functions; May throw Video_Initialized
-    static void preinit(const VIDEO_MODE &vm = ZENI_VIDEO_ANY, const int &w = 800, 
+    static void preinit(const Video_Base::VIDEO_MODE &vm = Video_Base::ZENI_VIDEO_ANY, const int &w = 800, 
       const int &h = 600, const bool &full = false, const int &multisampling = 1, 
       const bool &show_frame_ = true); ///< Sets values for Video initialization
 
@@ -184,7 +190,7 @@ namespace Zeni {
     inline void set_opengl_flag(const bool &on = true);
 
     virtual void init();
-    virtual void uninit();
+    inline void uninit();
 
   private:
     static Video *e_video;
@@ -198,7 +204,7 @@ namespace Zeni {
 
     SDL_Surface *m_display_surface, *m_icon_surface;
 
-    static VIDEO_MODE g_video_mode;
+    static Video_Base::VIDEO_MODE g_video_mode;
 
     static int g_screen_width;
     static int g_screen_height;

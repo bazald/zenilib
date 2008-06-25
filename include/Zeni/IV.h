@@ -26,31 +26,27 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_TEXTURES_HXX
-#define ZENI_TEXTURES_HXX
+#ifndef IV_H
+#define IV_H
 
-//#include <Zeni/Textures.h>
+/* This template offers the storage for the virtual type specifier.
+ *
+ * Additionally, it offers a getter for the type.
+ */
 
-#include <Zeni/Texture.hxx>
+template <class Base_Class,
+          typename BASE_VTYPE>
+class IV {
+  BASE_VTYPE m_vtype;
 
-namespace Zeni {
+protected:
+  typedef BASE_VTYPE VTYPE;
 
-  bool Textures::get_bilinear_filtering() {
-    return m_bilinear_filtering;
-  }
+  IV(const VTYPE &vtype_) : m_vtype(vtype_) {}
+  ~IV() {}
 
-  bool Textures::get_mipmapping() {
-    return m_mipmapping;
-  }
-
-  bool Textures::get_trilinear_filtering() {
-    return m_bilinear_filtering && m_mipmapping;
-  }
-
-  int Textures::get_anisotropic_filtering() {
-    return m_anisotropic_filtering;
-  }
-
-}
+public:
+  VTYPE vtype() const {return m_vtype;}
+};
 
 #endif

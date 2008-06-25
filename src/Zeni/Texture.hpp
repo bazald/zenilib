@@ -26,11 +26,7 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Texture.h>
-
-#include <Zeni/Textures.hxx>
-#include <Zeni/Video.hxx>
-#include <Zeni/Video_DX9.hxx>
+#include <Zeni/Texture.hxx>
 
 #ifndef DISABLE_GL
 #include <SDL/SDL_rotozoom.h>
@@ -41,7 +37,8 @@
 namespace Zeni {
 
   Sprite::Sprite()
-    : m_frame(0)
+    : Texture(Texture_Base::VTYPE_SPRITE),
+    m_frame(0)
   {
   }
   
@@ -118,40 +115,10 @@ namespace Zeni {
     m_frame = frame_number;
   }
 
-  void Sprite::apply_texture() const {
-    static bool no_recurse = true;
-
-    if(no_recurse)
-      no_recurse = false;
-    else
-      throw Sprite_Containing_Sprite();
-
-    if(m_frames.empty() || m_frame < 0 || m_frame >= int(m_frames.size()))
-      throw Frame_Out_of_Range();
-
-    try {
-      Textures::get_reference().apply_texture(m_frames[m_frame].second);
-    }
-    catch(Texture_Not_Found &) {
-      try {
-        m_frames[m_frame].second = Textures::get_reference().get_texture_id(m_frames[m_frame].first);
-        Textures::get_reference().apply_texture(m_frames[m_frame].second);
-      }
-      catch(...) {
-        no_recurse = true;
-        throw;
-      }
-    }
-    catch(...) {
-      no_recurse = true;
-      throw;
-    }
-    no_recurse = true;
-  }
-
 #ifndef DISABLE_GL
   Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, Video_GL &)
-    : m_texture_id(0),
+    : Texture(Texture_Base::VTYPE_GL),
+      m_texture_id(0),
       m_filename(filename),
       m_repeat(repeat)
   {
@@ -159,7 +126,8 @@ namespace Zeni {
   }
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
-    : m_texture_id(build_from_surface(surface, repeat)),
+    : Texture(Texture_Base::VTYPE_GL),
+      m_texture_id(build_from_surface(surface, repeat)),
       m_repeat(repeat)
   {
   }
@@ -167,14 +135,6 @@ namespace Zeni {
   Texture_GL::~Texture_GL() {
     if(m_texture_id)
       glDeleteTextures(1, &m_texture_id);
-  }
-
-  void Texture_GL::apply_texture() const {
-    if(!m_texture_id)
-      load(m_filename, m_repeat);
-    
-    glBindTexture(GL_TEXTURE_2D, m_texture_id);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 
   GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
@@ -286,7 +246,8 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat, Video_DX9 &) 
-    : m_texture(0)
+    : Texture(Texture_Base::VTYPE_DX9),
+      m_texture(0)
   {
     load(filename, repeat);
   }
@@ -294,28 +255,6 @@ namespace Zeni {
   Texture_DX9::~Texture_DX9() {
     if(m_texture)
       m_texture->Release();
-  }
-
-  void Texture_DX9::apply_texture() const {
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
-    //Set the colour to come completely from the texture
-    if(vdx.get_lighting())
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-    else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-
-    //Set the alpha to come completely from the texture
-    if(vdx.get_lighting())
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-    else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
-
-    vdx.get_d3d_device()->SetTexture(0, m_texture);
   }
   
   void Texture_DX9::load(const std::string &filename, const bool &repeat) const {

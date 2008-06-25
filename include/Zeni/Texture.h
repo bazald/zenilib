@@ -44,6 +44,7 @@
 #define ZENI_TEXTURE_H
 
 #include <Zeni/Core.h>
+#include <Zeni/IV.h>
 
 #include <SDL/SDL_image.h>
 #include <string>
@@ -62,11 +63,19 @@ namespace Zeni {
   class Video_GL;
   class Video_DX9;
 
-  class Texture {
+  class Texture_Base {
   public:
+    enum VTYPE {VTYPE_GL, VTYPE_DX9, VTYPE_SPRITE};
+
+    typedef IV<Texture_Base, VTYPE> IV;
+  };
+
+  class Texture : public Texture_Base::IV {
+  public:
+    Texture(const Texture_Base::VTYPE &vtype_) : Texture_Base::IV(vtype_) {}
     virtual ~Texture() {}
 
-    virtual void apply_texture() const = 0; ///< Apply a Texture to upcoming polygons
+    inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
   };
 
   class Sprite : public Texture {
@@ -84,7 +93,7 @@ namespace Zeni {
     int get_current_frame() const; ///< Get the currently selected frame number
     void set_current_frame(const int &frame_number); ///< Set this frame
 
-    virtual void apply_texture() const; ///< Apply the current Texture frame to upcoming polygons
+    inline void apply_texture_impl() const; ///< Apply the current Texture frame to upcoming polygons
 
   private:
     mutable std::vector<std::pair<std::string, unsigned long> > m_frames;
@@ -101,7 +110,7 @@ namespace Zeni {
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
     virtual ~Texture_GL();
 
-    virtual void apply_texture() const;
+    inline void apply_texture_impl() const;
 
   private:
     static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat);
@@ -121,7 +130,7 @@ namespace Zeni {
     Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_DX9 &video);
     virtual ~Texture_DX9();
 
-    virtual void apply_texture() const;
+    inline void apply_texture_impl() const;
 
   private:
     mutable IDirect3DTexture9 *m_texture;
@@ -147,5 +156,9 @@ namespace Zeni {
   };
 
 }
+
+#ifdef ZENI_INLINES
+#include <Zeni/Texture.hxx>
+#endif
 
 #endif

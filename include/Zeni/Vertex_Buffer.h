@@ -59,12 +59,14 @@
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Vertex3f.h>
-#include <Zeni/Video_GL.h>
 
 #include <vector>
 
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
+#endif
+#ifndef DISABLE_GL
+#include <GL/glext.h>
 #endif
 
 namespace Zeni {

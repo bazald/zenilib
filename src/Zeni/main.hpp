@@ -43,7 +43,7 @@ using namespace Zeni;
 
 /// Video_Options stores information used to control the creation of the Video system and Textures
 struct Video_Options {
-  VIDEO_MODE vm;
+  Video_Base::VIDEO_MODE vm;
   int anisotropy, multisampling;
   bool vsync, bilinear, mipmapping, fullscreen;
   int width, height;
@@ -92,15 +92,15 @@ static Video_Options handle_video_options(istream &is) {
     if(id == "RenderingEngine") {
 #ifndef DISABLE_GL
       if(value == "OpenGL")
-        vopts.vm = ZENI_VIDEO_GL;
+        vopts.vm = Video_Base::ZENI_VIDEO_GL;
       else
 #endif
 #ifndef DISABLE_DX9
         if(value == "DX9")
-          vopts.vm = ZENI_VIDEO_DX9;
+          vopts.vm = Video_Base::ZENI_VIDEO_DX9;
         else
 #endif
-          vopts.vm = ZENI_VIDEO_ANY;
+          vopts.vm = Video_Base::ZENI_VIDEO_ANY;
     }
     else if(id == "Anisotropy")
       vopts.anisotropy = atoi(value.c_str());

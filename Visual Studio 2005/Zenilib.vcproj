@@ -226,6 +226,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\IV.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Light.h"
 				>
 			</File>
@@ -424,6 +428,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Sound.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Texture.hxx"
 				>
 			</File>
 			<File
