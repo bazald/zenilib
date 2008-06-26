@@ -70,12 +70,12 @@ namespace Zeni {
 
   class Video_Base {
   public:
-    enum VIDEO_MODE {ZENI_VIDEO_ANY
+    enum VIDEO_MODE {ZENI_VIDEO_ANY = 0
 #ifndef DISABLE_GL
-      , ZENI_VIDEO_GL
+      , ZENI_VIDEO_GL = 1
 #endif
 #ifndef DISABLE_DX9
-      , ZENI_VIDEO_DX9
+      , ZENI_VIDEO_DX9 = 2
 #endif
     };
 

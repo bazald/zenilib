@@ -33,6 +33,8 @@
 
 #include <Zeni/Video_GL.h>
 
+#include <Zeni/Color.hxx>
+#include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Render_Wrapper.hxx>
 #include <Zeni/Vertex_Buffer.h>

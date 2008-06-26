@@ -31,6 +31,8 @@
 
 #include <Zeni/Game.h>
 
+#include <Zeni/Gamestate.hxx>
+
 namespace Zeni {
 
   Gamestate_Base & Game::get_current_state() {

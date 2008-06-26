@@ -65,7 +65,14 @@ namespace Zeni {
 
   class Texture_Base {
   public:
-    enum VTYPE {VTYPE_GL, VTYPE_DX9, VTYPE_SPRITE};
+    enum VTYPE {
+#ifndef DISABLE_GL
+      VTYPE_GL = 1,
+#endif
+#ifndef DISABLE_DX9
+      VTYPE_DX9 = 2,
+#endif
+      VTYPE_SPRITE = 3};
 
     typedef IV<Texture_Base, VTYPE> IV;
   };

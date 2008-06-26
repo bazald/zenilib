@@ -38,6 +38,9 @@
 
 namespace Zeni {
 
+#ifndef DISABLE_DX9
+#ifndef DISABLE_GL
+
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
@@ -55,6 +58,45 @@ namespace Zeni {
       case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
+
+#else
+
+#define \
+  TEXTURE_IV_FCN_CALL(member_function, ...) { \
+    switch(vtype()) { \
+      case Texture_Base::VTYPE_DX9: return reinterpret_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+    } \
+  }
+
+#define \
+  TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
+    switch(vtype()) { \
+      case Texture_Base::VTYPE_DX9: return reinterpret_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+    } \
+  }
+
+#endif
+#else
+
+#define \
+  TEXTURE_IV_FCN_CALL(member_function, ...) { \
+    switch(vtype()) { \
+      case Texture_Base::VTYPE_GL: return reinterpret_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+    } \
+  }
+
+#define \
+  TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
+    switch(vtype()) { \
+      case Texture_Base::VTYPE_GL: return reinterpret_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+    } \
+  }
+
+#endif
 
   void Sprite::apply_texture_impl() const {
     static bool no_recurse = true;
@@ -122,7 +164,7 @@ namespace Zeni {
 #endif
 
   void Texture::apply_texture() const {
-    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl);
+    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl, );
   }
 
 #undef TEXTURE_IV_FCN_CALL

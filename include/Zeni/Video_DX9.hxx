@@ -34,7 +34,7 @@
 #include <Zeni/Video_DX9.h>
 
 #include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
+#include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Render_Wrapper.hxx>
 #include <Zeni/Textures.hxx>
