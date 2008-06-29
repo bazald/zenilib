@@ -2188,6 +2188,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Widget.hxx"
+				>
+			</File>
+			<File
 				RelativePath="src\zenilib.h"
 				>
 			</File>

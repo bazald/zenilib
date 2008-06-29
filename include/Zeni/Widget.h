@@ -31,7 +31,6 @@
 
 #include <Zeni/Coordinate.h>
 #include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Video.h>
@@ -40,81 +39,164 @@
 
 namespace Zeni {
 
-  class Widget_Callback {
+  class Widget {
   public:
-    virtual ~Widget_Callback() {}
+    virtual ~Widget() {}
 
-    virtual void operator()() {};
+    inline void on_mouse_event(const SDL_MouseButtonEvent &event);
+    inline void on_mouse_event(const SDL_MouseMotionEvent &event);
 
-    virtual Widget_Callback * get_duplicate() const {return new Widget_Callback();}
+    virtual void on_mouse_button(const Point2i &pos, const bool &down) = 0;
+    virtual void on_mouse_motion(const Point2i &pos) = 0;
+
+    virtual void render() const = 0;
   };
 
-  class Widget {
-  protected:
-    enum MOUSE_STATE {
-      ZENI_MOUSE_NORMAL = 0,
-      ZENI_MOUSE_HOVERING,
-      ZENI_MOUSE_CLICKED,
-      ZENI_MOUSE_UNCLICKED};
-
+  class Widget_Positioned {
   public:
-    Widget();
-    Widget(const Point2f &upper_left, const Point2f &lower_right);
-    virtual ~Widget();
+    virtual ~Widget_Positioned() {}
 
-    Widget(const Widget &rhs);
-    Widget & operator=(const Widget &rhs);
+    virtual const Point2f & get_upper_left() const = 0;
+    inline Point2f get_lower_left() const;
+    virtual const Point2f & get_lower_right() const = 0;
+    inline Point2f get_upper_right() const;
+    inline Point2f get_center() const;
+  };
 
-    const Point2f & get_upper_left() const {return m_upper_left;}
-    const Point2f & get_lower_right() const {return m_lower_right;}
-    bool is_clicked_down() const {return m_clicked_down;}
-    bool is_clicked_elsewhere() const {return m_clicked_elsewhere;}
+  class Widget_Text {
+  public:
+    inline Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
 
-    virtual Widget * get_duplicate() const = 0;
+    inline const std::string & get_font_name() const;
+    inline const std::string & get_text() const;
+    inline const Color & get_color() const;
 
-    void set_on_mouse_normal(Widget_Callback *callback);
-    void set_on_mouse_hover(Widget_Callback *callback);
-    void set_on_mouse_click(Widget_Callback *callback);
-    void set_on_mouse_unclick(Widget_Callback *callback);
+    inline void set_font_name(const std::string &font_name_);
+    inline void set_text(const std::string &text_);
+    inline void set_color(const Color &color_);
+
+    inline void render(const Point2f &center) const;
+
+  private:
+    std::string m_font_name;
+    std::string m_text;
+    Color m_color;
+  };
+
+  class Widget_Rectangle : public Widget_Positioned {
+  public:
+    inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
     
-    virtual void mouse_move(const Point2f &mouse_pos);
-    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
+    virtual const Point2f & get_upper_left() const;
+    virtual const Point2f & get_lower_right() const;
+
+    virtual void render() const {}
+
+  private:
+    Point2f m_upper_left;
+    Point2f m_lower_right;
+  };
+
+  class Widget_Rectangle_Color : public Widget_Rectangle {
+  public:
+    inline Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
+                                  const Color &color_);
+    inline ~Widget_Rectangle_Color();
+    
+    inline Widget_Rectangle_Color(const Widget_Rectangle_Color &rhs);
+    inline Widget_Rectangle_Color & operator=(const Widget_Rectangle_Color &rhs);
+
+    inline const Color & get_color() const;
+    inline void set_color(const Color &color_);
+
+    virtual void render() const;
+
+  private:
+    inline void generate_quadrilateral();
+
+    Color m_color;
+    Quadrilateral<Vertex2f_Color> * m_quad;
+  };
+
+  class Widget_Rectangle_Texture : public Widget_Rectangle {
+  public:
+    inline Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
+                                    const std::string &texture_name_);
+    inline ~Widget_Rectangle_Texture();
+
+    inline Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs);
+    inline Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &rhs);
+
+    inline const std::string get_texture_name() const;
+    inline void set_texture_name(const std::string &texture_name_);
+
+    virtual void render() const;
+
+  private:
+    inline void generate_quadrilateral();
+
+    std::string m_texture_name;
+    Quadrilateral<Vertex2f_Texture> * m_quad;
+  };
+
+  class Widget_Button : public Widget, public Widget_Positioned {
+  public:
+    inline Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_);
+
+    virtual const Point2f & get_upper_left() const;
+    virtual const Point2f & get_lower_right() const;
+
+    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_motion(const Point2i &pos);
+
+    // Called when the cursor passes over the button
+    virtual void on_hover() {}
+    // Called when the cursor leaves the button without clicking
+    virtual void on_unhover() {}
+
+    // Called when the cursor downclicks the button
+    virtual void on_click() {}
+    // Called when the cursor is dragged off the button after being clicked
+    virtual void on_stray() {}
+    // Called when the cursor is dragged back onto the button without releasing the clicker
+    virtual void on_unstray() {}
+
+    // Called when the cursor is released inside the button
+    virtual void on_accept() {}
+    // Called when the cursor is released outside the button
+    virtual void on_reject() {}
+
+  private:
+    inline bool is_inside(const Point2i &pos) const;
+
+    Point2f m_upper_left;
+    Point2f m_lower_right;
+
+    bool m_clicked_inside;
+    bool m_clicked_outside;
+    bool m_transient;
+  };
+
+  class Text_Button : public Widget_Button {
+  public:
+    inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
+                       const Color &bg_color_,
+                       const std::string &font_name_, const std::string &text_, const Color &text_color_);
 
     virtual void render() const;
 
   protected:
-    void copy_from(const Widget &widget);
-
-    MOUSE_STATE get_mouse_state() const {return mouse_state;}
-
-  private:
-    Point2f m_upper_left, m_lower_right;
-
-    bool m_clicked_down;
-    bool m_clicked_elsewhere;
-
-    MOUSE_STATE mouse_state;
-    Widget_Callback *on_mouse_normal;
-    Widget_Callback *on_mouse_hover;
-    Widget_Callback *on_mouse_click;
-    Widget_Callback *on_mouse_unclick;
+    Widget_Rectangle_Color m_bg;
+    Widget_Text m_text;
   };
 
   class Widgets : public Widget {
   public:
-    Widgets();
-    virtual ~Widgets();
+    inline void add_Widget(Widget * const &widget);
+    inline void remove_Widget(Widget * const &widget);
 
-    Widgets(const Widgets &rhs);
-    Widgets & operator=(const Widgets &rhs);
-
-    virtual void add_Widget(Widget * widget);
-    virtual void remove_Widget(Widget * widget);
-
-    virtual Widget * get_duplicate() const;
-
-    virtual void mouse_move(const Point2f &mouse_pos);
-    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_motion(const Point2i &pos);
 
     virtual void render() const;
 
@@ -122,32 +204,10 @@ namespace Zeni {
     std::set<Widget *> m_widgets;
   };
 
-  class Button : public Widget {
-  public:
-    Button();
-    Button(const Point2f &upper_left, const Point2f &lower_right,
-      const std::string &normal, const std::string &mouse_over, const std::string &click_down);
-    ~Button();
-
-    Button(const Button &rhs);
-    Button & operator=(const Button &rhs);
-    
-    virtual Widget * get_duplicate() const;
-
-    virtual void mouse_move(const Point2f &mouse_pos);
-    virtual void mouse_click(const Point2f &mouse_pos, const bool &down);
-
-    virtual void render() const;
-
-  private:
-    void set_sprite_frame();
-
-    Sprite m_sprite;
-    std::string m_sprite_name;
-
-    Quadrilateral<Vertex2f_Texture> *m_quad;
-  };
-
 }
+
+#ifdef ZENI_INLINES
+#include <Zeni/Widget.hxx>
+#endif
 
 #endif

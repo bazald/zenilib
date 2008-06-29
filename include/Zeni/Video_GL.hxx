@@ -43,43 +43,6 @@
 
 namespace Zeni {
 
-  void Video_GL::render_all_impl() {
-#ifdef _WINDOWS
-    glFlush();
-#else
-    glFinish();
-#endif
-
-    glDepthMask(GL_TRUE);
-    glViewport(0, 0, get_screen_width(), get_screen_height());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    Game::get_reference().render();
-    
-    /*** Begin CPU saver ***/
-#ifdef MANUAL_GL_VSYNC_DELAY
-   Timer &tr = Timer::get_reference();
-   
-   if(get_vertical_sync()) {
-     Time buffer_swap_start_time = tr.get_time();
-     
-     const unsigned int time_allowed = 1000u/60u - 2u;
-     const unsigned int new_time_taken = buffer_swap_start_time.get_ticks_since(m_buffer_swap_end_time);
-     m_time_taken = (1.0f - m_weight_new) * m_time_taken + m_weight_new * new_time_taken;
-     
-     if(m_time_taken < time_allowed)
-       SDL_Delay(unsigned int(time_allowed - m_time_taken));
-   }
-#endif
-    
-    /// Swap the buffers <-- NOT part of the CPU saver, but the reason it is "needed"
-    SDL_GL_SwapBuffers();
-    
-#ifdef MANUAL_GL_VSYNC_DELAY
-   m_buffer_swap_end_time = tr.get_time();
-#endif
-  }
-
   void Video_GL::render_impl(const Renderable &renderable) {
     renderable.render_to(*this);
   }

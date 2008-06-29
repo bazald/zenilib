@@ -44,52 +44,6 @@
 
 namespace Zeni {
 
-  void Video_DX9::render_all_impl() {
-    static bool reset = false;
-
-    if(reset) {
-      const HRESULT result = m_d3d_device->TestCooperativeLevel();
-      
-      if(result == D3DERR_DEVICELOST)
-        return;
-      else if(result == D3DERR_DRIVERINTERNALERROR)
-        throw Video_Device_Failure();
-      
-      if(result == D3DERR_DEVICENOTRESET) {
-        if(FAILED(m_d3d_device->Reset(&m_d3d_parameters)))
-          throw Video_Device_Failure();
-      
-        reset = false;
-
-        init_context();
-        
-        Textures::get_reference().reload();
-        Fonts::get_reference().reload();
-      }
-    }
-    
-    HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
-    
-    if(result == S_OK) {
-      D3DVIEWPORT9 vp = {0, 0, get_screen_width(), get_screen_height(), 0, 1};
-      m_d3d_device->SetViewport(&vp);
-      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);
-      m_d3d_device->BeginScene();
-
-      Game::get_reference().render();
-      
-      m_d3d_device->EndScene();
-    }
-    else if(result == D3DERR_DEVICELOST) {
-      reset = true;
-      return;
-    }
-    else if(result == D3DERR_DEVICEREMOVED) {
-      throw Video_Device_Failure();
-    }
-
-  }
-
   void Video_DX9::render_impl(const Renderable &renderable) {
     renderable.render_to(*this);
   }

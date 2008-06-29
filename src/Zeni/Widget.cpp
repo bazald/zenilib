@@ -37,293 +37,107 @@
 #include <Zeni/Video.h>
 
 namespace Zeni {
+  
+  const Point2f & Widget_Rectangle::get_upper_left() const {
+    return m_upper_left;
+  }
 
-  Widget::Widget()
-    : m_clicked_down(0),
-    m_clicked_elsewhere(0),
-    mouse_state(ZENI_MOUSE_NORMAL),
-    on_mouse_normal(new Widget_Callback()),
-    on_mouse_hover(new Widget_Callback()),
-    on_mouse_click(new Widget_Callback()),
-    on_mouse_unclick(new Widget_Callback())
-  {
+  const Point2f & Widget_Rectangle::get_lower_right() const {
+    return m_lower_right;
+  }
+
+  void Widget_Rectangle_Color::render() const {
+    Video::get_reference().render(*m_quad);
+  }
+
+  void Widget_Rectangle_Texture::render() const {
+    Video::get_reference().render(*m_quad);
+  }
+
+  const Point2f & Widget_Button::get_upper_left() const {
+    return m_upper_left;
+  }
+
+  const Point2f & Widget_Button::get_lower_right() const {
+    return m_lower_right;
   }
   
-  Widget::Widget(const Point2f &upper_left, const Point2f &lower_right)
-    : m_upper_left(upper_left),
-    m_lower_right(lower_right),
-    m_clicked_down(0),
-    m_clicked_elsewhere(0),
-    mouse_state(ZENI_MOUSE_NORMAL),
-    on_mouse_normal(new Widget_Callback()),
-    on_mouse_hover(new Widget_Callback()),
-    on_mouse_click(new Widget_Callback()),
-    on_mouse_unclick(new Widget_Callback())
-  {
-  }
+  void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down) {
+    const bool inside = is_inside(pos);
 
-  Widget::~Widget() {
-    delete on_mouse_normal;
-    delete on_mouse_hover;
-    delete on_mouse_click;
-    delete on_mouse_unclick;
-  }
-
-  Widget::Widget(const Widget &rhs) {
-    copy_from(rhs);
-  }
-
-  Widget & Widget::operator=(const Widget &rhs) {
-    copy_from(rhs);
-    return *this;
-  }
-
-  void Widget::set_on_mouse_normal(Widget_Callback *callback) {
-    delete on_mouse_normal; on_mouse_normal = 0;
-    on_mouse_normal = callback;
-  }
-
-  void Widget::set_on_mouse_hover(Widget_Callback *callback) {
-    delete on_mouse_hover; on_mouse_hover = 0;
-    on_mouse_hover = callback;
-  }
-
-  void Widget::set_on_mouse_click(Widget_Callback *callback) {
-    delete on_mouse_click; on_mouse_click = 0;
-    on_mouse_click = callback;
-  }
-
-  void Widget::set_on_mouse_unclick(Widget_Callback *callback) {
-    delete on_mouse_unclick; on_mouse_unclick = 0;
-    on_mouse_unclick = callback;
-  }
-
-  void Widget::mouse_move(const Point2f &mouse_pos) {
-    if(m_clicked_elsewhere ||
-      mouse_pos.x < m_upper_left.x ||
-      mouse_pos.y < m_upper_left.y ||
-      mouse_pos.x > m_lower_right.x ||
-      mouse_pos.y > m_lower_right.y) {
-      if(mouse_state != ZENI_MOUSE_NORMAL) {
-        mouse_state = ZENI_MOUSE_NORMAL;
-        (*on_mouse_normal)();
+    if(down)
+      if(inside) {
+        m_clicked_inside = true;
+        m_transient = false;
+        on_click();
       }
-    }
-    else if(!m_clicked_down) {
-      if(mouse_state != ZENI_MOUSE_HOVERING) {
-        mouse_state = ZENI_MOUSE_HOVERING;
-        (*on_mouse_hover)();
-      }
-    }
+      else
+        m_clicked_outside = true;
     else
-      mouse_state = ZENI_MOUSE_CLICKED;
+      if(inside)
+        if(m_clicked_inside) {
+          m_clicked_inside = false;
+          on_accept();
+          on_mouse_motion(pos);
+        }
+        else
+          m_clicked_outside = false;
+      else
+        if(m_clicked_inside) {
+          m_clicked_inside = false;
+          m_transient = false;
+          on_reject();
+        }
+        else
+          m_clicked_outside = false;
   }
+  
+  void Widget_Button::on_mouse_motion(const Point2i &pos) {
+    const bool inside = is_inside(pos);
 
-  void Widget::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    if(m_clicked_elsewhere ||
-      mouse_pos.x < m_upper_left.x ||
-      mouse_pos.y < m_upper_left.y ||
-      mouse_pos.x > m_lower_right.x ||
-      mouse_pos.y > m_lower_right.y) {
-      if(mouse_state != ZENI_MOUSE_NORMAL) {
-        mouse_state = ZENI_MOUSE_NORMAL;
-        (*on_mouse_normal)();
-      }
-
-      m_clicked_elsewhere = down;
-      m_clicked_down = false;
-    }
-    else {
-      m_clicked_down = down;
-      m_clicked_elsewhere = false;
-
-      if(m_clicked_down) {
-        if(mouse_state != ZENI_MOUSE_CLICKED) {
-          mouse_state = ZENI_MOUSE_CLICKED;
-          (*on_mouse_click)();
+    if(!m_clicked_outside)
+      if(inside) {
+        if(m_clicked_inside) {
+          if(m_transient) {
+            m_transient = false;
+            on_unstray();
+          }
+        }
+        else if(!m_transient) {
+          m_transient = true;
+          on_hover();
         }
       }
-      else {
-        if(mouse_state != ZENI_MOUSE_UNCLICKED) {
-          mouse_state = ZENI_MOUSE_UNCLICKED;
-          (*on_mouse_unclick)();
+      else if(m_clicked_inside) {
+        if(!m_transient) {
+          m_transient = true;
+          on_stray();
         }
       }
-    }
+      else if(m_transient) {
+        m_transient = false;
+        on_unhover();
+      }
   }
 
-  void Widget::render() const {
+  void Text_Button::render() const {
+    m_bg.render();
+    m_text.render(get_center());
   }
 
-  void Widget::copy_from(const Widget &widget) {
-    m_upper_left = widget.m_upper_left;
-    m_lower_right = widget.m_lower_right;
-    m_clicked_down = widget.m_clicked_down;
-    m_clicked_elsewhere = widget.m_clicked_elsewhere;
-
-    mouse_state = widget.mouse_state;
-    set_on_mouse_normal(widget.on_mouse_normal->get_duplicate());
-    set_on_mouse_hover(widget.on_mouse_hover->get_duplicate());
-    set_on_mouse_click(widget.on_mouse_click->get_duplicate());
-    set_on_mouse_unclick(widget.on_mouse_unclick->get_duplicate());
-  }
-
-  Widgets::Widgets() {
-  }
-
-  Widgets::~Widgets() {
+  void Widgets::on_mouse_button(const Point2i &pos, const bool &down) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      delete *it;
-  }
-
-  Widgets::Widgets(const Widgets &rhs)
-    : Widget(rhs)
-  {
-    for(std::set<Widget *>::const_iterator it = rhs.m_widgets.begin(); it != rhs.m_widgets.end(); ++it)
-      m_widgets.insert((*it)->get_duplicate());
-  }
-
-  Widgets & Widgets::operator=(const Widgets &rhs) {
-    copy_from(rhs);
-
-    Widgets lhs(rhs);
-    std::swap(lhs.m_widgets, m_widgets);
-
-    return *this;
-  }
-
-  Widget * Widgets::get_duplicate() const {
-    return new Widgets(*this);
-  }
-
-  void Widgets::add_Widget(Widget * widget) {
-    m_widgets.insert(widget);
-  }
-
-  void Widgets::remove_Widget(Widget * widget) {
-    m_widgets.erase(widget);
+      (*it)->on_mouse_button(pos, down);
   }
     
-  void Widgets::mouse_move(const Point2f &mouse_pos) {
+  void Widgets::on_mouse_motion(const Point2i &pos) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->mouse_move(mouse_pos);
-  }
-
-  void Widgets::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->mouse_click(mouse_pos, down);
+      (*it)->on_mouse_motion(pos);
   }
 
   void Widgets::render() const {
     for(std::set<Widget *>::const_iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
       (*it)->render();
-  }
-
-  Button::Button()
-    : m_quad(0)
-  {
-  }
-
-  Button::Button(const Point2f &upper_left, const Point2f &lower_right,
-    const std::string &normal, const std::string &mouse_over, const std::string &click_down)
-    : Widget(upper_left, lower_right),
-    m_quad(0)
-  {
-    m_sprite.append_frame(normal);
-    m_sprite.append_frame(mouse_over);
-    m_sprite.append_frame(click_down);
-
-    char buf[64];
-#ifdef _WINDOWS
-    sprintf_s
-#else
-    sprintf
-#endif
-      (buf, "Zeni_%u", static_cast<unsigned int>(Resource::get_reference().assign()));
-    m_sprite_name = buf;
-    Textures::get_reference().set_texture(m_sprite_name, new Sprite(m_sprite));
-
-    m_quad = new Quadrilateral<Vertex2f_Texture>(
-      Vertex2f_Texture(Point2f(get_upper_left().x, get_upper_left().y), Point2f(0.0f, 0.0f)),
-      Vertex2f_Texture(Point2f(get_upper_left().x, get_lower_right().y), Point2f(0.0f, 1.0f)),
-      Vertex2f_Texture(Point2f(get_lower_right().x, get_lower_right().y), Point2f(1.0f, 1.0f)),
-      Vertex2f_Texture(Point2f(get_lower_right().x, get_upper_left().y), Point2f(1.0f, 0.0f)),
-      new Material_Render_Wrapper(Material(m_sprite_name)));
-  }
-
-  Button::Button(const Button &rhs)
-    : Widget(rhs)
-  {
-    m_sprite = rhs.m_sprite;
-    m_sprite_name = rhs.m_sprite_name;
-    m_quad = rhs.m_quad ? rhs.m_quad->get_duplicate() : 0;
-  }
-
-  Button::~Button() {
-    delete m_quad;
-  }
-
-  Widget * Button::get_duplicate() const {
-    return new Button(*this);
-  }
-
-  void Button::mouse_move(const Point2f &mouse_pos) {
-    Widget::mouse_move(mouse_pos);
-
-    set_sprite_frame();
-  }
-
-  void Button::mouse_click(const Point2f &mouse_pos, const bool &down) {
-    Widget::mouse_click(mouse_pos, down);
-
-    set_sprite_frame();
-  }
-
-  void Button::render() const {
-    if(m_quad) {
-      Video &vr = Video::get_reference();
-      Textures &tex = Textures::get_reference();
-
-      try {
-        tex.set_current_frame(tex.get_texture_id(m_sprite_name), m_sprite.get_current_frame());
-        vr.render(*m_quad);
-      }
-      catch(Texture_Not_Found &) {
-        tex.set_texture(m_sprite_name, new Sprite(m_sprite));
-        vr.render(*m_quad);
-      }
-    }
-  }
-
-  Button & Button::operator=(const Button &rhs) {
-    copy_from(rhs);
-
-    Button lhs(rhs);
-    std::swap(m_sprite, lhs.m_sprite);
-    std::swap(m_sprite_name, lhs.m_sprite_name);
-    std::swap(m_quad, lhs.m_quad);
-
-    return *this;
-  }
-
-  void Button::set_sprite_frame() {
-    switch(get_mouse_state()) {
-      case ZENI_MOUSE_NORMAL:
-        m_sprite.set_current_frame(0);
-        break;
-
-      case ZENI_MOUSE_HOVERING:
-      case ZENI_MOUSE_UNCLICKED:
-        m_sprite.set_current_frame(1);
-        break;
-
-      case ZENI_MOUSE_CLICKED:
-        m_sprite.set_current_frame(2);
-        break;
-
-      default:
-        throw Error("Internal Error in Button::mouse_move.");
-    }
   }
 
 }

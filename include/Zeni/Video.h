@@ -97,7 +97,7 @@ namespace Zeni {
     static Video & get_reference(); ///< Get access to the singleton
 
     // Rendering functions
-    inline void render_all(); ///< Render the scene
+    virtual void render_all() = 0; ///< Render the scene
     inline void render(const Renderable &renderable); ///< Render a Renderable
 
     // Accessors

@@ -207,10 +207,6 @@ namespace Zeni {
 
 #endif
 
-  void Video::render_all() {
-    VIDEO_IV_FCN_CALL(render_all_impl, );
-  }
-
   void Video::render(const Renderable &renderable) {
     VIDEO_IV_FCN_CALL(render_impl, renderable);
   }
@@ -230,7 +226,7 @@ namespace Zeni {
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
-    const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, 0.0f, 1.0f);
+    const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, -1.0f, 1.0f);
     set_projection_matrix(projection);
 
     set_viewport(viewport);

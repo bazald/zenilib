@@ -64,7 +64,7 @@ namespace Zeni {
 
   public:
     // Rendering functions
-    inline void render_all_impl(); ///< Render the scene
+    virtual void render_all(); ///< Render the scene
     inline void render_impl(const Renderable &renderable); ///< Render a Renderable
 
     // Accessors
