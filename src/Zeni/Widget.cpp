@@ -26,12 +26,10 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Widget.h>
+#include <Zeni/Widget.hxx>
 
 #include <Zeni/Coordinate.hxx>
-#include <Zeni/Resource.hxx>
 #include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
 #include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Video.h>

@@ -31,6 +31,8 @@
 
 #include <Zeni/Widget.h>
 
+#include <Zeni/Fonts.h>
+
 namespace Zeni {
 
   void Widget::on_mouse_event(const SDL_MouseButtonEvent &event) {
