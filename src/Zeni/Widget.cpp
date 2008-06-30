@@ -36,7 +36,6 @@
 #include <Zeni/Video.h>
 
 #include <list>
-#include <iostream>
 
 using std::string;
 using std::vector;
@@ -140,6 +139,7 @@ namespace Zeni {
                 clean_string(text_), text_color_),
     m_editable(editable_),
     m_edit_pos(-1),
+    m_last_seek(0),
     m_justify(justify_),
     m_tab_spaces(tab_spaces_),
     m_cursor_index(-1, -1)
@@ -248,8 +248,6 @@ namespace Zeni {
     m_cursor_index.y = -1;
 
     Text_Button::on_mouse_button(pos, down);
-
-    //SDL_EnableKeyRepeat(0, 0);
   }
 
   void Text_Box::on_accept() {
@@ -287,9 +285,6 @@ namespace Zeni {
 
     seek(m_edit_pos);
 #endif
-
-    //if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL))
-    //  std::cerr << "Enabling \"Key Repeat\" failed in Zeni::Text_Box.\n";
   }
 
   void Text_Box::render() const {
@@ -311,7 +306,7 @@ namespace Zeni {
       f.render_text(m_lines[i].formatted, x_pos, y_offset + m_lines[i].glyph_top, c, m_justify);
 
     if(m_cursor_index.x != -1 && m_cursor_index.y != -1
-       //&& time(0) & 1 // render every other second
+      && !((Timer::get_reference().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // render every other second
        )
     {
       const Point2f p0(get_upper_left().x + m_lines[m_cursor_index.y].unformatted_glyph_sides[m_cursor_index.x],
@@ -425,12 +420,6 @@ namespace Zeni {
       }
     }
     else {
-      //const int offset = next_sum - *word.unformatted_glyph_sides.rbegin();
-
-      //l.unformatted += word.unformatted;
-      //for(int i = 1, iend = word.unformatted_glyph_sides.size(); i != iend; ++i)
-      //  l.unformatted_glyph_sides.push_back(word.unformatted_glyph_sides[i] + offset);
-
       for(int i = 0, iend = word.unformatted.size(); i != iend; ++i) {
         l.unformatted += word.unformatted[i];
         l.unformatted_glyph_sides.push_back(get_text_width(f, l.unformatted));
@@ -469,6 +458,9 @@ namespace Zeni {
     m_cursor_index.x = i;
     m_cursor_index.y = j;
 
+    m_last_seek = Timer::get_reference().get_time();
+
+    // HACK: Makes the "Home" command kind of work
     if(alt_mode && !m_cursor_index.x && isspace(t[m_edit_pos]))
       ++m_edit_pos;
   }
@@ -516,6 +508,31 @@ namespace Zeni {
 
   int Text_Box::max_line_width() const {
     return int(get_lower_right().x - get_upper_left().x);
+  }
+
+  void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
+    m_keysym = keysym;
+    m_down = down;
+
+    m_last_repeated = Timer::get_reference().get_time();
+    m_active = true;
+    m_delay_finished = false;
+
+    m_widget->on_key(m_keysym, m_down);
+  }
+
+  void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down) {
+    m_active = false;
+
+    m_widget->on_mouse_button(pos, down);
+  }
+
+  void Widget_Input_Repeater::on_mouse_motion(const Point2i &pos) {
+    m_widget->on_mouse_motion(pos);
+  }
+
+  void Widget_Input_Repeater::render() const {
+    m_widget->render();
   }
 
   void Widgets::on_mouse_button(const Point2i &pos, const bool &down) {

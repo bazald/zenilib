@@ -215,6 +215,10 @@ namespace Zeni {
   {
   }
 
+  const std::string & Text_Box::get_font_name() const {
+    return m_text.get_font_name();
+  }
+
   const Font & Text_Box::get_font() const {
     return Fonts::get_reference().get_font(m_text.get_font_name());
   }
@@ -227,12 +231,66 @@ namespace Zeni {
     return m_editable;
   }
 
-  void Widgets::add_Widget(Widget * const &widget) {
-    m_widgets.insert(widget);
+  void Text_Box::set_font_name(const std::string &font_name_) {
+    m_text.set_font_name(font_name_);
+    format();
+    seek(m_edit_pos);
   }
 
-  void Widgets::remove_Widget(Widget * const &widget) {
-    m_widgets.erase(widget);
+  void Text_Box::set_text(const std::string &text_) {
+    m_text.set_text(text_);
+    format();
+    seek(m_edit_pos);
+  }
+
+  void Text_Box::set_editable(const bool &editable_) {
+    m_editable = editable_;
+    format();
+    m_edit_pos = -1;
+    m_cursor_index.x = -1;
+    m_cursor_index.y = -1;
+  }
+
+  Widget_Input_Repeater::Widget_Input_Repeater(Widget &widget_,
+                                               const int &repeat_delay_,
+                                               const int &repeat_interval_)
+  : m_widget(&widget_),
+  m_repeat_delay(repeat_delay_),
+  m_repeat_interval(repeat_interval_),
+  m_last_repeated(0),
+  m_active(false)
+  {
+  }
+
+  Widget * const & Widget_Input_Repeater::get_widget() const {return m_widget;}
+  const int & Widget_Input_Repeater::get_repeat_delay() const {return m_repeat_delay;}
+  const int & Widget_Input_Repeater::get_repeat_interval() const  {return m_repeat_interval;}
+
+  void Widget_Input_Repeater::set_widget(Widget &widget_) {m_widget = &widget_;}
+  void Widget_Input_Repeater::set_repeat_delay(const int &repeat_delay_) {m_repeat_delay = repeat_delay_;}
+  void Widget_Input_Repeater::set_repeat_interval(const int &repeat_interval_) {m_repeat_interval = repeat_interval_;}
+
+  void Widget_Input_Repeater::perform_logic() {
+    if(!m_active)
+      return;
+
+    const Time current_time = Timer::get_reference().get_time();
+    const int ticks = current_time.get_ticks_since(m_last_repeated);
+
+    if(m_delay_finished && ticks > m_repeat_interval ||
+      !m_delay_finished && ticks > m_repeat_delay) {
+      m_delay_finished = true;
+      m_last_repeated = current_time;
+      m_widget->on_key(m_keysym, m_down);
+    }
+  }
+
+  void Widgets::add_Widget(Widget &widget) {
+    m_widgets.insert(&widget);
+  }
+
+  void Widgets::remove_Widget(Widget &widget) {
+    m_widgets.erase(&widget);
   }
 
 }

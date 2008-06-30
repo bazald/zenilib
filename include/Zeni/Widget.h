@@ -32,6 +32,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Font.h>
 #include <Zeni/Texture.h>
+#include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Video.h>
@@ -207,9 +208,14 @@ namespace Zeni {
     virtual void on_mouse_button(const Point2i &pos, const bool &down);
     virtual void on_accept();
 
+    inline const std::string & get_font_name() const;
     inline const Font & get_font() const;
     inline const std::string & get_text() const;
     inline const bool & is_editable() const;
+
+    inline void set_font_name(const std::string &font_name_);
+    inline void set_text(const std::string &text_);
+    inline void set_editable(const bool &editable_);
 
     /// By default, seek will rest on the earliest line possible; In its alternate mode, seek will rest on the latest lie possible;
     void seek(const int &edit_pos, const bool &alt_mode = false);
@@ -248,6 +254,7 @@ namespace Zeni {
 
     bool m_editable;
     int m_edit_pos;
+    Time m_last_seek;
 
     JUSTIFY m_justify;
     int m_tab_spaces;
@@ -256,10 +263,52 @@ namespace Zeni {
     Point2i m_cursor_index;
   };
 
+  class Widget_Input_Repeater : public Widget {
+  public:
+    /// Pass in the Widget to have input "repeated" to
+    inline Widget_Input_Repeater(Widget &widget_,
+                                 const int &repeat_delay_ = SDL_DEFAULT_REPEAT_DELAY,
+                                 const int &repeat_interval_ = SDL_DEFAULT_REPEAT_INTERVAL);
+
+    inline Widget * const & get_widget() const;
+    inline const int & get_repeat_delay() const;
+    inline const int & get_repeat_interval() const ;
+
+    inline void set_widget(Widget &widget_);
+    inline void set_repeat_delay(const int &repeat_delay_ = SDL_DEFAULT_REPEAT_DELAY);
+    inline void set_repeat_interval(const int &repeat_interval_ = SDL_DEFAULT_REPEAT_INTERVAL);
+
+    /// on_key input is repeated
+    virtual void on_key(const SDL_keysym &keysym, const bool &down);
+    
+    /// on_mouse_button deactivates the repeater (if active) and then passes input to the Widget
+    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    /// on_mouse_motion input is simply passed through
+    virtual void on_mouse_motion(const Point2i &pos);
+
+    /// Call this function in your perform_logic function to get this Widget to actually do its job
+    inline void perform_logic();
+
+    // render is simply passed through
+    virtual void render() const;
+
+  private:
+    Widget * m_widget;
+    int m_repeat_delay;
+    int m_repeat_interval;
+    
+    Time m_last_repeated;
+    bool m_active;
+    bool m_delay_finished;
+
+    SDL_keysym m_keysym;
+    bool m_down;
+  };
+
   class Widgets : public Widget {
   public:
-    inline void add_Widget(Widget * const &widget);
-    inline void remove_Widget(Widget * const &widget);
+    inline void add_Widget(Widget &widget);
+    inline void remove_Widget(Widget &widget);
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down);
     virtual void on_mouse_motion(const Point2i &pos);
