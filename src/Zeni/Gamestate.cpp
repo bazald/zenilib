@@ -231,49 +231,49 @@ namespace Zeni {
     }
 
     switch(ks.sym) {
-    case SDLK_BACKSPACE:    return '\b';
+    //case SDLK_BACKSPACE:    return '\b';
     case SDLK_TAB:          return '\t';
-    case SDLK_RETURN:       return '\r';
-    case SDLK_ESCAPE:       return 0x1B;
+    case SDLK_RETURN:       return '\n'; // '\r' is less sane, but another possibility
+    //case SDLK_ESCAPE:       return 0x1B;
     case SDLK_SPACE:        return ' ';
     case SDLK_EXCLAIM:      return '!';
     case SDLK_QUOTEDBL:     return '"';
     case SDLK_HASH:         return '#';
     case SDLK_DOLLAR:       return '$';
     case SDLK_AMPERSAND:    return '&';
-    case SDLK_QUOTE:        return '\'';
+    case SDLK_QUOTE:        return (ks.mod & KMOD_SHIFT) ? '"' : '\'';
     case SDLK_LEFTPAREN:    return '(';
     case SDLK_RIGHTPAREN:   return ')';
     case SDLK_ASTERISK:     return '*';
     case SDLK_PLUS:         return '+';
-    case SDLK_COMMA:        return ',';
-    case SDLK_MINUS:        return '-';
-    case SDLK_PERIOD:       return '.';
-    case SDLK_SLASH:        return '/';
-    case SDLK_0:            return '0';
-    case SDLK_1:            return '1';
-    case SDLK_2:            return '2';
-    case SDLK_3:            return '3';
-    case SDLK_4:            return '4';
-    case SDLK_5:            return '5';
-    case SDLK_6:            return '6';
-    case SDLK_7:            return '7';
-    case SDLK_8:            return '8';
-    case SDLK_9:            return '9';
+    case SDLK_COMMA:        return (ks.mod & KMOD_SHIFT) ? '<' : ',';
+    case SDLK_MINUS:        return (ks.mod & KMOD_SHIFT) ? '_' : '-';
+    case SDLK_PERIOD:       return (ks.mod & KMOD_SHIFT) ? '>' : '.';
+    case SDLK_SLASH:        return (ks.mod & KMOD_SHIFT) ? '?' : '/';
+    case SDLK_0:            return (ks.mod & KMOD_SHIFT) ? ')' : '0';
+    case SDLK_1:            return (ks.mod & KMOD_SHIFT) ? '!' : '1';
+    case SDLK_2:            return (ks.mod & KMOD_SHIFT) ? '@' : '2';
+    case SDLK_3:            return (ks.mod & KMOD_SHIFT) ? '#' : '3';
+    case SDLK_4:            return (ks.mod & KMOD_SHIFT) ? '$' : '4';
+    case SDLK_5:            return (ks.mod & KMOD_SHIFT) ? '%' : '5';
+    case SDLK_6:            return (ks.mod & KMOD_SHIFT) ? '^' : '6';
+    case SDLK_7:            return (ks.mod & KMOD_SHIFT) ? '&' : '7';
+    case SDLK_8:            return (ks.mod & KMOD_SHIFT) ? '*' : '8';
+    case SDLK_9:            return (ks.mod & KMOD_SHIFT) ? '(' : '9';
     case SDLK_COLON:        return ':';
-    case SDLK_SEMICOLON:    return ';';
+    case SDLK_SEMICOLON:    return (ks.mod & KMOD_SHIFT) ? ':' : ';';
     case SDLK_LESS:         return '<';
-    case SDLK_EQUALS:       return '=';
+    case SDLK_EQUALS:       return (ks.mod & KMOD_SHIFT) ? '+' : '=';
     case SDLK_GREATER:      return '>';
     case SDLK_QUESTION:     return '?';
     case SDLK_AT:           return '@';
-    case SDLK_LEFTBRACKET:  return '[';
-    case SDLK_BACKSLASH:    return '\\';
-    case SDLK_RIGHTBRACKET: return ']';
+    case SDLK_LEFTBRACKET:  return (ks.mod & KMOD_SHIFT) ? '{' : '[';
+    case SDLK_BACKSLASH:    return (ks.mod & KMOD_SHIFT) ? '|' : '\\';
+    case SDLK_RIGHTBRACKET: return (ks.mod & KMOD_SHIFT) ? '}' : ']';
     case SDLK_CARET:        return '^';
     case SDLK_UNDERSCORE:   return '_';
-    case SDLK_BACKQUOTE:    return '`';
-    case SDLK_DELETE:       return 0x7F;
+    case SDLK_BACKQUOTE:    return (ks.mod & KMOD_SHIFT) ? '~' : '`';
+    //case SDLK_DELETE:       return 0x7F;
     default: break;
     }
 

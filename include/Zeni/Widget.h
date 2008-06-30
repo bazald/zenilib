@@ -30,11 +30,14 @@
 #define ZENI_WIDGET_H
 
 #include <Zeni/Coordinate.h>
+#include <Zeni/Font.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Video.h>
 
+#include <string>
+#include <vector>
 #include <set>
 
 namespace Zeni {
@@ -43,9 +46,11 @@ namespace Zeni {
   public:
     virtual ~Widget() {}
 
-    inline void on_mouse_event(const SDL_MouseButtonEvent &event);
-    inline void on_mouse_event(const SDL_MouseMotionEvent &event);
+    inline void on_event(const SDL_KeyboardEvent &event);
+    inline void on_event(const SDL_MouseButtonEvent &event);
+    inline void on_event(const SDL_MouseMotionEvent &event);
 
+    virtual void on_key(const SDL_keysym & /*keysym*/, const bool & /*down*/) {}
     virtual void on_mouse_button(const Point2i &pos, const bool &down) = 0;
     virtual void on_mouse_motion(const Point2i &pos) = 0;
 
@@ -188,6 +193,67 @@ namespace Zeni {
   protected:
     Widget_Rectangle_Color m_bg;
     Widget_Text m_text;
+  };
+  
+  class Text_Box : public Text_Button {
+  public:
+    Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
+             const Color &bg_color_,
+             const std::string &font_name_, const std::string &text_, const Color &text_color_,
+             const bool &editable_ = false, const JUSTIFY &justify_ = ZENI_LEFT, const int &tab_spaces_ = 5);
+
+    virtual void on_key(const SDL_keysym &keysym, const bool &down);
+
+    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_accept();
+
+    inline const Font & get_font() const;
+    inline const std::string & get_text() const;
+    inline const bool & is_editable() const;
+
+    /// By default, seek will rest on the earliest line possible; In its alternate mode, seek will rest on the latest lie possible;
+    void seek(const int &edit_pos, const bool &alt_mode = false);
+
+    virtual void render() const;
+
+  private:
+    struct Word {
+      enum Type {NONSENSE = 0x0, WORD = 0x1, SPACE = 0x2};
+
+      Word(const Type &type_ = NONSENSE) : unformatted_glyph_sides(1, 0), type(type_), splittable(false), fpsplit(false) {}
+
+      std::string unformatted;
+      std::vector<int> unformatted_glyph_sides;
+      Type type;
+      bool splittable;
+      bool fpsplit; // indicates it has been split already and a '-' should be appended
+    };
+
+    struct Line : public Word {
+      Line() : glyph_top(0) {}
+
+      std::string formatted;
+      int glyph_top;
+    };
+
+    void format();
+    void append_word(const Word &word);
+
+    std::string clean_string(const std::string &unclean_string) const;
+    std::string untablinebreak(const std::string &tabbed_text) const;
+    int get_text_width(const Font &font, const std::string &text); 
+    int max_line_width() const;
+
+    std::vector<Line> m_lines;
+
+    bool m_editable;
+    int m_edit_pos;
+
+    JUSTIFY m_justify;
+    int m_tab_spaces;
+
+    Point2i m_cursor_pos;
+    Point2i m_cursor_index;
   };
 
   class Widgets : public Widget {

@@ -35,11 +35,15 @@
 
 namespace Zeni {
 
-  void Widget::on_mouse_event(const SDL_MouseButtonEvent &event) {
+  void Widget::on_event(const SDL_KeyboardEvent &event) {
+    on_key(event.keysym, event.type == SDL_KEYDOWN);
+  }
+
+  void Widget::on_event(const SDL_MouseButtonEvent &event) {
     on_mouse_button(Point2i(event.x, event.y), event.type == SDL_MOUSEBUTTONDOWN);
   }
 
-  void Widget::on_mouse_event(const SDL_MouseMotionEvent &event) {
+  void Widget::on_event(const SDL_MouseMotionEvent &event) {
     on_mouse_motion(Point2i(event.x, event.y));
   }
 
@@ -209,6 +213,18 @@ namespace Zeni {
     m_bg(upper_left_, lower_right_, bg_color_),
     m_text(font_name_, text_, text_color_)
   {
+  }
+
+  const Font & Text_Box::get_font() const {
+    return Fonts::get_reference().get_font(m_text.get_font_name());
+  }
+
+  const std::string & Text_Box::get_text() const {
+    return m_text.get_text();
+  }
+
+  const bool & Text_Box::is_editable() const {
+    return m_editable;
   }
 
   void Widgets::add_Widget(Widget * const &widget) {
