@@ -249,7 +249,7 @@ namespace Zeni {
 
     Text_Button::on_mouse_button(pos, down);
 
-    SDL_EnableKeyRepeat(0, 0);
+    //SDL_EnableKeyRepeat(0, 0);
   }
 
   void Text_Box::on_accept() {
@@ -288,8 +288,8 @@ namespace Zeni {
     seek(m_edit_pos);
 #endif
 
-    if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL))
-      std::cerr << "Enabling \"Key Repeat\" failed in Zeni::Text_Box.\n";
+    //if(SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL))
+    //  std::cerr << "Enabling \"Key Repeat\" failed in Zeni::Text_Box.\n";
   }
 
   void Text_Box::render() const {
@@ -469,7 +469,7 @@ namespace Zeni {
     m_cursor_index.x = i;
     m_cursor_index.y = j;
 
-    if(alt_mode && isspace(t[m_edit_pos]))
+    if(alt_mode && !m_cursor_index.x && isspace(t[m_edit_pos]))
       ++m_edit_pos;
   }
 
