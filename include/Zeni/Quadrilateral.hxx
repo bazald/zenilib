@@ -49,6 +49,38 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  Quadrilateral<VERTEX>::~Quadrilateral() {
+    delete m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  Quadrilateral<VERTEX>::Quadrilateral(const Quadrilateral<VERTEX> &rhs)
+    : m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+  {
+    m_vertex[0] = rhs.m_vertex[0];
+    m_vertex[1] = rhs.m_vertex[1];
+    m_vertex[2] = rhs.m_vertex[2];
+    m_vertex[3] = rhs.m_vertex[3];
+  }
+
+  template <typename VERTEX>
+  Quadrilateral<VERTEX> & Quadrilateral<VERTEX>::operator=(const Quadrilateral<VERTEX> &rhs) {
+    if(this != &rhs) {
+      delete m_render_wrapper;
+      m_render_wrapper = 0;
+
+      m_vertex[0] = rhs.m_vertex[0];
+      m_vertex[1] = rhs.m_vertex[1];
+      m_vertex[2] = rhs.m_vertex[2];
+      m_vertex[3] = rhs.m_vertex[3];
+
+      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
+    }
+
+    return *this;
+  }
+
+  template <typename VERTEX>
   const VERTEX & Quadrilateral<VERTEX>::get_vertex(const int &index) const {
     assert(-1 < index && index < 4);
     return m_vertex[index];
@@ -92,7 +124,13 @@ namespace Zeni {
 
   template <typename VERTEX>
   const Render_Wrapper * const Quadrilateral<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper.get();
+    return m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  void Quadrilateral<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) const {
+    delete m_render_wrapper;
+    m_render_wrapper = render_wrapper;
   }
 
   template <typename VERTEX>

@@ -49,6 +49,36 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  Triangle<VERTEX>::~Triangle() {
+    delete m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  Triangle<VERTEX>::Triangle(const Triangle<VERTEX> &rhs)
+    : m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+  {
+    m_vertex[0] = rhs.m_vertex[0];
+    m_vertex[1] = rhs.m_vertex[1];
+    m_vertex[2] = rhs.m_vertex[2];
+  }
+
+  template <typename VERTEX>
+  Triangle<VERTEX> & Triangle<VERTEX>::operator=(const Triangle<VERTEX> &rhs) {
+    if(this != &rhs) {
+      delete m_render_wrapper;
+      m_render_wrapper = 0;
+
+      m_vertex[0] = rhs.m_vertex[0];
+      m_vertex[1] = rhs.m_vertex[1];
+      m_vertex[2] = rhs.m_vertex[2];
+
+      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
+    }
+
+    return *this;
+  }
+
+  template <typename VERTEX>
   const VERTEX & Triangle<VERTEX>::get_vertex(const int &index) const {
     assert(-1 < index && index < 3);
     return m_vertex[index];
@@ -93,7 +123,13 @@ namespace Zeni {
 
   template <typename VERTEX>
   const Render_Wrapper * const Triangle<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper.get();
+    return m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  void Triangle<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) const {
+    delete m_render_wrapper;
+    m_render_wrapper = render_wrapper;
   }
 
   template <typename VERTEX>

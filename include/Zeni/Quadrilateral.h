@@ -49,8 +49,6 @@
 #include <Zeni/Render_Wrapper.h>
 #include <Zeni/Triangle.h>
 
-#include <memory>
-
 namespace Zeni {
 
   template <typename VERTEX>
@@ -60,6 +58,10 @@ namespace Zeni {
     Quadrilateral(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
       const VERTEX &vertex2 = VERTEX(), const VERTEX &vertex3 = VERTEX(), 
       Render_Wrapper *render_wrapper = new Render_Wrapper());
+    ~Quadrilateral();
+
+    Quadrilateral(const Quadrilateral<VERTEX> &rhs);
+    Quadrilateral<VERTEX> & operator=(const Quadrilateral<VERTEX> &rhs);
 
     const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
     void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
@@ -76,6 +78,7 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const render_wrapper) const; ///< Set the current Render_Wrapper
     Quadrilateral<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Quadrilateral
 
     Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral
@@ -83,7 +86,7 @@ namespace Zeni {
 
   private:
     VERTEX m_vertex[4];
-    std::auto_ptr<Render_Wrapper> m_render_wrapper;
+    Render_Wrapper * m_render_wrapper;
   };
 
 }

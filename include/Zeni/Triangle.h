@@ -45,8 +45,6 @@
 
 #include <Zeni/Render_Wrapper.h>
 
-#include <memory>
-
 namespace Zeni {
 
   template <typename VERTEX>
@@ -55,6 +53,10 @@ namespace Zeni {
     /// The best way to create a Triangle
     Triangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
       const VERTEX &vertex2 = VERTEX(), Render_Wrapper *render_wrapper = new Render_Wrapper());
+    ~Triangle();
+
+    Triangle(const Triangle<VERTEX> &rhs);
+    Triangle<VERTEX> & operator=(const Triangle<VERTEX> &rhs);
 
     const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
     void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
@@ -71,6 +73,7 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const render_wrapper) const; ///< Set the current Render_Wrapper
     Triangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Triangle
 
     Triangle<VERTEX> * get_duplicate_subt0() const; ///< Get quarter 0 of the Triangle; Can be used for software LOD increase
@@ -80,7 +83,7 @@ namespace Zeni {
 
   private:
     VERTEX m_vertex[3];
-    std::auto_ptr<Render_Wrapper> m_render_wrapper;
+    Render_Wrapper * m_render_wrapper;
   };
 
 }

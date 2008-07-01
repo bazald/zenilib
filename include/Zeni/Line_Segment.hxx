@@ -47,6 +47,34 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  Line_Segment<VERTEX>::~Line_Segment() {
+    delete m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  Line_Segment<VERTEX>::Line_Segment(const Line_Segment<VERTEX> &rhs)
+    : m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+  {
+    m_vertex[0] = rhs.m_vertex[0];
+    m_vertex[1] = rhs.m_vertex[1];
+  }
+
+  template <typename VERTEX>
+  Line_Segment<VERTEX> & Line_Segment<VERTEX>::operator=(const Line_Segment<VERTEX> &rhs) {
+    if(this != &rhs) {
+      delete m_render_wrapper;
+      m_render_wrapper = 0;
+
+      m_vertex[0] = rhs.m_vertex[0];
+      m_vertex[1] = rhs.m_vertex[1];
+
+      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
+    }
+
+    return *this;
+  }
+
+  template <typename VERTEX>
   const VERTEX & Line_Segment<VERTEX>::get_vertex(const int &index) const {
     if(index < 0 || index > 1)
       throw Invalid_Vertex_Index();
@@ -92,7 +120,13 @@ namespace Zeni {
 
   template <typename VERTEX>
   const Render_Wrapper * const Line_Segment<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper.get();
+    return m_render_wrapper;
+  }
+
+  template <typename VERTEX>
+  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) const {
+    delete m_render_wrapper;
+    m_render_wrapper = render_wrapper;
   }
 
   template <typename VERTEX>

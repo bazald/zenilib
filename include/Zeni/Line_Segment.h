@@ -45,8 +45,6 @@
 
 #include <Zeni/Render_Wrapper.h>
 
-#include <memory>
-
 namespace Zeni {
 
   template <typename VERTEX>
@@ -54,7 +52,11 @@ namespace Zeni {
   public:
     /// The best way to create a Line
     Line_Segment(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      Render_Wrapper *render_wrapper = new Render_Wrapper());
+      Render_Wrapper * const render_wrapper = new Render_Wrapper());
+    ~Line_Segment();
+
+    Line_Segment(const Line_Segment<VERTEX> &rhs);
+    Line_Segment<VERTEX> & operator=(const Line_Segment<VERTEX> &rhs);
 
     const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
     void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
@@ -71,11 +73,12 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * const get_render_wrapper() const; ///< Get the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const render_wrapper) const; ///< Set the current Render_Wrapper
     Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
 
   private:
     VERTEX m_vertex[2];
-    std::auto_ptr<Render_Wrapper> m_render_wrapper;
+    Render_Wrapper * m_render_wrapper;
   };
 
 }
