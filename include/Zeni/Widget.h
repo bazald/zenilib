@@ -212,10 +212,13 @@ namespace Zeni {
     inline const Font & get_font() const;
     inline const std::string & get_text() const;
     inline const bool & is_editable() const;
+    inline int get_num_lines() const;
+    inline int get_max_lines() const;
 
     inline void set_font_name(const std::string &font_name_);
     inline void set_text(const std::string &text_);
     inline void set_editable(const bool &editable_);
+    inline void erase_lines(const int &before_index, const int &after_and_including_index);
 
     /// By default, seek will rest on the earliest line possible; In its alternate mode, seek will rest on the latest lie possible;
     void seek(const int &edit_pos, const bool &alt_mode = false);
@@ -249,6 +252,8 @@ namespace Zeni {
     std::string untablinebreak(const std::string &tabbed_text) const;
     int get_text_width(const Font &font, const std::string &text); 
     int max_line_width() const;
+
+    inline void invalidate_edit_pos();
 
     std::vector<Line> m_lines;
 

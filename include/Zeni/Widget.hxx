@@ -231,6 +231,14 @@ namespace Zeni {
     return m_editable;
   }
 
+  int Text_Box::get_num_lines() const {
+    return int(m_lines.size());
+  }
+
+  int Text_Box::get_max_lines() const {
+    return int(get_lower_right().y - get_upper_left().y) / get_font().get_text_height();
+  }
+
   void Text_Box::set_font_name(const std::string &font_name_) {
     m_text.set_font_name(font_name_);
     format();
@@ -246,6 +254,24 @@ namespace Zeni {
   void Text_Box::set_editable(const bool &editable_) {
     m_editable = editable_;
     format();
+    invalidate_edit_pos();
+  }
+
+  void Text_Box::erase_lines(const int &before_index, const int &after_and_including_index) {
+    std::string new_text;
+    for(int i = 0, iend = m_lines.size(); i != iend; ++i)
+      if(before_index <= i && i < after_and_including_index)
+        new_text += m_lines[i].unformatted;
+    if(!new_text.empty() && new_text[0] == '\n')
+      new_text = new_text.substr(1, new_text.size() - 1);
+
+    m_text.set_text(new_text);
+
+    format();
+    invalidate_edit_pos();
+  }
+
+  void Text_Box::invalidate_edit_pos() {
     m_edit_pos = -1;
     m_cursor_index.x = -1;
     m_cursor_index.y = -1;

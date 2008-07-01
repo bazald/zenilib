@@ -241,11 +241,10 @@ namespace Zeni {
   }
 
   void Text_Box::on_mouse_button(const Point2i &pos, const bool &down) {
-    m_edit_pos = -1;
     m_cursor_pos.x = int(pos.x - get_upper_left().x);
     m_cursor_pos.y = int(pos.y - get_upper_left().y);
-    m_cursor_index.x = -1;
-    m_cursor_index.y = -1;
+
+    invalidate_edit_pos();
 
     Text_Button::on_mouse_button(pos, down);
   }
@@ -288,6 +287,8 @@ namespace Zeni {
   }
 
   void Text_Box::render() const {
+    Video &vr = Video::get_reference();
+
     m_bg.render();
 
     const Font &f = get_font();
@@ -318,7 +319,7 @@ namespace Zeni {
       Vertex2f_Color v1(p1, c);
 
       const Line_Segment<Vertex2f_Color> visible_cursor(v0, v1);
-      Video::get_reference().render(visible_cursor);
+      vr.render(visible_cursor);
     }
   }
 
