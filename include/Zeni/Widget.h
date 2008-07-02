@@ -195,6 +195,31 @@ namespace Zeni {
     Widget_Rectangle_Color m_bg;
     Widget_Text m_text;
   };
+
+  class Check_Box : public Widget_Button {
+  public:
+    inline Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
+                     const Color &border_color_, const Color &check_color_,
+                     const bool &checked_ = false, const bool &toggleable_ = true);
+
+    inline const Color & get_border_color() const;
+    inline const Color & get_check_color() const;
+    inline const bool & is_checked() const;
+
+    inline void set_border_color(const Color &border_color_);
+    inline void set_check_color(const Color &check_color_);
+    inline const void set_checked(const bool &checked_);
+    
+    virtual void on_accept();
+
+    virtual void render() const;
+
+  protected:
+    Color m_border_color;
+    Color m_check_color;
+    bool m_checked;
+    bool m_toggleable;
+  };
   
   class Text_Box : public Text_Button {
   public:
@@ -220,8 +245,13 @@ namespace Zeni {
     inline void set_editable(const bool &editable_);
     inline void erase_lines(const int &before_index, const int &after_and_including_index);
 
-    /// By default, seek will rest on the earliest line possible; In its alternate mode, seek will rest on the latest lie possible;
-    void seek(const int &edit_pos, const bool &alt_mode = false);
+    const int & get_edit_pos() const;
+    const int get_cursor_pos() const;
+    const int get_max_seek() const;
+    const int get_max_cursor_seek() const;
+
+    void seek(const int &edit_pos);
+    void seek_cursor(const int &cursor_pos);
 
     virtual void render() const;
 
@@ -239,10 +269,11 @@ namespace Zeni {
     };
 
     struct Line : public Word {
-      Line() : glyph_top(0) {}
+      Line() : glyph_top(0), endled(false) {}
 
       std::string formatted;
       int glyph_top;
+      bool endled;
     };
 
     void format();

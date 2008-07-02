@@ -214,6 +214,25 @@ namespace Zeni {
     m_text(font_name_, text_, text_color_)
   {
   }
+  
+  Check_Box::Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
+                       const Color &border_color_, const Color &check_color_,
+                       const bool &checked_, const bool &toggleable_)
+    : Widget_Button(upper_left_, lower_right_),
+    m_border_color(border_color_),
+    m_check_color(check_color_),
+    m_checked(checked_),
+    m_toggleable(toggleable_)
+  {
+  }
+
+  const Color & Check_Box::get_border_color() const {return m_border_color;}
+  const Color & Check_Box::get_check_color() const {return m_check_color;}
+  const bool & Check_Box::is_checked() const {return m_checked;}
+
+  void Check_Box::set_border_color(const Color &border_color_) {m_border_color = border_color_;}
+  void Check_Box::set_check_color(const Color &check_color_) {m_check_color = check_color_;}
+  const void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
 
   const std::string & Text_Box::get_font_name() const {
     return m_text.get_font_name();

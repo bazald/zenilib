@@ -32,7 +32,7 @@
 #include <Zeni/Line_Segment.hxx>
 #include <Zeni/Texture.h>
 #include <Zeni/Quadrilateral.hxx>
-#include <Zeni/Vertex2f.h>
+#include <Zeni/Vertex2f.hxx>
 #include <Zeni/Video.h>
 
 #include <list>
@@ -130,6 +130,46 @@ namespace Zeni {
     m_text.render(get_center());
   }
 
+  void Check_Box::on_accept() {
+    m_checked = !m_checked;
+  }
+  
+  void Check_Box::render() const {
+    Video &vr = Video::get_reference();
+
+    Vertex2f_Color ul(get_upper_left(), m_border_color);
+    Vertex2f_Color ll(get_lower_left(), m_border_color);
+    Vertex2f_Color lr(get_lower_right(), m_border_color);
+    Vertex2f_Color ur(get_upper_right(), m_border_color);
+
+    Line_Segment<Vertex2f_Color> line_seg(ul, ll);
+    vr.render(line_seg);
+
+    line_seg.set_vertex(0, lr);
+    vr.render(line_seg);
+
+    line_seg.set_vertex(1, ur);
+    vr.render(line_seg);
+
+    line_seg.set_vertex(0, ul);
+    vr.render(line_seg);
+
+    if(m_checked) {
+      ul.set_color(m_check_color);
+      ll.set_color(m_check_color);
+      lr.set_color(m_check_color);
+      ur.set_color(m_check_color);
+
+      line_seg.set_vertex(0, ul);
+      line_seg.set_vertex(1, lr);
+      vr.render(line_seg);
+
+      line_seg.set_vertex(0, ll);
+      line_seg.set_vertex(1, ur);
+      vr.render(line_seg);
+    }
+  }
+
   Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Color &bg_color_,
                      const std::string &font_name_, const std::string &text_, const Color &text_color_,
@@ -180,20 +220,18 @@ namespace Zeni {
           break;
         case SDLK_HOME:
           if(m_cursor_index.x) {
-            int count = 0;
-            for(int i = 0, iend = m_cursor_index.y; i != iend; ++i)
-              count += m_lines[i].unformatted.size();
+            int cursor_pos = get_cursor_pos() - m_cursor_index.x;
+            if(m_lines[m_cursor_index.y].endled)
+              ++cursor_pos;
             
-            seek(count, true);
+            seek_cursor(cursor_pos);
           }
           break;
         case SDLK_END:
-          if(m_cursor_index.x != -1) {
-            int count = 0;
-            for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
-              count += m_lines[i].unformatted.size();
+          {
+            int cursor_pos = get_cursor_pos() - m_cursor_index.x + m_lines[m_cursor_index.y].unformatted.size();
             
-            seek(count);
+            seek_cursor(cursor_pos);
           }
           break;
         case SDLK_LEFT:
@@ -368,6 +406,8 @@ namespace Zeni {
       if(it->fpsplit)
         it->formatted += "-";
       it->glyph_top = glyph_top;
+      if(!it->unformatted.empty() && it->unformatted[0] == '\n')
+        it->endled = true;
 
       glyph_top += f.get_text_height();
     }
@@ -430,14 +470,39 @@ namespace Zeni {
     }
   }
 
-  void Text_Box::seek(const int &edit_pos, const bool &alt_mode) {
+  const int & Text_Box::get_edit_pos() const {
+    return m_edit_pos;
+  }
+
+  const int Text_Box::get_cursor_pos() const {
+    int count = m_cursor_index.x;
+    for(int j = 0, jend = m_cursor_index.y; j < jend; ++j) {
+      const int size = m_lines[j].unformatted_glyph_sides.size();
+      count += size;
+    }
+    return count;
+  }
+
+  const int Text_Box::get_max_seek() const {
+    return get_text().size();
+  }
+
+  const int Text_Box::get_max_cursor_seek() const {
+    int count = -1;
+    for(vector<Line>::const_iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
+      const int size = it->unformatted_glyph_sides.size();
+      count += size;
+    }
+    return count;
+  }
+
+  void Text_Box::seek(const int &edit_pos) {
     if(!m_editable)
       return;
 
     const string t = get_text();
 
     if(edit_pos < 0 ||
-      alt_mode && edit_pos == int(t.size()) ||
       edit_pos > int(t.size()))
       return;
 
@@ -446,8 +511,7 @@ namespace Zeni {
     for(; j != jend; ++j) {
       iend = m_lines[j].unformatted.size();
 
-      if(alt_mode && count + iend <= edit_pos ||
-        !alt_mode && count + iend < edit_pos) {
+      if(count + iend < edit_pos) {
         count += iend;
         continue;
       }
@@ -460,10 +524,34 @@ namespace Zeni {
     m_cursor_index.y = j;
 
     m_last_seek = Timer::get_reference().get_time();
+  }
 
-    // HACK: Makes the "Home" command kind of work
-    if(alt_mode && !m_cursor_index.x && isspace(t[m_edit_pos]))
-      ++m_edit_pos;
+  void Text_Box::seek_cursor(const int &cursor_pos) {
+    if(!m_editable || cursor_pos < 0)
+      return;
+
+    int edit_count = 0, count = 0, j = 0, jend = m_lines.size(), i = -1, iend;
+    for(; j != jend; ++j) {
+      iend = m_lines[j].unformatted_glyph_sides.size();
+
+      if(count + iend <= cursor_pos) {
+        count += iend;
+        edit_count += m_lines[j].unformatted.size();
+        continue;
+      }
+
+      i = cursor_pos - count;
+      edit_count += i;
+      break;
+    }
+
+    if(i != -1) {
+      m_edit_pos = edit_count;
+      m_cursor_index.x = i;
+      m_cursor_index.y = j;
+    }
+
+    m_last_seek = Timer::get_reference().get_time();
   }
 
   string Text_Box::clean_string(const string &unclean_string) const {
