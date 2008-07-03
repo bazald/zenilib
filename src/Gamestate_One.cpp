@@ -17,6 +17,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace Zeni;
 
 static vector<string> g_args;
 
