@@ -278,7 +278,7 @@ namespace Zeni {
 
   void Text_Box::erase_lines(const int &before_index, const int &after_and_including_index) {
     std::string new_text;
-    for(int i = 0, iend = m_lines.size(); i != iend; ++i)
+    for(int i = 0, iend = int(m_lines.size()); i != iend; ++i)
       if(before_index <= i && i < after_and_including_index)
         new_text += m_lines[i].unformatted;
     if(!new_text.empty() && new_text[0] == '\n')

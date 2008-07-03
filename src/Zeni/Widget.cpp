@@ -229,7 +229,7 @@ namespace Zeni {
           break;
         case SDLK_END:
           {
-            int cursor_pos = get_cursor_pos() - m_cursor_index.x + m_lines[m_cursor_index.y].unformatted.size();
+            int cursor_pos = get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
             
             seek_cursor(cursor_pos);
           }
@@ -244,7 +244,7 @@ namespace Zeni {
           if(m_cursor_index.y) {
             int count = 0;
             for(int i = 0, iend = m_cursor_index.y - 1; i != iend; ++i)
-              count += m_lines[i].unformatted.size();
+              count += int(m_lines[i].unformatted.size());
             count += min(m_cursor_index.x, int(m_lines[m_cursor_index.y - 1].unformatted.size()));
             
             seek(count);
@@ -254,7 +254,7 @@ namespace Zeni {
           if(m_cursor_index.y + 1 < int(m_lines.size())) {
             int count = 0;
             for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
-              count += m_lines[i].unformatted.size();
+              count += int(m_lines[i].unformatted.size());
             count += min(m_cursor_index.x, int(m_lines[m_cursor_index.y + 1].unformatted.size()));
             
             seek(count);
@@ -291,11 +291,11 @@ namespace Zeni {
     if(!m_editable)
       return;
 
-    int j = 0, jend = m_lines.size();
+    int j = 0, jend = int(m_lines.size());
     for(; j != jend && m_cursor_pos.y > m_lines[j].glyph_top; ++j);
     --j;
 
-    int i = 0, iend = m_lines[j].unformatted_glyph_sides.size();
+    int i = 0, iend = int(m_lines[j].unformatted_glyph_sides.size());
     for(; i != iend && m_cursor_pos.x > m_lines[j].unformatted_glyph_sides[i]; ++i);
     --i;
 
@@ -308,14 +308,14 @@ namespace Zeni {
     m_cursor_index.y = j;
     m_edit_pos = i;
     for(int k = 0; k < j; ++k)
-      m_edit_pos += m_lines[k].unformatted.size();
+      m_edit_pos += int(m_lines[k].unformatted.size());
 
 #ifdef _DEBUG
     {
-      const int size = get_text().size();
+      const int size = int(get_text().size());
       int count = 0;
-      for(int k = 0, kend = m_lines.size(); k != kend; ++k)
-        count += m_lines[k].unformatted.size();
+      for(int k = 0, kend = int(m_lines.size()); k != kend; ++k)
+        count += int(m_lines[k].unformatted.size());
 
       assert(size == count);
     }
@@ -341,7 +341,7 @@ namespace Zeni {
       x_pos = int((get_upper_left().x + get_lower_right().x) / 2);
 
     const int y_offset = int(get_upper_left().y);
-    for(int i = 0, iend = m_lines.size(); i != iend; ++i)
+    for(int i = 0, iend = int(m_lines.size()); i != iend; ++i)
       f.render_text(m_lines[i].formatted, x_pos, y_offset + m_lines[i].glyph_top, c, m_justify);
 
     if(m_cursor_index.x != -1 && m_cursor_index.y != -1
@@ -375,7 +375,7 @@ namespace Zeni {
     list<Word> words;
     Word next_word;
 
-    for(int i = 0, iend = t.size(); i != iend; ++i) {
+    for(int i = 0, iend = int(t.size()); i != iend; ++i) {
       const Word::Type type = isspace(t[i]) ? Word::SPACE : Word::WORD;
 
       if(next_word.type) {
@@ -425,7 +425,7 @@ namespace Zeni {
 
     if(word.type != Word::SPACE && next_sum > mll) {
       if(word.splittable) {
-        int i = 0, iend = word.unformatted.size();
+        int i = 0, iend = int(word.unformatted.size());
         for(; i != iend && get_text_width(f, l.unformatted + word.unformatted.substr(0, i) + "-") < mll; ++i);
         --i;
         if(i > 0
@@ -434,7 +434,7 @@ namespace Zeni {
           {
             Word first_word(word.type);
             first_word.unformatted = word.unformatted.substr(0, i);
-            for(int j = 1, jend = first_word.unformatted.size(); j <= jend; ++j)
+            for(int j = 1, jend = int(first_word.unformatted.size()); j <= jend; ++j)
               first_word.unformatted_glyph_sides.push_back(get_text_width(f, first_word.unformatted.substr(0, j)));
             first_word.fpsplit = true;
             append_word(first_word);
@@ -443,7 +443,7 @@ namespace Zeni {
           {
             Word second_word(word.type);
             second_word.unformatted = word.unformatted.substr(i, word.unformatted.size() - i);
-            for(int j = 1, jend = second_word.unformatted.size(); j <= jend; ++j)
+            for(int j = 1, jend = int(second_word.unformatted.size()); j <= jend; ++j)
               second_word.unformatted_glyph_sides.push_back(get_text_width(f, second_word.unformatted.substr(0, j)));
             second_word.splittable = get_text_width(f, second_word.unformatted) > mll;
             append_word(second_word);
@@ -461,7 +461,7 @@ namespace Zeni {
       }
     }
     else {
-      for(int i = 0, iend = word.unformatted.size(); i != iend; ++i) {
+      for(int i = 0, iend = int(word.unformatted.size()); i != iend; ++i) {
         l.unformatted += word.unformatted[i];
         l.unformatted_glyph_sides.push_back(get_text_width(f, l.unformatted));
       }
@@ -474,25 +474,21 @@ namespace Zeni {
     return m_edit_pos;
   }
 
-  const int Text_Box::get_cursor_pos() const {
+  int Text_Box::get_cursor_pos() const {
     int count = m_cursor_index.x;
-    for(int j = 0, jend = m_cursor_index.y; j < jend; ++j) {
-      const int size = m_lines[j].unformatted_glyph_sides.size();
-      count += size;
-    }
+    for(int j = 0, jend = m_cursor_index.y; j < jend; ++j)
+      count += int(m_lines[j].unformatted_glyph_sides.size());
     return count;
   }
 
-  const int Text_Box::get_max_seek() const {
-    return get_text().size();
+  int Text_Box::get_max_seek() const {
+    return int(get_text().size());
   }
 
-  const int Text_Box::get_max_cursor_seek() const {
+  int Text_Box::get_max_cursor_seek() const {
     int count = -1;
-    for(vector<Line>::const_iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
-      const int size = it->unformatted_glyph_sides.size();
-      count += size;
-    }
+    for(vector<Line>::const_iterator it = m_lines.begin(); it != m_lines.end(); ++it)
+      count += int(it->unformatted_glyph_sides.size());
     return count;
   }
 
@@ -507,9 +503,9 @@ namespace Zeni {
       return;
 
     m_edit_pos = edit_pos;
-    int count = 0, j = 0, jend = m_lines.size(), i = -1, iend;
+    int count = 0, j = 0, jend = int(m_lines.size()), i = -1, iend;
     for(; j != jend; ++j) {
-      iend = m_lines[j].unformatted.size();
+      iend = int(m_lines[j].unformatted.size());
 
       if(count + iend < edit_pos) {
         count += iend;
@@ -530,13 +526,13 @@ namespace Zeni {
     if(!m_editable || cursor_pos < 0)
       return;
 
-    int edit_count = 0, count = 0, j = 0, jend = m_lines.size(), i = -1, iend;
+    int edit_count = 0, count = 0, j = 0, jend = int(m_lines.size()), i = -1, iend;
     for(; j != jend; ++j) {
-      iend = m_lines[j].unformatted_glyph_sides.size();
+      iend = int(m_lines[j].unformatted_glyph_sides.size());
 
       if(count + iend <= cursor_pos) {
         count += iend;
-        edit_count += m_lines[j].unformatted.size();
+        edit_count += int(m_lines[j].unformatted.size());
         continue;
       }
 

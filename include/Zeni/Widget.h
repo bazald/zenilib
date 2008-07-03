@@ -246,9 +246,9 @@ namespace Zeni {
     inline void erase_lines(const int &before_index, const int &after_and_including_index);
 
     const int & get_edit_pos() const;
-    const int get_cursor_pos() const;
-    const int get_max_seek() const;
-    const int get_max_cursor_seek() const;
+    int get_cursor_pos() const;
+    int get_max_seek() const;
+    int get_max_cursor_seek() const;
 
     void seek(const int &edit_pos);
     void seek_cursor(const int &cursor_pos);
