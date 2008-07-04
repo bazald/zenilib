@@ -249,6 +249,11 @@ namespace Zeni {
       (*it)->set_checked((*it) == &radio_button);
   }
 
+  void Radio_Button_Set::clear() {
+    for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->set_checked(false);
+  }
+
   void Radio_Button_Set::add_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.insert(&radio_button);
   }

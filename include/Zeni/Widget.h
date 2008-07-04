@@ -229,6 +229,7 @@ namespace Zeni {
     virtual void on_mouse_motion(const Point2i &pos);
 
     inline void accept(Radio_Button &radio_button);
+    inline void clear();
 
     virtual void render() const;
 
