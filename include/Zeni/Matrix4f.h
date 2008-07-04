@@ -68,8 +68,11 @@ namespace Zeni {
     inline static Matrix4f Scale(const Vector3f &scaling_factor);
     inline static Matrix4f Rotate(const Quaternion &rotation);
     inline static Matrix4f Translate(const Vector3f &translation_factor);
+    /// Similar to gluLookAt
     inline static Matrix4f View(const Point3f &position, const Vector3f &forward, const Vector3f &up);
+    /// Similar to gluOrtho
     inline static Matrix4f Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far);
+    /// Similar to gluPerspective
     inline static Matrix4f Perspective(const float &fov_rad_y, const float &aspect, const float &near, const float &far);
 
     // Matrix addition/subtraction

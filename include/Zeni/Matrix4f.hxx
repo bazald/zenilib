@@ -85,14 +85,14 @@ namespace Zeni {
   
   Matrix4f Matrix4f::View(const Point3f &position, const Vector3f &forward, const Vector3f &up) {
     const Vector3f l = forward.normalized();
-    const Vector3f s = (l % up).normalized();
+    const Vector3f s = (l % up.normalized()).normalized();
     const Vector3f u = s % l;
 
-    return Translate(-Vector3f(position)).transposed() * 
-           Matrix4f(s.i, s.j, s.k, 0.0f,
-                    u.i, u.j, u.k, 0.0f,
-                    -l.i, -l.j, -l.k, 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
+    return (Matrix4f(s.i, s.j, s.k, 0.0f,
+                     u.i, u.j, u.k, 0.0f,
+                     -l.i, -l.j, -l.k, 0.0f,
+                     0.0f, 0.0f, 0.0f, 1.0f) *
+            Translate(-Vector3f(position))).transposed();
   }
 
   Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near_, const float &far_) {
