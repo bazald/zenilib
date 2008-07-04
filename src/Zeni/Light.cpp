@@ -57,7 +57,14 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   void Light::set(const GLint &number, Video_GL &) const {
-    GLfloat position[] = {m_position.x, m_position.y, m_position.z, m_light_type != LIGHT_DIRECTIONAL ? 1.0f : 0.0f};
+    GLfloat position[] = {m_position.x, m_position.y, m_position.z, 1.0f};
+
+    if(m_light_type == LIGHT_DIRECTIONAL) {
+      position[0] = -m_spot_direction.i;
+      position[1] = -m_spot_direction.j;
+      position[2] = -m_spot_direction.k;
+      position[3] = 0.0f;
+    }
 
     glEnable(number);
     glLightfv(number, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
