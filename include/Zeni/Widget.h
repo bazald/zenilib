@@ -220,6 +220,37 @@ namespace Zeni {
     bool m_checked;
     bool m_toggleable;
   };
+
+  class Radio_Button_Set : public Widget {
+    friend class Radio_Button;
+
+  public:
+    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_motion(const Point2i &pos);
+
+    inline void accept(Radio_Button &radio_button);
+
+    virtual void render() const;
+
+  private:
+    inline void add_Radio_Button(Radio_Button &radio_button);
+    inline void remove_Radio_Button(Radio_Button &radio_button);
+
+    std::set<Radio_Button *> m_radio_buttons;
+  };
+
+  class Radio_Button : public Check_Box {
+  public:
+    inline Radio_Button(Radio_Button_Set &radio_button_set_,
+                        const Point2f &upper_left_, const Point2f &lower_right_,
+                        const Color &border_color_, const Color &check_color_,
+                        const bool &checked_ = false, const bool &toggleable_ = true);
+
+    virtual void on_accept();
+
+  private:
+    Radio_Button_Set * m_radio_button_set;
+  };
   
   class Text_Box : public Text_Button {
   public:
@@ -233,16 +264,22 @@ namespace Zeni {
     virtual void on_mouse_button(const Point2i &pos, const bool &down);
     virtual void on_accept();
 
+    inline const Color & get_bg_color() const;
     inline const std::string & get_font_name() const;
     inline const Font & get_font() const;
     inline const std::string & get_text() const;
+    inline const Color & get_text_color() const;
     inline const bool & is_editable() const;
+    inline const JUSTIFY & get_justify() const;
     inline int get_num_lines() const;
     inline int get_max_lines() const;
 
+    inline void set_bg_color(const Color &bg_color_);
     inline void set_font_name(const std::string &font_name_);
     inline void set_text(const std::string &text_);
+    inline void set_text_color(const Color &text_color_);
     inline void set_editable(const bool &editable_);
+    inline void set_justify(const JUSTIFY &justify_);
     inline void erase_lines(const int &before_index, const int &after_and_including_index);
 
     const int & get_edit_pos() const;

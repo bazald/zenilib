@@ -234,6 +234,33 @@ namespace Zeni {
   void Check_Box::set_check_color(const Color &check_color_) {m_check_color = check_color_;}
   const void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
 
+  Radio_Button::Radio_Button(Radio_Button_Set &radio_button_set_,
+                             const Point2f &upper_left_, const Point2f &lower_right_,
+                             const Color &border_color_, const Color &check_color_,
+                             const bool &checked_, const bool &toggleable_)
+    : m_radio_button_set(&radio_button_set_),
+    Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_)
+  {
+    radio_button_set_.add_Radio_Button(*this);
+  }
+
+  void Radio_Button_Set::accept(Radio_Button &radio_button) {
+    for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->set_checked((*it) == &radio_button);
+  }
+
+  void Radio_Button_Set::add_Radio_Button(Radio_Button &radio_button) {
+    m_radio_buttons.insert(&radio_button);
+  }
+
+  void Radio_Button_Set::remove_Radio_Button(Radio_Button &radio_button) {
+    m_radio_buttons.erase(&radio_button);
+  }
+  
+  const Color & Text_Box::get_bg_color() const {
+    return m_bg.get_color();
+  }
+
   const std::string & Text_Box::get_font_name() const {
     return m_text.get_font_name();
   }
@@ -245,9 +272,17 @@ namespace Zeni {
   const std::string & Text_Box::get_text() const {
     return m_text.get_text();
   }
+  
+  const Color & Text_Box::get_text_color() const {
+    return m_text.get_color();
+  }
 
   const bool & Text_Box::is_editable() const {
     return m_editable;
+  }
+
+  const JUSTIFY & Text_Box::get_justify() const {
+    return m_justify;
   }
 
   int Text_Box::get_num_lines() const {
@@ -256,6 +291,10 @@ namespace Zeni {
 
   int Text_Box::get_max_lines() const {
     return int(get_lower_right().y - get_upper_left().y) / get_font().get_text_height();
+  }
+
+  void Text_Box::set_bg_color(const Color &bg_color_) {
+    m_bg.set_color(bg_color_);
   }
 
   void Text_Box::set_font_name(const std::string &font_name_) {
@@ -269,11 +308,19 @@ namespace Zeni {
     format();
     seek(m_edit_pos);
   }
+  
+  void Text_Box::set_text_color(const Color &text_color_) {
+    m_text.set_color(text_color_);
+  }
 
   void Text_Box::set_editable(const bool &editable_) {
     m_editable = editable_;
     format();
     invalidate_edit_pos();
+  }
+  
+  void Text_Box::set_justify(const JUSTIFY &justify_) {
+    m_justify = justify_;
   }
 
   void Text_Box::erase_lines(const int &before_index, const int &after_and_including_index) {

@@ -170,6 +170,30 @@ namespace Zeni {
     }
   }
 
+  void Radio_Button::on_accept() {
+    if(is_checked())
+      return;
+
+    Check_Box::on_accept();
+
+    m_radio_button_set->accept(*this);
+  }
+
+  void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down) {
+    for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->on_mouse_button(pos, down);
+  }
+    
+  void Radio_Button_Set::on_mouse_motion(const Point2i &pos) {
+    for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->on_mouse_motion(pos);
+  }
+
+  void Radio_Button_Set::render() const {
+    for(std::set<Radio_Button *>::const_iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->render();
+  }
+
   Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Color &bg_color_,
                      const std::string &font_name_, const std::string &text_, const Color &text_color_,
