@@ -29,8 +29,10 @@
 #ifndef ZENI_WIDGET_H
 #define ZENI_WIDGET_H
 
+#include <Zeni/Collision.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Font.h>
+#include <Zeni/Line_Segment.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
@@ -44,7 +46,11 @@
 namespace Zeni {
 
   class Widget {
+    Widget(const Widget &);
+    Widget & operator=(const Widget &);
+
   public:
+    Widget() {}
     virtual ~Widget() {}
 
     inline void on_event(const SDL_KeyboardEvent &event);
@@ -251,6 +257,46 @@ namespace Zeni {
 
   private:
     Radio_Button_Set * m_radio_button_set;
+  };
+  
+  class Slider : public Widget {
+  public:
+    Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
+           const float &slider_radius_,
+           const Color &line_color_,
+           const Color &slider_color_,
+           const float &slider_position_ = 0.5f);
+
+    inline Point2f get_end_point_a() const;
+    inline Point2f get_end_point_b() const;
+    inline const float & get_slider_radius() const;
+    inline const Color & get_line_color() const;
+    inline const Color & get_slider_color() const;
+    inline const float & get_slider_position() const;
+
+    inline void set_line_color(const Color &line_color_);
+    inline void set_slider_color(const Color &slider_color_);
+    inline void set_slider_position(const float &slider_position_);
+
+    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down);
+
+    virtual void on_mouse_motion(const Zeni::Point2i &pos);
+
+    virtual void render() const;
+
+  private:
+    inline void regenerate_slider_r();
+
+    Zeni_Collision::Line_Segment m_line_segment;
+    Zeni::Color m_line_color;
+    Zeni::Line_Segment<Vertex2f_Color> m_line_segment_r;
+
+    float m_slider_radius;
+    Zeni::Color m_slider_color;
+    Zeni::Line_Segment<Vertex2f_Color> m_slider_r;
+
+    float m_slider_position;
+    bool m_down;
   };
   
   class Text_Box : public Text_Button {

@@ -189,6 +189,59 @@ namespace Zeni {
       (*it)->on_mouse_motion(pos);
   }
 
+  Slider::Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
+                 const float &slider_radius_,
+                 const Color &line_color_,
+                 const Color &slider_color_,
+                 const float &slider_position_)
+  : m_line_segment(Point3f(end_point_a_), Point3f(end_point_b_)),
+    m_line_color(line_color_),
+    m_line_segment_r(Vertex2f_Color(Point2f(m_line_segment.get_end_point_a()), m_line_color),
+                     Vertex2f_Color(Point2f(m_line_segment.get_end_point_b()), m_line_color)),
+    m_slider_radius(slider_radius_),
+    m_slider_color(slider_color_),
+    m_slider_position(slider_position_),
+    m_down(false)
+  {
+    regenerate_slider_r();
+  }
+
+  void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down) {
+    if(down) {
+      const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
+
+      const std::pair<float, float> test = m_line_segment.nearest_point(mouse_pos);
+      if(test.first < m_slider_radius) {
+        m_down = true;
+        m_slider_position = test.second;
+        regenerate_slider_r();
+      }
+      else
+        m_down = false;
+    }
+    else
+      m_down = false;
+  }
+
+  void Slider::on_mouse_motion(const Zeni::Point2i &pos) {
+    if(m_down) {
+      const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
+
+      const std::pair<float, float> test = m_line_segment.nearest_point(mouse_pos);
+      if(test.first < m_slider_radius) {
+        m_slider_position = test.second;
+        regenerate_slider_r();
+      }
+    }
+  }
+
+  void Slider::render() const {
+    Video &vr = Video::get_reference();
+
+    vr.render(m_line_segment_r);
+    vr.render(m_slider_r);
+  }
+
   void Radio_Button_Set::render() const {
     for(std::set<Radio_Button *>::const_iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
       (*it)->render();

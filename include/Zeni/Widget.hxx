@@ -261,6 +261,67 @@ namespace Zeni {
   void Radio_Button_Set::remove_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.erase(&radio_button);
   }
+
+  Point2f Slider::get_end_point_a() const {
+    return Point2f(m_line_segment.get_end_point_a());
+  }
+
+  Point2f Slider::get_end_point_b() const {
+    return Point2f(m_line_segment.get_end_point_b());
+  }
+
+  const float & Slider::get_slider_radius() const {
+    return m_slider_radius;
+  }
+
+  const Color & Slider::get_line_color() const {
+    return m_line_color;
+  }
+
+  const Color & Slider::get_slider_color() const {
+    return m_slider_color;
+  }
+
+  const float & Slider::get_slider_position() const {
+    return m_slider_position;
+  }
+
+  void Slider::set_line_color(const Color &line_color_) {
+    m_line_color = line_color_;
+
+    m_line_segment_r.set_vertex(0, Vertex2f_Color(get_end_point_a(), m_line_color));
+    m_line_segment_r.set_vertex(1, Vertex2f_Color(get_end_point_b(), m_line_color));
+  }
+
+  void Slider::set_slider_color(const Color &slider_color_) {
+    m_slider_color = slider_color_;
+
+    regenerate_slider_r();
+  }
+
+  void Slider::set_slider_position(const float &slider_position_) {
+    if(slider_position_ < 0.0f)
+      m_slider_position = 0.0f;
+    else if(slider_position_ > 1.0f)
+      m_slider_position = 1.0f;
+    else
+      m_slider_position = slider_position_;
+
+    regenerate_slider_r();
+  }
+  
+  void Slider::regenerate_slider_r() {
+    const Point3f &p0 = m_line_segment.get_end_point_a();
+    const Point3f &p1 = m_line_segment.get_end_point_b();
+    const Vector3f v = p1 - p0;
+    const Vector3f n(-v.j, v.i, 0.0f); // or (v.j, -v.i, 0.0f)
+
+    const Point3f &midpt = p0 + m_slider_position * v;
+    const Vector3f &n2 = m_slider_radius * n.normalized();
+
+    m_slider_r.set_vertex(0, Vertex2f_Color(Point2f(midpt - n2), m_slider_color));
+    m_slider_r.set_vertex(1, Vertex2f_Color(Point2f(midpt + n2), m_slider_color));
+  }
   
   const Color & Text_Box::get_bg_color() const {
     return m_bg.get_color();
