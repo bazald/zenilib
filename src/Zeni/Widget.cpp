@@ -189,6 +189,11 @@ namespace Zeni {
       (*it)->on_mouse_motion(pos);
   }
 
+  void Radio_Button_Set::render() const {
+    for(std::set<Radio_Button *>::const_iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
+      (*it)->render();
+  }
+
   Slider::Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
                  const float &slider_radius_,
                  const Color &line_color_,
@@ -242,18 +247,13 @@ namespace Zeni {
     vr.render(m_slider_r);
   }
 
-  void Radio_Button_Set::render() const {
-    for(std::set<Radio_Button *>::const_iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
-      (*it)->render();
-  }
-
   Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Color &bg_color_,
                      const std::string &font_name_, const std::string &text_, const Color &text_color_,
                      const bool &editable_, const JUSTIFY &justify_, const int &tab_spaces_)
-  : Text_Button(upper_left_, lower_right_,
-                bg_color_, font_name_,
-                clean_string(text_), text_color_),
+  : Widget_Button(upper_left_, lower_right_),
+    m_bg(upper_left_, lower_right_, bg_color_),
+    m_text(font_name_, clean_string(text_), text_color_),
     m_editable(editable_),
     m_edit_pos(-1),
     m_last_seek(0),
@@ -361,7 +361,7 @@ namespace Zeni {
 
     invalidate_edit_pos();
 
-    Text_Button::on_mouse_button(pos, down);
+    Widget_Button::on_mouse_button(pos, down);
   }
 
   void Text_Box::on_accept() {
@@ -694,7 +694,11 @@ namespace Zeni {
   }
 
   void Widget_Input_Repeater::render() const {
-    m_widget->render();
+  }
+
+  void Widgets::on_key(const SDL_keysym &keysym, const bool &down) {
+    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+      (*it)->on_key(keysym, down);
   }
 
   void Widgets::on_mouse_button(const Point2i &pos, const bool &down) {

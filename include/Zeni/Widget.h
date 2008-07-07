@@ -299,7 +299,7 @@ namespace Zeni {
     bool m_down;
   };
   
-  class Text_Box : public Text_Button {
+  class Text_Box : public Widget_Button {
   public:
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
              const Color &bg_color_,
@@ -362,6 +362,9 @@ namespace Zeni {
 
     void format();
     void append_word(const Word &word);
+    
+    Widget_Rectangle_Color m_bg;
+    Widget_Text m_text;
 
     std::string clean_string(const std::string &unclean_string) const;
     std::string untablinebreak(const std::string &tabbed_text) const;
@@ -429,6 +432,8 @@ namespace Zeni {
   public:
     inline void add_Widget(Widget &widget);
     inline void remove_Widget(Widget &widget);
+
+    virtual void on_key(const SDL_keysym &keysym, const bool &down);
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down);
     virtual void on_mouse_motion(const Point2i &pos);

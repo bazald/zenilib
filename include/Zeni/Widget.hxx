@@ -32,6 +32,7 @@
 #include <Zeni/Widget.h>
 
 #include <Zeni/Fonts.h>
+#include <Zeni/Timer.hxx>
 
 namespace Zeni {
 
