@@ -227,6 +227,7 @@ namespace Zeni {
     bool m_toggleable;
   };
 
+  class Radio_Button;
   class Radio_Button_Set : public Widget {
     friend class Radio_Button;
 

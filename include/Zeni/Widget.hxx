@@ -129,6 +129,8 @@ namespace Zeni {
       m_color = rhs.m_color;
       m_quad = rhs.m_quad->get_duplicate();
     }
+
+    return *this;
   }
 
   void Widget_Rectangle_Color::generate_quadrilateral() {
@@ -178,6 +180,8 @@ namespace Zeni {
       m_texture_name = rhs.m_texture_name;
       m_quad = rhs.m_quad->get_duplicate();
     }
+
+    return *this;
   }
 
   void Widget_Rectangle_Texture::generate_quadrilateral() {
@@ -239,8 +243,8 @@ namespace Zeni {
                              const Point2f &upper_left_, const Point2f &lower_right_,
                              const Color &border_color_, const Color &check_color_,
                              const bool &checked_, const bool &toggleable_)
-    : m_radio_button_set(&radio_button_set_),
-    Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_)
+    : Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_),
+    m_radio_button_set(&radio_button_set_)
   {
     radio_button_set_.add_Radio_Button(*this);
   }
