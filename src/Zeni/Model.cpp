@@ -63,11 +63,11 @@ namespace Zeni {
   public:
     virtual void operator()(const Model &model, Lib3dsNode *node) = 0;
 
-    void create_vertex_buffer(Vertex_Buffer *user_d, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh);
+    void create_vertex_buffer(Vertex_Buffer *user_p, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh);
   };
 
-  void Model_Renderer::create_vertex_buffer(Vertex_Buffer *user_d, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh) {
-    node->user.d = reinterpret_cast<long int>(user_d);
+  void Model_Renderer::create_vertex_buffer(Vertex_Buffer *user_p, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh) {
+    node->user.p = user_p;
 
     struct l3dsv {
       ~l3dsv() {delete [] normalL;}
@@ -102,7 +102,7 @@ namespace Zeni {
       }
 
       if(mat.get_texture().size()) {
-        user_d->add_triangle
+        user_p->add_triangle
         (new Triangle<Vertex3f_Texture>
         (
         Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
@@ -112,7 +112,7 @@ namespace Zeni {
         ));
       }
       else
-        user_d->add_triangle
+        user_p->add_triangle
         (new Triangle<Vertex3f_Color>
         (
         Vertex3f_Color(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), pseudo_color.get_argb()),
@@ -135,10 +135,10 @@ namespace Zeni {
       !strcmp(node->name, "$$$DUMMY"))
       return;
 
-    if(node->user.d) {
-      Vertex_Buffer *user_d = reinterpret_cast<Vertex_Buffer *>(node->user.d);
-      delete user_d;
-      node->user.d = 0;
+    if(node->user.p) {
+      Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
+      delete user_p;
+      node->user.p = 0;
     }
   }
 
@@ -301,11 +301,11 @@ namespace Zeni {
 
     //mesh->texels = 0; ///HACK
 
-    if(!node->user.d)
+    if(!node->user.p)
       create_vertex_buffer(new Vertex_Buffer_GL(), model, node, mesh);
 
-    Vertex_Buffer *user_d = reinterpret_cast<Vertex_Buffer *>(node->user.d);
-    if(!user_d)
+    Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
+    if(!user_p)
       throw Model_Render_Failure();
 
     Lib3dsObjectData *data=&node->data.object;
@@ -328,8 +328,8 @@ namespace Zeni {
     lib3ds_matrix_inv(M);
     glMultMatrixf(&M[0][0]);
 
-    //user_d->debug_render(); ///HACK
-    user_d->render();
+    //user_p->debug_render(); ///HACK
+    user_p->render();
 
     glPopMatrix();
   }
@@ -376,10 +376,10 @@ namespace Zeni {
     if(!mesh)
       throw Model_Render_Failure();
 
-    if(!node->user.d)
+    if(!node->user.p)
       create_vertex_buffer(new Vertex_Buffer_DX9(), model, node, mesh);
 
-    Vertex_Buffer *user_d = reinterpret_cast<Vertex_Buffer *>(node->user.d);
+    Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
     if(!mesh)
       throw Model_Render_Failure();
 
@@ -406,8 +406,8 @@ namespace Zeni {
 
     vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
 
-    //user_d->debug_render(); ///HACK
-    user_d->render();
+    //user_p->debug_render(); ///HACK
+    user_p->render();
 
     vdx.get_matrix_stack()->Pop();
     vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
