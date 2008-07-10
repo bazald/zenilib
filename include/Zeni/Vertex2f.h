@@ -72,7 +72,7 @@ namespace Zeni {
     inline void set_position(const Point2f &position);
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-    inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
+    inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 
   private:
 #ifdef X64

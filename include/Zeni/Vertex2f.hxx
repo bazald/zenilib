@@ -45,8 +45,8 @@ namespace Zeni {
     return const_cast<Point3f *>(&m_position);
   }
 
-  unsigned long Vertex2f::get_offset() const {
-    return reinterpret_cast<unsigned long>(&m_position) - reinterpret_cast<unsigned long>(this);
+  unsigned long long Vertex2f::get_offset() const {
+    return reinterpret_cast<unsigned long long>(&m_position) - reinterpret_cast<unsigned long long>(this);
   }
 
   const Uint32 & Vertex2f_Color::get_color() const {

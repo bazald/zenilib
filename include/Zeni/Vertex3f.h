@@ -74,7 +74,7 @@ namespace Zeni {
     inline void set_normal(const Vector3f &normal);
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-    inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
+    inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 
   private:
     Point3f m_position;

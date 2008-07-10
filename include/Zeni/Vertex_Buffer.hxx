@@ -68,12 +68,12 @@ namespace Zeni {
 
   int Vertex_Buffer_DX9::vertex_c_size() const {
     static Vertex3f_Color vert;
-    return sizeof(Vertex3f_Color) - vert.get_offset();
+    return int(sizeof(Vertex3f_Color) - vert.get_offset());
   }
 
   int Vertex_Buffer_DX9::vertex_t_size() const {
     static Vertex3f_Texture vert;
-    return sizeof(Vertex3f_Texture) - vert.get_offset();
+    return int(sizeof(Vertex3f_Texture) - vert.get_offset());
   }
 
 #endif
