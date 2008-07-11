@@ -271,7 +271,7 @@ namespace Zeni {
     };
     
   public:
-    Split_UDP_Socket(const unsigned short &port, const Uint16 &chunk_sets = 64, const Uint16 &chunk_size = 960);
+    Split_UDP_Socket(const Uint16 &port, const Uint16 &chunk_sets = 64, const Uint16 &chunk_size = 960);
 
     /// Send data to an IPaddress
     virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
