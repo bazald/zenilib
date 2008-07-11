@@ -33,6 +33,8 @@
  *
  * \brief A Snapshot of the Timer
  *
+ * \note Guaranteed millisecond precision
+ *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
@@ -47,6 +49,39 @@
  *
  * Rather than using multiple Timers, I recommend using just this one and 
  * storing Times wherever necessary.
+ *
+ * \note Guaranteed millisecond precision
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Time_HQ
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Snapshot of the Timer_HQ
+ *
+ * \note Guaranteed sub-millisecond precision (approximately microsecond)
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Timer_HQ
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A High Quality Timer Singleton
+ *
+ * Rather than using multiple Timers, I recommend using just this one and 
+ * storing Time_HQs wherever necessary.
+ *
+ * \note Guaranteed sub-millisecond precision (approximately microsecond)
  *
  * \author bazald
  *

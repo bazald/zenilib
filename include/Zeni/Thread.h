@@ -26,6 +26,76 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Task
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Task to be run in a Runonce_Computation
+ *
+ * One way of "simply" achieving parallelism.  Best used for background tasks.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Repeatable_Task
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Task to be run repeatedly in a Repeatable_Computation
+ *
+ * One way of "simply" achieving parallelism.  Best used for background tasks.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Thread
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Thread
+ *
+ * If you want to spawn a Thread, this way is as good as any.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Repeatable_Computation
+ *
+ * \ingroup Zenilib
+ *
+ * \brief The preferred way of running a Task
+ *
+ * One way of "simply" achieving parallelism.  Best used for background tasks.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Runonce_Computation
+ *
+ * \ingroup Zenilib
+ *
+ * \brief The preferred way of running a Repeatable_Task
+ *
+ * One way of "simply" achieving parallelism.  Best used for background tasks.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_THREAD_H
 #define ZENI_THREAD_H
 

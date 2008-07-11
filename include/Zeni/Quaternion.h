@@ -26,6 +26,21 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Quaternion
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Featureful Quaternion Class
+ *
+ * Quaternion provides functionality for representing "pure" rotations.
+ * You can think of a Quaternion as the combination of an axis and an angle.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_QUATERNION_H
 #define ZENI_QUATERNION_H
 
@@ -50,7 +65,7 @@ namespace Zeni {
     inline Quaternion & operator-=(const Quaternion &rhs); ///< Set equal to the difference
 
     // Vector Dot-Product and Cross-Product
-    inline Quaternion operator*(const Quaternion &rhs) const; ///< Get the grassman_even_product
+    inline Quaternion operator*(const Quaternion &rhs) const; ///< Get the grassman_product
     inline Quaternion operator*=(const Quaternion &rhs); ///< Get the grassman_odd_product
     inline Quaternion grassman_product(const Quaternion &rhs) const; ///< Get the Grassman-product
     inline Quaternion grassman_even_product(const Quaternion &rhs) const; ///< Get the Grassman even/inner-product

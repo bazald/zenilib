@@ -26,6 +26,148 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni_Collision::Sphere
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Sphere
+ *
+ * This class describes an Sphere object in 3-space.  The  
+ * Sphere extends the Point3f to have a radius.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Plane
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Plane
+ *
+ * This class describes a Plane object in 3-space.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Line_Segment
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Line Segment
+ *
+ * This class describes a Line Segment object in 3-space.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.  Additionally, it is possible to determine the closest point on
+ * the Line_Segment to the object it is being compared to.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Ray
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Ray
+ *
+ * This class describes a Ray object in 3-space.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.  Additionally, it is possible to determine the closest point on
+ * the Ray to the object it is being compared to.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Line
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Line
+ *
+ * This class describes a Line object in 3-space.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Infinite_Cylinder
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Infinite Cylinder
+ *
+ * This class describes an Infinite Cylinder object in 3-space.  The  
+ * Infinite_Cylinder extends the Line to have a radius.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Capsule
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Capsule
+ *
+ * This class describes a Capsule object in 3-space.  The Capsule 
+ * extends the Line_Segment to have a radius.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.  Additionally, it is possible to determine the closest point on
+ * the Capsule's inner Line Segment to the object it is being compared to.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni_Collision::Parallelepiped
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Collision Parallelepiped
+ *
+ * This class describes a Parallelepiped object in 3-space.  It is possible to test 
+ * to see if it intersects any other object in Zeni_Collision, and it is also 
+ * possible to find the shortest distance between it and any other object in 
+ * Zeni_Collision.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_COLLISION_H
 #define ZENI_COLLISION_H
 

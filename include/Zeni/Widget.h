@@ -26,6 +26,221 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Widget
+ *
+ * \ingroup Zenilib
+ *
+ * \brief The Widget base class
+ *
+ * The basic interface for all Widgets is outlined in this class.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Positioned
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Widget with a clear Rectangular bound
+ *
+ * Usually Widget_Rectangle (inheriting from this) is a fine choice.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Text
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Widget Text rendering
+ *
+ * Any Widget using Text should incorporate this object.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Rectangle
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Rectangle positioning
+ *
+ * Any Widget occupying a rectangle should inherit from this class and 
+ * offer its interface.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Rectangle_Color
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Colored Rectangle Widget
+ *
+ * Any Widget using a Colored Rectangle should incorporate this object.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Rectangle_Texture
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Textured Rectangle Widget
+ *
+ * Any Widget using a Textured Rectangle should incorporate this object.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Button
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Button Widget
+ *
+ * Any simple click-button should inherit from this class.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Text_Button
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Text Button Widget
+ *
+ * Any simple click-button with text overlaid should inherit from this class.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Check_Box
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Check Box
+ *
+ * Basically a button that can be toggled on and off.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Radio_Button
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Radio Button
+ *
+ * Basically a Check_Box that turns off other Check_Boxes.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Radio_Button_Set
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Set of Radio Buttons
+ *
+ * A set of all Radio_Buttons that are tied together.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Slider
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Slider
+ *
+ * A line segment that has a slider overlaid, so a floating point 
+ * value from [0.0f, 1.0f] can be extracted.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Text_Box
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Text_Box
+ *
+ * An (optionally) editable text box.  It can behave as a simple text 
+ * editor.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widget_Input_Repeater
+ *
+ * \ingroup Zenilib
+ *
+ * \brief An Input Repeater Class
+ *
+ * This will repeat keypresses for anything looking for text-editor-like 
+ * keyboard behavior.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Widgets
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Widget Set
+ *
+ * This allows you to batch send events and render commands to many 
+ * Widgets at once.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_WIDGET_H
 #define ZENI_WIDGET_H
 

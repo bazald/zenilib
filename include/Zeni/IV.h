@@ -29,10 +29,21 @@
 #ifndef IV_H
 #define IV_H
 
-/* This template offers the storage for the virtual type specifier.
- *
- * Additionally, it offers a getter for the type.
- */
+/**
+* \class Zeni::Line<Base_Class, BASE_VTYPE>
+*
+* \brief Inline Virtual base class
+*
+* This template offers the storage for the virtual type specifier.
+*
+* Additionally, it offers a getter for the type.
+*
+* \note This is an advanced technique with only a few valid uses.
+*
+* \author bazald
+*
+* Contact: bazald@zenipex.com
+*/
 
 template <class Base_Class,
           typename BASE_VTYPE>

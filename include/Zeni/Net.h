@@ -86,6 +86,23 @@
  * Contact: bazald@zenipex.com
  */
 
+/**
+ * \class Zeni::Split_UDP_Socket
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A higher level UDP_Socket
+ *
+ * It works almost identically to the UDP_Socket as far as users should be concerned.
+ * On the other hand, it works around UDP packet size limitations very well (and adds 
+ * some overhead in the process).  If you need to use this, your design is probably 
+ * flawed, but it does its job as needed.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 

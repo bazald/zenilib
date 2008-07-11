@@ -26,6 +26,62 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Semaphore
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A simple Semaphore class
+ *
+ * Just one way of offering mutual exclusion and/or waiting conditions.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Mutex
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A simple Mutex class
+ *
+ * Just one way of offering mutual exclusion.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Recursive_Mutex
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A more sophisticated Mutex class
+ *
+ * A slower Mutex allowing repeated locks, useful for some tasks but otherwise to be avoided.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Condition_Variable
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A simple Condition Variable class
+ *
+ * Just one way of offering waiting conditions.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_MUTEX_H
 #define ZENI_MUTEX_H
 

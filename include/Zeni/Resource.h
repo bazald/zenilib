@@ -26,6 +26,20 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Resource
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Resource Assignement Singleton
+ *
+ * The Resource Singleton assigns identifiers unique over the runtime of your program.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_RESOURCE_H
 #define ZENI_RESOURCE_H
 

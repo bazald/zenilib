@@ -26,6 +26,24 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Matrix4f
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A Featureful 4-Space Matrix Class
+ *
+ * Matrix4f provides all the most basic functions of a Matrix class 
+ * class:  addition and substraction, multiplication, scalar multiplication, 
+ * inverse, transpose, and determinant.  Additionally, it offers static 
+ * creator functions for Zero and Identity matrices, and more advanced 
+ * rendering-specific matrices as well.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_MATRIX_H
 #define ZENI_MATRIX_H
 

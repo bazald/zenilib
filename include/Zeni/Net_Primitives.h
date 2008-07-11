@@ -26,6 +26,39 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Serializable
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A base class for objects that can be sent over the network
+ *
+ * Any class deriving from Serializable should know how to send themselves 
+ * over a network socket, and how to receive themselves from a network 
+ * socket.  This is good for primitives, but for complicated interactions 
+ * where only part of a class should be sent or received at a time, it is 
+ * not the way to go.  Go higher level in those cases.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::VLUID
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Variable Length Unique IDentifier
+ *
+ * When the length of an ID has to be able to grow until the end of time, 
+ * this is the way to go.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifndef ZENI_NET_PRIMITIVES_H
 #define ZENI_NET_PRIMITIVES_H
 

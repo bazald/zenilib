@@ -31,21 +31,11 @@
  *
  * \ingroup Zenilib
  *
- * \brief A Base Class for all Vertex_Buffers
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
- * \class Zeni::Vertex_Buffer
- *
- * \ingroup Zenilib
- *
  * \brief A Vertex_Buffer that accepts both Triangle<Vertex3f_Color>s and Triangle<Vertex3f_Texture>s.
  *
  * \note All Triangles are expected to have either the base Render_Wrapper or a Material_Render_Wrapper.
+ *
+ * \note Created with a call to Video::get_reference().create_Vertex_Buffer()
  *
  * \author bazald
  *

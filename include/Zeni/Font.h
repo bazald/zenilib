@@ -41,6 +41,8 @@
  *
  * \note TrueType fonts must be installed to work correctly in DirectX.
  *
+ * \note Created with a call to Video::get_reference().create_Font(...)
+ *
  * \warning Always instantiate a new Font with a call to Video::get_reference().create_Font().  Do not directly call the class constrcutors.
  *
  * \warning Text will look faded if you render to a clipped portion of the screen in OpenGL (e.g. split-screen multiplayer).  The workaround is to choose a smaller font size and to transform the position of the text manually.  Not to do so is essentially a coding error.
