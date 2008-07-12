@@ -166,8 +166,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Texture.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Texture.hxx>
 #endif

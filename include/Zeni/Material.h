@@ -117,8 +117,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Material.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Material.hxx>
 #endif

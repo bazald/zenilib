@@ -246,8 +246,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Video.hxx>
 #endif

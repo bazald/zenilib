@@ -307,8 +307,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Net.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Net.hxx>
 #endif

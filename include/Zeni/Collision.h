@@ -495,8 +495,8 @@ namespace Zeni_Collision {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Collision.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Collision.hxx>
 #endif

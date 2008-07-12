@@ -160,8 +160,8 @@ namespace Zeni {
 
 #endif
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video_DX9.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Video_DX9.hxx>
 #endif

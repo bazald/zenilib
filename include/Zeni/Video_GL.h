@@ -150,8 +150,8 @@ namespace Zeni {
 
 #endif
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video_GL.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Video_GL.hxx>
 #endif

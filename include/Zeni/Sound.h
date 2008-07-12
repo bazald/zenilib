@@ -264,8 +264,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Sound.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Sound.hxx>
 #endif

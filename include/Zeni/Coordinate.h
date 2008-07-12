@@ -134,8 +134,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Coordinate.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Coordinate.hxx>
 #endif

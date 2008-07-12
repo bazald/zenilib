@@ -130,8 +130,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Matrix4f.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Matrix4f.hxx>
 #endif

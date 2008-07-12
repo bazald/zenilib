@@ -213,8 +213,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Timer.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Timer.hxx>
 #endif

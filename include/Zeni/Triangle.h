@@ -88,8 +88,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Triangle.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Triangle.hxx>
 #endif

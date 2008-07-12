@@ -128,8 +128,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Light.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Light.hxx>
 #endif

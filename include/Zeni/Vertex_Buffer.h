@@ -165,8 +165,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex_Buffer.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Vertex_Buffer.hxx>
 #endif

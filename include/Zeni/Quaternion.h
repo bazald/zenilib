@@ -108,8 +108,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Quaternion.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Quaternion.hxx>
 #endif

@@ -83,8 +83,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Line_Segment.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Line_Segment.hxx>
 #endif

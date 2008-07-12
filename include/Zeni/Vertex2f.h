@@ -147,8 +147,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex2f.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Vertex2f.hxx>
 #endif

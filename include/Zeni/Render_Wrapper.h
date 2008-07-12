@@ -156,8 +156,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Render_Wrapper.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Render_Wrapper.hxx>
 #endif

@@ -217,8 +217,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Gamestate.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Gamestate.hxx>
 #endif

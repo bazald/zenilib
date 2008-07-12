@@ -165,8 +165,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Font.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Font.hxx>
 #endif

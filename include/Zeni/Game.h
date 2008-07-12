@@ -93,8 +93,8 @@ namespace Zeni {
 
 }
 
-#ifdef ZENI_INLINES
-#include <Zeni/Game.hxx>
 #endif
 
+#ifdef ZENI_INLINES
+#include <Zeni/Game.hxx>
 #endif
