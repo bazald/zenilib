@@ -235,6 +235,8 @@ namespace Zeni {
 
   Sound_Source::~Sound_Source() {
 #ifndef DISABLE_AL
+    stop();
+
     if(m_source != AL_NONE)
       alDeleteSources(1, &m_source);
 #endif
