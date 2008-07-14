@@ -45,6 +45,9 @@ token	token
 token	name for sound
 token	filepath (cannot contain spaces)
 
+WARNING:  For positional audio to work, monaural sound files must be used.
+          Stereo sound files are, of course, fine for background music.
+
 NOTE:  WAV is supported
        OGG vorbis is supported
        No other sound types are supported
@@ -52,6 +55,16 @@ NOTE:  WAV is supported
          MP3 is NOT supported
          AIF is NOT supported
          WMA is NOT supported
+
+HOWTO:  To convert between types, or to downmix to mono,
+        (1) Open in Audacity, obtainable from http://audacity.sourceforge.net/
+              or http://portableapps.com/apps/music_video/audacity_portable
+        (2) To the left of the waveform that appears, left-click on effect
+              and left-click on Split Stereo Track
+        (3) To the left of each of the split waveforms, left-click on effect
+              and left-click on Mono
+        (4) Go to File->Export As Ogg Vorbis
+               or File->Export As WAV
 
 ================================================================================
 textures.txt
@@ -63,8 +76,13 @@ token	name for image
 token	filepath (cannot contain spaces)
 int	non-zero for a repeating texture, zero for a clamped texture
 
+WARNING:  Alpha channel is supported
+          Indexed transparency is NOT supported
+
 NOTE:  PNG is supported
        TIFF is supported, with additional support for zip and jpeg compression
        No other image types are supported
          JPEG is NOT supported
          GIF is NOT supported
+
+NOTE:  Resolution (both x and y) should be powers of 2 for efficient loading
