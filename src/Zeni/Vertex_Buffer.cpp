@@ -390,6 +390,9 @@ namespace Zeni {
       free(p_verts);
       free(p_normals);
       free(p_texels);
+      
+      if(!m_pglDeleteBuffersARB)
+        m_pglDeleteBuffersARB = vgl.get_pglDeleteBuffersARB();
     }
 
     clear_triangles(m_triangles_c);
