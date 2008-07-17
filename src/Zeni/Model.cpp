@@ -77,6 +77,13 @@ namespace Zeni {
 
     lib3ds_mesh_calculate_normals(mesh, normal);
 
+    // Get scaling vector
+    Lib3dsObjectData * const data=&node->data.object;
+    Vector3f scl(data->scl[0], data->scl[1], data->scl[2]);
+    const bool flip = (data->scl[0] < 0.0f) ^
+                      (data->scl[1] < 0.0f) ^
+                      (data->scl[2] < 0.0f);
+
     for(unsigned int i = 0; i < mesh->faces; ++i) {
       Lib3dsFace *face = &mesh->faceL[i];
 
@@ -101,25 +108,44 @@ namespace Zeni {
         pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
-      if(mat.get_texture().size()) {
-        user_p->add_triangle
-        (new Triangle<Vertex3f_Texture>
-        (
-        Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
-        Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
-        Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
-        (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
-        ));
-      }
+      if(flip)
+        if(mat.get_texture().size())
+          user_p->add_triangle
+          (new Triangle<Vertex3f_Texture>
+          (
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
+          (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
+          ));
+        else
+          user_p->add_triangle
+          (new Triangle<Vertex3f_Color>
+          (
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), pseudo_color.get_argb()),
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), pseudo_color.get_argb()),
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), pseudo_color.get_argb()),
+          (material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper())
+          ));
       else
-        user_p->add_triangle
-        (new Triangle<Vertex3f_Color>
-        (
-        Vertex3f_Color(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), pseudo_color.get_argb()),
-        Vertex3f_Color(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), pseudo_color.get_argb()),
-        Vertex3f_Color(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), pseudo_color.get_argb()),
-        (material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper())
-        ));
+        if(mat.get_texture().size())
+          user_p->add_triangle
+          (new Triangle<Vertex3f_Texture>
+          (
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
+          (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
+          ));
+        else
+          user_p->add_triangle
+          (new Triangle<Vertex3f_Color>
+          (
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), pseudo_color.get_argb()),
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), pseudo_color.get_argb()),
+          Vertex3f_Color(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), pseudo_color.get_argb()),
+          (material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper())
+          ));
 
       normal+=3;
     }
@@ -314,14 +340,7 @@ namespace Zeni {
 
     glMultMatrixf(&node->matrix[0][0]);
 
-    {//glTranslatef(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-      if (lib3ds_matrix_det(node->matrix) < 0.0) {
-        glScalef(-1.0, 1.0, 1.0);
-        glTranslatef(data->pivot[0], -data->pivot[1], -data->pivot[2]);
-      }
-      else
-        glTranslatef(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-    }
+    glTranslatef(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
 
     Lib3dsMatrix M;
     lib3ds_matrix_copy(M, mesh->matrix);
@@ -390,14 +409,7 @@ namespace Zeni {
 
     vdx.get_matrix_stack()->MultMatrixLocal(reinterpret_cast<D3DXMATRIX *>(node->matrix));
 
-    {//vdx.get_matrix_stack()->TranslateLocal(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-      if (lib3ds_matrix_det(node->matrix) < 0.0 && lib3ds_matrix_det(mesh->matrix) < 0.0) {
-        vdx.get_matrix_stack()->ScaleLocal(-1.0, 1.0, 1.0);
-        vdx.get_matrix_stack()->TranslateLocal(data->pivot[0], -data->pivot[1], -data->pivot[2]);
-      }
-      else
-        vdx.get_matrix_stack()->TranslateLocal(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-    }
+    vdx.get_matrix_stack()->TranslateLocal(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
 
     Lib3dsMatrix M;
     lib3ds_matrix_copy(M, mesh->matrix);
