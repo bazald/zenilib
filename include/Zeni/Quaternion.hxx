@@ -172,10 +172,17 @@ namespace Zeni {
   }
 
   std::pair<Vector3f, float> Quaternion::get_rotation() const {
-    float macos = acos(time);
-    if(!(macos < 32.0f)) /// Hack & imperfect
-      macos = 0.0f;
-    return std::make_pair(space.normalized(), -2.0f * macos);
+    Quaternion q = *this;
+    if(q.time > 1.0f)
+      q = norm();
+
+    const float angle = 2.0f * acos(q.time);
+    float s = sqrt(1.0f - q.time * q.time);
+
+    if(fabs(s) < 0.001f)
+      return std::make_pair(q.space, angle);
+    
+    return std::make_pair(q.space / s, angle);
   }
 
   Matrix4f Quaternion::get_matrix() const {
