@@ -185,20 +185,92 @@ namespace Zeni_Collision {
     const Vector3f real_min(min(tmin.i, tmax.i), min(tmin.j, tmax.j), min(tmin.k, tmax.k));
     const Vector3f real_max(max(tmin.i, tmax.i), max(tmin.j, tmax.j), max(tmin.k, tmax.k));
 
-    float min_max = min(min(real_max.i, real_max.j), real_max.k);
+    /** Begin Degenerative (Axis Aligned) Safe Code **/
+
+    float min_max;
+    float max_min;
+    float invalid_axes_distance2 = 0.0f;
+
+    if(direction.i != 0.0f) {
+      min_max = real_max.i;
+      max_min = real_min.i;
+
+      if(direction.j != 0.0f) {
+        if(real_max.j < min_max) min_max = real_max.j;
+        if(real_min.j > max_min) max_min = real_min.j;
+
+        if(direction.k != 0.0f) {
+          if(real_max.k < min_max) min_max = real_max.k;
+          if(real_min.k > max_min) max_min = real_min.k;
+        }
+      }
+      else if(direction.k != 0.0f) {
+        if(real_max.k < min_max) min_max = real_max.k;
+        if(real_min.k > max_min) max_min = real_min.k;
+      }
+    }
+    else {
+      if(end_point_a.i < 0.0f) {
+        const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i, 0.0f, 0.0f));
+        invalid_axes_distance2 += diff * diff;
+      }
+      else if(end_point_a.i > 1.0f) {
+        const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i - 1.0f, 0.0f, 0.0f));
+        invalid_axes_distance2 += diff * diff;
+      }
+
+      if(direction.j != 0.0f) {
+        min_max = real_max.j;
+        max_min = real_min.j;
+
+        if(direction.k != 0.0f) {
+          if(real_max.k < min_max) min_max = real_max.k;
+          if(real_min.k > max_min) max_min = real_min.k;
+        }
+      }
+      else {
+        if(end_point_a.j < 0.0f) {
+          const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j, 0.0f));
+          invalid_axes_distance2 += diff * diff;
+        }
+        else if(end_point_a.j > 1.0f) {
+          const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j - 1.0f, 0.0f));
+          invalid_axes_distance2 += diff * diff;
+        }
+
+        if(direction.k != 0.0f) {
+          min_max = real_max.k;
+          max_min = real_min.k;
+        }
+        else {
+          if(end_point_a.k < 0.0f) {
+            const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k));
+            return make_pair(diff.magnitude(), 0.0f);
+          }
+          else if(end_point_a.k > 1.0f) {
+            const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k - 1.0f));
+            return make_pair(diff.magnitude(), 0.0f);
+          }
+
+          return make_pair(0.0f, 0.0f);
+        }
+      }
+    }
+
+    /** End Degenerative (Axis Aligned) Safe Code **/
+
     if(LINE_TYPE::has_lower_bound() && min_max < 0.0f)
       min_max = 0.0f;
     else if(LINE_TYPE::has_upper_bound() && min_max > 1.0f)
       min_max = 1.0f;
 
-    float max_min = max(max(real_min.i, real_min.j), real_min.k);
     if(LINE_TYPE::has_lower_bound() && max_min < 0.0f)
       max_min = 0.0f;
     else if(LINE_TYPE::has_upper_bound() && max_min > 1.0f)
       max_min = 1.0f;
 
     if(min_max > max_min)
-      return make_pair(0.0f, max_min);
+      return make_pair(sqrt(invalid_axes_distance2), max_min);
 
     Point3f closest_point = end_point_a + min_max * direction;
     simple_clamp(closest_point.x, 0.0f, 1.0f);
@@ -206,7 +278,11 @@ namespace Zeni_Collision {
     simple_clamp(closest_point.z, 0.0f, 1.0f);
     closest_point = rhs.get_point() + rhs.get_convert_from() * Vector3f(closest_point);
 
-    return make_pair((lhs.get_end_point_a() + min_max * lhs.get_direction() - closest_point).magnitude(), min_max);
+    const Vector3f valid_axes_distance = lhs.get_end_point_a() + min_max * lhs.get_direction() - closest_point;
+    const float valid_axes_distance2 = valid_axes_distance * valid_axes_distance;
+    const float total_distance = sqrt(invalid_axes_distance2 + valid_axes_distance2);
+
+    return make_pair(total_distance, min_max);
   }
 
   /* End Helpers and Templates
