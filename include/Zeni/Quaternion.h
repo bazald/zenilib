@@ -52,8 +52,8 @@
 namespace Zeni {
 
   struct Quaternion {
-    /// The best way to create a Quaternion
-    Quaternion(const float &time = 0.0f, const Vector3f &space = Vector3f());
+    inline Quaternion();
+    Quaternion(const float &time, const Vector3f &space); ///< For advanced use only
     Quaternion(const Vector3f &v, const float &theta); ///< Set the rotation in radians left about an axis;
     Quaternion(const float &yaw, const float &pitch, const float &roll);
     Quaternion(const Quaternion &rhs);

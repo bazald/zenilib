@@ -38,6 +38,12 @@
 
 namespace Zeni {
 
+  Quaternion::Quaternion()
+    : time(1.0f),
+    space(0.0f, 0.0f, 0.0f)
+  {
+  }
+
   Quaternion Quaternion::operator+(const Quaternion &rhs) const {
     return Quaternion(time + rhs.time, space + rhs.space);
 	}
@@ -124,16 +130,16 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::absolute_value() const {
-    return Quaternion(sqrt(time * time + space * space));
+    return Quaternion(sqrt(time * time + space * space), Vector3f());
   }
 
   Quaternion Quaternion::norm() const {
-    return Quaternion(time * time + space * space);
+    return Quaternion(time * time + space * space, Vector3f());
   }
 
   Quaternion Quaternion::determinant() const {
     float temp = time * time + space * space;
-    return Quaternion(temp * temp);
+    return Quaternion(temp * temp, Vector3f());
   }
 
   Quaternion Quaternion::adjoint() const {
