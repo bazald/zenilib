@@ -5,7 +5,8 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Zenipex Library "
-PROJECT_NUMBER         = 0.2.6.2OUTPUT_DIRECTORY       = P:/transfer/bazald/zenilib/docs/Zeni
+PROJECT_NUMBER         = 0.2.6.2
+OUTPUT_DIRECTORY       = P:/transfer/bazald/zenilib/docs/Zeni
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
