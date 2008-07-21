@@ -79,13 +79,13 @@ namespace Zeni {
     inline const Color & get_specular() const; ///< Get the specular Color
     inline const Point3f & get_position() const; ///< Get the position of the Light (irrelevant for directional lights or purely ambient lights)
     inline const Vector3f & get_spot_direction() const; ///< Get the direction of the Light (relevent only to spotlights)
-    inline float get_range() const; ///< Get the max distance reached by the light (does NOT affect OpenGL)
-    inline float get_spot_exponent() const; ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
-    inline float get_constant_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline float get_linear_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline float get_quadratic_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline float get_spot_theta() const; ///< Get the angle, in radians, describing the size of the inner cone
-    inline float get_spot_phi() const; ///< Get the angle, in radians, describing the size of the outer cone
+    inline const float & get_range() const; ///< Get the max distance reached by the light (does NOT affect OpenGL)
+    inline const float & get_spot_exponent() const; ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
+    inline const float & get_constant_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    inline const float & get_linear_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    inline const float & get_quadratic_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    inline const float & get_spot_theta() const; ///< Get the angle, in radians, describing the size of the inner cone
+    inline const float & get_spot_phi() const; ///< Get the angle, in radians, describing the size of the outer cone
 
     // Modifiers
     inline void set_light_type(const LIGHT_TYPE &light_type); ///< Set the type of the Light

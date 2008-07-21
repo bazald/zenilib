@@ -127,6 +127,11 @@ namespace Zeni {
     m_opengl_flag = on;
   }
 
+  void Video::rotate_scene(const Quaternion &rotation) {
+    const std::pair<Vector3f, float> rayngel = rotation.get_rotation();
+    rotate_scene(rayngel.first, rayngel.second);
+  }
+
   const Matrix4f & Video::get_view_matrix() const {
     return m_view;
   }

@@ -57,31 +57,31 @@ namespace Zeni {
     return m_spot_direction;
   }
 
-  float Light::get_range() const {
+  const float & Light::get_range() const {
     return m_range;
   }
 
-  float Light::get_spot_exponent() const {
+  const float & Light::get_spot_exponent() const {
     return m_spot_exponent;
   }
 
-  float Light::get_constant_attenuation() const {
+  const float & Light::get_constant_attenuation() const {
     return m_constant_attenuation;
   }
 
-  float Light::get_linear_attenuation() const {
+  const float & Light::get_linear_attenuation() const {
     return m_linear_attenuation;
   }
 
-  float Light::get_quadratic_attenuation() const {
+  const float & Light::get_quadratic_attenuation() const {
     return m_quadratic_attenuation;
   }
 
-  float Light::get_spot_theta() const {
+  const float & Light::get_spot_theta() const {
     return m_spot_theta;
   }
 
-  float Light::get_spot_phi() const {
+  const float & Light::get_spot_phi() const {
     return m_spot_phi;
   }
 

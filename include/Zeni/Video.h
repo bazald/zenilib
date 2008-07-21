@@ -151,6 +151,7 @@ namespace Zeni {
     inline void pop_world_stack(); ///< Pop a model view matrix off the stack
     inline void translate_scene(const Vector3f &direction); ///< Translate the scene
     inline void rotate_scene(const Vector3f &about, const float &radians); ///< Rotate the scene
+    inline void rotate_scene(const Quaternion &rotation); ///< Rotate the scene
     inline void scale_scene(const Vector3f &factor); ///< Scale the scene
     inline void transform_scene(const Matrix4f &transformation); ///< Transform the scene
 

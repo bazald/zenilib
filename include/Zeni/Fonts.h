@@ -66,8 +66,8 @@ namespace Zeni {
     static Fonts & get_reference(); ///< Get access to the singleton.
 
     unsigned long get_font_id(const std::string &font) const; ///< Get a font id by name.
-    const Font & get_font(const std::string &font) const; ///< Get a reference to a font by name.
-    const Font & get_font(const unsigned long &id) const; ///< Get a reference to a font by id.
+    Font & get_font(const std::string &font) const; ///< Get a reference to a font by name.
+    Font & get_font(const unsigned long &id) const; ///< Get a reference to a font by id.
 
     unsigned long set_font(const std::string &name, Font * const font); ///< Set a font by name.
     void clear_font(const std::string &name); ///< Clear a font by name.

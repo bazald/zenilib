@@ -86,6 +86,7 @@
 namespace Zeni {
 
   class Model;
+  struct Quaternion;
 
   class Model_Visitor {
   public:
@@ -115,14 +116,15 @@ namespace Zeni {
     Model & operator =(const Model &rhs);
 
     // Accessors
-    inline Lib3dsFile * get_file() const; ///< Get the full 3ds file info
+    inline Lib3dsFile * const & get_file() const; ///< Get the full 3ds file info
     virtual Point3f get_position() const; ///< Get the position of the Model
-    inline Model_Extents get_extents() const; ///< Get the extents of the Model
+    inline const Model_Extents & get_extents() const; ///< Get the extents of the Model
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
 
     // Modifiers
     inline void set_scale(const Point3f &multiplier); ///< Scale the Model
     inline void set_rotate(const float &angle, const Point3f &ray); ///< Rotate the Model
+    inline void set_rotate(const Quaternion &quaternion); ///< Rotate the Model
     inline void set_translate(const Point3f &vector); ///< Translate the Model
     inline void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
 
@@ -138,7 +140,7 @@ namespace Zeni {
 #endif
 
     // Thread-Unsafe versions
-    inline Lib3dsFile * thun_get_file() const; ///< Get the full 3ds file info - Thread Unsafe Version
+    inline Lib3dsFile * const & thun_get_file() const; ///< Get the full 3ds file info - Thread Unsafe Version
 
   private:
     std::string m_filename;

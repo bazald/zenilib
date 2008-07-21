@@ -30,20 +30,22 @@
 #define ZENI_MODEL_HXX
 
 #include <Zeni/Model.h>
+#include <Zeni/Quaternion.h>
+#include <Zeni/Vector3f.h>
 
 namespace Zeni {
 
-  Lib3dsFile * Model::get_file() const {
+  Lib3dsFile * const & Model::get_file() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_file;
     GUARANTEED_FINISHED_END();
   }
 
-  Lib3dsFile * Model::thun_get_file() const {
+  Lib3dsFile * const & Model::thun_get_file() const {
     return m_file;
   }
 
-  Model_Extents Model::get_extents() const {
+  const Model_Extents & Model::get_extents() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_extents;
     GUARANTEED_FINISHED_END();
@@ -66,6 +68,11 @@ namespace Zeni {
     m_rotate_angle = angle;
     m_rotate = ray;
     GUARANTEED_FINISHED_END();
+  }
+
+  void Model::set_rotate(const Quaternion &rotation) {
+    const std::pair<Vector3f, float> rayngel = rotation.get_rotation();
+    set_rotate(rayngel.second, rayngel.first);
   }
 
   void Model::set_translate(const Point3f &vector) {

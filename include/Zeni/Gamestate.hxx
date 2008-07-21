@@ -86,11 +86,11 @@ namespace Zeni {
     return *m_state;
   }
   
-  float Gamestate_II::get_min_confidence() const {
+  const float & Gamestate_II::get_min_confidence() const {
     return m_min_confidence;
   }
 
-  float Gamestate_II::get_max_confidence() const {
+  const float & Gamestate_II::get_max_confidence() const {
     return m_max_confidence;
   }
 

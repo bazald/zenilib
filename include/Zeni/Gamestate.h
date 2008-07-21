@@ -193,8 +193,8 @@ namespace Zeni {
     virtual void on_event(const SDL_Event &event);
     virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
 
-    inline float get_min_confidence() const;
-    inline float get_max_confidence() const;
+    inline const float & get_min_confidence() const;
+    inline const float & get_max_confidence() const;
 
     inline void set_min_confidence(const float &min);
     inline void set_max_confidence(const float &max);
