@@ -119,7 +119,7 @@ namespace Zeni {
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * const & Line_Segment<VERTEX>::get_render_wrapper() const {
+  const Render_Wrapper * Line_Segment<VERTEX>::get_render_wrapper() const {
     return m_render_wrapper;
   }
 

@@ -72,7 +72,7 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * const & get_render_wrapper() const; ///< Get the current Render_Wrapper
+    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
     void set_render_wrapper(Render_Wrapper * const render_wrapper) const; ///< Set the current Render_Wrapper
     Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
 

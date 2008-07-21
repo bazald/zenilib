@@ -122,7 +122,7 @@ namespace Zeni {
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * const & Triangle<VERTEX>::get_render_wrapper() const {
+  const Render_Wrapper * Triangle<VERTEX>::get_render_wrapper() const {
     return m_render_wrapper;
   }
 
