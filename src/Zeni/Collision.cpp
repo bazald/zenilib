@@ -187,75 +187,55 @@ namespace Zeni_Collision {
 
     /** Begin Degenerative (Axis Aligned) Safe Code **/
 
-    float min_max;
-    float max_min;
+    int valid_axes = 0;
     float invalid_axes_distance2 = 0.0f;
+    float min_max = 42.0f;
+    float max_min = 42.0f;
 
-    if(fabs(direction.i) > 0.001f) {
-      min_max = real_max.i;
-      max_min = real_min.i;
-
-      if(fabs(direction.j) > 0.001f) {
-        if(real_max.j < min_max) min_max = real_max.j;
-        if(real_min.j > max_min) max_min = real_min.j;
-
-        if(fabs(direction.k) > 0.001f) {
-          if(real_max.k < min_max) min_max = real_max.k;
-          if(real_min.k > max_min) max_min = real_min.k;
-        }
-      }
-      else if(fabs(direction.k) > 0.001f) {
-        if(real_max.k < min_max) min_max = real_max.k;
-        if(real_min.k > max_min) max_min = real_min.k;
-      }
+    if(fabs(direction.i) > g_intersection_epsilon) {
+      if(!valid_axes || real_max.i < min_max) min_max = real_max.i;
+      if(!valid_axes || real_min.i > max_min) max_min = real_min.i;
+      ++valid_axes;
     }
-    else {
-      if(end_point_a.i < 0.0f) {
-        const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i, 0.0f, 0.0f));
-        invalid_axes_distance2 += diff * diff;
-      }
-      else if(end_point_a.i > 1.0f) {
-        const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i - 1.0f, 0.0f, 0.0f));
-        invalid_axes_distance2 += diff * diff;
-      }
-
-      if(fabs(direction.j) > 0.001f) {
-        min_max = real_max.j;
-        max_min = real_min.j;
-
-        if(fabs(direction.k) > 0.001f) {
-          if(real_max.k < min_max) min_max = real_max.k;
-          if(real_min.k > max_min) max_min = real_min.k;
-        }
-      }
-      else {
-        if(end_point_a.j < 0.0f) {
-          const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j, 0.0f));
-          invalid_axes_distance2 += diff * diff;
-        }
-        else if(end_point_a.j > 1.0f) {
-          const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j - 1.0f, 0.0f));
-          invalid_axes_distance2 += diff * diff;
-        }
-
-        if(fabs(direction.k) > 0.001f) {
-          min_max = real_max.k;
-          max_min = real_min.k;
-        }
-        else {
-          if(end_point_a.k < 0.0f) {
-            const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k));
-            return make_pair(diff.magnitude(), 0.0f);
-          }
-          else if(end_point_a.k > 1.0f) {
-            const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k - 1.0f));
-            return make_pair(diff.magnitude(), 0.0f);
-          }
-
-          return make_pair(0.0f, 0.0f);
-        }
-      }
+    else if(end_point_a.i < 0.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i, 0.0f, 0.0f));
+      invalid_axes_distance2 += diff * diff;
     }
+    else if(end_point_a.i > 1.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i - 1.0f, 0.0f, 0.0f));
+      invalid_axes_distance2 += diff * diff;
+    }
+
+    if(fabs(direction.j) > g_intersection_epsilon) {
+      if(!valid_axes || real_max.j < min_max) min_max = real_max.j;
+      if(!valid_axes || real_min.j > max_min) max_min = real_min.j;
+      ++valid_axes;
+    }
+    else if(end_point_a.j < 0.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j, 0.0f));
+      invalid_axes_distance2 += diff * diff;
+    }
+    else if(end_point_a.j > 1.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j - 1.0f, 0.0f));
+      invalid_axes_distance2 += diff * diff;
+    }
+
+    if(fabs(direction.k) > g_intersection_epsilon) {
+      if(!valid_axes || real_max.k < min_max) min_max = real_max.k;
+      if(!valid_axes || real_min.k > max_min) max_min = real_min.k;
+      ++valid_axes;
+    }
+    else if(end_point_a.k < 0.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k));
+      invalid_axes_distance2 += diff * diff;
+    }
+    else if(end_point_a.k > 1.0f) {
+      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k - 1.0f));
+      invalid_axes_distance2 += diff * diff;
+    }
+
+    if(!valid_axes)
+      return make_pair(invalid_axes_distance2, 0.0f);
 
     /** End Degenerative (Axis Aligned) Safe Code **/
 
