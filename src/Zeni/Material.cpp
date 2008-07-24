@@ -56,8 +56,8 @@ namespace Zeni {
     set_texture(texture);
   }
 
-  Material::Material(const string &texture)
-    : m_diffuse(1.0f, 1.0f, 1.0f, 1.0f), 
+  Material::Material(const string &texture, const Color &diffuse)
+    : m_diffuse(diffuse), 
     m_ambient(1.0f, 1.0f, 1.0f, 1.0f), 
     m_specular(1.0f, 0.2f, 0.2f, 0.2f), 
     m_emissive(1.0f, 0.0f, 0.0f, 0.0f),
@@ -102,6 +102,8 @@ namespace Zeni {
       if(!(optimization & (1 << 4)))
         glMaterialfv(face, GL_SHININESS, &m_power);
     }
+    else
+      vgl.set_color(m_diffuse);
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty()) {
@@ -126,8 +128,12 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   void Material::set(Video_DX9 &vdx, const int &optimization) const {
-    if(!(optimization & ((1 << 5) - 1)))
-      vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
+    if(vdx.get_lighting()) {
+      if(!(optimization & ((1 << 5) - 1)))
+        vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
+    }
+    else
+      vdx.set_color(m_diffuse);
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty())

@@ -53,7 +53,7 @@ namespace Zeni {
   public:
     /// Set the red, green, blue, and alpha channels using the stored type, float
     Color(); ///< Default value is full white (opaque)
-    Color(const float &a, const float &r, const float g, const float &b); ///< ARGB order is used for consistency despite interal RGBA ordering
+    Color(const float &a, const float &r, const float &g, const float &b); ///< ARGB order is used for consistency despite interal RGBA ordering
     Color(const unsigned long &argb);
 
     inline const float & a() const; ///< Get the alpha channel [0.0f, 1.0f]

@@ -109,6 +109,10 @@ namespace Zeni {
     return it->second;
   }
 
+  Texture * Textures::get_texture(const std::string &name) const {
+    return get_texture(get_texture_id(name));
+  }
+
   void Textures::apply_texture(const string &name) {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(name);
 

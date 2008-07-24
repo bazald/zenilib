@@ -37,7 +37,7 @@ namespace Zeni {
     rgba[3] = 1.0f;
   }
 
-  Color::Color(const float &a, const float &r, const float g, const float &b) {
+  Color::Color(const float &a, const float &r, const float &g, const float &b) {
     rgba[0] = r;
     rgba[1] = g;
     rgba[2] = b;

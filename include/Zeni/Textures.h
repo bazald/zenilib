@@ -76,6 +76,7 @@ namespace Zeni {
     void clear_texture(const std::string &name); ///< Clear a texture by name.
     unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
     Texture * get_texture(const unsigned long &id) const; ///< Get a texture by id.
+    Texture * get_texture(const std::string &name) const; ///< Get a texture by name.
     void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 

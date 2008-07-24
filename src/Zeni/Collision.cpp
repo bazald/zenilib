@@ -191,20 +191,20 @@ namespace Zeni_Collision {
     float max_min;
     float invalid_axes_distance2 = 0.0f;
 
-    if(direction.i != 0.0f) {
+    if(fabs(direction.i) > 0.001f) {
       min_max = real_max.i;
       max_min = real_min.i;
 
-      if(direction.j != 0.0f) {
+      if(fabs(direction.j) > 0.001f) {
         if(real_max.j < min_max) min_max = real_max.j;
         if(real_min.j > max_min) max_min = real_min.j;
 
-        if(direction.k != 0.0f) {
+        if(fabs(direction.k) > 0.001f) {
           if(real_max.k < min_max) min_max = real_max.k;
           if(real_min.k > max_min) max_min = real_min.k;
         }
       }
-      else if(direction.k != 0.0f) {
+      else if(fabs(direction.k) > 0.001f) {
         if(real_max.k < min_max) min_max = real_max.k;
         if(real_min.k > max_min) max_min = real_min.k;
       }
@@ -219,11 +219,11 @@ namespace Zeni_Collision {
         invalid_axes_distance2 += diff * diff;
       }
 
-      if(direction.j != 0.0f) {
+      if(fabs(direction.j) > 0.001f) {
         min_max = real_max.j;
         max_min = real_min.j;
 
-        if(direction.k != 0.0f) {
+        if(fabs(direction.k) > 0.001f) {
           if(real_max.k < min_max) min_max = real_max.k;
           if(real_min.k > max_min) max_min = real_min.k;
         }
@@ -238,7 +238,7 @@ namespace Zeni_Collision {
           invalid_axes_distance2 += diff * diff;
         }
 
-        if(direction.k != 0.0f) {
+        if(fabs(direction.k) > 0.001f) {
           min_max = real_max.k;
           max_min = real_min.k;
         }

@@ -1585,6 +1585,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Gamestate_One.h"
+				>
+			</File>
+			<File
 				RelativePath="include\Zeni\Hash_Map.h"
 				>
 			</File>
@@ -1594,10 +1598,6 @@
 			</File>
 			<File
 				RelativePath="include\Zeni\Light.h"
-				>
-			</File>
-			<File
-				RelativePath="include\Zeni\Line.h"
 				>
 			</File>
 			<File
@@ -1704,10 +1704,6 @@
 				RelativePath="include\Zeni\Widget.h"
 				>
 			</File>
-			<File
-				RelativePath="include\Zeni\zeniapp.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Include Files"
@@ -1743,10 +1739,6 @@
 			</File>
 			<File
 				RelativePath="include\Zeni\Light.hxx"
-				>
-			</File>
-			<File
-				RelativePath="include\Zeni\Line.hxx"
 				>
 			</File>
 			<File

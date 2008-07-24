@@ -162,7 +162,7 @@ namespace Zeni {
     bool m_done;
   };
   
-#define GUARANTEED_FINISHED_BEGIN(TASK) {Recursive_Mutex::Lock GF_lock(TASK.done_mutex()); {Condition_Variable &GF_condition = TASK.done_condition(); const bool &GF_done = TASK.done_variable(); while(!GF_done) {if(TASK.status) throw Error(TASK.msg); GF_condition.wait(GF_lock);}} {
+#define GUARANTEED_FINISHED_BEGIN(TASK) {Recursive_Mutex::Lock GF_lock(TASK.done_mutex()); {Condition_Variable &GF_condition = TASK.done_condition(); const bool &GF_done = TASK.done_variable(); for(;;) {if(TASK.status) throw Error(TASK.msg); if(GF_done) break; GF_condition.wait(GF_lock);}} {
 #define GUARANTEED_FINISHED_END() }}
 
   class Repeatable_Task : public Task {
