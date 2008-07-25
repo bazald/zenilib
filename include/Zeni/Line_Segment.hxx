@@ -124,7 +124,7 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) const {
+  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
     delete m_render_wrapper;
     m_render_wrapper = render_wrapper;
   }

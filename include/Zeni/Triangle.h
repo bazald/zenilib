@@ -73,7 +73,7 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper) const; ///< Set the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
     Triangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Triangle
 
     Triangle<VERTEX> * get_duplicate_subt0() const; ///< Get quarter 0 of the Triangle; Can be used for software LOD increase

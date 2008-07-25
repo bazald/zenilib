@@ -76,8 +76,8 @@ token	name for image
 token	filepath (cannot contain spaces)
 int	non-zero for a repeating texture, zero for a clamped texture
 
-WARNING:  Alpha channel is supported
-          Indexed transparency is NOT supported
+WARNING:  RGB Color with (or without) an Alpha channel is supported
+          Indexed color and/or transparency is NOT supported
 
 NOTE:  PNG is supported
        TIFF is supported, with additional support for zip and jpeg compression
