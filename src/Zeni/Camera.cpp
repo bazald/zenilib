@@ -46,19 +46,28 @@ namespace Zeni {
   }
 
   void Camera::adjust_yaw(const float &theta) {
-    m_forward = Quaternion(get_up(), theta) * m_forward;
+    m_forward = (Quaternion(get_up(), theta) * m_forward).normalized();
     // left changes implicitly
+
+	// anti-parallelism correction
+	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::adjust_pitch(const float &phi) {
-    const Quaternion rot(get_left(), phi);
-    m_forward = rot * m_forward;
-    m_up = rot * m_up;
+    const Quaternion rot(get_left().normalized(), phi);
+    m_forward = (rot * m_forward).normalized();
+    m_up = (rot * m_up).normalized();
+
+	// anti-parallelism correction
+	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::adjust_roll(const float &rho) {
-    m_up = Quaternion(get_forward(), rho) * m_up;
+    m_up = (Quaternion(get_forward(), rho) * m_up).normalized();
     // left changes implicitly
+
+	// anti-parallelism correction
+	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::move_forward_xy(const float &distance) {
@@ -72,8 +81,11 @@ namespace Zeni {
 
   void Camera::turn_left_xy(const float &theta) {
     const Quaternion rot(Vector3f(0.0f, 0.0f, 1.0f), theta);
-    m_forward = rot * m_forward;
-    m_up = rot * m_up;
+    m_forward = (rot * m_forward).normalized();
+    m_up = (rot * m_up).normalized();
+
+	// anti-parallelism correction
+	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
 }
