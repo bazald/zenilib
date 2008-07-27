@@ -94,6 +94,9 @@ namespace Zeni {
     inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
     inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
 
+    // Fog
+    inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
+
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     inline void push_world_stack_impl(); ///< Push a model view matrix onto the stack

@@ -330,6 +330,10 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(unset_material_impl, material, optimization);
   }
 
+  void Video::set_fog(const Fog * const fog) {
+    VIDEO_IV_FCN_CALL(set_fog_impl, fog);
+  }
+
   void Video::select_world_matrix() {
     VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
   }

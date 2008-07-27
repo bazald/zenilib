@@ -33,6 +33,7 @@
 
 #include <Zeni/Video_DX9.h>
 
+#include <Zeni/Fog.hxx>
 #include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
@@ -105,6 +106,10 @@ namespace Zeni {
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
   }
 
+  void Video_DX9::set_color_impl(const Color &color) {
+    m_d3d_device->SetRenderState(D3DRS_TEXTUREFACTOR, color.get_argb());
+  }
+
   void Video_DX9::apply_texture_impl(const unsigned long &id) {
     Textures::get_reference().apply_texture(id);
 
@@ -114,9 +119,9 @@ namespace Zeni {
   }
 
   void Video_DX9::apply_texture_impl(const Texture &texture) {
-    texture.apply_texture();
-
     m_textured = true;
+
+    texture.apply_texture();
 
     set_fvf();
   }
@@ -124,6 +129,8 @@ namespace Zeni {
   void Video_DX9::unapply_texture_impl() {
     m_textured = false;
 
+    m_d3d_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+    m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
     m_d3d_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
     m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
@@ -159,6 +166,17 @@ namespace Zeni {
 
   void Video_DX9::unset_material_impl(const Material &material, const int &optimization) {
     material.unset(*this, optimization);
+  }
+
+  void Video_DX9::set_fog_impl(const Fog * const fog) {
+    if(fog) {
+      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
+      fog->set(*this);
+    }
+    else {
+      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
+      m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
+    }
   }
 
   void Video_DX9::push_world_stack_impl() {

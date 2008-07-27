@@ -229,6 +229,12 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
     m_d3d_device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 
+    // Configure Texture Stages
+    m_d3d_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+    m_d3d_device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+    m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+    m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
+
     // Set Lighting Variables
     m_d3d_device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
 

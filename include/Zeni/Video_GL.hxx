@@ -34,6 +34,7 @@
 #include <Zeni/Video_GL.h>
 
 #include <Zeni/Color.hxx>
+#include <Zeni/Fog.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Render_Wrapper.hxx>
@@ -174,6 +175,15 @@ namespace Zeni {
 
   void Video_GL::unset_material_impl(const Material &material, const int &optimization) {
     material.unset(*this, optimization);
+  }
+
+  void Video_GL::set_fog_impl(const Fog * const fog) {
+    if(fog) {
+      glEnable(GL_FOG);
+      fog->set(*this);
+    }
+    else
+      glDisable(GL_FOG);
   }
 
   void Video_GL::select_world_matrix_impl() {

@@ -26,42 +26,53 @@
 * the GNU General Public License.
 */
 
-#include "zenilib.h"
+#ifndef ZENI_FOG_HXX
+#define ZENI_FOG_HXX
 
-#include "Zeni/Camera.cpp"
-#include "Zeni/Collision.cpp"
-#include "Zeni/Color.cpp"
-#include "Zeni/Colors.cpp"
-#include "Zeni/Coordinate.cpp"
-#include "Zeni/Core.cpp"
-#include "Zeni/EZ2D.cpp"
-#include "Zeni/Fog.cpp"
-#include "Zeni/Font.cpp"
-#include "Zeni/Fonts.cpp"
-#include "Zeni/Game.cpp"
-#include "Zeni/Gamestate.cpp"
-#include "Zeni/Light.cpp"
-#include "Zeni/main.cpp"
-#include "Zeni/Material.cpp"
-#include "Zeni/Matrix4f.cpp"
-#include "Zeni/Model.cpp"
-#include "Zeni/Mutex.cpp"
-#include "Zeni/Net.cpp"
-#include "Zeni/Net_Primitives.cpp"
-#include "Zeni/Quaternion.cpp"
-#include "Zeni/Render_Wrapper.cpp"
-#include "Zeni/Resource.cpp"
-#include "Zeni/Sound.cpp"
-#include "Zeni/Sounds.cpp"
-#include "Zeni/Texture.cpp"
-#include "Zeni/Textures.cpp"
-#include "Zeni/Thread.cpp"
-#include "Zeni/Timer.cpp"
-#include "Zeni/Vector3f.cpp"
-#include "Zeni/Vertex2f.cpp"
-#include "Zeni/Vertex3f.cpp"
-#include "Zeni/Vertex_Buffer.cpp"
-#include "Zeni/Video.cpp"
-#include "Zeni/Video_DX9.cpp"
-#include "Zeni/Video_GL.cpp"
-#include "Zeni/Widget.cpp"
+#include <Zeni/Fog.h>
+
+namespace Zeni {
+
+  FOG_TYPE Fog::get_type() const {
+    return m_type;
+  }
+
+  const Color & Fog::get_color() const {
+    return m_color;
+  }
+
+  const float & Fog::get_density() const {
+    return m_density;
+  }
+
+  const float & Fog::get_start() const {
+    return m_start;
+  }
+
+  const float & Fog::get_end() const {
+    return m_end;
+  }
+
+  void Fog::set_type(const FOG_TYPE &type_) {
+    m_type = type_;
+  }
+
+  void Fog::set_color(const Color &color_) {
+    m_color = color_;
+  }
+
+  void Fog::set_density(const float &density_) {
+    m_density = density_;
+  }
+  
+  void Fog::set_start(const float &start_) {
+    m_start = start_;
+  }
+
+  void Fog::set_end(const float &end_) {
+    m_end = end_;
+  }
+
+}
+
+#endif

@@ -135,31 +135,28 @@ namespace Zeni {
       load(m_filename, m_repeat);
     
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
+
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 #endif
 
 #ifndef DISABLE_DX9
   void Texture_DX9::apply_texture_impl() const {
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
-    //Set the colour to come completely from the texture
-    if(vdx.get_lighting())
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-    else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-
-    //Set the alpha to come completely from the texture
-    if(vdx.get_lighting())
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-    else
-      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
-    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+    Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(Video::get_reference());
 
     vdx.get_d3d_device()->SetTexture(0, m_texture);
+
+    if(vdx.get_lighting()) {
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+    }
+    else {
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
+      vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
+    }
+
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
   }
 #endif
 

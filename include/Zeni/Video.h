@@ -61,6 +61,7 @@
 namespace Zeni {
 
   class Camera;
+  class Fog;
   class Font;
   class Light;
   class Material;
@@ -144,6 +145,9 @@ namespace Zeni {
     inline void set_light(const int &number, const Light * const light = 0); ///< Set a particular Light
     inline void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
     inline void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
+
+    // Fog
+    inline void set_fog(const Fog * const fog = 0); ///< Set Fog on/off
 
     // Model/World Transformation Stack Functions
     inline void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene

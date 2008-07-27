@@ -83,7 +83,7 @@ namespace Zeni {
     inline void set_ztest_impl(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
 
     // Color and Texturing
-    inline void set_color_impl(const Color & /*color*/) {} ///< Set the current color
+    inline void set_color_impl(const Color & /*color*/); ///< Set the current color
     inline void set_clear_color_impl(const Color & /*color*/) {} ///< Set the blank background color
     inline void apply_texture_impl(const unsigned long &id); ///< Apply a texture by id
     inline void apply_texture_impl(const Texture &texture); ///< Apply a texture by id
@@ -96,6 +96,9 @@ namespace Zeni {
     inline void set_light_impl(const int &number, const Light * const light = 0); ///< Set a particular Light
     inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
     inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
+
+    // Fog
+    inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
 
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl() {} ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
