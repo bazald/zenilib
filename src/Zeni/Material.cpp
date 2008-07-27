@@ -56,10 +56,10 @@ namespace Zeni {
     set_texture(texture);
   }
 
-  Material::Material(const string &texture, const Color &diffuse)
-    : m_diffuse(diffuse), 
-    m_ambient(1.0f, 1.0f, 1.0f, 1.0f), 
-    m_specular(1.0f, 0.2f, 0.2f, 0.2f), 
+  Material::Material(const string &texture, const Color &ambient_and_diffuse)
+    : m_diffuse(ambient_and_diffuse), 
+    m_ambient(ambient_and_diffuse), 
+    m_specular(1.0f, 0.5f * (ambient_and_diffuse.r() + 1.0f), 0.5f * (ambient_and_diffuse.g() + 1.0f), 0.5f * (ambient_and_diffuse.b() + 1.0f)), 
     m_emissive(1.0f, 0.0f, 0.0f, 0.0f),
     m_power(1.0f),
     m_texture(""),

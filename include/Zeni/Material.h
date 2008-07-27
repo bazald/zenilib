@@ -70,7 +70,7 @@ namespace Zeni {
       const Color &specular = Color(1.0f, 0.2f, 0.2f, 0.2f), 
       const Color &emissive = Color(1.0f, 0.0f, 0.0f, 0.0f), const float &power = 1.0f,
       const std::string &texture = "");
-    Material(const std::string &texture, const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f));
+    Material(const std::string &texture, const Color &ambient_and_diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Accessors
     inline const Color & get_ambient() const; ///< Get the ambient Color
