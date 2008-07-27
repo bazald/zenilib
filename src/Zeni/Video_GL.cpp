@@ -181,6 +181,8 @@ namespace Zeni {
       uni.ptr = SDL_GL_GetProcAddress("glBufferDataARB");
       m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)uni.proc;
     }
+    else
+      cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) to OpenGL.\n";
 
     if(strstr((char*)glGetString(GL_EXTENSIONS), "GL_EXT_texture_filter_anisotropic"))
       glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_maximum_anisotropy);

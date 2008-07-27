@@ -129,7 +129,10 @@ namespace Zeni {
     inline int color_size() const;
     inline int texel_size() const;
 
-    GLuint m_vbuf[6];
+    union VBO_GL {
+      GLuint vbo;
+      void * alt;
+    } m_vbuf[6];
     
     static PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
   };
