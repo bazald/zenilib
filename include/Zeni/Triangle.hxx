@@ -55,7 +55,8 @@ namespace Zeni {
 
   template <typename VERTEX>
   Triangle<VERTEX>::Triangle(const Triangle<VERTEX> &rhs)
-    : m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    : Renderable(),
+    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
   {
     m_vertex[0] = rhs.m_vertex[0];
     m_vertex[1] = rhs.m_vertex[1];
