@@ -222,11 +222,15 @@ namespace Zeni {
   }
 
   Texture * Video_DX9::load_Texture_impl(const std::string &filename, const bool &repeat) {
-    return new Texture_DX9(filename, repeat, *this);
+    return new Texture_DX9(filename, repeat);
+  }
+
+  Texture * Video_DX9::create_Texture_impl(SDL_Surface * const &surface, const bool &repeat) {
+    return new Texture_DX9(surface, repeat);
   }
 
   Font * Video_DX9::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
-    return new Font_DX9(filename, bold, italic, glyph_height);
+    return new Font_FT(filename, bold, italic, glyph_height);
   }
 
   Vertex_Buffer * Video_DX9::create_Vertex_Buffer_impl() {

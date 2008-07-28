@@ -97,8 +97,7 @@ namespace Zeni {
     std::string m_font_name;
   };
 
-#ifndef DISABLE_GL
-  class Font_GL : public Font {
+  class Font_FT : public Font {
     static const int num_glyphs = 256;
 
     struct Glyph {
@@ -116,10 +115,10 @@ namespace Zeni {
     };
 
   public:
-    Font_GL(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
-    Font_GL(const std::string &codename, const bool &bold, const bool &italic, 
+    Font_FT(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font_FT(const std::string &codename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
-    ~Font_GL();
+    ~Font_FT();
 
     virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
@@ -131,7 +130,6 @@ namespace Zeni {
     Texture *m_texture;
     int m_font_height;
   };
-#endif
 
 #ifndef DISABLE_DX9
   class Font_DX9 : public Font {

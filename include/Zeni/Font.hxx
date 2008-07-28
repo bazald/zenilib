@@ -49,13 +49,9 @@ namespace Zeni {
     return m_glyph_height;
   }
 
-#ifndef DISABLE_GL
-
-  int Font_GL::Glyph::get_glyph_width() const {
+  int Font_FT::Glyph::get_glyph_width() const {
     return m_glyph_width;
   }
-
-#endif
 
 }
 

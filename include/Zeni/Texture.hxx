@@ -134,9 +134,12 @@ namespace Zeni {
     if(!m_texture_id)
       load(m_filename, m_repeat);
     
+    glEnable(GL_TEXTURE_2D);
+
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   }
 #endif
 

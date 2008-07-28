@@ -548,8 +548,10 @@ namespace Zeni {
       buffered = 0;
 
       if(m_buf_c.is_vbo) {
-        if(FAILED(m_buf_c.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+        if(FAILED(m_buf_c.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0))) {
+          m_buf_c.data.vbo->Release();
           throw VBuf_Render_Failure();
+        }
       }
       else
         buffered = m_buf_c.data.alt;
@@ -595,8 +597,10 @@ namespace Zeni {
       buffered = 0;
 
       if(m_buf_t.is_vbo) {
-        if(FAILED(m_buf_t.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+        if(FAILED(m_buf_t.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0))) {
+          m_buf_t.data.vbo->Release();
           throw VBuf_Render_Failure();
+        }
       }
       else
         buffered = m_buf_t.data.alt;

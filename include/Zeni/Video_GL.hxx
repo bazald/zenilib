@@ -113,16 +113,10 @@ namespace Zeni {
 
   void Video_GL::apply_texture_impl(const unsigned long &id) {
     Textures::get_reference().apply_texture(id);
-
-    glEnable(GL_TEXTURE_2D);
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   }
 
   void Video_GL::apply_texture_impl(const Texture &texture) {
     texture.apply_texture();
-
-    glEnable(GL_TEXTURE_2D);
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   }
 
   void Video_GL::unapply_texture_impl() {
@@ -232,11 +226,15 @@ namespace Zeni {
   }
 
   Texture * Video_GL::load_Texture_impl(const std::string &filename, const bool &repeat) {
-    return new Texture_GL(filename, repeat, *this);
+    return new Texture_GL(filename, repeat);
+  }
+
+  Texture * Video_GL::create_Texture_impl(SDL_Surface * const &surface, const bool &repeat) {
+    return new Texture_GL(surface, repeat);
   }
 
   Font * Video_GL::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
-    return new Font_GL(filename, bold, italic, glyph_height);
+    return new Font_FT(filename, bold, italic, glyph_height);
   }
 
   Vertex_Buffer * Video_GL::create_Vertex_Buffer_impl() {

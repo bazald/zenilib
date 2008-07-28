@@ -55,13 +55,12 @@ namespace Zeni {
   {
   }
 
-#ifndef DISABLE_GL
-  Font_GL::Glyph::Glyph()
+  Font_FT::Glyph::Glyph()
     : m_glyph_width(0)
   {
   }
 
-  Font_GL::Glyph::Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height)
+  Font_FT::Glyph::Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height)
     : m_glyph_width(0)
   {
     int minx, maxy;
@@ -83,7 +82,7 @@ namespace Zeni {
     SDL_FreeSurface(source);
   }
 
-  void Font_GL::Glyph::render(const int &x, const int &y) const {
+  void Font_FT::Glyph::render(const int &x, const int &y) const {
     static Video &vr = Video::get_reference();
 
     Quadrilateral<Vertex2f_Texture> rect
@@ -95,13 +94,13 @@ namespace Zeni {
     vr.render(rect);
   }
 
-  Font_GL::Font_GL()
+  Font_FT::Font_FT()
     : m_font_height(0)
   {
     memset(m_glyph, 0, num_glyphs * sizeof(Glyph *));
   }
 
-  Font_GL::Font_GL(const std::string &codename, const bool &bold, const bool &italic, const int &glyph_height)
+  Font_FT::Font_FT(const std::string &codename, const bool &bold, const bool &italic, const int &glyph_height)
     : Font(bold, italic, glyph_height, codename),
     m_font_height(0)
   {
@@ -161,17 +160,17 @@ namespace Zeni {
 
     /*** Initialize Final Texture ***/
     
-    m_texture = new Texture_GL(font_surface, false);
+    m_texture = Video::get_reference().create_Texture(font_surface, false);
 
     TTF_CloseFont(font);
   }
 
-  Font_GL::~Font_GL() {
+  Font_FT::~Font_FT() {
     for(int i = 1; i < num_glyphs; ++i)
       delete m_glyph[i];
   }
   
-  int Font_GL::get_text_width(const std::string &text) const {
+  int Font_FT::get_text_width(const std::string &text) const {
     int max_width = 0, width = 0;
     unsigned int pos = 0;
 
@@ -186,14 +185,13 @@ namespace Zeni {
     return max(max_width, width);
   }
 
-  void Font_GL::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
+  void Font_FT::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
     Video &vr = Video::get_reference();
 
     const Color previous_color = vr.get_color();
 
     vr.set_color(color);
-    m_texture->apply_texture();
-    glEnable(GL_TEXTURE_2D);
+    vr.apply_texture(*m_texture);
 
     int cx, x_diff, cy = y, i = 0;
 
@@ -230,11 +228,10 @@ NEXT_LINE:
       }
     }
 
-    glDisable(GL_TEXTURE_2D);
+    vr.unapply_texture();
 
     vr.set_color(previous_color);
   }
-#endif
 
 #ifndef DISABLE_DX9
   Font_DX9::Font_DX9()

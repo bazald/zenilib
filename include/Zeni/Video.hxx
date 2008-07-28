@@ -386,6 +386,10 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(load_Texture_impl, filename, repeat);
   }
 
+  Texture * Video::create_Texture(SDL_Surface * const &surface, const bool &repeat) {
+    VIDEO_IV_FCN_CALL(create_Texture_impl, surface, repeat);
+  }
+
   Font * Video::create_Font(const std::string &filename, const bool &bold, const bool &italic, 
     const int &glyph_height) {
     VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height);

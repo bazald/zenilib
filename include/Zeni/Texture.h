@@ -85,6 +85,9 @@ namespace Zeni {
     virtual ~Texture() {}
 
     inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
+
+  protected:
+    static int build_from_surface(SDL_Surface * &surface);
   };
 
   class Sprite : public Texture {
@@ -115,7 +118,7 @@ namespace Zeni {
     Texture_GL & operator=(const Texture_GL &);
     
   public:
-    Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_GL &video);
+    Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */);
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
     virtual ~Texture_GL();
 
@@ -136,12 +139,16 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   class Texture_DX9 : public Texture {
   public:
-    Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */, Video_DX9 &video);
+    Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */);
+    Texture_DX9(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
     virtual ~Texture_DX9();
 
     inline void apply_texture_impl() const;
 
   private:
+    static void set_sampler_states(const bool &repeat);
+    static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface, const bool &repeat);
+
     mutable IDirect3DTexture9 *m_texture;
     
     void load(const std::string &filename, const bool &repeat) const;

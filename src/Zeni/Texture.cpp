@@ -36,6 +36,54 @@
 
 namespace Zeni {
 
+  int Texture::build_from_surface(SDL_Surface * &surface) {
+    bool width_pow2 = false, height_pow2 = false;
+
+    for(int i = 1; i; i <<= 1) {
+      if(surface->w == i)
+        width_pow2 = true;
+      if(surface->h == i)
+        height_pow2 = true;
+    }
+
+    if(!width_pow2 || !height_pow2) {
+      float next_w = pow(2.0f, ceil(log(float(surface->w))/log(2.0f)));
+      float next_h = pow(2.0f, ceil(log(float(surface->h))/log(2.0f)));
+
+      SDL_Surface *surf2 = rotozoomSurfaceXY(surface, 0,
+        next_w/surface->w,
+        next_h/surface->h, 1);
+
+      if(surf2) {
+        SDL_FreeSurface(surface);
+        surface = surf2;
+      }
+    }
+
+    switch(surface->format->BytesPerPixel) {
+    case 3:
+      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
+        return -'R';
+      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
+        return -'B';
+      break;
+
+    case 4:
+      if(surface->format->Rshift == 24 && surface->format->Gshift == 16 && surface->format->Bshift == 8 && surface->format->Ashift == 0)
+        return 'A';
+      else if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
+        return 'R';
+      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
+        return 'B';
+      break;
+
+    default:
+      break;
+    }
+
+    throw Texture_Init_Failure();
+  }
+
   Sprite::Sprite()
     : Texture(Texture_Base::VTYPE_SPRITE),
     m_frame(0)
@@ -116,7 +164,7 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, Video_GL &)
+  Texture_GL::Texture_GL(const std::string &filename, const bool &repeat)
     : Texture(Texture_Base::VTYPE_GL),
       m_texture_id(0),
       m_filename(filename),
@@ -139,56 +187,15 @@ namespace Zeni {
 
   GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
     GLuint texture_id = 0;
-    bool width_pow2 = false, height_pow2 = false;
 
-    for(int i = 1; i; i <<= 1) {
-      if(surface->w == i)
-        width_pow2 = true;
-      if(surface->h == i)
-        height_pow2 = true;
-    }
+    const int mode = Texture::build_from_surface(surface);
 
-    if(!width_pow2 || !height_pow2) {
-      float next_w = pow(2.0f, ceil(log(float(surface->w))/log(2.0f)));
-      float next_h = pow(2.0f, ceil(log(float(surface->h))/log(2.0f)));
-
-      SDL_Surface *surf2 = rotozoomSurfaceXY(surface, 0,
-        next_w/surface->w,
-        next_h/surface->h, 1);
-
-      if(surf2) {
-        SDL_FreeSurface(surface);
-        surface = surf2;
-      }
-    }
-
-    GLint mode1;
-    GLint mode2;
-    switch(surface->format->BytesPerPixel) {
-    case 3:
-      mode1 = GL_RGB;
-      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
-        mode2 = GL_RGB;
-      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
-        mode2 = GL_BGR;
-      else
-        throw Texture_Init_Failure();
-      break;
-
-    case 4:
-      mode1 = GL_RGBA;
-      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24 ||
-        surface->format->Rshift == 24 && surface->format->Gshift == 16 && surface->format->Bshift == 8 && surface->format->Ashift == 0)
-        mode2 = GL_RGBA;
-      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
-        mode2 = GL_BGRA;
-      else
-        throw Texture_Init_Failure();
-      break;
-
-    default:
-      throw Texture_Init_Failure();
-    }
+    const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
+    const GLint mode2 =
+      mode == -'R' ? GL_RGB :
+      mode == -'B' ? GL_BGR :
+      mode == 'R' ? GL_RGBA :
+      /*mode == 'A' ?*/ GL_BGRA;
 
     // Allocate a unique id for the texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -239,25 +246,37 @@ namespace Zeni {
         throw Texture_Init_Failure();
     }
     
-    m_texture_id = build_from_surface(surface, repeat);
+    try {
+      m_texture_id = build_from_surface(surface, repeat);
+    }
+    catch(...) {
+      SDL_FreeSurface(surface);
+      throw;
+    }
   }
   
 #endif
 
 #ifndef DISABLE_DX9
-  Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat, Video_DX9 &) 
+  Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat) 
     : Texture(Texture_Base::VTYPE_DX9),
       m_texture(0)
   {
     load(filename, repeat);
   }
 
+  Texture_DX9::Texture_DX9(SDL_Surface *surface, const bool &repeat)
+    : Texture(Texture_Base::VTYPE_DX9),
+      m_texture(build_from_surface(surface, repeat))
+  {
+  }
+
   Texture_DX9::~Texture_DX9() {
     if(m_texture)
       m_texture->Release();
   }
-  
-  void Texture_DX9::load(const std::string &filename, const bool &repeat) const {
+
+  void Texture_DX9::set_sampler_states(const bool &repeat) {
     Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
     
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
@@ -281,9 +300,99 @@ namespace Zeni {
     }
 
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
+  }
 
-    if(FAILED(D3DXCreateTextureFromFile(vr.get_d3d_device(), filename.c_str(), &m_texture)))
+  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+
+    IDirect3DTexture9 * ppTexture;
+
+    const int mode = Texture::build_from_surface(surface);
+    const int stride = mode > 0 ? 4 : 3;
+
+    set_sampler_states(repeat);
+
+    if(FAILED(D3DXCreateTexture(vdx.get_d3d_device(),
+                                surface->w, surface->h,
+                                D3DX_DEFAULT,
+                                0,
+                                mode > 0 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8,
+                                D3DPOOL_MANAGED,
+                                &ppTexture)))
       throw Texture_Init_Failure();
+
+    D3DLOCKED_RECT rect;
+    if(FAILED(ppTexture->LockRect(0, &rect, 0, 0))) {
+      ppTexture->Release();
+      throw Texture_Init_Failure();
+    }
+
+    for(int i = 0; i < surface->h; ++i)
+      for(unsigned char * dest = reinterpret_cast<unsigned char *>(rect.pBits) + i * rect.Pitch,
+                        * src = reinterpret_cast<unsigned char *>(surface->pixels) + i * surface->pitch,
+                        * src_end = src + surface->w * stride;
+          src != src_end;
+          dest += 4, src += stride)
+      {
+        Uint32 rgba = 0;
+        rgba |= Uint32(src[0]);
+        rgba |= Uint32(src[1]) << 8;
+        rgba |= Uint32(src[2]) << 16;
+        if(stride == 4)
+          rgba |= Uint32(src[3]) << 24;
+
+        if(mode == 'A') {
+          dest[0] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
+          dest[1] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
+          dest[2] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
+          dest[3] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
+        }
+        else /*if(mode == 'R' || mode == 'B')*/ {
+          dest[0] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
+          dest[1] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
+          dest[2] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
+          dest[3] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
+        }
+      }
+
+    if(FAILED(ppTexture->UnlockRect(0))) {
+      ppTexture->Release();
+      throw Texture_Init_Failure();
+    }
+
+    if(FAILED(D3DXFilterTexture(ppTexture, 0, D3DX_DEFAULT, D3DX_DEFAULT))) {
+      ppTexture->Release();
+      throw Texture_Init_Failure();
+    }
+
+    SDL_FreeSurface(surface);
+
+    return ppTexture;
+  }
+  
+  void Texture_DX9::load(const std::string &filename, const bool &repeat) const {
+    //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+
+    //set_sampler_states(repeat);
+
+    //if(FAILED(D3DXCreateTextureFromFile(vr.get_d3d_device(), filename.c_str(), &m_texture)))
+    //  throw Texture_Init_Failure();
+
+    SDL_Surface *surface;
+    
+    {
+      surface = IMG_Load(filename.c_str());
+      if(!surface)
+        throw Texture_Init_Failure();
+    }
+    
+    try {
+      m_texture = build_from_surface(surface, repeat);
+    }
+    catch(...) {
+      SDL_FreeSurface(surface);
+      throw;
+    }
   }
 #endif
 
