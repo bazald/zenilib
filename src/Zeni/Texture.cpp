@@ -69,9 +69,7 @@ namespace Zeni {
       break;
 
     case 4:
-      if(surface->format->Rshift == 24 && surface->format->Gshift == 16 && surface->format->Bshift == 8 && surface->format->Ashift == 0)
-        return 'A';
-      else if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
+      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
         return 'R';
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
         return 'B';
@@ -308,7 +306,7 @@ namespace Zeni {
     IDirect3DTexture9 * ppTexture;
 
     const int mode = Texture::build_from_surface(surface);
-    const int stride = mode > 0 ? 4 : 3;
+    const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states(repeat);
 
@@ -341,18 +339,10 @@ namespace Zeni {
         if(stride == 4)
           rgba |= Uint32(src[3]) << 24;
 
-        if(mode == 'A') {
-          dest[0] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
-          dest[1] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
-          dest[2] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
-          dest[3] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
-        }
-        else /*if(mode == 'R' || mode == 'B')*/ {
-          dest[0] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
-          dest[1] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
-          dest[2] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
-          dest[3] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
-        }
+        dest[0] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
+        dest[1] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
+        dest[2] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
+        dest[3] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
       }
 
     if(FAILED(ppTexture->UnlockRect(0))) {

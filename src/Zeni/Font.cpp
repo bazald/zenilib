@@ -142,11 +142,11 @@ namespace Zeni {
       next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
       next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
   
-    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[42]->format->Rmask, source[42]->format->Gmask, source[42]->format->Bmask, source[42]->format->Amask);
     if(!font_surface)
       throw Font_Init_Failure();
 
-    SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, SDL_ALPHA_TRANSPARENT, 255, 255, 255));
+    SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, 0, 0, 0, SDL_ALPHA_TRANSPARENT));
 
     /*** Initialize Glyphs ***/
 
@@ -154,9 +154,18 @@ namespace Zeni {
     m_glyph[0] = 0;
     for(unsigned char c = 1; c; ++c) {
       dstrect.x = Sint16((c % 16) * font_width);
-      dstrect.y = Sint16((c / 16) * font_width);
+      dstrect.y = Sint16((c / 16) * font_height);
       m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h);
     }
+
+    /*** Correct Transparency ***/
+
+    for(int i = 0; i < font_surface->h; ++i)
+      for(Uint32 * src = reinterpret_cast<Uint32 *>(font_surface->pixels) + i * font_surface->pitch / 4,
+                 * src_end = src + font_surface->w;
+          src != src_end;
+          ++src)
+        *src |= (*src & font_surface->format->Rmask) >> font_surface->format->Rshift << font_surface->format->Ashift;
 
     /*** Initialize Final Texture ***/
     
