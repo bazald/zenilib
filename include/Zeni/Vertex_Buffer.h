@@ -131,7 +131,7 @@ namespace Zeni {
 
     union VBO_GL {
       GLuint vbo;
-      void * alt;
+      unsigned char * alt;
     } m_vbuf[6];
     
     static PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
