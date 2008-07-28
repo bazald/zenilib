@@ -57,13 +57,37 @@ namespace Zeni {
     GUARANTEED_FINISHED_END();
   }
 
-  void Model::set_scale(const Point3f &multiplier) {
+  const Vector3f & Model::get_scale() {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    return m_scale;
+    GUARANTEED_FINISHED_END();
+  }
+
+  std::pair<Vector3f, float> Model::get_rotate() {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    return std::make_pair(m_rotate, m_rotate_angle);
+    GUARANTEED_FINISHED_END();
+  }
+
+  const Vector3f & Model::get_translate() {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    return m_translate;
+    GUARANTEED_FINISHED_END();
+  }
+
+  const float & Model::get_keyframe() {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    return m_keyframe;
+    GUARANTEED_FINISHED_END();
+  }
+
+  void Model::set_scale(const Vector3f &multiplier) {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     m_scale = multiplier;
     GUARANTEED_FINISHED_END();
   }
 
-  void Model::set_rotate(const float &angle, const Point3f &ray) {
+  void Model::set_rotate(const float &angle, const Vector3f &ray) {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     m_rotate_angle = angle;
     m_rotate = ray;
@@ -75,7 +99,7 @@ namespace Zeni {
     set_rotate(rayngel.second, rayngel.first);
   }
 
-  void Model::set_translate(const Point3f &vector) {
+  void Model::set_translate(const Vector3f &vector) {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     m_translate = vector;
     GUARANTEED_FINISHED_END();

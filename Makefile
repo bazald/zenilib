@@ -46,6 +46,7 @@ LIB_SRCS = src/Zeni/Camera.cpp \
 	src/Zeni/Coordinate.cpp \
 	src/Zeni/Core.cpp \
 	src/Zeni/EZ2D.cpp \
+	src/Zeni/Fog.cpp \
 	src/Zeni/Font.cpp \
 	src/Zeni/Fonts.cpp \
 	src/Zeni/Game.cpp \

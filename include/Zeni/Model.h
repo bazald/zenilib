@@ -78,6 +78,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Render_Wrapper.h>
 #include <Zeni/Thread.h>
+#include <Zeni/Vector3f.h>
 
 #include <lib3ds/file.h>
 #include <lib3ds/node.h>
@@ -106,7 +107,7 @@ namespace Zeni {
     bool started;
   };
 
-  class Model : public Renderable {
+  class Model {
   public:
     /// The only way to create a Model
     Model(const std::string &filename);
@@ -120,24 +121,22 @@ namespace Zeni {
     virtual Point3f get_position() const; ///< Get the position of the Model
     inline const Model_Extents & get_extents() const; ///< Get the extents of the Model
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
+    inline const Vector3f & get_scale(); ///< Get the Model scale
+    inline std::pair<Vector3f, float> get_rotate(); ///< Get the Model rotation
+    inline const Vector3f & get_translate(); ///< Get the Model translation
+    inline const float & get_keyframe(); ///< Get the current (key)frame
 
     // Modifiers
-    inline void set_scale(const Point3f &multiplier); ///< Scale the Model
-    inline void set_rotate(const float &angle, const Point3f &ray); ///< Rotate the Model
+    inline void set_scale(const Vector3f &multiplier); ///< Scale the Model
+    inline void set_rotate(const float &angle, const Vector3f &ray); ///< Rotate the Model
     inline void set_rotate(const Quaternion &quaternion); ///< Rotate the Model
-    inline void set_translate(const Point3f &vector); ///< Translate the Model
+    inline void set_translate(const Vector3f &vector); ///< Translate the Model
     inline void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
 
     // Post-Order Traversal
     void visit_nodes(Model_Visitor &mv, Lib3dsNode *node = 0) const; ///< Visit all nodes
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
-#endif
-
-#ifndef DISABLE_DX9
-    virtual void render_to(Video_DX9 &screen) const;
-#endif
+    void render() const;
 
     // Thread-Unsafe versions
     inline Lib3dsFile * const & thun_get_file() const; ///< Get the full 3ds file info - Thread Unsafe Version
@@ -152,7 +151,7 @@ namespace Zeni {
     Model_Extents m_extents;
     Point3f m_position;
 
-    Point3f m_scale, m_rotate, m_translate;
+    Vector3f m_scale, m_rotate, m_translate;
     float m_rotate_angle;
     
     class Loader : public Task {

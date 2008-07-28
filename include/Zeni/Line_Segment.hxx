@@ -53,7 +53,7 @@ namespace Zeni {
 
   template <typename VERTEX>
   Line_Segment<VERTEX>::Line_Segment(const Line_Segment<VERTEX> &rhs)
-    : Renderable(),
+    : Renderable(rhs),
     m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
   {
     m_vertex[0] = rhs.m_vertex[0];

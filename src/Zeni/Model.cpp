@@ -35,20 +35,13 @@
 #include <Zeni/Material.hxx>
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Vector3f.hxx>
-#include <Zeni/Video_DX9.hxx>
+#include <Zeni/Video.hxx>
 
 #include <lib3ds/mesh.h>
 #include <lib3ds/material.h>
 #include <lib3ds/matrix.h>
 #include <lib3ds/vector.h>
 #include <string>
-
-#ifndef DISABLE_GL
-#include <GL/gl.h>
-#endif
-#ifndef DISABLE_DX9
-#include <d3dx9.h>
-#endif
 
 namespace Zeni {
 
@@ -61,7 +54,7 @@ namespace Zeni {
 
   class Model_Renderer : public Model_Visitor {
   public:
-    virtual void operator()(const Model &model, Lib3dsNode *node) = 0;
+    virtual void operator()(const Model &model, Lib3dsNode *node);
 
     void create_vertex_buffer(Vertex_Buffer *user_p, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh);
   };
@@ -207,8 +200,7 @@ namespace Zeni {
   }
 
   Model::Model(const Model &rhs)
-    : Renderable(rhs),
-    m_filename(rhs.m_filename),
+    : m_filename(rhs.m_filename),
     m_file(0),
     m_keyframe(rhs.m_keyframe),
     m_unrenderer(0),
@@ -263,13 +255,10 @@ namespace Zeni {
     delete lhs;
 
     return *this;
-    
   }
 
   Point3f Model::get_position() const {
-    return Point3f(m_translate.x + m_position.x,
-      m_translate.y + m_position.y,
-      m_translate.z + m_position.z);
+    return m_translate + m_scale.multiply_by(Quaternion(m_rotate, m_rotate_angle) * Vector3f(m_position));
   }
 
   void Model::visit_nodes(Model_Visitor &mv, Lib3dsNode *node) const {
@@ -285,38 +274,29 @@ namespace Zeni {
     mv(*this, node);
   }
 
-#ifndef DISABLE_GL
-
-  class Model_Renderer_GL : public Model_Renderer {
-  public:
-    virtual void operator()(const Model &model, Lib3dsNode *node);
-  };
-
-  void Model::render_to(Video_GL &) const {
+  void Model::render() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
+    Video &vr = Video::get_reference();
 
-    GLfloat m[16]; glGetFloatv (GL_MODELVIEW_MATRIX, m);
+    vr.push_world_stack();
 
-    glTranslatef(m_translate.x, m_translate.y, m_translate.z);
-    glRotatef(m_rotate_angle*180.0f/pi, m_rotate.x, m_rotate.y, m_rotate.z);
-    glScalef(m_scale.x, m_scale.y, m_scale.z);
+    vr.translate_scene(m_translate);
+    vr.rotate_scene(m_rotate, m_rotate_angle);
+    vr.scale_scene(m_scale);
 
-    Model_Renderer_GL mrGL;
-    visit_nodes(mrGL);
+    Model_Renderer mr;
+    visit_nodes(mr);
 
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
+    vr.pop_world_stack();
     
     GUARANTEED_FINISHED_END();
   }
 
-  void Model_Renderer_GL::operator()(const Model &model, Lib3dsNode *node) {
+  void Model_Renderer::operator()(const Model &model, Lib3dsNode *node) {
     if(node->type != LIB3DS_OBJECT_NODE ||
       !strcmp(node->name, "$$$DUMMY"))
       return;
@@ -327,105 +307,28 @@ namespace Zeni {
 
     //mesh->texels = 0; ///HACK
 
-    if(!node->user.p)
-      create_vertex_buffer(new Vertex_Buffer_GL(), model, node, mesh);
+    Video &vr = Video::get_reference();
 
-    Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
+    if(!node->user.p)
+      create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);
+
+    Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
     if(!user_p)
       throw Model_Render_Failure();
 
     Lib3dsObjectData *data=&node->data.object;
 
-    glPushMatrix();
+    vr.push_world_stack();
 
-    glMultMatrixf(&node->matrix[0][0]);
-
-    glTranslatef(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-
-    Lib3dsMatrix M;
-    lib3ds_matrix_copy(M, mesh->matrix);
-    lib3ds_matrix_inv(M);
-    glMultMatrixf(&M[0][0]);
+    vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
+    vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
+    vr.transform_scene(reinterpret_cast<const Matrix4f &>(mesh->matrix).inverted());
 
     //user_p->debug_render(); ///HACK
     user_p->render();
 
-    glPopMatrix();
+    vr.pop_world_stack();
   }
-
-#endif
-#ifndef DISABLE_DX9
-
-  class Model_Renderer_DX9 : public Model_Renderer {
-  public:
-    virtual void operator()(const Model &model, Lib3dsNode *node);
-  };
-
-  void Model::render_to(Video_DX9 &vdx) const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
-    
-    if(!m_unrenderer)
-      m_unrenderer = new Model_Unrenderer();
-
-    vdx.get_matrix_stack()->Push();
-
-    D3DXMATRIX world;
-    vdx.get_d3d_device()->GetTransform(D3DTS_WORLD, &world);
-    vdx.get_matrix_stack()->LoadMatrix(&world);
-
-    vdx.get_matrix_stack()->TranslateLocal(m_translate.x, m_translate.y, m_translate.z);
-    vdx.get_matrix_stack()->RotateAxisLocal(reinterpret_cast<const D3DXVECTOR3 *>(&m_rotate), m_rotate_angle);
-    vdx.get_matrix_stack()->ScaleLocal(m_scale.x, m_scale.y, m_scale.z);
-
-    Model_Renderer_DX9 mrDX9;
-    visit_nodes(mrDX9);
-
-    vdx.get_matrix_stack()->Pop();
-    vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
-    
-    GUARANTEED_FINISHED_END();
-  }
-
-  void Model_Renderer_DX9::operator()(const Model &model, Lib3dsNode *node) {
-    if(node->type != LIB3DS_OBJECT_NODE ||
-      !strcmp(node->name, "$$$DUMMY"))
-      return;
-
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
-    if(!mesh)
-      throw Model_Render_Failure();
-
-    if(!node->user.p)
-      create_vertex_buffer(new Vertex_Buffer_DX9(), model, node, mesh);
-
-    Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
-    if(!mesh)
-      throw Model_Render_Failure();
-
-    Lib3dsObjectData *data=&node->data.object;
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
-
-    vdx.get_matrix_stack()->Push();
-
-    vdx.get_matrix_stack()->MultMatrixLocal(reinterpret_cast<D3DXMATRIX *>(node->matrix));
-
-    vdx.get_matrix_stack()->TranslateLocal(-data->pivot[0], -data->pivot[1], -data->pivot[2]);
-
-    Lib3dsMatrix M;
-    lib3ds_matrix_copy(M, mesh->matrix);
-    lib3ds_matrix_inv(M);
-    vdx.get_matrix_stack()->MultMatrixLocal(reinterpret_cast<D3DXMATRIX *>(M));
-
-    vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
-
-    //user_p->debug_render(); ///HACK
-    user_p->render();
-
-    vdx.get_matrix_stack()->Pop();
-    vdx.get_d3d_device()->SetTransform(D3DTS_WORLD, vdx.get_matrix_stack()->GetTop());
-  }
-
-#endif
 
   void Model_Extents::operator()(const Model &model, Lib3dsNode *node) {
     if(node->type != LIB3DS_OBJECT_NODE ||
