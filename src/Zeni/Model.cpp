@@ -101,14 +101,17 @@ namespace Zeni {
         pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
+	  const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
+	  const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
+
       if(flip)
         if(mat.get_texture().size())
           user_p->add_triangle
           (new Triangle<Vertex3f_Texture>
           (
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[2]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[2]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[1]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[1]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[0]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[0]][1])),
           (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
           ));
         else
@@ -125,9 +128,9 @@ namespace Zeni {
           user_p->add_triangle
           (new Triangle<Vertex3f_Texture>
           (
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(mesh->texelL[face->points[0]][0], mesh->texelL[face->points[0]][1])),
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(mesh->texelL[face->points[1]][0], mesh->texelL[face->points[1]][1])),
-          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(mesh->texelL[face->points[2]][0], mesh->texelL[face->points[2]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]), Vector3f(normal[0][0], normal[0][1], normal[0][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[0]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[0]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]), Vector3f(normal[1][0], normal[1][1], normal[1][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[1]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[1]][1])),
+          Vertex3f_Texture(Point3f(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]), Vector3f(normal[2][0], normal[2][1], normal[2][2]), Point2f(tex_offset.x + tex_scale.x * mesh->texelL[face->points[2]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[2]][1])),
           (reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)))
           ));
         else

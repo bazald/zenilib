@@ -231,7 +231,13 @@ namespace Zeni {
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
-    const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, -1.0f, 1.0f);
+	const float offset = dynamic_cast<Video_DX9 *>(this) ? 0.5f : 0.0f;
+
+    const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x + offset,
+                                                       camera2d.second.x + offset,
+                                                       camera2d.second.y + offset,
+                                                       camera2d.first.y + offset,
+                                                       -1.0f, 1.0f);
     set_projection_matrix(projection);
 
     set_viewport(viewport);

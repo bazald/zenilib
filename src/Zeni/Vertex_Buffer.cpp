@@ -524,7 +524,7 @@ namespace Zeni {
     char *buffered;
 
     if(!m_triangles_c.empty() || !m_triangles_cm.empty()) {
-      const size_t buf_size = vertex_c_size() * (num_vertices_c() + num_vertices_cm());
+      const unsigned int buf_size = vertex_c_size() * (num_vertices_c() + num_vertices_cm());
 
 #ifndef DISABLE_VBO
       if(FAILED
@@ -573,7 +573,7 @@ namespace Zeni {
     }
 
     if(!m_triangles_t.empty()) {
-      const size_t buf_size = vertex_t_size() * num_vertices_t();
+      const unsigned int buf_size = vertex_t_size() * num_vertices_t();
 
 #ifndef DISABLE_VBO
       if(FAILED
