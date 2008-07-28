@@ -40,6 +40,8 @@
 
 #include <algorithm>
 
+//#define DISABLE_VBO
+
 using namespace std;
 
 namespace Zeni {
@@ -284,7 +286,7 @@ namespace Zeni {
     }
     else {
       for(int i = 0; i < 6; ++i)
-        free(m_vbuf[i].alt);
+        delete [] m_vbuf[i].alt;
     }
   }
 
@@ -298,8 +300,10 @@ namespace Zeni {
 
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
+#ifndef DISABLE_VBO
     if(!m_pglDeleteBuffersARB)
       m_pglDeleteBuffersARB = vgl.get_pglDeleteBuffersARB();
+#endif
 
     const unsigned int v_size = vertex_size();
     const unsigned int n_size = normal_size();
@@ -314,9 +318,9 @@ namespace Zeni {
     const unsigned int tbuf_size = t_size * (num_vertices_t());
     
     if(vbuf_c_size) {
-      unsigned char *p_verts = reinterpret_cast<unsigned char *>(malloc(vbuf_c_size));
-      unsigned char *p_normals = reinterpret_cast<unsigned char *>(malloc(nbuf_c_size));
-      unsigned char *p_colors = reinterpret_cast<unsigned char *>(malloc(cbuf_size));
+      unsigned char *p_verts = new unsigned char [vbuf_c_size];
+      unsigned char *p_normals = new unsigned char [nbuf_c_size];
+      unsigned char *p_colors = new unsigned char [cbuf_size];
 
       unsigned char *buffered_verts = p_verts;
       unsigned char *buffered_normals = p_normals;
@@ -359,9 +363,9 @@ namespace Zeni {
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
         vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, cbuf_size, p_colors, GL_STATIC_DRAW_ARB);
 
-        free(p_verts);
-        free(p_normals);
-        free(p_colors);
+        delete [] p_verts;
+        delete [] p_normals;
+        delete [] p_colors;
       }
       else {
         m_vbuf[0].alt = p_verts;
@@ -371,9 +375,9 @@ namespace Zeni {
     }
 
     if(vbuf_t_size) {
-      unsigned char *p_verts = reinterpret_cast<unsigned char *>(malloc(vbuf_t_size));
-      unsigned char *p_normals = reinterpret_cast<unsigned char *>(malloc(nbuf_t_size));
-      unsigned char *p_texels = reinterpret_cast<unsigned char *>(malloc(tbuf_size));
+      unsigned char *p_verts = new unsigned char [vbuf_t_size];
+      unsigned char *p_normals = new unsigned char [nbuf_t_size];
+      unsigned char *p_texels = new unsigned char [tbuf_size];
 
       unsigned char *buffered_verts = p_verts;
       unsigned char *buffered_normals = p_normals;
@@ -402,9 +406,9 @@ namespace Zeni {
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
         vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, tbuf_size, p_texels, GL_STATIC_DRAW_ARB);
 
-        free(p_verts);
-        free(p_normals);
-        free(p_texels);
+        delete [] p_verts;
+        delete [] p_normals;
+        delete [] p_texels;
       }
       else {
         m_vbuf[3].alt = p_verts;
@@ -486,24 +490,33 @@ namespace Zeni {
 #endif
 #ifndef DISABLE_DX9
 
-  Vertex_Buffer_DX9::Vertex_Buffer_DX9()
-    : m_buf_c(0),
-      m_buf_t(0)
-  {
+  Vertex_Buffer_DX9::Vertex_Buffer_DX9() {
+    memset(&m_buf_c, 0, sizeof(VBO_DX9));
+    memset(&m_buf_t, 0, sizeof(VBO_DX9));
   }
 
   Vertex_Buffer_DX9::~Vertex_Buffer_DX9() {
-    if(m_buf_c)
-      m_buf_c->Release();
-    if(m_buf_t)
-      m_buf_t->Release();
+    if(m_buf_c.is_vbo) {
+      if(m_buf_c.data.vbo)
+        m_buf_c.data.vbo->Release();
+    }
+    else
+      delete [] m_buf_c.data.alt;
+
+    if(m_buf_t.is_vbo) {
+      if(m_buf_t.data.vbo)
+        m_buf_t.data.vbo->Release();
+    }
+    else
+      delete [] m_buf_t.data.alt;
   }
 
   void Vertex_Buffer_DX9::prerender() {
     sort_triangles();
     set_descriptors();
 
-    if(m_buf_c || m_buf_t)
+    if(m_buf_c.data.vbo || m_buf_c.data.alt ||
+       m_buf_t.data.vbo || m_buf_t.data.alt)
       throw VBuf_Render_Failure();
 
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
@@ -511,20 +524,35 @@ namespace Zeni {
     char *buffered;
 
     if(!m_triangles_c.empty() || !m_triangles_cm.empty()) {
+      const size_t buf_size = vertex_c_size() * (num_vertices_c() + num_vertices_cm());
+
+#ifndef DISABLE_VBO
       if(FAILED
-        (vdx.get_d3d_device()->CreateVertexBuffer
-        ((vertex_c_size() * (num_vertices_c() + num_vertices_cm())),
+        (vdx.get_d3d_device()->CreateVertexBuffer(
+        buf_size,
         D3DUSAGE_WRITEONLY,
         D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE,
         D3DPOOL_MANAGED,
-        &m_buf_c, NULL))) {
-          throw VBuf_Render_Failure();
+        &m_buf_c.data.vbo, NULL)))
+#endif
+      {
+        m_buf_c.is_vbo = false;
+        m_buf_c.data.alt = new char [buf_size];
       }
+#ifndef DISABLE_VBO
+      else
+        m_buf_c.is_vbo = true;
+#endif
 
       vertex_size = vertex_c_size();
       buffered = 0;
-      if(FAILED(m_buf_c->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
-        throw VBuf_Render_Failure();
+
+      if(m_buf_c.is_vbo) {
+        if(FAILED(m_buf_c.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+          throw VBuf_Render_Failure();
+      }
+      else
+        buffered = reinterpret_cast<char *>(m_buf_c.data.alt);
 
       for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
@@ -538,24 +566,40 @@ namespace Zeni {
           buffered += vertex_size;
         }
 
-      m_buf_c->Unlock();
+      if(m_buf_c.is_vbo)
+        m_buf_c.data.vbo->Unlock();
     }
 
     if(!m_triangles_t.empty()) {
+      const size_t buf_size = vertex_t_size() * num_vertices_t();
+
+#ifndef DISABLE_VBO
       if(FAILED
-        (vdx.get_d3d_device()->CreateVertexBuffer
-        ((vertex_t_size() * num_vertices_t()),
+        (vdx.get_d3d_device()->CreateVertexBuffer(
+        buf_size,
         D3DUSAGE_WRITEONLY,
         D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1,
         D3DPOOL_MANAGED,
-        &m_buf_t, NULL))) {
-          throw VBuf_Render_Failure();
+        &m_buf_t.data.vbo, NULL)))
+#endif
+      {
+        m_buf_t.is_vbo = false;
+        m_buf_t.data.alt = new char [buf_size];
       }
+#ifndef DISABLE_VBO
+      else
+        m_buf_t.is_vbo = true;
+#endif
 
       vertex_size = vertex_t_size();
       buffered = 0;
-      if(FAILED(m_buf_t->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
-        throw VBuf_Render_Failure();
+
+      if(m_buf_t.is_vbo) {
+        if(FAILED(m_buf_t.data.vbo->Lock(0, 0, reinterpret_cast<void **>(&buffered), 0)))
+          throw VBuf_Render_Failure();
+      }
+      else
+        buffered = reinterpret_cast<char *>(m_buf_t.data.alt);
 
       for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
@@ -563,7 +607,8 @@ namespace Zeni {
           buffered += vertex_size;
         }
 
-      m_buf_t->Unlock();
+      if(m_buf_t.is_vbo)
+        m_buf_t.data.vbo->Unlock();
     }
 
     clear_triangles(m_triangles_c);
@@ -572,16 +617,24 @@ namespace Zeni {
   }
 
   static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+    Vertex_Buffer_DX9::VBO_DX9 &vbo_dx9,
+    const unsigned int &stride,
     Video_DX9 &vdx) {
       for(unsigned int i = 0; i < descriptors.size(); ++i) {
         descriptors[i]->render_wrapper->prerender();
-        vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors[i]->start, descriptors[i]->num_elements);
+
+        if(vbo_dx9.is_vbo)
+          vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors[i]->start, descriptors[i]->num_elements);
+        else
+          vdx.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, descriptors[i]->num_elements, vbo_dx9.data.alt, stride);
+
         descriptors[i]->render_wrapper->postrender();
       }
   }
 
   void Vertex_Buffer_DX9::render() {
-    if(!m_buf_c && !m_buf_t)
+    if(!m_buf_c.data.vbo && !m_buf_c.data.alt &&
+       !m_buf_t.data.vbo && !m_buf_t.data.alt)
       prerender();
 
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
@@ -591,14 +644,16 @@ namespace Zeni {
     if(flip_3d)
       vdx.set_3d(true);
 
-    if(m_buf_c) {
-      vdx.get_d3d_device()->SetStreamSource(0, m_buf_c, 0, vertex_c_size());
-      Zeni::render(m_descriptors_c, vdx);
-      Zeni::render(m_descriptors_cm, vdx);
+    if(m_buf_c.data.vbo || m_buf_c.data.alt) {
+      if(m_buf_c.is_vbo)
+        vdx.get_d3d_device()->SetStreamSource(0, m_buf_c.data.vbo, 0, vertex_c_size());
+      Zeni::render(m_descriptors_c, m_buf_c, vertex_c_size(), vdx);
+      Zeni::render(m_descriptors_cm, m_buf_c, vertex_c_size(), vdx);
     }
-    if(m_buf_t) {
-      vdx.get_d3d_device()->SetStreamSource(0, m_buf_t, 0, vertex_t_size());
-      Zeni::render(m_descriptors_t, vdx);
+    if(m_buf_t.data.vbo || m_buf_t.data.alt) {
+      if(m_buf_t.is_vbo)
+        vdx.get_d3d_device()->SetStreamSource(0, m_buf_t.data.vbo, 0, vertex_t_size());
+      Zeni::render(m_descriptors_t, m_buf_t, vertex_t_size(), vdx);
     }
 
     if(flip_3d)

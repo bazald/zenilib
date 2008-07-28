@@ -153,7 +153,15 @@ namespace Zeni {
     inline int vertex_c_size() const;
     inline int vertex_t_size() const;
 
-    IDirect3DVertexBuffer9 *m_buf_c, *m_buf_t;
+  public:
+    struct VBO_DX9 {
+      bool is_vbo;
+
+      union VBO_DX9_impl {
+        IDirect3DVertexBuffer9 * vbo;
+        void * alt;
+      } data;
+    } m_buf_c, m_buf_t;
   };
 
 #endif
