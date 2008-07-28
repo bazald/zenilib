@@ -849,6 +849,42 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="src\Zeni\Fog.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="src\Zeni\Font.cpp"
 				>
 				<FileConfiguration
@@ -1927,6 +1963,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Fog.h"
+				>
+			</File>
+			<File
 				RelativePath="include\Zeni\Font.h"
 				>
 			</File>
@@ -2081,6 +2121,10 @@
 			</File>
 			<File
 				RelativePath="include\Zeni\Coordinate.hxx"
+				>
+			</File>
+			<File
+				RelativePath="include\Zeni\Fog.hxx"
 				>
 			</File>
 			<File
