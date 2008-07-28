@@ -552,7 +552,7 @@ namespace Zeni {
           throw VBuf_Render_Failure();
       }
       else
-        buffered = reinterpret_cast<char *>(m_buf_c.data.alt);
+        buffered = m_buf_c.data.alt;
 
       for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
@@ -599,7 +599,7 @@ namespace Zeni {
           throw VBuf_Render_Failure();
       }
       else
-        buffered = reinterpret_cast<char *>(m_buf_t.data.alt);
+        buffered = m_buf_t.data.alt;
 
       for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {

@@ -159,7 +159,7 @@ namespace Zeni {
 
       union VBO_DX9_impl {
         IDirect3DVertexBuffer9 * vbo;
-        void * alt;
+        char * alt;
       } data;
     } m_buf_c, m_buf_t;
   };
