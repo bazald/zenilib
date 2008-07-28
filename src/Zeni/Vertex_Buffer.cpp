@@ -624,9 +624,14 @@ namespace Zeni {
         descriptors[i]->render_wrapper->prerender();
 
         if(vbo_dx9.is_vbo)
-          vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST, 3*descriptors[i]->start, descriptors[i]->num_elements);
+          vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST,
+                                              3 * descriptors[i]->start,
+                                              descriptors[i]->num_elements);
         else
-          vdx.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, descriptors[i]->num_elements, vbo_dx9.data.alt, stride);
+          vdx.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
+                                                descriptors[i]->num_elements,
+                                                vbo_dx9.data.alt + 3 * descriptors[i]->start,
+                                                stride);
 
         descriptors[i]->render_wrapper->postrender();
       }
