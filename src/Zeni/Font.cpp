@@ -160,12 +160,14 @@ namespace Zeni {
 
     /*** Correct Transparency ***/
 
+    const Uint32 transparent_white = font_surface->format->Rmask | font_surface->format->Gmask | font_surface->format->Bmask;
     for(int i = 0; i < font_surface->h; ++i)
       for(Uint32 * src = reinterpret_cast<Uint32 *>(font_surface->pixels) + i * font_surface->pitch / 4,
                  * src_end = src + font_surface->w;
           src != src_end;
           ++src)
-        *src |= (*src & font_surface->format->Rmask) >> font_surface->format->Rshift << font_surface->format->Ashift;
+        if(*src & font_surface->format->Rmask)
+          *src = transparent_white | ((*src & font_surface->format->Rmask) >> font_surface->format->Rshift << font_surface->format->Ashift);
 
     /*** Initialize Final Texture ***/
     
