@@ -207,8 +207,7 @@ namespace Zeni {
   }
 
   void Video_GL::transform_scene_impl(const Matrix4f &transformation) {
-    Matrix4f transpose = transformation.transposed(); // to get column-major matrix
-    glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transpose));
+    glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transformation));
   }
 
   void Video_GL::set_view_matrix_impl(const Matrix4f &view) {

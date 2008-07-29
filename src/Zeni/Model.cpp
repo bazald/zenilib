@@ -324,8 +324,14 @@ namespace Zeni {
     vr.push_world_stack();
 
     vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
+
     vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
-    vr.transform_scene(reinterpret_cast<const Matrix4f &>(mesh->matrix).inverted());
+
+    Lib3dsMatrix M;
+    lib3ds_matrix_copy(M, mesh->matrix);
+    lib3ds_matrix_inv(M);
+
+    vr.transform_scene(reinterpret_cast<const Matrix4f &>(M));
 
     //user_p->debug_render(); ///HACK
     user_p->render();
