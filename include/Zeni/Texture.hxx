@@ -146,6 +146,9 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   void Texture_DX9::apply_texture_impl() const {
     Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    
+    vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+    vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
 
     vdx.get_d3d_device()->SetTexture(0, m_texture);
 

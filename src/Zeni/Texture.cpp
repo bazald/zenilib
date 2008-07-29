@@ -83,13 +83,13 @@ namespace Zeni {
   }
 
   Sprite::Sprite()
-    : Texture(Texture_Base::VTYPE_SPRITE),
+    : Texture(Texture_Base::VTYPE_SPRITE, false),
     m_frame(0)
   {
   }
   
   Sprite::Sprite(const Sprite &rhs)
-    : Texture(rhs),
+    : Texture(Texture_Base::VTYPE_SPRITE, false),
     m_frames(rhs.m_frames),
     m_frame(rhs.m_frame)
   {
@@ -163,18 +163,16 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   Texture_GL::Texture_GL(const std::string &filename, const bool &repeat)
-    : Texture(Texture_Base::VTYPE_GL),
+    : Texture(Texture_Base::VTYPE_GL, repeat),
       m_texture_id(0),
-      m_filename(filename),
-      m_repeat(repeat)
+      m_filename(filename)
   {
     //load(m_filename, m_repeat);
   }
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
-    : Texture(Texture_Base::VTYPE_GL),
-      m_texture_id(build_from_surface(surface, repeat)),
-      m_repeat(repeat)
+    : Texture(Texture_Base::VTYPE_GL, repeat),
+      m_texture_id(build_from_surface(surface, repeat))
   {
   }
 
@@ -257,15 +255,15 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat) 
-    : Texture(Texture_Base::VTYPE_DX9),
+    : Texture(Texture_Base::VTYPE_DX9, repeat),
       m_texture(0)
   {
-    load(filename, repeat);
+    load(filename);
   }
 
   Texture_DX9::Texture_DX9(SDL_Surface *surface, const bool &repeat)
-    : Texture(Texture_Base::VTYPE_DX9),
-      m_texture(build_from_surface(surface, repeat))
+    : Texture(Texture_Base::VTYPE_DX9, repeat),
+      m_texture(build_from_surface(surface))
   {
   }
 
@@ -274,11 +272,8 @@ namespace Zeni {
       m_texture->Release();
   }
 
-  void Texture_DX9::set_sampler_states(const bool &repeat) {
+  void Texture_DX9::set_sampler_states() {
     Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
-    
-    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
@@ -300,7 +295,7 @@ namespace Zeni {
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
   }
 
-  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface) {
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
 
     IDirect3DTexture9 * ppTexture;
@@ -308,7 +303,7 @@ namespace Zeni {
     const int mode = Texture::build_from_surface(surface);
     const int stride = surface->format->BytesPerPixel;
 
-    set_sampler_states(repeat);
+    set_sampler_states();
 
     if(FAILED(D3DXCreateTexture(vdx.get_d3d_device(),
                                 surface->w, surface->h,
@@ -360,10 +355,10 @@ namespace Zeni {
     return ppTexture;
   }
   
-  void Texture_DX9::load(const std::string &filename, const bool &repeat) const {
+  void Texture_DX9::load(const std::string &filename) const {
     //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
 
-    //set_sampler_states(repeat);
+    //set_sampler_states();
 
     //if(FAILED(D3DXCreateTextureFromFile(vr.get_d3d_device(), filename.c_str(), &m_texture)))
     //  throw Texture_Init_Failure();
@@ -377,7 +372,7 @@ namespace Zeni {
     }
     
     try {
-      m_texture = build_from_surface(surface, repeat);
+      m_texture = build_from_surface(surface);
     }
     catch(...) {
       SDL_FreeSurface(surface);

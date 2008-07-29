@@ -80,14 +80,19 @@ namespace Zeni {
   };
 
   class Texture : public Texture_Base::IV {
+    Texture(const Texture &);
+    Texture & operator=(const Texture &);
+
   public:
-    Texture(const Texture_Base::VTYPE &vtype_) : Texture_Base::IV(vtype_) {}
+    Texture(const Texture_Base::VTYPE &vtype_, const bool &repeat_) : Texture_Base::IV(vtype_), m_repeat(repeat_) {}
     virtual ~Texture() {}
 
     inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
 
   protected:
     static int build_from_surface(SDL_Surface * &surface);
+
+    const bool m_repeat;
   };
 
   class Sprite : public Texture {
@@ -132,7 +137,6 @@ namespace Zeni {
     void load(const std::string &filename, const bool &repeat) const;
     
     const std::string m_filename;
-    const bool m_repeat;
   };
 #endif
 
@@ -146,12 +150,12 @@ namespace Zeni {
     inline void apply_texture_impl() const;
 
   private:
-    static void set_sampler_states(const bool &repeat);
-    static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface, const bool &repeat);
+    static void set_sampler_states();
+    static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface);
 
     mutable IDirect3DTexture9 *m_texture;
     
-    void load(const std::string &filename, const bool &repeat) const;
+    void load(const std::string &filename) const;
   };
 #endif
 
