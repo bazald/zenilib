@@ -34,7 +34,7 @@
  * \brief A Featureful 4-Space Matrix Class
  *
  * Matrix4f provides all the most basic functions of a Matrix class 
- * class:  addition and substraction, multiplication, scalar multiplication, 
+ * class:  addition and subtraction, multiplication, scalar multiplication, 
  * inverse, transpose, and determinant.  Additionally, it offers static 
  * creator functions for Zero and Identity matrices, and more advanced 
  * rendering-specific matrices as well.

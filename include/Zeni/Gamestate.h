@@ -212,7 +212,13 @@ namespace Zeni {
   };
 
   struct Quit_Event : public Error {
-    Quit_Event() : Error("Quit Event Detected") {}
+    Quit_Event() : Error("Quit Event Detected") {fired = true;}
+
+    static void fire() {throw Quit_Event();}
+    static bool has_fired() {return fired;}
+
+  private:
+    static bool fired;
   };
 
 }

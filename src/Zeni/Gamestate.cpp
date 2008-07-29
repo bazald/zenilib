@@ -868,4 +868,6 @@ default: return "SDLK_UNKNOWN";
     m_rii[action] = event;
   }
 
+  bool Quit_Event::fired = false;
+
 }

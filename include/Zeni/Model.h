@@ -123,14 +123,14 @@ namespace Zeni {
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
     inline const Vector3f & get_scale(); ///< Get the Model scale
     inline std::pair<Vector3f, float> get_rotate(); ///< Get the Model rotation
-    inline const Vector3f & get_translate(); ///< Get the Model translation
+    inline const Point3f & get_translate(); ///< Get the Model translation
     inline const float & get_keyframe(); ///< Get the current (key)frame
 
     // Modifiers
     inline void set_scale(const Vector3f &multiplier); ///< Scale the Model
     inline void set_rotate(const float &angle, const Vector3f &ray); ///< Rotate the Model
     inline void set_rotate(const Quaternion &quaternion); ///< Rotate the Model
-    inline void set_translate(const Vector3f &vector); ///< Translate the Model
+    inline void set_translate(const Point3f &vector); ///< Translate the Model
     inline void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
 
     // Post-Order Traversal
@@ -151,7 +151,8 @@ namespace Zeni {
     Model_Extents m_extents;
     Point3f m_position;
 
-    Vector3f m_scale, m_rotate, m_translate;
+    Vector3f m_scale, m_rotate;
+    Point3f m_translate;
     float m_rotate_angle;
     
     class Loader : public Task {

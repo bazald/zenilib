@@ -40,6 +40,10 @@
 
 namespace Zeni {
 
+  Vertex2f::Vertex2f()
+  {
+  }
+
   Vertex2f::Vertex2f(const Point2f &position)
     : m_position(position.x, position.y, position.z)
   {
@@ -56,6 +60,10 @@ namespace Zeni {
     const Point3f position = get_position().interpolate_to(rhs_part, rhs.get_position());
     return new Vertex2f_Color(Point2f(position.x, position.y), 
       Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
+  }
+
+  Vertex2f_Color::Vertex2f_Color()
+  {
   }
 
   Vertex2f_Color::Vertex2f_Color(const Point2f &position, const Color &color)
@@ -95,6 +103,10 @@ namespace Zeni {
     screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_POINTLIST, 1, this, sizeof(Vertex2f_Color));
   }
 #endif
+
+  Vertex2f_Texture::Vertex2f_Texture()
+  {
+  }
 
   Vertex2f_Texture::Vertex2f_Texture(const Point2f &position, const Point2f &texture_coordinate)
     : Vertex2f(position),

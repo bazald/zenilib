@@ -409,7 +409,7 @@ namespace Zeni_Collision {
     Capsule(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
                   const float &radius_);
 
-    /// Returns <distance, interpolation value (-inf, inf)>
+    /// Returns <distance, interpolation value [0.0f, 1.0f]>
     std::pair<float, float> nearest_point(const Capsule &rhs) const;
     std::pair<float, float> nearest_point(const Zeni::Point3f &rhs) const;
     std::pair<float, float> nearest_point(const Sphere &rhs) const;

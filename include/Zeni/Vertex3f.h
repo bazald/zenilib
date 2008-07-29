@@ -64,7 +64,8 @@ namespace Zeni {
 
   class Vertex3f {
   public:
-    Vertex3f(const Point3f &position = Point3f(), const Vector3f &normal = Vector3f());
+    Vertex3f();
+    Vertex3f(const Point3f &position, const Vector3f &normal = Vector3f());
     virtual ~Vertex3f();
 
     virtual Point3f get_position() const {return m_position;}
@@ -88,10 +89,9 @@ namespace Zeni {
   class Vertex3f_Color : public Renderable, public Vertex3f {
   public:
     /// Initialize the Vertex3f_Color
-    Vertex3f_Color(const Point3f &position = Point3f(), const Vector3f &normal = Vector3f(), 
-      const Color &color = Color());
-    Vertex3f_Color(const Point3f &position, const Vector3f &normal, 
-      const long &argb);
+    Vertex3f_Color();
+    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Color &color);
+    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb);
     Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const Uint32 &argb);
 
@@ -121,8 +121,8 @@ namespace Zeni {
   class Vertex3f_Texture : public Renderable, public Vertex3f {
   public:
     /// Initialize the Vertex3f_Texture
-    Vertex3f_Texture(const Point3f &position = Point3f(), const Vector3f &normal = Vector3f(), 
-      const Point2f &texture_coordinate = Point2f());
+    Vertex3f_Texture();
+    Vertex3f_Texture(const Point3f &position, const Vector3f &normal, const Point2f &texture_coordinate);
     Vertex3f_Texture(const Point3f &position, const Point2f &texture_coordinate);
 
     Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture

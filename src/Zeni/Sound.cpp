@@ -98,7 +98,7 @@ namespace Zeni {
     delete m_loader;
     
 #ifndef DISABLE_AL
-    if(m_buffer != AL_NONE)
+    if(m_buffer != AL_NONE && !Quit_Event::has_fired())
       alDeleteBuffers(1, &m_buffer);
 #endif
   }
@@ -235,7 +235,7 @@ namespace Zeni {
 
   Sound_Source::~Sound_Source() {
 #ifndef DISABLE_AL
-    if(m_source != AL_NONE)
+    if(m_source != AL_NONE && !Quit_Event::has_fired())
       alDeleteSources(1, &m_source);
 #endif
   }

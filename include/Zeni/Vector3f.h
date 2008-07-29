@@ -34,7 +34,7 @@
  * \brief A Featureful 3-Space Vector Class
  *
  * Vector3f provides everything you might expect from a specialized vector 
- * class:  addition and substraction, scalar multiplication, dot products, 
+ * class:  addition and subtraction, scalar multiplication, dot products, 
  * cross products, normalization functions, and a handful of useful constants.
  *
  * \author bazald

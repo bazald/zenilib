@@ -63,8 +63,8 @@ namespace Zeni {
 
   class Vertex2f {
   public:
+    Vertex2f();
     Vertex2f(const Point2f &position);
-    Vertex2f(const Point3f &position = Point3f());
     virtual ~Vertex2f();
 
     virtual Point3f get_position() const;
@@ -88,7 +88,8 @@ namespace Zeni {
   class Vertex2f_Color : public Renderable, public Vertex2f {
   public:
     /// Initialize the Vertex2f_Color
-    Vertex2f_Color(const Point2f &position = Point2f(), const Color &color = Color());
+    Vertex2f_Color();
+    Vertex2f_Color(const Point2f &position, const Color &color);
     Vertex2f_Color(const Point2f &position, const Uint32 &argb);
 
     Vertex2f * interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const; ///< Get a Vertex2f_Color between two vertices; rhs must be a Vertex2f_Color
@@ -117,8 +118,8 @@ namespace Zeni {
   class Vertex2f_Texture : public Renderable, public Vertex2f {
   public:
     /// Initialize the Vertex2f_Texture
-    Vertex2f_Texture(const Point2f &position = Point2f(), 
-      const Point2f &texture_coordinate = Point2f());
+    Vertex2f_Texture();
+    Vertex2f_Texture(const Point2f &position, const Point2f &texture_coordinate);
 
     Vertex2f * interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture
 

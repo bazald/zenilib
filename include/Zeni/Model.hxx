@@ -69,7 +69,7 @@ namespace Zeni {
     GUARANTEED_FINISHED_END();
   }
 
-  const Vector3f & Model::get_translate() {
+  const Point3f & Model::get_translate() {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_translate;
     GUARANTEED_FINISHED_END();
@@ -99,7 +99,7 @@ namespace Zeni {
     set_rotate(rayngel.second, rayngel.first);
   }
 
-  void Model::set_translate(const Vector3f &vector) {
+  void Model::set_translate(const Point3f &vector) {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     m_translate = vector;
     GUARANTEED_FINISHED_END();

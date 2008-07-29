@@ -287,7 +287,7 @@ namespace Zeni {
 
     vr.push_world_stack();
 
-    vr.translate_scene(m_translate);
+    vr.translate_scene(Vector3f(m_translate));
     vr.rotate_scene(m_rotate, m_rotate_angle);
     vr.scale_scene(m_scale);
 
