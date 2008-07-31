@@ -206,9 +206,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return shortest_distance(rhs) < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_center() const {return center;}
     const float & get_radius() const {return radius;}
@@ -234,9 +232,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return shortest_distance(rhs) < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_point() const {return point;}
     const Zeni::Vector3f & get_normal() const {return normal;}
@@ -271,9 +267,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return nearest_point(rhs).first < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
     const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
@@ -316,9 +310,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return nearest_point(rhs).first < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
     const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
@@ -352,9 +344,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Capsule &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return shortest_distance(rhs) < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
     const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
@@ -390,9 +380,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return shortest_distance(rhs) < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_end_point_a() const {return line.get_end_point_a();}
     const Zeni::Point3f & get_end_point_b() const {return line.get_end_point_b();}
@@ -431,9 +419,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Parallelepiped &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return nearest_point(rhs).first < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_end_point_a() const {return line_segment.get_end_point_a();}
     const Zeni::Point3f & get_end_point_b() const {return line_segment.get_end_point_b();}
@@ -461,9 +447,7 @@ namespace Zeni_Collision {
     inline float shortest_distance(const Capsule &rhs) const;
 
     template <typename TYPE>
-    bool intersects(const TYPE &rhs) const {
-      return shortest_distance(rhs) < g_intersection_epsilon;
-    }
+    bool intersects(const TYPE &rhs) const;
     
     const Zeni::Point3f & get_point() const {return point;}
     const Zeni::Vector3f & get_edge_a() const {return edge_a;}

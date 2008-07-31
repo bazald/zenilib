@@ -552,6 +552,7 @@ namespace Zeni {
 
     void seek(const int &edit_pos);
     void seek_cursor(const int &cursor_pos);
+    void set_focus(const bool &value);
 
     virtual void render() const;
 

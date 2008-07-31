@@ -62,11 +62,14 @@ namespace Zeni {
   }
 
   Gamestate & Gamestate::operator=(const Gamestate &state) {
+    if(state.m_state)
+      state.m_state->increment();
+
     if(m_state)
       m_state->decrement();
-    m_state=state.m_state;
-    if(m_state)
-      m_state->increment();
+
+    m_state = state.m_state;
+
     return *this;
   }
 

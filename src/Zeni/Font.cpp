@@ -82,8 +82,10 @@ namespace Zeni {
     SDL_FreeSurface(source);
   }
 
-  void Font_FT::Glyph::render(const int &x, const int &y) const {
+  void Font_FT::Glyph::render(const Point2f &position) const {
     static Video &vr = Video::get_reference();
+    const float &x = position.x;
+    const float &y = position.y;
 
     Quadrilateral<Vertex2f_Texture> rect
       (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel),
@@ -186,7 +188,8 @@ namespace Zeni {
     unsigned int pos = 0;
 
     for(; pos < text.size(); ++pos)
-      if(text[pos] != '\r' && text[pos] != '\n')
+      if(text[pos] != '\r' && text[pos] != '\n' &&
+        m_glyph[int(text[pos])])
         width += m_glyph[int(text[pos])]->get_glyph_width();
       else {
         max_width = max(max_width, width);
@@ -196,15 +199,18 @@ namespace Zeni {
     return max(max_width, width);
   }
 
-  void Font_FT::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
+  void Font_FT::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
     Video &vr = Video::get_reference();
+    const float &x = position.x;
+    const float &y = position.y;
 
     const Color previous_color = vr.get_color();
 
     vr.set_color(color);
     vr.apply_texture(*m_texture);
 
-    int cx, x_diff, cy = y, i = 0;
+    float cx, x_diff, cy = y;
+    int i = 0;
 
 NEXT_LINE:
 
@@ -213,7 +219,8 @@ NEXT_LINE:
 
     if(justify != ZENI_LEFT) {
       for(unsigned int j = i; j < text.size(); ++j) {
-        if(text[j] == '\r' || text[j] == '\n')
+        if(text[j] == '\r' || text[j] == '\n' ||
+          !m_glyph[int(text[j])])
           break;
 
         x_diff -= m_glyph[int(text[j])]->get_glyph_width();
@@ -228,13 +235,14 @@ NEXT_LINE:
     for(; i < int(text.size()); ++i) {
       if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
         ++i;
+
       if(text[i] == '\r' || text[i] == '\n') {
         ++i;
         cy += m_font_height;
         goto NEXT_LINE;
       }
-      else {
-        m_glyph[int(text[i])]->render(cx, cy);
+      else if(m_glyph[int(text[i])]) {
+        m_glyph[int(text[i])]->render(Point2f(cx, cy));
         cx += m_glyph[int(text[i])]->get_glyph_width();
       }
     }
@@ -295,8 +303,10 @@ NEXT_LINE:
     return rect.right - rect.left;
   }
 
-  void Font_DX9::render_text(const std::string &text, const int &x, const int &y, const Color &color, const JUSTIFY &justify) const {
+  void Font_DX9::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
     static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    const float &x = position.x;
+    const float &y = position.y;
 
     D3DCOLOR color2 = D3DCOLOR_ARGB(color.a_ub(),
       color.r_ub(),

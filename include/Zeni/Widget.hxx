@@ -84,7 +84,7 @@ namespace Zeni {
 
     const float x = center.x;
     const float y = center.y - 0.5f * font.get_text_height();
-    font.render_text(m_text, int(x), int(y), m_color, ZENI_CENTER);
+    font.render_text(m_text, Point2f(x, y), m_color, ZENI_CENTER);
   }
   
   Widget_Rectangle::Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_)
@@ -377,7 +377,7 @@ namespace Zeni {
   void Text_Box::set_text(const std::string &text_) {
     m_text.set_text(text_);
     format();
-    seek(m_edit_pos);
+    seek(min(m_edit_pos, this->get_max_seek()));
   }
   
   void Text_Box::set_text_color(const Color &text_color_) {

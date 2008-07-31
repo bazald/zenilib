@@ -29,6 +29,7 @@
 #include <Zeni/Sound.hxx>
 
 #include <Zeni/Coordinate.hxx>
+#include <Zeni/Gamestate.hxx>
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Vector3f.hxx>
 

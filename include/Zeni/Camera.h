@@ -72,11 +72,8 @@ namespace Zeni {
 
     // Modifiers
     inline void set_position(const Point3f &point); ///< Set the current position of the camera.
-    inline void set_position(const float &x, const float &y, const float &z); ///< Set the vector indicating the direction in which the camera is pointing.
     inline void set_forward(const Vector3f &forward); ///< Set the vector indicating what is "forward" from the perspective of the camera.
-    inline void set_forward(const float &i, const float &j, const float &k); ///< Set the vector indicating what is "forward" from the perspective of the camera.
     inline void set_up(const Vector3f &up); ///< Set the vector indicating what is "up" from the perspective of the camera.
-    inline void set_up(const float &i, const float &j, const float &k); ///< Set the vector indicating what is "up" from the perspective of the camera.
     inline void set_near_clip(const float &distance); ///< Set the near clipping distance.  Must be non-zero.  Should be greater than or equal to 1.0f
     inline void set_far_clip(const float &distance); ///< Set the far clipping distance.  Must not equal the near-clipping value.
     inline void set_fov_deg(const float &degrees); ///< Set the field of view (in the y-axis) in degrees.
@@ -88,8 +85,7 @@ namespace Zeni {
     inline Matrix4f get_projection_matrix(const std::pair<Point2f, Point2f> &viewport) const; ///< Equivalent to glOrtho
 
     inline void adjust_position(const Vector3f &by); ///< Adjust the position of the camera using a vector.
-    inline void adjust_position(const float &i, const float &j, const float &k); ///< Adjust the position of the camera using ijk values.
-
+    
     void adjust_yaw(const float &theta); ///< Adjust the orientation of the camera: left == positive;
     void adjust_pitch(const float &phi); ///< Adjust the orientation of the camera: up == positive;
     void adjust_roll(const float &rho);  ///< Adjust the orientation of the camera: spin right == positive;

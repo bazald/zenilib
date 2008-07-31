@@ -72,26 +72,12 @@ namespace Zeni {
     m_position = point;
   }
 
-  void Camera::set_position(const float &x, const float &y, const float &z) {
-    m_position.x = x;
-    m_position.y = y;
-    m_position.z = z;
-  }
-
   void Camera::set_forward(const Vector3f &forward) {
     m_forward = forward.normalized();
   }
 
-  void Camera::set_forward(const float &i, const float &j, const float &k) {
-    m_forward = Vector3f(i, j, k).normalized();
-  }
-
   void Camera::set_up(const Vector3f &up) {
     m_up = up.normalized();
-  }
-
-  void Camera::set_up(const float &i, const float &j, const float &k) {
-    m_up = Vector3f(i, j, k).normalized();
   }
 
   void Camera::set_near_clip(const float &distance) {
@@ -120,12 +106,6 @@ namespace Zeni {
 
   void Camera::adjust_position(const Vector3f &by) {
     m_position += by;
-  }
-
-  void Camera::adjust_position(const float &i, const float &j, const float &k) {
-    m_position.x += i;
-    m_position.y += j;
-    m_position.z += k;
   }
 
 }

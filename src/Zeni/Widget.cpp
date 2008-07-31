@@ -409,17 +409,17 @@ namespace Zeni {
     const Font &f = get_font();
     const Color &c = m_text.get_color();
 
-    int x_pos;
+    float x_pos;
     if(m_justify == ZENI_LEFT)
-      x_pos = int(get_upper_left().x);
+      x_pos = get_upper_left().x;
     else if(m_justify == ZENI_RIGHT)
-      x_pos = int(get_lower_right().x);
+      x_pos = get_lower_right().x;
     else
-      x_pos = int((get_upper_left().x + get_lower_right().x) / 2);
+      x_pos = (get_upper_left().x + get_lower_right().x) / 2;
 
-    const int y_offset = int(get_upper_left().y);
+    const float &y_offset = get_upper_left().y;
     for(int i = 0, iend = int(m_lines.size()); i != iend; ++i)
-      f.render_text(m_lines[i].formatted, x_pos, y_offset + m_lines[i].glyph_top, c, m_justify);
+      f.render_text(m_lines[i].formatted, Point2f(x_pos, y_offset + m_lines[i].glyph_top), c, m_justify);
 
     if(m_cursor_index.x != -1 && m_cursor_index.y != -1
       && !((Timer::get_reference().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // render every other second
@@ -625,6 +625,13 @@ namespace Zeni {
     }
 
     m_last_seek = Timer::get_reference().get_time();
+  }
+  
+  void Text_Box::set_focus(const bool &value) {
+    if(value)
+      seek(get_max_seek());
+    else
+      invalidate_edit_pos();
   }
 
   string Text_Box::clean_string(const string &unclean_string) const {
