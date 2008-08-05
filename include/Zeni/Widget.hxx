@@ -34,6 +34,9 @@
 #include <Zeni/Fonts.h>
 #include <Zeni/Timer.hxx>
 
+#undef min
+//#include <algorithm>
+
 namespace Zeni {
 
   void Widget::on_event(const SDL_KeyboardEvent &event) {
@@ -377,7 +380,6 @@ namespace Zeni {
   void Text_Box::set_text(const std::string &text_) {
     m_text.set_text(text_);
     format();
-#undef min
     seek(std::min(m_edit_pos, this->get_max_seek()));
   }
   

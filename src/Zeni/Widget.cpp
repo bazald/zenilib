@@ -322,7 +322,7 @@ namespace Zeni {
             int count = 0;
             for(int i = 0, iend = m_cursor_index.y - 1; i != iend; ++i)
               count += int(m_lines[i].unformatted.size());
-            count += min(m_cursor_index.x, int(m_lines[m_cursor_index.y - 1].unformatted.size()));
+            count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y - 1].unformatted.size()));
             
             seek(count);
           }
@@ -332,7 +332,7 @@ namespace Zeni {
             int count = 0;
             for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
               count += int(m_lines[i].unformatted.size());
-            count += min(m_cursor_index.x, int(m_lines[m_cursor_index.y + 1].unformatted.size()));
+            count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y + 1].unformatted.size()));
             
             seek(count);
           }
