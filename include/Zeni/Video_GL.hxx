@@ -210,6 +210,10 @@ namespace Zeni {
     glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transformation));
   }
 
+  Point2f Video_GL::get_pixel_offset_impl() const {
+    return Point2f(0.0f, 0.0f);
+  }
+
   void Video_GL::set_view_matrix_impl(const Matrix4f &view) {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&view)));

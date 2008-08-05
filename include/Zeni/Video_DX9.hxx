@@ -208,6 +208,10 @@ namespace Zeni {
     m_d3d_device->SetTransform(D3DTS_WORLD, m_matrix_stack->GetTop());
   }
 
+  Point2f Video_DX9::get_pixel_offset_impl() const {
+    return Point2f(0.5f, 0.5f);
+  }
+
   void Video_DX9::set_view_matrix_impl(const Matrix4f &view) {
     m_d3d_device->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DXMATRIX *>(const_cast<Matrix4f *>(&view)));
   }

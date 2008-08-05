@@ -110,6 +110,7 @@ namespace Zeni {
     inline void transform_scene_impl(const Matrix4f &transformation); ///< Transform the scene
 
     // View+Projection Matrix Functions
+    inline Point2f get_pixel_offset_impl() const; ///< Get the pixel offset in the 2d view
     inline void set_view_matrix_impl(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix_impl(const Matrix4f &projection); ///< Set the projection Matrix4f
     inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
