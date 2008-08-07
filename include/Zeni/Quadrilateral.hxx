@@ -31,8 +31,10 @@
 
 #include <Zeni/Quadrilateral.h>
 
-#include <Zeni/Triangle.hxx>
+// HXXed below
+#include <Zeni/Triangle.h>
 
+// Not HXXed
 #include <GL/gl.h>
 #include <cassert>
 
@@ -150,5 +152,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Triangle.hxx>
 
 #endif

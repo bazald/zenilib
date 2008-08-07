@@ -30,10 +30,12 @@
 #define ZENI_LINE_SEGMENT_HXX
 
 #include <Zeni/Line_Segment.h>
+
+// HXXed below
+#include <Zeni/Video_DX9.h>
+
+// Not HXXed
 #include <Zeni/Vector3f.h>
-
-#include <Zeni/Video_DX9.hxx>
-
 #include <GL/gl.h>
 
 namespace Zeni {
@@ -136,5 +138,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Video_DX9.hxx>
 
 #endif

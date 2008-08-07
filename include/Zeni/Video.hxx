@@ -31,8 +31,9 @@
 
 #include <Zeni/Video.h>
 
-#include <Zeni/Camera.hxx>
-#include <Zeni/Textures.hxx>
+// HXXed below
+#include <Zeni/Camera.h>
+#include <Zeni/Textures.h>
 
 namespace Zeni {
 
@@ -420,5 +421,8 @@ namespace Zeni {
 #undef VIDEO_IV_FCN_CALL
 #undef VIDEO_IV_FCN_CALL_CONST
 }
+
+#include <Zeni/Camera.hxx>
+#include <Zeni/Textures.hxx>
 
 #endif

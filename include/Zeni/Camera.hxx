@@ -31,8 +31,9 @@
 
 #include <Zeni/Camera.h>
 
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Matrix4f.hxx>
+// HXXed below
+#include <Zeni/Coordinate.h>
+#include <Zeni/Matrix4f.h>
 
 namespace Zeni {
 
@@ -109,5 +110,8 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Matrix4f.hxx>
 
 #endif

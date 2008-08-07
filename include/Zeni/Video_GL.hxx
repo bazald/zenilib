@@ -26,18 +26,20 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Video.hxx>
-
 #ifndef ZENI_VIDEO_GL_HXX
 #define ZENI_VIDEO_GL_HXX
 
 #include <Zeni/Video_GL.h>
 
-#include <Zeni/Color.hxx>
-#include <Zeni/Fog.hxx>
-#include <Zeni/Game.hxx>
-#include <Zeni/Light.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+// HXXed below
+#include <Zeni/Color.h>
+#include <Zeni/Fog.h>
+#include <Zeni/Game.h>
+#include <Zeni/Light.h>
+#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Video.h>
+
+// Not HXXed
 #include <Zeni/Vertex_Buffer.h>
 
 #ifndef DISABLE_GL
@@ -263,5 +265,12 @@ namespace Zeni {
 }
 
 #endif
+
+#include <Zeni/Color.hxx>
+#include <Zeni/Fog.hxx>
+#include <Zeni/Game.hxx>
+#include <Zeni/Light.hxx>
+#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Video.hxx>
 
 #endif

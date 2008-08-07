@@ -29,9 +29,10 @@
 #ifndef ZENI_TEXTURES_HXX
 #define ZENI_TEXTURES_HXX
 
-//#include <Zeni/Textures.h>
+#include <Zeni/Textures.h>
 
-#include <Zeni/Texture.hxx>
+// HXXed below
+#include <Zeni/Texture.h>
 
 namespace Zeni {
 
@@ -52,5 +53,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Texture.hxx>
 
 #endif

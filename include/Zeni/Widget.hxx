@@ -31,8 +31,11 @@
 
 #include <Zeni/Widget.h>
 
+// HXXed below
+#include <Zeni/Timer.h>
+
+// Not HXXed
 #include <Zeni/Fonts.h>
-#include <Zeni/Timer.hxx>
 
 #undef min
 //#include <algorithm>
@@ -460,5 +463,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Timer.hxx>
 
 #endif

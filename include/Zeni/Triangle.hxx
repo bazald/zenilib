@@ -30,10 +30,12 @@
 #define ZENI_TRIANGLE_HXX
 
 #include <Zeni/Triangle.h>
+
+// HXXed below
+#include <Zeni/Video_DX9.h>
+
+// Not HXXed
 #include <Zeni/Vector3f.h>
-
-#include <Zeni/Video_DX9.hxx>
-
 #include <GL/gl.h>
 #include <cassert>
 
@@ -159,5 +161,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Video_DX9.hxx>
 
 #endif

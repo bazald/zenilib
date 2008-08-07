@@ -31,8 +31,10 @@
 
 #include <Zeni/Vector3f.h>
 
-#include <Zeni/Coordinate.hxx>
+// HXXed below
+#include <Zeni/Coordinate.h>
 
+// Not HXXed
 #include <cassert>
 #include <cmath>
 
@@ -212,5 +214,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Coordinate.hxx>
 
 #endif

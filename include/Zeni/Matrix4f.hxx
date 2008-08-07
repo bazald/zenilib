@@ -31,9 +31,11 @@
 
 #include <Zeni/Matrix4f.h>
 
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Quaternion.hxx>
+// HXXed below
+#include <Zeni/Coordinate.h>
+#include <Zeni/Quaternion.h>
 
+// Not HXXed
 #include <cassert>
 #include <cmath>
 
@@ -262,5 +264,8 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Quaternion.hxx>
 
 #endif

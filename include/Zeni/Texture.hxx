@@ -31,10 +31,13 @@
 
 #include <Zeni/Texture.h>
 
+// HXXed below
 #include <Zeni/Textures.h>
-#include <Zeni/Textures.hxx>
-#include <Zeni/Video.hxx>
-#include <Zeni/Video_DX9.hxx>
+#include <Zeni/Video.h>
+#include <Zeni/Video_DX9.h>
+
+// Not HXXed
+#include <Zeni/Textures.h>
 
 namespace Zeni {
 
@@ -174,5 +177,9 @@ namespace Zeni {
 #undef TEXTURE_IV_FCN_CALL_CONST
 
 }
+
+#include <Zeni/Textures.hxx>
+#include <Zeni/Video.hxx>
+#include <Zeni/Video_DX9.hxx>
 
 #endif

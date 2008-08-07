@@ -31,7 +31,8 @@
 
 #include <Zeni/Game.h>
 
-#include <Zeni/Gamestate.hxx>
+// HXXed below
+#include <Zeni/Gamestate.h>
 
 namespace Zeni {
 
@@ -108,5 +109,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Gamestate.hxx>
 
 #endif
