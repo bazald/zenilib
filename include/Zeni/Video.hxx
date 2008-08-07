@@ -35,6 +35,8 @@
 #include <Zeni/Camera.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Quaternion.h>
+#include <Zeni/Video_DX9.h>
+#include <Zeni/Video_GL.h>
 
 namespace Zeni {
 
@@ -154,12 +156,6 @@ namespace Zeni {
     return m_screen_to_world;
   }
 
-}
-
-#include "Video_DX9.hxx"
-#include "Video_GL.hxx"
-
-namespace Zeni {
   /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
    * It is not hard to code around, but they are convenient.
    */
@@ -426,5 +422,7 @@ namespace Zeni {
 #include <Zeni/Camera.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Quaternion.hxx>
+#include <Zeni/Video_DX9.hxx>
+#include <Zeni/Video_GL.hxx>
 
 #endif
