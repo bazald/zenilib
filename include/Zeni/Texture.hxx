@@ -37,7 +37,9 @@
 #include <Zeni/Video_DX9.h>
 
 // Not HXXed
-#include <Zeni/Textures.h>
+#ifndef DISABLE_GL
+#include <GL/glext.h>
+#endif
 
 namespace Zeni {
 

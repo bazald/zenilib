@@ -34,6 +34,7 @@
 // HXXed below
 #include <Zeni/Camera.h>
 #include <Zeni/Textures.h>
+#include <Zeni/Quaternion.h>
 
 namespace Zeni {
 
@@ -424,5 +425,6 @@ namespace Zeni {
 
 #include <Zeni/Camera.hxx>
 #include <Zeni/Textures.hxx>
+#include <Zeni/Quaternion.hxx>
 
 #endif
