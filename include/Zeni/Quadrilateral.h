@@ -43,6 +43,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Quadrilateral.hxx>
+#endif
+
 #ifndef ZENI_Quadrilateral_H
 #define ZENI_Quadrilateral_H
 
@@ -91,8 +95,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Quadrilateral.hxx>
 #endif

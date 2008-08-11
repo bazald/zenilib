@@ -29,8 +29,6 @@
 #ifndef ZENI_VIDEO_GL_HXX
 #define ZENI_VIDEO_GL_HXX
 
-#include <Zeni/Video_GL.h>
-
 // HXXed below
 #include <Zeni/Color.h>
 #include <Zeni/Fog.h>
@@ -38,6 +36,8 @@
 #include <Zeni/Light.h>
 #include <Zeni/Render_Wrapper.h>
 #include <Zeni/Video.h>
+
+#include <Zeni/Video_GL.h>
 
 // Not HXXed
 #include <Zeni/Vertex_Buffer.h>

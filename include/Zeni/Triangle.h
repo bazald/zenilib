@@ -40,6 +40,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Triangle.hxx>
+#endif
+
 #ifndef ZENI_TRIANGLE_H
 #define ZENI_TRIANGLE_H
 
@@ -88,8 +92,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Triangle.hxx>
 #endif

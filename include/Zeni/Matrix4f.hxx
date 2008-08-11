@@ -29,11 +29,11 @@
 #ifndef ZENI_MATRIX4F_HXX
 #define ZENI_MATRIX4F_HXX
 
-#include <Zeni/Matrix4f.h>
-
 // HXXed below
 #include <Zeni/Coordinate.h>
 #include <Zeni/Quaternion.h>
+
+#include <Zeni/Matrix4f.h>
 
 // Not HXXed
 #include <cassert>

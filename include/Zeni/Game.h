@@ -42,6 +42,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Game.hxx>
+#endif
+
 #ifndef ZENI_GAME_H
 #define ZENI_GAME_H
 
@@ -93,8 +97,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Game.hxx>
 #endif

@@ -42,6 +42,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Light.hxx>
+#endif
+
 #ifndef ZENI_LIGHT_H
 #define ZENI_LIGHT_H
 
@@ -128,8 +132,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Light.hxx>
 #endif

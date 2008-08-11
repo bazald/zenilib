@@ -29,10 +29,10 @@
 #ifndef ZENI_Quadrilateral_HXX
 #define ZENI_Quadrilateral_HXX
 
-#include <Zeni/Quadrilateral.h>
-
 // HXXed below
 #include <Zeni/Triangle.h>
+
+#include <Zeni/Quadrilateral.h>
 
 // Not HXXed
 #include <GL/gl.h>

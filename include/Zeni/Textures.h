@@ -40,6 +40,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Textures.hxx>
+#endif
+
 #ifndef ZENI_TEXTURES_H
 #define ZENI_TEXTURES_H
 
@@ -118,8 +122,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Textures.hxx>
 #endif

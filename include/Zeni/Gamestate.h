@@ -85,6 +85,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Gamestate.hxx>
+#endif
+
 #ifndef ZENI_GAMESTATE_H
 #define ZENI_GAMESTATE_H
 
@@ -223,8 +227,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Gamestate.hxx>
 #endif

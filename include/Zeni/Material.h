@@ -42,6 +42,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Material.hxx>
+#endif
+
 #ifndef ZENI_MATERIAL_H
 #define ZENI_MATERIAL_H
 
@@ -117,8 +121,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Material.hxx>
 #endif

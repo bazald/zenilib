@@ -29,10 +29,10 @@
 #ifndef ZENI_LINE_SEGMENT_HXX
 #define ZENI_LINE_SEGMENT_HXX
 
-#include <Zeni/Line_Segment.h>
-
 // HXXed below
 #include <Zeni/Video_DX9.h>
+
+#include <Zeni/Line_Segment.h>
 
 // Not HXXed
 #include <Zeni/Vector3f.h>

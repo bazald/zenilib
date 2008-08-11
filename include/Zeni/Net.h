@@ -103,6 +103,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Net.hxx>
+#endif
+
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 
@@ -307,8 +311,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Net.hxx>
 #endif

@@ -29,10 +29,10 @@
 #ifndef ZENI_GAME_HXX
 #define ZENI_GAME_HXX
 
-#include <Zeni/Game.h>
-
 // HXXed below
 #include <Zeni/Gamestate.h>
+
+#include <Zeni/Game.h>
 
 namespace Zeni {
 

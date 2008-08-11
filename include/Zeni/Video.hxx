@@ -29,14 +29,14 @@
 #ifndef ZENI_VIDEO_HXX
 #define ZENI_VIDEO_HXX
 
-#include <Zeni/Video.h>
-
 // HXXed below
 #include <Zeni/Camera.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Quaternion.h>
 #include <Zeni/Video_DX9.h>
 #include <Zeni/Video_GL.h>
+
+#include <Zeni/Video.h>
 
 namespace Zeni {
 

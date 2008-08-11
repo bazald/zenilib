@@ -168,6 +168,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Collision.hxx>
+#endif
+
 #ifndef ZENI_COLLISION_H
 #define ZENI_COLLISION_H
 
@@ -479,8 +483,4 @@ namespace Zeni_Collision {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Collision.hxx>
 #endif

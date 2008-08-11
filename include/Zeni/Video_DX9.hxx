@@ -30,8 +30,6 @@
 #ifndef ZENI_VIDEO_DX9_HXX
 #define ZENI_VIDEO_DX9_HXX
 
-#include <Zeni/Video_DX9.h>
-
 // HXXed below
 #include <Zeni/Fog.h>
 #include <Zeni/Game.h>
@@ -39,6 +37,8 @@
 #include <Zeni/Render_Wrapper.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
+
+#include <Zeni/Video_DX9.h>
 
 // Not HXXed
 #include <Zeni/Fonts.h>

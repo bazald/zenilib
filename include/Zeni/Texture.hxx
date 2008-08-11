@@ -29,12 +29,12 @@
 #ifndef ZENI_TEXTURE_HXX
 #define ZENI_TEXTURE_HXX
 
-#include <Zeni/Texture.h>
-
 // HXXed below
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 #include <Zeni/Video_DX9.h>
+
+#include <Zeni/Texture.h>
 
 // Not HXXed
 #ifndef DISABLE_GL

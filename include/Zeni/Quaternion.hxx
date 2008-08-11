@@ -29,11 +29,11 @@
 #ifndef ZENI_QUATERNION_HXX
 #define ZENI_QUATERNION_HXX
 
-#include <Zeni/Quaternion.h>
-
 // HXXed below
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
+
+#include <Zeni/Quaternion.h>
 
 // Not HXXed
 #include <cmath>

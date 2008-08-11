@@ -29,10 +29,10 @@
 #ifndef ZENI_WIDGET_HXX
 #define ZENI_WIDGET_HXX
 
-#include <Zeni/Widget.h>
-
 // HXXed below
 #include <Zeni/Timer.h>
+
+#include <Zeni/Widget.h>
 
 // Not HXXed
 #include <Zeni/Fonts.h>

@@ -44,6 +44,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Matrix4f.hxx>
+#endif
+
 #ifndef ZENI_MATRIX_H
 #define ZENI_MATRIX_H
 
@@ -130,8 +134,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Matrix4f.hxx>
 #endif

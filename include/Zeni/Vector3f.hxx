@@ -29,10 +29,10 @@
 #ifndef ZENI_VECTOR3F_HXX
 #define ZENI_VECTOR3F_HXX
 
-#include <Zeni/Vector3f.h>
-
 // HXXed below
 #include <Zeni/Coordinate.h>
+
+#include <Zeni/Vector3f.h>
 
 // Not HXXed
 #include <cassert>

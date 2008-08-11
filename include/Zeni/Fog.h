@@ -40,6 +40,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Fog.hxx>
+#endif
+
 #ifndef ZENI_FOG_H
 #define ZENI_FOG_H
 
@@ -100,8 +104,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Fog.hxx>
 #endif

@@ -40,6 +40,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Line_Segment.hxx>
+#endif
+
 #ifndef ZENI_LINE_SEGMENT_H
 #define ZENI_LINE_SEGMENT_H
 
@@ -83,8 +87,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Line_Segment.hxx>
 #endif

@@ -29,11 +29,11 @@
 #ifndef ZENI_CAMERA_HXX
 #define ZENI_CAMERA_HXX
 
-#include <Zeni/Camera.h>
-
 // HXXed below
 #include <Zeni/Coordinate.h>
 #include <Zeni/Matrix4f.h>
+
+#include <Zeni/Camera.h>
 
 namespace Zeni {
 

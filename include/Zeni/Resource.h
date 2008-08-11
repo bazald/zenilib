@@ -40,6 +40,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Resource.hxx>
+#endif
+
 #ifndef ZENI_RESOURCE_H
 #define ZENI_RESOURCE_H
 
@@ -75,8 +79,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Resource.hxx>
 #endif

@@ -82,6 +82,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Mutex.hxx>
+#endif
+
 #ifndef ZENI_MUTEX_H
 #define ZENI_MUTEX_H
 
@@ -261,8 +265,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Mutex.hxx>
 #endif

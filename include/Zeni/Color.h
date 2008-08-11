@@ -42,6 +42,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Color.hxx>
+#endif
+
 #ifndef ZENI_COLOR_H
 #define ZENI_COLOR_H
 
@@ -81,8 +85,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Color.hxx>
 #endif

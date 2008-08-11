@@ -50,6 +50,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Vertex2f.hxx>
+#endif
+
 #ifndef ZENI_VERTEX2F_H
 #define ZENI_VERTEX2F_H
 
@@ -148,8 +152,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex2f.hxx>
 #endif

@@ -75,6 +75,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Render_Wrapper.hxx>
+#endif
+
 #ifndef ZENI_RENDER_WRAPPER_H
 #define ZENI_RENDER_WRAPPER_H
 
@@ -156,8 +160,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Render_Wrapper.hxx>
 #endif

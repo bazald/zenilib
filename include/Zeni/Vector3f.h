@@ -42,6 +42,10 @@
  * Contact: bazald@zenipex.com
  */
 
+#ifdef ZENI_INLINES
+#include <Zeni/Vector3f.hxx>
+#endif
+
 #ifndef ZENI_VECTOR3F_H
 #define ZENI_VECTOR3F_H
 
@@ -129,8 +133,4 @@ namespace Zeni {
 
 }
 
-#endif
-
-#ifdef ZENI_INLINES
-#include <Zeni/Vector3f.hxx>
 #endif
