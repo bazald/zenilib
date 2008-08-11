@@ -94,14 +94,18 @@ namespace Zeni {
     Model_Visitor() {}
     virtual ~Model_Visitor() {}
 
-    virtual void operator()(const Model &model, Lib3dsNode *node) = 0;
+    // Note visiting function
+    virtual void operator()(const Model & /*model*/, Lib3dsNode * const & /*node*/) {}
+
+    // Mesh visiting function
+    virtual void operator()(const Model & /*model*/, Lib3dsNode * const & /*node*/, Lib3dsMesh * const & /*mesh*/) {}
   };
 
   class Model_Extents : public Model_Visitor {
   public:
     Model_Extents();
 
-    virtual void operator()(const Model &model, Lib3dsNode *node);
+    virtual void operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
 
     Point3f lower_bound, upper_bound; ///< The bounding box of model, first frame only if animated
     bool started;
@@ -135,6 +139,7 @@ namespace Zeni {
 
     // Post-Order Traversal
     void visit_nodes(Model_Visitor &mv, Lib3dsNode *node = 0) const; ///< Visit all nodes
+    void visit_meshes(Model_Visitor &mv, Lib3dsNode *node = 0, Lib3dsMesh *mesh = 0) const; ///< Visit all meshes
 
     void render() const;
 

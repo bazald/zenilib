@@ -54,13 +54,13 @@ namespace Zeni {
 
   class Model_Renderer : public Model_Visitor {
   public:
-    virtual void operator()(const Model &model, Lib3dsNode *node);
+    virtual void operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
 
-    void create_vertex_buffer(Vertex_Buffer *user_p, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh);
+    void create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
   };
 
-  void Model_Renderer::create_vertex_buffer(Vertex_Buffer *user_p, const Model &model, Lib3dsNode *node, Lib3dsMesh *mesh) {
-    node->user.p = user_p;
+  void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const & /*node*/, Lib3dsMesh * const &mesh) {
+    mesh->user.p = user_p;
 
     struct l3dsv {
       ~l3dsv() {delete [] normalL;}
@@ -70,12 +70,26 @@ namespace Zeni {
 
     lib3ds_mesh_calculate_normals(mesh, normal);
 
+    /*** BEGIN OLD FLIP-TEST ***/
+
+    const Matrix4f &mesh_transform = reinterpret_cast<const Matrix4f &>(mesh->matrix);
+    const Vector3f ti = mesh_transform * Vector3f(1.0f, 0.0f, 0.0f);
+    const Vector3f tj = mesh_transform * Vector3f(0.0f, 1.0f, 0.0f);
+    const Vector3f tk = mesh_transform * Vector3f(0.0f, 0.0f, 1.0f);
+    const bool flip = (ti % tj) * tk < 0.0f;
+
+    /*** END OLD FLIP-TEST ***/
+
+    /*** BEGIN OLD FLIP-TEST ***/
+
     // Get scaling vector
-    Lib3dsObjectData * const data=&node->data.object;
-    Vector3f scl(data->scl[0], data->scl[1], data->scl[2]);
-    const bool flip = (data->scl[0] < 0.0f) ^
-                      (data->scl[1] < 0.0f) ^
-                      (data->scl[2] < 0.0f);
+    //Lib3dsObjectData * const data=&node->data.object;
+    //Vector3f scl(data->scl[0], data->scl[1], data->scl[2]);
+    //const bool flip = (data->scl[0] < 0.0f) ^
+    //                  (data->scl[1] < 0.0f) ^
+    //                  (data->scl[2] < 0.0f);
+
+    /*** END OLD FLIP-TEST ***/
 
     for(unsigned int i = 0; i < mesh->faces; ++i) {
       Lib3dsFace *face = &mesh->faceL[i];
@@ -149,18 +163,19 @@ namespace Zeni {
 
   class Model_Unrenderer : public Model_Visitor {
   public:
-    virtual void operator()(const Model &model, Lib3dsNode *node);
+    virtual void operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
   };
 
-  void Model_Unrenderer::operator()(const Model &, Lib3dsNode *node) {
-    if(node->type != LIB3DS_OBJECT_NODE ||
-      !strcmp(node->name, "$$$DUMMY"))
+  void Model_Unrenderer::operator()(const Model & /*model*/, Lib3dsNode * const &node, Lib3dsMesh * const &mesh) {
+    if(node &&
+      (node->type != LIB3DS_OBJECT_NODE ||
+       !strcmp(node->name, "$$$DUMMY")))
       return;
 
-    if(node->user.p) {
-      Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
+    if(mesh->user.p) {
+      Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user.p);
       delete user_p;
-      node->user.p = 0;
+      mesh->user.p = 0;
     }
   }
 
@@ -223,7 +238,7 @@ namespace Zeni {
     m_loader.finish();
     
     if(m_unrenderer)
-      visit_nodes(*m_unrenderer);
+      visit_meshes(*m_unrenderer);
     delete m_unrenderer;
 
     lib3ds_file_free(m_file);
@@ -277,6 +292,22 @@ namespace Zeni {
     mv(*this, node);
   }
 
+  void Model::visit_meshes(Model_Visitor &mv, Lib3dsNode *node, Lib3dsMesh *mesh) const {
+    if(mesh)
+      mv(*this, node, mesh);
+    else
+      for(mesh=m_file->meshes; mesh; mesh=mesh->next)
+        visit_meshes(mv, node, mesh);
+
+    if(node) {
+      for(node=m_file->nodes; node; node=node->next)
+        visit_meshes(mv, node);
+
+      for(Lib3dsNode *child=node->childs; child; child=child->next)
+        visit_meshes(mv, child);
+    }
+  }
+
   void Model::render() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     
@@ -292,46 +323,60 @@ namespace Zeni {
     vr.scale_scene(m_scale);
 
     Model_Renderer mr;
-    visit_nodes(mr);
+    visit_meshes(mr);
 
     vr.pop_world_stack();
     
     GUARANTEED_FINISHED_END();
   }
 
-  void Model_Renderer::operator()(const Model &model, Lib3dsNode *node) {
-    if(node->type != LIB3DS_OBJECT_NODE ||
-      !strcmp(node->name, "$$$DUMMY"))
-      return;
+  void Model_Renderer::operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &node_mesh) {
+    Lib3dsMesh * mesh = 0;
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
-    if(!mesh)
+    if(node) {
+      if(node->type != LIB3DS_OBJECT_NODE ||
+        !strcmp(node->name, "$$$DUMMY"))
+        return;
+
+      mesh = lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+    }
+    else if(node_mesh)
+      mesh = node_mesh;
+    else
       throw Model_Render_Failure();
-
-    //mesh->texels = 0; ///HACK
 
     Video &vr = Video::get_reference();
 
-    if(!node->user.p)
+    if(!mesh->user.p)
       create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);
 
-    Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(node->user.p);
+    Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user.p);
     if(!user_p)
       throw Model_Render_Failure();
 
-    Lib3dsObjectData *data=&node->data.object;
-
     vr.push_world_stack();
 
-    vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
+    /*** BEGIN NEW TRANSFORM ***/
+    
+    vr.transform_scene(reinterpret_cast<const Matrix4f &>(mesh->matrix));
 
-    vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
+    /*** END NEW TRANSFORM ***/
 
-    Lib3dsMatrix M;
-    lib3ds_matrix_copy(M, mesh->matrix);
-    lib3ds_matrix_inv(M);
+    /*** BEGIN OLD TRANSFORM ***/
 
-    vr.transform_scene(reinterpret_cast<const Matrix4f &>(M));
+    //Lib3dsObjectData * data = &node->data.object;
+
+    //vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
+
+    //vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
+
+    //Lib3dsMatrix M;
+    //lib3ds_matrix_copy(M, mesh->matrix);
+    //lib3ds_matrix_inv(M);
+
+    //vr.transform_scene(reinterpret_cast<const Matrix4f &>(M));
+    
+    /*** END OLD TRANSFORM ***/
 
     //user_p->debug_render(); ///HACK
     user_p->render();
@@ -339,14 +384,19 @@ namespace Zeni {
     vr.pop_world_stack();
   }
 
-  void Model_Extents::operator()(const Model &model, Lib3dsNode *node) {
-    if(node->type != LIB3DS_OBJECT_NODE ||
-      !strcmp(node->name, "$$$DUMMY"))
-      return;
+  void Model_Extents::operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &node_mesh) {
+    Lib3dsMesh * mesh = 0;
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+    if(node) {
+      if(node->type != LIB3DS_OBJECT_NODE ||
+        !strcmp(node->name, "$$$DUMMY"))
+        return;
 
-    if(!mesh)
+      mesh = lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+    }
+    else if(node_mesh)
+      mesh = node_mesh;
+    else
       return;
 
     for(Lib3dsPoint *point=&mesh->pointL[0], *end=point+mesh->points; point != end; ++point)
@@ -381,7 +431,7 @@ namespace Zeni {
 
     lib3ds_file_eval(m_file, m_keyframe);
 
-    visit_nodes(m_extents);
+    visit_meshes(m_extents);
 
     m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
 
