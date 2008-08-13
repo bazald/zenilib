@@ -84,13 +84,41 @@ namespace Zeni {
   }
   
   void Condition_Variable::wait(Mutex::Lock &mutex_lock) {
+#ifndef NDEBUG
+    {
+      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+      mutex_lock.m_mutex.locking_thread = 0;
+    }
+#endif
+
     if(SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl))
       throw CV_Wait_Failure();
+
+#ifndef NDEBUG
+    {
+      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+      mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
+    }
+#endif
   }
   
   void Condition_Variable::wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms) {
+#ifndef NDEBUG
+    {
+      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+      mutex_lock.m_mutex.locking_thread = 0;
+    }
+#endif
+
     if(SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms))
       throw CV_Wait_Timeout_Failure();
+
+#ifndef NDEBUG
+    {
+      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+      mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
+    }
+#endif
   }
 
 }
