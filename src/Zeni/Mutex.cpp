@@ -48,8 +48,11 @@ namespace Zeni {
       }
     }
     
+#ifndef _WINDOWS
     try {
+#endif
       m_impl.lock();
+#ifndef _WINDOWS
     }
     catch(...) {
       Mutex::Lock lock(self_lock);
@@ -58,6 +61,7 @@ namespace Zeni {
 
       throw;
     }
+#endif
       
     locking_thread = current_thread;
     count = 1u;
