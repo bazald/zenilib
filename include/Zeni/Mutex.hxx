@@ -33,71 +33,217 @@
 #include <cassert>
 
 namespace Zeni {
+
+  Mutex::Mutex()
+#ifndef NDEBUG
+    : locking_thread(0)
+#endif
+  {
+    // Ensure Core is initialized
+    Core::get_reference();
+
+#ifdef _WINDOWS
+    InitializeCriticalSection(&m_impl);
+#else
+    if(pthread_mutex_init(&m_impl, 0))
+      throw Mutex_Init_Failure();
+#endif
+
+#ifndef NDEBUG
+#ifdef _WINDOWS
+    InitializeCriticalSection(&self_lock);
+#else
+    if(pthread_mutex_init(&self_lock, 0)) {
+      pthread_mutex_destroy(&m_impl);
+      throw Mutex_Init_Failure();
+    }
+#endif
+#endif
+  }
+  
+  Mutex::~Mutex() {
+#ifdef _WINDOWS
+    DeleteCriticalSection(&m_impl);
+#else
+    if(pthread_mutex_destroy(&m_impl)) {
+      pthread_mutex_destroy(&self_lock);
+      throw Mutex_Destroy_Failure();
+    }
+#endif
+
+#ifndef NDEBUG
+#ifdef _WINDOWS
+    DeleteCriticalSection(&self_lock);
+#else
+    if(pthread_mutex_destroy(&self_lock))
+      throw Mutex_Destroy_Failure();
+#endif
+#endif
+  }
+  
+  void Mutex::lock() {
+#ifndef NDEBUG
+    const unsigned int current_thread = SDL_ThreadID();
+    
+    {
+#ifdef _WINDOWS
+      EnterCriticalSection(&self_lock);
+#else
+      if(pthread_mutex_lock(&self_lock))
+        throw Mutex_Lock_Failure();
+#endif
+
+      assert(locking_thread != current_thread);
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&self_lock);
+#else
+      if(pthread_mutex_unlock(&self_lock))
+        throw Mutex_Unlock_Failure();
+#endif
+    }
+#endif
+
+#ifdef _WINDOWS
+      EnterCriticalSection(&m_impl);
+#else
+      if(pthread_mutex_lock(&m_impl))
+        throw Mutex_Lock_Failure();
+#endif
+
+#ifndef NDEBUG
+    locking_thread = current_thread;
+#endif
+  }
   
   void Mutex::unlock() {
 #ifndef NDEBUG
     {
-      Semaphore::Down down(self_lock);
-      
+#ifdef _WINDOWS
+      EnterCriticalSection(&self_lock);
+#else
+      if(pthread_mutex_lock(&self_lock)) {
+        pthread_mutex_unlock(&m_impl);
+        throw Mutex_Lock_Failure();
+      }
+#endif
+
       assert(locking_thread == SDL_ThreadID());
-    
+
       locking_thread = 0;
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&self_lock);
+#else
+      if(pthread_mutex_unlock(&self_lock)) {
+        pthread_mutex_unlock(&m_impl);
+        throw Mutex_Unlock_Failure();
+      }
+#endif
     }
 #endif
 
-    if(SDL_mutexV(m_impl))
+#ifdef _WINDOWS
+    LeaveCriticalSection(&m_impl);
+#else
+    if(pthread_mutex_unlock(&m_impl))
       throw Mutex_Unlock_Failure();
+#endif
+  }
+
+  Mutex::Lock::Lock(Mutex &mutex)
+    : m_mutex(mutex)
+  {
+    m_mutex.lock();
   }
   
-  void Semaphore::down() {
-    if(SDL_SemWait(m_impl))
-      throw Semaphore_Down_Failure();
+  Mutex::Lock::~Lock() {
+    m_mutex.unlock();
+  }
+
+  Condition_Variable::Condition_Variable() {
+    // Ensure Core is initialized
+    Core::get_reference();
+
+#ifdef _WINDOWS
+    InitializeConditionVariable(&m_impl);
+#else
+    if(pthread_cond_init(&m_impl, 0))
+      throw CV_Init_Failure();
+#endif
   }
   
-  void Semaphore::try_down() {
-    if(SDL_SemTryWait(m_impl))
-      throw Semaphore_Try_Down_Failure();
-  }
-  
-  void Semaphore::down_timeout(const unsigned int &ms) {
-    if(SDL_SemWaitTimeout(m_impl, ms))
-      throw Semaphore_Down_Timeout_Failure();
-  }
-  
-  void Semaphore::up() {
-    if(SDL_SemPost(m_impl))
-      throw Semaphore_Up_Failure();
-  }
-  
-  unsigned int Semaphore::count() const {
-    return SDL_SemValue(m_impl);
+  Condition_Variable::~Condition_Variable() {
+#ifndef _WINDOWS
+    if(pthread_cond_destroy(&m_impl))
+      throw CV_Destroy_Failure();
+#endif
   }
   
   void Condition_Variable::signal() {
-    if(SDL_CondSignal(m_impl))
+#ifdef _WINDOWS
+    WakeConditionVariable(&m_impl);
+#else
+    if(pthread_cond_signal(&m_impl))
       throw CV_Signal_Failure();
+#endif
   }
   
   void Condition_Variable::broadcast() {
-    if(SDL_CondBroadcast(m_impl))
+#ifdef _WINDOWS
+    WakeAllConditionVariable(&m_impl);
+#else
+    if(pthread_cond_broadcast(&m_impl))
       throw CV_Broadcast_Failure();
+#endif
   }
   
   void Condition_Variable::wait(Mutex::Lock &mutex_lock) {
 #ifndef NDEBUG
     {
-      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+#ifdef _WINDOWS
+      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Lock_Failure();
+#endif
+
       mutex_lock.m_mutex.locking_thread = 0;
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Unlock_Failure();
+#endif
     }
 #endif
 
-    if(SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl))
+#ifdef _WINDOWS
+    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl, INFINITE) == 0;
+#else
+    const bool result = pthread_cond_wait(&m_impl, &mutex_lock.m_mutex.m_impl) != 0;
+#endif
+    if(result)
       throw CV_Wait_Failure();
 
 #ifndef NDEBUG
     {
-      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+#ifdef _WINDOWS
+      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Lock_Failure();
+#endif
+
       mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Unlock_Failure();
+#endif
     }
 #endif
   }
@@ -105,20 +251,93 @@ namespace Zeni {
   void Condition_Variable::wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms) {
 #ifndef NDEBUG
     {
-      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+#ifdef _WINDOWS
+      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Lock_Failure();
+#endif
+
       mutex_lock.m_mutex.locking_thread = 0;
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Unlock_Failure();
+#endif
     }
 #endif
 
-    if(SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms))
+#ifdef _WINDOWS
+    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl, ms) == 0;
+#else
+    const struct timespec ts = {ms / 1000u, 1000u * (ms % 1000u)};
+    const bool result = pthread_cond_timedwait(&m_impl, &mutex_lock.m_mutex.m_impl, &ts) != 0;
+#endif
+    if(result)
       throw CV_Wait_Timeout_Failure();
 
 #ifndef NDEBUG
     {
-      Semaphore::Down down(mutex_lock.m_mutex.self_lock);
+#ifdef _WINDOWS
+      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Lock_Failure();
+#endif
+
       mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
+
+#ifdef _WINDOWS
+      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
+#else
+      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
+        throw Mutex_Unlock_Failure();
+#endif
     }
 #endif
+  }
+
+  Semaphore::Semaphore(const unsigned int &count)
+    : m_count(count)
+  {
+  }
+
+  void Semaphore::down() {
+    Mutex::Lock lock(m_mutex);
+
+    while(m_count < 1)
+      m_positive_count_cond.wait(lock);
+  }
+
+  void Semaphore::down_timeout(const unsigned int &ms) {
+    Mutex::Lock lock(m_mutex);
+
+    while(m_count < 1)
+      m_positive_count_cond.wait_timeout(lock, ms);
+  }
+
+  void Semaphore::up() {
+    Mutex::Lock lock(m_mutex);
+
+    ++m_count;
+
+    m_positive_count_cond.signal();
+  }
+
+  unsigned int Semaphore::count() const {
+    Mutex::Lock lock(m_mutex);
+
+    return m_count;
+  }
+
+  Semaphore::Down::Down(Semaphore &semaphore) : m_semaphore(semaphore) {
+    m_semaphore.down();
+  }
+
+  Semaphore::Down::~Down() {
+    m_semaphore.up();
   }
 
 }

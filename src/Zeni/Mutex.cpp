@@ -30,71 +30,17 @@
 
 namespace Zeni {
 
-  Mutex::Mutex()
-    : m_impl(0)
-#ifndef NDEBUG
-    , self_lock(1)
-    , locking_thread(0)
-#endif
-  {
-#ifdef NDEBUG
-    // Ensure Core is initialized
-    Core::get_reference();
-#endif
-    
-    m_impl = SDL_CreateMutex();
-  }
-  
-  Mutex::~Mutex() {
-    SDL_DestroyMutex(m_impl);
-  }
-  
-  void Mutex::lock() {
-#ifndef NDEBUG
-    const unsigned int current_thread = SDL_ThreadID();
-    
-    {
-      Semaphore::Down down(self_lock);
-      assert(locking_thread != current_thread);
-    }
-#endif
-    
-    if(SDL_mutexP(m_impl))
-      throw Mutex_Lock_Failure();
-    
-#ifndef NDEBUG
-    locking_thread = current_thread;
-#endif
-  }
-
-  Mutex::Lock::Lock(Mutex &mutex)
-    : m_mutex(mutex)
-  {
-    m_mutex.lock();
-  }
-  
-  Mutex::Lock::~Lock() {
-    m_mutex.unlock();
-  }
-
   Recursive_Mutex::Recursive_Mutex()
-    : m_impl(0)
-    , self_lock(1)
-    , locking_thread(0)
+    : locking_thread(0)
     , count(0)
   {
-    m_impl = SDL_CreateMutex();
-  }
-  
-  Recursive_Mutex::~Recursive_Mutex() {
-    SDL_DestroyMutex(m_impl);
   }
   
   void Recursive_Mutex::lock() {
     const unsigned int current_thread = SDL_ThreadID();
     
     {
-      Semaphore::Down down(self_lock);
+      Mutex::Lock lock(self_lock);
       
       if(locking_thread == current_thread) {
         ++count;
@@ -102,15 +48,23 @@ namespace Zeni {
       }
     }
     
-    if(SDL_mutexP(m_impl))
-      throw Mutex_Lock_Failure();
+    try {
+      m_impl.lock();
+    }
+    catch(...) {
+      Mutex::Lock lock(self_lock);
+      if(!--count)
+        locking_thread = 0;
+
+      throw;
+    }
       
     locking_thread = current_thread;
     count = 1u;
   }
   
   void Recursive_Mutex::unlock() {
-    Semaphore::Down down(self_lock);
+    Mutex::Lock lock(self_lock);
     
     assert(locking_thread == SDL_ThreadID() && count);
     
@@ -119,8 +73,7 @@ namespace Zeni {
     
     locking_thread = 0;
 
-    if(SDL_mutexV(m_impl))
-      throw Mutex_Unlock_Failure();
+    m_impl.unlock();
   }
 
   Recursive_Mutex::Lock::Lock(Recursive_Mutex &mutex)
@@ -131,40 +84,6 @@ namespace Zeni {
   
   Recursive_Mutex::Lock::~Lock() {
     m_mutex.unlock();
-  }
-
-  Semaphore::Semaphore(const unsigned int &count)
-    : m_impl(0)
-  {
-    // Ensure Core is initialized
-    Core::get_reference();
-    
-    m_impl = SDL_CreateSemaphore(count);
-  }
-  
-  Semaphore::~Semaphore() {
-    SDL_DestroySemaphore(m_impl);
-  }
-
-  Semaphore::Down::Down(Semaphore &semaphore) : m_semaphore(semaphore) {
-    m_semaphore.down();
-  }
-  
-  Semaphore::Down::~Down() {
-    m_semaphore.up();
-  }
-
-  Condition_Variable::Condition_Variable()
-    : m_impl(0)
-  {
-    // Ensure Core is initialized
-    Core::get_reference();
-    
-    m_impl = SDL_CreateCond();
-  }
-  
-  Condition_Variable::~Condition_Variable() {
-    SDL_DestroyCond(m_impl);
   }
   
   void Condition_Variable::wait(Recursive_Mutex::Lock &mutex_lock) {
@@ -178,21 +97,24 @@ namespace Zeni {
     assert(locking_thread == current_thread && count);
     
     {
-      Semaphore::Down down(mutex.self_lock);
+      Mutex::Lock lock(mutex.self_lock);
       locking_thread = 0;
       count = 0;
     }
-    
-    const int result = SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl);
-    
+
+#ifdef _WINDOWS
+    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, INFINITE) == 0;
+#else
+    const bool result = pthread_cond_wait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl) != 0;
+#endif
+    if(result)
+      throw CV_Wait_Failure();
+
     {
-      Semaphore::Down down(mutex.self_lock);
+      Mutex::Lock lock(mutex.self_lock);
       locking_thread = current_thread;
       count = current_count;
     }
-    
-    if(result)
-      throw CV_Wait_Failure();
   }
   
   void Condition_Variable::wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms) {
@@ -206,15 +128,22 @@ namespace Zeni {
     assert(locking_thread == current_thread && count);
     
     {
-      Semaphore::Down down(mutex.self_lock);
+      Mutex::Lock lock(mutex.self_lock);
       locking_thread = 0;
       count = 0;
     }
     
-    const int result = SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms);
+#ifdef _WINDOWS
+    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, ms) == 0;
+#else
+    const struct timespec ts = {ms / 1000u, 1000u * (ms % 1000u)};
+    const bool result = pthread_cond_timedwait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, &ts) != 0;
+#endif
+    if(result)
+      throw CV_Wait_Timeout_Failure();
     
     {
-      Semaphore::Down down(mutex.self_lock);
+      Mutex::Lock lock(mutex.self_lock);
       locking_thread = current_thread;
       count = current_count;
     }

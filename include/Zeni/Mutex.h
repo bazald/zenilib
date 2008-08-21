@@ -91,42 +91,14 @@
 
 #include <Zeni/Core.h>
 
-#include <SDL/SDL_mutex.h>
+//#include <SDL/SDL_mutex.h>
+#ifdef _WINDOWS
+#include <Windows.h>
+#else
+#include <pthread.h>
+#endif
 
 namespace Zeni {
-
-  class Semaphore {
-    Semaphore(const Semaphore &rhs);
-    Semaphore & operator=(const Semaphore &rhs);
-    
-  public:
-    Semaphore(const unsigned int &count = 1);
-    ~Semaphore();
-    
-    inline void down();
-    inline void try_down();
-    inline void down_timeout(const unsigned int &ms);
-    
-    inline void up();
-    
-    inline unsigned int count() const;
-
-  private:
-    SDL_sem *m_impl;
-  
-  public:
-    class Down {
-      Down(const Down &rhs);
-      Down & operator=(const Down &rhs);
-      
-    public:
-      Down(Semaphore &semaphore);
-      ~Down();
-      
-    private:
-      Semaphore &m_semaphore;
-    };
-  };
 
   class Mutex {
     friend class Condition_Variable;
@@ -135,18 +107,25 @@ namespace Zeni {
     Mutex & operator=(const Mutex &rhs);
     
   public:
-    Mutex();
-    ~Mutex();
+    inline Mutex();
+    inline ~Mutex();
     
-    void lock();
-    
+    inline void lock();
     inline void unlock();
 
   private:
-    SDL_mutex *m_impl;
+#ifdef _WINDOWS
+    CRITICAL_SECTION m_impl;
+#else
+    pthread_mutex_t m_impl;
+#endif
     
 #ifndef NDEBUG
-    Semaphore self_lock;
+#ifdef _WINDOWS
+    CRITICAL_SECTION self_lock;
+#else
+    pthread_mutex_t self_lock;
+#endif
     unsigned int locking_thread;
 #endif
   
@@ -158,8 +137,8 @@ namespace Zeni {
       Lock & operator=(const Lock &rhs);
       
     public:
-      Lock(Mutex &mutex);
-      ~Lock();
+      inline Lock(Mutex &mutex);
+      inline ~Lock();
       
     private:
       Mutex &m_mutex;
@@ -174,16 +153,14 @@ namespace Zeni {
     
   public:
     Recursive_Mutex();
-    ~Recursive_Mutex();
     
     void lock();
-    
     void unlock();
 
   private:
-    SDL_mutex *m_impl;
+    Mutex m_impl;
     
-    Semaphore self_lock;
+    Mutex self_lock;
     unsigned int locking_thread;
     unsigned int count;
   
@@ -208,8 +185,8 @@ namespace Zeni {
     Condition_Variable & operator=(const Condition_Variable &rhs);
     
   public:
-    Condition_Variable();
-    ~Condition_Variable();
+    inline Condition_Variable();
+    inline ~Condition_Variable();
     
     inline void signal();
     inline void broadcast();
@@ -220,7 +197,52 @@ namespace Zeni {
     void wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms);
 
   private:
-    SDL_cond *m_impl;
+#ifdef _WINDOWS
+  CONDITION_VARIABLE m_impl;
+#else
+  pthread_cond_t m_impl;
+#endif
+  };
+
+  class Semaphore {
+    Semaphore(const Semaphore &rhs);
+    Semaphore & operator=(const Semaphore &rhs);
+    
+  public:
+    inline Semaphore(const unsigned int &count = 1);
+    
+    inline void down();
+    inline void down_timeout(const unsigned int &ms);
+    
+    inline void up();
+    
+    inline unsigned int count() const;
+
+  private:
+    mutable Mutex m_mutex;
+    Condition_Variable m_positive_count_cond;
+    unsigned int m_count;
+  
+  public:
+    class Down {
+      Down(const Down &rhs);
+      Down & operator=(const Down &rhs);
+      
+    public:
+      inline Down(Semaphore &semaphore);
+      inline ~Down();
+      
+    private:
+      Semaphore &m_semaphore;
+    };
+  };
+
+  struct Mutex_Init_Failure : public Error {
+    Mutex_Init_Failure() : Error("Zeni Mutex Init Failure") {}
+  };
+
+  struct Mutex_Destroy_Failure : public Error {
+    Mutex_Destroy_Failure() : Error("Zeni Mutex Destroy Failure") {}
   };
 
   struct Mutex_Lock_Failure : public Error {
@@ -245,6 +267,14 @@ namespace Zeni {
 
   struct Semaphore_Up_Failure : public Error {
     Semaphore_Up_Failure() : Error("Zeni Semaphore Up Failure") {}
+  };
+
+  struct CV_Init_Failure : public Error {
+    CV_Init_Failure() : Error("Zeni Condition Variable Init Failure") {}
+  };
+
+  struct CV_Destroy_Failure : public Error {
+    CV_Destroy_Failure() : Error("Zeni Condition Variable Destroy Failure") {}
   };
 
   struct CV_Signal_Failure : public Error {
