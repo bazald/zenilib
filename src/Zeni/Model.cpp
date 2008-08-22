@@ -115,8 +115,8 @@ namespace Zeni {
         pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
-	  const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
-	  const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
+      const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
+      const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
 
       if(flip)
         if(mat.get_texture().size())
