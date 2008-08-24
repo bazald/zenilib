@@ -280,14 +280,14 @@ namespace Zeni {
   //}
   
   Vector3f Matrix4f::operator*(const Vector3f &vector) const {
-    Vector3f rv;
+    const Vector3f vec(m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3],
+                       m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3],
+                       m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3]);
 
-    rv.i = m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3];
-    rv.j = m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3];
-    rv.k = m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3];
+    //const float scaling_factor = m_matrix[3][3];
+    //if(fabs(scaling_factor) > 0.001f)
+    //  return vec / scaling_factor;
 
-    const float scaling_factor = m_matrix[3][3];
-
-    return rv / scaling_factor;
+    return vec;
   }
 }
