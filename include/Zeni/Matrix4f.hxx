@@ -121,9 +121,11 @@ namespace Zeni {
                     0.0f, 0.0f, (far_ + near_) / denom, -1.0f,
                     0.0f, 0.0f, 2.0f * far_ * near_ / denom, 0.0f);
 
-    //const float top = tan(fov_rad_y) * near_;
-    //const float bottom = -top;
-    //return Frustum(Point2f(aspect * bottom, top), Point2f(aspect * top, bottom), near_, far_);
+    //{
+    //  const float top = tan(0.5f * fov_rad_y) * near_;
+    //  const float bottom = -top;
+    //  return Frustum(Point2f(aspect * bottom, top), Point2f(aspect * top, bottom), near_, far_);
+    //}
   }
 
   Matrix4f Matrix4f::Frustum(const Point2f &upper_left, const Point2f &lower_right, const float &near_, const float &far_) {
@@ -134,14 +136,18 @@ namespace Zeni {
 
     const float denom_x = right - left;
     const float denom_y = top - bottom;
-    const float denom_z = far_ - near_;
+    const float denom_z = near_ - far_;
 
     return Matrix4f(2.0f * near_ / denom_x, 0.0f, 0.0f, 0.0f,
                     0.0f, 2.0f * near_ / denom_y, 0.0f, 0.0f,
-                    (right + left) / denom_x, (top + bottom) / denom_y, (far_ + near_) / denom_z, -1.0f,
-                    0.0f, 0.0f, 2.0f * far_ * near_ / denom_z, 0.0f);
+                    (right + left) / denom_x, (top + bottom) / denom_y, (near_ + far_) / denom_z, -1.0f,
+                    0.0f, 0.0f, 2.0f * near_ * far_ / denom_z, 0.0f);
 
-    //const float fov_rad_y = atan((top - bottom) / near_);
+    //{
+    //  const float fov_rad_y = 2.0f * atan(0.5f * denom_y / near_);
+    //  const float aspect = denom_x / denom_y;
+    //  return Perspective(fov_rad_y, aspect, near_, far_);
+    //}
   }
 
   const Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) const {
