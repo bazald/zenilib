@@ -96,6 +96,8 @@ namespace Zeni {
     inline static Matrix4f Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near, const float &far);
     /// Similar to gluPerspective
     inline static Matrix4f Perspective(const float &fov_rad_y, const float &aspect, const float &near, const float &far);
+    /// Similar to glFrustum
+    inline static Matrix4f Frustum(const Point2f &upper_left, const Point2f &lower_right, const float &near, const float &far);
 
     // Matrix addition/subtraction
     inline Matrix4f operator+(const Matrix4f &rhs) const; ///< Get the sum

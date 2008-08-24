@@ -190,104 +190,10 @@ namespace Zeni {
 #undef term
 #undef m
   }
-
-  //pair<Matrix4f, Matrix4f> Matrix4f::qr3() const {
-  //  const Vector3f a1 = get_column(0);
-  //  const Vector3f a2 = get_column(1);
-  //  const Vector3f a3 = get_column(2);
-
-  //  const Vector3f u1 = get_column(0);
-  //  const Vector3f e1 = u1.normalized();
-  //  Vector3f subsum = e1 * a2;
-
-  //  const Vector3f u2 = a2 - subsum;
-  //  const Vector3f e2 = u2.normalized();
-  //  subsum += e2 * a3;
-
-  //  const Vector3f u3 = a3 - subsum;
-  //  const Vector3f e3 = u3.normalized();
-
-  //  const Matrix4f q(e1, e2, e3);
-  //  const Matrix4f r = q.transposed() * *this;
-
-  //  return make_pair(q, r);
-  //}
-
-  //const Matrix4f & Matrix4f::rref() {
-  //  float *row[4] = {m_matrix[0], m_matrix[1], m_matrix[2], m_matrix[3]};
-  //  int ones_place[4] = {-1, -1, -1, -1};
-
-  //  /*** Obtain zeroes in the lower-left triangle insomuch as it is possible ***/
-
-  //  int subrow = 0;
-  //  for(int k = 0; k < 4; ++k) {
-  //    const int start_row = k - subrow, end_row = 4;
-  //    const int start_col = k, end_col = 4;
-
-  //    int choice = start_row;
-  //    float mag = fabs(m_matrix[start_row][start_col]);
-  //    for(int i = start_row + 1; i < end_row; ++i) {
-  //      float mag2 = fabs(m_matrix[i][start_col]);
-  //      if(mag2 > mag) {
-  //        choice = i;
-  //        mag = mag2;
-  //      }
-  //    }
-
-  //    if(mag != 0.0f) {
-  //      swap(row[start_row], row[choice]);
-  //      ones_place[start_col] = choice;
-
-  //      const float div = 1 / row[start_row][start_col];
-  //      row[start_row][start_col] = 1.0f;
-  //      for(int i = start_col + 1; i < end_col; ++i)
-  //        row[start_row][i] *= div;
-
-  //      for(int i = start_row + 1; i < end_row; ++i) {
-  //        const float amt = row[i][start_col];
-  //        row[i][start_col] = 0.0f;
-  //        for(int j = start_col + 1; j < end_col; ++j)
-  //          row[i][j] -= amt * row[start_row][j];
-  //      }
-  //    }
-  //    else
-  //      ++subrow;
-  //  }
-
-  //  /*** Zero out upper-left triangle insomuch as it is possible ***/
-
-  //  for(int k = 3; k > 0; --k) {
-  //    const int bottom_row = ones_place[k];
-  //    if(ones_place[k] == -1)
-  //      continue;
-
-  //    for(int i = 0; i < bottom_row; ++i) {
-  //      const float amt = row[i][k];
-  //      row[i][k] = 0.0f;
-
-  //      for(int j = k + 1; j < 4; ++j)
-  //        row[i][j] -= amt * row[bottom_row][j];
-  //    }
-  //  }
-
-  //  return *this;
-  //}
-
-  //Matrix4f Matrix4f::rrefed() const {
-  //  Matrix4f matrix = *this;
-  //  matrix.rref();
-  //  return matrix;
-  //}
   
   Vector3f Matrix4f::operator*(const Vector3f &vector) const {
-    const Vector3f vec(m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3],
-                       m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3],
-                       m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3]);
-
-    //const float scaling_factor = m_matrix[3][3];
-    //if(fabs(scaling_factor) > 0.001f)
-    //  return vec / scaling_factor;
-
-    return vec;
+    return Vector3f(m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3],
+                    m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3],
+                    m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3]);
   }
 }
