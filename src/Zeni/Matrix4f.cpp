@@ -112,55 +112,34 @@ namespace Zeni {
 
   Matrix4f Matrix4f::inverted() const
   {
-#define DETERMINANT22(a) (a[0] * a[3] - a[1] * a[2])
-#define INVERT22(a, b) {const float id = 1.0f / DETERMINANT22(a); b[0] = id * a[3]; b[1] = -id * a[1]; b[2] = -id * a[2]; b[3] = id * a[0];}
-#define NEGATE22(a) {a[0] *= -1; a[1] *= -1; a[2] *= -1; a[3] *= -1;}
-#define SUM22(a, b) {a[0] += b[0]; a[1] += b[1]; a[2] += b[2]; a[3] += b[3];}
-#define MULT22(a, b, c) {c[0] = a[0] * b[0] + a[1] * b[2]; c[1] = a[0] * b[1] + a[1] * b[3]; c[2] = a[2] * b[0] + a[3] * b[2]; c[3] = a[2] * b[1] + a[3] * b[3];}
+    const float det_M = determinant();
 
-    const float A0[4] = {m_matrix[0][0], m_matrix[0][1], m_matrix[1][0], m_matrix[1][1]};
-    const float A1[4] = {m_matrix[0][2], m_matrix[0][3], m_matrix[1][2], m_matrix[1][3]};
-    const float A2[4] = {m_matrix[2][0], m_matrix[2][1], m_matrix[3][0], m_matrix[3][1]};
-    const float A3[4] = {m_matrix[2][2], m_matrix[2][3], m_matrix[3][2], m_matrix[3][3]};
+#define m(i,j) (m_matrix[i][j])
 
-    float InvA3[4];
-    INVERT22(A3, InvA3)
-    float A1_mult_InvA3[4];
-    MULT22(A1, InvA3, A1_mult_InvA3)
+    const float m00 = (m(1,2)*m(2,3)*m(3,1) - m(1,3)*m(2,2)*m(3,1) + m(1,3)*m(2,1)*m(3,2) - m(1,1)*m(2,3)*m(3,2) - m(1,2)*m(2,1)*m(3,3) + m(1,1)*m(2,2)*m(3,3)) / det_M;
+    const float m01 = (m(0,3)*m(2,2)*m(3,1) - m(0,2)*m(2,3)*m(3,1) - m(0,3)*m(2,1)*m(3,2) + m(0,1)*m(2,3)*m(3,2) + m(0,2)*m(2,1)*m(3,3) - m(0,1)*m(2,2)*m(3,3)) / det_M;
+    const float m02 = (m(0,2)*m(1,3)*m(3,1) - m(0,3)*m(1,2)*m(3,1) + m(0,3)*m(1,1)*m(3,2) - m(0,1)*m(1,3)*m(3,2) - m(0,2)*m(1,1)*m(3,3) + m(0,1)*m(1,2)*m(3,3)) / det_M;
+    const float m03 = (m(0,3)*m(1,2)*m(2,1) - m(0,2)*m(1,3)*m(2,1) - m(0,3)*m(1,1)*m(2,2) + m(0,1)*m(1,3)*m(2,2) + m(0,2)*m(1,1)*m(2,3) - m(0,1)*m(1,2)*m(2,3)) / det_M;
+    const float m10 = (m(1,3)*m(2,2)*m(3,0) - m(1,2)*m(2,3)*m(3,0) - m(1,3)*m(2,0)*m(3,2) + m(1,0)*m(2,3)*m(3,2) + m(1,2)*m(2,0)*m(3,3) - m(1,0)*m(2,2)*m(3,3)) / det_M;
+    const float m11 = (m(0,2)*m(2,3)*m(3,0) - m(0,3)*m(2,2)*m(3,0) + m(0,3)*m(2,0)*m(3,2) - m(0,0)*m(2,3)*m(3,2) - m(0,2)*m(2,0)*m(3,3) + m(0,0)*m(2,2)*m(3,3)) / det_M;
+    const float m12 = (m(0,3)*m(1,2)*m(3,0) - m(0,2)*m(1,3)*m(3,0) - m(0,3)*m(1,0)*m(3,2) + m(0,0)*m(1,3)*m(3,2) + m(0,2)*m(1,0)*m(3,3) - m(0,0)*m(1,2)*m(3,3)) / det_M;
+    const float m13 = (m(0,2)*m(1,3)*m(2,0) - m(0,3)*m(1,2)*m(2,0) + m(0,3)*m(1,0)*m(2,2) - m(0,0)*m(1,3)*m(2,2) - m(0,2)*m(1,0)*m(2,3) + m(0,0)*m(1,2)*m(2,3)) / det_M;
+    const float m20 = (m(1,1)*m(2,3)*m(3,0) - m(1,3)*m(2,1)*m(3,0) + m(1,3)*m(2,0)*m(3,1) - m(1,0)*m(2,3)*m(3,1) - m(1,1)*m(2,0)*m(3,3) + m(1,0)*m(2,1)*m(3,3)) / det_M;
+    const float m21 = (m(0,3)*m(2,1)*m(3,0) - m(0,1)*m(2,3)*m(3,0) - m(0,3)*m(2,0)*m(3,1) + m(0,0)*m(2,3)*m(3,1) + m(0,1)*m(2,0)*m(3,3) - m(0,0)*m(2,1)*m(3,3)) / det_M;
+    const float m22 = (m(0,1)*m(1,3)*m(3,0) - m(0,3)*m(1,1)*m(3,0) + m(0,3)*m(1,0)*m(3,1) - m(0,0)*m(1,3)*m(3,1) - m(0,1)*m(1,0)*m(3,3) + m(0,0)*m(1,1)*m(3,3)) / det_M;
+    const float m23 = (m(0,3)*m(1,1)*m(2,0) - m(0,1)*m(1,3)*m(2,0) - m(0,3)*m(1,0)*m(2,1) + m(0,0)*m(1,3)*m(2,1) + m(0,1)*m(1,0)*m(2,3) - m(0,0)*m(1,1)*m(2,3)) / det_M;
+    const float m30 = (m(1,2)*m(2,1)*m(3,0) - m(1,1)*m(2,2)*m(3,0) - m(1,2)*m(2,0)*m(3,1) + m(1,0)*m(2,2)*m(3,1) + m(1,1)*m(2,0)*m(3,2) - m(1,0)*m(2,1)*m(3,2)) / det_M;
+    const float m31 = (m(0,1)*m(2,2)*m(3,0) - m(0,2)*m(2,1)*m(3,0) + m(0,2)*m(2,0)*m(3,1) - m(0,0)*m(2,2)*m(3,1) - m(0,1)*m(2,0)*m(3,2) + m(0,0)*m(2,1)*m(3,2)) / det_M;
+    const float m32 = (m(0,2)*m(1,1)*m(3,0) - m(0,1)*m(1,2)*m(3,0) - m(0,2)*m(1,0)*m(3,1) + m(0,0)*m(1,2)*m(3,1) + m(0,1)*m(1,0)*m(3,2) - m(0,0)*m(1,1)*m(3,2)) / det_M;
+    const float m33 = (m(0,1)*m(1,2)*m(2,0) - m(0,2)*m(1,1)*m(2,0) + m(0,2)*m(1,0)*m(2,1) - m(0,0)*m(1,2)*m(2,1) - m(0,1)*m(1,0)*m(2,2) + m(0,0)*m(1,1)*m(2,2)) / det_M;
 
-    float B0[4], B1[4], B2[4], B3[4];
-    float TEMP[4];
-
-    // B0 = Inv(A0 - A1 * InvA3 * A2)
-    MULT22(A1, A1_mult_InvA3, TEMP)
-    NEGATE22(TEMP)
-    SUM22(TEMP, A0)
-    INVERT22(TEMP, B0)
-
-    // B1 = - B0 * (A1 * InvA3)
-    MULT22(B0, A1_mult_InvA3, B1)
-    NEGATE22(B1)
-
-    // B2 = - (InvA3 * A2) * B0
-    MULT22(InvA3, A2, TEMP)
-    MULT22(TEMP, B0, B2)
-    NEGATE22(B2)
-
-    // B3 = InvA3 + B2 * (A1 * InvA3)
-    MULT22(B2, A1_mult_InvA3, B3)
-    SUM22(B3, InvA3)
+#undef m
 
     return Matrix4f(
-      B0[0], B0[1], B1[0], B1[1],
-      B0[2], B0[3], B1[2], B1[3],
-      B2[0], B2[1], B3[0], B3[1],
-      B2[2], B2[3], B3[2], B3[3]);
-
-#undef MULT22
-#undef SUM22
-#undef NEGATE22
-#undef INVERT22
-#undef DETERMINANT22
+      m00, m01, m02, m03,
+      m10, m11, m12, m13,
+      m20, m21, m22, m23,
+      m30, m31, m32, m33);
   }
 
   Matrix4f & Matrix4f::transpose()
