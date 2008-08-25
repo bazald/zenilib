@@ -52,6 +52,7 @@
 #include <Zeni/Model.h>
 #include <Zeni/Mutex.h>
 #include <Zeni/Net.h>
+#include <Zeni/Projector.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Quaternion.h>
 #include <Zeni/Render_Wrapper.h>

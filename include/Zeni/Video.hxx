@@ -148,14 +148,6 @@ namespace Zeni {
     return m_viewport;
   }
 
-  const Matrix4f & Video::get_world_to_screen_matrix() const {
-    return m_world_to_screen;
-  }
-
-  const Matrix4f & Video::get_screen_to_world_matrix() const {
-    return m_screen_to_world;
-  }
-
   /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
    * It is not hard to code around, but they are convenient.
    */
@@ -372,14 +364,12 @@ namespace Zeni {
 
   void Video::set_view_matrix(const Matrix4f &view) {
     m_view = view;
-    regenerate_compound_matrices();
 
     VIDEO_IV_FCN_CALL(set_view_matrix_impl, view);
   }
 
   void Video::set_projection_matrix(const Matrix4f &projection) {
     m_projection = projection;
-    regenerate_compound_matrices();
 
     VIDEO_IV_FCN_CALL(set_projection_matrix_impl, projection);
   }

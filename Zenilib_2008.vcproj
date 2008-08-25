@@ -2027,6 +2027,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Projector.h"
+				>
+			</File>
+			<File
 				RelativePath="include\Zeni\Quadrilateral.h"
 				>
 			</File>
@@ -2168,6 +2172,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Projector.hxx"
+				>
+			</File>
+			<File
 				RelativePath="include\Zeni\Quadrilateral.hxx"
 				>
 			</File>
@@ -2233,10 +2241,6 @@
 			</File>
 			<File
 				RelativePath="include\Zeni\Widget.hxx"
-				>
-			</File>
-			<File
-				RelativePath="src\zenilib.h"
 				>
 			</File>
 		</Filter>

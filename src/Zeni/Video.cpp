@@ -168,11 +168,6 @@ namespace Zeni {
     return true;
   }
 
-  void Video::regenerate_compound_matrices() {
-    m_world_to_screen = m_preview * m_view * m_projection;
-    m_screen_to_world = m_world_to_screen.inverted();
-  }
-
   Video *Video::e_video = 0;
   Video_Base::VIDEO_MODE Video::g_video_mode = Video_Base::ZENI_VIDEO_ANY;
   int Video::g_screen_width = 0;

@@ -168,8 +168,6 @@ namespace Zeni {
     inline const Matrix4f & get_view_matrix() const; ///< Get the view Matrix4f
     inline const Matrix4f & get_projection_matrix() const; ///< Get the projection Matrix4f
     inline const std::pair<Point2i, Point2i> & get_viewport() const; ///< Get the viewport
-    inline const Matrix4f & get_world_to_screen_matrix() const; ///< For manual projection
-    inline const Matrix4f & get_screen_to_world_matrix() const; ///< For picking
     inline void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
     inline void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
@@ -211,8 +209,6 @@ namespace Zeni {
     // Set icon
     bool set_icon();
 
-    void regenerate_compound_matrices();
-
     SDL_Surface *m_display_surface, *m_icon_surface;
 
     static Video_Base::VIDEO_MODE g_video_mode;
@@ -239,8 +235,6 @@ namespace Zeni {
     const Matrix4f m_preview;
     Matrix4f m_view;
     Matrix4f m_projection;
-    Matrix4f m_world_to_screen;
-    Matrix4f m_screen_to_world;
     std::pair<Point2i, Point2i> m_viewport;
 
     bool m_zwrite;
