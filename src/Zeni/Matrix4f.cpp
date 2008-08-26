@@ -49,23 +49,23 @@ namespace Zeni {
     const float &dw, const float &dx, const float &dy, const float &dz)
   {
     m_matrix[0][0] = aw;
-    m_matrix[0][1] = ax;
-    m_matrix[0][2] = ay;
-    m_matrix[0][3] = az;
+    m_matrix[1][0] = ax;
+    m_matrix[2][0] = ay;
+    m_matrix[3][0] = az;
 
-    m_matrix[1][0] = bw;
+    m_matrix[0][1] = bw;
     m_matrix[1][1] = bx;
-    m_matrix[1][2] = by;
-    m_matrix[1][3] = bz;
+    m_matrix[2][1] = by;
+    m_matrix[3][1] = bz;
 
-    m_matrix[2][0] = cw;
-    m_matrix[2][1] = cx;
+    m_matrix[0][2] = cw;
+    m_matrix[1][2] = cx;
     m_matrix[2][2] = cy;
-    m_matrix[2][3] = cz;
+    m_matrix[3][2] = cz;
 
-    m_matrix[3][0] = dw;
-    m_matrix[3][1] = dx;
-    m_matrix[3][2] = dy;
+    m_matrix[0][3] = dw;
+    m_matrix[1][3] = dx;
+    m_matrix[2][3] = dy;
     m_matrix[3][3] = dz;
   }
   
@@ -83,20 +83,20 @@ namespace Zeni {
     m_matrix[3][3] = 1.0f;
 
     if(rows) {
-      m_matrix[0][1] = first.j;
-      m_matrix[0][2] = first.k;
-      m_matrix[1][0] = second.i;
-      m_matrix[1][2] = second.k;
-      m_matrix[2][0] = third.i;
-      m_matrix[2][1] = third.j;
+      m_matrix[1][0] = first.j;
+      m_matrix[2][0] = first.k;
+      m_matrix[0][1] = second.i;
+      m_matrix[2][1] = second.k;
+      m_matrix[0][2] = third.i;
+      m_matrix[1][2] = third.j;
     }
     else {
-      m_matrix[0][1] = second.i;
-      m_matrix[0][2] = third.i;
-      m_matrix[1][0] = first.j;
-      m_matrix[1][2] = third.j;
-      m_matrix[2][0] = first.k;
-      m_matrix[2][1] = second.k;
+      m_matrix[1][0] = second.i;
+      m_matrix[2][0] = third.i;
+      m_matrix[0][1] = first.j;
+      m_matrix[2][1] = third.j;
+      m_matrix[0][2] = first.k;
+      m_matrix[1][2] = second.k;
     }
   }
 
@@ -114,7 +114,7 @@ namespace Zeni {
   {
     const float det_M = determinant();
 
-#define m(i,j) (m_matrix[i][j])
+#define m(i,j) (m_matrix[j][i])
 
     const float m00 = (m(1,2)*m(2,3)*m(3,1) - m(1,3)*m(2,2)*m(3,1) + m(1,3)*m(2,1)*m(3,2) - m(1,1)*m(2,3)*m(3,2) - m(1,2)*m(2,1)*m(3,3) + m(1,1)*m(2,2)*m(3,3)) / det_M;
     const float m01 = (m(0,3)*m(2,2)*m(3,1) - m(0,2)*m(2,3)*m(3,1) - m(0,3)*m(2,1)*m(3,2) + m(0,1)*m(2,3)*m(3,2) + m(0,2)*m(2,1)*m(3,3) - m(0,1)*m(2,2)*m(3,3)) / det_M;
@@ -167,7 +167,7 @@ namespace Zeni {
 
   float Matrix4f::determinant() const
   {
-#define m(i,j) m_matrix[i][j]
+#define m(i,j) m_matrix[j][i]
 #define term(a,b,c,d) m(0,a)*m(1,b)*m(2,c)*m(3,d)
 
     return
@@ -192,8 +192,8 @@ namespace Zeni {
   }
   
   Vector3f Matrix4f::operator*(const Vector3f &vector) const {
-    return Vector3f(m_matrix[0][0] * vector.i + m_matrix[0][1] * vector.j + m_matrix[0][2] * vector.k + m_matrix[0][3],
-                    m_matrix[1][0] * vector.i + m_matrix[1][1] * vector.j + m_matrix[1][2] * vector.k + m_matrix[1][3],
-                    m_matrix[2][0] * vector.i + m_matrix[2][1] * vector.j + m_matrix[2][2] * vector.k + m_matrix[2][3]);
+    return Vector3f(m_matrix[0][0] * vector.i + m_matrix[1][0] * vector.j + m_matrix[2][0] * vector.k + m_matrix[3][0],
+                    m_matrix[0][1] * vector.i + m_matrix[1][1] * vector.j + m_matrix[2][1] * vector.k + m_matrix[3][1],
+                    m_matrix[0][2] * vector.i + m_matrix[1][2] * vector.j + m_matrix[2][2] * vector.k + m_matrix[3][2]);
   }
 }

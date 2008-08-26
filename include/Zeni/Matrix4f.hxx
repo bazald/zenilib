@@ -48,12 +48,12 @@ namespace Zeni {
 
   const float & Matrix4f::Matrix4f_Row::operator[](const int &index) const {
     assert(-1 < index && index < 4);
-    return row[index];
+    return row[index << 2];
   }
 
   float & Matrix4f::Matrix4f_Row::operator[](const int &index) {
     assert(-1 < index && index < 4);
-    return row[index];
+    return row[index << 2];
   }
 
   Matrix4f Matrix4f::Zero() {
@@ -90,11 +90,11 @@ namespace Zeni {
     const Vector3f s = (l % up.normalized()).normalized();
     const Vector3f u = s % l;
 
-    return (Matrix4f(s.i, s.j, s.k, 0.0f,
-                     u.i, u.j, u.k, 0.0f,
-                     -l.i, -l.j, -l.k, 0.0f,
-                     0.0f, 0.0f, 0.0f, 1.0f) *
-            Translate(-Vector3f(position))).transposed();
+    return Matrix4f(s.i, s.j, s.k, 0.0f,
+                    u.i, u.j, u.k, 0.0f,
+                    -l.i, -l.j, -l.k, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f) *
+           Translate(-Vector3f(position));
   }
 
   Matrix4f Matrix4f::Orthographic(const float &left, const float &right, const float &bottom, const float &top, const float &near_, const float &far_) {
@@ -106,10 +106,10 @@ namespace Zeni {
     const float t_y = (bottom + top) / denom_y;
     const float t_z = (near_ + far_) / denom_z;
 
-    return Matrix4f(-2.0f / denom_x, 0.0f, 0.0f, 0.0f,
-                    0.0f, -2.0f / denom_y, 0.0f, 0.0f,
-                    0.0f, 0.0f, 2.0f / denom_z, 0.0f,
-                    t_x, t_y, t_z, 1.0f);
+    return Matrix4f(-2.0f / denom_x, 0.0f, 0.0f, t_x,
+                    0.0f, -2.0f / denom_y, 0.0f, t_y,
+                    0.0f, 0.0f, 2.0f / denom_z, t_z,
+                    0.0f, 0.0f, 0.0f, 1.0f);
   }
 
   Matrix4f Matrix4f::Perspective(const float &fov_rad_y, const float &aspect, const float &near_, const float &far_) {
@@ -118,8 +118,8 @@ namespace Zeni {
 
     return Matrix4f(f / aspect, 0.0f, 0.0f, 0.0f,
                     0.0f, f, 0.0f, 0.0f,
-                    0.0f, 0.0f, (far_ + near_) / denom, -1.0f,
-                    0.0f, 0.0f, 2.0f * far_ * near_ / denom, 0.0f);
+                    0.0f, 0.0f, (far_ + near_) / denom, 2.0f * far_ * near_ / denom,
+                    0.0f, 0.0f, -1.0f, 0.0f);
 
     //{
     //  const float top = tan(0.5f * fov_rad_y) * near_;
@@ -138,10 +138,10 @@ namespace Zeni {
     const float denom_y = top - bottom;
     const float denom_z = near_ - far_;
 
-    return Matrix4f(2.0f * near_ / denom_x, 0.0f, 0.0f, 0.0f,
-                    0.0f, 2.0f * near_ / denom_y, 0.0f, 0.0f,
-                    (right + left) / denom_x, (top + bottom) / denom_y, (near_ + far_) / denom_z, -1.0f,
-                    0.0f, 0.0f, 2.0f * near_ * far_ / denom_z, 0.0f);
+    return Matrix4f(2.0f * near_ / denom_x, 0.0f, (right + left) / denom_x, 0.0f,
+                    0.0f, 2.0f * near_ / denom_y, (top + bottom) / denom_y, 0.0f,
+                    0.0f, 0.0f, (near_ + far_) / denom_z, 2.0f * near_ * far_ / denom_z,
+                    0.0f, 0.0f, -1.0f, 0.0f);
 
     //{
     //  const float fov_rad_y = 2.0f * atan(0.5f * denom_y / near_);
@@ -152,12 +152,12 @@ namespace Zeni {
 
   const Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) const {
     assert(-1 < index && index < 4);
-    return Matrix4f_Row(const_cast<float *>(m_matrix[index]));
+    return Matrix4f_Row(const_cast<float *>(&m_matrix[0][0] + index));
   }
 
   Matrix4f::Matrix4f_Row Matrix4f::operator[](const int &index) {
     assert(-1 < index && index < 4);
-    return Matrix4f_Row(m_matrix[index]);
+    return Matrix4f_Row(&m_matrix[0][0] + index);
   }
 
   Matrix4f Matrix4f::operator+(const Matrix4f &rhs) const {
@@ -213,11 +213,11 @@ namespace Zeni {
 
     for(int i = 0; i < 4; ++i)
       for(int j = 0; j < 4; ++j)
-        matrix.m_matrix[i][j] =
-        m_matrix[i][0] * rhs.m_matrix[0][j] +
-        m_matrix[i][1] * rhs.m_matrix[1][j] +
-        m_matrix[i][2] * rhs.m_matrix[2][j] +
-        m_matrix[i][3] * rhs.m_matrix[3][j];
+        matrix.m_matrix[j][i] =
+        m_matrix[0][i] * rhs.m_matrix[j][0] +
+        m_matrix[1][i] * rhs.m_matrix[j][1] +
+        m_matrix[2][i] * rhs.m_matrix[j][2] +
+        m_matrix[3][i] * rhs.m_matrix[j][3];
 
     return matrix;
   }
@@ -283,12 +283,12 @@ namespace Zeni {
   
   Vector3f Matrix4f::get_column(const int &column) const {
     assert(-1 < column && column < 3);
-    return Vector3f(m_matrix[0][column], m_matrix[1][column], m_matrix[2][column]);
+    return Vector3f(m_matrix[column][0], m_matrix[column][1], m_matrix[column][2]);
   }
 
   Vector3f Matrix4f::get_row(const int &row) const {
     assert(-1 < row && row < 3);
-    return Vector3f(m_matrix[row][0], m_matrix[row][1], m_matrix[row][2]);
+    return Vector3f(m_matrix[0][row], m_matrix[1][row], m_matrix[2][row]);
   }
 
 }
