@@ -69,6 +69,10 @@ namespace Zeni {
     return m_fov_rad;
   }
 
+  float Camera::get_tunnel_vision_factor() const {
+    return m_tunnel_vision_factor;
+  }
+
   void Camera::set_position(const Point3f &point) {
     m_position = point;
   }
@@ -96,13 +100,39 @@ namespace Zeni {
   void Camera::set_fov_rad(const float &radians) {
     m_fov_rad = radians;
   }
-  
+
+  void Camera::set_tunnel_vision_factor(const float &tunnel_vision_factor) {
+    m_tunnel_vision_factor = tunnel_vision_factor;
+  }
+
+  Point3f Camera::get_tunneled_position() const {
+    return m_position + (1.0f - m_tunnel_vision_factor) * m_near_clip * m_forward;
+  }
+
+  float Camera::get_tunneled_near_clip() const {
+    return m_near_clip * m_tunnel_vision_factor;
+  }
+
+  float Camera::get_tunneled_far_clip() const {
+    return m_far_clip - m_near_clip + get_tunneled_near_clip();
+  }
+
+  float Camera::get_tunneled_fov_deg() const {
+    return get_tunneled_fov_rad() * 180.0f / pi;
+  }
+
+  float Camera::get_tunneled_fov_rad() const {
+    return 2.0f * atan((m_near_clip * tan(0.5f * m_fov_rad)) / get_tunneled_near_clip());
+  }
+
   Matrix4f Camera::get_view_matrix() const {
-    return Matrix4f::View(m_position, m_forward, m_up);
+    return Matrix4f::View(get_tunneled_position(), m_forward, m_up);
   }
 
   Matrix4f Camera::get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const {
-    return Matrix4f::Perspective(m_fov_rad, float(viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y), m_near_clip, m_far_clip);
+    return Matrix4f::Perspective(get_tunneled_fov_rad(),
+      float(viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y),
+      get_tunneled_near_clip(), get_tunneled_far_clip());
   }
 
   void Camera::adjust_position(const Vector3f &by) {
