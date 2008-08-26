@@ -98,12 +98,10 @@ namespace Zeni {
   {
     Projector::init(viewport);
 
-    m_world_to_screen = Matrix4f::Translate(Vector3f(float(viewport.first.x), float(viewport.first.y), 0.0f)) *
-      Matrix4f::Scale(Vector3f((viewport.second.x - viewport.first.x) / (camera2d.second.x - camera2d.first.x),
-                               (viewport.second.y - viewport.first.y) / (camera2d.second.y - camera2d.first.y),
-                               1.0f)) *
-      Matrix4f::Translate(Vector3f(-camera2d.first.x, -camera2d.first.y, 0.0f));
-      //m_eye * Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, -1.0f, 1.0f);
+    m_world_to_screen =
+      Matrix4f::Orthographic(float(viewport.first.x), float(viewport.second.x), float(viewport.second.y), float(viewport.first.y), -1.0f, 1.0f).inverted() *
+      Matrix4f::Orthographic(camera2d.first.x, camera2d.second.x, camera2d.second.y, camera2d.first.y, -1.0f, 1.0f);
+
     m_screen_to_world = m_world_to_screen.inverted();
   }
 

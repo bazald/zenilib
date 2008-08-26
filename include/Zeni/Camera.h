@@ -86,7 +86,7 @@ namespace Zeni {
     // Convenience Functions
 
     inline Matrix4f get_view_matrix() const; ///< Equivalent to gluLookAt
-    inline Matrix4f get_projection_matrix(const std::pair<Point2f, Point2f> &viewport) const; ///< Equivalent to glOrtho
+    inline Matrix4f get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const; ///< Equivalent to glOrtho
 
     inline void adjust_position(const Vector3f &by); ///< Adjust the position of the camera using a vector.
     

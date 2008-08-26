@@ -101,8 +101,8 @@ namespace Zeni {
     return Matrix4f::View(m_position, m_forward, m_up);
   }
 
-  Matrix4f Camera::get_projection_matrix(const std::pair<Point2f, Point2f> &viewport) const {
-    return Matrix4f::Perspective(m_fov_rad, (viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y), m_near_clip, m_far_clip);
+  Matrix4f Camera::get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const {
+    return Matrix4f::Perspective(m_fov_rad, float(viewport.second.x - viewport.first.x) / (viewport.second.y - viewport.first.y), m_near_clip, m_far_clip);
   }
 
   void Camera::adjust_position(const Vector3f &by) {

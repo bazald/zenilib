@@ -242,7 +242,7 @@ namespace Zeni {
     const Matrix4f view = camera.get_view_matrix();
     set_view_matrix(view);
 
-    Matrix4f projection = camera.get_projection_matrix(std::make_pair(Point2f(float(viewport.first.x), float(viewport.first.y)), Point2f(float(viewport.second.x), float(viewport.second.y))));
+    Matrix4f projection = camera.get_projection_matrix(viewport);
     set_projection_matrix(projection);
 
     set_viewport(viewport);
