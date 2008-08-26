@@ -1,0 +1,52 @@
+; Zenipex Automagic Ends
+
+  SendMessage ${HWND_BROADCAST} ${WM_FONTCHANGE} 0 0 /TIMEOUT=5000
+SectionEnd
+
+Section -Post
+  SetShellVarContext all
+
+  WriteUninstaller "$INSTDIR\uninst.exe"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${EXECUTABLE_FILE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${EXECUTABLE_FILE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+SectionEnd
+
+Function un.onUninstSuccess
+  HideWindow
+  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) was successfully removed from your computer."
+FunctionEnd
+
+Function un.onInit
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
+  Abort
+FunctionEnd
+
+Section Uninstall
+  SetShellVarContext all
+
+;Temp Files
+  Delete "$INSTDIR\stderr.txt"
+  Delete "$INSTDIR\stdout.txt"
+
+;Links
+  Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\Uninstall.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_PUBLISHER}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${ZENIPEX_LIBRARY}.lnk"
+  RMDir "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
+  RMDir "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
+
+;Additional Items
+  Delete "$INSTDIR\${PRODUCT_NAME}.url"
+  Delete "$INSTDIR\${PRODUCT_PUBLISHER}.url"
+  Delete "$INSTDIR\${ZENIPEX_LIBRARY}.url"
+  Delete "$INSTDIR\uninst.exe"
+
+; Zenipex Automagic Begins

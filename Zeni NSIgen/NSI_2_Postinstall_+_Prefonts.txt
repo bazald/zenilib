@@ -1,0 +1,51 @@
+; Zenipex Automagic Ends
+
+SectionEnd
+
+Section -Redist
+  SetShellVarContext all
+
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_2.0.50727.762.exe" /q:a /c:"msiexec /i vcredist.msi /qn"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\directx\DXSETUP.exe" /silent'
+  ExecWait '"$INSTDIR\redist\openal\oalinst_2.0.3.0.exe" /silent'
+SectionEnd
+
+Section -Icons
+  SetShellVarContext all
+
+;Link to Start Menu
+
+  CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${EXECUTABLE_FILE}"
+
+;Link to Desktop
+
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${EXECUTABLE_FILE}"
+
+;Link to Website
+
+  SetOutPath $INSTDIR
+  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+
+  SetOutPath $INSTDIR
+  WriteIniStr "$INSTDIR\${PRODUCT_PUBLISHER}.url" "InternetShortcut" "URL" "${PUBLISHER_WEB_SITE}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_PUBLISHER}.lnk" "$INSTDIR\${PRODUCT_PUBLISHER}.url"
+
+  SetOutPath $INSTDIR
+  WriteIniStr "$INSTDIR\${ZENIPEX_LIBRARY}.url" "InternetShortcut" "URL" "${ZENIPEX_LIBRARY_WEB_SITE}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${ZENIPEX_LIBRARY}.lnk" "$INSTDIR\${ZENIPEX_LIBRARY}.url"
+
+;Uninstaller
+
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninst.exe"
+
+SectionEnd
+
+Section "Fonts"
+  SetShellVarContext all
+
+  StrCpy $FONT_DIR $FONTS
+
+; Zenipex Automagic Begins

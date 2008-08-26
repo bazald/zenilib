@@ -1,0 +1,9 @@
+!define PRODUCT_NAME "Zeniapp"
+!define PRODUCT_VERSION "DO NOT DISTRIBUTE"
+!define PRODUCT_PUBLISHER "Wolverine Soft"
+!define ZENIPEX_LIBRARY "Zenipex Library"
+!define PRODUCT_WEB_SITE "http://www.wolverinesoft.org/project.php?id=-1"
+!define PUBLISHER_WEB_SITE "http://www.wolverinesoft.org/"
+!define ZENIPEX_LIBRARY_WEB_SITE "http://zenipex.com/zenilib/"
+
+!define EXECUTABLE_FILE "Zeniapp.exe"
