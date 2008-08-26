@@ -139,8 +139,8 @@ namespace Zeni {
   {
     Projector::init(viewport);
 
-    m_camera_to_world = camera3d.get_view_matrix();
-    m_world_to_camera = m_camera_to_world.transposed();
+    m_world_to_camera = camera3d.get_view_matrix().transposed();
+    m_camera_to_world = m_world_to_camera.inverted();
 
     const float aspect = size().i / size().j;
     const float top = tan(0.5f * camera3d.get_fov_rad()) * camera3d.get_near_clip();
