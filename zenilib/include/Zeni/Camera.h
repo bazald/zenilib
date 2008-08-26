@@ -62,7 +62,8 @@ namespace Zeni {
     /// The Camera constructor is an alternative to using the numerous setter functions. 
     Camera(const Point3f &position = Point3f(0, 0, 0), const Vector3f &forward = Vector3f(1, 0, 0), 
       const Vector3f &up = Vector3f(0, 0, 1), const float &near_clip = 10.0f, 
-      const float &far_clip = 1000.0f, const float &fov_rad_ = pi/2);
+      const float &far_clip = 1000.0f, const float &fov_rad_ = pi/2,
+      const float &tunnel_vision_factor = 1.0f);
 
     // Accessors
     inline const Point3f & get_position() const; ///< Get the current position of the camera.
@@ -73,6 +74,7 @@ namespace Zeni {
     inline float get_far_clip() const; ///< Get the far clipping distance.
     inline float get_fov_deg() const; ///< Get the field of view (in the y-axis) in degrees.
     inline float get_fov_rad() const; ///< Get the field of view (in the y-axis) in radians.
+    inline float get_tunnel_vision_factor() const; ///< Get the tunnel vision factor a.k.a. how far to pull back the focal point, scaling the near distance and keeping all else equal.
 
     // Modifiers
     inline void set_position(const Point3f &point); ///< Set the current position of the camera.
@@ -82,11 +84,17 @@ namespace Zeni {
     inline void set_far_clip(const float &distance); ///< Set the far clipping distance.  Must not equal the near-clipping value.
     inline void set_fov_deg(const float &degrees); ///< Set the field of view (in the y-axis) in degrees.
     inline void set_fov_rad(const float &radians); ///< Set the field of view (in the y-axis) in radians.
+    inline void set_tunnel_vision_factor(const float &tunnel_vision_factor); ///< Set the tunnel vision factor a.k.a. how far to pull back the focal point, scaling the near distance and keeping all else equal.
 
     // Convenience Functions
 
-    inline Matrix4f get_view_matrix() const; ///< Equivalent to gluLookAt
-    inline Matrix4f get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const; ///< Equivalent to glOrtho
+    inline Point3f get_tunneled_position() const; ///< Get the position shifted by tunnel vision
+    inline float get_tunneled_near_clip() const; ///< Get the near clip shifted by tunnel vision
+    inline float get_tunneled_far_clip() const; ///< Get the far clip shifted by tunnel vision
+    inline float get_tunneled_fov_deg() const; ///< Get the field of view (in the y-axis) in degrees, shifted by tunnel vision
+    inline float get_tunneled_fov_rad() const; ///< Get the field of view (in the y-axis) in radians, shifted by tunnel vision
+    inline Matrix4f get_view_matrix() const; ///< Equivalent to gluLookAt + tunnel_vision_factor
+    inline Matrix4f get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const; ///< Equivalent to gluPerspective + tunnel_vision_factor
 
     inline void adjust_position(const Vector3f &by); ///< Adjust the position of the camera using a vector.
     
@@ -102,6 +110,8 @@ namespace Zeni {
     Point3f m_position;
     Vector3f m_forward, m_up;
     float m_near_clip, m_far_clip, m_fov_rad;
+
+    float m_tunnel_vision_factor;
   };
 
 }

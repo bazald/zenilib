@@ -146,10 +146,13 @@ namespace Zeni {
     const float left = aspect * bottom;
     const float right = aspect * top;
 
-    m_uln = Vector3f(left, top, -camera3d.get_near_clip());
-    m_uln2lrf = Vector3f(right, bottom, -camera3d.get_far_clip()) - m_uln;
+    const float tunneled_near_clip = camera3d.get_tunneled_near_clip();
+    const float tunneled_far_clip = camera3d.get_tunneled_far_clip();
 
-    m_near2far = camera3d.get_far_clip() / camera3d.get_near_clip();
+    m_uln = Vector3f(left, top, -tunneled_near_clip);
+    m_uln2lrf = Vector3f(right, bottom, -tunneled_far_clip) - m_uln;
+
+    m_near2far = tunneled_far_clip / tunneled_near_clip;
   }
 
 }

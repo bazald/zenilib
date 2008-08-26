@@ -35,13 +35,14 @@
 
 namespace Zeni {
 
-  Camera::Camera(const Point3f &position, const Vector3f &forward, const Vector3f &up, const float &near_clip, const float &far_clip, const float &fov_rad_)
+  Camera::Camera(const Point3f &position, const Vector3f &forward, const Vector3f &up, const float &near_clip, const float &far_clip, const float &fov_rad_, const float &tunnel_vision_factor)
     : m_position(position),
-    m_forward(forward),
-    m_up(up),
+    m_forward(forward.normalized()),
+    m_up(up.normalized()),
     m_near_clip(near_clip),
     m_far_clip(far_clip),
-    m_fov_rad(fov_rad_)
+    m_fov_rad(fov_rad_),
+    m_tunnel_vision_factor(tunnel_vision_factor)
   {
   }
 
