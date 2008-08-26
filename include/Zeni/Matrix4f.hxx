@@ -113,7 +113,9 @@ namespace Zeni {
   }
 
   Matrix4f Matrix4f::Perspective(const float &fov_rad_y, const float &aspect, const float &near_, const float &far_) {
-    const float f = atan(fov_rad_y);
+#define cotangent(angle) (1.0f / tan(angle))
+    const float f = cotangent(0.5f * fov_rad_y);
+#undef cotangent
     const float denom = near_ - far_;
 
     return Matrix4f(f / aspect, 0.0f, 0.0f, 0.0f,
