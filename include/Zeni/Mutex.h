@@ -91,12 +91,12 @@
 
 #include <Zeni/Core.h>
 
-//#include <SDL/SDL_mutex.h>
-#ifdef _WINDOWS
-#include <Windows.h>
-#else
-#include <pthread.h>
-#endif
+#include <SDL/SDL_mutex.h>
+//#ifdef _WINDOWS
+//#include <Windows.h>
+//#else
+//#include <pthread.h>
+//#endif
 
 namespace Zeni {
 
@@ -114,18 +114,20 @@ namespace Zeni {
     inline void unlock();
 
   private:
-#ifdef _WINDOWS
-    CRITICAL_SECTION m_impl;
-#else
-    pthread_mutex_t m_impl;
-#endif
+    SDL_mutex *m_impl;
+//#ifdef _WINDOWS
+//    CRITICAL_SECTION m_impl;
+//#else
+//    pthread_mutex_t m_impl;
+//#endif
     
 #ifndef NDEBUG
-#ifdef _WINDOWS
-    CRITICAL_SECTION self_lock;
-#else
-    pthread_mutex_t self_lock;
-#endif
+    SDL_mutex *self_lock;
+//#ifdef _WINDOWS
+//    CRITICAL_SECTION self_lock;
+//#else
+//    pthread_mutex_t self_lock;
+//#endif
     unsigned int locking_thread;
 #endif
   
@@ -197,11 +199,12 @@ namespace Zeni {
     void wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms);
 
   private:
-#ifdef _WINDOWS
-  CONDITION_VARIABLE m_impl;
-#else
-  pthread_cond_t m_impl;
-#endif
+    SDL_cond *m_impl;
+//#ifdef _WINDOWS
+//  CONDITION_VARIABLE m_impl;
+//#else
+//  pthread_cond_t m_impl;
+//#endif
   };
 
   class Semaphore {
