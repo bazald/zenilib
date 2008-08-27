@@ -48,20 +48,7 @@ namespace Zeni {
       }
     }
     
-#ifndef _WINDOWS
-    try {
-#endif
-      m_impl.lock();
-#ifndef _WINDOWS
-    }
-    catch(...) {
-      Mutex::Lock lock(self_lock);
-      if(!--count)
-        locking_thread = 0;
-
-      throw;
-    }
-#endif
+    m_impl.lock();
       
     locking_thread = current_thread;
     count = 1u;
@@ -106,11 +93,12 @@ namespace Zeni {
       count = 0;
     }
 
-#ifdef _WINDOWS
-    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, INFINITE) == 0;
-#else
-    const bool result = pthread_cond_wait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl) != 0;
-#endif
+    const int result = SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl.m_impl);
+//#ifdef _WINDOWS
+//    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, INFINITE) == 0;
+//#else
+//    const bool result = pthread_cond_wait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl) != 0;
+//#endif
     if(result)
       throw CV_Wait_Failure();
 
@@ -137,12 +125,13 @@ namespace Zeni {
       count = 0;
     }
     
-#ifdef _WINDOWS
-    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, ms) == 0;
-#else
-    const struct timespec ts = {ms / 1000u, 1000u * (ms % 1000u)};
-    const bool result = pthread_cond_timedwait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, &ts) != 0;
-#endif
+    const int result = SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl.m_impl, ms);
+//#ifdef _WINDOWS
+//    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, ms) == 0;
+//#else
+//    const struct timespec ts = {ms / 1000u, 1000u * (ms % 1000u)};
+//    const bool result = pthread_cond_timedwait(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, &ts) != 0;
+//#endif
     if(result)
       throw CV_Wait_Timeout_Failure();
     
