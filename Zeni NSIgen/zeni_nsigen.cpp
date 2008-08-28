@@ -190,17 +190,15 @@ int main(int argc, char * argv[]) {
   ifstream nsi_0("Zeni NSIgen\\NSI_0_Preuser.txt");
   ifstream nsi_u("Zeni NSIS Settings.txt");
   ifstream nsi_1("Zeni NSIgen\\NSI_1_Postuser_+_Preinstall.txt");
-  ifstream nsi_2("Zeni NSIgen\\NSI_2_Postinstall_+_Prefonts.txt");
-  ifstream nsi_3("Zeni NSIgen\\NSI_3_Postfonts_+_Preuninstall.txt");
-  ifstream nsi_4("Zeni NSIgen\\NSI_4_Postuninstall.txt");
+  ifstream nsi_2("Zeni NSIgen\\NSI_2_Postinstall_+_Preuninstall.txt");
+  ifstream nsi_3("Zeni NSIgen\\NSI_3_Postuninstall.txt");
 
   if(!nsi ||
     !nsi_0 ||
     !nsi_u ||
     !nsi_1 ||
     !nsi_2 ||
-    !nsi_3 ||
-    !nsi_4)
+    !nsi_3)
     abort();
 
   Install_Files installer;
@@ -211,10 +209,8 @@ int main(int argc, char * argv[]) {
   dump(nsi, nsi_1);
   recurse_directory(nsi, "zenilib\\", installer);
   dump(nsi, nsi_2);
-  installer.install_fonts(nsi);
-  dump(nsi, nsi_3);
   recurse_directory(nsi, "zenilib\\", uninstaller);
-  dump(nsi, nsi_4);
+  dump(nsi, nsi_3);
 
   return 0;
 }
