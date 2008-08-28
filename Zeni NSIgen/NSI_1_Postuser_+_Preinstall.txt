@@ -8,8 +8,6 @@ SetCompressor lzma
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
-!include "FontReg.nsh"
-!include "FontName.nsh"
 !include "WinMessages.nsh"
 
 ; MUI Settings
