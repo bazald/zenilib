@@ -5,22 +5,22 @@ This software is closed source.  However, it was built upon many open source, fr
 ~bazald@zenipex.com
 
 The Zenipex Library
-zenilib       0.2.6.0        (GNU Runtime GPL)       http://zenilib.sourceforge.net/
+zenilib         0.2.7.0         (GNU Runtime GPL)       http://zenipex.com/zenilib/
 
-DirectX       9.0c June 2007 (Proprietary)           http://msdn.microsoft.com/directx/sdk/
-OpenAL        1.1            (Proprietary)           http://www.openal.org/downloads.html
-OpenGL                       (Proprietary)
+DirectX         9.0c March 2008 (Proprietary)           http://msdn.microsoft.com/directx/sdk/
+OpenAL          1.1              (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
+OpenGL                          (Proprietary)
 
-ALUT            1.1.0          (GNU LGPL)              http://www.openal.org/downloads.html
-lib3ds          1.3.0          (GNU LGPL)              http://lib3ds.sourceforge.net/
-JPEG            6b4            (BSD License)           http://gnuwin32.sourceforge.net/packages/jpeg.htm
-libogg          1.1.3          (Xiph BSD-like License) http://xiph.org/downloads/
-libpng          1.2.29         (zlib/libpng)           http://www.libpng.org/pub/png/libpng.html
-libtiff         3.8.2          (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
-libvorbis(file) 1.2.0          (Xiph BSD-like License) http://xiph.org/downloads/
-SDL             1.2.13         (GNU LGPL)              http://www.libsdl.org/download-1.2.php
-SDL_gfx         2.0.16         (GNU LGPL)              http://www.ferzkopp.net/joomla/content/view/19/14/
-SDL_image       1.2.6          (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
-SDL_net         1.2.7          (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
-SDL_ttf         2.0.8          (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/
-zlib            1.2.3          (BSD License)           http://www.zlib.net/
+ALUT            1.1.0           (GNU LGPL)              http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
+lib3ds          1.3.0           (GNU LGPL)              http://lib3ds.sourceforge.net/
+JPEG            6b4             (BSD License)           http://gnuwin32.sourceforge.net/packages/jpeg.htm
+libogg          1.1.3           (Xiph BSD-like License) http://xiph.org/downloads/
+libpng          1.2.29          (zlib/libpng)           http://www.libpng.org/pub/png/libpng.html
+libtiff         3.8.2           (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
+libvorbis(file) 1.2.0           (Xiph BSD-like License) http://xiph.org/downloads/
+SDL             1.2.13          (GNU LGPL)              http://www.libsdl.org/download-1.2.php
+SDL_gfx         2.0.16          (GNU LGPL)              http://www.ferzkopp.net/joomla/content/view/19/14/
+SDL_image       1.2.6           (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
+SDL_net         1.2.7           (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
+SDL_ttf         2.0.8           (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/
+zlib            1.2.3           (BSD License)           http://www.zlib.net/
