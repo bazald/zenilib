@@ -34,6 +34,7 @@
 #include <Zeni/Matrix4f.h>
 
 #include <Zeni/Camera.h>
+#include <cmath>
 
 namespace Zeni {
 
@@ -122,7 +123,7 @@ namespace Zeni {
   }
 
   float Camera::get_tunneled_fov_rad() const {
-    return 2.0f * atan((m_near_clip * tan(0.5f * m_fov_rad)) / get_tunneled_near_clip());
+    return 2.0f * std::atan((m_near_clip * std::tan(0.5f * m_fov_rad)) / get_tunneled_near_clip());
   }
 
   Matrix4f Camera::get_view_matrix() const {
