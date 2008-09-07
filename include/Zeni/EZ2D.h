@@ -62,7 +62,7 @@ namespace Zeni {
     const std::string &image_name,
     const Point2f &upper_left,
     const Point2f &lower_right,
-    const float &radians_cw,
+    const float &radians_ccw,
     const float &scaling_factor,
     const Point2f &about,
     const bool &horizontally_flipped = false,
