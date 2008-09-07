@@ -69,7 +69,7 @@ namespace Zeni {
     const std::string &image_name,
     const Point2f &upper_left,
     const Point2f &lower_right,
-    const float &radians_cw,
+    const float &radians_ccw,
     const float &scaling_factor,
     const Point2f &about,
     const bool &horizontally_flipped,
@@ -83,10 +83,10 @@ namespace Zeni {
         lrv = Point3f(lower_right) - about3,
         urv = Point3f(lower_right.x, upper_left.y, 0.0f) - about3;
 
-      ulv.set_spherical(ulv.theta() + radians_cw, ulv.phi(), ulv.magnitude() * scaling_factor);
-      llv.set_spherical(llv.theta() + radians_cw, llv.phi(), llv.magnitude() * scaling_factor);
-      lrv.set_spherical(lrv.theta() + radians_cw, lrv.phi(), lrv.magnitude() * scaling_factor);
-      urv.set_spherical(urv.theta() + radians_cw, urv.phi(), urv.magnitude() * scaling_factor);
+      ulv.set_spherical(ulv.theta() - radians_ccw, ulv.phi(), ulv.magnitude() * scaling_factor);
+      llv.set_spherical(llv.theta() - radians_ccw, llv.phi(), llv.magnitude() * scaling_factor);
+      lrv.set_spherical(lrv.theta() - radians_ccw, lrv.phi(), lrv.magnitude() * scaling_factor);
+      urv.set_spherical(urv.theta() - radians_ccw, urv.phi(), urv.magnitude() * scaling_factor);
 
       const float
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
