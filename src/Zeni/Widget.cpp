@@ -500,14 +500,13 @@ namespace Zeni {
     Line &l = *m_lines.rbegin();
     int next_sum = get_text_width(f, l.unformatted + word.unformatted);
 
-    if(word.type != Word::SPACE && next_sum > mll) {
+    if(word.type != Word::SPACE && next_sum > mll && !word.fpsplit) {
       if(word.splittable) {
         int i = 0, iend = int(word.unformatted.size());
         for(; i != iend && get_text_width(f, l.unformatted + word.unformatted.substr(0, i) + "-") < mll; ++i);
-        --i;
-        if(i > 0
-          || l.unformatted.empty() // prevent infinite loop on *stupid* input
-          ) {
+        if(!l.unformatted.empty())
+          --i;
+        if(i > 0) {
           {
             Word first_word(word.type);
             first_word.unformatted = word.unformatted.substr(0, i);
@@ -527,8 +526,10 @@ namespace Zeni {
           }
         }
         else {
+          Word only_word(word);
+          only_word.fpsplit = l.unformatted.empty();
           m_lines.push_back(Line());
-          append_word(word);
+          append_word(only_word);
           return;
         }
       }
