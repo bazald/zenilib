@@ -361,10 +361,11 @@ namespace Zeni {
     m_bgm_source->stop();
     delete m_bgm_source;
     m_bgm_source = 0;
+    delete m_bgm;
+    m_bgm = 0;
 
     m_bgmusic = filename;
-    *m_bgm = Sound_Buffer(filename);
-
+    m_bgm = new Sound_Buffer(filename);
     m_bgm_source = new Sound_Source(*m_bgm, pitch, gain, position, velocity, looping);
 
     if(playing)
