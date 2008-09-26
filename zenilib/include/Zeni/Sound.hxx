@@ -287,7 +287,6 @@ namespace Zeni {
     ALfloat listener_position[3] = {position.x, position.y, position.z};
     alListenerfv(AL_POSITION, listener_position);
 
-    assert_m_bgm();
     m_bgm_source->set_position(position);
 #endif
   }
@@ -301,7 +300,6 @@ namespace Zeni {
     ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
     alListenerfv(AL_VELOCITY, listener_velocity);
 
-    assert_m_bgm();
     m_bgm_source->set_velocity(velocity);
 #endif
   }
@@ -390,52 +388,42 @@ namespace Zeni {
   }
 
   float Sound::get_BGM_pitch() {
-    assert_m_bgm();
     return m_bgm_source->get_pitch();
   }
 
   float Sound::get_BGM_gain() {
-    assert_m_bgm();
     return m_bgm_source->get_gain();
   }
 
   bool Sound::is_BGM_looping() {
-    assert_m_bgm();
     return m_bgm_source->is_looping();
   }
 
   float Sound::get_BGM_time() {
-    assert_m_bgm();
     return m_bgm_source->get_time();
   }
 
   bool Sound::playing_BGM() {
-    assert_m_bgm();
     return m_bgm_source->is_playing();
   }
 
   bool Sound::paused_BGM() {
-    assert_m_bgm();
     return m_bgm_source->is_paused();
   }
 
   bool Sound::stopped_BGM() {
-    assert_m_bgm();
     return m_bgm_source->is_stopped();
   }
 
   void Sound::play_BGM() {
-    assert_m_bgm();
     return m_bgm_source->play();
   }
 
   void Sound::pause_BGM() {
-    assert_m_bgm();
     return m_bgm_source->pause();
   }
   
   void Sound::stop_BGM() {
-    assert_m_bgm();
     return m_bgm_source->stop();
   }
 
