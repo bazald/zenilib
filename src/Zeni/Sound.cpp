@@ -316,6 +316,19 @@ namespace Zeni {
     alListenerfv(AL_POSITION, listener_position);
     alListenerfv(AL_VELOCITY, listener_velocity);
     alListenerfv(AL_ORIENTATION, listener_forward_and_up);
+
+    m_bgm = new Sound_Buffer();
+    if(!m_bgm) {
+      alutExit();
+      throw Sound_Init_Failure();
+    }
+
+    m_bgm_source = new Sound_Source(*m_bgm);
+    if(!m_bgm_source) {
+      delete m_bgm;
+      alutExit();
+      throw Sound_Init_Failure();
+    }
 #endif
   }
 
@@ -338,8 +351,6 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    assert_m_bgm();
-
     bool playing = m_bgm_source->is_playing() ? true : false;
     float pitch = m_bgm_source->get_pitch();
     float gain = m_bgm_source->get_gain();
@@ -358,27 +369,6 @@ namespace Zeni {
 
     if(playing)
       m_bgm_source->play();
-#endif
-  }
-
-  void Sound::assert_m_bgm() {
-#ifndef DISABLE_AL
-    if(!m_bgm) {
-      m_bgm = new Sound_Buffer();
-      if(!m_bgm) {
-        alutExit();
-        throw Sound_Init_Failure();
-      }
-    }
-
-    if(!m_bgm_source) {
-      m_bgm_source = new Sound_Source(*m_bgm);
-      if(!m_bgm_source) {
-        delete m_bgm;
-        alutExit();
-        throw Sound_Init_Failure();
-      }
-    }
 #endif
   }
 
