@@ -215,6 +215,8 @@ namespace Zeni {
   }
 
   void Sounds::init() {
+    purge();
+
     m_sound_lookup.clear();
     m_sounds.clear();
 
