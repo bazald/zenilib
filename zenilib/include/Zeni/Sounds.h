@@ -81,7 +81,7 @@ namespace Zeni {
     Replacement_Policy get_Replacement_Policy() const; ///< Get the BESP Replacement_Policy
     void set_Replacement_Policy(const Replacement_Policy &replacement_policy); ///< Set the BESP Replacement_Policy
 
-    bool play_sound(const std::string &sound_buffer); ///< Play a Sound_Buffer
+    bool play_sound(const std::string &sound_effect); ///< Play a Sound_Buffer
     bool play_sound(const unsigned long &id); ///< Play a Sound_Buffer
 
     void pause_all(); ///< Pause all BESP Sound_Sources.

@@ -122,20 +122,43 @@ namespace Zeni {
     m_replacement_policy = replacement_policy;
   }
 
-  bool Sounds::play_sound(const std::string &sound_buffer) {
-    return play_sound(get_sound_id(sound_buffer));
+  bool Sounds::play_sound(const string &sound_effect) {
+    return play_sound(get_sound_id(sound_effect));
   }
 
   bool Sounds::play_sound(const unsigned long &id) {
     const Sound_Buffer &sb = get_sound(id);
     Sound_Source *ss_ptr = 0;
 
+    { // Reuse and Recycle
+      list<Sound_Source *> keepers;
+
+      for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
+          it != m_sound_sources.end();
+          ++it)
+      {
+        if((*it)->is_playing())
+          keepers.push_back(*it);
+        else if(ss_ptr)
+          delete *it;
+        else
+          ss_ptr = *it;
+      }
+
+      m_sound_sources.swap(keepers);
+    }
+
     try {
-      ss_ptr = new Sound_Source(sb);
+      if(ss_ptr)
+        ss_ptr->set_buffer(sb);
+      else
+        ss_ptr = new Sound_Source(sb);
     }
     catch(Sound_Source_Init_Failure &) {
       if(m_sound_sources.empty())
         throw;
+
+      // Replace
 
       switch(m_replacement_policy) {
         case BESP_NONE:
@@ -161,7 +184,7 @@ namespace Zeni {
   }
 
   void Sounds::pause_all() {
-    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
         it != m_sound_sources.end();
         ++it)
     {
@@ -171,7 +194,7 @@ namespace Zeni {
   }
 
   void Sounds::unpause_all() {
-    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
         it != m_sound_sources.end();
         ++it)
     {
@@ -181,7 +204,7 @@ namespace Zeni {
   }
 
   void Sounds::purge() {
-    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
         it != m_sound_sources.end();
         ++it)
     {
