@@ -42,7 +42,8 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : m_soundsfile("config/sounds.txt")
+    : m_soundsfile("config/sounds.txt"),
+    m_replacement_policy(BESP_OLDEST)
   {
     // Ensure Sound is initialized
     Sound::get_reference();
@@ -50,7 +51,9 @@ namespace Zeni {
     reload();
   }
 
-  Sounds::~Sounds() {}
+  Sounds::~Sounds() {
+    purge();
+  }
 
   Sounds & Sounds::get_reference() {
     static Sounds e_sounds;
@@ -109,6 +112,83 @@ namespace Zeni {
       m_soundsfile = soundsfile;
 
     init();
+  }
+
+  Sounds::Replacement_Policy Sounds::get_Replacement_Policy() const {
+    return m_replacement_policy;
+  }
+
+  void Sounds::set_Replacement_Policy(const Sounds::Replacement_Policy &replacement_policy) {
+    m_replacement_policy = replacement_policy;
+  }
+
+  bool Sounds::play_sound(const std::string &sound_buffer) {
+    return play_sound(get_sound_id(sound_buffer));
+  }
+
+  bool Sounds::play_sound(const unsigned long &id) {
+    const Sound_Buffer &sb = get_sound(id);
+    Sound_Source *ss_ptr = 0;
+
+    try {
+      ss_ptr = new Sound_Source(sb);
+    }
+    catch(Sound_Source_Init_Failure &) {
+      if(m_sound_sources.empty())
+        throw;
+
+      switch(m_replacement_policy) {
+        case BESP_NONE:
+          return false;
+
+        case BESP_OLDEST:
+          ss_ptr = m_sound_sources.front();
+          m_sound_sources.pop_front();
+          break;
+
+        default:
+          throw;
+      }
+
+      ss_ptr->stop();
+      ss_ptr->set_buffer(sb);
+    }
+
+    ss_ptr->play();
+    m_sound_sources.push_back(ss_ptr);
+
+    return true;
+  }
+
+  void Sounds::pause_all() {
+    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+        it != m_sound_sources.end();
+        ++it)
+    {
+      if((*it)->is_playing())
+        (*it)->pause();
+    }
+  }
+
+  void Sounds::unpause_all() {
+    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+        it != m_sound_sources.end();
+        ++it)
+    {
+      if((*it)->is_paused())
+        (*it)->play();
+    }
+  }
+
+  void Sounds::purge() {
+    for(std::list<Sound_Source *>::iterator it = m_sound_sources.begin();
+        it != m_sound_sources.end();
+        ++it)
+    {
+      delete *it;
+    }
+
+    m_sound_sources.clear();
   }
 
   void Sounds::init() {
