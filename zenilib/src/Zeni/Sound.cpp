@@ -50,8 +50,6 @@ namespace Zeni {
       m_loader(0),
       m_thread(0)
   {
-    Sound::get_reference();
-
 #ifndef DISABLE_AL
     m_buffer = alutCreateBufferHelloWorld();
 
@@ -67,11 +65,9 @@ namespace Zeni {
       m_loader(0),
       m_thread(0)
   {
-    Sound::get_reference();
-    
 #ifndef DISABLE_AL
     m_buffer = alutCreateBufferHelloWorld();
-    
+
     if(m_buffer == AL_NONE) {
       std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
@@ -88,8 +84,6 @@ namespace Zeni {
       m_loader(0),
       m_thread(0)
   {
-    Sound::get_reference();
-    
     m_loader = new Loader(filename);
     m_thread = new Thread(*m_loader);
   }
@@ -97,13 +91,13 @@ namespace Zeni {
   Sound_Buffer::~Sound_Buffer() {
     delete m_thread;
     delete m_loader;
-    
+
 #ifndef DISABLE_AL
     if(m_buffer != AL_NONE && !Quit_Event::has_fired())
       alDeleteBuffers(1, &m_buffer);
 #endif
   }
-  
+
   Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
     Sound_Buffer temp(rhs);
     std::swap(m_buffer, temp.m_buffer);
@@ -144,7 +138,7 @@ namespace Zeni {
         buffer.insert(buffer.end(), array, array + bytes);
       else {
         ov_clear(&oggFile);
-        
+
         if(!bytes)
           break;
         else {
@@ -161,7 +155,7 @@ namespace Zeni {
     alBufferData(bufferID, format, &buffer[0], static_cast<ALsizei>(buffer.size()), freq);
 
     return bufferID;
-    
+
 #else
 
     return AL_NONE;
@@ -169,12 +163,12 @@ namespace Zeni {
 #endif
 
   }
-  
+
   Sound_Buffer::Loader::Loader(const std::string &filename)
     : m_filename(filename)
   {
   }
-  
+
   int Sound_Buffer::Loader::function() {
 #ifndef DISABLE_AL
     m_buffer = load_ogg_vorbis(m_filename);
@@ -193,13 +187,13 @@ namespace Zeni {
   void Sound_Buffer::finish_loading() const {
     delete m_thread;
     m_thread = 0;
-    
+
     const int status = m_loader->status;
     m_buffer = m_loader->m_buffer;
-    
+
     delete m_loader;
     m_loader = 0;
-    
+
     if(status)
       throw Sound_Buffer_Init_Failure();
   }
@@ -215,7 +209,7 @@ namespace Zeni {
     : m_source(rhs.m_source)
   {
     rhs.m_source = AL_NONE;
-    
+
     static Sound_Buffer hello_world_buffer;
     const_cast<Sound_Source &>(rhs).init(hello_world_buffer.get_id());
   }
@@ -266,8 +260,6 @@ namespace Zeni {
     looping
 #endif
     ) {
-    Sound::get_reference();
-
 #ifndef DISABLE_AL
     alGenSources(1, &m_source);
 
