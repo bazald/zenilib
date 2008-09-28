@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) {
   catch(...) {
     cerr << "Unknown Error (Not of Type 'Zeni::Error')";
     assert("Unknown Error caught in main" == 0);
-    return -1;
+    throw;
   }
 #ifdef _WINDOWS
 #pragma warning( pop )
