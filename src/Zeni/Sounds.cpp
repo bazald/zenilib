@@ -127,58 +127,15 @@ namespace Zeni {
   }
 
   bool Sounds::play_sound(const unsigned long &id) {
-    const Sound_Buffer &sb = get_sound(id);
-    Sound_Source *ss_ptr = 0;
-
-    { // Reuse and Recycle
-      list<Sound_Source *> keepers;
-
-      for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
-          it != m_sound_sources.end();
-          ++it)
-      {
-        if((*it)->is_playing())
-          keepers.push_back(*it);
-        else if(ss_ptr)
-          delete *it;
-        else
-          ss_ptr = *it;
-      }
-
-      m_sound_sources.swap(keepers);
-    }
+    Sound_Source * ss_ptr = 0;
 
     try {
-      if(ss_ptr)
-        ss_ptr->set_buffer(sb);
-      else
-        ss_ptr = new Sound_Source(sb);
+      ss_ptr = take_Sound_Source();
+      ss_ptr->set_buffer(get_sound(id));
+      give_Sound_Source(ss_ptr);
     }
     catch(Sound_Source_Init_Failure &) {
-      if(m_sound_sources.empty())
-        throw;
-
-      // Replace
-
-      switch(m_replacement_policy) {
-        case BESP_NONE:
-          return false;
-
-        case BESP_OLDEST:
-          ss_ptr = m_sound_sources.front();
-          m_sound_sources.pop_front();
-          break;
-
-        default:
-          throw;
-      }
-
-      ss_ptr->stop();
-      ss_ptr->set_buffer(sb);
     }
-
-    ss_ptr->play();
-    m_sound_sources.push_back(ss_ptr);
 
     return true;
   }
@@ -212,6 +169,63 @@ namespace Zeni {
     }
 
     m_sound_sources.clear();
+  }
+
+  Sound_Source * Sounds::take_Sound_Source() {
+    Sound_Source *ss_ptr = 0;
+
+    { // Reuse and Recycle
+      list<Sound_Source *> keepers;
+
+      for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
+          it != m_sound_sources.end();
+          ++it)
+      {
+        if((*it)->is_playing())
+          keepers.push_back(*it);
+        else if(ss_ptr)
+          delete *it;
+        else
+          ss_ptr = *it;
+      }
+
+      m_sound_sources.swap(keepers);
+    }
+
+    try {
+      if(ss_ptr)
+        return ss_ptr;
+      else
+        return new Sound_Source();
+    }
+    catch(Sound_Source_Init_Failure &) {
+      if(m_sound_sources.empty())
+        throw;
+
+      // Replace
+
+      switch(m_replacement_policy) {
+        case BESP_NONE:
+          throw;
+
+        case BESP_OLDEST:
+          ss_ptr = m_sound_sources.front();
+          m_sound_sources.pop_front();
+          break;
+
+        default:
+          throw;
+      }
+
+      ss_ptr->stop();
+      return ss_ptr;
+    }
+  }
+
+  void Sounds::give_Sound_Source(Sound_Source * const &sound_source) {
+    assert(sound_source);
+    sound_source->play();
+    m_sound_sources.push_back(sound_source);
   }
 
   void Sounds::init() {

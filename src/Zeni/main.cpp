@@ -168,7 +168,7 @@ static void load_ini() {
 
 /*** main ***/
 
-int main(int argc, char *argv[]) {
+inline int main2(const int &argc, const char * const argv[]) {
   srand(static_cast<unsigned int>(time(0)));
 
   vector<string> args(argc - 1);
@@ -207,4 +207,8 @@ int main(int argc, char *argv[]) {
 #endif
 
   return 0;
+}
+
+int main(int argc, char *argv[]) {
+  return main2(argc, argv);
 }

@@ -88,6 +88,9 @@ namespace Zeni {
     void unpause_all(); ///< Unpause all paused BESP Sound_Sources.
     void purge(); ///< Purge all BESP Sound_Sources
 
+    Sound_Source * take_Sound_Source(); ///< Request a Sound_Source from the BESP system
+    void give_Sound_Source(Sound_Source * const &sound_source); ///< Add a Sound_Source to the BESP system; BESP will then play the Sound_Source
+
   private:
     void init();
 
