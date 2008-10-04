@@ -104,6 +104,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -192,6 +193,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -285,6 +287,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -377,6 +380,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -464,6 +468,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -552,6 +557,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -645,6 +651,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -737,6 +744,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64.exe&quot;"
 			/>
 		</Configuration>
 	</Configurations>

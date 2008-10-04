@@ -20,3 +20,7 @@ DEL /Q "lib\*_d.lib"
 DEL /Q "*_d.dll"
 DEL /Q "*_x64.dll"
 DEL /Q "*_x64d.dll"
+
+DEL /Q "Zeniapp_d.exe"
+DEL /Q "Zeniapp_x64.exe"
+DEL /Q "Zeniapp_x64d.exe"
