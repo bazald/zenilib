@@ -104,6 +104,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_d.exe&quot;"
 			/>
 		</Configuration>
@@ -193,6 +194,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64d.exe&quot;"
 			/>
 		</Configuration>
@@ -287,6 +289,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp.exe&quot;"
 			/>
 		</Configuration>
@@ -380,6 +383,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64.exe&quot;"
 			/>
 		</Configuration>
@@ -468,6 +472,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_d.exe&quot;"
 			/>
 		</Configuration>
@@ -557,6 +562,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64d.exe&quot;"
 			/>
 		</Configuration>
@@ -651,6 +657,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp.exe&quot;"
 			/>
 		</Configuration>
@@ -744,6 +751,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib/&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)Zeniapp_x64.exe&quot;"
 			/>
 		</Configuration>
