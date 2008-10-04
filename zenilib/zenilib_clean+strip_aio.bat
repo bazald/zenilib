@@ -15,6 +15,7 @@ DEL /Q /A:H "Zeniapp_2005.suo"
 DEL /Q "*.user"
 
 RMDIR /S /Q "lib\x64\"
+DEL /Q "lib\*_d.lib"
 
 DEL /Q "*_d.dll"
 DEL /Q "*_x64.dll"
