@@ -34,11 +34,7 @@
 
 namespace Zeni {
 
-  Mutex::Mutex()
-#ifndef NDEBUG
-    : locking_thread(0)
-#endif
-  {
+  Mutex::Mutex() {
     // Ensure Core is initialized
     Core::get_reference();
 
@@ -49,18 +45,6 @@ namespace Zeni {
 //    if(pthread_mutex_init(&m_impl, 0))
 //      throw Mutex_Init_Failure();
 //#endif
-
-#ifndef NDEBUG
-    self_lock = SDL_CreateMutex();
-//#ifdef _WINDOWS
-//    InitializeCriticalSection(&self_lock);
-//#else
-//    if(pthread_mutex_init(&self_lock, 0)) {
-//      pthread_mutex_destroy(&m_impl);
-//      throw Mutex_Init_Failure();
-//    }
-//#endif
-#endif
   }
   
   Mutex::~Mutex() {
@@ -73,45 +57,9 @@ namespace Zeni {
 //      throw Mutex_Destroy_Failure();
 //    }
 //#endif
-
-#ifndef NDEBUG
-    SDL_DestroyMutex(self_lock);
-//#ifdef _WINDOWS
-//    DeleteCriticalSection(&self_lock);
-//#else
-//    if(pthread_mutex_destroy(&self_lock))
-//      throw Mutex_Destroy_Failure();
-//#endif
-#endif
   }
   
   void Mutex::lock() {
-#ifndef NDEBUG
-    const unsigned int current_thread = SDL_ThreadID();
-    
-    {
-      if(SDL_mutexP(self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&self_lock);
-//#else
-//      if(pthread_mutex_lock(&self_lock))
-//        throw Mutex_Lock_Failure();
-//#endif
-
-      assert(locking_thread != current_thread);
-
-      if(SDL_mutexV(self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&self_lock);
-//#else
-//      if(pthread_mutex_unlock(&self_lock))
-//        throw Mutex_Unlock_Failure();
-//#endif
-    }
-#endif
-
     if(SDL_mutexP(m_impl))
       throw Mutex_Lock_Failure();
 //#ifdef _WINDOWS
@@ -120,43 +68,9 @@ namespace Zeni {
 //    if(pthread_mutex_lock(&m_impl))
 //      throw Mutex_Lock_Failure();
 //#endif
-
-#ifndef NDEBUG
-    locking_thread = current_thread;
-#endif
   }
   
   void Mutex::unlock() {
-#ifndef NDEBUG
-    {
-      if(SDL_mutexP(self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&self_lock);
-//#else
-//      if(pthread_mutex_lock(&self_lock)) {
-//        pthread_mutex_unlock(&m_impl);
-//        throw Mutex_Lock_Failure();
-//      }
-//#endif
-
-      assert(locking_thread == SDL_ThreadID());
-
-      locking_thread = 0;
-
-      if(SDL_mutexV(self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&self_lock);
-//#else
-//      if(pthread_mutex_unlock(&self_lock)) {
-//        pthread_mutex_unlock(&m_impl);
-//        throw Mutex_Unlock_Failure();
-//      }
-//#endif
-    }
-#endif
-
     if(SDL_mutexV(m_impl))
       throw Mutex_Unlock_Failure();
 //#ifdef _WINDOWS
@@ -221,30 +135,6 @@ namespace Zeni {
   }
   
   void Condition_Variable::wait(Mutex::Lock &mutex_lock) {
-#ifndef NDEBUG
-    {
-      if(SDL_mutexP(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Lock_Failure();
-//#endif
-
-      mutex_lock.m_mutex.locking_thread = 0;
-
-      if(SDL_mutexV(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Unlock_Failure();
-//#endif
-    }
-#endif
-
     const int result = SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl);
 //#ifdef _WINDOWS
 //    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl, INFINITE) == 0;
@@ -253,57 +143,9 @@ namespace Zeni {
 //#endif
     if(result)
       throw CV_Wait_Failure();
-
-#ifndef NDEBUG
-    {
-      if(SDL_mutexP(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Lock_Failure();
-//#endif
-
-      mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
-
-      if(SDL_mutexV(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Unlock_Failure();
-//#endif
-    }
-#endif
   }
   
   void Condition_Variable::wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms) {
-#ifndef NDEBUG
-    {
-      if(SDL_mutexP(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Lock_Failure();
-//#endif
-
-      mutex_lock.m_mutex.locking_thread = 0;
-
-      if(SDL_mutexV(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Unlock_Failure();
-//#endif
-    }
-#endif
-
     const int result = SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl, ms);
 //#ifdef _WINDOWS
 //    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl, ms) == 0;
@@ -313,30 +155,6 @@ namespace Zeni {
 //#endif
     if(result)
       throw CV_Wait_Timeout_Failure();
-
-#ifndef NDEBUG
-    {
-      if(SDL_mutexP(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Lock_Failure();
-//#ifdef _WINDOWS
-//      EnterCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_lock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Lock_Failure();
-//#endif
-
-      mutex_lock.m_mutex.locking_thread = SDL_ThreadID();
-
-      if(SDL_mutexV(mutex_lock.m_mutex.self_lock))
-        throw Mutex_Unlock_Failure();
-//#ifdef _WINDOWS
-//      LeaveCriticalSection(&mutex_lock.m_mutex.self_lock);
-//#else
-//      if(pthread_mutex_unlock(&mutex_lock.m_mutex.self_lock))
-//        throw Mutex_Unlock_Failure();
-//#endif
-    }
-#endif
   }
 
   Semaphore::Semaphore(const unsigned int &count)
