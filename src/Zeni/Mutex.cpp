@@ -38,7 +38,7 @@ namespace Zeni {
   
   void Recursive_Mutex::lock() {
     const unsigned int current_thread = SDL_ThreadID();
-    
+
     {
       Mutex::Lock lock(self_lock);
       
@@ -47,11 +47,15 @@ namespace Zeni {
         return;
       }
     }
-    
+
     m_impl.lock();
-      
-    locking_thread = current_thread;
-    count = 1u;
+
+    {
+      Mutex::Lock lock(self_lock);
+
+      locking_thread = current_thread;
+      count = 1u;
+    }
   }
   
   void Recursive_Mutex::unlock() {
@@ -83,14 +87,13 @@ namespace Zeni {
     unsigned int &count = mutex.count;
     
     const unsigned int current_thread = SDL_ThreadID();
-    const unsigned int current_count = count;
-    
-    assert(locking_thread == current_thread && count);
-    
+    unsigned int current_count;
+
     {
       Mutex::Lock lock(mutex.self_lock);
-      locking_thread = 0;
-      count = 0;
+      assert(locking_thread == current_thread && count);
+      current_count = count;
+      count = 0u;
     }
 
     const int result = SDL_CondWait(m_impl, mutex_lock.m_mutex.m_impl.m_impl);
@@ -115,16 +118,17 @@ namespace Zeni {
     unsigned int &count = mutex.count;
     
     const unsigned int current_thread = SDL_ThreadID();
-    const unsigned int current_count = count;
+    unsigned int current_count;
     
     assert(locking_thread == current_thread && count);
-    
+
     {
       Mutex::Lock lock(mutex.self_lock);
-      locking_thread = 0;
-      count = 0;
+      assert(locking_thread == current_thread && count);
+      current_count = count;
+      count = 0u;
     }
-    
+
     const int result = SDL_CondWaitTimeout(m_impl, mutex_lock.m_mutex.m_impl.m_impl, ms);
 //#ifdef _WINDOWS
 //    const bool result = SleepConditionVariableCS(&m_impl, &mutex_lock.m_mutex.m_impl.m_impl, ms) == 0;

@@ -120,16 +120,6 @@ namespace Zeni {
 //#else
 //    pthread_mutex_t m_impl;
 //#endif
-    
-#ifndef NDEBUG
-    SDL_mutex *self_lock;
-//#ifdef _WINDOWS
-//    CRITICAL_SECTION self_lock;
-//#else
-//    pthread_mutex_t self_lock;
-//#endif
-    unsigned int locking_thread;
-#endif
   
   public:
     class Lock {
