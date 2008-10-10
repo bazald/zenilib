@@ -27,6 +27,7 @@
 */
 
 #include <Zeni/Camera.hxx>
+#include <Zeni/Collision.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Quaternion.hxx>
 #include <Zeni/Vector3f.hxx>
@@ -50,8 +51,8 @@ namespace Zeni {
     m_forward = (Quaternion(get_up(), theta) * m_forward).normalized();
     // left changes implicitly
 
-	// anti-parallelism correction
-	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
+	  // anti-parallelism correction
+	  m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::adjust_pitch(const float &phi) {
@@ -59,16 +60,16 @@ namespace Zeni {
     m_forward = (rot * m_forward).normalized();
     m_up = (rot * m_up).normalized();
 
-	// anti-parallelism correction
-	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
+	  // anti-parallelism correction
+	  m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::adjust_roll(const float &rho) {
     m_up = (Quaternion(get_forward(), rho) * m_up).normalized();
     // left changes implicitly
 
-	// anti-parallelism correction
-	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
+	  // anti-parallelism correction
+	  m_up = (m_up - (m_forward * m_up) * m_up).normalized();
   }
 
   void Camera::move_forward_xy(const float &distance) {
@@ -85,8 +86,18 @@ namespace Zeni {
     m_forward = (rot * m_forward).normalized();
     m_up = (rot * m_up).normalized();
 
-	// anti-parallelism correction
-	m_up = (m_up - (m_forward * m_up) * m_up).normalized();
+	  // anti-parallelism correction
+	  m_up = (m_up - (m_forward * m_up) * m_up).normalized();
+  }
+
+  void Camera::look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal) {
+    m_forward = (world_coord - m_position).normalized();
+    const Vector3f left = (horizon_plane_normal % m_forward).normalized();
+    m_up = (m_forward % left).normalized(); 
+  }
+
+  void Camera::look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane) {
+    look_at(world_coord, horizon_plane.get_normal());
   }
 
 }
