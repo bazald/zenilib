@@ -51,6 +51,7 @@
 #ifndef ZENI_CAMERA_H
 #define ZENI_CAMERA_H
 
+#include <Zeni/Collision.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
@@ -105,6 +106,9 @@ namespace Zeni {
     void move_forward_xy(const float &distance); ///< Move the camera in the forward direction, projected onto the xy-plane.
     void move_left_xy(const float &distance); ///< Move the camera in the left direction, projected onto the xy-plane.
     void turn_left_xy(const float &theta); ///< Turn the camera left about the z-axis.
+
+    void look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal = Vector3f(0.0f, 0.0f, 1.0f)); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for a Plane with the given normal Vector3f.
+    void look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for the given Plane.
 
   private:
     Point3f m_position;
