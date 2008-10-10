@@ -286,7 +286,9 @@ namespace Zeni {
   }
 
   Point3f Model::get_position() const {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_translate + m_scale.multiply_by(Quaternion(m_rotate, m_rotate_angle) * Vector3f(m_position));
+    GUARANTEED_FINISHED_END();
   }
 
   void Model::visit_nodes(Model_Visitor &mv, Lib3dsNode *node) const {
