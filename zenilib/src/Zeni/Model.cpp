@@ -250,7 +250,8 @@ namespace Zeni {
       visit_meshes(*m_unrenderer);
     delete m_unrenderer;
 
-    lib3ds_file_free(m_file);
+    if(m_file)
+      lib3ds_file_free(m_file);
   }
 
   Model & Model::operator =(const Model &rhs) {
