@@ -200,6 +200,14 @@ namespace Zeni {
   Vector3f Vector3f::divide_by(const Vector3f &rhs) const {
     return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
   }
+
+  inline float Vector3f::angle_between(const Vector3f &rhs) const {
+    const float a = magnitude();
+    const float b = rhs.magnitude();
+    const float c = (rhs - *this).magnitude();
+
+    return acos((a * a + b * b - c * c) / (2 * a * b));
+  }
   
   const float Vector3f::operator[](const int &index) const {
     assert(-1 < index && index < 3);

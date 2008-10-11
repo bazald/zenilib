@@ -108,6 +108,7 @@ namespace Zeni {
     inline Vector3f get_jk() const; ///< Get just the j and k parts
     inline Vector3f multiply_by(const Vector3f &rhs) const; ///< Multiply corresponding members
     inline Vector3f divide_by(const Vector3f &rhs) const; ///< Divide corresponding members
+    inline float angle_between(const Vector3f &rhs) const; ///< Find the angle between the Vector3fs
 
     // Indexing
     inline const float operator[](const int &index) const; ///< Get 'index'
