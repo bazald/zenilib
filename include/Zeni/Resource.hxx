@@ -29,13 +29,16 @@
 #ifndef ZENI_RESOURCE_HXX
 #define ZENI_RESOURCE_HXX
 
+// HXXed below
+#include <Zeni/Mutex.h>
+
 #include <Zeni/Resource.h>
 
 namespace Zeni {
 
   unsigned long Resource::assign() {
     Mutex::Lock lock(m_mutex);
-    
+
     unsigned long rv = ++m_current;
     if(!rv) {
       --m_current;
@@ -45,5 +48,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Mutex.hxx>
 
 #endif

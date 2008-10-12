@@ -30,6 +30,7 @@
 #define ZENI_WIDGET_HXX
 
 // HXXed below
+#include <Zeni/Font.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Widget.h>
@@ -464,6 +465,7 @@ namespace Zeni {
 
 }
 
+#include <Zeni/Font.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif

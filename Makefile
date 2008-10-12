@@ -18,6 +18,7 @@ EXTENSION = cxx
 
 CC = g++
 
+#PEDANTIC = -Werror
 #PEDANTIC = -pedantic
 #PEDANTIC = -pedantic-errors -Werror
 

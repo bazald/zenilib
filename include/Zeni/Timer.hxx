@@ -29,6 +29,9 @@
 #ifndef ZENI_TIMER_HXX
 #define ZENI_TIMER_HXX
 
+// HXXed below
+#include <Zeni/Mutex.h>
+
 #include <Zeni/Timer.h>
 
 #include <SDL/SDL.h>
@@ -154,5 +157,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Mutex.hxx>
 
 #endif

@@ -31,6 +31,7 @@
 
 // HXXed below
 #include <Zeni/Gamestate.h>
+#include <Zeni/Mutex.h>
 
 #include <Zeni/Game.h>
 
@@ -111,5 +112,6 @@ namespace Zeni {
 }
 
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Mutex.hxx>
 
 #endif
