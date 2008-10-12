@@ -5,7 +5,7 @@ This software is closed source.  However, it was built upon many open source, fr
 ~bazald@zenipex.com
 
 The Zenipex Library
-zenilib         0.2.7.0         (GNU Runtime GPL)       http://zenipex.com/zenilib/
+zenilib         0.2.7.1         (GNU Runtime GPL)       http://zenipex.com/zenilib/
 
 DirectX         9.0c March 2008 (Proprietary)           http://msdn.microsoft.com/directx/sdk/
 OpenAL          1.1              (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
