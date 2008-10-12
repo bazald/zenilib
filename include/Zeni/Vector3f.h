@@ -97,6 +97,7 @@ namespace Zeni {
     // Other Standard Functions
     Vector3f & normalize(); ///< Normalize the vector
     Vector3f normalized() const; ///< Get the normalized vector
+    inline float magnitude2() const; ///< Get the 'magnitude squared' of the vector
     inline float magnitude() const; ///< Get the magnitude of the vector
 
     // Other helpful functions

@@ -165,8 +165,12 @@ namespace Zeni {
     return Vector3f(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
   }
 
+  float Vector3f::magnitude2() const {
+    return i * i + j * j + k * k;
+  }
+
   float Vector3f::magnitude() const {
-    return sqrt(pow(i, 2) + pow(j, 2) + pow(k, 2));
+    return sqrt(magnitude2());
   }
 
   Vector3f Vector3f::get_i() const {
