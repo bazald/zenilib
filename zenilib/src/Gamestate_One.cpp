@@ -4,7 +4,7 @@
 * This source file is simply under the public domain.
 */
 
-#include "zenilib.h"
+#include <zenilib.h>
 
 #include <Zeni/Fonts.h>
 #include <Zeni/Sounds.h>
