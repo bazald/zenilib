@@ -26,7 +26,7 @@
 * the GNU General Public License.
 */
 
-#include "zenilib.h"
+#include <zenilib.h>
 
 #include "Zeni/Camera.cpp"
 #include "Zeni/Collision.cpp"
