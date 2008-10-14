@@ -78,6 +78,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
+#include <Zeni/Video.h>
 
 namespace Zeni {
 

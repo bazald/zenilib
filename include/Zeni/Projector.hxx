@@ -33,6 +33,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
+#include <Zeni/Video.h>
 
 #include <Zeni/Projector.h>
 
@@ -160,5 +161,6 @@ namespace Zeni {
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Matrix4f.hxx>
+#include <Zeni/Video.hxx>
 
 #endif
