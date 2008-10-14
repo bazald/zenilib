@@ -61,8 +61,6 @@ namespace Zeni {
 	  space.i = shr * chp * chy - chr * shp * shy;
 	  space.j = chr * shp * chy + shr * chp * shy;
 	  space.k = chr * chp * shy - shr * shp * chy;
-   
-	  *this = norm();
   }
 
   Quaternion::Quaternion(const Quaternion &rhs)
