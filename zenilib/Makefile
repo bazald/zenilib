@@ -14,7 +14,7 @@ SRCS_TYPE = SCU_SRCS
 EXTENSION = cxx
 
 # MODIFY ABOVE
-# LEAVE THE REST ALONE (unnless you know what you are doing
+# LEAVE THE REST ALONE (unless you know what you are doing
 
 CC = g++
 
@@ -52,6 +52,7 @@ LIB_SRCS = src/Zeni/Camera.cpp \
 	src/Zeni/Fonts.cpp \
 	src/Zeni/Game.cpp \
 	src/Zeni/Gamestate.cpp \
+	src/Zeni/Image.cpp \
 	src/Zeni/Light.cpp \
 	src/Zeni/main.cpp \
 	src/Zeni/Material.cpp \
