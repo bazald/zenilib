@@ -45,6 +45,7 @@
 #include <Zeni/Gamestate.h>
 #include <Zeni/Gamestate_One.h>
 #include <Zeni/Hash_Map.h>
+#include <Zeni/Image.h>
 #include <Zeni/Light.h>
 #include <Zeni/Line_Segment.h>
 #include <Zeni/Material.h>

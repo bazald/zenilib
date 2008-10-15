@@ -40,6 +40,7 @@
 #include "Zeni/Fonts.cpp"
 #include "Zeni/Game.cpp"
 #include "Zeni/Gamestate.cpp"
+#include "Zeni/Image.cpp"
 #include "Zeni/Light.cpp"
 #include "Zeni/main.cpp"
 #include "Zeni/Material.cpp"

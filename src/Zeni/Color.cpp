@@ -53,10 +53,10 @@ namespace Zeni {
 
   Color Color::interpolate_to(const float &rhs_part, const Color &rhs) const {
     float lhs_part = 1.0f - rhs_part;
-    return Color(lhs_part * rgba[0] + rhs_part * rhs.rgba[0], 
-      lhs_part * rgba[1] + rhs_part * rhs.rgba[1], 
-      lhs_part * rgba[2] + rhs_part * rhs.rgba[2], 
-      lhs_part * rgba[3] + rhs_part * rhs.rgba[3]);
+    return Color(lhs_part * rgba[1] + rhs_part * rhs.rgba[1], 
+                 lhs_part * rgba[2] + rhs_part * rhs.rgba[2], 
+                 lhs_part * rgba[3] + rhs_part * rhs.rgba[3],
+                 lhs_part * rgba[0] + rhs_part * rhs.rgba[0]);
   }
 
   bool Color::operator<(const Color &rhs) const {
