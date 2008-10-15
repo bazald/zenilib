@@ -1029,6 +1029,70 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="src\Zeni\Image.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="src\Zeni\Light.cpp"
 				>
 				<FileConfiguration
@@ -1991,6 +2055,10 @@
 				>
 			</File>
 			<File
+				RelativePath="include\Zeni\Image.h"
+				>
+			</File>
+			<File
 				RelativePath="include\Zeni\IV.h"
 				>
 			</File>
@@ -2141,6 +2209,10 @@
 			</File>
 			<File
 				RelativePath="include\Zeni\Gamestate.hxx"
+				>
+			</File>
+			<File
+				RelativePath="include\Zeni\Image.hxx"
 				>
 			</File>
 			<File
