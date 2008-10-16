@@ -68,4 +68,29 @@ namespace Zeni {
     *this = rhs;
   }
 
+  Quaternion & Quaternion::normalize() {
+    float mplier = magnitude();
+
+    if(fabs(mplier) < 0.001f)
+      return *this;
+
+    mplier = 1.0f / mplier;
+
+    time *= mplier;
+    space *= mplier;
+
+    return *this;
+  }
+
+  Quaternion Quaternion::normalized() const {
+    float mplier = magnitude();
+
+    if(fabs(mplier) < 0.001f)
+      return *this;
+
+    mplier = 1.0f / mplier;
+
+    return Quaternion(time * mplier, space * mplier);
+  }
+
 }
