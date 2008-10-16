@@ -46,10 +46,10 @@ namespace Zeni {
   Vector3f & Vector3f::normalize() {
     float mplier = magnitude();
 
-    if(!mplier)
+    if(fabs(mplier) < 0.001f)
       return *this;
 
-    mplier = 1 / mplier;
+    mplier = 1.0f / mplier;
 
     i *= mplier;
     j *= mplier;
@@ -61,10 +61,10 @@ namespace Zeni {
   Vector3f Vector3f::normalized() const {
     float mplier = magnitude();
 
-    if(!mplier)
+    if(fabs(mplier) < 0.001f)
       return *this;
 
-    mplier = 1 / mplier;
+    mplier = 1.0f / mplier;
 
     return Vector3f(i * mplier, j * mplier, k * mplier);
   }

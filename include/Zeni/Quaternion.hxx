@@ -122,6 +122,14 @@ namespace Zeni {
     return Quaternion(time * -1, space * -1);
   }
 
+  float Quaternion::magnitude2() const {
+    return time * time + space * space;
+  }
+
+  float Quaternion::magnitude() const {
+    return sqrt(magnitude2());
+  }
+
   Quaternion Quaternion::conjugate() const {
     return Quaternion(time, -space);
   }
@@ -132,15 +140,15 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::absolute_value() const {
-    return Quaternion(sqrt(time * time + space * space), Vector3f());
+    return Quaternion(magnitude(), Vector3f());
   }
 
   Quaternion Quaternion::norm() const {
-    return Quaternion(time * time + space * space, Vector3f());
+    return Quaternion(magnitude2(), Vector3f());
   }
 
   Quaternion Quaternion::determinant() const {
-    float temp = time * time + space * space;
+    const float temp = magnitude2();
     return Quaternion(temp * temp, Vector3f());
   }
 
@@ -180,9 +188,12 @@ namespace Zeni {
   }
 
   std::pair<Vector3f, float> Quaternion::get_rotation() const {
-    Quaternion q = *this;
-    if(q.time > 1.0f)
-      q = norm();
+    Quaternion q = normalized();
+
+    if(q.time < -1.0f)
+      q.time = -1.0f;
+    else if(q.time > 1.0f)
+      q.time = 1.0f;
 
     const float angle = 2.0f * acos(q.time);
     float s = sqrt(1.0f - q.time * q.time);

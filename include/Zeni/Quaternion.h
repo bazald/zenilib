@@ -86,6 +86,10 @@ namespace Zeni {
     inline Quaternion operator-() const; ///< Get the negation
 
     // Other Standard Functions
+    Quaternion & normalize(); ///< Normalize the vector
+    Quaternion normalized() const; ///< Get the normalized vector
+    inline float magnitude2() const; ///< Get the 'magnitude squared' of the vector
+    inline float magnitude() const; ///< Get the magnitude of the vector
     inline Quaternion conjugate() const; ///< Get the spacial conjugation
     inline Quaternion reciprocal() const;
     inline Quaternion absolute_value() const;
