@@ -56,7 +56,7 @@ namespace Zeni {
     void create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
   };
 
-  void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const & /*node*/, Lib3dsMesh * const &mesh) {
+  void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const & /*node*/ , Lib3dsMesh * const &mesh) {
     mesh->user_ptr = user_p;
 
     struct l3dsv {
@@ -69,24 +69,18 @@ namespace Zeni {
 
     /*** BEGIN NEW FLIP-TEST ***/
 
+    //const Matrix4f &node_transform = reinterpret_cast<const Matrix4f &>(node->matrix);
     const Matrix4f &mesh_transform = reinterpret_cast<const Matrix4f &>(mesh->matrix);
-    const Vector3f ti = mesh_transform * Vector3f(1.0f, 0.0f, 0.0f);
-    const Vector3f tj = mesh_transform * Vector3f(0.0f, 1.0f, 0.0f);
-    const Vector3f tk = mesh_transform * Vector3f(0.0f, 0.0f, 1.0f);
-    const bool flip = (ti % tj) * tk < 0.0f;
+    //const Matrix4f node_transform_inv = node_transform.inverted();
+    const Matrix4f mesh_transform_inv = mesh_transform.inverted();
+
+    const Vector3f ti = mesh_transform_inv * Vector3f(1.0f, 0.0f, 0.0f);
+    const Vector3f tj = mesh_transform_inv * Vector3f(0.0f, 1.0f, 0.0f);
+    const Vector3f tk = mesh_transform_inv * Vector3f(0.0f, 0.0f, 1.0f);
+
+    bool flip = ((ti % tj) * tk > 0.0f);
 
     /*** END NEW FLIP-TEST ***/
-
-    /*** BEGIN OLD FLIP-TEST ***/
-
-    //// Get scaling vector
-    //Lib3dsObjectData * const data=&node->data.object;
-    //Vector3f scl(data->scl[0], data->scl[1], data->scl[2]);
-    //const bool flip = (data->scl[0] < 0.0f) ^
-    //                  (data->scl[1] < 0.0f) ^
-    //                  (data->scl[2] < 0.0f);
-
-    /*** END OLD FLIP-TEST ***/
 
     for(unsigned int i = 0; i < mesh->nfaces; ++i) {
       Lib3dsFace *face = &mesh->faces[i];
@@ -128,6 +122,10 @@ namespace Zeni {
       if(flip) {
         std::swap(pa, pc);
         std::swap(na, nc);
+
+        na *= -1;
+        nb *= -1;
+        nc *= -1;
       }
 
       if(mat.get_texture().size()) {
