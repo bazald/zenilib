@@ -102,14 +102,16 @@ namespace Zeni {
       Color pseudo_color;
 
       if(material) {///HACK
-        mat = Material(Color(material->ambient[3], material->ambient[0], material->ambient[1], material->ambient[2]),
-          Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]),
-          Color(material->specular[3], material->specular[0], material->specular[1], material->specular[2]),
+        const float opacity = 1.0f - material->transparency;
+
+        mat = Material(Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
+          Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
+          Color(opacity, material->specular[0], material->specular[1], material->specular[2]),
           Color(1.0f, 0.0f, 0.0f, 0.0f),
           1.0f, mesh->texcos ? material->texture1_map.name : "");
         mat.set_shininess(material->shininess);
 
-        pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
+        pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
       const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
@@ -182,28 +184,6 @@ namespace Zeni {
       delete user_p;
       mesh->user_ptr = 0;
     }
-  }
-
-  void vflip_texels(const Model &model, Lib3dsNode *node = 0) {
-    if(!node) {
-      for(node=model.thun_get_file()->nodes; node; node=node->next)
-        vflip_texels(model, node);
-      return;
-    }
-
-    for(Lib3dsNode *child=node->childs; child; child=child->next)
-      vflip_texels(model, child);
-
-    // End recursion // Begin vflip
-
-    Lib3dsMesh *mesh = model.thun_get_file()->meshes[lib3ds_file_mesh_by_name(model.thun_get_file(), node->name)];
-    if(!mesh)
-      return;
-    
-    //// 2.0 Update Disabled
-
-    //for(float (*texel)[2] = &mesh->texcos[0], (*end)[2] = texel + mesh->texels; texel != end; ++texel)
-    //  (*texel)[1] = 1.0f - (*texel)[1];
   }
 
 #ifdef _WINDOWS
@@ -456,9 +436,6 @@ namespace Zeni {
     visit_meshes(m_extents);
 
     m_position = m_extents.upper_bound.interpolate_to(0.5f, m_extents.lower_bound);
-
-    // Flip Textures Vertically - !!HACK!!
-    vflip_texels(*this);
   }
 
 }
