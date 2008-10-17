@@ -261,6 +261,66 @@ namespace Zeni {
     }
   };
 
+  template<typename VERTEX>
+  inline void align_similar_normals(const VERTEX v0,
+                                    Triangle<VERTEX> &t1,
+                                    const int &which)
+  {
+    const float closeness_threshold = 0.00001f;
+    const float alikeness_threshold = 0.95f;
+
+    const VERTEX &v1 = t1.get_vertex(which);
+
+    if((v0.get_position() - v1.get_position()).magnitude2() < closeness_threshold &&
+       v0.get_normal() * v1.get_normal() > alikeness_threshold)
+    {
+      VERTEX next(v1);
+      next.set_normal(v0.get_normal());
+      t1.set_vertex(which, next);
+    }
+  }
+
+  template<typename VERTEX>
+  static void align_similar_normals(std::vector<Triangle<VERTEX> *> &triangles,
+                                    std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors)
+  {
+
+    for(std::vector<Vertex_Buffer::Vertex_Buffer_Range *>::iterator it = descriptors.begin();
+        it != descriptors.end();
+        ++it)
+    {
+      for(int i = (*it)->start, iend = (*it)->start + (*it)->num_elements;
+          i != iend;
+          ++i)
+      {
+        Triangle<VERTEX> &ti = *triangles[i];
+        const VERTEX &vi0 = ti.get_vertex(0);
+        const VERTEX &vi1 = ti.get_vertex(1);
+        const VERTEX &vi2 = ti.get_vertex(2);
+
+        for(int j = i + 1; j < iend; ++j) {
+          Triangle<VERTEX> &tj = *triangles[j];
+
+          align_similar_normals(vi0, tj, 0);
+          align_similar_normals(vi0, tj, 1);
+          align_similar_normals(vi0, tj, 2);
+          align_similar_normals(vi1, tj, 0);
+          align_similar_normals(vi1, tj, 1);
+          align_similar_normals(vi1, tj, 2);
+          align_similar_normals(vi2, tj, 0);
+          align_similar_normals(vi2, tj, 1);
+          align_similar_normals(vi2, tj, 2);
+        }
+      }
+    }
+  }
+
+  void Vertex_Buffer::align_similar_normals() {
+    Zeni::align_similar_normals(m_triangles_c, m_descriptors_c);
+    Zeni::align_similar_normals(m_triangles_cm, m_descriptors_cm);
+    Zeni::align_similar_normals(m_triangles_t, m_descriptors_t);
+  }
+
   void Vertex_Buffer::set_descriptors() {
     {
       int done = DESCRIBER<Vertex3f_Color>()(m_triangles_c, m_descriptors_c, 0);
@@ -297,6 +357,7 @@ namespace Zeni {
 
     sort_triangles();
     set_descriptors();
+    //align_similar_normals(); // SLOW
 
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
@@ -514,6 +575,7 @@ namespace Zeni {
   void Vertex_Buffer_DX9::prerender() {
     sort_triangles();
     set_descriptors();
+    //align_similar_normals(); // SLOW
 
     if(m_buf_c.data.vbo || m_buf_c.data.alt ||
        m_buf_t.data.vbo || m_buf_t.data.alt)
