@@ -84,8 +84,7 @@
 #include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 
-#include <lib3ds/file.h>
-#include <lib3ds/node.h>
+#include <lib3ds.h>
 #include <memory>
 
 namespace Zeni {

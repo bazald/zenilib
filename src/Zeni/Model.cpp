@@ -37,10 +37,7 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
-#include <lib3ds/mesh.h>
-#include <lib3ds/material.h>
-#include <lib3ds/matrix.h>
-#include <lib3ds/vector.h>
+#include <lib3ds.h>
 #include <string>
 
 namespace Zeni {
@@ -60,15 +57,15 @@ namespace Zeni {
   };
 
   void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const & /*node*/, Lib3dsMesh * const &mesh) {
-    mesh->user.p = user_p;
+    mesh->user_ptr = user_p;
 
     struct l3dsv {
-      ~l3dsv() {delete [] normalL;}
-      Lib3dsVector *normalL;
-    } ptr = {new Lib3dsVector[3 * mesh->faces]};
-    Lib3dsVector *normal = ptr.normalL;
+      ~l3dsv() {free(normals);}
+      float (*normals)[3];
+    } ptr = {(float(*)[3])malloc(sizeof(float) * 9 * mesh->nfaces)};
+    float (*normal)[3] = ptr.normals;
 
-    lib3ds_mesh_calculate_normals(mesh, normal);
+    lib3ds_mesh_calculate_vertex_normals(mesh, normal);
 
     /*** BEGIN NEW FLIP-TEST ***/
 
@@ -91,12 +88,12 @@ namespace Zeni {
 
     /*** END OLD FLIP-TEST ***/
 
-    for(unsigned int i = 0; i < mesh->faces; ++i) {
-      Lib3dsFace *face = &mesh->faceL[i];
+    for(unsigned int i = 0; i < mesh->nfaces; ++i) {
+      Lib3dsFace *face = &mesh->faces[i];
 
       Lib3dsMaterial *material = 0;
-      if(face->material[0]) {
-        material=lib3ds_file_material_by_name(model.thun_get_file(), face->material);
+      if(face->material != -1) {
+        material = model.thun_get_file()->materials[face->material];
         if(!material)
           throw Model_Render_Failure();
       }
@@ -109,7 +106,7 @@ namespace Zeni {
           Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]),
           Color(material->specular[3], material->specular[0], material->specular[1], material->specular[2]),
           Color(1.0f, 0.0f, 0.0f, 0.0f),
-          1.0f, mesh->texels ? material->texture1_map.name : "");
+          1.0f, mesh->texcos ? material->texture1_map.name : "");
         mat.set_shininess(material->shininess);
 
         pseudo_color = Color(material->diffuse[3], material->diffuse[0], material->diffuse[1], material->diffuse[2]);
@@ -118,9 +115,9 @@ namespace Zeni {
       const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
       const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
 
-      Point3f pa(mesh->pointL[face->points[0]].pos[0], mesh->pointL[face->points[0]].pos[1], mesh->pointL[face->points[0]].pos[2]);
-      const Point3f pb(mesh->pointL[face->points[1]].pos[0], mesh->pointL[face->points[1]].pos[1], mesh->pointL[face->points[1]].pos[2]);
-      Point3f pc(mesh->pointL[face->points[2]].pos[0], mesh->pointL[face->points[2]].pos[1], mesh->pointL[face->points[2]].pos[2]);
+      Point3f pa(mesh->vertices[face->index[0]][0], mesh->vertices[face->index[0]][1], mesh->vertices[face->index[0]][2]);
+      const Point3f pb(mesh->vertices[face->index[1]][0], mesh->vertices[face->index[1]][1], mesh->vertices[face->index[1]][2]);
+      Point3f pc(mesh->vertices[face->index[2]][0], mesh->vertices[face->index[2]][1], mesh->vertices[face->index[2]][2]);
       
       Vector3f na(normal[0][0], normal[0][1], normal[0][2]);
       Vector3f nb(normal[1][0], normal[1][1], normal[1][2]);
@@ -132,9 +129,9 @@ namespace Zeni {
       }
 
       if(mat.get_texture().size()) {
-        Point2f ta(tex_offset.x + tex_scale.x * mesh->texelL[face->points[0]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[0]][1]);
-        const Point2f tb(tex_offset.x + tex_scale.x * mesh->texelL[face->points[1]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[1]][1]);
-        Point2f tc(tex_offset.x + tex_scale.x * mesh->texelL[face->points[2]][0], tex_offset.y + tex_scale.y * mesh->texelL[face->points[2]][1]);
+        Point2f ta(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[0]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[0]][1]));
+        const Point2f tb(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[1]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[1]][1]));
+        Point2f tc(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[2]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[2]][1]));
       
         if(flip)
           std::swap(ta, tc);
@@ -169,21 +166,21 @@ namespace Zeni {
     Lib3dsMesh * mesh = 0;
 
     if(node) {
-      if(node->type != LIB3DS_OBJECT_NODE ||
+      if(node->type != LIB3DS_NODE_MESH_INSTANCE ||
         !strcmp(node->name, "$$$DUMMY"))
         return;
 
-      mesh = lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+      mesh = model.thun_get_file()->meshes[lib3ds_file_mesh_by_name(model.thun_get_file(), node->name)];
     }
     else if(node_mesh)
       mesh = node_mesh;
     else
       return;
 
-    if(mesh->user.p) {
-      Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user.p);
+    if(mesh->user_ptr) {
+      Vertex_Buffer *user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user_ptr);
       delete user_p;
-      mesh->user.p = 0;
+      mesh->user_ptr = 0;
     }
   }
 
@@ -199,12 +196,14 @@ namespace Zeni {
 
     // End recursion // Begin vflip
 
-    Lib3dsMesh *mesh=lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+    Lib3dsMesh *mesh = model.thun_get_file()->meshes[lib3ds_file_mesh_by_name(model.thun_get_file(), node->name)];
     if(!mesh)
       return;
+    
+    //// 2.0 Update Disabled
 
-    for(Lib3dsTexel *texel=&mesh->texelL[0], *end=texel+mesh->texels; texel != end; ++texel)
-      (*texel)[1] = 1.0f - (*texel)[1];
+    //for(float (*texel)[2] = &mesh->texcos[0], (*end)[2] = texel + mesh->texels; texel != end; ++texel)
+    //  (*texel)[1] = 1.0f - (*texel)[1];
   }
 
 #ifdef _WINDOWS
@@ -307,11 +306,15 @@ namespace Zeni {
     if(!node) {
       if(!mesh) {
         if(m_file->nodes)
-          for(node=m_file->nodes; node; node=node->next)
+          for(node = m_file->nodes; node; node = node->next)
             visit_meshes(mv, node);
         else
-          for(mesh=m_file->meshes; mesh; mesh=mesh->next)
+          for(Lib3dsMesh *mesh = *m_file->meshes, *end = mesh + m_file->nmeshes;
+              mesh != end;
+              ++mesh)
+          {
             visit_meshes(mv, node, mesh);
+          }
 
         return;
       }
@@ -349,11 +352,11 @@ namespace Zeni {
     Lib3dsMesh * mesh = 0;
 
     if(node) {
-      if(node->type != LIB3DS_OBJECT_NODE ||
+      if(node->type != LIB3DS_NODE_MESH_INSTANCE ||
         !strcmp(node->name, "$$$DUMMY"))
         return;
 
-      mesh = lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+      mesh = model.thun_get_file()->meshes[lib3ds_file_mesh_by_name(model.thun_get_file(), node->name)];
     }
     else if(node_mesh)
       mesh = node_mesh;
@@ -362,10 +365,10 @@ namespace Zeni {
 
     Video &vr = Video::get_reference();
 
-    if(!mesh->user.p)
+    if(!mesh->user_ptr)
       create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);
 
-    Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user.p);
+    Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user_ptr);
     if(!user_p)
       throw Model_Render_Failure();
 
@@ -373,19 +376,21 @@ namespace Zeni {
 
     /*** BEGIN PART 1 ***/
 
-    if(node) {
-      Lib3dsObjectData * data = &node->data.object;
+    //// 2.0 Update Disabled
+    //if(node) {
+    //  Lib3dsObjectData * data = &node->data.object;
 
       vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
 
-      vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
-    }
+    //// 2.0 Update Disabled
+    //  vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
+    //}
     
     /*** END PART 1 ***/
 
     /*** BEGIN PART 2 ***/
 
-    Lib3dsMatrix M;
+    float M[4][4];
     lib3ds_matrix_copy(M, mesh->matrix);
     lib3ds_matrix_inv(M);
 
@@ -403,32 +408,34 @@ namespace Zeni {
     Lib3dsMesh * mesh = 0;
 
     if(node) {
-      if(node->type != LIB3DS_OBJECT_NODE ||
+      if(node->type != LIB3DS_NODE_MESH_INSTANCE ||
         !strcmp(node->name, "$$$DUMMY"))
         return;
 
-      mesh = lib3ds_file_mesh_by_name(model.thun_get_file(), node->name);
+      mesh = model.thun_get_file()->meshes[lib3ds_file_mesh_by_name(model.thun_get_file(), node->name)];
     }
     else if(node_mesh)
       mesh = node_mesh;
     else
       return;
 
-    for(Lib3dsPoint *point=&mesh->pointL[0], *end=point+mesh->points; point != end; ++point)
-      if(point) {
-        if(lower_bound.x > point->pos[0] || !started)
-          lower_bound.x = point->pos[0];
-        if(lower_bound.y > point->pos[1] || !started)
-          lower_bound.y = point->pos[1];
-        if(lower_bound.z > point->pos[2] || !started)
-          lower_bound.z = point->pos[2];
+    for(float (*vertex)[3] = &mesh->vertices[0], (*end)[3] = vertex + mesh->nvertices; vertex != end; ++vertex)
+      if(vertex) {
+        float (&point)[3] = *vertex;
 
-        if(upper_bound.x < point->pos[0] || !started)
-          upper_bound.x = point->pos[0];
-        if(upper_bound.y < point->pos[1] || !started)
-          upper_bound.y = point->pos[1];
-        if(upper_bound.z < point->pos[2] || !started)
-          upper_bound.z = point->pos[2];
+        if(lower_bound.x > point[0] || !started)
+          lower_bound.x = point[0];
+        if(lower_bound.y > point[1] || !started)
+          lower_bound.y = point[1];
+        if(lower_bound.z > point[2] || !started)
+          lower_bound.z = point[2];
+
+        if(upper_bound.x < point[0] || !started)
+          upper_bound.x = point[0];
+        if(upper_bound.y < point[1] || !started)
+          upper_bound.y = point[1];
+        if(upper_bound.z < point[2] || !started)
+          upper_bound.z = point[2];
 
         started = true;
       }
@@ -440,7 +447,7 @@ namespace Zeni {
   }
   
   void Model::load() {
-    m_file = lib3ds_file_load(m_filename.c_str());
+    m_file = lib3ds_file_open(m_filename.c_str());
     if(!m_file)
       throw Model_Init_Failure();
 
