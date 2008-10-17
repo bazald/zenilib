@@ -107,6 +107,9 @@ namespace Zeni {
     // Generate lists of vertex ranges to be rendered more efficiently
     void set_descriptors();
 
+    // Align normals of similar vertices
+    void align_similar_normals();
+
     std::vector<Triangle<Vertex3f_Color> *> m_triangles_c;
     std::vector<Triangle<Vertex3f_Color> *> m_triangles_cm;
     std::vector<Triangle<Vertex3f_Texture> *> m_triangles_t;
