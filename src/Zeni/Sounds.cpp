@@ -135,7 +135,6 @@ namespace Zeni {
       give_Sound_Source(ss_ptr);
     }
     catch(Sound_Source_Init_Failure &) {
-      return false;
     }
 
     return true;
