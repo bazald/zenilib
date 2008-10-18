@@ -56,7 +56,7 @@ namespace Zeni {
     void create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
   };
 
-  void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const & /*node*/ , Lib3dsMesh * const &mesh) {
+  void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh) {
     mesh->user_ptr = user_p;
 
     struct l3dsv {
@@ -69,16 +69,10 @@ namespace Zeni {
 
     /*** BEGIN NEW FLIP-TEST ***/
 
-    //const Matrix4f &node_transform = reinterpret_cast<const Matrix4f &>(node->matrix);
-    const Matrix4f &mesh_transform = reinterpret_cast<const Matrix4f &>(mesh->matrix);
-    //const Matrix4f node_transform_inv = node_transform.inverted();
-    const Matrix4f mesh_transform_inv = mesh_transform.inverted();
+    Lib3dsMeshInstanceNode * const &instance = reinterpret_cast<Lib3dsMeshInstanceNode *>(node);
+    const Vector3f scl_track = reinterpret_cast<const Vector3f &>(instance->scl_track.keys->value);
 
-    const Vector3f ti = mesh_transform_inv * Vector3f(1.0f, 0.0f, 0.0f);
-    const Vector3f tj = mesh_transform_inv * Vector3f(0.0f, 1.0f, 0.0f);
-    const Vector3f tk = mesh_transform_inv * Vector3f(0.0f, 0.0f, 1.0f);
-
-    bool flip = ((ti % tj) * tk > 0.0f);
+    const bool flip_order = scl_track.i * scl_track.j * scl_track.k < 0.0f;
 
     /*** END NEW FLIP-TEST ***/
 
@@ -114,12 +108,12 @@ namespace Zeni {
       Point3f pa(mesh->vertices[face->index[0]][0], mesh->vertices[face->index[0]][1], mesh->vertices[face->index[0]][2]);
       const Point3f pb(mesh->vertices[face->index[1]][0], mesh->vertices[face->index[1]][1], mesh->vertices[face->index[1]][2]);
       Point3f pc(mesh->vertices[face->index[2]][0], mesh->vertices[face->index[2]][1], mesh->vertices[face->index[2]][2]);
-      
+
       Vector3f na(normal[0][0], normal[0][1], normal[0][2]);
       Vector3f nb(normal[1][0], normal[1][1], normal[1][2]);
       Vector3f nc(normal[2][0], normal[2][1], normal[2][2]);
 
-      if(flip) {
+      if(flip_order) {
         std::swap(pa, pc);
         std::swap(na, nc);
 
@@ -133,7 +127,7 @@ namespace Zeni {
         const Point2f tb(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[1]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[1]][1]));
         Point2f tc(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[2]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[2]][1]));
       
-        if(flip)
+        if(flip_order)
           std::swap(ta, tc);
 
         Render_Wrapper * const rw_ptr = material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper();
