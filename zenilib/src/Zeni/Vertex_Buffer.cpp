@@ -262,6 +262,36 @@ namespace Zeni {
   };
 
   template<typename VERTEX>
+  struct Vertex_Ref {
+    Vertex_Ref() : t(0), which(-1) {}
+    Vertex_Ref(Triangle<VERTEX> * const &t_, const int &which_) : t(t_), which(which_) {}
+
+    Triangle<VERTEX> *t;
+    int which;
+
+    struct X_Sorter {
+      bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
+        return lhs.t->get_vertex(lhs.which).get_position().x <
+               rhs.t->get_vertex(rhs.which).get_position().x;
+      }
+    };
+
+    struct Y_Sorter {
+      bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
+        return lhs.t->get_vertex(lhs.which).get_position().y <
+               rhs.t->get_vertex(rhs.which).get_position().y;
+      }
+    };
+
+    struct Z_Sorter {
+      bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
+        return lhs.t->get_vertex(lhs.which).get_position().z <
+               rhs.t->get_vertex(rhs.which).get_position().z;
+      }
+    };
+  };
+
+  template<typename VERTEX>
   inline void align_similar_normals(const VERTEX v0,
                                     Triangle<VERTEX> &t1,
                                     const int &which)
@@ -272,7 +302,7 @@ namespace Zeni {
     const VERTEX &v1 = t1.get_vertex(which);
 
     if((v0.get_position() - v1.get_position()).magnitude2() < closeness_threshold &&
-       v0.get_normal() * v1.get_normal() > alikeness_threshold)
+       fabs(v0.get_normal() * v1.get_normal()) > alikeness_threshold)
     {
       VERTEX next(v1);
       next.set_normal(v0.get_normal());
@@ -284,32 +314,48 @@ namespace Zeni {
   static void align_similar_normals(std::vector<Triangle<VERTEX> *> &triangles,
                                     std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors)
   {
+    const float closeness_threshold = 0.001f;
 
     for(std::vector<Vertex_Buffer::Vertex_Buffer_Range *>::iterator it = descriptors.begin();
         it != descriptors.end();
         ++it)
     {
+      vector< Vertex_Ref<VERTEX> > verts;
+
+      verts.reserve(3 * (*it)->num_elements);
       for(int i = (*it)->start, iend = (*it)->start + (*it)->num_elements;
           i != iend;
           ++i)
       {
-        Triangle<VERTEX> &ti = *triangles[i];
-        const VERTEX &vi0 = ti.get_vertex(0);
-        const VERTEX &vi1 = ti.get_vertex(1);
-        const VERTEX &vi2 = ti.get_vertex(2);
+        verts.push_back(Vertex_Ref<VERTEX>(triangles[i], 0));
+        verts.push_back(Vertex_Ref<VERTEX>(triangles[i], 1));
+        verts.push_back(Vertex_Ref<VERTEX>(triangles[i], 2));
+      }
 
-        for(int j = i + 1; j < iend; ++j) {
-          Triangle<VERTEX> &tj = *triangles[j];
+      std::stable_sort(verts.begin(), verts.end(), Vertex_Ref<VERTEX>::Z_Sorter());
 
-          align_similar_normals(vi0, tj, 0);
-          align_similar_normals(vi0, tj, 1);
-          align_similar_normals(vi0, tj, 2);
-          align_similar_normals(vi1, tj, 0);
-          align_similar_normals(vi1, tj, 1);
-          align_similar_normals(vi1, tj, 2);
-          align_similar_normals(vi2, tj, 0);
-          align_similar_normals(vi2, tj, 1);
-          align_similar_normals(vi2, tj, 2);
+      vector< Vertex_Ref<VERTEX> >::iterator kend = verts.begin();
+
+      for(vector< Vertex_Ref<VERTEX> >::iterator jt = verts.begin();
+          jt != verts.end();
+          ++jt)
+      {
+        for(; kend != verts.end(); ++kend)
+        {
+          if(kend->t->get_vertex(kend->which).get_position().z -
+             jt->t->get_vertex(jt->which).get_position().z > closeness_threshold)
+          {
+            break;
+          }
+        }
+
+        for(vector< Vertex_Ref<VERTEX> >::iterator kt = jt + 1;
+            kt != kend;
+            ++kt)
+        {
+          align_similar_normals(jt->t->get_vertex(jt->which),
+                                *kt->t,
+                                kt->which);
         }
       }
     }
@@ -357,7 +403,7 @@ namespace Zeni {
 
     sort_triangles();
     set_descriptors();
-    //align_similar_normals(); // SLOW
+    align_similar_normals();
 
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
@@ -575,7 +621,7 @@ namespace Zeni {
   void Vertex_Buffer_DX9::prerender() {
     sort_triangles();
     set_descriptors();
-    //align_similar_normals(); // SLOW
+    align_similar_normals();
 
     if(m_buf_c.data.vbo || m_buf_c.data.alt ||
        m_buf_t.data.vbo || m_buf_t.data.alt)
