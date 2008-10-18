@@ -341,6 +341,7 @@ namespace Zeni {
     else
       throw Model_Render_Failure();
 
+    Lib3dsMeshInstanceNode * const &instance = reinterpret_cast<Lib3dsMeshInstanceNode *>(node);
     Video &vr = Video::get_reference();
 
     if(!mesh->user_ptr)
@@ -352,29 +353,13 @@ namespace Zeni {
 
     vr.push_world_stack();
 
-    /*** BEGIN PART 1 ***/
+    const Matrix4f &node_matrix = reinterpret_cast<const Matrix4f &>(node->matrix);
+    const Matrix4f &mesh_matrix = reinterpret_cast<const Matrix4f &>(mesh->matrix);
+    const Vector3f &pivot = reinterpret_cast<const Vector3f &>(instance->pivot);
 
-    //// 2.0 Update Disabled
-    //if(node) {
-    //  Lib3dsObjectData * data = &node->data.object;
-
-      vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->matrix));
-
-    //// 2.0 Update Disabled
-    //  vr.translate_scene(-reinterpret_cast<const Vector3f &>(data->pivot));
-    //}
-    
-    /*** END PART 1 ***/
-
-    /*** BEGIN PART 2 ***/
-
-    float M[4][4];
-    lib3ds_matrix_copy(M, mesh->matrix);
-    lib3ds_matrix_inv(M);
-
-    vr.transform_scene(reinterpret_cast<const Matrix4f &>(M));
-    
-    /*** END PART 2 ***/
+    vr.transform_scene(node_matrix);
+    vr.translate_scene(-pivot);
+    vr.transform_scene(mesh_matrix.inverted());
 
     //user_p->debug_render(); ///HACK
     user_p->render();
