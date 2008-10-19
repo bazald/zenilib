@@ -81,6 +81,10 @@ namespace Zeni {
     GUARANTEED_FINISHED_END();
   }
 
+  bool Model::will_do_normal_alignment() const {
+    return m_align_normals;
+  }
+
   void Model::set_scale(const Vector3f &multiplier) {
     GUARANTEED_FINISHED_BEGIN(m_loader);
     m_scale = multiplier;
@@ -110,6 +114,10 @@ namespace Zeni {
     m_keyframe = keyframe;
     lib3ds_file_eval(m_file, keyframe);
     GUARANTEED_FINISHED_END();
+  }
+
+  void Model::do_normal_alignment(const bool align_normals_) {
+    m_align_normals = align_normals_;
   }
 
 }
