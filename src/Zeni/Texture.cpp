@@ -162,12 +162,13 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  Texture_GL::Texture_GL(const std::string &filename, const bool &repeat)
+  Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, const bool &lazy_loading)
     : Texture(Texture_Base::VTYPE_GL, repeat),
       m_texture_id(0),
       m_filename(filename)
   {
-    //load(m_filename, m_repeat);
+    if(!lazy_loading)
+      load(m_filename, m_repeat);
   }
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)

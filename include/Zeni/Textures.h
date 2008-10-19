@@ -71,10 +71,12 @@ namespace Zeni {
     inline static bool get_mipmapping(); ///< Check if mipmapping is in use
     inline static bool get_trilinear_filtering(); ///< Check if trilinear filtering (the combination of bilinear filtering and mipmapping) is in use
     inline static int get_anisotropic_filtering(); ///< Check the current level of anisotropy
+    inline static bool get_lazy_loading(); /// Check to see if Textures is set to use lazy loading if possible
 
     // Modifiers
     static void set_texturing_mode(const int &anisotropic_filtering_,
       const bool &bilinear_filtering_, const bool &mipmapping_); ///< Set the texturing mode
+    inline static void set_lazy_loading(const bool &lazy_loading = true); ///< Set whether Textures should use lazy loading if possible, or if it should always load Textures immediately.
     unsigned long set_texture(const std::string &name, Texture * const); ///< Load a texture
     void clear_texture(const std::string &name); ///< Clear a texture by name.
     unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
@@ -106,6 +108,7 @@ namespace Zeni {
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;
+    static bool m_lazy_loading;
   };
 
   struct Texture_Not_Found : public Error {

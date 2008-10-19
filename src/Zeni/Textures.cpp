@@ -270,7 +270,7 @@ namespace Zeni {
     bool repeat;
     while(tdbin >> name >> fileName >> repeat) {
       try {
-        Texture * const texture = vr.load_Texture(fileName, repeat);
+        Texture * const texture = vr.load_Texture(fileName, repeat, m_lazy_loading);
             
         const unsigned long id = Resource::get_reference().assign();
         m_texture_lookup[name] = id;
@@ -318,5 +318,6 @@ namespace Zeni {
   bool Textures::m_bilinear_filtering = true;
   bool Textures::m_mipmapping = true;
   int Textures::m_anisotropic_filtering = 0;
+  bool Textures::m_lazy_loading = false;
 
 }

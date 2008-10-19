@@ -230,8 +230,8 @@ namespace Zeni {
     glViewport(viewport.first.x, get_screen_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
   }
 
-  Texture * Video_GL::load_Texture_impl(const std::string &filename, const bool &repeat) {
-    return new Texture_GL(filename, repeat);
+  Texture * Video_GL::load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading) {
+    return new Texture_GL(filename, repeat, lazy_loading);
   }
 
   Texture * Video_GL::create_Texture_impl(SDL_Surface * const &surface, const bool &repeat) {

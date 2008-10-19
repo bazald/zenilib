@@ -127,7 +127,8 @@ namespace Zeni {
     Texture_GL & operator=(const Texture_GL &);
     
   public:
-    Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */);
+    Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */,
+               const bool &lazy_loading = false);
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
     virtual ~Texture_GL();
 
