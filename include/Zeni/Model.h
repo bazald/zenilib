@@ -117,7 +117,7 @@ namespace Zeni {
   class Model {
   public:
     /// The only way to create a Model
-    Model(const std::string &filename);
+    Model(const std::string &filename, const bool align_normals_ = false);
     Model(const Model &rhs);
     ~Model();
 

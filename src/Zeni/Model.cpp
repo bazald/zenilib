@@ -173,11 +173,11 @@ namespace Zeni {
 #pragma warning( push )
 #pragma warning( disable : 4355 )
 #endif
-  Model::Model(const std::string &filename)
+  Model::Model(const std::string &filename, const bool align_normals_)
     : m_filename(filename),
     m_file(0), 
     m_keyframe(0.0f),
-    m_align_normals(false),
+    m_align_normals(align_normals_),
     m_unrenderer(0), 
     m_scale(1.0f, 1.0f, 1.0f), 
     m_rotate(0.0f, 0.0f, 1.0f), 
