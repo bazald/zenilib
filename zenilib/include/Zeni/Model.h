@@ -101,14 +101,14 @@ namespace Zeni {
     virtual void operator()(const Model & /*model*/, Lib3dsNode * const & /*node*/) {}
 
     // Mesh visiting function
-    virtual void operator()(const Model & /*model*/, Lib3dsNode * const & /*node*/, Lib3dsMesh * const & /*mesh*/) {}
+    virtual void operator()(const Model & /*model*/, Lib3dsMeshInstanceNode * const & /*node*/, Lib3dsMesh * const & /*mesh*/) {}
   };
 
   class Model_Extents : public Model_Visitor {
   public:
     Model_Extents();
 
-    virtual void operator()(const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh);
+    virtual void operator()(const Model &model, Lib3dsMeshInstanceNode * const &node, Lib3dsMesh * const &mesh);
 
     Point3f lower_bound, upper_bound; ///< The bounding box of model, first frame only if animated
     bool started;
@@ -143,8 +143,8 @@ namespace Zeni {
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Model should try to fix broken normals before rendering
 
     // Post-Order Traversal
-    void visit_nodes(Model_Visitor &mv, Lib3dsNode *node = 0) const; ///< Visit all nodes
-    void visit_meshes(Model_Visitor &mv, Lib3dsNode *node = 0, Lib3dsMesh *mesh = 0) const; ///< Visit all meshes
+    void visit_nodes(Model_Visitor &mv, Lib3dsNode * node = 0) const; ///< Visit all nodes
+    void visit_meshes(Model_Visitor &mv, Lib3dsNode * node = 0, Lib3dsMesh * const &mesh = 0) const; ///< Visit all meshes
 
     void render() const;
 
