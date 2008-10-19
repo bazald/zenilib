@@ -68,6 +68,9 @@ namespace Zeni {
   class Render_Wrapper;
 
   class Vertex_Buffer  {
+    Vertex_Buffer(const Vertex_Buffer &);
+    Vertex_Buffer operator=(const Vertex_Buffer &);
+
   public:
     struct Vertex_Buffer_Range {
       Vertex_Buffer_Range(Render_Wrapper *rw, const int &s, const int &ne);
@@ -80,22 +83,25 @@ namespace Zeni {
     Vertex_Buffer();
     virtual ~Vertex_Buffer();
 
-    void add_triangle(Triangle<Vertex2f_Color> *triangle); ///< Add a Triangle to the Vertex_Buffer
-    void add_triangle(Triangle<Vertex2f_Texture> *triangle); ///< Add a Triangle to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex2f_Color> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Vertex_Buffer should try to fix broken normals in the prerender phase;
+    inline bool will_do_normal_alignment() const; // Find out whether Vertex_Buffer is set to try to fix broken normals in the prerender phase;
 
-    void add_triangle(Triangle<Vertex3f_Color> *triangle); ///< Add a Triangle to the Vertex_Buffer
-    void add_triangle(Triangle<Vertex3f_Texture> *triangle); ///< Add a Triangle to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex3f_Color> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quadrilateral); ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex2f_Color> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex2f_Texture> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex2f_Color> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
+
+    void add_triangle(Triangle<Vertex3f_Color> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
+    void add_triangle(Triangle<Vertex3f_Texture> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex3f_Color> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
+    void add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
     virtual void render() = 0; ///< Render the Vertex_Buffer
 
   protected:
-    virtual void prerender() = 0; ///< Create the vertex buffer in the GPU/VPU
+    virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
     inline int num_vertices_c() const;
     inline int num_vertices_cm() const;
@@ -117,11 +123,16 @@ namespace Zeni {
     std::vector<Vertex_Buffer_Range *> m_descriptors_c;
     std::vector<Vertex_Buffer_Range *> m_descriptors_cm;
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
+
+    bool m_align_normals;
   };
 
 #ifndef DISABLE_GL
 
   class Vertex_Buffer_GL : public Vertex_Buffer {
+    Vertex_Buffer_GL(const Vertex_Buffer_GL &);
+    Vertex_Buffer_GL operator=(const Vertex_Buffer_GL &);
+
   public:
     Vertex_Buffer_GL();
     virtual ~Vertex_Buffer_GL();
@@ -148,6 +159,9 @@ namespace Zeni {
 #ifndef DISABLE_DX9
 
   class Vertex_Buffer_DX9 : public Vertex_Buffer {
+    Vertex_Buffer_DX9(const Vertex_Buffer_DX9 &);
+    Vertex_Buffer_DX9 operator=(const Vertex_Buffer_DX9 &);
+
   public:
     Vertex_Buffer_DX9();
     virtual ~Vertex_Buffer_DX9();

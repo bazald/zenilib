@@ -35,6 +35,7 @@
 #include <Zeni/Material.hxx>
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Vector3f.hxx>
+#include <Zeni/Vertex_Buffer.hxx>
 #include <Zeni/Video.hxx>
 
 #include <lib3ds.h>
@@ -58,6 +59,7 @@ namespace Zeni {
 
   void Model_Renderer::create_vertex_buffer(Vertex_Buffer * const &user_p, const Model &model, Lib3dsNode * const &node, Lib3dsMesh * const &mesh) {
     mesh->user_ptr = user_p;
+    user_p->do_normal_alignment(model.will_do_normal_alignment());
 
     struct l3dsv {
       ~l3dsv() {free(normals);}
@@ -186,6 +188,7 @@ namespace Zeni {
     : m_filename(filename),
     m_file(0), 
     m_keyframe(0.0f),
+    m_align_normals(false),
     m_unrenderer(0), 
     m_scale(1.0f, 1.0f, 1.0f), 
     m_rotate(0.0f, 0.0f, 1.0f), 
@@ -200,6 +203,7 @@ namespace Zeni {
     : m_filename(rhs.m_filename),
     m_file(0),
     m_keyframe(rhs.m_keyframe),
+    m_align_normals(rhs.m_align_normals),
     m_unrenderer(0),
     m_scale(rhs.m_scale),
     m_rotate(rhs.m_rotate),

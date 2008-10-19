@@ -132,6 +132,7 @@ namespace Zeni {
     inline std::pair<Vector3f, float> get_rotate(); ///< Get the Model rotation
     inline const Point3f & get_translate(); ///< Get the Model translation
     inline const float & get_keyframe(); ///< Get the current (key)frame
+    inline bool will_do_normal_alignment() const; // Find out whether the Model will try to fix broken normals before rendering
 
     // Modifiers
     inline void set_scale(const Vector3f &multiplier); ///< Scale the Model
@@ -139,6 +140,7 @@ namespace Zeni {
     inline void set_rotate(const Quaternion &quaternion); ///< Rotate the Model
     inline void set_translate(const Point3f &vector); ///< Translate the Model
     inline void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
+    inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Model should try to fix broken normals before rendering
 
     // Post-Order Traversal
     void visit_nodes(Model_Visitor &mv, Lib3dsNode *node = 0) const; ///< Visit all nodes
@@ -153,6 +155,7 @@ namespace Zeni {
     std::string m_filename;
     Lib3dsFile *m_file;
     float m_keyframe;
+    bool m_align_normals;
 
     mutable Model_Visitor *m_unrenderer;
 

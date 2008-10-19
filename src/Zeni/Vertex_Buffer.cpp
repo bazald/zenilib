@@ -54,6 +54,7 @@ namespace Zeni {
   }
 
   Vertex_Buffer::Vertex_Buffer()
+    : m_align_normals(false)
   {
   }
 
@@ -70,11 +71,11 @@ namespace Zeni {
     clear_triangles(m_triangles_t);
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Color> *triangle) {
-    std::auto_ptr<Renderable> to_delete(triangle);
-
+  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Color> *triangle, const bool &give_ownership) {
     if(!triangle)
       throw VBuf_Init_Failure();
+
+    std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
     const Vertex2f_Color &v0 = triangle->get_vertex(0);
     const Vertex2f_Color &v1 = triangle->get_vertex(1);
@@ -87,11 +88,11 @@ namespace Zeni {
       triangle->get_render_wrapper()->get_duplicate()));
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Texture> *triangle) {
-    std::auto_ptr<Renderable> to_delete(triangle);
-
+  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Texture> *triangle, const bool &give_ownership) {
     if(!triangle)
       throw VBuf_Init_Failure();
+
+    std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
     const Vertex2f_Texture &v0 = triangle->get_vertex(0);
     const Vertex2f_Texture &v1 = triangle->get_vertex(1);
@@ -104,11 +105,11 @@ namespace Zeni {
       triangle->get_render_wrapper()->get_duplicate()));
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Color> *quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
-
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Color> *quad, const bool &give_ownership) {
     if(!quad)
       throw VBuf_Init_Failure();
+
+    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
     const Vertex2f_Color &v0 = quad->get_vertex(0);
     const Vertex2f_Color &v1 = quad->get_vertex(1);
@@ -123,11 +124,11 @@ namespace Zeni {
       quad->get_render_wrapper()->get_duplicate()));
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
-
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quad, const bool &give_ownership) {
     if(!quad)
       throw VBuf_Init_Failure();
+
+    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
     const Vertex2f_Texture &v0 = quad->get_vertex(0);
     const Vertex2f_Texture &v1 = quad->get_vertex(1);
@@ -142,7 +143,7 @@ namespace Zeni {
       quad->get_render_wrapper()->get_duplicate()));
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Color> *triangle) {
+  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Color> *triangle, const bool &give_ownership) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
@@ -150,27 +151,30 @@ namespace Zeni {
 
     if(mrw)
       if(mrw->get_material().get_texture().empty())
-        m_triangles_cm.push_back(triangle);
+        m_triangles_cm.push_back(give_ownership ? triangle
+                                                : triangle->get_duplicate());
       else
         throw VBuf_Init_Failure();
     else
-      m_triangles_c.push_back(triangle);
+      m_triangles_c.push_back(give_ownership ? triangle
+                                             : triangle->get_duplicate());
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Texture> *triangle) {
+  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Texture> *triangle, const bool &give_ownership) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
     const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
 
     if(mrw && !mrw->get_material().get_texture().empty())
-      m_triangles_t.push_back(triangle);
+      m_triangles_t.push_back(give_ownership ? triangle
+                                             : triangle->get_duplicate());
     else
       throw VBuf_Init_Failure();
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Color> *quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Color> *quad, const bool &give_ownership) {
+    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
     if(!quad)
       throw VBuf_Init_Failure();
@@ -180,6 +184,7 @@ namespace Zeni {
 
     try {
       add_triangle(tri0);
+      tri0 = 0;
       add_triangle(tri1);
     }
     catch(...) {
@@ -189,8 +194,8 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quad, const bool &give_ownership) {
+    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
     if(!quad)
       throw VBuf_Init_Failure();
@@ -200,6 +205,7 @@ namespace Zeni {
 
     try {
       add_triangle(tri0);
+      tri0 = 0;
       add_triangle(tri1);
     }
     catch(...) {
@@ -224,6 +230,13 @@ namespace Zeni {
       return dynamic_cast<const RENDER_WRAPPER &>(*lhs->get_render_wrapper()) < dynamic_cast<const RENDER_WRAPPER &>(*rhs->get_render_wrapper());
     }
   };
+
+  void Vertex_Buffer::prerender() {
+    sort_triangles();
+    set_descriptors();
+    if(m_align_normals)
+      align_similar_normals();
+  }
 
   void Vertex_Buffer::sort_triangles() {
     std::sort(m_triangles_c.begin(), m_triangles_c.end(), SORTER<Vertex3f_Color>());
@@ -401,9 +414,7 @@ namespace Zeni {
        m_vbuf[3].vbo || m_vbuf[3].alt)
       throw VBuf_Render_Failure();
 
-    sort_triangles();
-    set_descriptors();
-    align_similar_normals();
+    Vertex_Buffer::prerender();
 
     Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
 
@@ -619,13 +630,11 @@ namespace Zeni {
   }
 
   void Vertex_Buffer_DX9::prerender() {
-    sort_triangles();
-    set_descriptors();
-    align_similar_normals();
-
     if(m_buf_c.data.vbo || m_buf_c.data.alt ||
        m_buf_t.data.vbo || m_buf_t.data.alt)
       throw VBuf_Render_Failure();
+
+    Vertex_Buffer::prerender();
 
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
     unsigned int vertex_size;
