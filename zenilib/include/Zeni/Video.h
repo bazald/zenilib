@@ -179,7 +179,7 @@ namespace Zeni {
     const bool set_icon(const std::string &filename); ///< Set the window icon
 
     // Creation Functions
-    inline Texture * load_Texture(const std::string &filename, const bool &repeat); ///< Function for loading a Texture; used internally by Textures
+    inline Texture * load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts

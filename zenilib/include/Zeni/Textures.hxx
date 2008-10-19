@@ -52,6 +52,14 @@ namespace Zeni {
     return m_anisotropic_filtering;
   }
 
+  bool Textures::get_lazy_loading() {
+    return m_lazy_loading;
+  }
+
+  void Textures::set_lazy_loading(const bool &lazy_loading) {
+    m_lazy_loading = lazy_loading;
+  }
+
 }
 
 #include <Zeni/Texture.hxx>

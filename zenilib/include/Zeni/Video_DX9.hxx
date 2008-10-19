@@ -228,7 +228,7 @@ namespace Zeni {
     m_d3d_device->SetViewport(&vp);
   }
 
-  Texture * Video_DX9::load_Texture_impl(const std::string &filename, const bool &repeat) {
+  Texture * Video_DX9::load_Texture_impl(const std::string &filename, const bool &repeat, const bool & /*lazy_loading*/ ) {
     return new Texture_DX9(filename, repeat);
   }
 

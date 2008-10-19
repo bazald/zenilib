@@ -117,7 +117,7 @@ namespace Zeni {
     inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
 
     // Creation Functions
-    inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat); ///< Function for loading a Texture; used internally by Textures
+    inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture_impl(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts

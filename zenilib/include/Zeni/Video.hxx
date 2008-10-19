@@ -380,8 +380,8 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_viewport_impl, viewport);
   }
 
-  Texture * Video::load_Texture(const std::string &filename, const bool &repeat) {
-    VIDEO_IV_FCN_CALL(load_Texture_impl, filename, repeat);
+  Texture * Video::load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading) {
+    VIDEO_IV_FCN_CALL(load_Texture_impl, filename, repeat, lazy_loading);
   }
 
   Texture * Video::create_Texture(SDL_Surface * const &surface, const bool &repeat) {
