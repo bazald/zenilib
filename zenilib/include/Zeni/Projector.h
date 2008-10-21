@@ -103,13 +103,13 @@ namespace Zeni {
       const std::pair<Point2f, Point2f> &camera2d = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(Video::get_reference().get_screen_width()), float(Video::get_reference().get_screen_height()))),
       const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(Video::get_reference().get_screen_width(), Video::get_reference().get_screen_height())));
 
-    inline Vector3f project(const Vector3f &world_coord) const;
-    inline Point3f project(const Point3f &world_coord) const;
-    inline Point2f project(const Point2f &world_coord) const;
+    inline Vector3f project(const Vector3f &world_coord) const; //< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
+    inline Point3f project(const Point3f &world_coord) const; //< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
+    inline Point2f project(const Point2f &world_coord) const; //< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
 
-    inline Vector3f unproject(const Vector3f &screen_coord) const;
-    inline Point3f unproject(const Point3f &screen_coord) const;
-    inline Point2f unproject(const Point2f &screen_coord) const;
+    inline Vector3f unproject(const Vector3f &screen_coord) const; //< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
+    inline Point3f unproject(const Point3f &screen_coord) const; //< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
+    inline Point2f unproject(const Point2f &screen_coord) const; //< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
 
   private:
     inline void init(
@@ -126,11 +126,11 @@ namespace Zeni {
       const Camera &camera3d = Camera(),
       const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(Video::get_reference().get_screen_width(), Video::get_reference().get_screen_height())));
 
-    inline Vector3f project(const Vector3f &world_coord) const;
-    inline Point3f project(const Point3f &world_coord) const;
+    inline Vector3f project(const Vector3f &world_coord) const; //< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])
+    inline Point3f project(const Point3f &world_coord) const; //< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])
 
-    inline Vector3f unproject(const Vector3f &screen_coord) const;
-    inline Point3f unproject(const Point3f &screen_coord) const;
+    inline Vector3f unproject(const Vector3f &screen_coord) const; //< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing frustum
+    inline Point3f unproject(const Point3f &screen_coord) const; //< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing frustum
 
   private:
     inline void init(
