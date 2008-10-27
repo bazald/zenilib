@@ -102,6 +102,10 @@ namespace Zeni {
     inline std::pair<Vector3f, float> get_rotation() const; ///< Get the rotation in radians left about an axis
     inline Matrix4f get_matrix() const; ///< Get the matrix form of the rotation in row-major order
 
+    // Indexing
+    inline const float & operator[](const int &index) const; ///< Get 'index'
+    inline float & operator[](const int &index); ///< Get 'index'
+
     float time;
 	  Vector3f space;
   };
