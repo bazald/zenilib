@@ -77,19 +77,11 @@ namespace Zeni {
     Material(const std::string &texture, const Color &ambient_and_diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Accessors
-    inline const Color & get_ambient() const; ///< Get the ambient Color
-    inline const Color & get_diffuse() const; ///< Get the diffuse Color
-    inline const Color & get_specular() const; ///< Get the specular Color
-    inline const Color & get_emissive() const; ///< Get the emissive Color
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)
     float get_shininess() const; ///< Get the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
     inline const std::string & get_texture() const; ///< Get the texture identifier
 
     // Modifiers
-    inline void set_ambient(const Color &ambient); ///< Set the ambient Color
-    inline void set_diffuse(const Color &diffuse); ///< Set the diffuse Color
-    inline void set_specular(const Color &specular); ///< Set the specular Color
-    inline void set_emissive(const Color &emissive); ///< Set the emissive Color
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
     void set_texture(const std::string &texture); ///< Set the texture identifier
@@ -108,11 +100,12 @@ namespace Zeni {
 
     bool operator==(const Material &rhs) const; ///< A simple equality test. Close hits are misses.
 
+    Color diffuse; ///< The diffuse Color
+    Color ambient; ///< The ambient Color
+    Color specular; ///< The specular Color
+    Color emissive; ///< The emissive Color
+
   private:
-    Color m_diffuse;
-    Color m_ambient;
-    Color m_specular;
-    Color m_emissive;
     float m_power;
 
     std::string m_texture;

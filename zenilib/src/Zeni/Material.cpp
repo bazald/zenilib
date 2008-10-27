@@ -44,11 +44,11 @@ using namespace std;
 
 namespace Zeni {
 
-  Material::Material(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power, const string &texture)
-    : m_diffuse(diffuse),
-    m_ambient(ambient),
-    m_specular(specular), 
-    m_emissive(emissive),
+  Material::Material(const Color &ambient_, const Color &diffuse_, const Color &specular_, const Color &emissive_, const float &power, const string &texture)
+    : diffuse(diffuse_),
+    ambient(ambient_),
+    specular(specular_), 
+    emissive(emissive_),
     m_power(power),
     m_texture(""),
     m_texture_id(0)
@@ -57,10 +57,10 @@ namespace Zeni {
   }
 
   Material::Material(const string &texture, const Color &ambient_and_diffuse)
-    : m_diffuse(ambient_and_diffuse), 
-    m_ambient(ambient_and_diffuse), 
-    m_specular(1.0f, ambient_and_diffuse.r, ambient_and_diffuse.g, ambient_and_diffuse.b), 
-    m_emissive(1.0f, 0.0f, 0.0f, 0.0f),
+    : diffuse(ambient_and_diffuse), 
+    ambient(ambient_and_diffuse), 
+    specular(1.0f, 0.5f * (ambient_and_diffuse.r + 1.0f), 0.5f * (ambient_and_diffuse.g + 1.0f), ambient_and_diffuse.b), 
+    emissive(1.0f, 0.0f, 0.0f, 0.0f),
     m_power(1.0f),
     m_texture(""),
     m_texture_id(0)
@@ -92,18 +92,18 @@ namespace Zeni {
       GLenum face = vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
 
       if(!(optimization & (1 << 0)))
-        glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&m_ambient));
+        glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
       if(!(optimization & (1 << 1)))
-        glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&m_diffuse));
+        glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&diffuse));
       if(!(optimization & (1 << 2)))
-        glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&m_specular));
+        glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&specular));
       if(!(optimization & (1 << 3)))
-        glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&m_emissive));
+        glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&emissive));
       if(!(optimization & (1 << 4)))
         glMaterialfv(face, GL_SHININESS, &m_power);
     }
     else
-      vgl.set_color(m_diffuse);
+      vgl.set_color(diffuse);
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty()) {
@@ -133,7 +133,7 @@ namespace Zeni {
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
-      vdx.set_color(m_diffuse);
+      vdx.set_color(diffuse);
 
     if(!(optimization & (1 << 5)) &&
        !m_texture.empty())
@@ -149,19 +149,19 @@ namespace Zeni {
 
   bool Material::operator<(const Material &rhs) const {
     return m_texture < rhs.m_texture || m_texture == rhs.m_texture &&
-      (m_diffuse < rhs.m_diffuse || m_diffuse == rhs.m_diffuse &&
-      (m_ambient < rhs.m_ambient || m_ambient == rhs.m_ambient &&
-      (m_specular < rhs.m_specular || m_specular == rhs.m_specular &&
-      (m_emissive < rhs.m_emissive || m_emissive == rhs.m_emissive &&
+      (diffuse < rhs.diffuse || diffuse == rhs.diffuse &&
+      (ambient < rhs.ambient || ambient == rhs.ambient &&
+      (specular < rhs.specular || specular == rhs.specular &&
+      (emissive < rhs.emissive || emissive == rhs.emissive &&
       m_power < rhs.m_power))));
   }
 
   bool Material::operator==(const Material &rhs) const {
     return m_texture == rhs.m_texture &&
-      m_diffuse == rhs.m_diffuse &&
-      m_ambient == rhs.m_ambient &&
-      m_specular == rhs.m_specular &&
-      m_emissive == rhs.m_emissive &&
+      diffuse == rhs.diffuse &&
+      ambient == rhs.ambient &&
+      specular == rhs.specular &&
+      emissive == rhs.emissive &&
       m_power == rhs.m_power;
   }
 

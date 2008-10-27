@@ -67,8 +67,7 @@ namespace Zeni {
 
   enum LIGHT_TYPE {LIGHT_POINT = 1, LIGHT_SPOT = 2, LIGHT_DIRECTIONAL = 3};
 
-  class Light {
-  public:
+  struct Light {
     /// An Alternative to the numerous setter functions
     Light(const Color &ambient = Color(1.0f, 0.0f, 0.0f, 0.0f), 
       const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
@@ -76,33 +75,8 @@ namespace Zeni {
       const Point3f &position = Point3f(0.0f, 0.0f, 0.0f), 
       const Vector3f &spot_direction = Vector3f(0.0f, 0.0f, -1.0f));
 
-    // Accessors
-    inline LIGHT_TYPE get_light_type() const; ///< Get the type of the Light
-    inline const Color & get_ambient() const; ///< Get the ambient Color
-    inline const Color & get_diffuse() const; ///< Get the diffuse Color
-    inline const Color & get_specular() const; ///< Get the specular Color
-    inline const Point3f & get_position() const; ///< Get the position of the Light (irrelevant for directional lights or purely ambient lights)
-    inline const Vector3f & get_spot_direction() const; ///< Get the direction of the Light (relevent only to spotlights)
-    inline const float & get_range() const; ///< Get the max distance reached by the light (does NOT affect OpenGL)
-    inline const float & get_spot_exponent() const; ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
-    inline const float & get_constant_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline const float & get_linear_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline const float & get_quadratic_attenuation() const; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline const float & get_spot_theta() const; ///< Get the angle, in radians, describing the size of the inner cone
-    inline const float & get_spot_phi() const; ///< Get the angle, in radians, describing the size of the outer cone
-
-    // Modifiers
+    // Helpers
     inline void set_light_type(const LIGHT_TYPE &light_type); ///< Set the type of the Light
-    inline void set_ambient(const Color &ambient); ///< Set the ambient Color
-    inline void set_diffuse(const Color &diffuse); ///< Set the diffuse Color
-    inline void set_specular(const Color &specular); ///< Set the specular Color
-    inline void set_position(const Point3f &position); ///< Set the position of the Light (irrelevant for directional lights or purely ambient lights)
-    inline void set_spot_direction(const Vector3f &spot_direction); ///< Set the direction of the Light (relevent only to spotlights)
-    inline void set_range(const float &range); ///< Set the max distance reached by the light (does NOT affect OpenGL)
-    inline void set_spot_exponent(const float &spot_exponent); ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
-    inline void set_constant_attenuation(const float &constant_attenuation); ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline void set_linear_attenuation(const float &linear_attenuation); ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
-    inline void set_quadratic_attenuation(const float &quadratic_attenuation); ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
     inline void set_spot_theta(const float &spot_theta); ///< Set the angle, in radians, describing the size of the inner cone (automatically increases phi if necessary)
     inline void set_spot_phi(const float &spot_phi); ///< Set the angle, in radians, describing the size of the outer cone (automatically decreases theta if necessary)
 
@@ -114,20 +88,19 @@ namespace Zeni {
     void set(const DWORD &number, Video_DX9 &screen) const;
 #endif
 
-  private:
-    LIGHT_TYPE m_light_type;
-    Color m_diffuse;
-    Color m_specular;
-    Color m_ambient;
-    Point3f m_position;
-    Vector3f m_spot_direction;
-    float m_range; // NOT SUPPORTED BY OPENGL
-    float m_spot_exponent; // Falloff
-    float m_constant_attenuation;
-    float m_linear_attenuation;
-    float m_quadratic_attenuation;
-    float m_spot_theta; // NOT SUPPORTED BY OPENGL
-    float m_spot_phi; // cutoff
+    LIGHT_TYPE light_type; ///< The type of the Light
+    Color diffuse; ///< The diffuse Color
+    Color specular; ///< The specular Color
+    Color ambient; ///< The ambient Color
+    Point3f position; ///< The position of the Light (irrelevant for directional lights or purely ambient lights)
+    Vector3f spot_direction; ///< The direction of the Light (relevent only to spotlights)
+    float range; ///< The max distance reached by the light; NOT SUPPORTED BY OPENGL
+    float spot_exponent; ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
+    float constant_attenuation; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    float linear_attenuation; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    float quadratic_attenuation; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
+    float spot_theta; ///< The angle, in radians, describing the size of the inner cone (automatically increases phi if necessary); NOT SUPPORTED BY OPENGL
+    float spot_phi; ///< The angle, in radians, describing the size of the outer cone (automatically decreases theta if necessary)
   };
 
 }

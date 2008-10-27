@@ -31,7 +31,6 @@
 #define ZENI_VIDEO_DX9_HXX
 
 // HXXed below
-#include <Zeni/Fog.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
 #include <Zeni/Render_Wrapper.h>
@@ -41,6 +40,7 @@
 #include <Zeni/Video_DX9.h>
 
 // Not HXXed
+#include <Zeni/Fog.h>
 #include <Zeni/Fonts.h>
 #include <Zeni/Vertex_Buffer.h>
 
@@ -280,7 +280,6 @@ namespace Zeni {
 
 #endif
 
-#include <Zeni/Fog.hxx>
 #include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>

@@ -50,9 +50,7 @@ namespace Zeni {
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
         tx1 = 1.0f - tx0;
 
-      Material material(image_name);
-      material.set_ambient(color_filter);
-      material.set_diffuse(color_filter);
+      const Material material(image_name, color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f)),
@@ -92,9 +90,7 @@ namespace Zeni {
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
         tx1 = 1.0f - tx0;
 
-      Material material(image_name);
-      material.set_ambient(color_filter);
-      material.set_diffuse(color_filter);
+      const Material material(image_name, color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f)),

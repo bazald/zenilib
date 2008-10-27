@@ -31,7 +31,6 @@
 
 // HXXed below
 #include <Zeni/Color.h>
-#include <Zeni/Fog.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
 #include <Zeni/Render_Wrapper.h>
@@ -40,6 +39,7 @@
 #include <Zeni/Video_GL.h>
 
 // Not HXXed
+#include <Zeni/Fog.h>
 #include <Zeni/Vertex_Buffer.h>
 
 #ifndef DISABLE_GL
@@ -267,7 +267,6 @@ namespace Zeni {
 #endif
 
 #include <Zeni/Color.hxx>
-#include <Zeni/Fog.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Render_Wrapper.hxx>

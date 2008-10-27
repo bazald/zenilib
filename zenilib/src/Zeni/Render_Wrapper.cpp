@@ -70,13 +70,13 @@ namespace Zeni {
   void Material_Render_Wrapper::optimize_to_follow(const Material_Render_Wrapper &rhs) {
     const Material &material = rhs.get_material();
 
-    if(m_material.get_ambient() == material.get_ambient())
+    if(m_material.ambient == material.ambient)
       optimization |= (1 << 0);
-    if(m_material.get_diffuse() == material.get_diffuse())
+    if(m_material.diffuse == material.diffuse)
       optimization |= (1 << 1);
-    if(m_material.get_specular() == material.get_specular())
+    if(m_material.specular == material.specular)
       optimization |= (1 << 2);
-    if(m_material.get_emissive() == material.get_emissive())
+    if(m_material.emissive == material.emissive)
       optimization |= (1 << 3);
     if(m_material.get_power() == material.get_power())
       optimization |= (1 << 4);
@@ -87,13 +87,13 @@ namespace Zeni {
   void Material_Render_Wrapper::optimize_to_precede(const Material_Render_Wrapper &rhs) {
     const Material &material = rhs.get_material();
 
-    if(m_material.get_ambient() == material.get_ambient())
+    if(m_material.ambient == material.ambient)
       optimization |= (1 << 6);
-    if(m_material.get_diffuse() == material.get_diffuse())
+    if(m_material.diffuse == material.diffuse)
       optimization |= (1 << 7);
-    if(m_material.get_specular() == material.get_specular())
+    if(m_material.specular == material.specular)
       optimization |= (1 << 8);
-    if(m_material.get_emissive() == material.get_emissive())
+    if(m_material.emissive == material.emissive)
       optimization |= (1 << 9);
     if(m_material.get_power() == material.get_power())
       optimization |= (1 << 10);

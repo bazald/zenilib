@@ -65,9 +65,9 @@
 namespace Zeni {
 
   class Camera;
-  class Fog;
+  struct Fog;
   class Font;
-  class Light;
+  struct Light;
   class Material;
   class Renderable;
   class Texture;
