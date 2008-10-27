@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Fog.hxx>
-#endif
-
 #ifndef ZENI_FOG_H
 #define ZENI_FOG_H
 
@@ -63,28 +59,12 @@ namespace Zeni {
 
   enum FOG_TYPE {FOG_LINEAR = 1, FOG_EXP = 2, FOG_EXP2 = 3};
 
-  class Fog {
-  public:
-    /// An Alternative to the numerous setter functions
+  struct Fog {
     Fog(const Color &color_ = Color(1.0f, 1.0f, 1.0f, 1.0f), 
         const float &density_ = 0.01f,
         const FOG_TYPE &type_ = FOG_EXP,
         const float &start_ = 10.0f,
         const float &end_ = 1000.0f);
-
-    // Accessors
-    inline FOG_TYPE get_type() const; ///< Get the type of the Fog
-    inline const Color & get_color() const; ///< Get the Color
-    inline const float & get_density() const; ///< Get the fog density
-    inline const float & get_start() const; ///< Get the start of the Fog
-    inline const float & get_end() const; ///< Get the end of the Fog
-
-    // Modifiers
-    inline void set_type(const FOG_TYPE &type_); ///< Set the type of the Fog
-    inline void set_color(const Color &color_); ///< Set the Color
-    inline void set_density(const float &density_); ///< Set the fog density
-    inline void set_start(const float &start_); ///< Set the start of the Fog
-    inline void set_end(const float &end_); ///< Set the end of the Fog
 
 #ifndef DISABLE_GL
     void set(Video_GL &screen) const;
@@ -94,12 +74,11 @@ namespace Zeni {
     void set(Video_DX9 &screen) const;
 #endif
 
-  private:
-    FOG_TYPE m_type;
-    Color m_color;
-    float m_density; // used when (FOGTYPE == FOG_EXP || FOGTYPE == FOG_EXP2)
-    float m_start;   // used when FOGTYPE == FOG_LINEAR
-    float m_end;     // used when FOGTYPE == FOG_LINEAR
+    FOG_TYPE type; ///< The type of the Fog
+    Color color;   ///< Color muxed with the rendering
+    float density; //< used when (FOGTYPE == FOG_EXP || FOGTYPE == FOG_EXP2)
+    float start;   //< used when FOGTYPE == FOG_LINEAR
+    float end;     //< used when FOGTYPE == FOG_LINEAR
   };
 
 }

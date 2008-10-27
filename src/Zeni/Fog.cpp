@@ -41,50 +41,50 @@ namespace Zeni {
     const FOG_TYPE &type_,
     const float &start_,
     const float &end_)
-    : m_type(type_),
-    m_color(color_),
-    m_density(density_),
-    m_start(start_),
-    m_end(end_)
+    : type(type_),
+    color(color_),
+    density(density_),
+    start(start_),
+    end(end_)
   {
   }
 
 #ifndef DISABLE_GL
   void Fog::set(Video_GL &) const {
-    const int type = m_type == FOG_EXP ? GL_EXP
-      : m_type == FOG_EXP2 ? GL_EXP2
+    const int type = type == FOG_EXP ? GL_EXP
+      : type == FOG_EXP2 ? GL_EXP2
       : GL_LINEAR;
 
     glFogi(GL_FOG_MODE, type);
 
-    if(m_type == FOG_LINEAR) {
-      glFogf(GL_FOG_START, m_start);
-      glFogf(GL_FOG_END, m_end);
+    if(type == FOG_LINEAR) {
+      glFogf(GL_FOG_START, start);
+      glFogf(GL_FOG_END, end);
     }
     else
-      glFogf(GL_FOG_DENSITY, m_density);
+      glFogf(GL_FOG_DENSITY, density);
 
-    glFogfv(GL_FOG_COLOR, reinterpret_cast<const GLfloat *>(&m_color));
+    glFogfv(GL_FOG_COLOR, reinterpret_cast<const GLfloat *>(&color));
     glHint(GL_FOG_HINT, GL_NICEST);
   }
 #endif
 
 #ifndef DISABLE_DX9
   void Fog::set(Video_DX9 &screen) const {
-    const DWORD type = m_type == FOG_EXP ? D3DFOG_EXP
-      : m_type == FOG_EXP2 ? D3DFOG_EXP2
+    const DWORD type = type == FOG_EXP ? D3DFOG_EXP
+      : type == FOG_EXP2 ? D3DFOG_EXP2
       : D3DFOG_LINEAR;
 
     screen.get_d3d_device()->SetRenderState(D3DRS_FOGTABLEMODE, type);
 
-    if(m_type == FOG_LINEAR) {
-      screen.get_d3d_device()->SetRenderState(D3DRS_FOGSTART, *(DWORD *)(&m_start));
-      screen.get_d3d_device()->SetRenderState(D3DRS_FOGEND, *(DWORD *)(&m_end));
+    if(type == FOG_LINEAR) {
+      screen.get_d3d_device()->SetRenderState(D3DRS_FOGSTART, *(DWORD *)(&start));
+      screen.get_d3d_device()->SetRenderState(D3DRS_FOGEND, *(DWORD *)(&end));
     }
     else
-      screen.get_d3d_device()->SetRenderState(D3DRS_FOGDENSITY, *(DWORD *)(&m_density));
+      screen.get_d3d_device()->SetRenderState(D3DRS_FOGDENSITY, *(DWORD *)(&density));
 
-    screen.get_d3d_device()->SetRenderState(D3DRS_FOGCOLOR, m_color.get_argb());
+    screen.get_d3d_device()->SetRenderState(D3DRS_FOGCOLOR, color.get_argb());
   }
 #endif
 
