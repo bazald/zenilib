@@ -49,8 +49,6 @@
 #ifndef ZENI_VECTOR3F_H
 #define ZENI_VECTOR3F_H
 
-#include <Zeni/Coordinate.h>
-
 namespace Zeni {
 
   struct Vector3f;
@@ -71,10 +69,6 @@ namespace Zeni {
     inline Vector3f();
     inline Vector3f(const float &i_, const float &j_, const float &k_);
     inline Vector3f(const Vector3f &rhs);
-
-    /// To/From a Point3f
-    inline explicit Vector3f(const Point3f &rhs);
-    inline operator Point3f() const;
 
     // Vector addition/subtraction
     inline Vector3f operator+(const Vector3f &rhs) const; ///< Get the sum
@@ -136,13 +130,6 @@ namespace Zeni {
 
   // Vector Scalar Multiplication Part II of II
   inline Vector3f operator*(const float &lhs, const Vector3f &rhs); ///< Get the scalar multiple
-
-  // Vector Addition / Subtraction to a Point
-  inline Point3f operator+(const Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
-  inline Point3f & operator+=(Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
-  inline Point3f operator-(const Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
-  inline Point3f & operator-=(Point3f &lhs, const Vector3f &rhs); ///< Get the translated Point3f
-  inline Vector3f operator-(const Point3f &lhs, const Point3f &rhs); ///< Get the translated Point3f
 
 }
 

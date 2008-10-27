@@ -71,9 +71,9 @@ namespace Zeni {
 
   bool Color::operator==(const Color &rhs) const {
     return a == rhs.a &&
-           r == rhs.r &&
-           g == rhs.g &&
-           b == rhs.b;
+            r == rhs.r &&
+            g == rhs.g &&
+            b == rhs.b;
   }
 
 }
