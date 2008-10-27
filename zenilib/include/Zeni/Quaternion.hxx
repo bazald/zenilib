@@ -36,6 +36,7 @@
 #include <Zeni/Quaternion.h>
 
 // Not HXXed
+#include <cassert>
 #include <cmath>
 
 namespace Zeni {
@@ -232,6 +233,18 @@ namespace Zeni {
       0.0f,
 
 		  0.0f, 0.0f, 0.0f, 1.0f);
+  }
+
+  const float & Quaternion::operator[](const int &index) const {
+    assert(-1 < index && index < 4);
+    const float * const ptr = &time;
+    return ptr[index];
+  }
+
+  float & Quaternion::operator[](const int &index) {
+    assert(-1 < index && index < 4);
+    float * const ptr = &time;
+    return ptr[index];
   }
 
 }
