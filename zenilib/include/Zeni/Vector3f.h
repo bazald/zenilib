@@ -112,7 +112,7 @@ namespace Zeni {
     inline float angle_between(const Vector3f &rhs) const; ///< Find the angle between the Vector3fs
 
     // Indexing
-    inline const float operator[](const int &index) const; ///< Get 'index'
+    inline const float & operator[](const int &index) const; ///< Get 'index'
     inline float & operator[](const int &index); ///< Get 'index'
 
     // Spherical Accessors and Modifiers
