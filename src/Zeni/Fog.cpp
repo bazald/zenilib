@@ -51,11 +51,11 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
   void Fog::set(Video_GL &) const {
-    const int type = type == FOG_EXP ? GL_EXP
+    const int mode = type == FOG_EXP ? GL_EXP
       : type == FOG_EXP2 ? GL_EXP2
       : GL_LINEAR;
 
-    glFogi(GL_FOG_MODE, type);
+    glFogi(GL_FOG_MODE, mode);
 
     if(type == FOG_LINEAR) {
       glFogf(GL_FOG_START, start);
@@ -71,11 +71,11 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   void Fog::set(Video_DX9 &screen) const {
-    const DWORD type = type == FOG_EXP ? D3DFOG_EXP
+    const DWORD mode = type == FOG_EXP ? D3DFOG_EXP
       : type == FOG_EXP2 ? D3DFOG_EXP2
       : D3DFOG_LINEAR;
 
-    screen.get_d3d_device()->SetRenderState(D3DRS_FOGTABLEMODE, type);
+    screen.get_d3d_device()->SetRenderState(D3DRS_FOGTABLEMODE, mode);
 
     if(type == FOG_LINEAR) {
       screen.get_d3d_device()->SetRenderState(D3DRS_FOGSTART, *(DWORD *)(&start));
