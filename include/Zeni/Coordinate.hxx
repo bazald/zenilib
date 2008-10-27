@@ -29,6 +29,9 @@
 #ifndef ZENI_COORDINATE_HXX
 #define ZENI_COORDINATE_HXX
 
+// HXXed below
+#include <Zeni/Vector3f.h>
+
 #include <Zeni/Coordinate.h>
 
 namespace Zeni {
@@ -79,20 +82,26 @@ namespace Zeni {
   }
 
   Point3f::Point3f()
-    : x(0.0f), y(0.0f), z(0.0f)
   {
   }
 
   Point3f::Point3f(const float &x_, const float &y_, const float &z_)
-    : x(x_), y(y_), z(z_)
+    : Vector3f(x_, y_, z_)
   {
   }
 
   Point3f::Point3f(const Point2f &rhs)
-    : x(float(rhs.x)), y(float(rhs.y)), z(0.0f)
+    : Vector3f(rhs.x, rhs.y, z)
+  {
+  }
+
+  Point3f::Point3f(const Vector3f &rhs)
+    : Vector3f(rhs.x, rhs.y, rhs.z)
   {
   }
 
 }
+
+#include <Zeni/Vector3f.hxx>
 
 #endif
