@@ -120,7 +120,18 @@ namespace Zeni {
     float phi() const; ///< phi   == radians down from k
     void set_spherical(const float &theta, const float &phi, const float &magnitude = 1); ///< Set the vector using spherical coordinates
 
-    float i, j, k;
+    union {
+      float i;
+      float x;
+    };
+    union {
+      float j;
+      float y;
+    };
+    union {
+      float k;
+      float z;
+    };
   };
 
   // Vector Scalar Multiplication Part II of II

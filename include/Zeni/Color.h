@@ -72,6 +72,7 @@ namespace Zeni {
 
     inline Uint32 get_rgba() const; ///< Get a Uint32 representation of 0xRRGGBBAA
     inline Uint32 get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB
+    inline Uint32 get_bgra() const; ///< Get a Uint32 representation of 0xBBGGRRAA - Endianness swap of rgba
 
     Color interpolate_to(const float &rhs_part, const Color &rhs) const; ///< Get a color that is inbetween this color and another color.
 

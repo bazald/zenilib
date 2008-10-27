@@ -73,6 +73,10 @@ namespace Zeni {
     return (a_ub() << 24) | (r_ub() << 16) | (g_ub() << 8) | b_ub();
   }
 
+  Uint32 Color::get_bgra() const {
+    return (b_ub() << 24) | (g_ub() << 16) | (r_ub() << 8) | a_ub();
+  }
+
 }
 
 #endif
