@@ -57,7 +57,7 @@
 
 namespace Zeni {
 
-  class Color;
+  struct Color;
 
   class Video_DX9 : public Video {
     friend class Video;

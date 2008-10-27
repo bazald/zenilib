@@ -106,11 +106,11 @@ namespace Zeni {
   }
 
   void Video_GL::set_color_impl(const Color &color) {
-    glColor4f(color.r(), color.g(), color.b(), color.a());
+    glColor4f(color.r, color.g, color.b, color.a);
   }
 
   void Video_GL::set_clear_color_impl(const Color &color) {
-    glClearColor(color.r(), color.g(), color.b(), 0.0f);
+    glClearColor(color.r, color.g, color.b, 0.0f);
   }
 
   void Video_GL::apply_texture_impl(const unsigned long &id) {

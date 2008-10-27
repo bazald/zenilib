@@ -72,7 +72,7 @@
 
 namespace Zeni {
 
-  class Color;
+  struct Color;
   class Video_GL;
   class Video_DX9;
   class Texture;

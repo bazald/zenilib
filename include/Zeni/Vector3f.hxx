@@ -213,7 +213,7 @@ namespace Zeni {
     return acos((a * a + b * b - c * c) / (2 * a * b));
   }
   
-  const float Vector3f::operator[](const int &index) const {
+  const float & Vector3f::operator[](const int &index) const {
     assert(-1 < index && index < 3);
     const float * const ptr = &i;
     return ptr[index];

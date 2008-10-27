@@ -31,38 +31,24 @@
 
 #include <Zeni/Color.h>
 
+#include <cassert>
+
 namespace Zeni {
 
-  const float & Color::r() const {
-    return rgba[0];
-  }
-
-  const float & Color::g() const {
-    return rgba[1];
-  }
-
-  const float & Color::b() const {
-    return rgba[2];
-  }
-
-  const float & Color::a() const {
-    return rgba[3];
-  }
-
   unsigned char Color::r_ub() const {
-    return static_cast<unsigned char>(rgba[0]*0xFF);
+    return static_cast<unsigned char>(r*0xFF);
   }
 
   unsigned char Color::g_ub() const {
-    return static_cast<unsigned char>(rgba[1]*0xFF);
+    return static_cast<unsigned char>(g*0xFF);
   }
 
   unsigned char Color::b_ub() const {
-    return static_cast<unsigned char>(rgba[2]*0xFF);
+    return static_cast<unsigned char>(b*0xFF);
   }
 
   unsigned char Color::a_ub() const {
-    return static_cast<unsigned char>(rgba[3]*0xFF);
+    return static_cast<unsigned char>(a*0xFF);
   }
 
   Uint32 Color::get_rgba() const {
@@ -75,6 +61,18 @@ namespace Zeni {
 
   Uint32 Color::get_bgra() const {
     return (b_ub() << 24) | (g_ub() << 16) | (r_ub() << 8) | a_ub();
+  }
+
+  const float & Color::operator[](const int &index) const {
+    assert(-1 < index && index < 4);
+    const float * const ptr = &r;
+    return ptr[index];
+  }
+
+  float & Color::operator[](const int &index) {
+    assert(-1 < index && index < 4);
+    float * const ptr = &r;
+    return ptr[index];
   }
 
 }
