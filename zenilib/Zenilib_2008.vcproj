@@ -2168,10 +2168,6 @@
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Fog.hxx"
-				>
-			</File>
-			<File
 				RelativePath="include\Zeni\Font.hxx"
 				>
 			</File>
