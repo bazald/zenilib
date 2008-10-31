@@ -88,6 +88,8 @@ namespace Zeni {
   private:
     VERTEX m_vertex[3];
     Render_Wrapper * m_render_wrapper;
+    
+    void * m_alignment_rubbish;
   };
 
 }
