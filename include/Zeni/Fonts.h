@@ -65,12 +65,13 @@ namespace Zeni {
     // Get reference to only instance;
     static Fonts & get_reference(); ///< Get access to the singleton.
 
-    unsigned long get_font_id(const std::string &font) const; ///< Get a font id by name.
-    Font & get_font(const std::string &font) const; ///< Get a reference to a font by name.
-    Font & get_font(const unsigned long &id) const; ///< Get a reference to a font by id.
+    unsigned long get_font_id(const std::string &font) const; ///< Get a Font id by name.
 
-    unsigned long set_font(const std::string &name, Font * const font); ///< Set a font by name.
-    void clear_font(const std::string &name); ///< Clear a font by name.
+    Font & operator[](const std::string &font) const; ///< Get a Font by name
+    Font & operator[](const unsigned long &id) const; ///< Get a Font by id
+
+    unsigned long set_font(const std::string &name, Font * const font); ///< Set a Font by name.
+    void clear_font(const std::string &font); ///< Clear a Font by name.
     void reload(const std::string &filename = ""); ///< Reload the database or choose a new one.
 
     void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed

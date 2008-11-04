@@ -87,7 +87,7 @@ namespace Zeni {
   void Widget_Text::set_color(const Color &color_) {m_color = color_;}
 
   void Widget_Text::render(const Point2f &center) const {
-    const Font &font = Fonts::get_reference().get_font(m_font_name);
+    const Font &font = Fonts::get_reference()[m_font_name];
 
     const float x = center.x;
     const float y = center.y - 0.5f * font.get_text_height();
@@ -344,7 +344,7 @@ namespace Zeni {
   }
 
   const Font & Text_Box::get_font() const {
-    return Fonts::get_reference().get_font(m_text.get_font_name());
+    return Fonts::get_reference()[m_text.get_font_name()];
   }
 
   const std::string & Text_Box::get_text() const {

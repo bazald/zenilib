@@ -63,11 +63,11 @@ namespace Zeni {
     return it->second;
   }
 
-  Font & Fonts::get_font(const string &font) const {
-    return get_font(get_font_id(font));
+  Font & Fonts::operator[](const std::string &font) const {
+    return (*this)[get_font_id(font)];
   }
 
-  Font & Fonts::get_font(const unsigned long &font) const {
+  Font & Fonts::operator[](const unsigned long &font) const {
     stdext::hash_map<unsigned long, Font *>::const_iterator it = m_fonts.find(font);
 
     if(it == m_fonts.end()) {

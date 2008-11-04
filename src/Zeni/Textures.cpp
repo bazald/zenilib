@@ -92,7 +92,7 @@ namespace Zeni {
     return it->second;
   }
 
-  Texture * Textures::get_texture(const unsigned long &id) const {
+  Texture * Textures::operator[](const unsigned long &id) const {
     stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
 
     if(it == m_textures.end() || !it->second) {
@@ -109,8 +109,8 @@ namespace Zeni {
     return it->second;
   }
 
-  Texture * Textures::get_texture(const std::string &name) const {
-    return get_texture(get_texture_id(name));
+  Texture * Textures::operator[](const std::string &name) const {
+    return (*this)[get_texture_id(name)];
   }
 
   void Textures::apply_texture(const string &name) {

@@ -128,8 +128,8 @@ namespace Zeni {
   void increment_sprite_frame(
     const std::string &sprite_name) {
 
-      Texture * const texture = Textures::get_reference().get_texture(
-        Textures::get_reference().get_texture_id(sprite_name));
+      Texture * const texture = Textures::get_reference()
+        [Textures::get_reference().get_texture_id(sprite_name)];
 
       Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
 
@@ -149,8 +149,8 @@ namespace Zeni {
   void decrement_sprite_frame(
     const std::string &sprite_name) {
 
-      Texture * const texture = Textures::get_reference().get_texture(
-        Textures::get_reference().get_texture_id(sprite_name));
+      Texture * const texture = Textures::get_reference()
+        [Textures::get_reference().get_texture_id(sprite_name)];
 
       Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
 

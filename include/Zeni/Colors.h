@@ -65,12 +65,13 @@ namespace Zeni {
     // Get reference to only instance;
     static Colors & get_reference(); ///< Get access to the singleton.
 
-    Uint32 get_color_id(const std::string &color) const; ///< Get a color id by name.
-    Color get_color(const std::string &color) const; ///< Get a color by name.
-    Color get_color(const Uint32 &id) const; ///< Get a color by id.
+    unsigned long get_color_id(const std::string &color) const; ///< Get a color id by name.
+
+    Color operator[](const std::string &color) const; ///< Get a Color by name
+    Color operator[](const unsigned long &id) const; ///< Get a Color by id
 
     // May throw Colors_Init_Failure
-    Uint32 set_color(const std::string &name, const Color &color); ///< Set a color by name.
+    unsigned long set_color(const std::string &name, const Color &color); ///< Set a Color by name.
     void clear_color(const std::string &name); ///< Clear a color by name.
     void reload(const std::string &colors = ""); ///< Reload the database or choose a new one.
 
