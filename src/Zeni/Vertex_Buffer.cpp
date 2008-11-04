@@ -77,9 +77,9 @@ namespace Zeni {
 
     std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
-    const Vertex2f_Color &v0 = triangle->get_vertex(0);
-    const Vertex2f_Color &v1 = triangle->get_vertex(1);
-    const Vertex2f_Color &v2 = triangle->get_vertex(2);
+    const Vertex2f_Color &v0 = triangle->a;
+    const Vertex2f_Color &v1 = triangle->b;
+    const Vertex2f_Color &v2 = triangle->c;
 
     add_triangle(new Triangle<Vertex3f_Color>(
       Vertex3f_Color(v0.position, v0.get_color()),
@@ -94,9 +94,9 @@ namespace Zeni {
 
     std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
-    const Vertex2f_Texture &v0 = triangle->get_vertex(0);
-    const Vertex2f_Texture &v1 = triangle->get_vertex(1);
-    const Vertex2f_Texture &v2 = triangle->get_vertex(2);
+    const Vertex2f_Texture &v0 = triangle->a;
+    const Vertex2f_Texture &v1 = triangle->b;
+    const Vertex2f_Texture &v2 = triangle->c;
 
     add_triangle(new Triangle<Vertex3f_Texture>(
       Vertex3f_Texture(v0.position, v0.texture_coordinate),
@@ -111,10 +111,10 @@ namespace Zeni {
 
     std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
-    const Vertex2f_Color &v0 = quad->get_vertex(0);
-    const Vertex2f_Color &v1 = quad->get_vertex(1);
-    const Vertex2f_Color &v2 = quad->get_vertex(2);
-    const Vertex2f_Color &v3 = quad->get_vertex(3);
+    const Vertex2f_Color &v0 = quad->a;
+    const Vertex2f_Color &v1 = quad->b;
+    const Vertex2f_Color &v2 = quad->c;
+    const Vertex2f_Color &v3 = quad->d;
 
     add_quadrilateral(new Quadrilateral<Vertex3f_Color>(
       Vertex3f_Color(v0.position, v0.get_color()),
@@ -130,10 +130,10 @@ namespace Zeni {
 
     std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
 
-    const Vertex2f_Texture &v0 = quad->get_vertex(0);
-    const Vertex2f_Texture &v1 = quad->get_vertex(1);
-    const Vertex2f_Texture &v2 = quad->get_vertex(2);
-    const Vertex2f_Texture &v3 = quad->get_vertex(3);
+    const Vertex2f_Texture &v0 = quad->a;
+    const Vertex2f_Texture &v1 = quad->b;
+    const Vertex2f_Texture &v2 = quad->c;
+    const Vertex2f_Texture &v3 = quad->d;
 
     add_quadrilateral(new Quadrilateral<Vertex3f_Texture>(
       Vertex3f_Texture(v0.position, v0.texture_coordinate),
@@ -298,8 +298,8 @@ namespace Zeni {
 
     struct Z_Sorter {
       bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
-        return lhs.t->get_vertex(lhs.which).position.z <
-               rhs.t->get_vertex(rhs.which).position.z;
+        return (*lhs.t)[lhs.which].position.z <
+               (*rhs.t)[rhs.which].position.z;
       }
     };
   };
@@ -312,14 +312,14 @@ namespace Zeni {
     const float closeness_threshold = 0.00001f;
     const float alikeness_threshold = 0.95f;
 
-    const VERTEX &v1 = t1.get_vertex(which);
+    const VERTEX &v1 = t1[which];
 
     if((v0.position - v1.position).magnitude2() < closeness_threshold &&
        fabs(v0.normal * v1.normal) > alikeness_threshold)
     {
       VERTEX next(v1);
       next.normal = v0.normal;
-      t1.set_vertex(which, next);
+      t1[which] = next;
     }
   }
 
@@ -355,8 +355,8 @@ namespace Zeni {
       {
         for(; kend != verts.end(); ++kend)
         {
-          if(kend->t->get_vertex(kend->which).position.z -
-             jt->t->get_vertex(jt->which).position.z > closeness_threshold)
+          if((*kend->t)[kend->which].position.z -
+             (*jt->t)[jt->which].position.z > closeness_threshold)
           {
             break;
           }
@@ -366,7 +366,7 @@ namespace Zeni {
             kt != kend;
             ++kt)
         {
-          align_similar_normals(jt->t->get_vertex(jt->which),
+          align_similar_normals((*jt->t)[jt->which],
                                 *kt->t,
                                 kt->which);
         }
@@ -446,26 +446,26 @@ namespace Zeni {
 
       for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(int j = 0; j < 3; ++j) {
-          memcpy(buffered_verts, m_triangles_c[i]->get_vertex(j).get_address(), v_size);
+          memcpy(buffered_verts, (*m_triangles_c[i])[j].get_address(), v_size);
           buffered_verts += v_size;
 
-          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_c[i]->get_vertex(j).get_address())+3, n_size);
+          memcpy(buffered_normals, reinterpret_cast<float *>((*m_triangles_c[i])[j].get_address())+3, n_size);
           buffered_normals += n_size;
 
-          memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_c[i]->get_vertex(j).get_address())+6, c_size);
+          memcpy(buffered_colors, reinterpret_cast<float *>((*m_triangles_c[i])[j].get_address())+6, c_size);
           swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
 
       for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
         for(int j = 0; j < 3; ++j) {
-          memcpy(buffered_verts, m_triangles_cm[i]->get_vertex(j).get_address(), v_size);
+          memcpy(buffered_verts, (*m_triangles_cm[i])[j].get_address(), v_size);
           buffered_verts += v_size;
 
-          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_cm[i]->get_vertex(j).get_address())+3, n_size);
+          memcpy(buffered_normals, reinterpret_cast<float *>((*m_triangles_cm[i])[j].get_address())+3, n_size);
           buffered_normals += n_size;
 
-          memcpy(buffered_colors, reinterpret_cast<float *>(m_triangles_cm[i]->get_vertex(j).get_address())+6, c_size);
+          memcpy(buffered_colors, reinterpret_cast<float *>((*m_triangles_cm[i])[j].get_address())+6, c_size);
           swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
@@ -503,13 +503,13 @@ namespace Zeni {
 
       for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
         for(int j = 0; j < 3; ++j) {
-          memcpy(buffered_verts, m_triangles_t[i]->get_vertex(j).get_address(), v_size);
+          memcpy(buffered_verts, (*m_triangles_t[i])[j].get_address(), v_size);
           buffered_verts += v_size;
 
-          memcpy(buffered_normals, reinterpret_cast<float *>(m_triangles_t[i]->get_vertex(j).get_address())+3, n_size);
+          memcpy(buffered_normals, reinterpret_cast<float *>((*m_triangles_t[i])[j].get_address())+3, n_size);
           buffered_normals += n_size;
 
-          memcpy(buffered_texels, reinterpret_cast<float *>(m_triangles_t[i]->get_vertex(j).get_address())+6, t_size);
+          memcpy(buffered_texels, reinterpret_cast<float *>((*m_triangles_t[i])[j].get_address())+6, t_size);
           buffered_texels += t_size;
         }
 
@@ -675,13 +675,13 @@ namespace Zeni {
 
       for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, m_triangles_c[i]->get_vertex(j).get_address(), vertex_size);
+          memcpy(buffered, (*m_triangles_c[i])[j].get_address(), vertex_size);
           buffered += vertex_size;
         }
 
       for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, m_triangles_cm[i]->get_vertex(j).get_address(), vertex_size);
+          memcpy(buffered, (*m_triangles_cm[i])[j].get_address(), vertex_size);
           buffered += vertex_size;
         }
 
@@ -724,7 +724,7 @@ namespace Zeni {
 
       for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, m_triangles_t[i]->get_vertex(j).get_address(), vertex_size);
+          memcpy(buffered, (*m_triangles_t[i])[j].get_address(), vertex_size);
           buffered += vertex_size;
         }
 
