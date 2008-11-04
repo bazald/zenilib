@@ -64,13 +64,14 @@ namespace Zeni {
   public:
     // Get reference to only instance;
     static Sounds & get_reference(); ///< Get access to the singleton.
+    
+    unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Buffer id by name.
+
+    const Sound_Buffer & operator[](const std::string &sound_effect) const; ///< Get a Sound_Buffer by name
+    const Sound_Buffer & operator[](const unsigned long &id) const; ///< Get a Sound_Buffer by id
 
     unsigned long set_sound(const std::string &name, const std::string &filename); ///< Load a Sound_Buffer.
     void clear_sound(const std::string &name); ///< Clear a sound by name.
-    unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Buffer id by name.
-    const Sound_Buffer & get_sound(const std::string &sound_effect) const; ///< Get a Sound_Buffer
-    const Sound_Buffer & get_sound(const unsigned long &id) const; ///< Get a Sound_Buffer
-
     void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Buffer database
 
     /// Best Effort Sound Player

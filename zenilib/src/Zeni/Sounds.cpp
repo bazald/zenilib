@@ -86,11 +86,11 @@ namespace Zeni {
     return it->second;
   }
 
-  const Sound_Buffer & Sounds::get_sound(const string &sound) const {
-    return get_sound(get_sound_id(sound));
+  const Sound_Buffer & Sounds::operator[](const std::string &sound) const {
+    return (*this)[get_sound_id(sound)];
   }
 
-  const Sound_Buffer & Sounds::get_sound(const unsigned long &sound_effect) const {
+  const Sound_Buffer & Sounds::operator[](const unsigned long &sound_effect) const {
     stdext::hash_map<unsigned long, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
 
     if(it == m_sounds.end()) {
@@ -131,7 +131,7 @@ namespace Zeni {
 
     try {
       ss_ptr = take_Sound_Source();
-      ss_ptr->set_buffer(get_sound(id));
+      ss_ptr->set_buffer((*this)[id]);
       give_Sound_Source(ss_ptr);
     }
     catch(Sound_Source_Init_Failure &) {

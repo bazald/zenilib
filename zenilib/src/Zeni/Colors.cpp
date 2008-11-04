@@ -54,7 +54,7 @@ namespace Zeni {
     init();
   }
 
-  Uint32 Colors::get_color_id(const string &color) const {
+  unsigned long Colors::get_color_id(const string &color) const {
     stdext::hash_map<string, unsigned long>::const_iterator it = m_color_lookup.find(color);
 
     if(it == m_color_lookup.end() || !it->second)
@@ -63,11 +63,11 @@ namespace Zeni {
     return it->second;
   }
 
-  Color Colors::get_color(const string &color) const {
-    return get_color(get_color_id(color));
+  Color Colors::operator[](const std::string &color) const {
+    return (*this)[get_color_id(color)];
   }
 
-  Color Colors::get_color(const Uint32 &color) const {
+  Color Colors::operator[](const unsigned long &color) const {
     stdext::hash_map<unsigned long, Color>::const_iterator it = m_color.find(color);
 
     if(it == m_color.end()) {
@@ -84,8 +84,8 @@ namespace Zeni {
     return it->second;
   }
 
-  Uint32 Colors::set_color(const std::string &name, const Color &color) {
-    Uint32 id = Resource::get_reference().assign();
+  unsigned long Colors::set_color(const std::string &name, const Color &color) {
+    unsigned long id = Resource::get_reference().assign();
     m_color_lookup[name] = id;
     m_color[id] = color;
     return id;
