@@ -145,13 +145,13 @@ namespace Zeni {
     Line_Segment<Vertex2f_Color> line_seg(ul, ll);
     vr.render(line_seg);
 
-    line_seg.set_vertex(0, lr);
+    line_seg.a = lr;
     vr.render(line_seg);
 
-    line_seg.set_vertex(1, ur);
+    line_seg.b = ur;
     vr.render(line_seg);
 
-    line_seg.set_vertex(0, ul);
+    line_seg.a = ul;
     vr.render(line_seg);
 
     if(m_checked) {
@@ -160,12 +160,12 @@ namespace Zeni {
       lr.set_color(m_check_color);
       ur.set_color(m_check_color);
 
-      line_seg.set_vertex(0, ul);
-      line_seg.set_vertex(1, lr);
+      line_seg.a = ul;
+      line_seg.b = lr;
       vr.render(line_seg);
 
-      line_seg.set_vertex(0, ll);
-      line_seg.set_vertex(1, ur);
+      line_seg.a = ll;
+      line_seg.b = ur;
       vr.render(line_seg);
     }
   }

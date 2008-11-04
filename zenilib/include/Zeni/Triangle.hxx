@@ -44,11 +44,11 @@ namespace Zeni {
 
   template <typename VERTEX>
   Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, Render_Wrapper *render_wrapper)
-    : m_render_wrapper(render_wrapper)
+    : a(vertex0),
+    b(vertex1),
+    c(vertex2),
+    m_render_wrapper(render_wrapper)
   {
-    m_vertex[0] = vertex0;
-    m_vertex[1] = vertex1;
-    m_vertex[2] = vertex2;
   }
 
   template <>
@@ -59,19 +59,19 @@ namespace Zeni {
                              (vertex2.position - vertex0.position)).normalized();
 
     if(vertex0.normal.magnitude2() < 0.0001f)
-      m_vertex[0] = Vertex3f_Color(vertex0.position, normal, vertex0.get_color());
+      a = Vertex3f_Color(vertex0.position, normal, vertex0.get_color());
     else
-      m_vertex[0] = vertex0;
+      a = vertex0;
 
     if(vertex1.normal.magnitude2() < 0.0001f)
-      m_vertex[1] = Vertex3f_Color(vertex1.position, normal, vertex1.get_color());
+      b = Vertex3f_Color(vertex1.position, normal, vertex1.get_color());
     else
-      m_vertex[1] = vertex1;
+      b = vertex1;
 
     if(vertex2.normal.magnitude2() < 0.0001f)
-      m_vertex[2] = Vertex3f_Color(vertex2.position, normal, vertex2.get_color());
+      c = Vertex3f_Color(vertex2.position, normal, vertex2.get_color());
     else
-      m_vertex[2] = vertex2;
+      c = vertex2;
   }
 
   template <>
@@ -82,19 +82,19 @@ namespace Zeni {
                              (vertex2.position - vertex0.position)).normalized();
 
     if(vertex0.normal.magnitude2() < 0.0001f)
-      m_vertex[0] = Vertex3f_Texture(vertex0.position, normal, vertex0.texture_coordinate);
+      a = Vertex3f_Texture(vertex0.position, normal, vertex0.texture_coordinate);
     else
-      m_vertex[0] = vertex0;
+      a = vertex0;
 
     if(vertex1.normal.magnitude2() < 0.0001f)
-      m_vertex[1] = Vertex3f_Texture(vertex1.position, normal, vertex1.texture_coordinate);
+      b = Vertex3f_Texture(vertex1.position, normal, vertex1.texture_coordinate);
     else
-      m_vertex[1] = vertex1;
+      b = vertex1;
 
     if(vertex2.normal.magnitude2() < 0.0001f)
-      m_vertex[2] = Vertex3f_Texture(vertex2.position, normal, vertex2.texture_coordinate);
+      c = Vertex3f_Texture(vertex2.position, normal, vertex2.texture_coordinate);
     else
-      m_vertex[2] = vertex2;
+      c = vertex2;
   }
 
   template <typename VERTEX>
@@ -105,11 +105,11 @@ namespace Zeni {
   template <typename VERTEX>
   Triangle<VERTEX>::Triangle(const Triangle<VERTEX> &rhs)
     : Renderable(rhs),
+    a(rhs.a),
+    b(rhs.b),
+    c(rhs.c),
     m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
   {
-    m_vertex[0] = rhs.m_vertex[0];
-    m_vertex[1] = rhs.m_vertex[1];
-    m_vertex[2] = rhs.m_vertex[2];
   }
 
   template <typename VERTEX>
@@ -118,9 +118,9 @@ namespace Zeni {
       delete m_render_wrapper;
       m_render_wrapper = 0;
 
-      m_vertex[0] = rhs.m_vertex[0];
-      m_vertex[1] = rhs.m_vertex[1];
-      m_vertex[2] = rhs.m_vertex[2];
+      a = rhs.a;
+      b = rhs.b;
+      c = rhs.c;
 
       m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
     }
@@ -129,22 +129,10 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  const VERTEX & Triangle<VERTEX>::get_vertex(const int &index) const {
-    assert(-1 < index && index < 3);
-    return m_vertex[index];
-  }
-
-  template <typename VERTEX>
-  void Triangle<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
-    assert(-1 < index && index < 3);
-    m_vertex[index] = vertex;
-  }
-
-  template <typename VERTEX>
   Point3f Triangle<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].position.x + m_vertex[1].position.x + m_vertex[2].position.x) * over_three,
-      (m_vertex[0].position.y + m_vertex[1].position.y + m_vertex[2].position.y) * over_three,
-      (m_vertex[0].position.z + m_vertex[1].position.z + m_vertex[2].position.z) * over_three);
+    return Point3f((a.position.x + b.position.x + c.position.x) * over_three,
+      (a.position.y + b.position.y + c.position.y) * over_three,
+      (a.position.z + b.position.z + c.position.z) * over_three);
   }
 
 #ifndef DISABLE_GL
@@ -153,9 +141,9 @@ namespace Zeni {
     m_render_wrapper->prerender();
 
     glBegin(GL_TRIANGLES);
-    m_vertex[0].subrender_to(screen);
-    m_vertex[1].subrender_to(screen);
-    m_vertex[2].subrender_to(screen);
+    a.subrender_to(screen);
+    b.subrender_to(screen);
+    c.subrender_to(screen);
     glEnd();
 
     m_render_wrapper->postrender();
@@ -166,7 +154,7 @@ namespace Zeni {
   template <typename VERTEX>
   void Triangle<VERTEX>::render_to(Video_DX9 &screen) const {
     m_render_wrapper->prerender();
-    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 1, m_vertex[0].get_address(), sizeof(VERTEX));
+    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 1, a.get_address(), sizeof(VERTEX));
     m_render_wrapper->postrender();
   }
 #endif
@@ -184,27 +172,41 @@ namespace Zeni {
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(a, b, c, m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt0() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1].interpolate_to(0.5f, m_vertex[0]), m_vertex[2].interpolate_to(0.5f, m_vertex[0]), m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(a, b.interpolate_to(0.5f, a), c.interpolate_to(0.5f, a), m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt1() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[1]), m_vertex[1], m_vertex[2].interpolate_to(0.5f, m_vertex[1]), m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b, c.interpolate_to(0.5f, b), m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt2() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[2]), m_vertex[1].interpolate_to(0.5f, m_vertex[2]), m_vertex[2], m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(a.interpolate_to(0.5f, c), b.interpolate_to(0.5f, c), c, m_render_wrapper->get_duplicate());
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt3() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[1]), m_vertex[1].interpolate_to(0.5f, m_vertex[2]), m_vertex[2].interpolate_to(0.5f, m_vertex[0]), m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b.interpolate_to(0.5f, c), c.interpolate_to(0.5f, a), m_render_wrapper->get_duplicate());
+  }
+
+  template <typename VERTEX>
+  const VERTEX & Triangle<VERTEX>::operator[](const int &index) const {
+    assert(-1 < index && index < 3);
+    const VERTEX * const ptr = &a;
+    return ptr[index];
+  }
+
+  template <typename VERTEX>
+  VERTEX & Triangle<VERTEX>::operator[](const int &index) {
+    assert(-1 < index && index < 3);
+    VERTEX * const ptr = &a;
+    return ptr[index];
   }
 
 }

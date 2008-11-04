@@ -62,9 +62,6 @@ namespace Zeni {
     Triangle(const Triangle<VERTEX> &rhs);
     Triangle<VERTEX> & operator=(const Triangle<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
     // The "position" is the average of the three vertices
     virtual Point3f get_position() const; ///< Get the aveage of all vertices
 
@@ -85,8 +82,15 @@ namespace Zeni {
     Triangle<VERTEX> * get_duplicate_subt2() const; ///< Get quarter 2 of the Triangle; Can be used for software LOD increase
     Triangle<VERTEX> * get_duplicate_subt3() const; ///< Get quarter 3 of the Triangle; Can be used for software LOD increase
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+    VERTEX c;
+
   private:
-    VERTEX m_vertex[3];
     Render_Wrapper * m_render_wrapper;
     
     void * m_alignment_rubbish;

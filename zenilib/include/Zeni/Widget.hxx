@@ -301,8 +301,8 @@ namespace Zeni {
   void Slider::set_line_color(const Color &line_color_) {
     m_line_color = line_color_;
 
-    m_line_segment_r.set_vertex(0, Vertex2f_Color(get_end_point_a(), m_line_color));
-    m_line_segment_r.set_vertex(1, Vertex2f_Color(get_end_point_b(), m_line_color));
+    m_line_segment_r.a = Vertex2f_Color(get_end_point_a(), m_line_color);
+    m_line_segment_r.b = Vertex2f_Color(get_end_point_b(), m_line_color);
   }
 
   void Slider::set_slider_color(const Color &slider_color_) {
@@ -331,8 +331,8 @@ namespace Zeni {
     const Point3f &midpt = p0 + m_slider_position * v;
     const Vector3f &n2 = m_slider_radius * n.normalized();
 
-    m_slider_r.set_vertex(0, Vertex2f_Color(Point2f(midpt - n2), m_slider_color));
-    m_slider_r.set_vertex(1, Vertex2f_Color(Point2f(midpt + n2), m_slider_color));
+    m_slider_r.a = Vertex2f_Color(Point2f(midpt - n2), m_slider_color);
+    m_slider_r.b = Vertex2f_Color(Point2f(midpt + n2), m_slider_color);
   }
   
   const Color & Text_Box::get_bg_color() const {

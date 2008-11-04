@@ -67,9 +67,6 @@ namespace Zeni {
     Quadrilateral(const Quadrilateral<VERTEX> &rhs);
     Quadrilateral<VERTEX> & operator=(const Quadrilateral<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
     // The "position" is the average of the three vertices
     virtual Point3f get_position() const; ///< Get the aveage of all vertices
 
@@ -88,8 +85,16 @@ namespace Zeni {
     Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral
     Triangle<VERTEX> * get_duplicate_t1() const; ///< Get the second half of the Quadrilateral
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+    VERTEX c;
+    VERTEX d;
+
   private:
-    VERTEX m_vertex[4];
     Render_Wrapper * m_render_wrapper;
     
     void * m_alignment_rubbish;

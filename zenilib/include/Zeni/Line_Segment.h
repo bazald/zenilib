@@ -62,9 +62,6 @@ namespace Zeni {
     Line_Segment(const Line_Segment<VERTEX> &rhs);
     Line_Segment<VERTEX> & operator=(const Line_Segment<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
     // The "position" is the average of the three vertices
     virtual Point3f get_position() const; ///< Get the aveage of all vertices
 
@@ -80,8 +77,14 @@ namespace Zeni {
     void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
     Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+
   private:
-    VERTEX m_vertex[2];
     Render_Wrapper * m_render_wrapper;
   };
 
