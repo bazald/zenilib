@@ -82,9 +82,9 @@ namespace Zeni {
     const Vertex2f_Color &v2 = triangle->get_vertex(2);
 
     add_triangle(new Triangle<Vertex3f_Color>(
-      Vertex3f_Color(v0.get_position(), v0.get_color()),
-      Vertex3f_Color(v1.get_position(), v1.get_color()),
-      Vertex3f_Color(v2.get_position(), v2.get_color()),
+      Vertex3f_Color(v0.position, v0.get_color()),
+      Vertex3f_Color(v1.position, v1.get_color()),
+      Vertex3f_Color(v2.position, v2.get_color()),
       triangle->get_render_wrapper()->get_duplicate()));
   }
 
@@ -99,9 +99,9 @@ namespace Zeni {
     const Vertex2f_Texture &v2 = triangle->get_vertex(2);
 
     add_triangle(new Triangle<Vertex3f_Texture>(
-      Vertex3f_Texture(v0.get_position(), v0.get_texture_coordinate()),
-      Vertex3f_Texture(v1.get_position(), v1.get_texture_coordinate()),
-      Vertex3f_Texture(v2.get_position(), v2.get_texture_coordinate()),
+      Vertex3f_Texture(v0.position, v0.texture_coordinate),
+      Vertex3f_Texture(v1.position, v1.texture_coordinate),
+      Vertex3f_Texture(v2.position, v2.texture_coordinate),
       triangle->get_render_wrapper()->get_duplicate()));
   }
 
@@ -117,10 +117,10 @@ namespace Zeni {
     const Vertex2f_Color &v3 = quad->get_vertex(3);
 
     add_quadrilateral(new Quadrilateral<Vertex3f_Color>(
-      Vertex3f_Color(v0.get_position(), v0.get_color()),
-      Vertex3f_Color(v1.get_position(), v1.get_color()),
-      Vertex3f_Color(v2.get_position(), v2.get_color()),
-      Vertex3f_Color(v3.get_position(), v3.get_color()),
+      Vertex3f_Color(v0.position, v0.get_color()),
+      Vertex3f_Color(v1.position, v1.get_color()),
+      Vertex3f_Color(v2.position, v2.get_color()),
+      Vertex3f_Color(v3.position, v3.get_color()),
       quad->get_render_wrapper()->get_duplicate()));
   }
 
@@ -136,10 +136,10 @@ namespace Zeni {
     const Vertex2f_Texture &v3 = quad->get_vertex(3);
 
     add_quadrilateral(new Quadrilateral<Vertex3f_Texture>(
-      Vertex3f_Texture(v0.get_position(), v0.get_texture_coordinate()),
-      Vertex3f_Texture(v1.get_position(), v1.get_texture_coordinate()),
-      Vertex3f_Texture(v2.get_position(), v2.get_texture_coordinate()),
-      Vertex3f_Texture(v3.get_position(), v3.get_texture_coordinate()),
+      Vertex3f_Texture(v0.position, v0.texture_coordinate),
+      Vertex3f_Texture(v1.position, v1.texture_coordinate),
+      Vertex3f_Texture(v2.position, v2.texture_coordinate),
+      Vertex3f_Texture(v3.position, v3.texture_coordinate),
       quad->get_render_wrapper()->get_duplicate()));
   }
 
@@ -284,22 +284,22 @@ namespace Zeni {
 
     struct X_Sorter {
       bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
-        return lhs.t->get_vertex(lhs.which).get_position().x <
-               rhs.t->get_vertex(rhs.which).get_position().x;
+        return lhs.t->get_vertex(lhs.which).position.x <
+               rhs.t->get_vertex(rhs.which).position.x;
       }
     };
 
     struct Y_Sorter {
       bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
-        return lhs.t->get_vertex(lhs.which).get_position().y <
-               rhs.t->get_vertex(rhs.which).get_position().y;
+        return lhs.t->get_vertex(lhs.which).position.y <
+               rhs.t->get_vertex(rhs.which).position.y;
       }
     };
 
     struct Z_Sorter {
       bool operator()(const Vertex_Ref<VERTEX> &lhs, const Vertex_Ref<VERTEX> &rhs) const {
-        return lhs.t->get_vertex(lhs.which).get_position().z <
-               rhs.t->get_vertex(rhs.which).get_position().z;
+        return lhs.t->get_vertex(lhs.which).position.z <
+               rhs.t->get_vertex(rhs.which).position.z;
       }
     };
   };
@@ -314,11 +314,11 @@ namespace Zeni {
 
     const VERTEX &v1 = t1.get_vertex(which);
 
-    if((v0.get_position() - v1.get_position()).magnitude2() < closeness_threshold &&
-       fabs(v0.get_normal() * v1.get_normal()) > alikeness_threshold)
+    if((v0.position - v1.position).magnitude2() < closeness_threshold &&
+       fabs(v0.normal * v1.normal) > alikeness_threshold)
     {
       VERTEX next(v1);
-      next.set_normal(v0.get_normal());
+      next.normal = v0.normal;
       t1.set_vertex(which, next);
     }
   }
@@ -355,8 +355,8 @@ namespace Zeni {
       {
         for(; kend != verts.end(); ++kend)
         {
-          if(kend->t->get_vertex(kend->which).get_position().z -
-             jt->t->get_vertex(jt->which).get_position().z > closeness_threshold)
+          if(kend->t->get_vertex(kend->which).position.z -
+             jt->t->get_vertex(jt->which).position.z > closeness_threshold)
           {
             break;
           }
