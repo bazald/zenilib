@@ -97,9 +97,9 @@ namespace Zeni {
 
   template <typename VERTEX>
   Point3f Quadrilateral<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x + m_vertex[3].get_position().x) * 0.25f,
-      (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y + m_vertex[3].get_position().y) * 0.25f,
-      (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z + m_vertex[3].get_position().z) * 0.25f);
+    return Point3f((m_vertex[0].position.x + m_vertex[1].position.x + m_vertex[2].position.x + m_vertex[3].position.x) * 0.25f,
+      (m_vertex[0].position.y + m_vertex[1].position.y + m_vertex[2].position.y + m_vertex[3].position.y) * 0.25f,
+      (m_vertex[0].position.z + m_vertex[1].position.z + m_vertex[2].position.z + m_vertex[3].position.z) * 0.25f);
   }
 
 #ifndef DISABLE_GL

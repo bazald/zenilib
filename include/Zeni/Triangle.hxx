@@ -55,21 +55,21 @@ namespace Zeni {
   Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper *render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
-    const Vector3f normal = ((vertex1.get_position() - vertex0.get_position()) %
-                             (vertex2.get_position() - vertex0.get_position())).normalized();
+    const Vector3f normal = ((vertex1.position - vertex0.position) %
+                             (vertex2.position - vertex0.position)).normalized();
 
-    if(vertex0.get_normal().magnitude2() < 0.0001f)
-      m_vertex[0] = Vertex3f_Color(vertex0.get_position(), normal, vertex0.get_color());
+    if(vertex0.normal.magnitude2() < 0.0001f)
+      m_vertex[0] = Vertex3f_Color(vertex0.position, normal, vertex0.get_color());
     else
       m_vertex[0] = vertex0;
 
-    if(vertex1.get_normal().magnitude2() < 0.0001f)
-      m_vertex[1] = Vertex3f_Color(vertex1.get_position(), normal, vertex1.get_color());
+    if(vertex1.normal.magnitude2() < 0.0001f)
+      m_vertex[1] = Vertex3f_Color(vertex1.position, normal, vertex1.get_color());
     else
       m_vertex[1] = vertex1;
 
-    if(vertex2.get_normal().magnitude2() < 0.0001f)
-      m_vertex[2] = Vertex3f_Color(vertex2.get_position(), normal, vertex2.get_color());
+    if(vertex2.normal.magnitude2() < 0.0001f)
+      m_vertex[2] = Vertex3f_Color(vertex2.position, normal, vertex2.get_color());
     else
       m_vertex[2] = vertex2;
   }
@@ -78,21 +78,21 @@ namespace Zeni {
   Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper *render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
-    const Vector3f normal = ((vertex1.get_position() - vertex0.get_position()) %
-                             (vertex2.get_position() - vertex0.get_position())).normalized();
+    const Vector3f normal = ((vertex1.position - vertex0.position) %
+                             (vertex2.position - vertex0.position)).normalized();
 
-    if(vertex0.get_normal().magnitude2() < 0.0001f)
-      m_vertex[0] = Vertex3f_Texture(vertex0.get_position(), normal, vertex0.get_texture_coordinate());
+    if(vertex0.normal.magnitude2() < 0.0001f)
+      m_vertex[0] = Vertex3f_Texture(vertex0.position, normal, vertex0.texture_coordinate);
     else
       m_vertex[0] = vertex0;
 
-    if(vertex1.get_normal().magnitude2() < 0.0001f)
-      m_vertex[1] = Vertex3f_Texture(vertex1.get_position(), normal, vertex1.get_texture_coordinate());
+    if(vertex1.normal.magnitude2() < 0.0001f)
+      m_vertex[1] = Vertex3f_Texture(vertex1.position, normal, vertex1.texture_coordinate);
     else
       m_vertex[1] = vertex1;
 
-    if(vertex2.get_normal().magnitude2() < 0.0001f)
-      m_vertex[2] = Vertex3f_Texture(vertex2.get_position(), normal, vertex2.get_texture_coordinate());
+    if(vertex2.normal.magnitude2() < 0.0001f)
+      m_vertex[2] = Vertex3f_Texture(vertex2.position, normal, vertex2.texture_coordinate);
     else
       m_vertex[2] = vertex2;
   }
@@ -142,9 +142,9 @@ namespace Zeni {
 
   template <typename VERTEX>
   Point3f Triangle<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x) * over_three,
-      (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y) * over_three,
-      (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z) * over_three);
+    return Point3f((m_vertex[0].position.x + m_vertex[1].position.x + m_vertex[2].position.x) * over_three,
+      (m_vertex[0].position.y + m_vertex[1].position.y + m_vertex[2].position.y) * over_three,
+      (m_vertex[0].position.z + m_vertex[1].position.z + m_vertex[2].position.z) * over_three);
   }
 
 #ifndef DISABLE_GL

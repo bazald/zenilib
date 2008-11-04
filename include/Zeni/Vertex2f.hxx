@@ -33,25 +33,17 @@
 
 namespace Zeni {
 
-  void Vertex2f::set_position(const Point3f &position) {
-    m_position = position;
-  }
-
-  void Vertex2f::set_position(const Point2f &position) {
-    m_position = Point3f(position.x, position.y, position.z);
-  }
-
   void * Vertex2f::get_address() const {
-    return const_cast<Point3f *>(&m_position);
+    return const_cast<Point3f *>(&position);
   }
 
 #ifdef _WINDOWS
   unsigned long long Vertex2f::get_offset() const {
-    return reinterpret_cast<unsigned long long>(&m_position) - reinterpret_cast<unsigned long long>(this);
+    return reinterpret_cast<unsigned long long>(&position) - reinterpret_cast<unsigned long long>(this);
   }
 #else
   unsigned long Vertex2f::get_offset() const {
-    return reinterpret_cast<unsigned long>(&m_position) - reinterpret_cast<unsigned long>(this);
+    return reinterpret_cast<unsigned long>(&position) - reinterpret_cast<unsigned long>(this);
   }
 #endif
 
@@ -65,14 +57,6 @@ namespace Zeni {
 
   void Vertex2f_Color::set_color(const Uint32 &argb) {
     m_argb = argb;
-  }
-
-  Point2f Vertex2f_Texture::get_texture_coordinate() const {
-    return m_texture_coordinate;
-  }
-
-  void Vertex2f_Texture::set_texture_coordinate(const Point2f &texture_coordinate) {
-    m_texture_coordinate = texture_coordinate;
   }
 
 }

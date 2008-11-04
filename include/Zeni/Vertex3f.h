@@ -72,11 +72,7 @@ namespace Zeni {
     Vertex3f(const Point3f &position, const Vector3f &normal = Vector3f());
     virtual ~Vertex3f();
 
-    virtual Point3f get_position() const {return m_position;}
-    const Vector3f & get_normal() const {return m_normal;}
-
-    inline void set_position(const Point3f &position);
-    inline void set_normal(const Vector3f &normal);
+    virtual Point3f get_position() const;
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #ifdef _WINDOWS
@@ -85,9 +81,8 @@ namespace Zeni {
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #endif
 
-  private:
-    Point3f m_position;
-    Vector3f m_normal;
+    Point3f position;
+    Vector3f normal;
   };
 
   class Vertex3f_Color : public Renderable, public Vertex3f {
@@ -131,9 +126,6 @@ namespace Zeni {
 
     Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture
 
-    inline Point2f get_texture_coordinate() const; ///< Get the current Texture coordinate
-    inline void set_texture_coordinate(const Point2f &texture_coordinate); ///< Set the current Texture coordinate
-
     // Begin rendering functions
 
     virtual Point3f get_position() const; ///< Get the current position
@@ -150,8 +142,7 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-  private:
-    Point2f m_texture_coordinate;
+    Point2f texture_coordinate;
   };
 
 }

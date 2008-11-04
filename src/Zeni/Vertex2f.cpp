@@ -45,7 +45,7 @@ namespace Zeni {
   }
 
   Vertex2f::Vertex2f(const Point2f &position)
-    : m_position(position.x, position.y, position.z)
+    : position(position.x, position.y, position.z)
   {
   }
 
@@ -53,12 +53,12 @@ namespace Zeni {
   }
 
   Point3f Vertex2f::get_position() const {
-    return m_position;
+    return position;
   }
 
   Vertex2f * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const {
-    const Point3f position = get_position().interpolate_to(rhs_part, rhs.get_position());
-    return new Vertex2f_Color(Point2f(position.x, position.y), 
+    const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
+    return new Vertex2f_Color(Point2f(midpt.x, midpt.y), 
       Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
   }
 
@@ -79,7 +79,7 @@ namespace Zeni {
   }
 
   Point3f Vertex2f_Color::get_position() const {
-    return Vertex2f::get_position();
+    return Vertex2f::position;
   }
 
 #ifndef DISABLE_GL
@@ -94,7 +94,7 @@ namespace Zeni {
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
-    glVertex2f(get_position().x, get_position().y);
+    glVertex2f(position.x, position.y);
   }
 #endif
 
@@ -108,20 +108,20 @@ namespace Zeni {
   {
   }
 
-  Vertex2f_Texture::Vertex2f_Texture(const Point2f &position, const Point2f &texture_coordinate)
+  Vertex2f_Texture::Vertex2f_Texture(const Point2f &position, const Point2f &texture_coordinate_)
     : Vertex2f(position),
-    m_texture_coordinate(texture_coordinate)
+    texture_coordinate(texture_coordinate_)
   {
   }
 
   Vertex2f * Vertex2f_Texture::interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const {
-    const Point3f position = get_position().interpolate_to(rhs_part, rhs.get_position());
-    return new Vertex2f_Texture(Point2f(position.x, position.y), 
-      m_texture_coordinate.interpolate_to(rhs_part, rhs.m_texture_coordinate));
+    const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
+    return new Vertex2f_Texture(Point2f(midpt.x, midpt.y), 
+      texture_coordinate.interpolate_to(rhs_part, rhs.texture_coordinate));
   }
 
   Point3f Vertex2f_Texture::get_position() const {
-    return Vertex2f::get_position();
+    return Vertex2f::position;
   }
 
 #ifndef DISABLE_GL
@@ -130,8 +130,8 @@ namespace Zeni {
   }
 
   void Vertex2f_Texture::subrender_to(Video_GL &) const {
-    glTexCoord2f(m_texture_coordinate.x, m_texture_coordinate.y);
-    glVertex2f(get_position().x, get_position().y);
+    glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
+    glVertex2f(position.x, position.y);
   }
 #endif
 
