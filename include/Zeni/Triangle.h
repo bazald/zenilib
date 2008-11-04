@@ -55,7 +55,7 @@ namespace Zeni {
   class Triangle : public Renderable {
   public:
     /// The best way to create a Triangle
-    Triangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
+    inline Triangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
       const VERTEX &vertex2 = VERTEX(), Render_Wrapper *render_wrapper = new Render_Wrapper());
     ~Triangle();
 
