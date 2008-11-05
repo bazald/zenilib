@@ -63,14 +63,9 @@ namespace Zeni {
       // Enable Backface Culling
       glEnable(GL_CULL_FACE);
       glCullFace(GL_BACK);
-
-      glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
     }
-    else {
+    else
       glDisable(GL_CULL_FACE);
-
-      glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-    }
   }
 
 #ifdef DISABLEWGL
