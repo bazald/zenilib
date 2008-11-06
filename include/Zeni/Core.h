@@ -75,6 +75,9 @@ namespace Zeni {
   };
 
   class Core {
+    // Get reference to only instance; Might throw Core_Init_Failure
+    friend Core & get_Core(); ///< Get access to the singleton.
+
     Core();
     ~Core();
 
@@ -82,11 +85,6 @@ namespace Zeni {
     Core(const Core &);
     Core & operator=(const Core &);
 
-  public:
-    // Get reference to only instance; Might throw Core_Init_Failure
-    static Core & get_reference();
-
-  private:
     std::vector<SDL_Joystick *> joystick;
   };
 

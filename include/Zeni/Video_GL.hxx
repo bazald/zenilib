@@ -109,7 +109,7 @@ namespace Zeni {
   }
 
   void Video_GL::apply_texture_impl(const unsigned long &id) {
-    Textures::get_reference().apply_texture(id);
+    get_Textures().apply_texture(id);
   }
 
   void Video_GL::apply_texture_impl(const Texture &texture) {

@@ -88,6 +88,9 @@ namespace Zeni {
   };
 
   class Video : public Video_Base::IV {
+    // Get reference to only instance;
+    friend Video & get_Video(); ///< Get access to the singleton.
+
   protected:
     Video(const Video_Base::VIDEO_MODE &vtype_);
     virtual ~Video() = 0;
@@ -98,9 +101,6 @@ namespace Zeni {
     Video & operator=(const Video &);
 
   public:
-    // Get reference to only instance; Might throw Video_Init_Failure
-    static Video & get_reference(); ///< Get access to the singleton
-
     // Rendering functions
     virtual void render_all() = 0; ///< Render the scene
     inline void render(const Renderable &renderable); ///< Render a Renderable

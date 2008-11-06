@@ -37,7 +37,7 @@ namespace Zeni {
   {
   }
 
-  Resource & Resource::get_reference() {
+  Resource & get_Resource() {
     static Resource e_reference;
     return e_reference;
   }

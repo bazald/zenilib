@@ -46,7 +46,7 @@ namespace Zeni {
     m_replacement_policy(BESP_OLDEST)
   {
     // Ensure Sound is initialized
-    Sound::get_reference();
+    get_Sound();
 
     reload();
   }
@@ -55,13 +55,13 @@ namespace Zeni {
     purge();
   }
 
-  Sounds & Sounds::get_reference() {
+  Sounds & get_Sounds() {
     static Sounds e_sounds;
     return e_sounds;
   }
   
   unsigned long Sounds::set_sound(const std::string &name, const std::string &filename) {
-    unsigned long id = Resource::get_reference().assign();
+    unsigned long id = get_Resource().assign();
     m_sound_lookup[name] = id;
     m_sounds[id] = Sound_Buffer(filename);
     return id;
@@ -243,7 +243,7 @@ namespace Zeni {
 
     while(soundsin >> name >> filename) {
       try {
-        unsigned long id = Resource::get_reference().assign();
+        unsigned long id = get_Resource().assign();
         m_sound_lookup[name] = id;
         m_sounds[id] = Sound_Buffer(filename);
       }

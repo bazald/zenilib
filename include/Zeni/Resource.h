@@ -56,6 +56,9 @@
 namespace Zeni {
 
   class Resource {
+    // Get reference to only instance;
+    friend Resource & get_Resource(); ///< Get access to the singleton.
+
     Resource();
 
     // Undefined
@@ -63,9 +66,6 @@ namespace Zeni {
     Resource & operator=(const Resource &);
 
   public:
-    // Get reference to only instance;
-    static Resource & get_reference(); ///< Get access to the singleton.
-
     inline unsigned long assign(); ///< Get a value, unique within this run of the program
 
   private:

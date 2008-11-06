@@ -54,6 +54,9 @@
 namespace Zeni {
 
   class Sounds {
+    // Get reference to only instance;
+    friend Sounds & get_Sounds(); ///< Get access to the singleton.
+
     Sounds();
     ~Sounds();
 
@@ -62,9 +65,6 @@ namespace Zeni {
     Sounds & operator=(const Sounds &);
 
   public:
-    // Get reference to only instance;
-    static Sounds & get_reference(); ///< Get access to the singleton.
-    
     unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Buffer id by name.
 
     const Sound_Buffer & operator[](const std::string &sound_effect) const; ///< Get a Sound_Buffer by name

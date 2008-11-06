@@ -55,6 +55,9 @@
 namespace Zeni {
 
   class Colors {
+    // Get reference to only instance;
+    friend Colors & get_Colors(); ///< Get access to the singleton.
+
     Colors();
 
     // Undefined
@@ -62,9 +65,6 @@ namespace Zeni {
     Colors & operator=(const Colors &);
 
   public:
-    // Get reference to only instance;
-    static Colors & get_reference(); ///< Get access to the singleton.
-
     unsigned long get_color_id(const std::string &color) const; ///< Get a color id by name.
 
     Color operator[](const std::string &color) const; ///< Get a Color by name

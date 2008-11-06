@@ -61,6 +61,7 @@ namespace Zeni {
 
   class Video_DX9 : public Video {
     friend class Video;
+    friend Video & get_Video();
 
     Video_DX9();
     ~Video_DX9();

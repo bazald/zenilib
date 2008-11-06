@@ -113,7 +113,7 @@ namespace Zeni {
     : m_impl(0), m_status(status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(fn, data);
   }
@@ -122,7 +122,7 @@ namespace Zeni {
     : m_impl(0), m_status(&task.status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(run_task, &task);
   }
@@ -131,7 +131,7 @@ namespace Zeni {
     : m_impl(0), m_status(&task.status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(run_repeatable_task, &task);
   }

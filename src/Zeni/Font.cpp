@@ -83,7 +83,7 @@ namespace Zeni {
   }
 
   void Font_FT::Glyph::render(const Point2f &position) const {
-    static Video &vr = Video::get_reference();
+    static Video &vr = get_Video();
     const float &x = position.x;
     const float &y = position.y;
 
@@ -173,7 +173,7 @@ namespace Zeni {
 
     /*** Initialize Final Texture ***/
     
-    m_texture = Video::get_reference().create_Texture(font_surface, false);
+    m_texture = get_Video().create_Texture(font_surface, false);
 
     TTF_CloseFont(font);
   }
@@ -200,7 +200,7 @@ namespace Zeni {
   }
 
   void Font_FT::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
     const float &x = position.x;
     const float &y = position.y;
 
@@ -264,7 +264,7 @@ NEXT_LINE:
     resized(0), 
     ratio(0)
   {
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     if(FAILED(D3DXCreateFont(vdx.get_d3d_device(),
       get_text_height(),
@@ -289,7 +289,7 @@ NEXT_LINE:
   }
   
   int Font_DX9::get_text_width(const std::string &text) const {
-    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     D3DCOLOR color2 = D3DCOLOR_ARGB(
       static_cast<unsigned char>(0xFF),
@@ -304,7 +304,7 @@ NEXT_LINE:
   }
 
   void Font_DX9::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
-    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    static Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
     const float &x = position.x;
     const float &y = position.y;
 
@@ -322,7 +322,7 @@ NEXT_LINE:
     if(FAILED(vdx.get_d3d_device()->GetViewport(&vp)))
       throw Font_Init_Failure();
     else {
-      const float y_scale = float(vp.Height) / Video::get_reference().get_screen_height();
+      const float y_scale = float(vp.Height) / get_Video().get_screen_height();
 
       if(y_scale != 1.0f) {
         if(ratio == y_scale)

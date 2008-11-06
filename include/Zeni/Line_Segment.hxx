@@ -41,7 +41,15 @@
 namespace Zeni {
 
   template <typename VERTEX>
-  Line_Segment<VERTEX>::Line_Segment(const VERTEX &vertex0, const VERTEX &vertex1, Render_Wrapper *render_wrapper)
+  Line_Segment<VERTEX>::Line_Segment()
+    : a(VERTEX()),
+    b(VERTEX()),
+    m_render_wrapper(new Render_Wrapper())
+  {
+  }
+
+  template <typename VERTEX>
+  Line_Segment<VERTEX>::Line_Segment(const VERTEX &vertex0, const VERTEX &vertex1, Render_Wrapper * const &render_wrapper)
     : a(vertex0),
     b(vertex1),
     m_render_wrapper(render_wrapper)
@@ -113,7 +121,7 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
+  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
     delete m_render_wrapper;
     m_render_wrapper = render_wrapper;
   }

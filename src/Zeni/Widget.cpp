@@ -52,11 +52,11 @@ namespace Zeni {
   }
 
   void Widget_Rectangle_Color::render() const {
-    Video::get_reference().render(*m_quad);
+    get_Video().render(*m_quad);
   }
 
   void Widget_Rectangle_Texture::render() const {
-    Video::get_reference().render(*m_quad);
+    get_Video().render(*m_quad);
   }
 
   const Point2f & Widget_Button::get_upper_left() const {
@@ -135,7 +135,7 @@ namespace Zeni {
   }
   
   void Check_Box::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     Vertex2f_Color ul(get_upper_left(), m_border_color);
     Vertex2f_Color ll(get_lower_left(), m_border_color);
@@ -241,7 +241,7 @@ namespace Zeni {
   }
 
   void Slider::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     vr.render(m_line_segment_r);
     vr.render(m_slider_r);
@@ -402,7 +402,7 @@ namespace Zeni {
   }
 
   void Text_Box::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     m_bg.render();
 
@@ -422,7 +422,7 @@ namespace Zeni {
       f.render_text(m_lines[i].formatted, Point2f(x_pos, y_offset + m_lines[i].glyph_top), c, m_justify);
 
     if(m_cursor_index.x != -1 && m_cursor_index.y != -1
-      && !((Timer::get_reference().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // render every other second
+      && !((get_Timer().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // render every other second
        )
     {
       const Point2f p0(get_upper_left().x + m_lines[m_cursor_index.y].unformatted_glyph_sides[m_cursor_index.x],
@@ -597,7 +597,7 @@ namespace Zeni {
     m_cursor_index.x = i;
     m_cursor_index.y = j;
 
-    m_last_seek = Timer::get_reference().get_time();
+    m_last_seek = get_Timer().get_time();
   }
 
   void Text_Box::seek_cursor(const int &cursor_pos) {
@@ -625,7 +625,7 @@ namespace Zeni {
       m_cursor_index.y = j;
     }
 
-    m_last_seek = Timer::get_reference().get_time();
+    m_last_seek = get_Timer().get_time();
   }
   
   void Text_Box::set_focus(const bool &value) {
@@ -684,7 +684,7 @@ namespace Zeni {
     m_keysym = keysym;
     m_down = down;
 
-    m_last_repeated = Timer::get_reference().get_time();
+    m_last_repeated = get_Timer().get_time();
     m_active = true;
     m_delay_finished = false;
 

@@ -291,7 +291,7 @@ namespace Zeni {
     m_bgm_source(0)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
 
 #ifndef DISABLE_AL
     if(!alutInit(0, 0))
@@ -332,7 +332,7 @@ namespace Zeni {
 #endif
   }
 
-  Sound & Sound::get_reference() {
+  Sound & get_Sound() {
     static Sound e_sound;
     return e_sound;
   }

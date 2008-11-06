@@ -115,12 +115,12 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     try {
-      Textures::get_reference().apply_texture(m_frames[m_frame].second);
+      get_Textures().apply_texture(m_frames[m_frame].second);
     }
     catch(Texture_Not_Found &) {
       try {
-        m_frames[m_frame].second = Textures::get_reference().get_texture_id(m_frames[m_frame].first);
-        Textures::get_reference().apply_texture(m_frames[m_frame].second);
+        m_frames[m_frame].second = get_Textures().get_texture_id(m_frames[m_frame].first);
+        get_Textures().apply_texture(m_frames[m_frame].second);
       }
       catch(...) {
         no_recurse = true;
@@ -150,7 +150,7 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   void Texture_DX9::apply_texture_impl() const {
-    Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(get_Video());
     
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);

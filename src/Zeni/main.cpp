@@ -161,8 +161,8 @@ static void load_ini() {
 
   // Start engines
   Video::preinit(vopts.vm, vopts.width, vopts.height, vopts.fullscreen, vopts.multisampling, true);
-  if(Video::get_reference().get_vertical_sync() != vopts.vsync)
-    Video::get_reference().set_vertical_sync(vopts.vsync);
+  if(get_Video().get_vertical_sync() != vopts.vsync)
+    get_Video().set_vertical_sync(vopts.vsync);
   Textures::set_texturing_mode(vopts.anisotropy, vopts.bilinear, vopts.mipmapping);
 }
 
@@ -177,13 +177,13 @@ inline int main2(const int &argc, const char * const argv[]) {
 
   try {
     // Primarily to set up IO redirection
-    Core::get_reference();
+    get_Core();
     
     // Load INI
     load_ini();
     
     // Run Game
-    Game::get_reference(&args).run();
+    get_Game(&args).run();
   }
   catch(Quit_Event &nonerror) {
     cerr << nonerror.msg << endl;

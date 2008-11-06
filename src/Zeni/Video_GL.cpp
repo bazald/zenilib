@@ -84,11 +84,11 @@ namespace Zeni {
     glViewport(0, 0, get_screen_width(), get_screen_height());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    Game::get_reference().render();
+    get_Game().render();
     
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
-   Timer &tr = Timer::get_reference();
+   Timer &tr = get_Timer();
    
    if(get_vertical_sync()) {
      Time buffer_swap_start_time = tr.get_time();

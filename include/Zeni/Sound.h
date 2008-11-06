@@ -205,6 +205,9 @@ namespace Zeni {
   };
 
   class Sound {
+    // Get reference to only instance;
+    friend Sound & get_Sound(); ///< Get access to the singleton.
+
     Sound();
     ~Sound();
 
@@ -213,9 +216,6 @@ namespace Zeni {
     Sound & operator=(const Sound &);
 
   public:
-    // Get reference to only instance; Might throw Sound_Init_Failure
-    static Sound & get_reference();
-
     // Listener Functions
     inline void set_listener_position(const Point3f &position); ///< Set the position of the listener and BGM.
     inline void set_listener_velocity(const Vector3f &velocity); ///< Set the velocity of the listener and BGM for the doppler effect.

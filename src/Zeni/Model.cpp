@@ -312,7 +312,7 @@ namespace Zeni {
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     vr.push_world_stack();
 
@@ -329,7 +329,7 @@ namespace Zeni {
   }
 
   void Model_Renderer::operator()(const Model &model, Lib3dsMeshInstanceNode * const &node, Lib3dsMesh * const &mesh) {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     if(!mesh || !mesh->user_ptr)
       create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);

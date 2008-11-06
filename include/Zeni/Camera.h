@@ -37,7 +37,7 @@
  * concept to that of an actual camera.  You take time to position a 
  * camera before you shoot (render) a scene.
  *
- * \note Tell the rendering engine to use a camera with a call to Video::get_reference().set_3d(...);
+ * \note Tell the rendering engine to use a camera with a call to get_Video().set_3d(...);
  *
  * \author bazald
  *

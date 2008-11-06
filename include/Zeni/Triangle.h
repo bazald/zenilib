@@ -54,9 +54,11 @@ namespace Zeni {
   template <typename VERTEX>
   class Triangle : public Renderable {
   public:
-    /// The best way to create a Triangle
-    inline Triangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      const VERTEX &vertex2 = VERTEX(), Render_Wrapper *render_wrapper = new Render_Wrapper());
+    Triangle();
+    inline Triangle(const VERTEX &vertex0,
+                    const VERTEX &vertex1, 
+                    const VERTEX &vertex2,
+                    Render_Wrapper * const &render_wrapper = new Render_Wrapper());
     ~Triangle();
 
     Triangle(const Triangle<VERTEX> &rhs);
@@ -74,7 +76,7 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const &render_wrapper); ///< Set the current Render_Wrapper
     Triangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Triangle
 
     Triangle<VERTEX> * get_duplicate_subt0() const; ///< Get quarter 0 of the Triangle; Can be used for software LOD increase

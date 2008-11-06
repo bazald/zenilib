@@ -56,11 +56,11 @@ namespace Zeni {
   }
 
   void Material_Render_Wrapper::prerender() const {
-    Video::get_reference().set_material(m_material, optimization);
+    get_Video().set_material(m_material, optimization);
   }
 
   void Material_Render_Wrapper::postrender() const {
-    Video::get_reference().unset_material(m_material, optimization);
+    get_Video().unset_material(m_material, optimization);
   }
 
   Render_Wrapper * Material_Render_Wrapper::get_duplicate() const {
