@@ -31,6 +31,7 @@
 
 // HXXed below
 #include <Zeni/Triangle.h>
+#include <Zeni/Vertex3f.h>
 
 #include <Zeni/Quadrilateral.h>
 
@@ -41,7 +42,17 @@
 namespace Zeni {
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper *render_wrapper)
+  Quadrilateral<VERTEX>::Quadrilateral()
+    : a(VERTEX()),
+    b(VERTEX()),
+    c(VERTEX()),
+    d(VERTEX()),
+    m_render_wrapper(new Render_Wrapper())
+  {
+  }
+
+  template <typename VERTEX>
+  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper * const &render_wrapper)
     : a(vertex0),
     b(vertex1),
     c(vertex2),
@@ -121,7 +132,7 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  void Quadrilateral<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
+  void Quadrilateral<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
     delete m_render_wrapper;
     m_render_wrapper = render_wrapper;
   }
@@ -158,5 +169,6 @@ namespace Zeni {
 }
 
 #include <Zeni/Triangle.hxx>
+#include <Zeni/Vertex3f.hxx>
 
 #endif

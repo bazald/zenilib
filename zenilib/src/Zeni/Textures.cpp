@@ -48,7 +48,7 @@ namespace Zeni {
     uninit();
   }
 
-  Textures & Textures::get_reference() {
+  Textures & get_Textures() {
     static Textures e_texturedb;
     return e_texturedb;
   }
@@ -67,7 +67,7 @@ namespace Zeni {
     if(!texture)
       throw Null_Texture_Set();
 
-    unsigned long id = Resource::get_reference().assign();
+    unsigned long id = get_Resource().assign();
     m_texture_lookup[name] = id;
     m_textures[id] = texture;
     return id;
@@ -223,10 +223,10 @@ namespace Zeni {
   }
 
   void Textures::set_texturing_mode(const int &anisotropic_filtering_, const bool &bilinear_filtering_, const bool &mipmapping_) {
-    const int af = anisotropic_filtering_ == -1 ? Video::get_reference().get_maximum_anisotropy() : anisotropic_filtering_;
+    const int af = anisotropic_filtering_ == -1 ? get_Video().get_maximum_anisotropy() : anisotropic_filtering_;
     
     if(m_loaded && ((af != m_anisotropic_filtering) | (bilinear_filtering_ ^ m_bilinear_filtering) | (mipmapping_ ^ m_mipmapping))) {
-      Textures &tr = get_reference();
+      Textures &tr = get_Textures();
       
       tr.uninit();
       
@@ -264,7 +264,7 @@ namespace Zeni {
     if(!tdbin)
       throw Texture_Init_Failure();
     
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     string fileName, name;
     bool repeat;
@@ -272,7 +272,7 @@ namespace Zeni {
       try {
         Texture * const texture = vr.load_Texture(fileName, repeat, m_lazy_loading);
             
-        const unsigned long id = Resource::get_reference().assign();
+        const unsigned long id = get_Resource().assign();
         m_texture_lookup[name] = id;
         m_textures[id] = texture;
       }

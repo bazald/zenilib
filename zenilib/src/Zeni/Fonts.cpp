@@ -49,7 +49,7 @@ namespace Zeni {
     uninit();
   }
 
-  Fonts & Fonts::get_reference() {
+  Fonts & get_Fonts() {
     static Fonts e_fonts;
     return e_fonts;
   }
@@ -95,7 +95,7 @@ namespace Zeni {
       }
     }
 
-    unsigned long id = Resource::get_reference().assign();
+    unsigned long id = get_Resource().assign();
     m_font_lookup[name] = id;
     m_fonts[id] = font;
     return id;
@@ -128,7 +128,7 @@ namespace Zeni {
 
     TTF_Init();
 
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
     
     string name, codename, color;
     bool bold, italic;
@@ -141,7 +141,7 @@ namespace Zeni {
       try {
         Font *font = vr.create_Font(codename, bold, italic, height);
 
-        unsigned long id = Resource::get_reference().assign();
+        unsigned long id = get_Resource().assign();
         m_font_lookup[name] = id;
         m_fonts[id] = font;
       }

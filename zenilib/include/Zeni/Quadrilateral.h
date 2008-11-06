@@ -58,10 +58,12 @@ namespace Zeni {
   template <typename VERTEX>
   class Quadrilateral : public Renderable {
   public:
-    /// The best way to create a Quadrilateral
-    Quadrilateral(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      const VERTEX &vertex2 = VERTEX(), const VERTEX &vertex3 = VERTEX(), 
-      Render_Wrapper *render_wrapper = new Render_Wrapper());
+    Quadrilateral();
+    Quadrilateral(const VERTEX &vertex0,
+                  const VERTEX &vertex1, 
+                  const VERTEX &vertex2,
+                  const VERTEX &vertex3, 
+                  Render_Wrapper * const &render_wrapper = new Render_Wrapper());
     ~Quadrilateral();
 
     Quadrilateral(const Quadrilateral<VERTEX> &rhs);
@@ -79,7 +81,7 @@ namespace Zeni {
 #endif
 
     const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
+    void set_render_wrapper(Render_Wrapper * const &render_wrapper); ///< Set the current Render_Wrapper
     Quadrilateral<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Quadrilateral
 
     Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral

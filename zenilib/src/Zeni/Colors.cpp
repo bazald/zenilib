@@ -43,7 +43,7 @@ namespace Zeni {
     init();
   }
 
-  Colors & Colors::get_reference() {
+  Colors & get_Colors() {
     static Colors e_color;
     return e_color;
   }
@@ -85,7 +85,7 @@ namespace Zeni {
   }
 
   unsigned long Colors::set_color(const std::string &name, const Color &color) {
-    unsigned long id = Resource::get_reference().assign();
+    unsigned long id = get_Resource().assign();
     m_color_lookup[name] = id;
     m_color[id] = color;
     return id;
@@ -112,7 +112,7 @@ namespace Zeni {
     short a, r, g, b;
     string name;
     while(colorin >> name >> hex >> a >> r >> g >> b) {
-      unsigned long id = Resource::get_reference().assign();
+      unsigned long id = get_Resource().assign();
       m_color_lookup[name] = id;
       m_color[id] = Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f);
     }

@@ -103,7 +103,7 @@ namespace Zeni {
   }
 
   void Sprite::append_frame(const std::string &name) {
-    m_frames.push_back(make_pair(name, Textures::get_reference().get_texture_id(name)));
+    m_frames.push_back(make_pair(name, get_Textures().get_texture_id(name)));
   }
 
   int Sprite::find_frame(const std::string &name, const int &starting_point) const {
@@ -117,7 +117,7 @@ namespace Zeni {
   }
 
   void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, Textures::get_reference().get_texture_id(name));
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_texture_id(name));
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();
@@ -210,7 +210,7 @@ namespace Zeni {
       (Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST));
 
     if(Textures::get_anisotropic_filtering()) {
-      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > Video::get_reference().get_maximum_anisotropy())
+      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > get_Video().get_maximum_anisotropy())
         throw Invalid_Anisotropy_Setting();
 
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
@@ -274,7 +274,7 @@ namespace Zeni {
   }
 
   void Texture_DX9::set_sampler_states() {
-    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
@@ -297,7 +297,7 @@ namespace Zeni {
   }
 
   IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface) {
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     IDirect3DTexture9 * ppTexture;
 
@@ -357,7 +357,7 @@ namespace Zeni {
   }
   
   void Texture_DX9::load(const std::string &filename) const {
-    //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
 
     //set_sampler_states();
 

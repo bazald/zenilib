@@ -54,6 +54,9 @@
 namespace Zeni {
 
   class Fonts {
+    // Get reference to only instance;
+    friend Fonts & get_Fonts(); ///< Get access to the singleton.
+
     Fonts();
     ~Fonts();
 
@@ -62,9 +65,6 @@ namespace Zeni {
     Fonts & operator=(const Fonts &);
 
   public:
-    // Get reference to only instance;
-    static Fonts & get_reference(); ///< Get access to the singleton.
-
     unsigned long get_font_id(const std::string &font) const; ///< Get a Font id by name.
 
     Font & operator[](const std::string &font) const; ///< Get a Font by name
@@ -77,7 +77,6 @@ namespace Zeni {
     void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
 
   private:
-    
     void init();
     void uninit();
 

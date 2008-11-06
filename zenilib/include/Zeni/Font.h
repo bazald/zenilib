@@ -41,9 +41,9 @@
  *
  * \note TrueType fonts must be installed to work correctly in DirectX.
  *
- * \note Created with a call to Video::get_reference().create_Font(...)
+ * \note Created with a call to get_Video().create_Font(...)
  *
- * \warning Always instantiate a new Font with a call to Video::get_reference().create_Font().  Do not directly call the class constrcutors.
+ * \warning Always instantiate a new Font with a call to get_Video().create_Font().  Do not directly call the class constrcutors.
  *
  * \warning Text will look faded if you render to a clipped portion of the screen in OpenGL (e.g. split-screen multiplayer).  The workaround is to choose a smaller font size and to transform the position of the text manually.  Not to do so is essentially a coding error.
  *
@@ -81,8 +81,8 @@ namespace Zeni {
 
   class Font {
   public:
-    Font(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
-    Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font(); ///< Instantiate a new Font with a call to get_Video().create_Font()
+    Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to get_Video().create_Font()
     virtual ~Font() {}
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
@@ -119,9 +119,9 @@ namespace Zeni {
     };
 
   public:
-    Font_FT(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font_FT(); ///< Instantiate a new Font with a call to get_Video().create_Font()
     Font_FT(const std::string &codename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+      const int &glyph_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
     ~Font_FT();
 
     virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
@@ -138,9 +138,9 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   class Font_DX9 : public Font {
   public:
-    Font_DX9(); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+    Font_DX9(); ///< Instantiate a new Font with a call to get_Video().create_Font()
     Font_DX9(const std::string &codename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Instantiate a new Font with a call to Video::get_reference().create_Font()
+      const int &glyph_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
     ~Font_DX9();
 
     virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f

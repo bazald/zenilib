@@ -30,10 +30,10 @@
 #define ZENI_TRIANGLE_HXX
 
 // HXXed below
+#include <Zeni/Vertex3f.h>
 #include <Zeni/Video_DX9.h>
 
 #include <Zeni/Triangle.h>
-#include <Zeni/Vertex3f.h>
 
 // Not HXXed
 #include <Zeni/Vector3f.h>
@@ -43,7 +43,16 @@
 namespace Zeni {
 
   template <typename VERTEX>
-  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, Render_Wrapper *render_wrapper)
+  Triangle<VERTEX>::Triangle()
+    : a(VERTEX()),
+    b(VERTEX()),
+    c(VERTEX()),
+    m_render_wrapper(new Render_Wrapper())
+  {
+  }
+
+  template <typename VERTEX>
+  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, Render_Wrapper * const &render_wrapper)
     : a(vertex0),
     b(vertex1),
     c(vertex2),
@@ -52,7 +61,7 @@ namespace Zeni {
   }
 
   template <>
-  Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper *render_wrapper)
+  Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper * const &render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
@@ -75,7 +84,7 @@ namespace Zeni {
   }
 
   template <>
-  Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper *render_wrapper)
+  Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper * const &render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
@@ -165,7 +174,7 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  void Triangle<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
+  void Triangle<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
     delete m_render_wrapper;
     m_render_wrapper = render_wrapper;
   }

@@ -124,6 +124,9 @@ struct SDL_Thread;
 namespace Zeni {
 
   class Net {
+    // Get reference to only instance;
+    friend Net & get_Net(); ///< Get access to the singleton.
+
     Net();
     ~Net();
 
@@ -132,9 +135,6 @@ namespace Zeni {
     Net & operator=(const Net &);
 
   public:
-    // Get reference to only instance; Might throw Sound_Init_Failure
-    static Net & get_reference();
-
     /// Default port 0 indicates a pure lookup with no intention of connecting.
     inline IPaddress resolve_host(const std::string &host, const unsigned short &port = 0);
     /// If you want to find a URL associated with an IP address

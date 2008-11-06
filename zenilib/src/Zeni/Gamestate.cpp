@@ -100,7 +100,7 @@ namespace Zeni {
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
     if(event.keysym.sym == SDLK_ESCAPE &&
        event.state == SDL_PRESSED)
-        Game::get_reference().pop_state();
+        get_Game().pop_state();
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {
@@ -140,7 +140,7 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &) {
-    //Video::get_reference().reinit(event.w, event.h, false, true);
+    //get_Video().reinit(event.w, event.h, false, true);
   }
 
   void Gamestate_Base::on_video_expose(const SDL_ExposeEvent &) {

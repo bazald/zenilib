@@ -55,6 +55,9 @@ namespace Zeni {
   class Texture;
 
   class Textures {
+    // Get reference to only instance;
+    friend Textures & get_Textures(); ///< Get access to the singleton.
+
     Textures();
     ~Textures();
 
@@ -63,9 +66,6 @@ namespace Zeni {
     Textures & operator=(const Textures &);
 
   public:
-    // Get reference to only instance;
-    static Textures & get_reference(); ///< Get access to the singleton.
-
     unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
 
     // Accessors

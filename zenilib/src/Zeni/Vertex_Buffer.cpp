@@ -217,11 +217,11 @@ namespace Zeni {
 
   void Vertex_Buffer::debug_render() {
     for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
-      Video::get_reference().render(*m_triangles_c[i]);
+      get_Video().render(*m_triangles_c[i]);
     for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
-      Video::get_reference().render(*m_triangles_cm[i]);
+      get_Video().render(*m_triangles_cm[i]);
     for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
-      Video::get_reference().render(*m_triangles_t[i]);
+      get_Video().render(*m_triangles_t[i]);
   }
 
   template <typename VERTEX, typename RENDER_WRAPPER = Render_Wrapper>
@@ -416,7 +416,7 @@ namespace Zeni {
 
     Vertex_Buffer::prerender();
 
-    Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
+    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
 
 #ifndef DISABLE_VBO
     if(!m_pglDeleteBuffersARB)
@@ -553,7 +553,7 @@ namespace Zeni {
        !m_vbuf[3].vbo && !m_vbuf[3].alt)
       prerender();
 
-    Video_GL &vgl = dynamic_cast<Video_GL &>(Video::get_reference());
+    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
@@ -636,7 +636,7 @@ namespace Zeni {
 
     Vertex_Buffer::prerender();
 
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
     unsigned int vertex_size;
     char *buffered;
 
@@ -763,7 +763,7 @@ namespace Zeni {
        !m_buf_t.data.vbo && !m_buf_t.data.alt)
       prerender();
 
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     bool flip_3d = !vdx.get_3d();
 

@@ -36,7 +36,7 @@ namespace Zeni {
 
   Mutex::Mutex() {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
 
     m_impl = SDL_CreateMutex();
 //#ifdef _WINDOWS
@@ -93,7 +93,7 @@ namespace Zeni {
 
   Condition_Variable::Condition_Variable() {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
 
     m_impl = SDL_CreateCond();
 //#ifdef _WINDOWS

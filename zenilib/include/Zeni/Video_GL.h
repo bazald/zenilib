@@ -58,6 +58,7 @@ namespace Zeni {
 
   class Video_GL : public Video {
     friend class Video;
+    friend Video & get_Video();
 
     Video_GL();
     ~Video_GL();

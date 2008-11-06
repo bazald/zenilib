@@ -78,7 +78,7 @@ namespace Zeni {
       cerr.rdbuf(cerr_bak);
   }
 
-  Core & Core::get_reference() {
+  Core & get_Core() {
     static Core e_core;
     return e_core;
   }

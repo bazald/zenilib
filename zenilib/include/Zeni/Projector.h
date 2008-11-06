@@ -84,7 +84,7 @@ namespace Zeni {
 
   class Projector {
   protected:
-    inline Projector(const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(Video::get_reference().get_screen_width(), Video::get_reference().get_screen_height())));
+    inline Projector(const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())));
     inline ~Projector();
 
     inline void init(const std::pair<Point2i, Point2i> &viewport);
@@ -100,8 +100,8 @@ namespace Zeni {
   class Projector2D : public Projector {
   public:
     inline Projector2D(
-      const std::pair<Point2f, Point2f> &camera2d = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(Video::get_reference().get_screen_width()), float(Video::get_reference().get_screen_height()))),
-      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(Video::get_reference().get_screen_width(), Video::get_reference().get_screen_height())));
+      const std::pair<Point2f, Point2f> &camera2d = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width()), float(get_Video().get_screen_height()))),
+      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())));
 
     inline Vector3f project(const Vector3f &world_coord) const; //< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
     inline Point3f project(const Point3f &world_coord) const; //< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
@@ -124,7 +124,7 @@ namespace Zeni {
   public:
     inline Projector3D(
       const Camera &camera3d = Camera(),
-      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(Video::get_reference().get_screen_width(), Video::get_reference().get_screen_height())));
+      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())));
 
     inline Vector3f project(const Vector3f &world_coord) const; //< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])
     inline Point3f project(const Point3f &world_coord) const; //< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])

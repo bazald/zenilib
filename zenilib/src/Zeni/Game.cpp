@@ -37,18 +37,18 @@
 namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
-    : time(Timer::get_reference().get_time()), ticks_passed(0), fps(0x36), fps_next(0)
+    : time(get_Timer().get_time()), ticks_passed(0), fps(0x36), fps_next(0)
   {
     m_states.push(Gamestate(new Gamestate_One(args)));
   }
 
-  Game & Game::get_reference(const std::vector<std::string> * const args) {
+  Game & get_Game(const std::vector<std::string> * const &args) {
     static Game e_game(args);
     return e_game;
   }
-  
+
   void Game::run() {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
     
     for(;;) {
       for(SDL_Event event; SDL_PollEvent(&event);)

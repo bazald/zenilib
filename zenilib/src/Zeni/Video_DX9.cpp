@@ -82,8 +82,8 @@ namespace Zeni {
 
         init_context();
         
-        Textures::get_reference().reload();
-        Fonts::get_reference().reload();
+        get_Textures().reload();
+        get_Fonts().reload();
       }
     }
     
@@ -95,7 +95,7 @@ namespace Zeni {
       m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);
       m_d3d_device->BeginScene();
 
-      Game::get_reference().render();
+      get_Game().render();
       
       m_d3d_device->EndScene();
     }

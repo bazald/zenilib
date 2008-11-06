@@ -35,7 +35,7 @@
  *
  * \note All Triangles are expected to have either the base Render_Wrapper or a Material_Render_Wrapper.
  *
- * \note Created with a call to Video::get_reference().create_Vertex_Buffer()
+ * \note Created with a call to get_Video().create_Vertex_Buffer()
  *
  * \author bazald
  *
