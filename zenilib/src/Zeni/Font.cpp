@@ -140,10 +140,14 @@ namespace Zeni {
 
     /*** Initialize Intermediate SDL Surface ***/
 
-    const int 
-      next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
-      next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
-  
+    int next_w = int(pow(2.0f, ceil(log(float(16 * font_width ))/log(2.0f)))); 
+    int next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
+
+    if(next_w > next_h)
+      next_h = next_w;
+    else if(next_h > next_w)
+      next_w = next_h;
+
     SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[42]->format->Rmask, source[42]->format->Gmask, source[42]->format->Bmask, source[42]->format->Amask);
     if(!font_surface)
       throw Font_Init_Failure();
