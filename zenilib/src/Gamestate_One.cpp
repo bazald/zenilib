@@ -30,13 +30,13 @@ namespace Zeni {
 #ifdef HIDE_MOUSE
     SDL_ShowCursor(0);
 #endif
-    
+
     if(args)
       g_args = *args;
-  
-    Textures::get_reference();
-    Fonts::get_reference();
-    Sounds::get_reference();
+
+    get_Textures();
+    get_Fonts();
+    get_Sounds();
   }
 
   Gamestate_One::~Gamestate_One() {
@@ -45,11 +45,11 @@ namespace Zeni {
   void Gamestate_One::perform_logic() {
     //// TODO: Parse commandline arguments and bootstrap into titlestate or other gamestate;
     //
-    //Game &gr = Game::get_reference();
+    //Game &gr = get_Game();
     //gr.pop_state();
     //gr.push_state(new MyCustomGamestate());
     //return;
-    
+
     SDL_Delay(5);
   }
 
