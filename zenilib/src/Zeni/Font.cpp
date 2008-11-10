@@ -74,7 +74,7 @@ namespace Zeni {
     SDL_Rect dstrect2 = {dstrect.x, dstrect.y, Uint16(source->w), Uint16(source->h)};
 
     m_upper_left_texel.x = float(dstrect2.x) / float(total_width);
-    m_upper_left_texel.y = float(dstrect2.y) / float(total_width);
+    m_upper_left_texel.y = float(dstrect2.y) / float(total_height);
     m_lower_right_texel.x = float(dstrect2.x + source->w) / float(total_width);
     m_lower_right_texel.y = float(dstrect2.y + source->h) / float(total_height);
 
@@ -140,14 +140,10 @@ namespace Zeni {
 
     /*** Initialize Intermediate SDL Surface ***/
 
-    int next_w = int(pow(2.0f, ceil(log(float(16 * font_width ))/log(2.0f)))); 
-    int next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
-
-    if(next_w > next_h)
-      next_h = next_w;
-    else if(next_h > next_w)
-      next_w = next_h;
-
+    const int 
+      next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
+      next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
+  
     SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[42]->format->Rmask, source[42]->format->Gmask, source[42]->format->Bmask, source[42]->format->Amask);
     if(!font_surface)
       throw Font_Init_Failure();
