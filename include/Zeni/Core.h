@@ -87,7 +87,12 @@ namespace Zeni {
 
   public:
     int get_num_joysticks() const; //< Get the number of joysticks attached to the system
+
     const std::string & get_joystick_name(const int &index) const; //< Get the name of a given joystick
+    int get_joystick_num_axes(const int &index) const; //< Get the number of axes for a joystick
+    int get_joystick_num_balls(const int &index) const; //< Get the number of balls for a joystick
+    int get_joystick_num_hats(const int &index) const; //< Get the number of hats for a joystick
+    int get_joystick_num_buttons(const int &index) const; //< Get the number of buttons for a joystick
 
     void regenerate_joysticks(); //< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
 
