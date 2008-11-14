@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 
 using namespace std;
 
@@ -83,7 +84,28 @@ namespace Zeni {
   }
 
   const std::string & Core::get_joystick_name(const int &index) const {
+    assert(-1 < index && index < int(joystick.size()));
     return joystick[index].second;
+  }
+  
+  int Core::get_joystick_num_axes(const int &index) const {
+    assert(-1 < index && index < int(joystick.size()));
+    return SDL_JoystickNumAxes(joystick[index].first);
+  }
+
+  int Core::get_joystick_num_balls(const int &index) const {
+    assert(-1 < index && index < int(joystick.size()));
+    return SDL_JoystickNumBalls(joystick[index].first);
+  }
+
+  int Core::get_joystick_num_hats(const int &index) const {
+    assert(-1 < index && index < int(joystick.size()));
+    return SDL_JoystickNumAxes(joystick[index].first);
+  }
+
+  int Core::get_joystick_num_buttons(const int &index) const {
+    assert(-1 < index && index < int(joystick.size()));
+    return SDL_JoystickNumAxes(joystick[index].first);
   }
 
   void Core::regenerate_joysticks() {
