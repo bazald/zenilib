@@ -56,19 +56,14 @@ namespace Zeni {
       cout.rdbuf(cout_file.rdbuf());
     }
 
-    if(SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
+    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
       throw Core_Init_Failure();
 
-    SDL_JoystickEventState(SDL_ENABLE);
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      joystick.push_back(SDL_JoystickOpen(i));
+    init_joysticks();
   }
 
   Core::~Core() {
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      SDL_JoystickClose(joystick[i]);
-    joystick.clear();
-    SDL_JoystickEventState(SDL_DISABLE);
+    quit_joysticks();
 
     SDL_Quit();
 
@@ -81,6 +76,49 @@ namespace Zeni {
   Core & get_Core() {
     static Core e_core;
     return e_core;
+  }
+
+  int Core::get_num_joysticks() const {
+    return joystick.size();
+  }
+
+  const std::string & Core::get_joystick_name(const int &index) const {
+    return joystick[index].second;
+  }
+
+  void Core::regenerate_joysticks() {
+    quit_joysticks();
+    init_joysticks();
+  }
+  
+  void Core::init_joysticks() {
+    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
+      throw Joystick_Init_Failure();
+
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
+      joystick.push_back(make_pair(SDL_JoystickOpen(i),
+                                   SDL_JoystickName(i)));
+
+      if(!joystick[i].first) {
+        joystick.pop_back();
+        quit_joysticks();
+
+        throw Joystick_Init_Failure();
+      }
+    }
+
+    SDL_JoystickEventState(SDL_ENABLE);
+  }
+
+  void Core::quit_joysticks() {
+    SDL_JoystickEventState(SDL_DISABLE);
+
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+      SDL_JoystickClose(joystick[i].first);
+
+    joystick.clear();
+
+    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
 
 }
