@@ -85,11 +85,25 @@ namespace Zeni {
     Core(const Core &);
     Core & operator=(const Core &);
 
-    std::vector<SDL_Joystick *> joystick;
+  public:
+    int get_num_joysticks() const; //< Get the number of joysticks attached to the system
+    const std::string & get_joystick_name(const int &index) const; //< Get the name of a given joystick
+
+    void regenerate_joysticks(); //< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
+
+  private:
+    void init_joysticks();
+    void quit_joysticks();
+
+    std::vector<std::pair<SDL_Joystick *, std::string> > joystick;
   };
 
   struct Core_Init_Failure : public Error {
     Core_Init_Failure() : Error("Zeni Core Failed to Initialize Correctly") {}
+  };
+
+  struct Joystick_Init_Failure : public Error {
+    Joystick_Init_Failure() : Error("Zeni Joystick Failed to Initialize Correctly") {}
   };
 
 }
