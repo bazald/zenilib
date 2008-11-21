@@ -105,6 +105,12 @@ namespace Zeni {
     // Fog
     inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
 
+    // Shaders
+    inline void set_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void set_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl() {} ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     inline void push_world_stack_impl(); ///< Push a model view matrix onto the stack
@@ -126,6 +132,9 @@ namespace Zeni {
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer_impl(); ///< Function for creating a Vertex_Buffer
+    inline void initialize_impl(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
+    inline Vertex_Shader * create_Vertex_Shader_impl(const std::string &filename, const std::string &entry_function); ///< Function for creating a Vertex_Shader
+    inline Fragment_Shader * create_Fragment_Shader_impl(const std::string &filename, const std::string &entry_function); ///< Function for creating a Fragment_Shader
 
     // D3D-Related Functions
     inline const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details

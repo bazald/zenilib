@@ -40,6 +40,7 @@
 
 // Not HXXed
 #include <Zeni/Fog.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Vertex_Buffer.h>
 
 #ifndef DISABLE_GL
@@ -177,6 +178,22 @@ namespace Zeni {
       glDisable(GL_FOG);
   }
 
+  void Video_GL::set_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::set_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::unset_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::unset_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
   void Video_GL::select_world_matrix_impl() {
     glMatrixMode(GL_MODELVIEW);
   }
@@ -239,6 +256,18 @@ namespace Zeni {
 
   Vertex_Buffer * Video_GL::create_Vertex_Buffer_impl() {
     return new Vertex_Buffer_GL();
+  }
+
+  void Video_GL::initialize_impl(Shader_System &shader_system) {
+    shader_system.init(*this);
+  }
+
+  Vertex_Shader * Video_GL::create_Vertex_Shader_impl(const std::string &filename, const std::string &entry_function) {
+    return new Vertex_Shader(filename, entry_function, *this);
+  }
+
+  Fragment_Shader * Video_GL::create_Fragment_Shader_impl(const std::string &filename, const std::string &entry_function) {
+    return new Fragment_Shader(filename, entry_function, *this);
   }
 
   void Video_GL::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
