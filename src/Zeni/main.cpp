@@ -168,6 +168,50 @@ static void load_ini() {
 
 /*** main ***/
 
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_net.h>
+#include <SDL/SDL_ttf.h>
+
+#ifndef DISABLE_GL
+#include <GL/glu.h>
+#endif
+
+#ifndef DISABLE_AL
+#include <al.h>
+static std::string alErrorString(const ALenum &err) {
+  switch(err) {
+    case AL_NO_ERROR:          return "AL_NO_ERROR";          break;
+    case AL_INVALID_NAME:      return "AL_INVALID_NAME";      break;
+    case AL_INVALID_ENUM:      return "AL_INVALID_ENUM";      break;
+    case AL_INVALID_VALUE:     return "AL_INVALID_VALUE";     break;
+    case AL_INVALID_OPERATION: return "AL_INVALID_OPERATION"; break;
+    case AL_OUT_OF_MEMORY:     return "AL_OUT_OF_MEMORY";     break;
+    default:                   return "AL_UNKNOWN_ERROR";     break;
+  }
+}
+#endif
+
+static void print_errors() {
+  cerr << "Printing all possible error strings:\n";
+
+  cerr << "SDL       : " << (strlen(SDL_GetError()   ) ? SDL_GetError()    : "no error") << endl;
+  cerr << "SDL_image : " << (strlen(IMG_GetError ()  ) ? IMG_GetError ()   : "no error") << endl;
+  cerr << "SDL_net   : " << (strlen(SDLNet_GetError()) ? SDLNet_GetError() : "no error") << endl;
+  cerr << "SDL_ttf   : " << (strlen(TTF_GetError()   ) ? TTF_GetError()    : "no error") << endl;
+
+#ifndef DISABLE_DX9
+  //DXGetErrorString?
+#endif
+
+#ifndef DISABLE_GL
+  cerr << "OpenGL    : " << gluErrorString(glGetError()) << endl;
+#endif
+
+#ifndef DISABLE_AL
+  cerr << "OpenAL    : " << alErrorString(alGetError()) << endl;
+#endif
+}
+
 inline int main2(const int &argc, const char * const argv[]) {
   srand(static_cast<unsigned int>(time(0)));
 
@@ -194,17 +238,25 @@ inline int main2(const int &argc, const char * const argv[]) {
 #endif
   catch(Error &error) {
     cerr << error.msg << endl;
+
+    print_errors();
+
     assert("Error caught in main - Please see stderr.txt" == 0);
     return 1;
   }
   catch(...) {
     cerr << "Unknown Error (Not of Type 'Zeni::Error')";
+
+    print_errors();
+
     assert("Unknown Error caught in main" == 0);
     throw;
   }
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
+
+  print_errors();
 
   return 0;
 }
