@@ -330,6 +330,22 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_fog_impl, fog);
   }
 
+  void Video::set_vertex_shader(const Vertex_Shader &shader) {
+    VIDEO_IV_FCN_CALL(set_vertex_shader_impl, shader);
+  }
+
+  void Video::set_fragment_shader(const Fragment_Shader &shader) {
+    VIDEO_IV_FCN_CALL(set_fragment_shader_impl, shader);
+  }
+
+  void Video::unset_vertex_shader(const Vertex_Shader &shader) {
+    VIDEO_IV_FCN_CALL(unset_vertex_shader_impl, shader);
+  }
+
+  void Video::unset_fragment_shader(const Fragment_Shader &shader) {
+    VIDEO_IV_FCN_CALL(unset_fragment_shader_impl, shader);
+  }
+
   void Video::select_world_matrix() {
     VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
   }
@@ -395,6 +411,18 @@ namespace Zeni {
 
   Vertex_Buffer * Video::create_Vertex_Buffer() {
     VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, );
+  }
+
+  void Video::initialize(Shader_System &shader_system) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader_system);
+  }
+
+  Vertex_Shader * Video::create_Vertex_Shader(const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(create_Vertex_Shader_impl, filename, entry_function);
+  }
+
+  Fragment_Shader * Video::create_Fragment_Shader(const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(create_Fragment_Shader_impl, filename, entry_function);
   }
 
   void Video::uninit() {

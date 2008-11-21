@@ -42,6 +42,7 @@
 // Not HXXed
 #include <Zeni/Fog.h>
 #include <Zeni/Fonts.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Vertex_Buffer.h>
 
 #ifndef DISABLE_DX9
@@ -182,6 +183,22 @@ namespace Zeni {
     }
   }
 
+  void Video_DX9::set_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_DX9::set_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_DX9::unset_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_DX9::unset_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
   void Video_DX9::push_world_stack_impl() {
     get_matrix_stack()->Push();
   }
@@ -242,6 +259,18 @@ namespace Zeni {
 
   Vertex_Buffer * Video_DX9::create_Vertex_Buffer_impl() {
     return new Vertex_Buffer_DX9();
+  }
+
+  void Video_DX9::initialize_impl(Shader_System &shader_system) {
+    shader_system.init(*this);
+  }
+
+  Vertex_Shader * Video_DX9::create_Vertex_Shader_impl(const std::string &filename, const std::string &entry_function) {
+    return new Vertex_Shader(filename, entry_function, *this);
+  }
+
+  Fragment_Shader * Video_DX9::create_Fragment_Shader_impl(const std::string &filename, const std::string &entry_function) {
+    return new Fragment_Shader(filename, entry_function, *this);
   }
 
   void Video_DX9::uninit_impl() {

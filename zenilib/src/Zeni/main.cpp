@@ -210,6 +210,8 @@ static void print_errors() {
 #ifndef DISABLE_AL
   cerr << "OpenAL    : " << alErrorString(alGetError()) << endl;
 #endif
+
+  cerr << "Cg        : " << cgGetErrorString(cgGetError()) << endl;
 }
 
 inline int main2(const int &argc, const char * const argv[]) {
