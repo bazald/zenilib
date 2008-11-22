@@ -192,11 +192,11 @@ namespace Zeni {
   }
 
   void Video_DX9::unset_vertex_shader_impl(const Vertex_Shader &shader) {
-    shader.set(*this);
+    shader.unset(*this);
   }
 
   void Video_DX9::unset_fragment_shader_impl(const Fragment_Shader &shader) {
-    shader.set(*this);
+    shader.unset(*this);
   }
 
   void Video_DX9::push_world_stack_impl() {
@@ -265,12 +265,12 @@ namespace Zeni {
     shader_system.init(*this);
   }
 
-  Vertex_Shader * Video_DX9::create_Vertex_Shader_impl(const std::string &filename, const std::string &entry_function) {
-    return new Vertex_Shader(filename, entry_function, *this);
+  void Video_DX9::initialize_impl(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
   }
 
-  Fragment_Shader * Video_DX9::create_Fragment_Shader_impl(const std::string &filename, const std::string &entry_function) {
-    return new Fragment_Shader(filename, entry_function, *this);
+  void Video_DX9::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
 
   void Video_DX9::uninit_impl() {

@@ -78,18 +78,26 @@ namespace Zeni {
       throw Shader_System_Init_Failure();
   }
 #endif
+  
+  Shader::Shader()
+    : m_program(0)
+  {
+  }
+
+  Shader::~Shader() {
+    cgDestroyProgram(m_program);
+  }
 
 #ifndef DISABLE_GL
-  Vertex_Shader::Vertex_Shader(const std::string &filename, const std::string &entry_function, Video_GL &) {
+  void Shader::init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_GL &) {
     Shader_System &shader_system = get_Shader_System();
     const CGcontext &context = shader_system.get_context();
-    const CGprofile &profile = shader_system.get_vertex_profile();
 
     cgGLSetOptimalOptions(profile);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
 
-    m_vertex_program =
+    m_program =
       cgCreateProgramFromFile(
         context,                /* Cg runtime context */
         CG_SOURCE,              /* Program in human-readable form */
@@ -99,50 +107,43 @@ namespace Zeni {
         NULL);                  /* No extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
       cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
     }
 
-    cgGLLoadProgram(m_vertex_program);
+    cgGLLoadProgram(m_program);
     if(cgGetError() != CG_NO_ERROR) {
       cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
     }
   }
 
-  void Vertex_Shader::set(Video_GL &) const {
-    Shader_System &shader_system = get_Shader_System();
-    const CGprofile &profile = shader_system.get_vertex_profile();
-
-    cgGLBindProgram(m_vertex_program);
+  void Shader::set(const CGprofile &profile, Video_GL &) const {
+    cgGLBindProgram(m_program);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Bind_Failure();
+      throw Shader_Bind_Failure();
 
     cgGLEnableProfile(profile);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Bind_Failure();
+      throw Shader_Bind_Failure();
   }
 
-  void Vertex_Shader::unset(Video_GL &) const {
-    Shader_System &shader_system = get_Shader_System();
-    const CGprofile &profile = shader_system.get_vertex_profile();
-
+  void Shader::unset(const CGprofile &profile, Video_GL &) const {
     cgGLDisableProfile(profile);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Bind_Failure();
+      throw Shader_Bind_Failure();
   }
 #endif
 
 #ifndef DISABLE_DX9
-  Vertex_Shader::Vertex_Shader(const std::string &filename, const std::string &entry_function, Video_DX9 &screen) {
+  void Shader::init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &screen) {
     Shader_System &shader_system = get_Shader_System();
     const CGcontext &context = shader_system.get_context();
-    const CGprofile &profile = shader_system.get_vertex_profile();
 
     const char **options = cgD3D9GetOptimalOptions(profile);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
 
-    m_vertex_program =
+    m_program =
       cgCreateProgramFromFile(
         context,                /* Cg runtime context */
         CG_SOURCE,              /* Program in human-readable form */
@@ -152,129 +153,40 @@ namespace Zeni {
         options);               /* No extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
       cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
     }
 
     reload(screen);
   }
 
-  void Vertex_Shader::reload(Video_DX9 &) {
-    cgD3D9LoadProgram(m_vertex_program, false, 0);
+  void Shader::reload(Video_DX9 &) {
+    cgD3D9LoadProgram(m_program, false, 0);
     if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Init_Failure();
+      throw Shader_Init_Failure();
   }
 
-  void Vertex_Shader::set(Video_DX9 &) const {
-    cgD3D9BindProgram(m_vertex_program);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Bind_Failure();
-  }
-
-  void Vertex_Shader::unset(Video_DX9 &) const {
-  }
-#endif
-
-  Vertex_Shader::~Vertex_Shader() {
-    cgDestroyProgram(m_vertex_program);
-  }
-
-#ifndef DISABLE_GL
-  Fragment_Shader::Fragment_Shader(const std::string &filename, const std::string &entry_function, Video_GL &) {
-    Shader_System &shader_system = get_Shader_System();
-    const CGcontext &context = shader_system.get_context();
-    const CGprofile &profile = shader_system.get_fragment_profile();
-
-    cgGLSetOptimalOptions(profile);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Init_Failure();
-
-    m_fragment_program =
-      cgCreateProgramFromFile(
-        context,                /* Cg runtime context */
-        CG_SOURCE,              /* Program in human-readable form */
-        filename.c_str(),       /* Name of file containing program */
-        profile,                /* Profile: OpenGL ARB vertex program */
-        entry_function.c_str(), /* Entry function name */
-        NULL);                  /* No extra compiler options */
-    if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Fragment_Shader_Init_Failure();
+  void Shader::set(const CGprofile &, Video_DX9 &screen) const {
+    try
+    {
+      cgD3D9BindProgram(m_program);
+      if(cgGetError() != CG_NO_ERROR)
+        throw Shader_Bind_Failure();
     }
-
-    cgGLLoadProgram(m_fragment_program);
-    if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Fragment_Shader_Init_Failure();
+    catch(Shader_Bind_Failure &bind_failure)
+    {
+      try
+      {
+        const_cast<Shader &>(*this).reload(screen);
+      }
+      catch(...)
+      {
+        throw bind_failure;
+      }
     }
   }
 
-  void Fragment_Shader::set(Video_GL &) const {
-    Shader_System &shader_system = get_Shader_System();
-    const CGprofile &profile = shader_system.get_fragment_profile();
-
-    cgGLBindProgram(m_fragment_program);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Bind_Failure();
-
-    cgGLEnableProfile(profile);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Bind_Failure();
-  }
-
-  void Fragment_Shader::unset(Video_GL &) const {
-    Shader_System &shader_system = get_Shader_System();
-    const CGprofile &profile = shader_system.get_fragment_profile();
-
-    cgGLDisableProfile(profile);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Vertex_Shader_Bind_Failure();
+  void Shader::unset(const CGprofile &, Video_DX9 &) const {
   }
 #endif
-
-#ifndef DISABLE_DX9
-  Fragment_Shader::Fragment_Shader(const std::string &filename, const std::string &entry_function, Video_DX9 &screen) {
-    Shader_System &shader_system = get_Shader_System();
-    const CGcontext &context = shader_system.get_context();
-    const CGprofile &profile = shader_system.get_fragment_profile();
-
-    const char **options = cgD3D9GetOptimalOptions(profile);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Init_Failure();
-
-    m_fragment_program =
-      cgCreateProgramFromFile(
-        context,                /* Cg runtime context */
-        CG_SOURCE,              /* Program in human-readable form */
-        filename.c_str(),       /* Name of file containing program */
-        profile,                /* Profile: OpenGL ARB vertex program */
-        entry_function.c_str(), /* Entry function name */
-        options);               /* No extra compiler options */
-    if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Fragment_Shader_Init_Failure();
-    }
-
-    reload(screen);
-  }
-
-  void Fragment_Shader::reload(Video_DX9 &) {
-    cgD3D9LoadProgram(m_fragment_program, false, 0);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Init_Failure();
-  }
-
-  void Fragment_Shader::set(Video_DX9 &) const {
-    cgD3D9BindProgram(m_fragment_program);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Fragment_Shader_Bind_Failure();
-  }
-
-  void Fragment_Shader::unset(Video_DX9 &) const {
-  }
-#endif
-
-  Fragment_Shader::~Fragment_Shader() {
-    cgDestroyProgram(m_fragment_program);
-  }
 
 }
