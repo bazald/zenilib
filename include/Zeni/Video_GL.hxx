@@ -187,11 +187,11 @@ namespace Zeni {
   }
 
   void Video_GL::unset_vertex_shader_impl(const Vertex_Shader &shader) {
-    shader.set(*this);
+    shader.unset(*this);
   }
 
   void Video_GL::unset_fragment_shader_impl(const Fragment_Shader &shader) {
-    shader.set(*this);
+    shader.unset(*this);
   }
 
   void Video_GL::select_world_matrix_impl() {
@@ -262,12 +262,12 @@ namespace Zeni {
     shader_system.init(*this);
   }
 
-  Vertex_Shader * Video_GL::create_Vertex_Shader_impl(const std::string &filename, const std::string &entry_function) {
-    return new Vertex_Shader(filename, entry_function, *this);
+  void Video_GL::initialize_impl(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
   }
 
-  Fragment_Shader * Video_GL::create_Fragment_Shader_impl(const std::string &filename, const std::string &entry_function) {
-    return new Fragment_Shader(filename, entry_function, *this);
+  void Video_GL::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
 
   void Video_GL::pglBindBufferARB(const GLenum target, const GLuint buffer) const {

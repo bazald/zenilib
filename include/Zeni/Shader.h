@@ -54,6 +54,9 @@ namespace Zeni {
     // Get reference to only instance;
     friend Shader_System & get_Shader_System(); ///< Get access to the singleton.
 
+    Shader_System(const Shader_System &);
+    Shader_System & operator=(const Shader_System &);
+
   public:
     Shader_System();
     ~Shader_System();
@@ -76,72 +79,83 @@ namespace Zeni {
     CGprofile m_cg_fragment_profile;
   };
 
-  class Vertex_Shader {
+  class Shader {
+    Shader(const Shader &);
+    Shader & operator=(const Shader &);
+
+  public:
+    Shader();
+    ~Shader();
+
+#ifndef DISABLE_GL
+    void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_GL &screen);
+#endif
+
+#ifndef DISABLE_DX9
+    void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &screen);
+    void reload(Video_DX9 &screen);
+#endif
+
+  protected:
+#ifndef DISABLE_GL
+    void set(const CGprofile &profile, Video_GL &screen) const;
+    void unset(const CGprofile &profile, Video_GL &screen) const;
+#endif
+
+#ifndef DISABLE_DX9
+    void set(const CGprofile &profile, Video_DX9 &screen) const;
+    void unset(const CGprofile &profile, Video_DX9 &screen) const;
+#endif
+
+    CGprogram m_program;
+  };
+
+  class Vertex_Shader : public Shader {
     Vertex_Shader(const Vertex_Shader &);
     Vertex_Shader & operator=(const Vertex_Shader &);
 
   public:
+    inline Vertex_Shader(const std::string &filename, const std::string &entry_function);
+
 #ifndef DISABLE_GL
-    Vertex_Shader(const std::string &filename, const std::string &entry_function, Video_GL &screen);
-    void set(Video_GL &screen) const;
-    void unset(Video_GL &screen) const;
+    inline void set(Video_GL &screen) const;
+    inline void unset(Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
-    Vertex_Shader(const std::string &filename, const std::string &entry_function, Video_DX9 &screen);
-    void reload(Video_DX9 &screen);
-    void set(Video_DX9 &screen) const;
-    void unset(Video_DX9 &screen) const;
+    inline void set(Video_DX9 &screen) const;
+    inline void unset(Video_DX9 &screen) const;
 #endif
-
-    ~Vertex_Shader();
-
-  private:
-    CGprogram m_vertex_program;
   };
 
-  class Fragment_Shader {
+  class Fragment_Shader : public Shader {
     Fragment_Shader(const Fragment_Shader &);
     Fragment_Shader & operator=(const Fragment_Shader &);
 
   public:
+    inline Fragment_Shader(const std::string &filename, const std::string &entry_function);
+
 #ifndef DISABLE_GL
-    Fragment_Shader(const std::string &filename, const std::string &entry_function, Video_GL &screen);
-    void set(Video_GL &screen) const;
-    void unset(Video_GL &screen) const;
+    inline void set(Video_GL &screen) const;
+    inline void unset(Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
-    Fragment_Shader(const std::string &filename, const std::string &entry_function, Video_DX9 &screen);
-    void reload(Video_DX9 &screen);
-    void set(Video_DX9 &screen) const;
-    void unset(Video_DX9 &screen) const;
+    inline void set(Video_DX9 &screen) const;
+    inline void unset(Video_DX9 &screen) const;
 #endif
-
-    ~Fragment_Shader();
-
-  private:
-    CGprogram m_fragment_program;
   };
 
   struct Shader_System_Init_Failure : public Error {
     Shader_System_Init_Failure() : Error("Zeni Shader System Failed to Initialize Correctly") {}
   };
 
-  struct Vertex_Shader_Init_Failure : public Error {
-    Vertex_Shader_Init_Failure() : Error("Zeni Vertex Shader Failed to Initialize Correctly") {}
+  struct Shader_Init_Failure : public Error {
+    Shader_Init_Failure() : Error("Zeni Shader Failed to Initialize Correctly") {}
   };
 
-  struct Fragment_Shader_Init_Failure : public Error {
-    Fragment_Shader_Init_Failure() : Error("Zeni Fragment Shader Failed to Initialize Correctly") {}
-  };
-
-  struct Vertex_Shader_Bind_Failure : public Error {
-    Vertex_Shader_Bind_Failure() : Error("Zeni Vertex Shader Failed to Bind Correctly") {}
-  };
-
-  struct Fragment_Shader_Bind_Failure : public Error {
-    Fragment_Shader_Bind_Failure() : Error("Zeni Fragment Shader Failed to Bind Correctly") {}
+  struct Shader_Bind_Failure : public Error {
+    Shader_Bind_Failure() : Error("Zeni Shader Failed to Bind Correctly") {}
   };
 
 }

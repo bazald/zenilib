@@ -417,12 +417,12 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(initialize_impl, shader_system);
   }
 
-  Vertex_Shader * Video::create_Vertex_Shader(const std::string &filename, const std::string &entry_function) {
-    VIDEO_IV_FCN_CALL(create_Vertex_Shader_impl, filename, entry_function);
+  void Video::initialize(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader, filename, entry_function);
   }
 
-  Fragment_Shader * Video::create_Fragment_Shader(const std::string &filename, const std::string &entry_function) {
-    VIDEO_IV_FCN_CALL(create_Fragment_Shader_impl, filename, entry_function);
+  void Video::initialize(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader, filename, entry_function);
   }
 
   void Video::uninit() {

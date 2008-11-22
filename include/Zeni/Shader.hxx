@@ -29,6 +29,9 @@
 #ifndef ZENI_SHADER_HXX
 #define ZENI_SHADER_HXX
 
+// HXXed below
+#include <Zeni/Video.h>
+
 #include <Zeni/Shader.h>
 
 namespace Zeni {
@@ -45,6 +48,56 @@ namespace Zeni {
     return m_cg_fragment_profile;
   }
 
+  Vertex_Shader::Vertex_Shader(const std::string &filename, const std::string &entry_function) {
+    get_Video().initialize(*this, filename, entry_function);
+  }
+
+#ifndef DISABLE_GL
+  void Vertex_Shader::set(Video_GL &screen) const {
+    Shader::set(get_Shader_System().get_vertex_profile(), screen);
+  }
+
+  void Vertex_Shader::unset(Video_GL &screen) const {
+    Shader::unset(get_Shader_System().get_vertex_profile(), screen);
+  }
+#endif
+
+#ifndef DISABLE_DX9
+  void Vertex_Shader::set(Video_DX9 &screen) const {
+    Shader::set(get_Shader_System().get_vertex_profile(), screen);
+  }
+
+  void Vertex_Shader::unset(Video_DX9 &screen) const {
+    Shader::unset(get_Shader_System().get_vertex_profile(), screen);
+  }
+#endif
+
+  Fragment_Shader::Fragment_Shader(const std::string &filename, const std::string &entry_function) {
+    get_Video().initialize(*this, filename, entry_function);
+  }
+
+#ifndef DISABLE_GL
+  void Fragment_Shader::set(Video_GL &screen) const {
+    Shader::set(get_Shader_System().get_fragment_profile(), screen);
+  }
+
+  void Fragment_Shader::unset(Video_GL &screen) const {
+    Shader::unset(get_Shader_System().get_fragment_profile(), screen);
+  }
+#endif
+
+#ifndef DISABLE_DX9
+  void Fragment_Shader::set(Video_DX9 &screen) const {
+    Shader::set(get_Shader_System().get_fragment_profile(), screen);
+  }
+
+  void Fragment_Shader::unset(Video_DX9 &screen) const {
+    Shader::unset(get_Shader_System().get_fragment_profile(), screen);
+  }
+#endif
+
 }
+
+#include <Zeni/Video.hxx>
 
 #endif

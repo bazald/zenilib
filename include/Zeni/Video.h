@@ -193,9 +193,12 @@ namespace Zeni {
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
+
+
+    // Initialization Functions
     inline void initialize(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
-    inline Vertex_Shader * create_Vertex_Shader(const std::string &filename, const std::string &entry_function); ///< Function for creating a Vertex_Shader
-    inline Fragment_Shader * create_Fragment_Shader(const std::string &filename, const std::string &entry_function); ///< Function for creating a Fragment_Shader
+    inline void initialize(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Vertex_Shader
+    inline void initialize(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Fragment_Shader
 
     // Initialization Checks and Changes
     inline static const bool & is_initialized(); ///< Determine whether Video is already initialized
