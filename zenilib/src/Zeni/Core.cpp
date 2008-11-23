@@ -80,7 +80,7 @@ namespace Zeni {
   }
 
   int Core::get_num_joysticks() const {
-    return joystick.size();
+    return int(joystick.size());
   }
 
   const std::string & Core::get_joystick_name(const int &index) const {
