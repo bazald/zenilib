@@ -36,7 +36,7 @@
 
 // Not HXXed
 #include <Zeni/Vector3f.h>
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 namespace Zeni {
 

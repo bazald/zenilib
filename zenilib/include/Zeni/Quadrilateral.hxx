@@ -36,7 +36,7 @@
 #include <Zeni/Quadrilateral.h>
 
 // Not HXXed
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <cassert>
 
 namespace Zeni {

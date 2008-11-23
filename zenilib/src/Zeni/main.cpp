@@ -172,10 +172,6 @@ static void load_ini() {
 #include <SDL/SDL_net.h>
 #include <SDL/SDL_ttf.h>
 
-#ifndef DISABLE_GL
-#include <GL/glu.h>
-#endif
-
 #ifndef DISABLE_AL
 #include <al.h>
 static std::string alErrorString(const ALenum &err) {

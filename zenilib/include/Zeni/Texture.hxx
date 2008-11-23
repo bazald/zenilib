@@ -38,7 +38,7 @@
 
 // Not HXXed
 #ifndef DISABLE_GL
-#include <GL/glext.h>
+#include <GL/glew.h>
 #endif
 
 namespace Zeni {

@@ -33,7 +33,7 @@
 #include <Zeni/Video_DX9.hxx>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 
 namespace Zeni {

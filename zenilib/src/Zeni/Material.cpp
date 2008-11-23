@@ -37,7 +37,7 @@
 #include <cmath>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 
 using namespace std;

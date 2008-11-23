@@ -30,8 +30,6 @@
 
 #ifndef DISABLE_GL
 #include <SDL/SDL_rotozoom.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
 #endif
 
 namespace Zeni {

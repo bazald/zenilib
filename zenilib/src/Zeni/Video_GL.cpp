@@ -41,9 +41,8 @@
 #include <Zeni/Video.hxx>
 
 #include <SDL/SDL.h>
+#include <GL/glew.h>
 #include <SDL/SDL_opengl.h>
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include <iostream>
 
 using namespace std;
@@ -133,6 +132,14 @@ namespace Zeni {
 
     set_opengl_flag(true);
     Video::init();
+
+    {
+      const GLenum err = glewInit();
+      if(GLEW_OK != err) {
+        cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
+        throw Video_Init_Failure();
+      }
+    }
 
     glViewport(0, 0, get_screen_width(), get_screen_height());
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

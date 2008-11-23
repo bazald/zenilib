@@ -1,0 +1,16 @@
+struct Zeni_Color_Output {
+  float4 color : COLOR;
+};
+
+struct Zeni_Color_Input {
+  const float4 color : COLOR;
+};
+
+Zeni_Color_Output Zeni_Color(Zeni_Color_Input IN)
+{
+  Zeni_Color_Output OUT;
+
+  OUT.color = IN.color;
+
+  return OUT;
+}
