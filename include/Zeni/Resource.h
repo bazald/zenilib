@@ -73,6 +73,8 @@ namespace Zeni {
     unsigned long m_current;
   };
 
+  Resource & get_Resource(); ///< Get access to the singleton.
+
   struct Resource_Init_Failure : public Error {
     Resource_Init_Failure() : Error("Zeni Resource Failed to Initialize Correctly") {}
   };

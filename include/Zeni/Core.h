@@ -103,6 +103,8 @@ namespace Zeni {
     std::vector<std::pair<SDL_Joystick *, std::string> > joystick;
   };
 
+  Core & get_Core(); ///< Get access to the singleton.
+
   struct Core_Init_Failure : public Error {
     Core_Init_Failure() : Error("Zeni Core Failed to Initialize Correctly") {}
   };

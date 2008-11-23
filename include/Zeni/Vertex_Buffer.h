@@ -69,7 +69,7 @@ namespace Zeni {
 
   class Vertex_Buffer  {
     Vertex_Buffer(const Vertex_Buffer &);
-    Vertex_Buffer operator=(const Vertex_Buffer &);
+    Vertex_Buffer & operator=(const Vertex_Buffer &);
 
   public:
     struct Vertex_Buffer_Range {

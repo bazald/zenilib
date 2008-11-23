@@ -252,6 +252,8 @@ namespace Zeni {
     Sound_Source *m_bgm_source;
   };
 
+  Sound & get_Sound(); ///< Get access to the singleton.
+
   struct Sound_Buffer_Init_Failure : public Error {
     Sound_Buffer_Init_Failure() : Error("Zeni Sound Buffer Failed to Initialize Correctly") {}
   };

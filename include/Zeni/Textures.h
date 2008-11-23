@@ -113,6 +113,8 @@ namespace Zeni {
     static bool m_lazy_loading;
   };
 
+  Textures & get_Textures(); ///< Get access to the singleton.
+
   struct Texture_Not_Found : public Error {
     Texture_Not_Found(const std::string &identifier) : Error("Zeni Texture '" + identifier + "' Not Found") {}
   };

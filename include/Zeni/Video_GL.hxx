@@ -34,6 +34,7 @@
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
 #include <Zeni/Render_Wrapper.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Video.h>
 
 #include <Zeni/Video_GL.h>
@@ -294,6 +295,7 @@ namespace Zeni {
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Shader.hxx>
 #include <Zeni/Video.hxx>
 
 #endif

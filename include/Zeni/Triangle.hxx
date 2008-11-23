@@ -61,7 +61,7 @@ namespace Zeni {
   }
 
   template <>
-  Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper * const &render_wrapper)
+  inline Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper * const &render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
@@ -84,7 +84,7 @@ namespace Zeni {
   }
 
   template <>
-  Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper * const &render_wrapper)
+  inline Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper * const &render_wrapper)
     : m_render_wrapper(render_wrapper)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %

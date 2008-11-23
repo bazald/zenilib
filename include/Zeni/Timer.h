@@ -149,6 +149,8 @@ namespace Zeni {
     int m_ticks; // Wraps at around 49 days
   };
 
+  Timer & get_Timer(); ///< Get access to the singleton.
+
   /** High Quality Timer Below **/
 
 #ifdef _WINDOWS
@@ -213,6 +215,8 @@ namespace Zeni {
 
     bool m_available;
   };
+
+  Timer_HQ & get_Timer_HQ(); ///< Get access to the singleton.
 
 }
 

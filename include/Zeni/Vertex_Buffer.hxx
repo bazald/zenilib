@@ -29,6 +29,9 @@
 #ifndef ZENI_VERTEX_BUFFER_HXX
 #define ZENI_VERTEX_BUFFER_HXX
 
+// HXXed below
+#include <Zeni/Triangle.h>
+
 #include <Zeni/Vertex_Buffer.h>
 
 namespace Zeni {
@@ -87,5 +90,7 @@ namespace Zeni {
 #endif
 
 }
+
+#include <Zeni/Triangle.hxx>
 
 #endif

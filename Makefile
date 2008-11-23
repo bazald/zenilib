@@ -1,6 +1,5 @@
 # MODIFY BELOW
 
-#DISABLEGL = -DDISABLE_GL
 DISABLEWGL = -DDISABLEWGL
 DISABLEDX9 = -DDISABLE_DX9
 #DISABLEAL = -DDISABLE_AL
@@ -8,10 +7,10 @@ DISABLEDX9 = -DDISABLE_DX9
 BUILD = DEBUG
 #BUILD = RELEASE
 
-#SRCS_TYPE = FULL_SRCS
-#EXTENSION = cpp
-SRCS_TYPE = SCU_SRCS
-EXTENSION = cxx
+SRCS_TYPE = FULL_SRCS
+EXTENSION = cpp
+#SRCS_TYPE = SCU_SRCS
+#EXTENSION = cxx
 
 # MODIFY ABOVE
 # LEAVE THE REST ALONE (unless you know what you are doing
@@ -22,22 +21,20 @@ CC = g++
 #PEDANTIC = -pedantic
 #PEDANTIC = -pedantic-errors -Werror
 
-ALLBUILDS = -Wall -W $(PEDANTIC) $(DISABLEGL) $(DISABLEWGL) $(DISABLEDX9) $(DISABLEAL) -D_CRT_SECURE_NO_DEPRECATE -Iinclude
+ALLBUILDS = -Wall -W -Wno-variadic-macros $(PEDANTIC)\
+            $(DISABLEWGL) $(DISABLEDX9) $(DISABLEAL) \
+            -D_CRT_SECURE_NO_DEPRECATE -Iinclude
 DEBUG = -ggdb $(ALLBUILDS)
 RELEASE = -O2 $(ALLBUILDS)
 
-LSDLFLAGS = -lSDL_image -lSDL_gfx -lSDL_ttf -lSDL_net
-LGLFLAGS = -lGL -lGLU
-WSDLFLAGS = -lSDLmain -lSDL $(LSDLFLAGS)
-WGLFLAGS = -lopengl32 -lglu32
-WFLAGS = -mwindows -lmingw32 -lwinmm -lcomctl32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32
-DX9FLAGS = -ld3dx9 -ld3d9 -ld3dxof -ldxguid
+SDLFLAGS = -lSDL -lSDLmain -lSDL_image -lSDL_gfx -lSDL_ttf -lSDL_net
+GLFLAGS = -lGL -lGLEW -lGLU
+CGFLAGS = -lCg -lCgGL
 3DSFLAGS = -l3ds
-LOALFLAGS = -lalut -lopenal -lvorbisfile
+ALFLAGS = `openal-config --libs` -lalut -lvorbisfile
 
-CFLAGS = $($(BUILD))
-XFLAGS = $(3DSFLAGS) $(WGLFLAGS) $(WFLAGS) $(WSDLFLAGS) -static-libgcc
-LFLAGS = `sdl-config --cflags --static-libs` $(3DSFLAGS) $(LGLFLAGS) $(LSDLFLAGS)
+CFLAGS = $($(BUILD)) `sdl-config --cflags` `lib3ds-config --cflags` `openal-config --cflags`
+LFLAGS = $(SDLFLAGS) $(GLFLAGS) $(CGFLAGS) $(3DSFLAGS)
 LD = ld
 
 LIB_SRCS = src/Zeni/Camera.cpp \
@@ -64,6 +61,7 @@ LIB_SRCS = src/Zeni/Camera.cpp \
 	src/Zeni/Quaternion.cpp \
 	src/Zeni/Render_Wrapper.cpp \
 	src/Zeni/Resource.cpp \
+	src/Zeni/Shader.cpp \
 	src/Zeni/Sound.cpp \
 	src/Zeni/Sounds.cpp \
 	src/Zeni/Texture.cpp \
@@ -100,7 +98,7 @@ zeniapp: $(OBJS)
 ifeq ($(DISABLEAL),-DDISABLE_AL)
 	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(LFLAGS)
 else
-	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(LFLAGS) $(LOALFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -o zeniapp $(LFLAGS) $(ALFLAGS)
 endif
 
 %.o:

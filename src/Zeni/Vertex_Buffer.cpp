@@ -345,11 +345,11 @@ namespace Zeni {
         verts.push_back(Vertex_Ref<VERTEX>(triangles[i], 2));
       }
 
-      std::stable_sort(verts.begin(), verts.end(), Vertex_Ref<VERTEX>::Z_Sorter());
+      std::stable_sort(verts.begin(), verts.end(), typename Vertex_Ref<VERTEX>::Z_Sorter());
 
-      vector< Vertex_Ref<VERTEX> >::iterator kend = verts.begin();
+      typename vector< Vertex_Ref<VERTEX> >::iterator kend = verts.begin();
 
-      for(vector< Vertex_Ref<VERTEX> >::iterator jt = verts.begin();
+      for(typename vector< Vertex_Ref<VERTEX> >::iterator jt = verts.begin();
           jt != verts.end();
           ++jt)
       {
@@ -362,7 +362,7 @@ namespace Zeni {
           }
         }
 
-        for(vector< Vertex_Ref<VERTEX> >::iterator kt = jt + 1;
+        for(typename vector< Vertex_Ref<VERTEX> >::iterator kt = jt + 1;
             kt != kend;
             ++kt)
         {

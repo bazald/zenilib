@@ -173,7 +173,7 @@ static void load_ini() {
 #include <SDL/SDL_ttf.h>
 
 #ifndef DISABLE_AL
-#include <al.h>
+#include <AL/al.h>
 static std::string alErrorString(const ALenum &err) {
   switch(err) {
     case AL_NO_ERROR:          return "AL_NO_ERROR";          break;

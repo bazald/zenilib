@@ -91,6 +91,8 @@ namespace Zeni {
     int ticks_passed, fps, fps_next;
   };
 
+  Game & get_Game(const std::vector<std::string> * const &args); ///< Get access to the singleton.
+
   struct Zero_Gamestate : public Error {
     Zero_Gamestate() : Error("Zeni Gamestate State is Empty") {}
   };
