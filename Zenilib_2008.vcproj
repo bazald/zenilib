@@ -2368,6 +2368,19 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Shader Files"
+			Filter="cg"
+			>
+			<File
+				RelativePath="shaders\zeni_fragment_shaders.cg"
+				>
+			</File>
+			<File
+				RelativePath="shaders\zeni_vertex_shaders.cg"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

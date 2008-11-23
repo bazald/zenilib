@@ -1,0 +1,24 @@
+struct Zeni_2D_Color_Output {
+  float4 position : POSITION;
+  float4 color : COLOR;
+};
+
+struct Zeni_2D_Color_Input {
+  const float4 position : POSITION;
+  const float4 color : COLOR;
+};
+
+Zeni_2D_Color_Output Zeni_2D_Color(Zeni_2D_Color_Input IN//,
+                                   //uniform float4x4 modelViewProj
+                                   )
+{	
+  Zeni_2D_Color_Output OUT;
+
+  OUT.position = float4(IN.position.x /  400 - 1,
+                        IN.position.y / -300 + 1,
+                        IN.position.zw);
+//  OUT.position = mul(modelViewProj, IN.position);
+  OUT.color = IN.color;
+
+  return OUT;	
+}

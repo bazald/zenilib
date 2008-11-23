@@ -51,8 +51,7 @@
 
 #ifndef DISABLE_GL
 
-#include <GL/gl.h>
-#include <GL/glext.h>
+#include <GL/glew.h>
 
 namespace Zeni {
 

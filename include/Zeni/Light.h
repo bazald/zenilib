@@ -54,7 +54,7 @@
 #include <Zeni/Vector3f.h>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 #ifndef DISABLE_DX9
 #include <d3dx9.h>

@@ -35,13 +35,12 @@
 
 #include <Zeni/Core.h>
 
-#include <Cg/cg.h>
-
 #ifndef DISABLE_DX9
 #include <Cg/cgD3D9.h>
 #endif
 
 #ifndef DISABLE_GL
+#include <GL/glew.h>
 #include <Cg/cgGL.h>
 #endif
 
