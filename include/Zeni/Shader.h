@@ -89,12 +89,15 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
     void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_GL &screen);
+    void load(Video_GL &screen);
 #endif
 
 #ifndef DISABLE_DX9
     void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &screen);
-    void reload(Video_DX9 &screen);
+    void load(Video_DX9 &screen);
 #endif
+
+    void compile();
 
   protected:
 #ifndef DISABLE_GL
@@ -115,7 +118,7 @@ namespace Zeni {
     Vertex_Shader & operator=(const Vertex_Shader &);
 
   public:
-    inline Vertex_Shader(const std::string &filename, const std::string &entry_function);
+    inline Vertex_Shader(const std::string &filename, const std::string &entry_function = "main");
 
 #ifndef DISABLE_GL
     inline void set(Video_GL &screen) const;
@@ -133,7 +136,7 @@ namespace Zeni {
     Fragment_Shader & operator=(const Fragment_Shader &);
 
   public:
-    inline Fragment_Shader(const std::string &filename, const std::string &entry_function);
+    inline Fragment_Shader(const std::string &filename, const std::string &entry_function = "main");
 
 #ifndef DISABLE_GL
     inline void set(Video_GL &screen) const;

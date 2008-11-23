@@ -42,6 +42,8 @@ namespace Zeni {
       throw Shader_System_Init_Failure();
 
     get_Video().initialize(*this);
+
+    cgSetAutoCompile(m_context, CG_COMPILE_MANUAL);
   }
 
   Shader_System::~Shader_System() {
@@ -78,6 +80,13 @@ namespace Zeni {
       throw Shader_System_Init_Failure();
   }
 #endif
+
+  void Shader::compile() {
+    if(!cgIsProgramCompiled(m_program))
+      cgCompileProgram(m_program);
+    if(cgGetError() != CG_NO_ERROR)
+      throw Shader_Init_Failure();
+  }
   
   Shader::Shader()
     : m_program(0)
@@ -104,27 +113,41 @@ namespace Zeni {
         filename.c_str(),       /* Name of file containing program */
         profile,                /* Profile: OpenGL ARB vertex program */
         entry_function.c_str(), /* Entry function name */
-        NULL);                  /* No extra compiler options */
-    if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
-      throw Shader_Init_Failure();
-    }
-
-    cgGLLoadProgram(m_program);
+        NULL);                  /* Probably no extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
       cerr << "Error initializing '" << filename.c_str() << "'\n";
       throw Shader_Init_Failure();
     }
   }
 
-  void Shader::set(const CGprofile &profile, Video_GL &) const {
-    cgGLBindProgram(m_program);
-    if(cgGetError() != CG_NO_ERROR)
-      throw Shader_Bind_Failure();
+  void Shader::load(Video_GL &) {
+    compile();
 
-    cgGLEnableProfile(profile);
+    cgGLLoadProgram(m_program);
     if(cgGetError() != CG_NO_ERROR)
-      throw Shader_Bind_Failure();
+      throw Shader_Init_Failure();
+  }
+
+  void Shader::set(const CGprofile &profile, Video_GL &screen) const {
+#define GLSET cgGLBindProgram(m_program); \
+              if(cgGetError() != CG_NO_ERROR) \
+                throw Shader_Bind_Failure(); \
+              cgGLEnableProfile(profile); \
+              if(cgGetError() != CG_NO_ERROR) \
+                throw Shader_Bind_Failure();
+
+    try
+    {
+      GLSET;
+    }
+    catch(Shader_Bind_Failure &)
+    {
+      const_cast<Shader &>(*this).load(screen);
+
+      GLSET;
+    }
+
+#undef GLSET
   }
 
   void Shader::unset(const CGprofile &profile, Video_GL &) const {
@@ -135,7 +158,7 @@ namespace Zeni {
 #endif
 
 #ifndef DISABLE_DX9
-  void Shader::init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &screen) {
+  void Shader::init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &) {
     Shader_System &shader_system = get_Shader_System();
     const CGcontext &context = shader_system.get_context();
 
@@ -150,39 +173,38 @@ namespace Zeni {
         filename.c_str(),       /* Name of file containing program */
         profile,                /* Profile: OpenGL ARB vertex program */
         entry_function.c_str(), /* Entry function name */
-        options);               /* No extra compiler options */
+        options);               /* Probably no extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
       cerr << "Error initializing '" << filename.c_str() << "'\n";
       throw Shader_Init_Failure();
     }
-
-    reload(screen);
   }
 
-  void Shader::reload(Video_DX9 &) {
+  void Shader::load(Video_DX9 &) {
+    compile();
+
     cgD3D9LoadProgram(m_program, false, 0);
     if(cgGetError() != CG_NO_ERROR)
       throw Shader_Init_Failure();
   }
 
   void Shader::set(const CGprofile &, Video_DX9 &screen) const {
+#define DXSET cgD3D9BindProgram(m_program); \
+              if(cgGetError() != CG_NO_ERROR) \
+                throw Shader_Bind_Failure();
+
     try
     {
-      cgD3D9BindProgram(m_program);
-      if(cgGetError() != CG_NO_ERROR)
-        throw Shader_Bind_Failure();
+      DXSET;
     }
-    catch(Shader_Bind_Failure &bind_failure)
+    catch(Shader_Bind_Failure &)
     {
-      try
-      {
-        const_cast<Shader &>(*this).reload(screen);
-      }
-      catch(...)
-      {
-        throw bind_failure;
-      }
+      const_cast<Shader &>(*this).load(screen);
+
+      DXSET;
     }
+
+#undef DXSET
   }
 
   void Shader::unset(const CGprofile &, Video_DX9 &) const {
