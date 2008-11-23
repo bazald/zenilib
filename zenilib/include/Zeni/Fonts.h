@@ -86,6 +86,8 @@ namespace Zeni {
     std::string m_filename;
   };
 
+  Fonts & get_Fonts(); ///< Get access to the singleton.
+
   struct Fonts_Init_Failure : Error {
     Fonts_Init_Failure() : Error("Zeni Fonts Initialization Failure!") {}
   };

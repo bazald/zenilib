@@ -28,6 +28,7 @@
 
 #include <Zeni/Collision.hxx>
 
+#include <Zeni/Coordinate.hxx>
 #include <Zeni/Vector3f.hxx>
 
 #include <cmath>

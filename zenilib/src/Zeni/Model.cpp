@@ -74,7 +74,9 @@ namespace Zeni {
 
     /*** BEGIN NEW FLIP-TEST ***/
 
-    const Vector3f scl_track = reinterpret_cast<const Vector3f &>(node->scl_track.keys->value);
+    const Vector3f scl_track(node->scl_track.keys->value[0],
+                             node->scl_track.keys->value[1],
+                             node->scl_track.keys->value[2]);
     const bool flip_order = scl_track.i * scl_track.j * scl_track.k < 0.0f;
 
     /*** END NEW FLIP-TEST ***/
@@ -105,8 +107,10 @@ namespace Zeni {
         pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
-      const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
-      const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
+      const Point2f tex_offset(material->texture1_map.offset[0],
+                               material->texture1_map.offset[1]);
+      const Point2f tex_scale(material->texture1_map.scale[0],
+                              material->texture1_map.scale[1]);
 
       Point3f pa(mesh->vertices[face->index[0]][0], mesh->vertices[face->index[0]][1], mesh->vertices[face->index[0]][2]);
       const Point3f pb(mesh->vertices[face->index[1]][0], mesh->vertices[face->index[1]][1], mesh->vertices[face->index[1]][2]);
@@ -302,7 +306,7 @@ namespace Zeni {
       if(!node_mesh)
         throw Model_Render_Failure();
 
-      mv(*this, reinterpret_cast<Lib3dsMeshInstanceNode * const &>(node), node_mesh);
+      mv(*this, reinterpret_cast<Lib3dsMeshInstanceNode * const>(node), node_mesh);
     }
   }
 
@@ -342,7 +346,9 @@ namespace Zeni {
 
     if(node) {
       vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->base.matrix));
-      vr.translate_scene(-reinterpret_cast<const Vector3f &>(node->pivot));
+      vr.translate_scene(Vector3f(-node->pivot[0],
+                                  -node->pivot[1],
+                                  -node->pivot[2]));
     }
     vr.transform_scene(reinterpret_cast<const Matrix4f &>(mesh->matrix).inverted());
 

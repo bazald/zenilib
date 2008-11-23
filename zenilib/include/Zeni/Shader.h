@@ -78,6 +78,8 @@ namespace Zeni {
     CGprofile m_cg_fragment_profile;
   };
 
+  Shader_System & get_Shader_System(); ///< Get access to the singleton.
+
   class Shader {
     Shader(const Shader &);
     Shader & operator=(const Shader &);

@@ -256,6 +256,8 @@ namespace Zeni {
     bool m_ztest;
   };
 
+  Video & get_Video(); ///< Get access to the singleton.
+
   struct Video_Init_Failure : public Error {
     Video_Init_Failure() : Error("Zeni Video Failed to Initialize Correctly") {}
   };

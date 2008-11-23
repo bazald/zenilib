@@ -104,6 +104,8 @@ namespace Zeni {
     Replacement_Policy m_replacement_policy;
   };
 
+  Sounds & get_Sounds(); ///< Get access to the singleton.
+
   struct Sound_Effect_Not_Found : public Error {
     Sound_Effect_Not_Found(const std::string &identifier) : Error("Zeni Sound Effect '" + identifier + "' Not Found") {}
   };

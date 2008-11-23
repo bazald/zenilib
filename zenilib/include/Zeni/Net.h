@@ -141,6 +141,8 @@ namespace Zeni {
     inline std::string reverse_lookup(IPaddress ip);
   };
 
+  Net & get_Net(); ///< Get access to the singleton.
+
   class TCP_Socket {
     TCP_Socket(const TCP_Socket &);
     TCP_Socket & operator=(const TCP_Socket &);

@@ -40,12 +40,16 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
-#include <SDL/SDL.h>
 #include <GL/glew.h>
-#include <SDL/SDL_opengl.h>
 #include <iostream>
 
+namespace SDL {
+  #include <SDL/SDL.h>
+  #include <SDL/SDL_opengl.h>
+}
+
 using namespace std;
+using namespace SDL;
 
 namespace Zeni {
 
