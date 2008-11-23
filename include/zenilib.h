@@ -58,6 +58,7 @@
 #include <Zeni/Quaternion.h>
 #include <Zeni/Render_Wrapper.h>
 #include <Zeni/Resource.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Sound.h>
 #include <Zeni/Sounds.h>
 #include <Zeni/Texture.h>

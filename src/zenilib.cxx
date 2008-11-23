@@ -52,6 +52,7 @@
 #include "Zeni/Quaternion.cpp"
 #include "Zeni/Render_Wrapper.cpp"
 #include "Zeni/Resource.cpp"
+#include "Zeni/Shader.cpp"
 #include "Zeni/Sound.cpp"
 #include "Zeni/Sounds.cpp"
 #include "Zeni/Texture.cpp"
