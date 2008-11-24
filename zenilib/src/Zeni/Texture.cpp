@@ -35,22 +35,54 @@
 namespace Zeni {
 
   int Texture::build_from_surface(SDL_Surface * &surface) {
-    bool width_pow2 = false, height_pow2 = false;
-
-    for(int i = 1; i; i <<= 1) {
-      if(surface->w == i)
+    int next_w = 1;
+    bool width_pow2 = false;
+    for(; next_w; next_w <<= 1)
+      if(next_w > surface->w)
+        break;
+      else if(surface->w == next_w) {
         width_pow2 = true;
-      if(surface->h == i)
+        break;
+      }
+
+    int next_h = 1;
+    bool height_pow2 = false;
+    for(; next_h; next_h <<= 1)
+      if(next_h > surface->h)
+        break;
+      else if(surface->h == next_h) {
         height_pow2 = true;
-    }
+        break;
+      }
+
+    double scale_w = next_w;
+    double scale_h = next_h;
 
     if(!width_pow2 || !height_pow2) {
-      float next_w = pow(2.0f, ceil(log(float(surface->w))/log(2.0f)));
-      float next_h = pow(2.0f, ceil(log(float(surface->h))/log(2.0f)));
+      int actual_w, actual_h;
+      for(;;) {
+        zoomSurfaceSize(surface->w, surface->h,
+                        scale_w/surface->w, scale_h/surface->h,
+                        &actual_w, &actual_h);
 
-      SDL_Surface *surf2 = rotozoomSurfaceXY(surface, 0,
-        next_w/surface->w,
-        next_h/surface->h, 1);
+        if(next_w == actual_w &&
+           next_h == actual_h)
+          break;
+
+        if(actual_w < next_w)
+          scale_w += 0.5;
+        else if(actual_w > next_w)
+          scale_w -= 0.5;
+
+        if(actual_h < next_h)
+          scale_h += 0.5;
+        else if(actual_h > next_h)
+          scale_h -= 0.5;
+      };
+
+      SDL_Surface *surf2 = zoomSurface(surface,
+        scale_w/surface->w,
+        scale_h/surface->h, 1);
 
       if(surf2) {
         SDL_FreeSurface(surface);
