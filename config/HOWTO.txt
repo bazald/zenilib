@@ -31,8 +31,7 @@ token	name for font
 int	should be bolded (1 for true, 0 for false - deprecated)
 int	should be italicized (1 for true, 0 for false - deprecated)
 int	font size (pt)
-rol	font name (e.g. Arial - must be installed name
-                                must have $(token).ttf in zenilib/fonts/)
+rol	font name (e.g. Arial - must have $(token).ttf in zenilib/fonts/)
 
 NOTE:  Only TrueType (TTF) fonts are supported
 

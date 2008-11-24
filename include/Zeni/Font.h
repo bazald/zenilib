@@ -135,27 +135,6 @@ namespace Zeni {
     int m_font_height;
   };
 
-#ifndef DISABLE_DX9
-  class Font_DX9 : public Font {
-  public:
-    Font_DX9(); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    Font_DX9(const std::string &codename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    ~Font_DX9();
-
-    virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
-
-    virtual void render_text(const std::string &text, const Point2f &position,
-      const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
-
-  private:
-    LPD3DXFONT font;
-
-    mutable LPD3DXFONT resized;
-    mutable float ratio;
-  };
-#endif
-
   struct Font_Type_Unsupported : Error {
     Font_Type_Unsupported(const std::string &filename) : Error("Unsupported Font Type: ") 
     {msg += filename;}
