@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -114,7 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -189,7 +189,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -262,7 +262,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;X64"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -328,7 +328,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -398,7 +398,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -473,7 +473,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -546,7 +546,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="include;&quot;$(CG_Inc_Path)&quot;;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;X64"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -597,7 +597,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="src\Zeni\Camera.cpp"
+				RelativePath="..\src\Zeni\Camera.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -633,7 +633,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Collision.cpp"
+				RelativePath="..\src\Zeni\Collision.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -669,7 +669,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Color.cpp"
+				RelativePath="..\src\Zeni\Color.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -705,7 +705,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Colors.cpp"
+				RelativePath="..\src\Zeni\Colors.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -741,7 +741,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Coordinate.cpp"
+				RelativePath="..\src\Zeni\Coordinate.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -777,7 +777,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Core.cpp"
+				RelativePath="..\src\Zeni\Core.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -813,7 +813,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\EZ2D.cpp"
+				RelativePath="..\src\Zeni\EZ2D.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -849,7 +849,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Fog.cpp"
+				RelativePath="..\src\Zeni\Fog.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -885,7 +885,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Font.cpp"
+				RelativePath="..\src\Zeni\Font.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -921,7 +921,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Fonts.cpp"
+				RelativePath="..\src\Zeni\Fonts.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -957,7 +957,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Game.cpp"
+				RelativePath="..\src\Zeni\Game.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -993,7 +993,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Gamestate.cpp"
+				RelativePath="..\src\Zeni\Gamestate.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1029,7 +1029,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Image.cpp"
+				RelativePath="..\src\Zeni\Image.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1065,7 +1065,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Light.cpp"
+				RelativePath="..\src\Zeni\Light.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1101,7 +1101,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\main.cpp"
+				RelativePath="..\src\Zeni\main.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1137,7 +1137,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Material.cpp"
+				RelativePath="..\src\Zeni\Material.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1173,7 +1173,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Matrix4f.cpp"
+				RelativePath="..\src\Zeni\Matrix4f.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1209,7 +1209,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Model.cpp"
+				RelativePath="..\src\Zeni\Model.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1245,7 +1245,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Mutex.cpp"
+				RelativePath="..\src\Zeni\Mutex.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1281,7 +1281,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Net.cpp"
+				RelativePath="..\src\Zeni\Net.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1317,7 +1317,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Net_Primitives.cpp"
+				RelativePath="..\src\Zeni\Net_Primitives.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1353,7 +1353,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Quaternion.cpp"
+				RelativePath="..\src\Zeni\Quaternion.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1389,7 +1389,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Render_Wrapper.cpp"
+				RelativePath="..\src\Zeni\Render_Wrapper.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1425,7 +1425,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Resource.cpp"
+				RelativePath="..\src\Zeni\Resource.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1461,7 +1461,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Shader.cpp"
+				RelativePath="..\src\Zeni\Shader.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1497,7 +1497,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Sound.cpp"
+				RelativePath="..\src\Zeni\Sound.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1533,7 +1533,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Sounds.cpp"
+				RelativePath="..\src\Zeni\Sounds.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1569,7 +1569,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Texture.cpp"
+				RelativePath="..\src\Zeni\Texture.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1605,7 +1605,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Textures.cpp"
+				RelativePath="..\src\Zeni\Textures.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1641,7 +1641,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Thread.cpp"
+				RelativePath="..\src\Zeni\Thread.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1677,7 +1677,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Timer.cpp"
+				RelativePath="..\src\Zeni\Timer.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1713,7 +1713,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Vector3f.cpp"
+				RelativePath="..\src\Zeni\Vector3f.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1749,7 +1749,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Vertex2f.cpp"
+				RelativePath="..\src\Zeni\Vertex2f.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1785,7 +1785,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Vertex3f.cpp"
+				RelativePath="..\src\Zeni\Vertex3f.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1821,7 +1821,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Vertex_Buffer.cpp"
+				RelativePath="..\src\Zeni\Vertex_Buffer.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1857,7 +1857,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Video.cpp"
+				RelativePath="..\src\Zeni\Video.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1893,7 +1893,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Video_DX9.cpp"
+				RelativePath="..\src\Zeni\Video_DX9.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1929,7 +1929,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Video_GL.cpp"
+				RelativePath="..\src\Zeni\Video_GL.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1965,7 +1965,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\Zeni\Widget.cpp"
+				RelativePath="..\src\Zeni\Widget.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -2007,183 +2007,183 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="include\Zeni\Camera.h"
+				RelativePath="..\include\Zeni\Camera.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Collision.h"
+				RelativePath="..\include\Zeni\Collision.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Color.h"
+				RelativePath="..\include\Zeni\Color.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Colors.h"
+				RelativePath="..\include\Zeni\Colors.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Coordinate.h"
+				RelativePath="..\include\Zeni\Coordinate.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Core.h"
+				RelativePath="..\include\Zeni\Core.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\EZ2D.h"
+				RelativePath="..\include\Zeni\EZ2D.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Fog.h"
+				RelativePath="..\include\Zeni\Fog.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Font.h"
+				RelativePath="..\include\Zeni\Font.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Fonts.h"
+				RelativePath="..\include\Zeni\Fonts.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Game.h"
+				RelativePath="..\include\Zeni\Game.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Gamestate.h"
+				RelativePath="..\include\Zeni\Gamestate.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Gamestate_One.h"
+				RelativePath="..\include\Zeni\Gamestate_One.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Hash_Map.h"
+				RelativePath="..\include\Zeni\Hash_Map.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Image.h"
+				RelativePath="..\include\Zeni\Image.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\IV.h"
+				RelativePath="..\include\Zeni\IV.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Light.h"
+				RelativePath="..\include\Zeni\Light.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Line_Segment.h"
+				RelativePath="..\include\Zeni\Line_Segment.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Material.h"
+				RelativePath="..\include\Zeni\Material.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Matrix4f.h"
+				RelativePath="..\include\Zeni\Matrix4f.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Model.h"
+				RelativePath="..\include\Zeni\Model.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Mutex.h"
+				RelativePath="..\include\Zeni\Mutex.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Net.h"
+				RelativePath="..\include\Zeni\Net.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Net_Primitives.h"
+				RelativePath="..\include\Zeni\Net_Primitives.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Projector.h"
+				RelativePath="..\include\Zeni\Projector.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Quadrilateral.h"
+				RelativePath="..\include\Zeni\Quadrilateral.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Quaternion.h"
+				RelativePath="..\include\Zeni\Quaternion.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Render_Wrapper.h"
+				RelativePath="..\include\Zeni\Render_Wrapper.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Resource.h"
+				RelativePath="..\include\Zeni\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Shader.h"
+				RelativePath="..\include\Zeni\Shader.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Sound.h"
+				RelativePath="..\include\Zeni\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Sounds.h"
+				RelativePath="..\include\Zeni\Sounds.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Texture.h"
+				RelativePath="..\include\Zeni\Texture.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Textures.h"
+				RelativePath="..\include\Zeni\Textures.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Thread.h"
+				RelativePath="..\include\Zeni\Thread.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Timer.h"
+				RelativePath="..\include\Zeni\Timer.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Triangle.h"
+				RelativePath="..\include\Zeni\Triangle.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vector3f.h"
+				RelativePath="..\include\Zeni\Vector3f.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex2f.h"
+				RelativePath="..\include\Zeni\Vertex2f.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex3f.h"
+				RelativePath="..\include\Zeni\Vertex3f.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex_Buffer.h"
+				RelativePath="..\include\Zeni\Vertex_Buffer.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video.h"
+				RelativePath="..\include\Zeni\Video.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video_DX9.h"
+				RelativePath="..\include\Zeni\Video_DX9.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video_GL.h"
+				RelativePath="..\include\Zeni\Video_GL.h"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Widget.h"
+				RelativePath="..\include\Zeni\Widget.h"
 				>
 			</File>
 		</Filter>
@@ -2192,139 +2192,139 @@
 			Filter="hxx;inl;inc"
 			>
 			<File
-				RelativePath="include\Zeni\Camera.hxx"
+				RelativePath="..\include\Zeni\Camera.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Collision.hxx"
+				RelativePath="..\include\Zeni\Collision.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Color.hxx"
+				RelativePath="..\include\Zeni\Color.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Coordinate.hxx"
+				RelativePath="..\include\Zeni\Coordinate.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Font.hxx"
+				RelativePath="..\include\Zeni\Font.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Game.hxx"
+				RelativePath="..\include\Zeni\Game.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Gamestate.hxx"
+				RelativePath="..\include\Zeni\Gamestate.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Image.hxx"
+				RelativePath="..\include\Zeni\Image.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Light.hxx"
+				RelativePath="..\include\Zeni\Light.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Line_Segment.hxx"
+				RelativePath="..\include\Zeni\Line_Segment.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Material.hxx"
+				RelativePath="..\include\Zeni\Material.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Matrix4f.hxx"
+				RelativePath="..\include\Zeni\Matrix4f.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Model.hxx"
+				RelativePath="..\include\Zeni\Model.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Mutex.hxx"
+				RelativePath="..\include\Zeni\Mutex.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Net.hxx"
+				RelativePath="..\include\Zeni\Net.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Projector.hxx"
+				RelativePath="..\include\Zeni\Projector.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Quadrilateral.hxx"
+				RelativePath="..\include\Zeni\Quadrilateral.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Quaternion.hxx"
+				RelativePath="..\include\Zeni\Quaternion.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Render_Wrapper.hxx"
+				RelativePath="..\include\Zeni\Render_Wrapper.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Resource.hxx"
+				RelativePath="..\include\Zeni\Resource.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Shader.hxx"
+				RelativePath="..\include\Zeni\Shader.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Sound.hxx"
+				RelativePath="..\include\Zeni\Sound.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Texture.hxx"
+				RelativePath="..\include\Zeni\Texture.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Textures.hxx"
+				RelativePath="..\include\Zeni\Textures.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Timer.hxx"
+				RelativePath="..\include\Zeni\Timer.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Triangle.hxx"
+				RelativePath="..\include\Zeni\Triangle.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vector3f.hxx"
+				RelativePath="..\include\Zeni\Vector3f.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex2f.hxx"
+				RelativePath="..\include\Zeni\Vertex2f.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex3f.hxx"
+				RelativePath="..\include\Zeni\Vertex3f.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Vertex_Buffer.hxx"
+				RelativePath="..\include\Zeni\Vertex_Buffer.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video.hxx"
+				RelativePath="..\include\Zeni\Video.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video_DX9.hxx"
+				RelativePath="..\include\Zeni\Video_DX9.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Video_GL.hxx"
+				RelativePath="..\include\Zeni\Video_GL.hxx"
 				>
 			</File>
 			<File
-				RelativePath="include\Zeni\Widget.hxx"
+				RelativePath="..\include\Zeni\Widget.hxx"
 				>
 			</File>
 		</Filter>
@@ -2332,7 +2332,7 @@
 			Name="SCU File"
 			>
 			<File
-				RelativePath="src\zenilib.cxx"
+				RelativePath="..\src\zenilib.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -2373,11 +2373,11 @@
 			Filter="cg"
 			>
 			<File
-				RelativePath="shaders\zeni_fragment_shaders.cg"
+				RelativePath="..\shaders\zeni_fragment_shaders.cg"
 				>
 			</File>
 			<File
-				RelativePath="shaders\zeni_vertex_shaders.cg"
+				RelativePath="..\shaders\zeni_vertex_shaders.cg"
 				>
 			</File>
 		</Filter>

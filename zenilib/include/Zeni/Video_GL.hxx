@@ -179,6 +179,7 @@ namespace Zeni {
       glDisable(GL_FOG);
   }
 
+#ifndef DISABLE_CG
   void Video_GL::set_vertex_shader_impl(const Vertex_Shader &shader) {
     shader.set(*this);
   }
@@ -194,6 +195,7 @@ namespace Zeni {
   void Video_GL::unset_fragment_shader_impl(const Fragment_Shader &shader) {
     shader.unset(*this);
   }
+#endif
 
   void Video_GL::select_world_matrix_impl() {
     glMatrixMode(GL_MODELVIEW);
@@ -259,6 +261,7 @@ namespace Zeni {
     return new Vertex_Buffer_GL();
   }
 
+#ifndef DISABLE_CG
   void Video_GL::initialize_impl(Shader_System &shader_system) {
     shader_system.init(*this);
   }
@@ -270,6 +273,7 @@ namespace Zeni {
   void Video_GL::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
     shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
+#endif
 
   void Video_GL::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
     m_pglBindBufferARB(target, buffer);

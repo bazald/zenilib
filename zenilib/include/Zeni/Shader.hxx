@@ -34,6 +34,8 @@
 
 #include <Zeni/Shader.h>
 
+#ifndef DISABLE_CG
+
 namespace Zeni {
 
   const CGcontext & Shader_System::get_context() const {
@@ -97,6 +99,8 @@ namespace Zeni {
 #endif
 
 }
+
+#endif
 
 #include <Zeni/Video.hxx>
 

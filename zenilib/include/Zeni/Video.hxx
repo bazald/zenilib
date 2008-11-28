@@ -330,6 +330,7 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_fog_impl, fog);
   }
 
+#ifndef DISABLE_CG
   void Video::set_vertex_shader(const Vertex_Shader &shader) {
     VIDEO_IV_FCN_CALL(set_vertex_shader_impl, shader);
   }
@@ -345,6 +346,7 @@ namespace Zeni {
   void Video::unset_fragment_shader(const Fragment_Shader &shader) {
     VIDEO_IV_FCN_CALL(unset_fragment_shader_impl, shader);
   }
+#endif
 
   void Video::select_world_matrix() {
     VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
@@ -413,6 +415,7 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, );
   }
 
+#ifndef DISABLE_CG
   void Video::initialize(Shader_System &shader_system) {
     VIDEO_IV_FCN_CALL(initialize_impl, shader_system);
   }
@@ -424,6 +427,7 @@ namespace Zeni {
   void Video::initialize(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
     VIDEO_IV_FCN_CALL(initialize_impl, shader, filename, entry_function);
   }
+#endif
 
   void Video::uninit() {
     SDL_FreeSurface(m_display_surface);

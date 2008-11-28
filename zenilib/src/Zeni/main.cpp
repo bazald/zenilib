@@ -36,6 +36,10 @@
 #include <fstream>
 #include <iostream>
 
+#ifdef _WINDOWS
+#include <direct.h>
+#endif
+
 using namespace std;
 using namespace Zeni;
 
@@ -207,7 +211,9 @@ static void print_errors() {
   cerr << "OpenAL    : " << alErrorString(alGetError()) << endl;
 #endif
 
+#ifndef DISABLE_CG
   cerr << "Cg        : " << cgGetErrorString(cgGetError()) << endl;
+#endif
 }
 
 inline int main2(const int &argc, const char * const argv[]) {
@@ -260,5 +266,18 @@ inline int main2(const int &argc, const char * const argv[]) {
 }
 
 int main(int argc, char *argv[]) {
+#ifdef _WINDOWS
+  for(int i = 0;; ++i) {
+    ifstream fin("zeniapp.ini");
+
+    if(fin)
+      break;
+    else if(_chdir("..\\") == -1 || i == 42) {
+      cerr << "zeniapp.ini not found.  Execute from 'bin' or 'bin/x64'.\n";
+      return -1;
+    }
+  }
+#endif
+
   return main2(argc, argv);
 }

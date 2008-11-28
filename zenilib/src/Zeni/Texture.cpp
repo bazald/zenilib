@@ -60,7 +60,7 @@ namespace Zeni {
 
     if(!width_pow2 || !height_pow2) {
       int actual_w, actual_h;
-      for(;;) {
+      for(int i = 0; i < 42; ++i) {
         zoomSurfaceSize(surface->w, surface->h,
                         scale_w/surface->w, scale_h/surface->h,
                         &actual_w, &actual_h);

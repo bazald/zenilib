@@ -34,6 +34,9 @@
 #define ZENI_SHADER_H
 
 #include <Zeni/Core.h>
+#include <Zeni/Hash_Map.h>
+
+#ifndef DISABLE_CG
 
 #ifndef DISABLE_DX9
 #include <Cg/cgD3D9.h>
@@ -98,6 +101,8 @@ namespace Zeni {
     void load(Video_DX9 &screen);
 #endif
 
+
+
     void compile();
 
   protected:
@@ -110,6 +115,15 @@ namespace Zeni {
     void set(const CGprofile &profile, Video_DX9 &screen) const;
     void unset(const CGprofile &profile, Video_DX9 &screen) const;
 #endif
+
+  private:
+    typedef stdext::hash_map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
+    Parameters m_parameters;
+
+    void initialize_parameter(const std::string &parameter_name);
+    CGparameter get_from_parameter(const std::string &parameter_name);
+    // cgSetParameter*() routines
+    void connect_parameter(const std::string &parameter_name);
 
     CGprogram m_program;
   };
@@ -162,6 +176,12 @@ namespace Zeni {
     Shader_Bind_Failure() : Error("Zeni Shader Failed to Bind Correctly") {}
   };
 
+  struct Shader_Parameter_Error : public Error {
+    Shader_Parameter_Error() : Error("Zeni Shader Parameter Error") {}
+  };
+
 }
+
+#endif
 
 #endif
