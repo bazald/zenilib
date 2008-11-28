@@ -105,11 +105,13 @@ namespace Zeni {
     // Fog
     inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
 
+#ifndef DISABLE_CG
     // Shaders
     inline void set_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
     inline void set_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
     inline void unset_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
     inline void unset_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+#endif
 
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl() {} ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene

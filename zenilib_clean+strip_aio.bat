@@ -1,26 +1,24 @@
-RMDIR /S /Q "Debug\"
-RMDIR /S /Q "Debug SCU\"
-RMDIR /S /Q "Release\"
-RMDIR /S /Q "Release SCU\"
-RMDIR /S /Q "x64\"
+RMDIR /S /Q "Visual Studio 2008\Debug\"
+RMDIR /S /Q "Visual Studio 2008\Debug SCU\"
+RMDIR /S /Q "Visual Studio 2008\Release\"
+RMDIR /S /Q "Visual Studio 2008\Release SCU\"
+RMDIR /S /Q "Visual Studio 2008\x64\"
 
 DEL /Q "stderr.txt"
 DEL /Q "stdout.txt"
 
-DEL /Q "*.ncb"
+DEL /Q "Visual Studio 2008\*.ncb"
 
-DEL /Q /A:H "Zeniapp_2008.suo"
-DEL /Q /A:H "Zeniapp_2005.suo"
+DEL /Q /A:H "Visual Studio 2008\Zeniapp_2008.suo"
 
-DEL /Q "*.user"
+DEL /Q "Visual Studio 2008\*.user"
 
-RMDIR /S /Q "lib\x64\"
-DEL /Q "lib\*_d.lib"
+RMDIR /S /Q "lib_win\x64\"
+DEL /Q "lib_win\*_d.lib"
 
-DEL /Q "*_d.dll"
-DEL /Q "*_x64.dll"
-DEL /Q "*_x64d.dll"
+RMDIR /S /Q "bin\x64\"
+DEL /Q "bin\*_d.dll"
 
-DEL /Q "Zeniapp_d.exe"
-DEL /Q "Zeniapp_x64.exe"
-DEL /Q "Zeniapp_x64d.exe"
+DEL /Q "bin\Zeniapp_d.exe"
+DEL /Q "bin\x64\Zeniapp_x64.exe"
+DEL /Q "bin\x64\Zeniapp_x64d.exe"

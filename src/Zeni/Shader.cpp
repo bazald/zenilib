@@ -33,6 +33,8 @@
 
 using namespace std;
 
+#ifndef DISABLE_CG
+
 namespace Zeni {
 
   Shader_System::Shader_System()
@@ -211,4 +213,52 @@ namespace Zeni {
   }
 #endif
 
+  void Shader::initialize_parameter(const std::string &parameter_name) {
+    if(m_parameters.find(parameter_name) != m_parameters.end())
+      return;
+
+    const CGparameter to = cgGetNamedParameter(m_program, parameter_name.c_str());
+    if(cgGetError() != CG_NO_ERROR)
+      throw Shader_Parameter_Error();
+
+    const CGtype type = cgGetParameterType(to);
+    if(cgGetError() != CG_NO_ERROR)
+      throw Shader_Parameter_Error();
+
+    const CGparameter from = cgCreateParameter(get_Shader_System().get_context(), type);
+    if(cgGetError() != CG_NO_ERROR)
+      throw Shader_Parameter_Error();
+
+    m_parameters[parameter_name] = make_pair(from, to);
+  }
+
+  CGparameter Shader::get_from_parameter(const std::string &parameter_name) {
+    Parameters::iterator it = m_parameters.find(parameter_name);
+
+    if(it == m_parameters.end()) {
+      initialize_parameter(parameter_name);
+      it = m_parameters.find(parameter_name);
+    }
+
+    return it->second.first;
+  }
+
+  void Shader::connect_parameter(const std::string &parameter_name) {
+    Parameters::iterator it = m_parameters.find(parameter_name);
+
+    assert(it != m_parameters.end());
+
+    cgConnectParameter(it->second.first, it->second.second);
+    if(cgGetError() != CG_NO_ERROR)
+      throw Shader_Parameter_Error();
+  }
+
 }
+
+#else
+
+namespace Zeni {
+  void * this_pointer_is_cg_dead_beef = (void *)0xDEADBEEF;
+}
+
+#endif

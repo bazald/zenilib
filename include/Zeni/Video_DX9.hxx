@@ -182,6 +182,7 @@ namespace Zeni {
     }
   }
 
+#ifndef DISABLE_CG
   void Video_DX9::set_vertex_shader_impl(const Vertex_Shader &shader) {
     shader.set(*this);
   }
@@ -197,6 +198,7 @@ namespace Zeni {
   void Video_DX9::unset_fragment_shader_impl(const Fragment_Shader &shader) {
     shader.unset(*this);
   }
+#endif
 
   void Video_DX9::push_world_stack_impl() {
     get_matrix_stack()->Push();
@@ -260,6 +262,7 @@ namespace Zeni {
     return new Vertex_Buffer_DX9();
   }
 
+#ifndef DISABLE_CG
   void Video_DX9::initialize_impl(Shader_System &shader_system) {
     shader_system.init(*this);
   }
@@ -271,6 +274,7 @@ namespace Zeni {
   void Video_DX9::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
     shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
+#endif
 
   void Video_DX9::uninit_impl() {
     destroy_device();
