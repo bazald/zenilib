@@ -161,18 +161,18 @@ if is_windows:
   linkflags = '/NOLOGO /SUBSYSTEM:WINDOWS /DYNAMICBASE:NO /ERRORREPORT:PROMPT' + link_optimization
   cpppath += [os.environ['DXSDK_DIR'] + 'Include']
   cpppath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\include']
-  cpppath += [os.environ['CG_INC_PATH']]
+  cpppath += ['include_win']
   if is_win64:
+    program_name = "bin\\x64\\" + program_name
     linkflags += ' /MACHINE:X64 '
     libpath += [os.environ['DXSDK_DIR'] + 'Lib\\x64']
     libpath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\libs\\Win64']
-    libpath += [os.environ['CG_LIB64_PATH']]
-    libpath += ['lib\\x64']
+    libpath += ['lib_win\\x64']
   else:
+    program_name = "bin\\" + program_name
     libpath += [os.environ['DXSDK_DIR'] + 'Lib\\x86']
     libpath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\libs\\Win32']
-    libpath += [os.environ['CG_LIB_PATH']]
-    libpath += ['lib']
+    libpath += ['lib_win']
 else:
   ccflags = defines + warnings + optimization + arch + profiling
   linkflags = arch + profiling
