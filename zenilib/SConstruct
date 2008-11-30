@@ -1,28 +1,25 @@
-import math, sys, os.path, glob, string, re
+import math, sys, os.path, glob, string, re, os
 
 is_windows = sys.platform == 'win32'
-is_win64   = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or 
-                            (os.environ.has_key('PROCESSOR_ARCHITEW6432') and
-                             os.environ['PROCESSOR_ARCHITEW6432'] == 'AMD64'))
+is_win64   = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or (os.environ.has_key('PROCESSOR_ARCHITEW6432') and os.environ['PROCESSOR_ARCHITEW6432'] == 'AMD64'))
 is_linux   = sys.platform == 'linux2'
 is_mac     = sys.platform == 'darwin'
 
-### win64 build environment is not automatically selected :-/
-is_win64 = 0
+### Decide architecture
 
-if is_windows:
-    import SCons.Tool.msvc
-elif is_linux:
-    import SCons.Tool.gcc
-elif is_mac:
-    import SCons.Tool.gcc
-
-### Set the basics
-
-if is_windows:
-  cc = ' cl '
-else:
+if is_win64:
+  if int(ARGUMENTS.get('x64', 0)):
+    cc = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\amd64\\cl.exe" '
+    lib = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\amd64\\lib.exe" '
+    link = '"' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\vcvars64.bat"' + ' && ' + ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\amd64\\link.exe" '
+  else:
+    cc = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\cl.exe" '
+    lib = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\lib.exe" '
+    link = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\link.exe" '
+    is_win64 = 0
+elif is_linux or is_max:
   cc = ' g++ '
+  link = ' ld '
 
 ### Decide single compilation unit
 
@@ -58,14 +55,16 @@ if is_windows:
 else:
   defines = ' -D_CRT_SECURE_NO_DEPRECATE ' + disable_dx9 + disable_wgl
 
-libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_gfx', 'SDL_ttf', 'SDL_net',
-  'Cg',
-  'lib3ds']
+libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_gfx', 'SDL_ttf', 'SDL_net', 'Cg']
+if is_windows:
+  libs += ['lib3ds-2_0', 'user32']
+else:
+  libs += ['lib3ds']
 if is_windows:
   al_libs = ['OpenAL32', 'alut', 'libvorbis', 'libvorbisfile']
 else:
   al_libs = ['openal', 'alut', 'libvorbis', 'vorbisfile']
-dx9_libs = ['d3d9', 'd3dx9', 'gdi32', 'user32', 'CgD3D9']
+dx9_libs = ['d3d9', 'd3dx9', 'gdi32', 'CgD3D9']
 if is_windows:
   gl_libs = ['opengl32', 'glew32', 'glu32', 'CgGL']
 else:
@@ -85,7 +84,7 @@ if is_windows:
     libs += dx9_libs
 
 nogl = ARGUMENTS.get('nogl', 0)
-if int(nogl):
+if is_windows and int(nogl):
   defines += disable_gl
 else:
   libs += gl_libs
@@ -106,7 +105,10 @@ if int(pedantic):
 
 ### Decide optimization
 
-program_name = 'zeniapp'
+if is_windows:
+  program_name = 'Zeniapp'
+else:
+  program_name = 'zeniapp'
 library_name = 'zenilib'
 
 if is_windows:
@@ -159,9 +161,9 @@ libpath = ['.']
 if is_windows:
   ccflags = defines + ' /FD /EHsc /fp:fast /W4 /nologo /c /TP /wd4005 /wd4312 /wd4505 /wd4311 /errorReport:prompt ' + optimization
   linkflags = '/NOLOGO /SUBSYSTEM:WINDOWS /DYNAMICBASE:NO /ERRORREPORT:PROMPT' + link_optimization
-  cpppath += [os.environ['DXSDK_DIR'] + 'Include']
-  cpppath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\include']
   cpppath += ['include_win']
+  cpppath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\include']
+  cpppath += [os.environ['DXSDK_DIR'] + 'Include']
   if is_win64:
     program_name = "bin\\x64\\" + program_name
     linkflags += ' /MACHINE:X64 '
@@ -183,8 +185,13 @@ env = Environment(
   CCFLAGS = ccflags,
   CPPPATH = cpppath,
   LINKFLAGS = linkflags,
-  LIBS = libs + gl_libs + al_libs,
+  LIBS = libs,
   LIBPATH = libpath)
+
+if is_windows:
+  env['CC'] = cc
+  env['LINK'] = link
+  env['AR'] = lib
 
 env.Program(
   program_name,

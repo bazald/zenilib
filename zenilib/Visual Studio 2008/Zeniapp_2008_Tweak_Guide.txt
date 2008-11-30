@@ -3,9 +3,9 @@
 (A)  Direct3D 9     OpenGL         OpenAL
 (B)  DISABLE_DX9    DISABLE_GL     DISABLE_AL
 (C)  d3d9.lib       opengl32.lib   OpenAL32.lib
-     d3dx9.lib      glu32.lib      alut.lib
-     cgD3D9.lib     cgGL.lib
-                    glew32.lib
+     d3dx9.lib      glew32.lib     alut.lib
+     cgD3D9.lib     glu32.lib
+                    cgGL.lib
 
 To prevent code from using (A),
 
