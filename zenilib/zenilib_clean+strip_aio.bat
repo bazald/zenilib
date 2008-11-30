@@ -16,6 +16,7 @@ DEL /Q "Visual Studio 2008\*.user"
 RMDIR /S /Q "lib_win\x64\"
 
 RMDIR /S /Q "bin\x64\"
+DEL /Q "*_x64.dll"
 
 DEL /Q "bin\Zeniapp_d.exe"
 DEL /Q "bin\x64\Zeniapp_x64.exe"
