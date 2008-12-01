@@ -92,7 +92,6 @@ namespace Zeni {
 
     // Lighting and Materials
     inline void set_lighting_impl(const bool &on = true); ///< Set lighting on/off
-    inline void set_normal_interpolation_impl(const bool &on = true); ///< Set normal interpolation on/off
     inline void set_ambient_lighting_impl(const Color &color); ///< Set ambient lighting on/off
     inline void set_light_impl(const int &number, const Light * const light = 0); ///< Set a particular Light
     inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material

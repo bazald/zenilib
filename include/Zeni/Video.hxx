@@ -304,12 +304,6 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_lighting_impl, on);
   }
 
-  void Video::set_normal_interpolation(const bool &on) {
-    g_normal_interp = on;
-
-    VIDEO_IV_FCN_CALL(set_normal_interpolation_impl, on);
-  }
-
   void Video::set_ambient_lighting(const Color &color) {
     VIDEO_IV_FCN_CALL(set_ambient_lighting_impl, color);
   }

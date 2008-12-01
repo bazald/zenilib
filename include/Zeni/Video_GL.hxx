@@ -120,7 +120,6 @@ namespace Zeni {
 
   void Video_GL::unapply_texture_impl() {
     glDisable(GL_TEXTURE_2D);
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
   }
 
   void Video_GL::set_lighting_impl(const bool &on) {
@@ -128,13 +127,6 @@ namespace Zeni {
       glEnable(GL_LIGHTING);
     else
       glDisable(GL_LIGHTING);
-  }
-
-  void Video_GL::set_normal_interpolation_impl(const bool &on) {
-    if(on)
-      glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    else
-      glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
   }
 
   void Video_GL::set_ambient_lighting_impl(const Color &color) {
