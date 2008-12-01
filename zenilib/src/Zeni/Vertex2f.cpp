@@ -78,6 +78,10 @@ namespace Zeni {
   {
   }
 
+  bool Vertex2f_Color::is_3d() const {
+    return false;
+  }
+
   Point3f Vertex2f_Color::get_position() const {
     return Vertex2f::position;
   }
@@ -118,6 +122,10 @@ namespace Zeni {
     const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
     return new Vertex2f_Texture(Point2f(midpt.x, midpt.y), 
       texture_coordinate.interpolate_to(rhs_part, rhs.texture_coordinate));
+  }
+
+  bool Vertex2f_Texture::is_3d() const {
+    return false;
   }
 
   Point3f Vertex2f_Texture::get_position() const {

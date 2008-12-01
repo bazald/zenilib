@@ -98,6 +98,9 @@ namespace Zeni {
   public:
     virtual ~Renderable() {}
 
+    /// Tell the rendering system if we're using 3D coordinates
+    virtual bool is_3d() const = 0;
+
     // Returns the approximate distance between two Renderables
     float get_distance(const Renderable &renderable) const; ///< Get an approximate distance measurement to another Renderable
     float get_distance(const Point3f &position) const; ///< Get an approximate distance measurement to another Renderable

@@ -95,6 +95,11 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  bool Quadrilateral<VERTEX>::is_3d() const {
+    return a.is_3d();
+  }
+
+  template <typename VERTEX>
   Point3f Quadrilateral<VERTEX>::get_position() const {
     return Point3f((a.position.x + b.position.x + c.position.x + d.position.x) * 0.25f,
       (a.position.y + b.position.y + c.position.y + d.position.y) * 0.25f,

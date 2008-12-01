@@ -102,6 +102,7 @@ namespace Zeni {
 
     // Begin rendering functions
 
+    virtual bool is_3d() const; ///< Tell the rendering system if we're using 3D coordinates
     virtual Point3f get_position() const; ///< Get the current position
 
 #ifndef DISABLE_GL
@@ -128,6 +129,7 @@ namespace Zeni {
 
     // Begin rendering functions
 
+    virtual bool is_3d() const; ///< Tell the rendering system if we're using 3D coordinates
     virtual Point3f get_position() const; ///< Get the current position
 
     // NOTE: Not really meaningful to render a textured point in isolation;

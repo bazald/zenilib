@@ -765,10 +765,7 @@ namespace Zeni {
 
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
-    bool flip_3d = !vdx.get_3d();
-
-    if(flip_3d)
-      vdx.set_3d(true);
+    vdx.set_fvf(true);
 
     if(m_buf_c.data.vbo || m_buf_c.data.alt) {
       if(m_buf_c.is_vbo)
@@ -781,9 +778,6 @@ namespace Zeni {
         vdx.get_d3d_device()->SetStreamSource(0, m_buf_t.data.vbo, 0, vertex_t_size());
       Zeni::render(m_descriptors_t, m_buf_t, vertex_t_size(), vdx);
     }
-
-    if(flip_3d)
-      vdx.set_3d(false);
   }
 
 #endif

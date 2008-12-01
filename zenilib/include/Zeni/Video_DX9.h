@@ -148,9 +148,10 @@ namespace Zeni {
     inline const int & get_dpi(); ///< Get the screen's DPI
     inline float get_dpi_ratio(); ///< Get the ratio of the screen's DPI to the normal DPI
 
-    // Manual 3D Flips
+    // Custom D3D-Related Functions
     bool get_3d() const;
     void set_3d(const bool &on);
+    void set_fvf(const bool &is_3d);
 
   protected:
     virtual void init();

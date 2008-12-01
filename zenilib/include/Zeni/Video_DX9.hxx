@@ -49,6 +49,8 @@
 namespace Zeni {
 
   void Video_DX9::render_impl(const Renderable &renderable) {
+    set_fvf(renderable.is_3d());
+
     renderable.render_to(*this);
   }
 
@@ -61,27 +63,19 @@ namespace Zeni {
   }
 
   void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
-    m_3d = false;
-
     Matrix4f world = Matrix4f::Identity();
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
     m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
     m_matrix_stack->LoadMatrix(world_ptr);
-
-    set_fvf();
   }
 
   void Video_DX9::set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
-    m_3d = true;
-
     Matrix4f world = Matrix4f::Identity();
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
     m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
     m_matrix_stack->LoadMatrix(world_ptr);
-
-    set_fvf();
   }
 
   void Video_DX9::set_backface_culling_impl(const bool &on) {
@@ -122,9 +116,9 @@ namespace Zeni {
   }
 
   void Video_DX9::apply_texture_impl(const Texture &texture) {
-    m_textured = true;
-
     texture.apply_texture();
+
+    m_textured = true;
 
     set_fvf();
   }
@@ -143,8 +137,6 @@ namespace Zeni {
   void Video_DX9::set_lighting_impl(const bool &on) {
     m_d3d_device->SetRenderState(D3DRS_LIGHTING, on);
     m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, on);
-
-    set_fvf();
   }
 
   void Video_DX9::set_normal_interpolation_impl(const bool & /*on*/) {

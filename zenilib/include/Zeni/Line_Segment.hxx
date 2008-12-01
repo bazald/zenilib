@@ -86,6 +86,11 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  bool Line_Segment<VERTEX>::is_3d() const {
+    return a.is_3d();
+  }
+
+  template <typename VERTEX>
   Point3f Line_Segment<VERTEX>::get_position() const {
     return Point3f((a.position.x + b.position.x) * 0.5f,
       (a.position.y + b.position.y) * 0.5f,

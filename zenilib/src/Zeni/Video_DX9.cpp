@@ -260,6 +260,12 @@ namespace Zeni {
     m_d3d_device = 0;
   }
 
+  void Video_DX9::set_fvf(const bool &is_3d) {
+    m_3d = is_3d;
+
+    set_fvf();
+  }
+
   void Video_DX9::set_fvf() {
     DWORD fvf = D3DFVF_XYZ;
 

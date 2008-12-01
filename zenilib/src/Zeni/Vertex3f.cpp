@@ -92,6 +92,10 @@ namespace Zeni {
   {
   }
 
+  bool Vertex3f_Color::is_3d() const {
+    return true;
+  }
+
   Point3f Vertex3f_Color::get_position() const {
     return Vertex3f::position;
   }
@@ -139,6 +143,10 @@ namespace Zeni {
     return new Vertex3f_Texture(position.interpolate_to(rhs_part, rhs.position), 
       0.5f*(normal + rhs.normal), 
       texture_coordinate.interpolate_to(rhs_part, rhs.texture_coordinate));
+  }
+
+  bool Vertex3f_Texture::is_3d() const {
+    return true;
   }
 
   Point3f Vertex3f_Texture::get_position() const {
