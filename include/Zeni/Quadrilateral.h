@@ -69,8 +69,11 @@ namespace Zeni {
     Quadrilateral(const Quadrilateral<VERTEX> &rhs);
     Quadrilateral<VERTEX> & operator=(const Quadrilateral<VERTEX> &rhs);
 
+    /// Tell the rendering system if we're using 3D coordinates
+    virtual bool is_3d() const;
+
     // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the aveage of all vertices
+    virtual Point3f get_position() const; ///< Get the average of all vertices
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;

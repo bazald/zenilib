@@ -138,6 +138,11 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
+  bool Triangle<VERTEX>::is_3d() const {
+    return a.is_3d();
+  }
+
+  template <typename VERTEX>
   Point3f Triangle<VERTEX>::get_position() const {
     return Point3f((a.position.x + b.position.x + c.position.x) * over_three,
       (a.position.y + b.position.y + c.position.y) * over_three,

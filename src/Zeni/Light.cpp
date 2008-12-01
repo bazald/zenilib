@@ -56,8 +56,10 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  void Light::set(const GLint &number, Video_GL &) const {
-    GLfloat pos[] = {position.x, position.y, position.z, 1.0f};
+  void Light::set(const GLint &number, Video_GL &screen) const {
+    const Point3f untransformed_pos = screen.get_view_matrix().inverted() * position;
+
+    GLfloat pos[] = {untransformed_pos.x, untransformed_pos.y, untransformed_pos.z, 1.0f};
 
     if(light_type == LIGHT_DIRECTIONAL) {
       pos[0] = -spot_direction.i;
