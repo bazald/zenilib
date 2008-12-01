@@ -21,10 +21,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib_d"
+			IntermediateDirectory="$(PlatformName)\zenilib_d"
 			ConfigurationType="4"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -55,6 +56,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -90,10 +92,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib_d"
+			IntermediateDirectory="$(PlatformName)\zenilib_d"
 			ConfigurationType="4"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -125,6 +128,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -160,11 +164,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib"
+			IntermediateDirectory="$(PlatformName)\zenilib"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -197,6 +202,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -232,11 +238,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib"
+			IntermediateDirectory="$(PlatformName)\zenilib"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -270,6 +277,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -305,10 +313,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|Win32"
-			OutputDirectory="$(SolutionDir)Debug"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib_d"
+			IntermediateDirectory="$(PlatformName)\zenilib_d"
 			ConfigurationType="4"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -339,6 +348,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -374,10 +384,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\Debug"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib_d"
+			IntermediateDirectory="$(PlatformName)\zenilib_d"
 			ConfigurationType="4"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -409,6 +420,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -444,11 +456,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release SCU|Win32"
-			OutputDirectory="$(SolutionDir)Release"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib"
+			IntermediateDirectory="$(PlatformName)\zenilib"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -478,9 +491,10 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -516,11 +530,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release SCU|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\Release"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zenilib"
+			IntermediateDirectory="$(PlatformName)\zenilib"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -551,9 +566,10 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"

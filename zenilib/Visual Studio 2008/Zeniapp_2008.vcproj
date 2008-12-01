@@ -21,10 +21,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp_d"
+			IntermediateDirectory="$(PlatformName)\zeniapp_d"
 			ConfigurationType="1"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -52,9 +53,10 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -72,11 +74,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Debug\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -110,10 +113,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp_d"
+			IntermediateDirectory="$(PlatformName)\zeniapp_d"
 			ConfigurationType="1"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -142,9 +146,10 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -162,11 +167,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib x64\Debug\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="true"
 				MapExports="true"
 				SubSystem="2"
@@ -200,11 +206,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp"
+			IntermediateDirectory="$(PlatformName)\zeniapp"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -234,9 +241,10 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -253,11 +261,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Release\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -295,11 +304,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp"
+			IntermediateDirectory="$(PlatformName)\zeniapp"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -330,9 +340,10 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -349,11 +360,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib x64\Release\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -389,10 +401,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp_d"
+			IntermediateDirectory="$(PlatformName)\zeniapp_d"
 			ConfigurationType="1"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -420,9 +433,10 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -440,11 +454,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Debug\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -478,10 +493,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp_d"
+			IntermediateDirectory="$(PlatformName)\zeniapp_d"
 			ConfigurationType="1"
 			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -510,9 +526,10 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -530,11 +547,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib x64\Debug\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="true"
 				MapExports="true"
 				SubSystem="2"
@@ -568,11 +586,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release SCU|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp"
+			IntermediateDirectory="$(PlatformName)\zeniapp"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -604,7 +623,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -621,11 +641,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Release\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -663,11 +684,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release SCU|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\zeniapp"
+			IntermediateDirectory="$(PlatformName)\zeniapp"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -700,7 +722,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
+				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -717,11 +740,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib x64\Release\Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib user32.lib Zenilib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -768,11 +792,44 @@
 				RelativePath="..\src\Gamestate_One.cpp"
 				>
 				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Debug SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -781,6 +838,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -789,6 +847,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -797,6 +856,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 			</File>
@@ -829,6 +889,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -837,6 +898,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -845,6 +907,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -853,6 +916,39 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>

@@ -6,13 +6,6 @@
 
 #include <zenilib.h>
 
-#include <Zeni/Fonts.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Textures.h>
-
-#include <Zeni/Sound.hxx>
-#include <Zeni/Gamestate_One.h>
-
 #include <iostream>
 #include <fstream>
 
