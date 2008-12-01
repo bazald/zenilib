@@ -92,6 +92,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -185,6 +186,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -283,6 +285,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -380,6 +383,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -472,6 +476,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -565,6 +570,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -663,6 +669,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -760,6 +767,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\zeniapp.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
