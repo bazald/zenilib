@@ -145,9 +145,6 @@ namespace Zeni {
       }
     }
 
-    glViewport(0, 0, get_screen_width(), get_screen_height());
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
     // Set Fill/Shade Mode
     glShadeModel(GL_SMOOTH);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -158,7 +155,12 @@ namespace Zeni {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
+    // Set lighting variables
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
     // Initialize Assorted Variables
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glPointSize(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
     glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
 
@@ -170,7 +172,6 @@ namespace Zeni {
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
     set_ambient_lighting(Color());
-    set_normal_interpolation(get_normal_interpolation());
 
     // Manage extensions
     union {
