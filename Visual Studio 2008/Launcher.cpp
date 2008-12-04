@@ -7,10 +7,10 @@ using namespace std;
 #define BUFFER_SIZE 4096
 int launch(const std::string &local_exe);
 
-int WinMain(HINSTANCE /*hInstance*/,
-            HINSTANCE /*hPrevInstance*/,
-            LPSTR /*lpCmdLine*/,
-            int /*nCmdShow*/)
+int WINAPI WinMain(HINSTANCE /*hInstance*/,
+                   HINSTANCE /*hPrevInstance*/,
+                   LPSTR /*lpCmdLine*/,
+                   int /*nCmdShow*/)
 {
 #ifdef X64
 #ifdef NDEBUG
