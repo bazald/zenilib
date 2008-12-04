@@ -277,6 +277,12 @@ int main(int argc, char *argv[]) {
       return -1;
     }
   }
+
+#ifdef X64
+  SetDllDirectory("bin\x64");
+#else
+  SetDllDirectory("bin");
+#endif
 #endif
 
   return main2(argc, argv);
