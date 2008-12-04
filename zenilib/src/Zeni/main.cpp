@@ -279,11 +279,14 @@ int main(int argc, char *argv[]) {
   }
 
 #ifdef X64
-  SetDllDirectory("bin\x64");
+  if(!SetDllDirectory("bin\x64")) {
 #else
-  SetDllDirectory("bin");
+  if(!SetDllDirectory("bin")) {
 #endif
 #endif
+    cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
+    return -2;
+  }
 
   return main2(argc, argv);
 }
