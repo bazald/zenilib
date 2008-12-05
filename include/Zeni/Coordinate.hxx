@@ -91,7 +91,7 @@ namespace Zeni {
   }
 
   Point3f::Point3f(const Point2f &rhs)
-    : Vector3f(rhs.x, rhs.y, z)
+    : Vector3f(rhs.x, rhs.y, 0.0f)
   {
   }
 
