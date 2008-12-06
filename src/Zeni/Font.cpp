@@ -102,14 +102,11 @@ namespace Zeni {
     memset(m_glyph, 0, num_glyphs * sizeof(Glyph *));
   }
 
-  Font_FT::Font_FT(const std::string &codename, const bool &bold, const bool &italic, const int &glyph_height)
-    : Font(bold, italic, glyph_height, codename),
+  Font_FT::Font_FT(const std::string &filepath, const bool &bold, const bool &italic, const int &glyph_height)
+    : Font(bold, italic, glyph_height, filepath),
     m_font_height(0)
   {
-    static const string directory = "fonts/", extension = ".ttf";
-    string filename = directory + codename + extension;
-
-    TTF_Font *font = TTF_OpenFont(filename.c_str(), glyph_height);
+    TTF_Font *font = TTF_OpenFont(filepath.c_str(), glyph_height);
     if(!font)
       throw Font_Init_Failure();
 

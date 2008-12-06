@@ -120,7 +120,7 @@ namespace Zeni {
 
   public:
     Font_FT(); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    Font_FT(const std::string &codename, const bool &bold, const bool &italic, 
+    Font_FT(const std::string &filepath, const bool &bold, const bool &italic, 
       const int &glyph_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
     ~Font_FT();
 

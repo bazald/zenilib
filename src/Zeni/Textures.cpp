@@ -39,7 +39,7 @@ using namespace std;
 namespace Zeni {
 
   Textures::Textures()
-    : m_texturedb("config/textures.txt")
+    : m_texturedb("config/textures.xml")
   {
     init();
   }
@@ -259,27 +259,26 @@ namespace Zeni {
     m_texture_lookup.clear();
     m_textures.clear();
     
-    ifstream tdbin(m_texturedb.c_str());
-
-    if(!tdbin)
-      throw Texture_Init_Failure();
-    
     Video &vr = get_Video();
 
-    string fileName, name;
-    bool repeat;
-    while(tdbin >> name >> fileName >> repeat) {
-      try {
-        Texture * const texture = vr.load_Texture(fileName, repeat, m_lazy_loading);
-            
+    XML_Reader textures_xml(m_texturedb.c_str());
+    XML_Element textures = textures_xml["Textures"];
+
+    try {
+      for(XML_Element it = textures.first();; it = it.next()) {
+        const string name = it.value();
+        const string filepath = it["filepath"].to_string();
+        const bool tile = it["tile"].to_bool();
+
+        Texture * const texture = vr.load_Texture(filepath, tile, m_lazy_loading);
+
         const unsigned long id = get_Resource().assign();
         m_texture_lookup[name] = id;
         m_textures[id] = texture;
       }
-      catch(Texture_Init_Failure &) {
-        cerr << "Textures: Error Loading '" << name << "' from '" << fileName << "'\n";
-        throw;
-      }
+    }
+    catch(Bad_XML_Access &)
+    {
     }
 
     m_loaded = true;

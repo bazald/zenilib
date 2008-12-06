@@ -34,12 +34,32 @@
 namespace Zeni {
 
   XML_Element::XML_Element(const TiXmlHandle &handle_)
-  : m_handle(handle_)
+    : m_handle(handle_)
   {
   }
 
   XML_Element XML_Element::operator[](const std::string &field) const {
-    return m_handle.FirstChild(field.c_str());
+    return XML_Element(m_handle.FirstChild(field.c_str()));
+  }
+
+  XML_Element XML_Element::first() const {
+    return XML_Element(m_handle.FirstChild());
+  }
+
+  XML_Element XML_Element::next() const {
+    TiXmlElement *element = m_handle.Element();
+    if(!element)
+      throw Bad_XML_Access();
+
+    return XML_Element(element->IterateChildren(element));
+  }
+
+  std::string XML_Element::value() const {
+    TiXmlElement *element = m_handle.Element();
+    if(!element)
+      throw Bad_XML_Access();
+
+    return element->Value();
   }
 
   bool XML_Element::to_bool() const {
@@ -87,6 +107,10 @@ namespace Zeni {
 
   XML_Element XML_Reader::operator[](const std::string &field) const {
     return (*m_root)[field];
+  }
+
+  XML_Element XML_Reader::first() const {
+    return m_root->first();
   }
 
 }

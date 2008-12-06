@@ -42,13 +42,21 @@ namespace Zeni {
   public:
     inline XML_Element(const TiXmlHandle &handle);
 
+    /// Get a named subelement
     inline XML_Element operator[](const std::string &field) const;
 
-    inline bool to_bool() const;
-    inline int to_int() const;
-    inline float to_float() const;
-    inline double to_double() const;
-    inline std::string to_string() const;
+    /// Get the first subelement
+    inline XML_Element first() const;
+    /// Get the next subelement
+    inline XML_Element next() const;
+
+    inline std::string value() const; ///< Get the value of the element (For nodes, this is the name)
+
+    inline bool to_bool() const; ///< Get the contained string as a boolean
+    inline int to_int() const; ///< Get the contained string as an integer
+    inline float to_float() const; ///< Get the contained string as a floating point number
+    inline double to_double() const; ///< Get the contained string as a double precision floating point number
+    inline std::string to_string() const; ///< Get the contained string
 
   private:
     TiXmlHandle m_handle;
@@ -63,6 +71,8 @@ namespace Zeni {
     inline ~XML_Reader();
 
     inline XML_Element operator[](const std::string &field) const;
+
+    inline XML_Element first() const;\
 
   private:
     TiXmlDocument m_xml_file;
