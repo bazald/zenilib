@@ -40,7 +40,7 @@ using namespace std;
 namespace Zeni {
 
   Fonts::Fonts()
-    : m_filename("config/fonts.txt")
+    : m_filename("config/fonts.xml")
   {
     init();
   }
@@ -121,35 +121,37 @@ namespace Zeni {
   }
 
   void Fonts::init() {
-    ifstream fin(m_filename.c_str());
-
-    if(!fin)
-      throw Fonts_Init_Failure();
-
     TTF_Init();
 
     Video &vr = get_Video();
-    
-    string name, codename, color;
-    bool bold, italic;
-    int height;
-    while(fin >> name >> bold >> italic >> height >> ws) {
-      getline(fin, codename);
-      while(!codename.empty() && isspace(codename[codename.size() - 1]))
-        codename.resize(codename.size() - 1);
 
-      try {
-        Font *font = vr.create_Font(codename, bold, italic, height);
+    XML_Reader fonts_xml(m_filename.c_str());
+    XML_Element fonts = fonts_xml["Fonts"];
 
-        unsigned long id = get_Resource().assign();
-        m_font_lookup[name] = id;
-        m_fonts[id] = font;
+    try {
+      for(XML_Element it = fonts.first();; it = it.next()) {
+        const string name = it.value();
+        const string filepath = it["filepath"].to_string();
+        const int height = it["height"].to_int();
+        const bool bold = it["bold"].to_bool();
+        const bool italics = it["italics"].to_bool();
+
+        try {
+          Font *font = vr.create_Font(filepath, bold, italics, height);
+
+          unsigned long id = get_Resource().assign();
+          m_font_lookup[name] = id;
+          m_fonts[id] = font;
+        }
+        catch(Font_Init_Failure &) {
+          uninit();
+          cerr << "Fonts: Error Loading '" << name << "' from '" << filepath << "'\n";
+          throw;
+        }
       }
-      catch(Font_Init_Failure &) {
-        uninit();
-        cerr << "Fonts: Error Loading '" << name << "' from '" << codename << "'\n";
-        throw;
-      }
+    }
+    catch(Bad_XML_Access &)
+    {
     }
   }
 

@@ -42,7 +42,7 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : m_soundsfile("config/sounds.txt"),
+    : m_soundsfile("config/sounds.xml"),
     m_replacement_policy(BESP_OLDEST)
   {
     // Ensure Sound is initialized
@@ -234,23 +234,27 @@ namespace Zeni {
     m_sound_lookup.clear();
     m_sounds.clear();
 
-    ifstream soundsin(m_soundsfile.c_str());
+    XML_Reader sounds_xml(m_soundsfile.c_str());
+    XML_Element sounds = sounds_xml["Sounds"];
 
-    if(!soundsin)
-      throw Sounds_Init_Failure();
+    try {
+      for(XML_Element it = sounds.first();; it = it.next()) {
+        const string name = it.value();
+        const string filepath = it["filepath"].to_string();
 
-    string name, filename;
-
-    while(soundsin >> name >> filename) {
-      try {
-        unsigned long id = get_Resource().assign();
-        m_sound_lookup[name] = id;
-        m_sounds[id] = Sound_Buffer(filename);
+        try {
+          unsigned long id = get_Resource().assign();
+          m_sound_lookup[name] = id;
+          m_sounds[id] = Sound_Buffer(filepath);
+        }
+        catch(Sound_Buffer_Init_Failure &) {
+          cerr << "Sounds: Error Loading '" << name << "' from '" << filepath << "'\n";
+          throw;
+        }
       }
-      catch(Sound_Buffer_Init_Failure &) {
-        cerr << "Sounds: Error Loading '" << name << "' from '" << filename << "'\n";
-        throw;
-      }
+    }
+    catch(Bad_XML_Access &)
+    {
     }
   }
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<!-- Fonts to load into the Fonts Database in Zenilib
+
+For each entry in Fonts:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'filepath' should be the path from within 'zenilib/'
+  3. 'height' should be the number of pixels high you want the Font.
+  4. 'bold' and 'italics' and boolean flags
+     They are deprecated.
+     It is much better to find bold/italicized versions of Fonts
+     than to use this feature.
+
+Only TrueType fonts are supported.
+-->
+<Fonts>
+  <!--
+  <token>
+    <filepath>fonts/font.ttf</filepath>
+    <height>16</height>
+    <bold>0</bold>
+    <italics>0</italics>
+  </token>
+  -->
+</Fonts>

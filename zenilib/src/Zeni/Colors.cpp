@@ -28,6 +28,7 @@
 
 #include <Zeni/Colors.h>
 #include <Zeni/Resource.hxx>
+#include <Zeni/XML.hxx>
 
 #include <iomanip>
 #include <iostream>
@@ -38,7 +39,7 @@ using namespace std;
 namespace Zeni {
 
   Colors::Colors()
-    : m_colordb("config/colors.txt")
+    : m_colordb("config/colors.xml")
   {
     init();
   }
@@ -103,18 +104,25 @@ namespace Zeni {
 
   void Colors::init() {
     m_color.clear();
-    ifstream colorin(m_colordb.c_str());
 
-    if(!colorin)
-      throw Colors_Init_Failure();
+    XML_Reader colors_xml(m_colordb.c_str());
+    XML_Element colors = colors_xml["Colors"];
 
-    Color tmp;
-    short a, r, g, b;
-    string name;
-    while(colorin >> name >> hex >> a >> r >> g >> b) {
-      unsigned long id = get_Resource().assign();
-      m_color_lookup[name] = id;
-      m_color[id] = Color(a/256.0f, r/256.0f, g/256.0f, b/256.0f);
+    try {
+      for(XML_Element it = colors.first();; it = it.next()) {
+        const string name = it.value();
+        const float alpha = it["alpha"].to_float();
+        const float red = it["red"].to_float();
+        const float green = it["green"].to_float();
+        const float blue = it["blue"].to_float();
+
+        unsigned long id = get_Resource().assign();
+        m_color_lookup[name] = id;
+        m_color[id] = Color(alpha, red, green, blue);
+      }
+    }
+    catch(Bad_XML_Access &)
+    {
     }
   }
 
