@@ -2202,6 +2202,10 @@
 				RelativePath="..\include\Zeni\Widget.h"
 				>
 			</File>
+			<File
+				RelativePath="..\include\Zeni\XML.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Include Files"
@@ -2341,6 +2345,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Widget.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\XML.hxx"
 				>
 			</File>
 		</Filter>

@@ -26,54 +26,57 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#ifdef ZENI_INLINES
+#include <Zeni/XML.hxx>
+#endif
 
-#define ZENI_INLINES
+#ifndef ZENI_XML_H
+#define ZENI_XML_H
 
-#include <Zeni/Camera.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Render_Wrapper.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
-#include <Zeni/XML.h>
+#include <tinyxml.h>
+#include <string>
+
+namespace Zeni {
+
+  class XML_Element {
+  public:
+    inline XML_Element(const TiXmlHandle &handle);
+
+    inline XML_Element operator[](const std::string &field) const;
+
+    inline bool to_bool() const;
+    inline int to_int() const;
+    inline float to_float() const;
+    inline double to_double() const;
+    inline std::string to_string() const;
+
+  private:
+    TiXmlHandle m_handle;
+  };
+
+  class XML_Reader {
+    XML_Reader(const XML_Reader &);
+    XML_Reader & operator=(const XML_Reader &);
+
+  public:
+    inline XML_Reader(const std::string &filename);
+    inline ~XML_Reader();
+
+    inline XML_Element operator[](const std::string &field) const;
+
+  private:
+    TiXmlDocument m_xml_file;
+    XML_Element * m_root;
+  };
+
+  struct Bad_XML : public Error {
+    Bad_XML() : Error("XML could not be loaded!") {}
+  };
+
+  struct Bad_XML_Access : public Error {
+    Bad_XML_Access() : Error("XML query could not be satisfied!") {}
+  };
+
+}
 
 #endif

@@ -26,54 +26,69 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#ifndef ZENI_XML_HXX
+#define ZENI_XML_HXX
 
-#define ZENI_INLINES
-
-#include <Zeni/Camera.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Render_Wrapper.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
 #include <Zeni/XML.h>
+
+namespace Zeni {
+
+  XML_Element::XML_Element(const TiXmlHandle &handle_)
+  : m_handle(handle_)
+  {
+  }
+
+  XML_Element XML_Element::operator[](const std::string &field) const {
+    return m_handle.FirstChild(field.c_str());
+  }
+
+  bool XML_Element::to_bool() const {
+    return to_int() != 0;
+  }
+
+  int XML_Element::to_int() const {
+    return atoi(to_string().c_str());
+  }
+
+  float XML_Element::to_float() const {
+    return float(atof(to_string().c_str()));
+  }
+
+  double XML_Element::to_double() const {
+    return atof(to_string().c_str());
+  }
+
+  std::string XML_Element::to_string() const {
+    TiXmlElement *element = m_handle.Element();
+    if(!element)
+      throw Bad_XML_Access();
+
+    const char * text = element->GetText();
+    if(!text)
+      throw Bad_XML_Access();
+
+    return text;
+  }
+
+  XML_Reader::XML_Reader(const std::string &filename)
+  : m_xml_file(filename.c_str()),
+  m_root(0)
+  {
+    if(!m_xml_file.LoadFile())
+      throw Bad_XML();
+
+    TiXmlHandle root = &m_xml_file;
+    m_root = new XML_Element(root);
+  }
+
+  XML_Reader::~XML_Reader() {
+    delete m_root;
+  }
+
+  XML_Element XML_Reader::operator[](const std::string &field) const {
+    return (*m_root)[field];
+  }
+
+}
 
 #endif
