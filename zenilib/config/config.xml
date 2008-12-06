@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!-- Initial Values for Video Singleton in Zenilib -->
+<Zenilib>
+  <Textures>
+    <Anisotropy>0</Anisotropy>
+    <Bilinear_Filtering>1</Bilinear_Filtering>
+    <Mipmapping>1</Mipmapping>
+  </Textures>
+  <Video>
+    <!--<API>DX9</API>-->
+    <!--<API>OpenGL</API>-->
+    <API>OpenGL</API>
+    <Full_Screen>0</Full_Screen>
+    <Multisampling>0</Multisampling>
+    <Resolution>
+      <Width>800</Width>
+      <Height>600</Height>
+    </Resolution>
+    <Vertical_Sync>0</Vertical_Sync>
+  </Video>
+</Zenilib>
