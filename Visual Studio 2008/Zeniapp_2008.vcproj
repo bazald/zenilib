@@ -966,23 +966,23 @@
 			Filter="ini;txt"
 			>
 			<File
-				RelativePath="..\config\colors.txt"
+				RelativePath="..\config\colors.xml"
 				>
 			</File>
 			<File
-				RelativePath="..\config\config.xml"
+				RelativePath="..\config\fonts.xml"
 				>
 			</File>
 			<File
-				RelativePath="..\config\fonts.txt"
+				RelativePath="..\config\sounds.xml"
 				>
 			</File>
 			<File
-				RelativePath="..\config\sounds.txt"
+				RelativePath="..\config\textures.xml"
 				>
 			</File>
 			<File
-				RelativePath="..\config\textures.txt"
+				RelativePath="..\config\zenilib.xml"
 				>
 			</File>
 		</Filter>
