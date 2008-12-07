@@ -226,17 +226,6 @@ inline int main2(const int &argc, const char * const argv[]) {
 
 int main(int argc, char *argv[]) {
 #ifdef _WINDOWS
-  for(int i = 0;; ++i) {
-    ifstream fin("config/zenilib.xml");
-
-    if(fin)
-      break;
-    else if(_chdir("..\\") == -1 || i == 42) {
-      cerr << "zeniapp.ini not found.  Execute from 'bin' or 'bin/x64'.\n";
-      return -1;
-    }
-  }
-
 #ifdef X64
   if(!SetDllDirectory("bin\x64")) {
 #else
@@ -244,7 +233,7 @@ int main(int argc, char *argv[]) {
 #endif
 #endif
     cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
-    return -2;
+    return -1;
   }
 
   return main2(argc, argv);
