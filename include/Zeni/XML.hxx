@@ -33,29 +33,31 @@
 
 namespace Zeni {
 
+  //child = parent->FirstChild(); child; child = child->NextSibling()
+
   XML_Element::XML_Element(const TiXmlHandle &handle_)
     : m_handle(handle_)
   {
   }
 
   XML_Element XML_Element::operator[](const std::string &field) const {
-    return XML_Element(m_handle.FirstChild(field.c_str()));
+    return XML_Element(m_handle.FirstChildElement(field.c_str()));
   }
 
   XML_Element XML_Element::first() const {
-    return XML_Element(m_handle.FirstChild());
+    return XML_Element(m_handle.FirstChildElement());
   }
 
   XML_Element XML_Element::next() const {
-    TiXmlElement *element = m_handle.Element();
-    if(!element)
+    TiXmlNode * node = m_handle.Node();
+    if(!node)
       throw Bad_XML_Access();
 
-    return XML_Element(element->IterateChildren(element));
+    return XML_Element(node->NextSiblingElement());
   }
 
   std::string XML_Element::value() const {
-    TiXmlElement *element = m_handle.Element();
+    TiXmlElement * element = m_handle.Element();
     if(!element)
       throw Bad_XML_Access();
 

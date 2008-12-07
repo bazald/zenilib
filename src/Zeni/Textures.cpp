@@ -263,12 +263,16 @@ namespace Zeni {
 
     XML_Reader textures_xml(m_texturedb.c_str());
     XML_Element textures = textures_xml["Textures"];
+    string name;
+    bool error = false;
 
     try {
       for(XML_Element it = textures.first();; it = it.next()) {
         const string name = it.value();
+        error = true;
         const string filepath = it["filepath"].to_string();
         const bool tile = it["tile"].to_bool();
+        error = false;
 
         Texture * const texture = vr.load_Texture(filepath, tile, m_lazy_loading);
 
@@ -279,6 +283,10 @@ namespace Zeni {
     }
     catch(Bad_XML_Access &)
     {
+      if(error) {
+        cerr << "Error loading Texture '" << name << "'\n";
+        throw;
+      }
     }
 
     m_loaded = true;
