@@ -4,30 +4,31 @@
 
 using namespace std;
 
-#define BUFFER_SIZE 4096
-int launch(const std::string &local_exe);
+// See http://msdn.microsoft.com/en-us/library/ms682425.aspx
+#define BUFFER_SIZE 32768
+int launch(const std::string &local_exe, const std::string &arguments);
 
 int WINAPI WinMain(HINSTANCE /*hInstance*/,
                    HINSTANCE /*hPrevInstance*/,
-                   LPSTR /*lpCmdLine*/,
+                   LPSTR lpCmdLine,
                    int /*nCmdShow*/)
 {
 #ifdef X64
 #ifdef NDEBUG
-  return launch("bin\\x64\\Zeniapp_x64.exe");
+  return launch("bin\\x64\\Zeniapp_x64.exe", lpCmdLine);
 #else
-  return launch("bin\\x64\\Zeniapp_x64d.exe");
+  return launch("bin\\x64\\Zeniapp_x64d.exe", lpCmdLine);
 #endif
 #else
 #ifdef NDEBUG
-  return launch("bin\\Zeniapp.exe");
+  return launch("bin\\Zeniapp.exe", lpCmdLine);
 #else
-  return launch("bin\\Zeniapp_d.exe");
+  return launch("bin\\Zeniapp_d.exe", lpCmdLine);
 #endif
 #endif
 }
 
-int launch(const std::string &local_exe) {
+int launch(const std::string &local_exe, const std::string &arguments) {
   char dir[BUFFER_SIZE];
   const DWORD required_length = GetCurrentDirectoryA(0, NULL);
   if(required_length > BUFFER_SIZE)
@@ -35,9 +36,14 @@ int launch(const std::string &local_exe) {
   GetCurrentDirectoryA(required_length, dir);
 
   char full_exe[BUFFER_SIZE];
-  if(strlen(dir) + strlen(local_exe.c_str()) + 1 > 4096)
+  if(strlen(dir) + strlen(local_exe.c_str()) + 1 > BUFFER_SIZE)
     return -2;
   sprintf_s(full_exe, BUFFER_SIZE, "%s\\%s", dir, local_exe.c_str());
+
+  char full_exe_with_args[BUFFER_SIZE];
+  if(strlen(full_exe) + arguments.size() + 1 > BUFFER_SIZE)
+    return -3;
+  sprintf_s(full_exe_with_args, BUFFER_SIZE, "%s %s", full_exe, arguments.c_str());
 
   STARTUPINFOA siStartupInfo;
   PROCESS_INFORMATION piProcessInfo;
@@ -46,7 +52,7 @@ int launch(const std::string &local_exe) {
   siStartupInfo.cb = sizeof(siStartupInfo);
 
   const bool result = CreateProcessA(full_exe,
-                                     full_exe,
+                                     full_exe_with_args,
                                      NULL,
                                      NULL,
                                      FALSE,
