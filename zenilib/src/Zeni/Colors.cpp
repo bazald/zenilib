@@ -107,14 +107,18 @@ namespace Zeni {
 
     XML_Reader colors_xml(m_colordb.c_str());
     XML_Element colors = colors_xml["Colors"];
+    string name;
+    bool error = false;
 
     try {
       for(XML_Element it = colors.first();; it = it.next()) {
-        const string name = it.value();
+        name = it.value();
+        error = true;
         const float alpha = it["alpha"].to_float();
         const float red = it["red"].to_float();
         const float green = it["green"].to_float();
         const float blue = it["blue"].to_float();
+        error = false;
 
         unsigned long id = get_Resource().assign();
         m_color_lookup[name] = id;
@@ -123,6 +127,10 @@ namespace Zeni {
     }
     catch(Bad_XML_Access &)
     {
+      if(error) {
+        cerr << "Error loading Color '" << name << "'\n";
+        throw;
+      }
     }
   }
 

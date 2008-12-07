@@ -127,14 +127,18 @@ namespace Zeni {
 
     XML_Reader fonts_xml(m_filename.c_str());
     XML_Element fonts = fonts_xml["Fonts"];
+    string name;
+    bool error = false;
 
     try {
       for(XML_Element it = fonts.first();; it = it.next()) {
-        const string name = it.value();
+        name = it.value();
+        error = true;
         const string filepath = it["filepath"].to_string();
         const int height = it["height"].to_int();
         const bool bold = it["bold"].to_bool();
         const bool italics = it["italics"].to_bool();
+        error = false;
 
         try {
           Font *font = vr.create_Font(filepath, bold, italics, height);
@@ -152,6 +156,10 @@ namespace Zeni {
     }
     catch(Bad_XML_Access &)
     {
+      if(error) {
+        cerr << "Error loading Font '" << name << "'\n";
+        throw;
+      }
     }
   }
 

@@ -236,11 +236,15 @@ namespace Zeni {
 
     XML_Reader sounds_xml(m_soundsfile.c_str());
     XML_Element sounds = sounds_xml["Sounds"];
+    string name;
+    bool error = false;
 
     try {
       for(XML_Element it = sounds.first();; it = it.next()) {
         const string name = it.value();
+        error = true;
         const string filepath = it["filepath"].to_string();
+        error = false;
 
         try {
           unsigned long id = get_Resource().assign();
@@ -255,6 +259,10 @@ namespace Zeni {
     }
     catch(Bad_XML_Access &)
     {
+      if(error) {
+        cerr << "Error loading Sound '" << name << "'\n";
+        throw;
+      }
     }
   }
 
