@@ -49,6 +49,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -65,6 +66,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)launcher.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -73,6 +75,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\launcher.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -90,82 +93,6 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launch_Zeniapp_d.exe&quot;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)\launcher"
-			IntermediateDirectory="$(PlatformName)\launcher"
-			ConfigurationType="1"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Copy the build to &apos;zenilib&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launch_Zeniapp.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -199,6 +126,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -215,6 +143,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)launcher.pdb"
 				SubSystem="2"
 				TargetMachine="17"
 			/>
@@ -223,6 +152,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\launcher.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -240,6 +170,85 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launch_Zeniapp_x64d.exe&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(PlatformName)\launcher"
+			IntermediateDirectory="$(PlatformName)\launcher"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)launcher.pdb"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\launcher.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib&apos;."
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launch_Zeniapp.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -274,6 +283,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -290,6 +300,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)launcher.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -300,6 +311,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\launcher.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
