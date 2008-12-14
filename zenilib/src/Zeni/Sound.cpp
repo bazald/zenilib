@@ -123,8 +123,14 @@ namespace Zeni {
     /*** Get Information About the Audio File ***/
 
     vorbis_info *pInfo = ov_info(&oggFile, -1);
-    const ALenum format = pInfo->channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+    const ALenum format = pInfo->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
     const ALsizei freq = pInfo->rate;
+    //const ogg_int64_t pcm_size = ov_pcm_total(&oggFile, -1) * (format == AL_FORMAT_STEREO16 ? 4 : 2);
+
+#ifndef NDEBUG
+    if(format == AL_FORMAT_STEREO16)
+      std::cerr << "WARNING: '" << filename << "' is stereo and will be unaffected by the OpenAL positional audio system." << std::endl;
+#endif
 
     /*** Load the Audio File ***/
 
