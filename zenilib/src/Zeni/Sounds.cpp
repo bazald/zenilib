@@ -33,6 +33,7 @@
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Resource.hxx>
 #include <Zeni/Vector3f.hxx>
+#include <Zeni/XML.hxx>
 
 #include <iostream>
 #include <fstream>

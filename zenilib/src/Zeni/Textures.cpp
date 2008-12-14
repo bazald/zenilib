@@ -30,6 +30,7 @@
 
 #include <Zeni/Resource.hxx>
 #include <Zeni/Video.hxx>
+#include <Zeni/XML.hxx>
 
 #include <iostream>
 #include <fstream>
