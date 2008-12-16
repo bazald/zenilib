@@ -1549,6 +1549,78 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\src\Zeni\Sound_Source.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Sound_Source_Pool.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\src\Zeni\Sounds.cpp"
 				>
 				<FileConfiguration
@@ -2147,6 +2219,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Sound_Source.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Sound_Source_Pool.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Sounds.h"
 				>
 			</File>
@@ -2297,6 +2377,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Sound.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Sound_Source.hxx"
 				>
 			</File>
 			<File

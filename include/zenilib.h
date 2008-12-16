@@ -60,6 +60,8 @@
 #include <Zeni/Resource.h>
 #include <Zeni/Shader.h>
 #include <Zeni/Sound.h>
+#include <Zeni/Sound_Source.h>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Sounds.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
