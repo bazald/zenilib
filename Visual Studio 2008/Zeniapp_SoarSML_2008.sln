@@ -26,6 +26,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcre", "..\SoarSuite\Core\p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoarKernel", "..\SoarSuite\Core\SoarKernel\SoarKernel.vcproj", "{844AB204-F1B2-43D5-A6E5-1EA19FF289F2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "Launcher.vcproj", "{FEC98728-E180-4349-98AB-161F4ADCF43C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug SCU|Win32 = Debug SCU|Win32
@@ -201,6 +203,24 @@ Global
 		{844AB204-F1B2-43D5-A6E5-1EA19FF289F2}.Release ZeniSCU|Win32.Build.0 = Release SCU|Win32
 		{844AB204-F1B2-43D5-A6E5-1EA19FF289F2}.Release|Win32.ActiveCfg = Release|Win32
 		{844AB204-F1B2-43D5-A6E5-1EA19FF289F2}.Release|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug SCU|Win32.ActiveCfg = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug SCU|Win32.Build.0 = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug ZeniSCU|Win32.ActiveCfg = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug ZeniSCU|Win32.Build.0 = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Debug|Win32.Build.0 = Debug|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution SCU|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution SCU|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution ZeniSCU|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution ZeniSCU|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Distribution|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release SCU|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release SCU|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release ZeniSCU|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release ZeniSCU|Win32.Build.0 = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release|Win32.ActiveCfg = Release|Win32
+		{FEC98728-E180-4349-98AB-161F4ADCF43C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
