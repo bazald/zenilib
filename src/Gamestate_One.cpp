@@ -30,10 +30,6 @@ namespace Zeni {
     get_Textures();
     get_Fonts();
     get_Sounds();
-
-    Sound &sr = get_Sound();
-    sr.set_BGM("music.ogg");
-    sr.play_BGM();
   }
 
   Gamestate_One::~Gamestate_One() {
