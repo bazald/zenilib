@@ -41,23 +41,6 @@
  */
 
 /**
- * \class Zeni::Sound_Source
- *
- * \ingroup Zenilib
- *
- * \brief Plays Sound Data
- *
- * A Sound_Source plays sound data from a Sound_Buffer.  The term comes
- * from the idea that OpenAL is built for 3D positional sound.  A Sound_Source
- * is defined by the Sound_Buffer it is playing as well as its position, 
- * velocity, and several other factors.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Sound
  *
  * \ingroup Zenilib
@@ -104,6 +87,8 @@
 
 namespace Zeni {
 
+  class Sound_Source;
+
   class Sound_Buffer {
   public:
     Sound_Buffer();
@@ -112,15 +97,17 @@ namespace Zeni {
     ~Sound_Buffer();
 
     inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
+    inline const float & get_duration() const; ///< Get the duration of the Sound_Buffer in seconds
 
     /// Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer & operator=(const Sound_Buffer &rhs);
 
     /// Ogg Vorbis Loader
-    static ALuint load_ogg_vorbis(const std::string &filename);
+    static std::pair<ALuint, float> load_ogg_vorbis(const std::string &filename);
 
   private:
     mutable ALuint m_buffer;
+    mutable float m_duration;
     
     class Loader : public Task {
       Loader(const Loader &);
@@ -132,6 +119,7 @@ namespace Zeni {
       virtual int function();
       
       ALuint m_buffer;
+      float m_duration;
       const std::string m_filename;
     };
     
@@ -139,69 +127,6 @@ namespace Zeni {
     
     mutable Loader *m_loader;
     mutable Thread *m_thread;
-  };
-
-  class Sound_Source {
-  public:
-    Sound_Source();
-    Sound_Source(const Sound_Source &rhs);
-    Sound_Source(const Sound_Buffer &buffer,
-                 const float &pitch = 1.0f,
-                 const float &gain = 1.0f,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
-    Sound_Source(const ALuint &buffer,
-                 const float &pitch = 1.0f,
-                 const float &gain = 1.0f,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
-    ~Sound_Source();
-
-    inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
-    inline void set_buffer(const ALuint &buffer); ///< Set the Sound_Buffer to be played.
-    inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
-    inline void set_gain(const float &gain = 1.0f); ///< Set the gain.
-    inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source.
-    inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
-    inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
-    inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clamp(const float &near_clip = 10.0f); // Set the near clipping distance
-    inline void set_far_clamp(const float &far_clip = 1000.0f); // Set the far clipping distance
-    inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
-
-    inline ALuint get_buffer() const; ///< Get the Sound_Buffer's OpenAL id
-    inline float get_pitch() const; ///< Get the pitch.
-    inline float get_gain() const; ///< Get the gain.
-    inline Point3f get_position() const; ///< Get the position of the Sound_Buffer.
-    inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
-    inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
-    inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
-    inline float get_near_clamp() const; // Get the near clipping distance
-    inline float get_far_clamp() const; // Get the far clipping distance
-    inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
-
-    inline void play(); ///< Begin playing or unpause the Sound_Source.
-    inline void pause(); ///< Pause the Sound_Source.
-    inline void stop(); ///< Stop the Sound_Source.  (Essentially the same as pause but resets the current time.)
-
-    inline bool is_playing(); ///< Check to see if the Sound_Source is playing.
-    inline bool is_paused(); ///< Check to see if the Sound_Source is paused.
-    inline bool is_stopped(); ///< Check to see if the Sound_Source is stopped.
-
-    /// Transfers the buffer rather than copying it (auto_ptr semantics)
-    Sound_Source & operator=(const Sound_Source &rhs);
-
-  private:
-    void init(const ALuint &buffer,
-              const float &pitch = 1.0f,
-              const float &gain = 1.0f,
-              const Point3f &position = Point3f(),
-              const Vector3f &velocity = Vector3f(),
-              const bool &looping = false);
-
-    mutable ALuint m_source;
   };
 
   class Sound {
@@ -256,10 +181,6 @@ namespace Zeni {
 
   struct Sound_Buffer_Init_Failure : public Error {
     Sound_Buffer_Init_Failure() : Error("Zeni Sound Buffer Failed to Initialize Correctly") {}
-  };
-
-  struct Sound_Source_Init_Failure : public Error {
-    Sound_Source_Init_Failure() : Error("Zeni Sound Source Failed to Initialize Correctly") {}
   };
 
   struct Sound_Init_Failure : public Error {

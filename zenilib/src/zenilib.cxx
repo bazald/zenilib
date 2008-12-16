@@ -54,6 +54,8 @@
 #include "Zeni/Resource.cpp"
 #include "Zeni/Shader.cpp"
 #include "Zeni/Sound.cpp"
+#include "Zeni/Sound_Source.cpp"
+#include "Zeni/Sound_Source_Pool.cpp"
 #include "Zeni/Sounds.cpp"
 #include "Zeni/Texture.cpp"
 #include "Zeni/Textures.cpp"

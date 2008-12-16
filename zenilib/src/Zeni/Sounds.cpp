@@ -29,6 +29,7 @@
 #include <Zeni/Sounds.h>
 
 #include <Zeni/Sound.hxx>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Resource.hxx>
@@ -43,8 +44,7 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : m_soundsfile("config/sounds.xml"),
-    m_replacement_policy(BESP_OLDEST)
+    : m_soundsfile("config/sounds.xml")
   {
     // Ensure Sound is initialized
     get_Sound();
@@ -53,7 +53,7 @@ namespace Zeni {
   }
 
   Sounds::~Sounds() {
-    purge();
+    get_Sound_Source_Pool().purge();
   }
 
   Sounds & get_Sounds() {
@@ -115,123 +115,8 @@ namespace Zeni {
     init();
   }
 
-  Sounds::Replacement_Policy Sounds::get_Replacement_Policy() const {
-    return m_replacement_policy;
-  }
-
-  void Sounds::set_Replacement_Policy(const Sounds::Replacement_Policy &replacement_policy) {
-    m_replacement_policy = replacement_policy;
-  }
-
-  bool Sounds::play_sound(const string &sound_effect) {
-    return play_sound(get_sound_id(sound_effect));
-  }
-
-  bool Sounds::play_sound(const unsigned long &id) {
-    Sound_Source * ss_ptr = 0;
-
-    try {
-      ss_ptr = take_Sound_Source();
-      ss_ptr->set_buffer((*this)[id]);
-      give_Sound_Source(ss_ptr);
-    }
-    catch(Sound_Source_Init_Failure &) {
-      return false;
-    }
-
-    return true;
-  }
-
-  void Sounds::pause_all() {
-    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
-        ++it)
-    {
-      if((*it)->is_playing())
-        (*it)->pause();
-    }
-  }
-
-  void Sounds::unpause_all() {
-    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
-        ++it)
-    {
-      if((*it)->is_paused())
-        (*it)->play();
-    }
-  }
-
-  void Sounds::purge() {
-    for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
-        ++it)
-    {
-      delete *it;
-    }
-
-    m_sound_sources.clear();
-  }
-
-  Sound_Source * Sounds::take_Sound_Source() {
-    Sound_Source *ss_ptr = 0;
-
-    { // Reuse and Recycle
-      list<Sound_Source *> keepers;
-
-      for(list<Sound_Source *>::iterator it = m_sound_sources.begin();
-          it != m_sound_sources.end();
-          ++it)
-      {
-        if((*it)->is_playing())
-          keepers.push_back(*it);
-        else if(ss_ptr)
-          delete *it;
-        else
-          ss_ptr = *it;
-      }
-
-      m_sound_sources.swap(keepers);
-    }
-
-    try {
-      if(ss_ptr)
-        return ss_ptr;
-      else
-        return new Sound_Source();
-    }
-    catch(Sound_Source_Init_Failure &) {
-      if(m_sound_sources.empty())
-        throw;
-
-      // Replace
-
-      switch(m_replacement_policy) {
-        case BESP_NONE:
-          throw;
-
-        case BESP_OLDEST:
-          ss_ptr = m_sound_sources.front();
-          m_sound_sources.pop_front();
-          break;
-
-        default:
-          throw;
-      }
-
-      ss_ptr->stop();
-      return ss_ptr;
-    }
-  }
-
-  void Sounds::give_Sound_Source(Sound_Source * const &sound_source) {
-    assert(sound_source);
-    sound_source->play();
-    m_sound_sources.push_back(sound_source);
-  }
-
   void Sounds::init() {
-    purge();
+    get_Sound_Source_Pool().purge();
 
     m_sound_lookup.clear();
     m_sounds.clear();
