@@ -40,6 +40,8 @@
 #include <GL/glew.h>
 #include <cassert>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   template <typename VERTEX>
@@ -67,17 +69,17 @@ namespace Zeni {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
                              (vertex2.position - vertex0.position)).normalized();
 
-    if(vertex0.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex0.normal.magnitude2()))
       a = Vertex3f_Color(vertex0.position, normal, vertex0.get_color());
     else
       a = vertex0;
 
-    if(vertex1.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex1.normal.magnitude2()))
       b = Vertex3f_Color(vertex1.position, normal, vertex1.get_color());
     else
       b = vertex1;
 
-    if(vertex2.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex2.normal.magnitude2()))
       c = Vertex3f_Color(vertex2.position, normal, vertex2.get_color());
     else
       c = vertex2;
@@ -90,17 +92,17 @@ namespace Zeni {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
                              (vertex2.position - vertex0.position)).normalized();
 
-    if(vertex0.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex0.normal.magnitude2()))
       a = Vertex3f_Texture(vertex0.position, normal, vertex0.texture_coordinate);
     else
       a = vertex0;
 
-    if(vertex1.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex1.normal.magnitude2()))
       b = Vertex3f_Texture(vertex1.position, normal, vertex1.texture_coordinate);
     else
       b = vertex1;
 
-    if(vertex2.normal.magnitude2() < 0.0001f)
+    if(INFINTESSIMAL_SQUARED(vertex2.normal.magnitude2()))
       c = Vertex3f_Texture(vertex2.position, normal, vertex2.texture_coordinate);
     else
       c = vertex2;
@@ -224,6 +226,8 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #include <Zeni/Video_DX9.hxx>
 #include <Zeni/Vertex3f.hxx>

@@ -52,6 +52,8 @@
 #include <d3dx9.h>
 #endif
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   class Video_GL;
@@ -60,11 +62,11 @@ namespace Zeni {
   enum FOG_TYPE {FOG_LINEAR = 1, FOG_EXP = 2, FOG_EXP2 = 3};
 
   struct Fog {
-    Fog(const Color &color_ = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-        const float &density_ = 0.01f,
-        const FOG_TYPE &type_ = FOG_EXP,
-        const float &start_ = 10.0f,
-        const float &end_ = 1000.0f);
+    Fog(const Color &color_ = ZENI_DEFAULT_FOG_COLOR, 
+        const float &density_ = ZENI_DEFAULT_FOG_DENSITY,
+        const FOG_TYPE &type_ = ZENI_DEFAULT_FOG_TYPE,
+        const float &start_ = ZENI_DEFAULT_FOG_START,
+        const float &end_ = ZENI_DEFAULT_FOG_END);
 
 #ifndef DISABLE_GL
     void set(Video_GL &screen) const;
@@ -82,5 +84,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

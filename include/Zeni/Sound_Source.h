@@ -73,6 +73,8 @@
 
 #endif
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   class Sound_Source_Pool;
@@ -87,14 +89,14 @@ namespace Zeni {
 
     Sound_Source_HW();
     Sound_Source_HW(const Sound_Buffer &buffer,
-                 const float &pitch = 1.0f,
-                 const float &gain = 1.0f,
+                 const float &pitch = ZENI_DEFAULT_PITCH,
+                 const float &gain = ZENI_DEFAULT_GAIN,
                  const Point3f &position = Point3f(),
                  const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
     Sound_Source_HW(const ALuint &buffer,
-                 const float &pitch = 1.0f,
-                 const float &gain = 1.0f,
+                 const float &pitch = ZENI_DEFAULT_PITCH,
+                 const float &gain = ZENI_DEFAULT_GAIN,
                  const Point3f &position = Point3f(),
                  const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
@@ -104,15 +106,15 @@ namespace Zeni {
     enum STATE {STOPPED, PAUSED, PLAYING};
 
     inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
-    inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
-    inline void set_gain(const float &gain = 1.0f); ///< Set the gain.
+    inline void set_pitch(const float &pitch = ZENI_DEFAULT_PITCH); ///< Set the pitch.
+    inline void set_gain(const float &gain = ZENI_DEFAULT_GAIN); ///< Set the gain.
     inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source_HW.
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source_HW for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clamp(const float &near_clamp = 10.0f); // Set the near clamping distance
-    inline void set_far_clamp(const float &far_clamp = 1000.0f); // Set the far clamping distance
-    inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
+    inline void set_near_clamp(const float &near_clamp = ZENI_DEFAULT_NEAR_CLAMP); // Set the near clamping distance
+    inline void set_far_clamp(const float &far_clamp = ZENI_DEFAULT_FAR_CLAMP); // Set the far clamping distance
+    inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer
     inline float get_pitch() const; ///< Get the pitch.
@@ -136,8 +138,8 @@ namespace Zeni {
 
   private:
     void init(const Sound_Buffer &buffer,
-              const float &pitch = 1.0f,
-              const float &gain = 1.0f,
+              const float &pitch = ZENI_DEFAULT_PITCH,
+              const float &gain = ZENI_DEFAULT_GAIN,
               const Point3f &position = Point3f(),
               const Vector3f &velocity = Vector3f(),
               const bool &looping = false);
@@ -155,24 +157,24 @@ namespace Zeni {
   public:
     Sound_Source();
     Sound_Source(const Sound_Buffer &buffer,
-                 const float &pitch = 1.0f,
-                 const float &gain = 1.0f,
+                 const float &pitch = ZENI_DEFAULT_PITCH,
+                 const float &gain = ZENI_DEFAULT_GAIN,
                  const Point3f &position = Point3f(),
                  const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
     ~Sound_Source();
 
-    inline void set_priority(const int &priority = 1024); ///< Set the priority that this Sound_Source should have. Higher numbers are more likely to be selected for play.
+    inline void set_priority(const int &priority = ZENI_DEFAULT_SOUND_PRIORITY); ///< Set the priority that this Sound_Source should have. Higher numbers are more likely to be selected for play.
     inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
-    inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
-    inline void set_gain(const float &gain = 1.0f); ///< Set the gain.
+    inline void set_pitch(const float &pitch = ZENI_DEFAULT_PITCH); ///< Set the pitch.
+    inline void set_gain(const float &gain = ZENI_DEFAULT_GAIN); ///< Set the gain.
     inline void set_position(const Point3f &position); ///< Set the position of the Sound_Source.
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clamp(const float &near_clamp = 10.0f); // Set the near clamping distance
-    inline void set_far_clamp(const float &far_clamp = 1000.0f); // Set the far clamping distance
-    inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
+    inline void set_near_clamp(const float &near_clamp = ZENI_DEFAULT_NEAR_CLAMP); // Set the near clamping distance
+    inline void set_far_clamp(const float &far_clamp = ZENI_DEFAULT_FAR_CLAMP); // Set the far clamping distance
+    inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline int get_priority() const; ///< Get the Sound_Source's priority.
     inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer's OpenAL id.
@@ -229,5 +231,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

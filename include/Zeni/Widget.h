@@ -262,6 +262,8 @@
 #include <vector>
 #include <set>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   class Widget {
@@ -485,7 +487,7 @@ namespace Zeni {
            const float &slider_radius_,
            const Color &line_color_,
            const Color &slider_color_,
-           const float &slider_position_ = 0.5f);
+           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
@@ -524,7 +526,9 @@ namespace Zeni {
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
              const Color &bg_color_,
              const std::string &font_name_, const std::string &text_, const Color &text_color_,
-             const bool &editable_ = false, const JUSTIFY &justify_ = ZENI_LEFT, const int &tab_spaces_ = 5);
+             const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
+             const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
+             const int &tab_spaces_ = ZENI_DEFAULT_TAB_SPACES);
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 
@@ -666,5 +670,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

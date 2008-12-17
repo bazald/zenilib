@@ -44,6 +44,8 @@
 #include <Zeni/Fonts.h>
 #include <Zeni/Vertex_Buffer.h>
 
+#include <Zeni/Global.h>
+
 #ifndef DISABLE_DX9
 
 namespace Zeni {
@@ -293,12 +295,14 @@ namespace Zeni {
   }
 
   float Video_DX9::get_dpi_ratio() {
-    return m_dpi / 96.0f;
+    return m_dpi / ZENI_STANDARD_DPI;
   }
 
 }
 
 #endif
+
+#include <Zeni/Global_Undef.h>
 
 #include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>

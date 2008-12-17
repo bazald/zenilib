@@ -28,13 +28,15 @@
 
 #include <Zeni/Font.hxx>
 
-#include <Zeni/Texture.h>
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Color.hxx>
 #include <Zeni/Quadrilateral.hxx>
+#include <Zeni/Texture.h>
 #include <Zeni/Vertex2f.hxx>
 #include <Zeni/Video.hxx>
+
+#include <Zeni/Global.h>
 
 using namespace std;
 
@@ -141,7 +143,7 @@ namespace Zeni {
       next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
       next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
   
-    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[42]->format->Rmask, source[42]->format->Gmask, source[42]->format->Bmask, source[42]->format->Amask);
+    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[END_OF_TIME]->format->Rmask, source[END_OF_TIME]->format->Gmask, source[END_OF_TIME]->format->Bmask, source[END_OF_TIME]->format->Amask);
     if(!font_surface)
       throw Font_Init_Failure();
 

@@ -70,6 +70,8 @@
 #include <d3dx9.h>
 #endif
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   struct Color;
@@ -93,7 +95,7 @@ namespace Zeni {
 
     /// Render text at screen position (x, y), with justification JUSTIFY.  Remember not to clip the screen if you want this to look good in OpenGL.
     virtual void render_text(const std::string &text, const Point2f &position,
-      const Color &color, const JUSTIFY &justify = ZENI_LEFT) const = 0;
+      const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const = 0;
 
   private:
     bool m_bold, m_italic;
@@ -145,5 +147,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

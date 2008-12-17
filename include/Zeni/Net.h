@@ -119,6 +119,8 @@
 #include <string>
 #include <list>
 
+#include <Zeni/Global.h>
+
 struct SDL_Thread;
 
 namespace Zeni {
@@ -258,7 +260,7 @@ namespace Zeni {
       Chunk_Collector operator=(const Chunk_Collector &);
       
     public:
-      Chunk_Collector(const Uint16 &size = 64)
+      Chunk_Collector(const Uint16 &size = ZENI_DEFAULT_CHUNK_SIZE)
         : m_size(size)
       {
         assert(m_size);
@@ -277,7 +279,7 @@ namespace Zeni {
     };
     
   public:
-    Split_UDP_Socket(const Uint16 &port, const Uint16 &chunk_sets = 64, const Uint16 &chunk_size = 960);
+    Split_UDP_Socket(const Uint16 &port, const Uint16 &chunk_sets = ZENI_DEFAULT_CHUNK_SETS, const Uint16 &chunk_size = ZENI_DEFAULT_CHUNK_SIZE);
 
     /// Send data to an IPaddress
     virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
@@ -312,5 +314,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

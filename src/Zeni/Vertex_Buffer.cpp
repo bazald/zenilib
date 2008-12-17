@@ -44,6 +44,8 @@
 
 using namespace std;
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   Vertex_Buffer::Vertex_Buffer_Range::Vertex_Buffer_Range(Render_Wrapper *rw, const int &s, const int &ne)
@@ -309,12 +311,12 @@ namespace Zeni {
                                     Triangle<VERTEX> &t1,
                                     const int &which)
   {
-    const float closeness_threshold = 0.00001f;
-    const float alikeness_threshold = 0.95f;
+    const float closeness_threshold_squared = CLOSENESS_THRESHOLD_SQUARED;
+    const float alikeness_threshold = ALIKENESS_THRESHOLD;
 
     const VERTEX &v1 = t1[which];
 
-    if((v0.position - v1.position).magnitude2() < closeness_threshold &&
+    if((v0.position - v1.position).magnitude2() < closeness_threshold_squared &&
        fabs(v0.normal * v1.normal) > alikeness_threshold)
     {
       VERTEX next(v1);
@@ -327,7 +329,7 @@ namespace Zeni {
   static void align_similar_normals(std::vector<Triangle<VERTEX> *> &triangles,
                                     std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors)
   {
-    const float closeness_threshold = 0.001f;
+    const float closeness_threshold = CLOSENESS_THRESHOLD;
 
     for(std::vector<Vertex_Buffer::Vertex_Buffer_Range *>::iterator it = descriptors.begin();
         it != descriptors.end();

@@ -254,7 +254,7 @@ namespace Zeni {
 
   Point3f Model::get_position() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
-    return m_translate + m_scale.multiply_by(Quaternion(m_rotate, m_rotate_angle) * Vector3f(m_position));
+    return m_translate + m_scale.multiply_by(Quaternion::Axis_Angle(m_rotate, m_rotate_angle) * Vector3f(m_position));
     GUARANTEED_FINISHED_END();
   }
 
