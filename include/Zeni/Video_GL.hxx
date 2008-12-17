@@ -133,9 +133,10 @@ namespace Zeni {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, reinterpret_cast<const GLfloat *>(&color));
   }
 
-  void Video_GL::set_light_impl(const int &number, const Light *light) {
+  void Video_GL::set_light_impl(const int &number, const Light &light) {
     GLint ln;
     switch(number) {
+    case 0: ln = GL_LIGHT0; break;
     case 1: ln = GL_LIGHT1; break;
     case 2: ln = GL_LIGHT2; break;
     case 3: ln = GL_LIGHT3; break;
@@ -143,15 +144,29 @@ namespace Zeni {
     case 5: ln = GL_LIGHT5; break;
     case 6: ln = GL_LIGHT6; break;
     case 7: ln = GL_LIGHT7; break;
-    case 0: 
     default:
-      ln = GL_LIGHT0; break;
+      throw Light_Out_of_Range();
     }
 
-    if(light)
-      light->set(ln, *this);
-    else
-      glDisable(ln);
+    light.set(ln, *this);
+  }
+
+  void Video_GL::unset_light_impl(const int &number) {
+    GLint ln;
+    switch(number) {
+    case 0: ln = GL_LIGHT0; break;
+    case 1: ln = GL_LIGHT1; break;
+    case 2: ln = GL_LIGHT2; break;
+    case 3: ln = GL_LIGHT3; break;
+    case 4: ln = GL_LIGHT4; break;
+    case 5: ln = GL_LIGHT5; break;
+    case 6: ln = GL_LIGHT6; break;
+    case 7: ln = GL_LIGHT7; break;
+    default:
+      throw Light_Out_of_Range();
+    }
+
+    glDisable(ln);
   }
 
   void Video_GL::set_material_impl(const Material &material, const int &optimization) {
@@ -162,13 +177,13 @@ namespace Zeni {
     material.unset(*this, optimization);
   }
 
-  void Video_GL::set_fog_impl(const Fog * const fog) {
-    if(fog) {
-      glEnable(GL_FOG);
-      fog->set(*this);
-    }
-    else
-      glDisable(GL_FOG);
+  void Video_GL::set_fog_impl(const Fog &fog) {
+    glEnable(GL_FOG);
+    fog.set(*this);
+  }
+
+  void Video_GL::unset_fog_impl() {
+    glDisable(GL_FOG);
   }
 
 #ifndef DISABLE_CG

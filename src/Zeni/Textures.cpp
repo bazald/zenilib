@@ -54,15 +54,12 @@ namespace Zeni {
     return e_texturedb;
   }
   
-  unsigned long Textures::set_texture(const std::string &name, Texture * const texture) {
+  unsigned long Textures::give_texture(const std::string &name, Texture * const texture) {
+    try {
+      clear_texture(name);
+    }
+    catch(Texture_Not_Found &)
     {
-      stdext::hash_map<std::string, unsigned long>::iterator it = m_texture_lookup.find(name);
-      if(it != m_texture_lookup.end()) {
-        stdext::hash_map<unsigned long, Texture *>::iterator jt = m_textures.find(it->second);
-        delete jt->second;
-        m_textures.erase(jt);
-        m_texture_lookup.erase(it);
-      }
     }
 
     if(!texture)
@@ -73,12 +70,29 @@ namespace Zeni {
     m_textures[id] = texture;
     return id;
   }
+  
+  unsigned long Textures::loan_texture(const std::string &name, Texture * const texture) {
+    const unsigned long retval = give_texture(name, texture);
+    m_loaned.insert(texture);
+    return retval;
+  }
 
   void Textures::clear_texture(const std::string &name) {
     stdext::hash_map<string, unsigned long>::iterator it = m_texture_lookup.find(name);
 
     if(it == m_texture_lookup.end())
       throw Texture_Not_Found(name);
+
+    stdext::hash_map<unsigned long, Texture *>::iterator jt = m_textures.find(it->second);
+
+    assert(jt != m_textures.end());
+
+    set<Texture *>::iterator kt = m_loaned.find(jt->second);
+
+    if(kt == m_loaned.end())
+      delete jt->second;
+    else
+      m_loaned.erase(kt);
 
     m_textures.erase(it->second);
     m_texture_lookup.erase(it);
@@ -294,8 +308,15 @@ namespace Zeni {
   }
 
   void Textures::uninit() {
-    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
-      delete it->second;
+    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it) {  
+      set<Texture *>::iterator jt = m_loaned.find(it->second);
+
+      if(jt == m_loaned.end())
+        delete it->second;
+      else
+        m_loaned.erase(jt);
+    }
+    assert(m_loaned.empty());
     m_textures.clear();
     m_texture_lookup.clear();
     m_loaded = false;
@@ -314,7 +335,7 @@ namespace Zeni {
       stdext::hash_map<unsigned long, Texture *>::iterator jt = textures.find(it->second);
       
       if(dynamic_cast<Sprite *>(jt->second))
-        set_texture(it->first, jt->second);
+        give_texture(it->first, jt->second);
       else
         delete jt->second;
     }

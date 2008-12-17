@@ -253,7 +253,12 @@ namespace Zeni {
     : Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_),
     m_radio_button_set(&radio_button_set_)
   {
-    radio_button_set_.add_Radio_Button(*this);
+    radio_button_set_.lend_Radio_Button(*this);
+  }
+
+  Radio_Button::~Radio_Button() {
+    if(m_radio_button_set)
+      m_radio_button_set->unlend_Radio_Button(*this);
   }
 
   void Radio_Button_Set::accept(Radio_Button &radio_button) {
@@ -266,12 +271,13 @@ namespace Zeni {
       (*it)->set_checked(false);
   }
 
-  void Radio_Button_Set::add_Radio_Button(Radio_Button &radio_button) {
+  void Radio_Button_Set::lend_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.insert(&radio_button);
   }
 
-  void Radio_Button_Set::remove_Radio_Button(Radio_Button &radio_button) {
+  void Radio_Button_Set::unlend_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.erase(&radio_button);
+    radio_button.m_radio_button_set = 0;
   }
 
   Point2f Slider::get_end_point_a() const {
@@ -455,11 +461,11 @@ namespace Zeni {
     }
   }
 
-  void Widgets::add_Widget(Widget &widget) {
+  void Widgets::lend_Widget(Widget &widget) {
     m_widgets.insert(&widget);
   }
 
-  void Widgets::remove_Widget(Widget &widget) {
+  void Widgets::unlend_Widget(Widget &widget) {
     m_widgets.erase(&widget);
   }
 
