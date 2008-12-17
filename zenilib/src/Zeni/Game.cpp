@@ -31,6 +31,7 @@
 #include <Zeni/Gamestate_One.h>
 
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
 
@@ -49,12 +50,15 @@ namespace Zeni {
 
   void Game::run() {
     Video &vr = get_Video();
+    Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     
     for(;;) {
       for(SDL_Event event; SDL_PollEvent(&event);)
         on_event(event);
       
       perform_logic();
+
+      sspr.update();
       
       vr.render_all();
     }

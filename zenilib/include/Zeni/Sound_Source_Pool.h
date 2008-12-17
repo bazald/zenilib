@@ -53,6 +53,8 @@ namespace Zeni {
     // Get reference to only instance;
     friend Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.
 
+    friend class Sound_Source;
+
     Sound_Source_Pool();
     ~Sound_Source_Pool();
 
@@ -61,22 +63,30 @@ namespace Zeni {
     Sound_Source_Pool & operator=(const Sound_Source_Pool &);
 
   public:
-    enum Replacement_Policy {BESP_NONE, // No Replacment of Playing Sounds
-                             BESP_OLDEST}; // Oldest
+    class Replacement_Policy {
+    public:
+      /// Default Sort:  Priority, Playing/Not-Playing
+      virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
-    Replacement_Policy get_Replacement_Policy() const; ///< Get the BESP Replacement_Policy
-    void set_Replacement_Policy(const Replacement_Policy &replacement_policy); ///< Set the BESP Replacement_Policy
+      bool operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const;
+    };
 
-    void pause_all(); ///< Pause all BESP Sound_Sources.
-    void unpause_all(); ///< Unpause all paused BESP Sound_Sources.
-    void purge(); ///< Purge all BESP Sound_Sources
+    const Replacement_Policy & get_Replacement_Policy() const; ///< Get the Replacement_Policy
+    void give_Replacement_Policy(Replacement_Policy * const &replacement_policy); ///< Give the Sound_Source_Pool a new Replacement_Policy
 
-    Sound_Source_HW * take_Sound_Source(); ///< Request a Sound_Source from the BESP system
-    void give_Sound_Source(Sound_Source_HW * const &sound_source); ///< Add a Sound_Source to the BESP system; BESP will then play the Sound_Source
+    void pause_all(); ///< Pause all Sound_Sources.
+    void unpause_all(); ///< Unpause all paused Sound_Sources.
+    void purge(); ///< Purge all Sound_Source_HW
+
+    void update(); ///< Redistribute hardware Sound_Sources according to the Replacement_Policy.  (Called automatically)
 
   private:
-    std::list<Sound_Source_HW *> m_sound_sources;
-    Replacement_Policy m_replacement_policy;
+    void insert_Sound_Source(Sound_Source &sound_source); // on Sound_Source construction
+    void remove_Sound_Source(Sound_Source &sound_source); // on Sound_Source destruction
+
+    std::set<Sound_Source_HW *> m_assigned_hw;
+    std::vector<Sound_Source *> m_handles;
+    Replacement_Policy * m_replacement_policy;
   };
 
   Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.

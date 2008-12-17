@@ -113,11 +113,11 @@ namespace Zeni {
 
     // Accessors
     // Time passed since last updated
-    inline int get_ticks_passed() const; ///< Get the number of clock ticks passed since current Time
-    inline float get_seconds_passed() const; ///< Get the number of seconds passed since current Time
+    inline int get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
+    inline float get_seconds_passed() const; ///< Get the number of seconds passed since this Time
     // From a specific time
-    inline int get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed since this Time
-    inline float get_seconds_since(const Time &time) const; ///< Get the number of seconds passed since this Time
+    inline int get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
+    inline float get_seconds_since(const Time &time) const; ///< Get the number of seconds passed between 'time' and this Time
 
     // Modifiers
     inline void update(); ///< Update to current Time
@@ -172,11 +172,11 @@ namespace Zeni {
 
     // Accessors
     // Time passed since last updated
-    inline HQ_Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since current Time
-    inline long double get_seconds_passed() const; ///< Get the number of seconds passed since current Time
+    inline HQ_Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
+    inline long double get_seconds_passed() const; ///< Get the number of seconds passed since this Time
     // From a specific time
-    inline HQ_Tick_Type get_ticks_since(const Time_HQ &time) const; ///< Get the number of clock ticks passed since this Time
-    inline long double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed since this Time
+    inline HQ_Tick_Type get_ticks_since(const Time_HQ &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
+    inline long double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed between 'time' and this Time
 
     // Modifiers
     inline void update(); ///< Update to current Time
