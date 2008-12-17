@@ -30,6 +30,8 @@
 
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   Quaternion::Quaternion(const float &t, const Vector3f &s)
@@ -38,11 +40,10 @@ namespace Zeni {
   {
   }
 
-  Quaternion::Quaternion(const Vector3f &v, const float &theta) {
+  Quaternion Quaternion::Axis_Angle(const Vector3f &v, const float &theta) {
     const float half_theta = 0.5f * theta;
 
-    time = cos(half_theta);
-    space = sin(half_theta) * v;
+    return Quaternion(cos(half_theta), sin(half_theta) * v);
   }
 
   Quaternion::Quaternion(const float &yaw, const float &pitch, const float &roll) {
@@ -71,7 +72,7 @@ namespace Zeni {
   Quaternion & Quaternion::normalize() {
     float mplier = magnitude();
 
-    if(fabs(mplier) < 0.001f)
+    if(INFINTESSIMAL(mplier))
       return *this;
 
     mplier = 1.0f / mplier;
@@ -85,7 +86,7 @@ namespace Zeni {
   Quaternion Quaternion::normalized() const {
     float mplier = magnitude();
 
-    if(fabs(mplier) < 0.001f)
+    if(INFINTESSIMAL(mplier))
       return *this;
 
     mplier = 1.0f / mplier;

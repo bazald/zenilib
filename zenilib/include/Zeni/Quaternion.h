@@ -58,9 +58,11 @@ namespace Zeni {
   struct Quaternion {
     inline Quaternion();
     Quaternion(const float &time, const Vector3f &space); ///< For advanced use only
-    Quaternion(const Vector3f &v, const float &theta); ///< Set the rotation in radians left about an axis;
     Quaternion(const float &yaw, const float &pitch, const float &roll);
     Quaternion(const Quaternion &rhs);
+
+    /// Create a Quaternion from an Axis/Angle pair
+    static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum

@@ -61,6 +61,8 @@
 #include <d3dx9.h>
 #endif
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   class Video_GL;
@@ -69,12 +71,14 @@ namespace Zeni {
   class Material {
   public:
     /// An Alternative to the numerous setter functions
-    Material(const Color &ambient = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &specular = Color(1.0f, 0.2f, 0.2f, 0.2f), 
-      const Color &emissive = Color(1.0f, 0.0f, 0.0f, 0.0f), const float &power = 1.0f,
-      const std::string &texture = "");
-    Material(const std::string &texture, const Color &ambient_and_diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f));
+    Material(const Color &ambient = ZENI_DEFAULT_MATERIAL_DIFFUSE, 
+             const Color &diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE, 
+             const Color &specular = ZENI_DEFAULT_MATERIAL_SPECULAR, 
+             const Color &emissive = ZENI_DEFAULT_MATERIAL_EMISSIVE,
+             const float &power = ZENI_DEFAULT_MATERIAL_POWER,
+             const std::string &texture = "");
+    Material(const std::string &texture,
+             const Color &ambient_and_diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE);
 
     // Accessors
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)
@@ -113,5 +117,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

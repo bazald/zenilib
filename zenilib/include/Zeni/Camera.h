@@ -57,16 +57,19 @@
 #include <Zeni/Matrix4f.h>
 #include <Zeni/Quaternion.h>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   class Camera {
   public:
     /// The Camera constructor is an alternative to using the numerous setter functions.
-    Camera(const Point3f &position = Point3f(0, 0, 0),
-      const Quaternion &orientation = Quaternion(),
-      const float &near_clip = 10.0f, 
-      const float &far_clip = 1000.0f, const float &fov_rad_ = pi/2,
-      const float &tunnel_vision_factor = 1.0f);
+    Camera(const Point3f &position = ZENI_DEFAULT_CAMERA_POSITION,
+           const Quaternion &orientation = ZENI_DEFAULT_CAMERA_ORIENTATION,
+           const float &near_clip = ZENI_DEFAULT_CAMERA_NEAR_CLIP, 
+           const float &far_clip = ZENI_DEFAULT_CAMERA_FAR_CLIP,
+           const float &fov_rad_ = ZENI_DEFAULT_CAMERA_FOV,
+           const float &tunnel_vision_factor = ZENI_DEFAULT_CAMERA_TUNNEL_VISION);
 
     // Accessors
     inline Vector3f get_forward() const; ///< Get the vector indicating the direction in which the camera is pointing.
@@ -111,5 +114,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

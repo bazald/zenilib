@@ -34,6 +34,8 @@
 #include <cassert>
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   void Sound_Source_HW::set_buffer(const Sound_Buffer &
@@ -143,7 +145,7 @@ namespace Zeni {
   }
 
   float Sound_Source_HW::get_pitch() const {
-    float pitch = 1.0f;
+    float pitch = ZENI_DEFAULT_PITCH;
 #ifndef DISABLE_AL
     alGetSourcef(m_source, AL_PITCH, &pitch);
 #endif
@@ -151,7 +153,7 @@ namespace Zeni {
   }
 
   float Sound_Source_HW::get_gain() const {
-    float gain = 1.0f;
+    float gain = ZENI_DEFAULT_GAIN;
 #ifndef DISABLE_AL
     alGetSourcef(m_source, AL_GAIN, &gain);
 #endif
@@ -191,7 +193,7 @@ namespace Zeni {
   }
   
   float Sound_Source_HW::get_near_clamp() const {
-    float near_clamp = 10.0f;
+    float near_clamp = ZENI_DEFAULT_NEAR_CLAMP;
 #ifndef DISABLE_AL
     alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clamp);
 #endif
@@ -199,7 +201,7 @@ namespace Zeni {
   }
 
   float Sound_Source_HW::get_far_clamp() const {
-    float far_clamp = 1000.0f;
+    float far_clamp = ZENI_DEFAULT_FAR_CLAMP;
 #ifndef DISABLE_AL
     alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clamp);
 #endif
@@ -207,7 +209,7 @@ namespace Zeni {
   }
 
   float Sound_Source_HW::get_rolloff() const {
-    float rolloff = 1.0f;
+    float rolloff = ZENI_DEFAULT_ROLLOFF;
 #ifndef DISABLE_AL
     alGetSourcef(m_source, AL_ROLLOFF_FACTOR, &rolloff);
 #endif
@@ -317,5 +319,7 @@ namespace Zeni {
   bool Sound_Source::is_assigned() {return m_hw != 0;}
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

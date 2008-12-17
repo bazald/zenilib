@@ -28,17 +28,18 @@
 
 #include <Zeni/Material.h>
 
+#include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
 #include <Zeni/Video_DX9.hxx>
 #include <Zeni/Video_GL.h>
-
-#include <Zeni/Textures.hxx>
 
 #include <cmath>
 
 #ifndef DISABLE_GL
 #include <GL/glew.h>
 #endif
+
+#include <Zeni/Global.h>
 
 using namespace std;
 
@@ -59,9 +60,9 @@ namespace Zeni {
   Material::Material(const string &texture, const Color &ambient_and_diffuse)
     : diffuse(ambient_and_diffuse), 
     ambient(ambient_and_diffuse), 
-    specular(1.0f, 0.5f * (ambient_and_diffuse.r + 1.0f), 0.5f * (ambient_and_diffuse.g + 1.0f), 0.5f * (ambient_and_diffuse.b + 1.0f)), 
-    emissive(1.0f, 0.0f, 0.0f, 0.0f),
-    m_power(1.0f),
+    specular(ZENI_DIFFUSE_TO_SPECULAR(ambient_and_diffuse)), 
+    emissive(ZENI_DEFAULT_MATERIAL_EMISSIVE),
+    m_power(ZENI_DEFAULT_MATERIAL_POWER),
     m_texture(""),
     m_texture_id(0)
   {

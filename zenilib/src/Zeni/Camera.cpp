@@ -53,27 +53,27 @@ namespace Zeni {
     const Vector3f axis0 = given_forward % destination_forward;
     const float angle0 = given_forward.angle_between(destination_forward);
 
-    const Quaternion rotation0(axis0, angle0);
+    const Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
 
     const Vector3f intermediate_up = rotation0 * given_up;
     const Vector3f axis1 = intermediate_up % destination_up;
     const float angle1 = intermediate_up.angle_between(destination_up);
 
-    const Quaternion rotation1(axis1, angle1);
+    const Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
 
     orientation = rotation1 * rotation0;
   }
 
   void Camera::adjust_yaw(const float &theta) {
-    orientation = Quaternion(get_up(), theta) * orientation;
+    orientation = Quaternion::Axis_Angle(get_up(), theta) * orientation;
   }
 
   void Camera::adjust_pitch(const float &phi) {
-    orientation = Quaternion(get_left(), phi) * orientation;
+    orientation = Quaternion::Axis_Angle(get_left(), phi) * orientation;
   }
 
   void Camera::adjust_roll(const float &rho) {
-    orientation = Quaternion(get_forward(), rho) * orientation;
+    orientation = Quaternion::Axis_Angle(get_forward(), rho) * orientation;
   }
 
   void Camera::move_forward_xy(const float &distance) {
@@ -85,7 +85,7 @@ namespace Zeni {
   }
 
   void Camera::turn_left_xy(const float &theta) {
-    orientation = Quaternion(Vector3f(0.0f, 0.0f, 1.0f), theta) * orientation;
+    orientation = Quaternion::Axis_Angle(Vector3f(0.0f, 0.0f, 1.0f), theta) * orientation;
   }
 
   void Camera::look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal) {

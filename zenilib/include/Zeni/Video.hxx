@@ -38,6 +38,8 @@
 
 #include <Zeni/Video.h>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   const Video_Base::VIDEO_MODE & Video::get_video_mode() {
@@ -162,7 +164,7 @@ namespace Zeni {
       case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
-    exit(42); /* cannot be called, but suppresses a warning */ \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
   }
 
 #define \
@@ -172,7 +174,7 @@ namespace Zeni {
       case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
-    exit(42); /* cannot be called, but suppresses a warning */ \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
   }
 
 #else
@@ -227,7 +229,7 @@ namespace Zeni {
                                                        camera2d.second.x + offset.x,
                                                        camera2d.second.y + offset.y,
                                                        camera2d.first.y + offset.y,
-                                                       -1.0f, 1.0f);
+                                                       ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
 
     set_viewport(viewport);
@@ -434,6 +436,8 @@ namespace Zeni {
 #undef VIDEO_IV_FCN_CALL
 #undef VIDEO_IV_FCN_CALL_CONST
 }
+
+#include <Zeni/Global_Undef.h>
 
 #include <Zeni/Camera.hxx>
 #include <Zeni/Textures.hxx>

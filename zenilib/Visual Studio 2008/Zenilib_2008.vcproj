@@ -2147,6 +2147,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Global.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Global_Undef.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Hash_Map.h"
 				>
 			</File>

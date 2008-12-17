@@ -44,6 +44,8 @@
 #include <vorbis/vorbisfile.h>
 #endif
 
+#include <Zeni/Global.h>
+
 using std::string;
 
 namespace Zeni {
@@ -118,14 +120,14 @@ namespace Zeni {
 
   Sound_Source::Sound_Source()
     : m_hw(0),
-    m_priority(1024),
+    m_priority(ZENI_DEFAULT_SOUND_PRIORITY),
     m_buffer(&get_Hello_World_Buffer()),
-    m_pitch(1.0f),
-    m_gain(1.0f),
+    m_pitch(ZENI_DEFAULT_PITCH),
+    m_gain(ZENI_DEFAULT_GAIN),
     m_looping(false),
-    m_near_clamp(10.0f),
-    m_far_clamp(1000.0f),
-    m_rolloff(1.0f),
+    m_near_clamp(ZENI_DEFAULT_NEAR_CLAMP),
+    m_far_clamp(ZENI_DEFAULT_FAR_CLAMP),
+    m_rolloff(ZENI_DEFAULT_ROLLOFF),
     m_play_position(0.0f),
     m_playing(false),
     m_paused(false),
@@ -141,16 +143,16 @@ namespace Zeni {
                              const Vector3f &velocity,
                              const bool &looping)
     : m_hw(0),
-    m_priority(1024),
+    m_priority(ZENI_DEFAULT_SOUND_PRIORITY),
     m_buffer(&buffer),
     m_pitch(pitch),
     m_gain(gain),
     m_position(position),
     m_velocity(velocity),
     m_looping(looping),
-    m_near_clamp(10.0f),
-    m_far_clamp(1000.0f),
-    m_rolloff(1.0f),
+    m_near_clamp(ZENI_DEFAULT_NEAR_CLAMP),
+    m_far_clamp(ZENI_DEFAULT_FAR_CLAMP),
+    m_rolloff(ZENI_DEFAULT_ROLLOFF),
     m_play_position(0.0f),
     m_playing(false),
     m_paused(false),

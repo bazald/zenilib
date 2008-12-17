@@ -33,6 +33,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 #ifdef min
 #undef min
 #endif
@@ -779,8 +781,8 @@ default: return "SDLK_UNKNOWN";
   }
 
   Gamestate_II::Gamestate_II()
-    : m_min_confidence(0.1f),
-    m_max_confidence(1.0f)
+    : m_min_confidence(ZENI_DEFAULT_II_MIN_CONFIDENCE),
+    m_max_confidence(ZENI_DEFAULT_II_MAX_CONFIDENCE)
   {
   }
 
