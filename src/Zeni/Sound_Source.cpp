@@ -33,6 +33,7 @@
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Sound.hxx>
 #include <Zeni/Sound_Source_Pool.h>
+#include <Zeni/Timer.hxx>
 #include <Zeni/Vector3f.hxx>
 
 #include <SDL/SDL.h>
@@ -116,16 +117,21 @@ namespace Zeni {
   }
 
   Sound_Source::Sound_Source()
-    : m_buffer(&get_Hello_World_Buffer()),
+    : m_hw(0),
+    m_priority(1024),
+    m_buffer(&get_Hello_World_Buffer()),
     m_pitch(1.0f),
     m_gain(1.0f),
     m_looping(false),
-    m_time(0.0f),
     m_near_clamp(10.0f),
     m_far_clamp(1000.0f),
-    m_rolloff(1.0f)
+    m_rolloff(1.0f),
+    m_play_position(0.0f),
+    m_playing(false),
+    m_paused(false),
+    m_stopped(true)
   {
-    init();
+    get_Sound_Source_Pool().insert_Sound_Source(*this);
   }
 
   Sound_Source::Sound_Source(const Sound_Buffer &buffer,
@@ -134,44 +140,98 @@ namespace Zeni {
                              const Point3f &position,
                              const Vector3f &velocity,
                              const bool &looping)
-    : m_buffer(&buffer),
+    : m_hw(0),
+    m_priority(1024),
+    m_buffer(&buffer),
     m_pitch(pitch),
     m_gain(gain),
     m_position(position),
     m_velocity(velocity),
     m_looping(looping),
-    m_time(0.0f),
     m_near_clamp(10.0f),
     m_far_clamp(1000.0f),
-    m_rolloff(1.0f)
+    m_rolloff(1.0f),
+    m_play_position(0.0f),
+    m_playing(false),
+    m_paused(false),
+    m_stopped(true)
   {
-    init();
+    get_Sound_Source_Pool().insert_Sound_Source(*this);
   }
 
   Sound_Source::~Sound_Source() {
-    get_Sound_Source_Pool().give_Sound_Source(m_hw);
+    get_Sound_Source_Pool().remove_Sound_Source(*this);
   }
 
-  void Sound_Source::init() {
-    try {
-      m_hw = get_Sound_Source_Pool().take_Sound_Source();
+  float Sound_Source::get_time() const {
+    if(m_playing) {
+      const float current_play_position = m_play_position + m_play_time.get_seconds_passed();
+
+      if(current_play_position < m_buffer->get_duration())
+        return current_play_position;
+      else if(m_looping)
+        return fmod(current_play_position, m_buffer->get_duration());
+      else
+        return 0.0f;
     }
-    catch(...)
-    {
+    else
+      return m_play_position;
+  }
+
+  void Sound_Source::assign(Sound_Source_HW &hw) {
+    m_hw = &hw;
+
+    hw.set_buffer(*m_buffer);
+    hw.set_pitch(m_pitch);
+    hw.set_gain(m_gain);
+    hw.set_position(m_position);
+    hw.set_velocity(m_velocity);
+    hw.set_looping(m_looping);
+    hw.set_time(get_time());
+    hw.set_near_clamp(m_near_clamp);
+    hw.set_far_clamp(m_far_clamp);
+    hw.set_rolloff(m_rolloff);
+
+    if(m_playing)
+      hw.play();
+  }
+
+  Sound_Source_HW * Sound_Source::unassign() {
+    Sound_Source_HW * ptr = m_hw;
+
+    if(m_hw) {
+      update_state();
+
       m_hw = 0;
-      return;
     }
 
-    m_hw->set_buffer(*m_buffer);
-    m_hw->set_pitch(m_pitch);
-    m_hw->set_gain(m_gain);
-    m_hw->set_position(m_position);
-    m_hw->set_velocity(m_velocity);
-    m_hw->set_looping(m_looping);
-    m_hw->set_time(m_time);
-    m_hw->set_near_clamp(m_near_clamp);
-    m_hw->set_far_clamp(m_far_clamp);
-    m_hw->set_rolloff(m_rolloff);
+    return ptr;
+  }
+
+  void Sound_Source::update_state() {
+    if(m_hw)
+      update_state(m_hw->get_state());
+  }
+
+  void Sound_Source::update_state(const Sound_Source_HW::STATE &state) {
+    if(state == Sound_Source_HW::PLAYING) {
+      m_play_time.update();
+
+      m_playing = true;
+      m_paused = m_stopped = false;
+    }
+    else if(state == Sound_Source_HW::PAUSED) {
+      m_play_position = get_time();
+
+      m_paused = true;
+      m_playing = m_stopped = false;
+    }
+    else if(!m_paused && state == Sound_Source_HW::STOPPED) {
+      m_play_position = 0.0f;
+
+      m_stopped = true;
+      m_playing = false;
+    }
   }
 
 }

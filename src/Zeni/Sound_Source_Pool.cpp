@@ -33,6 +33,7 @@
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Vector3f.hxx>
 
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
@@ -40,7 +41,7 @@ using namespace std;
 namespace Zeni {
 
   Sound_Source_Pool::Sound_Source_Pool()
-    : m_replacement_policy(BESP_OLDEST)
+    : m_replacement_policy(new Replacement_Policy())
   {
     // Ensure Sound is initialized
     get_Sound();
@@ -48,6 +49,8 @@ namespace Zeni {
 
   Sound_Source_Pool::~Sound_Source_Pool() {
     purge();
+
+    delete m_replacement_policy;
   }
 
   Sound_Source_Pool & get_Sound_Source_Pool() {
@@ -55,17 +58,27 @@ namespace Zeni {
     return e_Sound_Source_Pool;
   }
 
-  Sound_Source_Pool::Replacement_Policy Sound_Source_Pool::get_Replacement_Policy() const {
-    return m_replacement_policy;
+  bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
+    return lhs.get_priority() < rhs.get_priority();
   }
 
-  void Sound_Source_Pool::set_Replacement_Policy(const Sound_Source_Pool::Replacement_Policy &replacement_policy) {
+  bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const {
+    return (*this)(*lhs, *rhs);
+  }
+
+  const Sound_Source_Pool::Replacement_Policy & Sound_Source_Pool::get_Replacement_Policy() const {
+    return *m_replacement_policy;
+  }
+  
+  void Sound_Source_Pool::give_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
+    assert(replacement_policy);
+    delete m_replacement_policy;
     m_replacement_policy = replacement_policy;
   }
 
   void Sound_Source_Pool::pause_all() {
-    for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
+    for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
         ++it)
     {
       if((*it)->is_playing())
@@ -74,8 +87,8 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::unpause_all() {
-    for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
+    for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
         ++it)
     {
       if((*it)->is_paused())
@@ -84,72 +97,146 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::purge() {
-    for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
-        it != m_sound_sources.end();
+    for(vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
         ++it)
     {
-      delete *it;
+      (*it)->unassign();
     }
 
-    m_sound_sources.clear();
+    for(set<Sound_Source_HW *>::iterator it = m_assigned_hw.begin();
+        it != m_assigned_hw.end();
+        ++it)
+    {
+      Sound_Source_HW * hw = *it;
+
+      hw->stop();
+      delete hw;
+    }
+
+    m_assigned_hw.clear();
   }
 
-  Sound_Source_HW * Sound_Source_Pool::take_Sound_Source() {
-    Sound_Source_HW *ss_ptr = 0;
-
-    { // Reuse and Recycle
-      list<Sound_Source_HW *> keepers;
-
-      for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
-          it != m_sound_sources.end();
-          ++it)
-      {
-        if((*it)->is_playing())
-          keepers.push_back(*it);
-        else if(ss_ptr)
-          delete *it;
-        else
-          ss_ptr = *it;
-      }
-
-      m_sound_sources.swap(keepers);
-    }
+  void Sound_Source_Pool::update() {
+    vector<Sound_Source_HW *> unassigned_hw;
+    const unsigned long needed_hw = m_handles.size();
+    unsigned long given_hw = m_assigned_hw.size();
 
     try {
-      if(ss_ptr)
-        return ss_ptr;
-      else
-        return new Sound_Source_HW();
+      while(needed_hw > given_hw) {
+        unassigned_hw.push_back(new Sound_Source_HW());
+        ++given_hw;
+      }
     }
-    catch(Sound_Source_HW_Init_Failure &) {
-      if(m_sound_sources.empty())
-        throw;
+    catch(Sound_Source_HW_Init_Failure &)
+    {
+    }
 
-      // Replace
+    if(given_hw == needed_hw) {
+      vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
-      switch(m_replacement_policy) {
-        case BESP_NONE:
-          throw;
+      for(vector<Sound_Source *>::iterator it = m_handles.begin();
+          it != m_handles.end();
+          ++it)
+      {
+        Sound_Source &source = **it;
+        if(!source.is_assigned()) {
+          source.assign(**jt);
+          m_assigned_hw.insert(*jt);
+          ++jt;
+        }
+      }
+    }
+    else {
+      std::stable_sort(m_handles.rbegin(), m_handles.rend(), *m_replacement_policy);
 
-        case BESP_OLDEST:
-          ss_ptr = m_sound_sources.front();
-          m_sound_sources.pop_front();
-          break;
+      for(unsigned int i = given_hw; i != needed_hw; ++i) {
+        Sound_Source &source = *m_handles[i];
 
-        default:
-          throw;
+        if(source.is_assigned())
+          unassigned_hw.push_back(source.unassign());
       }
 
-      ss_ptr->stop();
-      return ss_ptr;
+      vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
+
+      for(unsigned int i = 0; i != given_hw; ++i) {
+        Sound_Source &source = *m_handles[i];
+
+        if(!source.is_assigned()) {
+          source.assign(**jt);
+          m_assigned_hw.insert(*jt);
+          ++jt;
+        }
+      }
     }
   }
 
-  void Sound_Source_Pool::give_Sound_Source(Sound_Source_HW * const &sound_source) {
-    if(sound_source) {
-      sound_source->play();
-      m_sound_sources.push_back(sound_source);
-    }
+  //Sound_Source_HW * Sound_Source_Pool::take_Sound_Source() {
+  //  Sound_Source_HW *ss_ptr = 0;
+
+  //  { // Reuse and Recycle
+  //    list<Sound_Source_HW *> keepers;
+
+  //    for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
+  //        it != m_sound_sources.end();
+  //        ++it)
+  //    {
+  //      if((*it)->is_playing())
+  //        keepers.push_back(*it);
+  //      else if(ss_ptr)
+  //        delete *it;
+  //      else
+  //        ss_ptr = *it;
+  //    }
+
+  //    m_sound_sources.swap(keepers);
+  //  }
+
+  //  try {
+  //    if(ss_ptr)
+  //      return ss_ptr;
+  //    else
+  //      return new Sound_Source_HW();
+  //  }
+  //  catch(Sound_Source_HW_Init_Failure &) {
+  //    if(m_sound_sources.empty())
+  //      throw;
+
+  //    // Replace
+
+  //    switch(m_replacement_policy) {
+  //      case BESP_NONE:
+  //        throw;
+
+  //      case BESP_OLDEST:
+  //        ss_ptr = m_sound_sources.front();
+  //        m_sound_sources.pop_front();
+  //        break;
+
+  //      default:
+  //        throw;
+  //    }
+
+  //    ss_ptr->stop();
+  //    return ss_ptr;
+  //  }
+  //}
+
+  //void Sound_Source_Pool::give_Sound_Source(Sound_Source_HW * const &sound_source) {
+  //  if(sound_source) {
+  //    sound_source->play();
+  //    m_sound_sources.push_back(sound_source);
+  //  }
+  //}
+
+  void Sound_Source_Pool::insert_Sound_Source(Sound_Source &sound_source) {
+    m_handles.push_back(&sound_source);
+  }
+
+  void Sound_Source_Pool::remove_Sound_Source(Sound_Source &sound_source) {
+    sound_source.stop();
+
+    m_handles.erase(std::find(m_handles.begin(), m_handles.end(), &sound_source));
   }
 
 }

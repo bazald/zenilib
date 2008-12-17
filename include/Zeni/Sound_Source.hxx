@@ -32,6 +32,7 @@
 #include <Zeni/Sound_Source.h>
 
 #include <cassert>
+#include <cmath>
 
 namespace Zeni {
 
@@ -231,6 +232,18 @@ namespace Zeni {
 #endif
   }
 
+  Sound_Source_HW::STATE Sound_Source_HW::get_state() {
+#ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
+    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING ? PLAYING :
+      state == AL_PAUSED ? PAUSED :
+      STOPPED;
+#else
+    return false;
+#endif
+  }
+
   bool Sound_Source_HW::is_playing() {
 #ifndef DISABLE_AL
     ALenum state = AL_STOPPED;
@@ -261,35 +274,47 @@ namespace Zeni {
 #endif
   }
 
+  void Sound_Source::set_priority(const int &priority)       {m_priority = priority;}
   void Sound_Source::set_buffer(const Sound_Buffer &buffer)  {m_buffer = &buffer;        if(m_hw) m_hw->set_buffer(buffer);}
   void Sound_Source::set_pitch(const float &pitch)           {m_pitch = pitch;           if(m_hw) m_hw->set_pitch(pitch);}
   void Sound_Source::set_gain(const float &gain)             {m_gain = gain;             if(m_hw) m_hw->set_gain(gain);}
   void Sound_Source::set_position(const Point3f &position)   {m_position = position;     if(m_hw) m_hw->set_position(position);}
   void Sound_Source::set_velocity(const Vector3f &velocity)  {m_velocity = velocity;     if(m_hw) m_hw->set_velocity(velocity);}
   void Sound_Source::set_looping(const bool &looping)        {m_looping = looping;       if(m_hw) m_hw->set_looping(looping);}
-  void Sound_Source::set_time(const float &time)             {m_time = time;             if(m_hw) m_hw->set_time(time);}
+
+  void Sound_Source::set_time(const float &time) {
+    m_play_position = time;
+    if(m_playing)
+      m_play_time.update();
+
+    if(m_hw)
+      m_hw->set_time(time);
+  }
+
   void Sound_Source::set_near_clamp(const float &near_clamp) {m_near_clamp = near_clamp; if(m_hw) m_hw->set_near_clamp(near_clamp);}
   void Sound_Source::set_far_clamp(const float &far_clamp)   {m_far_clamp = far_clamp;   if(m_hw) m_hw->set_far_clamp(far_clamp);}
   void Sound_Source::set_rolloff(const float &rolloff)       {m_rolloff = rolloff;       if(m_hw) m_hw->set_rolloff(rolloff);}
 
+  int Sound_Source::get_priority() const {return m_priority;}
   const Sound_Buffer & Sound_Source::get_buffer() const {assert(m_buffer); return *m_buffer;}
   float Sound_Source::get_pitch() const {return m_pitch;}
   float Sound_Source::get_gain() const {return m_gain;}
   Point3f Sound_Source::get_position() const {return m_position;}
   Vector3f Sound_Source::get_velocity() const {return m_velocity;}
   bool Sound_Source::is_looping() const {return m_looping;}
-  float Sound_Source::get_time() const {return m_time;}
   float Sound_Source::get_near_clamp() const {return m_near_clamp;}
   float Sound_Source::get_far_clamp() const {return m_far_clamp;}
   float Sound_Source::get_rolloff() const {return m_rolloff;}
 
-  void Sound_Source::play()  {if(m_hw) m_hw->play();}
-  void Sound_Source::pause() {if(m_hw) m_hw->pause();}
-  void Sound_Source::stop()  {if(m_hw) m_hw->stop();}
+  void Sound_Source::play()  {update_state(Sound_Source_HW::PLAYING); if(m_hw) m_hw->play();}
+  void Sound_Source::pause() {update_state(Sound_Source_HW::PAUSED); if(m_hw) m_hw->pause();}
+  void Sound_Source::stop()  {update_state(Sound_Source_HW::STOPPED); if(m_hw) m_hw->stop();}
 
-  bool Sound_Source::is_playing() {if(m_hw) return m_hw->is_playing(); return false;}
-  bool Sound_Source::is_paused()  {if(m_hw) return m_hw->is_paused();  return false;}
-  bool Sound_Source::is_stopped() {if(m_hw) return m_hw->is_stopped(); return false;}
+  bool Sound_Source::is_playing() {update_state(); return m_playing;}
+  bool Sound_Source::is_paused()  {update_state(); return m_paused;}
+  bool Sound_Source::is_stopped() {update_state(); return m_stopped;}
+
+  bool Sound_Source::is_assigned() {return m_hw != 0;}
 
 }
 

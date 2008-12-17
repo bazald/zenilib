@@ -75,13 +75,16 @@
 
 namespace Zeni {
 
+  class Sound_Source_Pool;
+
   const Sound_Buffer & get_Hello_World_Buffer();
 
   class Sound_Source_HW {
+    friend class Sound_Source_Pool;
+
     Sound_Source_HW(const Sound_Source_HW &rhs);
     Sound_Source_HW & operator=(const Sound_Source_HW &rhs);
 
-  public:
     Sound_Source_HW();
     Sound_Source_HW(const Sound_Buffer &buffer,
                  const float &pitch = 1.0f,
@@ -96,6 +99,9 @@ namespace Zeni {
                  const Vector3f &velocity = Vector3f(),
                  const bool &looping = false);
     ~Sound_Source_HW();
+
+  public:
+    enum STATE {STOPPED, PAUSED, PLAYING};
 
     inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
     inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
@@ -123,6 +129,7 @@ namespace Zeni {
     inline void pause(); ///< Pause the Sound_Source_HW.
     inline void stop(); ///< Stop the Sound_Source_HW.  (Essentially the same as pause but resets the current time.)
 
+    inline STATE get_state(); ///< Get PLAYING/PAUSED/STOPPED
     inline bool is_playing(); ///< Check to see if the Sound_Source_HW is playing.
     inline bool is_paused(); ///< Check to see if the Sound_Source_HW is paused.
     inline bool is_stopped(); ///< Check to see if the Sound_Source_HW is stopped.
@@ -140,6 +147,8 @@ namespace Zeni {
   };
 
   class Sound_Source {
+    friend class Sound_Source_Pool;
+
     Sound_Source(const Sound_Source &rhs);
     Sound_Source & operator=(const Sound_Source &rhs);
 
@@ -153,6 +162,7 @@ namespace Zeni {
                  const bool &looping = false);
     ~Sound_Source();
 
+    inline void set_priority(const int &priority = 1024); ///< Set the priority that this Sound_Source should have. Higher numbers are more likely to be selected for play.
     inline void set_buffer(const Sound_Buffer &buffer); ///< Set the Sound_Buffer to be played.
     inline void set_pitch(const float &pitch = 1.0f); ///< Set the pitch.
     inline void set_gain(const float &gain = 1.0f); ///< Set the gain.
@@ -164,13 +174,14 @@ namespace Zeni {
     inline void set_far_clamp(const float &far_clamp = 1000.0f); // Set the far clamping distance
     inline void set_rolloff(const float &rolloff = 1.0f); // Set the maximum reduction in volume due to distance
 
-    inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer's OpenAL id
+    inline int get_priority() const; ///< Get the Sound_Source's priority.
+    inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer's OpenAL id.
     inline float get_pitch() const; ///< Get the pitch.
     inline float get_gain() const; ///< Get the gain.
     inline Point3f get_position() const; ///< Get the position of the Sound_Buffer.
     inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
-    inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
+    float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
     inline float get_near_clamp() const; // Get the near clamping distance
     inline float get_far_clamp() const; // Get the far clamping distance
     inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
@@ -183,11 +194,17 @@ namespace Zeni {
     inline bool is_paused(); ///< Check to see if the Sound_Source is paused.
     inline bool is_stopped(); ///< Check to see if the Sound_Source is stopped.
 
+    inline bool is_assigned(); ///< Check to see if the Sound_Source is assigned to actual hardware.
+
   private:
-    void init();
+    void assign(Sound_Source_HW &hw);
+    Sound_Source_HW * unassign();
+
+    void update_state();
+    void update_state(const Sound_Source_HW::STATE &state);
 
     Sound_Source_HW * m_hw;
-    Time m_play_time;
+    int m_priority;
 
     const Sound_Buffer * m_buffer;
     float m_pitch;
@@ -195,10 +212,16 @@ namespace Zeni {
     Point3f m_position;
     Vector3f m_velocity;
     bool m_looping;
-    float m_time;
     float m_near_clamp;
     float m_far_clamp;
     float m_rolloff;
+
+    Time m_play_time;
+    float m_play_position;
+
+    bool m_playing;
+    bool m_paused;
+    bool m_stopped;
   };
 
   struct Sound_Source_HW_Init_Failure : public Error {
