@@ -75,8 +75,8 @@ namespace Zeni {
     public:
       Positional_Replacement_Policy(const Point3f &listener_position_);
 
-      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Distance
-      virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const; // Note that this does not (yet?) account for gain/rolloff/near_clamp/far_clamp
+      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Computed Gain
+      virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
       Point3f listener_position;
     };
