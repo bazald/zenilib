@@ -73,79 +73,75 @@ namespace Zeni {
     clear_triangles(m_triangles_t);
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Color> *triangle, const bool &give_ownership) {
+  void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Color> * const &triangle) {
+    std::auto_ptr<Renderable> to_delete(triangle);
+    fax_triangle(triangle);
+  }
+
+  void Vertex_Buffer::fax_triangle(const Triangle<Vertex2f_Color> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
-
-    std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
     const Vertex2f_Color &v0 = triangle->a;
     const Vertex2f_Color &v1 = triangle->b;
     const Vertex2f_Color &v2 = triangle->c;
 
-    add_triangle(new Triangle<Vertex3f_Color>(
-      Vertex3f_Color(v0.position, v0.get_color()),
-      Vertex3f_Color(v1.position, v1.get_color()),
-      Vertex3f_Color(v2.position, v2.get_color()),
-      triangle->get_render_wrapper()->get_duplicate()));
+    const Triangle<Vertex3f_Color> facsimile(Vertex3f_Color(v0.position, v0.get_color()),
+                                             Vertex3f_Color(v1.position, v1.get_color()),
+                                             Vertex3f_Color(v2.position, v2.get_color()),
+                                             triangle->get_render_wrapper()->get_duplicate());
+
+    fax_triangle(&facsimile);
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex2f_Texture> *triangle, const bool &give_ownership) {
+  void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Texture> * const &triangle) {
+    std::auto_ptr<Renderable> to_delete(triangle);
+    fax_triangle(triangle);
+  }
+
+  void Vertex_Buffer::fax_triangle(const Triangle<Vertex2f_Texture> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
-
-    std::auto_ptr<Renderable> to_delete(give_ownership ? triangle : 0);
 
     const Vertex2f_Texture &v0 = triangle->a;
     const Vertex2f_Texture &v1 = triangle->b;
     const Vertex2f_Texture &v2 = triangle->c;
 
-    add_triangle(new Triangle<Vertex3f_Texture>(
-      Vertex3f_Texture(v0.position, v0.texture_coordinate),
-      Vertex3f_Texture(v1.position, v1.texture_coordinate),
-      Vertex3f_Texture(v2.position, v2.texture_coordinate),
-      triangle->get_render_wrapper()->get_duplicate()));
+    const Triangle<Vertex3f_Texture> facsimile(Vertex3f_Texture(v0.position, v0.texture_coordinate),
+                                               Vertex3f_Texture(v1.position, v1.texture_coordinate),
+                                               Vertex3f_Texture(v2.position, v2.texture_coordinate),
+                                               triangle->get_render_wrapper()->get_duplicate());
+
+    fax_triangle(&facsimile);
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Color> *quad, const bool &give_ownership) {
+  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Color> * const &quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    fax_quadrilateral(quad);
+  }
+  
+  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
-
-    const Vertex2f_Color &v0 = quad->a;
-    const Vertex2f_Color &v1 = quad->b;
-    const Vertex2f_Color &v2 = quad->c;
-    const Vertex2f_Color &v3 = quad->d;
-
-    add_quadrilateral(new Quadrilateral<Vertex3f_Color>(
-      Vertex3f_Color(v0.position, v0.get_color()),
-      Vertex3f_Color(v1.position, v1.get_color()),
-      Vertex3f_Color(v2.position, v2.get_color()),
-      Vertex3f_Color(v3.position, v3.get_color()),
-      quad->get_render_wrapper()->get_duplicate()));
+    give_triangle(quad->get_duplicate_t0());
+    give_triangle(quad->get_duplicate_t1());
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quad, const bool &give_ownership) {
+  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    fax_quadrilateral(quad);
+  }
+  
+  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
-
-    const Vertex2f_Texture &v0 = quad->a;
-    const Vertex2f_Texture &v1 = quad->b;
-    const Vertex2f_Texture &v2 = quad->c;
-    const Vertex2f_Texture &v3 = quad->d;
-
-    add_quadrilateral(new Quadrilateral<Vertex3f_Texture>(
-      Vertex3f_Texture(v0.position, v0.texture_coordinate),
-      Vertex3f_Texture(v1.position, v1.texture_coordinate),
-      Vertex3f_Texture(v2.position, v2.texture_coordinate),
-      Vertex3f_Texture(v3.position, v3.texture_coordinate),
-      quad->get_render_wrapper()->get_duplicate()));
+    give_triangle(quad->get_duplicate_t0());
+    give_triangle(quad->get_duplicate_t1());
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Color> *triangle, const bool &give_ownership) {
+  void Vertex_Buffer::give_triangle(Triangle<Vertex3f_Color> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
@@ -153,68 +149,67 @@ namespace Zeni {
 
     if(mrw)
       if(mrw->get_material().get_texture().empty())
-        m_triangles_cm.push_back(give_ownership ? triangle
-                                                : triangle->get_duplicate());
-      else
+        m_triangles_cm.push_back(triangle);
+      else {
+        delete triangle;
         throw VBuf_Init_Failure();
+      }
     else
-      m_triangles_c.push_back(give_ownership ? triangle
-                                             : triangle->get_duplicate());
+      m_triangles_c.push_back(triangle);
   }
 
-  void Vertex_Buffer::add_triangle(Triangle<Vertex3f_Texture> *triangle, const bool &give_ownership) {
+  void Vertex_Buffer::fax_triangle(const Triangle<Vertex3f_Color> * const &triangle) {
+    if(!triangle)
+      throw VBuf_Init_Failure();
+
+    give_triangle(triangle->get_duplicate());
+  }
+
+  void Vertex_Buffer::give_triangle(Triangle<Vertex3f_Texture> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
     const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
 
     if(mrw && !mrw->get_material().get_texture().empty())
-      m_triangles_t.push_back(give_ownership ? triangle
-                                             : triangle->get_duplicate());
-    else
+      m_triangles_t.push_back(triangle);
+    else {
+      delete triangle;
       throw VBuf_Init_Failure();
-  }
-
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Color> *quad, const bool &give_ownership) {
-    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
-
-    if(!quad)
-      throw VBuf_Init_Failure();
-
-    Triangle<Vertex3f_Color> *tri0 = quad->get_duplicate_t0(),
-                             *tri1 = quad->get_duplicate_t1();
-
-    try {
-      add_triangle(tri0);
-      tri0 = 0;
-      add_triangle(tri1);
-    }
-    catch(...) {
-      delete tri0;
-      delete tri1;
-      throw;
     }
   }
 
-  void Vertex_Buffer::add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quad, const bool &give_ownership) {
-    std::auto_ptr<Renderable> to_delete(give_ownership ? quad : 0);
+  void Vertex_Buffer::fax_triangle(const Triangle<Vertex3f_Texture> * const &triangle) {
+    if(!triangle)
+      throw VBuf_Init_Failure();
 
+    give_triangle(triangle->get_duplicate());
+  }
+
+  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Color> * const &quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    fax_quadrilateral(quad);
+  }
+  
+  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    Triangle<Vertex3f_Texture> *tri0 = quad->get_duplicate_t0(),
-                               *tri1 = quad->get_duplicate_t1();
+    give_triangle(quad->get_duplicate_t0());
+    give_triangle(quad->get_duplicate_t1());
+  }
 
-    try {
-      add_triangle(tri0);
-      tri0 = 0;
-      add_triangle(tri1);
-    }
-    catch(...) {
-      delete tri0;
-      delete tri1;
-      throw;
-    }
+  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quad) {
+    std::auto_ptr<Renderable> to_delete(quad);
+    fax_quadrilateral(quad);
+  }
+  
+  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quad) {
+    if(!quad)
+      throw VBuf_Init_Failure();
+
+    give_triangle(quad->get_duplicate_t0());
+    give_triangle(quad->get_duplicate_t1());
   }
 
   void Vertex_Buffer::debug_render() {
