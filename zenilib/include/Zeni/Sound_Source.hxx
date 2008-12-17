@@ -109,23 +109,23 @@ namespace Zeni {
 #endif
   }
   
-  void Sound_Source_HW::set_near_clamp(const float &
+  void Sound_Source_HW::set_reference_distance(const float &
 #ifndef DISABLE_AL
-    near_clamp
+    reference_distance
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcef(m_source, AL_REFERENCE_DISTANCE, near_clamp);
+    alSourcef(m_source, AL_REFERENCE_DISTANCE, reference_distance);
 #endif
   }
 
-  void Sound_Source_HW::set_far_clamp(const float &
+  void Sound_Source_HW::set_max_distance(const float &
 #ifndef DISABLE_AL
-    far_clamp
+    max_distance
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcef(m_source, AL_MAX_DISTANCE, far_clamp);
+    alSourcef(m_source, AL_MAX_DISTANCE, max_distance);
 #endif
   }
 
@@ -192,20 +192,20 @@ namespace Zeni {
     return time;
   }
   
-  float Sound_Source_HW::get_near_clamp() const {
-    float near_clamp = ZENI_DEFAULT_NEAR_CLAMP;
+  float Sound_Source_HW::get_reference_distance() const {
+    float reference_distance = ZENI_DEFAULT_REFERENCE_DISTANCE;
 #ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clamp);
+    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &reference_distance);
 #endif
-    return near_clamp;
+    return reference_distance;
   }
 
-  float Sound_Source_HW::get_far_clamp() const {
-    float far_clamp = ZENI_DEFAULT_FAR_CLAMP;
+  float Sound_Source_HW::get_max_distance() const {
+    float max_distance = ZENI_DEFAULT_MAX_SOUND_DISTANCE;
 #ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clamp);
+    alGetSourcef(m_source, AL_MAX_DISTANCE, &max_distance);
 #endif
-    return far_clamp;
+    return max_distance;
   }
 
   float Sound_Source_HW::get_rolloff() const {
@@ -234,7 +234,7 @@ namespace Zeni {
 #endif
   }
 
-  Sound_Source_HW::STATE Sound_Source_HW::get_state() {
+  Sound_Source_HW::STATE Sound_Source_HW::get_state() const {
 #ifndef DISABLE_AL
     ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
@@ -246,7 +246,7 @@ namespace Zeni {
 #endif
   }
 
-  bool Sound_Source_HW::is_playing() {
+  bool Sound_Source_HW::is_playing() const {
 #ifndef DISABLE_AL
     ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
@@ -256,7 +256,7 @@ namespace Zeni {
 #endif
   }
 
-  bool Sound_Source_HW::is_paused() {
+  bool Sound_Source_HW::is_paused() const {
 #ifndef DISABLE_AL
     ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
@@ -266,7 +266,7 @@ namespace Zeni {
 #endif
   }
 
-  bool Sound_Source_HW::is_stopped() {
+  bool Sound_Source_HW::is_stopped() const {
 #ifndef DISABLE_AL
     ALenum state = AL_STOPPED;
     alGetSourcei(m_source, AL_SOURCE_STATE, &state);
@@ -293,9 +293,9 @@ namespace Zeni {
       m_hw->set_time(time);
   }
 
-  void Sound_Source::set_near_clamp(const float &near_clamp) {m_near_clamp = near_clamp; if(m_hw) m_hw->set_near_clamp(near_clamp);}
-  void Sound_Source::set_far_clamp(const float &far_clamp)   {m_far_clamp = far_clamp;   if(m_hw) m_hw->set_far_clamp(far_clamp);}
-  void Sound_Source::set_rolloff(const float &rolloff)       {m_rolloff = rolloff;       if(m_hw) m_hw->set_rolloff(rolloff);}
+  void Sound_Source::set_reference_distance(const float &reference_distance) {m_reference_distance = reference_distance; if(m_hw) m_hw->set_reference_distance(reference_distance);}
+  void Sound_Source::set_max_distance(const float &max_distance)             {m_max_distance = max_distance;             if(m_hw) m_hw->set_max_distance(max_distance);}
+  void Sound_Source::set_rolloff(const float &rolloff)                       {m_rolloff = rolloff;                       if(m_hw) m_hw->set_rolloff(rolloff);}
 
   int Sound_Source::get_priority() const {return m_priority;}
   const Sound_Buffer & Sound_Source::get_buffer() const {assert(m_buffer); return *m_buffer;}
@@ -304,19 +304,19 @@ namespace Zeni {
   Point3f Sound_Source::get_position() const {return m_position;}
   Vector3f Sound_Source::get_velocity() const {return m_velocity;}
   bool Sound_Source::is_looping() const {return m_looping;}
-  float Sound_Source::get_near_clamp() const {return m_near_clamp;}
-  float Sound_Source::get_far_clamp() const {return m_far_clamp;}
+  float Sound_Source::get_reference_distance() const {return m_reference_distance;}
+  float Sound_Source::get_max_distance() const {return m_max_distance;}
   float Sound_Source::get_rolloff() const {return m_rolloff;}
 
   void Sound_Source::play()  {update_state(Sound_Source_HW::PLAYING); if(m_hw) m_hw->play();}
   void Sound_Source::pause() {update_state(Sound_Source_HW::PAUSED); if(m_hw) m_hw->pause();}
   void Sound_Source::stop()  {update_state(Sound_Source_HW::STOPPED); if(m_hw) m_hw->stop();}
 
-  bool Sound_Source::is_playing() {update_state(); return m_playing;}
-  bool Sound_Source::is_paused()  {update_state(); return m_paused;}
-  bool Sound_Source::is_stopped() {update_state(); return m_stopped;}
+  bool Sound_Source::is_playing() const {update_state(); return m_playing;}
+  bool Sound_Source::is_paused() const  {update_state(); return m_paused;}
+  bool Sound_Source::is_stopped() const {update_state(); return m_stopped;}
 
-  bool Sound_Source::is_assigned() {return m_hw != 0;}
+  bool Sound_Source::is_assigned() const {return m_hw != 0;}
 
 }
 
