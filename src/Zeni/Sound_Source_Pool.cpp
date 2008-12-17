@@ -151,8 +151,8 @@ namespace Zeni {
 
   void Sound_Source_Pool::update() {
     vector<Sound_Source_HW *> unassigned_hw;
-    const unsigned long needed_hw = m_handles.size();
-    unsigned long given_hw = m_assigned_hw.size();
+    const size_t needed_hw = m_handles.size();
+    size_t given_hw = m_assigned_hw.size();
 
     try {
       while(needed_hw > given_hw
@@ -186,9 +186,9 @@ namespace Zeni {
     else {
       std::stable_sort(m_handles.rbegin(), m_handles.rend(), *m_replacement_policy);
 
-      const unsigned int cutoff = needed_hw - given_hw;
+      const size_t cutoff = needed_hw - given_hw;
 
-      for(unsigned int i = 0; i != cutoff; ++i) {
+      for(size_t i = 0; i != cutoff; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(source.is_assigned())
@@ -197,7 +197,7 @@ namespace Zeni {
 
       vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
-      for(unsigned int i = cutoff; i != needed_hw; ++i) {
+      for(size_t i = cutoff; i != needed_hw; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(!source.is_assigned()) {
