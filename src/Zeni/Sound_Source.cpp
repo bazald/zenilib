@@ -38,6 +38,7 @@
 
 #include <SDL/SDL.h>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #ifndef DISABLE_AL
@@ -46,7 +47,12 @@
 
 #include <Zeni/Global.h>
 
+#undef min
+#undef max
+
 using std::string;
+using std::min;
+using std::max;
 
 namespace Zeni {
 
