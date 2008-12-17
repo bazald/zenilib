@@ -148,12 +148,14 @@ namespace Zeni {
     // Lighting and Materials
     inline void set_lighting(const bool &on = true); ///< Set lighting on/off
     inline void set_ambient_lighting(const Color &color); ///< Set ambient lighting on/off
-    inline void set_light(const int &number, const Light * const light = 0); ///< Set a particular Light
+    inline void set_light(const int &number, const Light &light); ///< Set a particular Light
+    inline void unset_light(const int &number); ///< Unset a particular Light
     inline void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
-    inline void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
+    inline void unset_material(const Material &material, const int &optimization = 0); ///< Unset a Material
 
     // Fog
-    inline void set_fog(const Fog * const fog = 0); ///< Set Fog on/off
+    inline void set_fog(const Fog &fog); ///< Set Fog
+    inline void unset_fog(); ///< Unset Fog
 
 #ifndef DISABLE_CG
     // Shaders
@@ -264,6 +266,10 @@ namespace Zeni {
 
   struct Video_Initialized : public Error {
     Video_Initialized() : Error("Zeni Video Already Initialized") {}
+  };
+
+  struct Light_Out_of_Range : public Error {
+    Light_Out_of_Range() : Error("Light Set Out of Range [0,7]") {}
   };
 
 }

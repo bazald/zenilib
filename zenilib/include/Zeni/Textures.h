@@ -49,6 +49,7 @@
 
 #include <Zeni/Core.h>
 #include <Zeni/Hash_Map.h>
+#include <set>
 
 namespace Zeni {
 
@@ -82,7 +83,8 @@ namespace Zeni {
     static void set_texturing_mode(const int &anisotropic_filtering_,
       const bool &bilinear_filtering_, const bool &mipmapping_); ///< Set the texturing mode
     inline static void set_lazy_loading(const bool &lazy_loading = true); ///< Set whether Textures should use lazy loading if possible, or if it should always load Textures immediately.
-    unsigned long set_texture(const std::string &name, Texture * const); ///< Load a texture
+    unsigned long give_texture(const std::string &name, Texture * const); ///< Load a texture (which it will later delete)
+    unsigned long loan_texture(const std::string &name, Texture * const); ///< Load a texture (which it will NEVER delete)
     void clear_texture(const std::string &name); ///< Clear a texture by name.
     void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
@@ -107,6 +109,7 @@ namespace Zeni {
     
     stdext::hash_map<std::string, unsigned long> m_texture_lookup;
     stdext::hash_map<unsigned long, Texture *> m_textures;
+    std::set<Texture *> m_loaned;
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;

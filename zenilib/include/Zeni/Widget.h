@@ -462,18 +462,21 @@ namespace Zeni {
     virtual void render() const;
 
   private:
-    inline void add_Radio_Button(Radio_Button &radio_button);
-    inline void remove_Radio_Button(Radio_Button &radio_button);
+    inline void lend_Radio_Button(Radio_Button &radio_button);
+    inline void unlend_Radio_Button(Radio_Button &radio_button);
 
     std::set<Radio_Button *> m_radio_buttons;
   };
 
   class Radio_Button : public Check_Box {
+    friend class Radio_Button_Set;
+
   public:
     inline Radio_Button(Radio_Button_Set &radio_button_set_,
                         const Point2f &upper_left_, const Point2f &lower_right_,
                         const Color &border_color_, const Color &check_color_,
                         const bool &checked_ = false, const bool &toggleable_ = true);
+    inline ~Radio_Button();
 
     virtual void on_accept();
 
@@ -655,8 +658,8 @@ namespace Zeni {
 
   class Widgets : public Widget {
   public:
-    inline void add_Widget(Widget &widget);
-    inline void remove_Widget(Widget &widget);
+    inline void lend_Widget(Widget &widget);
+    inline void unlend_Widget(Widget &widget);
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 

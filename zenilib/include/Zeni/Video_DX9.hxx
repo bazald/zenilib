@@ -146,11 +146,18 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_AMBIENT, color.get_argb());
   }
 
-  void Video_DX9::set_light_impl(const int &number, const Light *light) {
-    if(light)
-      light->set(number, *this);
-    else
-      m_d3d_device->LightEnable(number, FALSE);
+  void Video_DX9::set_light_impl(const int &number, const Light &light) {
+    if(number < 0 || 7 < number)
+      throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
+
+    light.set(number, *this);
+  }
+
+  void Video_DX9::unset_light_impl(const int &number) {
+    if(number < 0 || 7 < number)
+      throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
+
+    m_d3d_device->LightEnable(number, FALSE);
   }
 
   void Video_DX9::set_material_impl(const Material &material, const int &optimization) {
@@ -161,15 +168,14 @@ namespace Zeni {
     material.unset(*this, optimization);
   }
 
-  void Video_DX9::set_fog_impl(const Fog * const fog) {
-    if(fog) {
-      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
-      fog->set(*this);
-    }
-    else {
-      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
-      m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
-    }
+  void Video_DX9::set_fog_impl(const Fog &fog) {
+    m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
+    fog.set(*this);
+  }
+
+  void Video_DX9::unset_fog_impl() {
+    m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
+    m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
   }
 
 #ifndef DISABLE_CG

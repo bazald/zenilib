@@ -97,12 +97,14 @@ namespace Zeni {
     // Lighting and Materials
     inline void set_lighting_impl(const bool &on = true); ///< Set lighting on/off
     inline void set_ambient_lighting_impl(const Color &color); ///< Set ambient lighting on/off
-    inline void set_light_impl(const int &number, const Light * const light = 0); ///< Set a particular Light
+    inline void set_light_impl(const int &number, const Light &light); ///< Set a particular Light
+    inline void unset_light_impl(const int &number); ///< Unset a particular Light
     inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
-    inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
+    inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Unset a Material
 
     // Fog
-    inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
+    inline void set_fog_impl(const Fog &fog); ///< Set Fog
+    inline void unset_fog_impl(); ///< Unset Fog
 
 #ifndef DISABLE_CG
     // Shaders

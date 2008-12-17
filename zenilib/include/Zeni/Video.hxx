@@ -310,8 +310,12 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_ambient_lighting_impl, color);
   }
 
-  void Video::set_light(const int &number, const Light * const light) {
+  void Video::set_light(const int &number, const Light &light) {
     VIDEO_IV_FCN_CALL(set_light_impl, number, light);
+  }
+
+  void Video::unset_light(const int &number) {
+    VIDEO_IV_FCN_CALL(unset_light_impl, number);
   }
 
   void Video::set_material(const Material &material, const int &optimization) {
@@ -322,8 +326,12 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(unset_material_impl, material, optimization);
   }
 
-  void Video::set_fog(const Fog * const fog) {
+  void Video::set_fog(const Fog &fog) {
     VIDEO_IV_FCN_CALL(set_fog_impl, fog);
+  }
+
+  void Video::unset_fog() {
+    VIDEO_IV_FCN_CALL(unset_fog_impl, );
   }
 
 #ifndef DISABLE_CG
