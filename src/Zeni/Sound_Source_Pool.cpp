@@ -36,12 +36,15 @@
 #include <algorithm>
 #include <iostream>
 
+#include <Zeni/Global.h>
+
 using namespace std;
 
 namespace Zeni {
 
   Sound_Source_Pool::Sound_Source_Pool()
-    : m_replacement_policy(new Replacement_Policy())
+    : m_replacement_policy(new Replacement_Policy()),
+    delete_m_replacement_policy(true)
   {
     // Ensure Sound is initialized
     get_Sound();
@@ -50,7 +53,8 @@ namespace Zeni {
   Sound_Source_Pool::~Sound_Source_Pool() {
     purge();
 
-    delete m_replacement_policy;
+    if(delete_m_replacement_policy)
+      delete m_replacement_policy;
   }
 
   Sound_Source_Pool & get_Sound_Source_Pool() {
@@ -59,11 +63,35 @@ namespace Zeni {
   }
 
   bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
+    if(!rhs.is_playing())
+      return false;
+    if(!lhs.is_playing())
+      return true;
+
     return lhs.get_priority() < rhs.get_priority();
   }
 
   bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const {
     return (*this)(*lhs, *rhs);
+  }
+  
+  Sound_Source_Pool::Positional_Replacement_Policy::Positional_Replacement_Policy(const Point3f &listener_position_)
+    : listener_position(listener_position_)
+  {
+  }
+
+  bool Sound_Source_Pool::Positional_Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
+    if(!rhs.is_playing())
+      return false;
+    if(!lhs.is_playing())
+      return true;
+
+    if(rhs.get_priority() < lhs.get_priority())
+      return false;
+    if(lhs.get_priority() < rhs.get_priority())
+      return true;
+
+    return rhs.calculate_gain(listener_position) > lhs.calculate_gain(listener_position);
   }
 
   const Sound_Source_Pool::Replacement_Policy & Sound_Source_Pool::get_Replacement_Policy() const {
@@ -71,9 +99,13 @@ namespace Zeni {
   }
   
   void Sound_Source_Pool::give_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
-    assert(replacement_policy);
-    delete m_replacement_policy;
-    m_replacement_policy = replacement_policy;
+    set_Replacement_Policy(replacement_policy);
+    delete_m_replacement_policy = true;
+  }
+  
+  void Sound_Source_Pool::lend_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
+    set_Replacement_Policy(replacement_policy);
+    delete_m_replacement_policy = false;
   }
 
   void Sound_Source_Pool::pause_all() {
@@ -123,7 +155,11 @@ namespace Zeni {
     unsigned long given_hw = m_assigned_hw.size();
 
     try {
-      while(needed_hw > given_hw) {
+      while(needed_hw > given_hw
+#ifdef TEST_NASTY_CONDITIONS
+        && given_hw < NASTY_SOUND_SOURCE_CAP
+#endif
+        ) {
         unassigned_hw.push_back(new Sound_Source_HW());
         ++given_hw;
       }
@@ -150,7 +186,9 @@ namespace Zeni {
     else {
       std::stable_sort(m_handles.rbegin(), m_handles.rend(), *m_replacement_policy);
 
-      for(unsigned int i = given_hw; i != needed_hw; ++i) {
+      const unsigned int cutoff = needed_hw - given_hw;
+
+      for(unsigned int i = 0; i != cutoff; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(source.is_assigned())
@@ -159,7 +197,7 @@ namespace Zeni {
 
       vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
-      for(unsigned int i = 0; i != given_hw; ++i) {
+      for(unsigned int i = cutoff; i != needed_hw; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(!source.is_assigned()) {
@@ -228,6 +266,15 @@ namespace Zeni {
   //    m_sound_sources.push_back(sound_source);
   //  }
   //}
+
+  void Sound_Source_Pool::set_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
+    assert(replacement_policy);
+
+    if(delete_m_replacement_policy)
+      delete m_replacement_policy;
+
+    m_replacement_policy = replacement_policy;
+  }
 
   void Sound_Source_Pool::insert_Sound_Source(Sound_Source &sound_source) {
     m_handles.push_back(&sound_source);

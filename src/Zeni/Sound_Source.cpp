@@ -114,8 +114,8 @@ namespace Zeni {
     alSourcei(m_source, AL_LOOPING, looping);
 #endif
 
-    set_near_clamp();
-    set_far_clamp();
+    set_reference_distance();
+    set_max_distance();
   }
 
   Sound_Source::Sound_Source()
@@ -125,8 +125,8 @@ namespace Zeni {
     m_pitch(ZENI_DEFAULT_PITCH),
     m_gain(ZENI_DEFAULT_GAIN),
     m_looping(false),
-    m_near_clamp(ZENI_DEFAULT_NEAR_CLAMP),
-    m_far_clamp(ZENI_DEFAULT_FAR_CLAMP),
+    m_reference_distance(ZENI_DEFAULT_REFERENCE_DISTANCE),
+    m_max_distance(ZENI_DEFAULT_MAX_SOUND_DISTANCE),
     m_rolloff(ZENI_DEFAULT_ROLLOFF),
     m_play_position(0.0f),
     m_playing(false),
@@ -150,8 +150,8 @@ namespace Zeni {
     m_position(position),
     m_velocity(velocity),
     m_looping(looping),
-    m_near_clamp(ZENI_DEFAULT_NEAR_CLAMP),
-    m_far_clamp(ZENI_DEFAULT_FAR_CLAMP),
+    m_reference_distance(ZENI_DEFAULT_REFERENCE_DISTANCE),
+    m_max_distance(ZENI_DEFAULT_MAX_SOUND_DISTANCE),
     m_rolloff(ZENI_DEFAULT_ROLLOFF),
     m_play_position(0.0f),
     m_playing(false),
@@ -180,6 +180,16 @@ namespace Zeni {
       return m_play_position;
   }
 
+  float Sound_Source::calculate_gain(const Point3f &listener_position) const {
+    float distance = (listener_position - m_position).magnitude();
+
+    // 'OpenAL 1.1 Specification.pdf' - '3.4.4. Linear Distance Clamped Model'
+    distance = std::max(distance, m_reference_distance);
+    distance = std::min(distance, m_max_distance);
+    return 1.0f - m_rolloff * (distance - m_reference_distance) /
+                        (m_max_distance - m_reference_distance);
+  }
+
   void Sound_Source::assign(Sound_Source_HW &hw) {
     m_hw = &hw;
 
@@ -190,8 +200,8 @@ namespace Zeni {
     hw.set_velocity(m_velocity);
     hw.set_looping(m_looping);
     hw.set_time(get_time());
-    hw.set_near_clamp(m_near_clamp);
-    hw.set_far_clamp(m_far_clamp);
+    hw.set_reference_distance(m_reference_distance);
+    hw.set_max_distance(m_max_distance);
     hw.set_rolloff(m_rolloff);
 
     if(m_playing)
@@ -210,12 +220,12 @@ namespace Zeni {
     return ptr;
   }
 
-  void Sound_Source::update_state() {
+  void Sound_Source::update_state() const {
     if(m_hw)
       update_state(m_hw->get_state());
   }
 
-  void Sound_Source::update_state(const Sound_Source_HW::STATE &state) {
+  void Sound_Source::update_state(const Sound_Source_HW::STATE &state) const {
     if(state == Sound_Source_HW::PLAYING) {
       m_play_time.update();
 

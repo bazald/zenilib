@@ -112,8 +112,8 @@ namespace Zeni {
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source_HW for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clamp(const float &near_clamp = ZENI_DEFAULT_NEAR_CLAMP); // Set the near clamping distance
-    inline void set_far_clamp(const float &far_clamp = ZENI_DEFAULT_FAR_CLAMP); // Set the far clamping distance
+    inline void set_reference_distance(const float &reference_distance = ZENI_DEFAULT_REFERENCE_DISTANCE); // Set the near clamping distance
+    inline void set_max_distance(const float &max_distance = ZENI_DEFAULT_MAX_SOUND_DISTANCE); // Set the far clamping distance
     inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer
@@ -123,18 +123,18 @@ namespace Zeni {
     inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
     inline float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
-    inline float get_near_clamp() const; // Get the near clamping distance
-    inline float get_far_clamp() const; // Get the far clamping distance
+    inline float get_reference_distance() const; // Get the near clamping distance
+    inline float get_max_distance() const; // Get the far clamping distance
     inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
 
     inline void play(); ///< Begin playing or unpause the Sound_Source_HW.
     inline void pause(); ///< Pause the Sound_Source_HW.
     inline void stop(); ///< Stop the Sound_Source_HW.  (Essentially the same as pause but resets the current time.)
 
-    inline STATE get_state(); ///< Get PLAYING/PAUSED/STOPPED
-    inline bool is_playing(); ///< Check to see if the Sound_Source_HW is playing.
-    inline bool is_paused(); ///< Check to see if the Sound_Source_HW is paused.
-    inline bool is_stopped(); ///< Check to see if the Sound_Source_HW is stopped.
+    inline STATE get_state() const; ///< Get PLAYING/PAUSED/STOPPED
+    inline bool is_playing() const; ///< Check to see if the Sound_Source_HW is playing.
+    inline bool is_paused() const; ///< Check to see if the Sound_Source_HW is paused.
+    inline bool is_stopped() const; ///< Check to see if the Sound_Source_HW is stopped.
 
   private:
     void init(const Sound_Buffer &buffer,
@@ -172,8 +172,8 @@ namespace Zeni {
     inline void set_velocity(const Vector3f &velocity); ///< Set the velocity of the Sound_Source for the doppler effect.
     inline void set_looping(const bool &looping); ///< Set whether the Sound_Buffer should loop back to the start once it is done playing.
     inline void set_time(const float &time); ///< Set the current position in the Sound_Buffer, offset in seconds.
-    inline void set_near_clamp(const float &near_clamp = ZENI_DEFAULT_NEAR_CLAMP); // Set the near clamping distance
-    inline void set_far_clamp(const float &far_clamp = ZENI_DEFAULT_FAR_CLAMP); // Set the far clamping distance
+    inline void set_reference_distance(const float &reference_distance = ZENI_DEFAULT_REFERENCE_DISTANCE); // Set the near clamping distance
+    inline void set_max_distance(const float &max_distance = ZENI_DEFAULT_MAX_SOUND_DISTANCE); // Set the far clamping distance
     inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline int get_priority() const; ///< Get the Sound_Source's priority.
@@ -184,26 +184,28 @@ namespace Zeni {
     inline Vector3f get_velocity() const; ///< Get the velocity of the Sound_Buffer.
     inline bool is_looping() const; ///< Check to see if the Sound_Buffer is set to loop back to the start once it is done playing.
     float get_time() const; ///< Get the current position in the Sound_Buffer, offset in seconds.
-    inline float get_near_clamp() const; // Get the near clamping distance
-    inline float get_far_clamp() const; // Get the far clamping distance
+    inline float get_reference_distance() const; // Get the near clamping distance
+    inline float get_max_distance() const; // Get the far clamping distance
     inline float get_rolloff() const; // Get the maximum reduction in volume due to distance
 
     inline void play(); ///< Begin playing or unpause the Sound_Source.
     inline void pause(); ///< Pause the Sound_Source.
     inline void stop(); ///< Stop the Sound_Source.  (Essentially the same as pause but resets the current time.)
 
-    inline bool is_playing(); ///< Check to see if the Sound_Source is playing.
-    inline bool is_paused(); ///< Check to see if the Sound_Source is paused.
-    inline bool is_stopped(); ///< Check to see if the Sound_Source is stopped.
+    inline bool is_playing() const; ///< Check to see if the Sound_Source is playing.
+    inline bool is_paused() const; ///< Check to see if the Sound_Source is paused.
+    inline bool is_stopped() const; ///< Check to see if the Sound_Source is stopped.
 
-    inline bool is_assigned(); ///< Check to see if the Sound_Source is assigned to actual hardware.
+    float calculate_gain(const Point3f &listener_position) const; ///< Get the actual volume gain, given gain+position+near_clamp+far_clamp+rolloff
+
+    inline bool is_assigned() const; ///< Check to see if the Sound_Source is assigned to actual hardware.
 
   private:
     void assign(Sound_Source_HW &hw);
     Sound_Source_HW * unassign();
 
-    void update_state();
-    void update_state(const Sound_Source_HW::STATE &state);
+    void update_state() const;
+    void update_state(const Sound_Source_HW::STATE &state) const;
 
     Sound_Source_HW * m_hw;
     int m_priority;
@@ -214,16 +216,16 @@ namespace Zeni {
     Point3f m_position;
     Vector3f m_velocity;
     bool m_looping;
-    float m_near_clamp;
-    float m_far_clamp;
+    float m_reference_distance;
+    float m_max_distance;
     float m_rolloff;
 
-    Time m_play_time;
-    float m_play_position;
+    mutable Time m_play_time;
+    mutable float m_play_position;
 
-    bool m_playing;
-    bool m_paused;
-    bool m_stopped;
+    mutable bool m_playing;
+    mutable bool m_paused;
+    mutable bool m_stopped;
   };
 
   struct Sound_Source_HW_Init_Failure : public Error {

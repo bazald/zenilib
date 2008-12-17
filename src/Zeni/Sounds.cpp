@@ -53,7 +53,6 @@ namespace Zeni {
   }
 
   Sounds::~Sounds() {
-    get_Sound_Source_Pool().purge();
   }
 
   Sounds & get_Sounds() {

@@ -55,12 +55,12 @@
 #define ZENI_DEFAULT_CHUNK_SETS (64u)
 
 // Sound_Source.h
-#define ZENI_DEFAULT_PITCH          (1.0f)
-#define ZENI_DEFAULT_GAIN           (1.0f)
-#define ZENI_DEFAULT_NEAR_CLAMP     (10.0f)
-#define ZENI_DEFAULT_FAR_CLAMP      (1000.0f)
-#define ZENI_DEFAULT_ROLLOFF        (1.0f)
-#define ZENI_DEFAULT_SOUND_PRIORITY (1024)
+#define ZENI_DEFAULT_PITCH              (1.0f)
+#define ZENI_DEFAULT_GAIN               (1.0f)
+#define ZENI_DEFAULT_REFERENCE_DISTANCE (10.0f)
+#define ZENI_DEFAULT_MAX_SOUND_DISTANCE (1000.0f)
+#define ZENI_DEFAULT_ROLLOFF            (1.0f)
+#define ZENI_DEFAULT_SOUND_PRIORITY     (1024)
 
 // Widget.h
 #define ZENI_DEFAULT_SLIDER_POSITION  (0.5f)
@@ -97,6 +97,9 @@
 #define CLOSENESS_THRESHOLD_SQUARED (0.00001f)
 #define ALIKENESS_THRESHOLD         (0.95f)
 #define CLOSENESS_THRESHOLD         (0.001f)
+
+// Nasty Conditions
+#define NASTY_SOUND_SOURCE_CAP (16lu)
 
 // Miscellaney
 #define END_OF_TIME (42)
