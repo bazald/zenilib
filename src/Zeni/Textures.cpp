@@ -52,19 +52,19 @@ namespace Zeni {
   }
 
   void Textures::apply_texture(const string &name) {
-    (*this)[name]->apply_texture();
+    (*this)[name].apply_texture();
   }
 
   void Textures::apply_texture(const unsigned long &id) {
-    (*this)[id]->apply_texture();
+    (*this)[id].apply_texture();
   }
 
   bool Textures::is_sprite(const unsigned long &id) {
-    return dynamic_cast<Sprite *>((*this)[id]) != 0;
+    return dynamic_cast<const Sprite *>(&(*this)[id]) != 0;
   }
   
   int Textures::get_num_frames(const unsigned long &id) {
-    Sprite *sprite = dynamic_cast<Sprite *>((*this)[id]);
+    const Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
       throw Sprite_Function_Misapplied();
 
@@ -72,7 +72,7 @@ namespace Zeni {
   }
 
   int Textures::get_current_frame(const unsigned long &id) {
-    Sprite *sprite = dynamic_cast<Sprite *>((*this)[id]);
+    const Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
       throw Sprite_Function_Misapplied();
 
@@ -80,7 +80,7 @@ namespace Zeni {
   }
 
   void Textures::set_current_frame(const unsigned long &id, const int &frame_number) {
-    Sprite *sprite = dynamic_cast<Sprite *>((*this)[id]);
+    Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
       throw Sprite_Function_Misapplied();
 

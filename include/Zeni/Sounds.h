@@ -62,14 +62,9 @@ namespace Zeni {
     Sounds & operator=(const Sounds &);
 
     virtual Sound_Buffer * load(XML_Element &xml_element);
-    virtual bool keep(const Sound_Buffer &type);
   };
 
   Sounds & get_Sounds(); ///< Get access to the singleton.
-
-  struct Sounds_Init_Failure : public Error {
-    Sounds_Init_Failure() : Error("Zeni Sounds Failed to Initialize Correctly") {}
-  };
 
 }
 

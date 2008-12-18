@@ -58,8 +58,4 @@ namespace Zeni {
     return new Sound_Buffer(filepath);
   }
 
-  bool Sounds::keep(const Sound_Buffer &) {
-    return false;
-  }
-
 }

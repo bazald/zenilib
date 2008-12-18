@@ -27,8 +27,7 @@
 */
 
 #include <Zeni/Colors.h>
-#include <Zeni/Resource.hxx>
-#include <Zeni/XML.hxx>
+#include <Zeni/Database.hxx>
 
 #include <iomanip>
 #include <iostream>
@@ -39,9 +38,8 @@ using namespace std;
 namespace Zeni {
 
   Colors::Colors()
-    : m_colordb("config/colors.xml")
+    : Database("config/colors.xml", "Colors")
   {
-    init();
   }
 
   Colors & get_Colors() {
@@ -49,89 +47,13 @@ namespace Zeni {
     return e_color;
   }
 
-  void Colors::reload(const std::string &color) {
-    if(color.length())
-      m_colordb = color;
-    init();
-  }
+  Color * Colors::load(XML_Element &xml_element) {
+    const float alpha = xml_element["alpha"].to_float();
+    const float red = xml_element["red"].to_float();
+    const float green = xml_element["green"].to_float();
+    const float blue = xml_element["blue"].to_float();
 
-  unsigned long Colors::get_color_id(const string &color) const {
-    stdext::hash_map<string, unsigned long>::const_iterator it = m_color_lookup.find(color);
-
-    if(it == m_color_lookup.end() || !it->second)
-      throw Color_Not_Found(color);
-
-    return it->second;
-  }
-
-  Color Colors::operator[](const std::string &color) const {
-    return (*this)[get_color_id(color)];
-  }
-
-  Color Colors::operator[](const unsigned long &color) const {
-    stdext::hash_map<unsigned long, Color>::const_iterator it = m_color.find(color);
-
-    if(it == m_color.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(color));
-      throw Color_Not_Found(buf);
-    }
-
-    return it->second;
-  }
-
-  unsigned long Colors::set_color(const std::string &name, const Color &color) {
-    unsigned long id = get_Resource().assign();
-    m_color_lookup[name] = id;
-    m_color[id] = color;
-    return id;
-  }
-
-  void Colors::clear_color(const std::string &name) {
-    stdext::hash_map<string, unsigned long>::iterator it = m_color_lookup.find(name);
-
-    if(it == m_color_lookup.end())
-      throw Color_Not_Found(name);
-
-    m_color.erase(it->second);
-    m_color_lookup.erase(it);
-  }
-
-  void Colors::init() {
-    m_color.clear();
-
-    XML_Reader colors_xml(m_colordb.c_str());
-    XML_Element colors = colors_xml["Colors"];
-    string name;
-    bool error = false;
-
-    try {
-      for(XML_Element it = colors.first();; it = it.next()) {
-        name = it.value();
-        error = true;
-        const float alpha = it["alpha"].to_float();
-        const float red = it["red"].to_float();
-        const float green = it["green"].to_float();
-        const float blue = it["blue"].to_float();
-        error = false;
-
-        unsigned long id = get_Resource().assign();
-        m_color_lookup[name] = id;
-        m_color[id] = Color(alpha, red, green, blue);
-      }
-    }
-    catch(Bad_XML_Access &)
-    {
-      if(error) {
-        cerr << "Error loading Color '" << name << "'\n";
-        throw;
-      }
-    }
+    return new Color(alpha, red, green, blue);
   }
 
 }

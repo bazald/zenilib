@@ -66,8 +66,8 @@ namespace Zeni {
 
     unsigned long get_id(const std::string &name) const; ///< Get an id by name.
     
-    TYPE * operator[](const std::string &name) const; ///< Get a TYPE by name
-    TYPE * operator[](const unsigned long &id) const; ///< Get a TYPE by id
+    TYPE & operator[](const std::string &name) const; ///< Get a TYPE by name
+    TYPE & operator[](const unsigned long &id) const; ///< Get a TYPE by id
 
     // Loaders
     unsigned long give(const std::string &name, TYPE * const &type); ///< Add an entry (which it will later delete)
@@ -92,7 +92,7 @@ namespace Zeni {
     virtual void post_lose() {}
 
     virtual TYPE * load(XML_Element &xml_element) = 0;
-    virtual bool keep(const TYPE &type) = 0;
+    virtual bool keep(const TYPE &type); ///< Default behavior is to keep none. lose_resources then behaves identically to uninit.
 
     std::string m_filename;
     std::string m_xml_identifier;
