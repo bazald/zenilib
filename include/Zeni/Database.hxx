@@ -44,12 +44,10 @@ namespace Zeni {
     : m_filename(filename),
     m_xml_identifier(xml_identifier)
   {
-    init();
   }
 
   template <class TYPE>
   Database<TYPE>::~Database() {
-    uninit();
   }
   
   template <class TYPE>

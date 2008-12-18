@@ -40,6 +40,11 @@ namespace Zeni {
   Colors::Colors()
     : Database("config/colors.xml", "Colors")
   {
+    init();
+  }
+
+  Colors::~Colors() {
+    uninit();
   }
 
   Colors & get_Colors() {

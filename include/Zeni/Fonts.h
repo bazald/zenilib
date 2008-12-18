@@ -57,6 +57,7 @@ namespace Zeni {
     friend Fonts & get_Fonts(); ///< Get access to the singleton.
 
     Fonts();
+    ~Fonts();
 
     // Undefined
     Fonts(const Fonts &);

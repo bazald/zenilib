@@ -56,6 +56,7 @@ namespace Zeni {
     friend Sounds & get_Sounds(); ///< Get access to the singleton.
 
     Sounds();
+    ~Sounds();
 
     // Undefined
     Sounds(const Sounds &);

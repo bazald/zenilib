@@ -41,6 +41,15 @@ namespace Zeni {
   Fonts::Fonts()
     : Database("config/fonts.xml", "Fonts")
   {
+    TTF_Init();
+
+    init();
+  }
+
+  Fonts::~Fonts() {
+    uninit();
+
+    TTF_Quit();
   }
 
   Fonts & get_Fonts() {

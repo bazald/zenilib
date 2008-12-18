@@ -56,6 +56,7 @@ namespace Zeni {
     friend Colors & get_Colors(); ///< Get access to the singleton.
 
     Colors();
+    ~Colors();
 
     // Undefined
     Colors(const Colors &);
