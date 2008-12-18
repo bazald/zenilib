@@ -111,7 +111,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  TYPE * Database<TYPE>::operator[](const unsigned long &id) const {
+  TYPE & Database<TYPE>::operator[](const unsigned long &id) const {
     stdext::hash_map<unsigned long, TYPE *>::const_iterator it = m_database.find(id);
 
     if(it == m_database.end() || !it->second) {
@@ -125,11 +125,11 @@ namespace Zeni {
       throw Database_Entry_Not_Found(buf);
     }
 
-    return it->second;
+    return *it->second;
   }
 
   template <class TYPE>
-  TYPE * Database<TYPE>::operator[](const std::string &name) const {
+  TYPE & Database<TYPE>::operator[](const std::string &name) const {
     return (*this)[get_id(name)];
   }
 
@@ -227,6 +227,11 @@ namespace Zeni {
     }
 
     post_lose();
+  }
+
+  template <class TYPE>
+  bool Database<TYPE>::keep(const TYPE &) {
+    return false;
   }
 
 }

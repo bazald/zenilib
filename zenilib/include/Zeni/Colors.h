@@ -47,14 +47,11 @@
 
 #include <Zeni/Color.h>
 #include <Zeni/Core.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Resource.h>
-
-#include <string>
+#include <Zeni/Database.h>
 
 namespace Zeni {
 
-  class Colors {
+  class Colors : public Database<Color> {
     // Get reference to only instance;
     friend Colors & get_Colors(); ///< Get access to the singleton.
 
@@ -64,31 +61,7 @@ namespace Zeni {
     Colors(const Colors &);
     Colors & operator=(const Colors &);
 
-  public:
-    unsigned long get_color_id(const std::string &color) const; ///< Get a color id by name.
-
-    Color operator[](const std::string &color) const; ///< Get a Color by name
-    Color operator[](const unsigned long &id) const; ///< Get a Color by id
-
-    // May throw Colors_Init_Failure
-    unsigned long set_color(const std::string &name, const Color &color); ///< Set a Color by name.
-    void clear_color(const std::string &name); ///< Clear a color by name.
-    void reload(const std::string &colors = ""); ///< Reload the database or choose a new one.
-
-  private:
-    void init();
-
-    std::string m_colordb;
-    stdext::hash_map<std::string, unsigned long> m_color_lookup;
-    stdext::hash_map<unsigned long, Color> m_color;
-  };
-
-  struct Color_Not_Found : public Error {
-    Color_Not_Found(const std::string &identifier) : Error("Zeni Color '" + identifier + "' Not Found") {}
-  };
-
-  struct Colors_Init_Failure : public Error {
-    Colors_Init_Failure() : Error("Zeni Colors Failed to Initialize Correctly") {}
+    virtual Color * load(XML_Element &xml_element);
   };
 
 }
