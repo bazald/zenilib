@@ -37,6 +37,7 @@
 #include <Zeni/Colors.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
+#include <Zeni/Database.h>
 #include <Zeni/EZ2D.h>
 #include <Zeni/Fog.h>
 #include <Zeni/Font.h>

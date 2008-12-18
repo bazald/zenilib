@@ -51,6 +51,8 @@ namespace Zeni {
       m_loader(0),
       m_thread(0)
   {
+    get_Sound();
+
 #ifndef DISABLE_AL
     m_buffer = alutCreateBufferHelloWorld();
 
@@ -61,30 +63,32 @@ namespace Zeni {
 #endif
   }
 
-  Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
-    : m_buffer(0),
-      m_loader(0),
-      m_thread(0)
-  {
-#ifndef DISABLE_AL
-    m_buffer = alutCreateBufferHelloWorld();
-
-    if(m_buffer == AL_NONE) {
-      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
-      throw Sound_Buffer_Init_Failure();
-    }
-#endif
-
-    swap(m_buffer, rhs.m_buffer);
-    swap(m_loader, rhs.m_loader);
-    swap(m_thread, rhs.m_thread);
-  }
+//  Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
+//    : m_buffer(0),
+//      m_loader(0),
+//      m_thread(0)
+//  {
+//#ifndef DISABLE_AL
+//    m_buffer = alutCreateBufferHelloWorld();
+//
+//    if(m_buffer == AL_NONE) {
+//      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
+//      throw Sound_Buffer_Init_Failure();
+//    }
+//#endif
+//
+//    swap(m_buffer, rhs.m_buffer);
+//    swap(m_loader, rhs.m_loader);
+//    swap(m_thread, rhs.m_thread);
+//  }
 
   Sound_Buffer::Sound_Buffer(const string &filename)
     : m_buffer(AL_NONE),
       m_loader(0),
       m_thread(0)
   {
+    get_Sound();
+
     m_loader = new Loader(filename);
     m_thread = new Thread(*m_loader);
   }
@@ -99,13 +103,13 @@ namespace Zeni {
 #endif
   }
 
-  Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
-    Sound_Buffer temp(rhs);
-    swap(m_buffer, temp.m_buffer);
-    swap(m_loader, temp.m_loader);
-    swap(m_thread, temp.m_thread);
-    return *this;
-  }
+  //Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
+  //  Sound_Buffer temp(rhs);
+  //  swap(m_buffer, temp.m_buffer);
+  //  swap(m_loader, temp.m_loader);
+  //  swap(m_thread, temp.m_thread);
+  //  return *this;
+  //}
 
   pair<ALuint, float> Sound_Buffer::load_ogg_vorbis(const string &
 #ifndef DISABLE_AL

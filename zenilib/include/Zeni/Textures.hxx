@@ -30,6 +30,7 @@
 #define ZENI_TEXTURES_HXX
 
 // HXXed below
+#include <Zeni/Database.h>
 #include <Zeni/Texture.h>
 
 #include <Zeni/Textures.h>
@@ -62,6 +63,7 @@ namespace Zeni {
 
 }
 
+#include <Zeni/Database.hxx>
 #include <Zeni/Texture.hxx>
 
 #endif

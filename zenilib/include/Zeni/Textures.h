@@ -48,14 +48,13 @@
 #define ZENI_TEXTURES_H
 
 #include <Zeni/Core.h>
-#include <Zeni/Hash_Map.h>
-#include <set>
+#include <Zeni/Database.h>
 
 namespace Zeni {
 
   class Texture;
 
-  class Textures {
+  class Textures : public Database<Texture> {
     // Get reference to only instance;
     friend Textures & get_Textures(); ///< Get access to the singleton.
 
@@ -67,26 +66,21 @@ namespace Zeni {
     Textures & operator=(const Textures &);
 
   public:
-    unsigned long get_texture_id(const std::string &name) const; ///< Get a texture id by name.
-
     // Accessors
     inline static bool get_bilinear_filtering(); ///< Check if bilinear filtering is in use
     inline static bool get_mipmapping(); ///< Check if mipmapping is in use
     inline static bool get_trilinear_filtering(); ///< Check if trilinear filtering (the combination of bilinear filtering and mipmapping) is in use
     inline static int get_anisotropic_filtering(); ///< Check the current level of anisotropy
     inline static bool get_lazy_loading(); /// Check to see if Textures is set to use lazy loading if possible
-    
-    Texture * operator[](const std::string &texture) const; ///< Get a Texture by name
-    Texture * operator[](const unsigned long &id) const; ///< Get a Texture by id
 
-    // Modifiers
+    // Loading Options
     static void set_texturing_mode(const int &anisotropic_filtering_,
-      const bool &bilinear_filtering_, const bool &mipmapping_); ///< Set the texturing mode
+                                   const bool &bilinear_filtering_,
+                                   const bool &mipmapping_); ///< Set the texturing mode
     inline static void set_lazy_loading(const bool &lazy_loading = true); ///< Set whether Textures should use lazy loading if possible, or if it should always load Textures immediately.
-    unsigned long give_texture(const std::string &name, Texture * const); ///< Load a texture (which it will later delete)
-    unsigned long loan_texture(const std::string &name, Texture * const); ///< Load a texture (which it will NEVER delete)
-    void clear_texture(const std::string &name); ///< Clear a texture by name.
-    void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons
+
+    // Appliers
+    void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons (Called by Video::apply_texture)
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
     // Sprite-specific
@@ -95,21 +89,13 @@ namespace Zeni {
     int get_current_frame(const unsigned long &id); ///< Get the currently selected frame number for a Sprite
     void set_current_frame(const unsigned long &id, const int &frame_number); ///< Set the frame number for a Sprite
 
-    // Initialization Functions
-    void reload(const std::string &tdb); ///< (Re)Load a texture database
-    void reload(); ///< Reload a texture database
-
-    void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
-
   private:
-    void init();
-    void uninit();
+    virtual void post_init();
+    virtual void post_uninit();
+    virtual void post_lose();
 
-    std::string m_texturedb;
-    
-    stdext::hash_map<std::string, unsigned long> m_texture_lookup;
-    stdext::hash_map<unsigned long, Texture *> m_textures;
-    std::set<Texture *> m_loaned;
+    virtual Texture * load(XML_Element &xml_element);
+    virtual bool keep(const Texture &type);
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;
@@ -117,14 +103,6 @@ namespace Zeni {
   };
 
   Textures & get_Textures(); ///< Get access to the singleton.
-
-  struct Texture_Not_Found : public Error {
-    Texture_Not_Found(const std::string &identifier) : Error("Zeni Texture '" + identifier + "' Not Found") {}
-  };
-
-  struct Null_Texture_Set : public Error {
-    Null_Texture_Set() : Error("Null Texture Added to Textures Database") {}
-  };
 
   struct Sprite_Function_Misapplied : public Error {
     Sprite_Function_Misapplied() : Error("Sprite Function Misapplied") {}

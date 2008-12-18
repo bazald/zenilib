@@ -84,7 +84,7 @@ namespace Zeni {
     if(texture.empty())
       m_texture_id = 0;
     else
-      m_texture_id = get_Textures().get_texture_id(texture);
+      m_texture_id = get_Textures().get_id(texture);
   }
 
 #ifndef DISABLE_GL
@@ -111,8 +111,8 @@ namespace Zeni {
       try {
         vgl.apply_texture(m_texture_id);
       }
-      catch(Texture_Not_Found &) {
-        m_texture_id = get_Textures().get_texture_id(m_texture);
+      catch(Database_Entry_Not_Found &) {
+        m_texture_id = get_Textures().get_id(m_texture);
         if(!m_texture_id)
           throw;
         vgl.apply_texture(m_texture_id);

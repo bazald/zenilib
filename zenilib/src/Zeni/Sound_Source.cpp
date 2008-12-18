@@ -65,6 +65,8 @@ namespace Zeni {
     : m_source(AL_NONE),
     m_buffer(0)
   {
+    get_Sound();
+
     init(get_Hello_World_Buffer());
   }
 
@@ -137,7 +139,8 @@ namespace Zeni {
     m_play_position(0.0f),
     m_playing(false),
     m_paused(false),
-    m_stopped(true)
+    m_stopped(true),
+    m_remove_from_Pool_on_destruction(true)
   {
     get_Sound_Source_Pool().insert_Sound_Source(*this);
   }
@@ -162,13 +165,15 @@ namespace Zeni {
     m_play_position(0.0f),
     m_playing(false),
     m_paused(false),
-    m_stopped(true)
+    m_stopped(true),
+    m_remove_from_Pool_on_destruction(true)
   {
     get_Sound_Source_Pool().insert_Sound_Source(*this);
   }
 
   Sound_Source::~Sound_Source() {
-    get_Sound_Source_Pool().remove_Sound_Source(*this);
+    if(m_remove_from_Pool_on_destruction)
+      get_Sound_Source_Pool().remove_Sound_Source(*this);
   }
 
   float Sound_Source::get_time() const {

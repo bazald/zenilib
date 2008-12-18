@@ -27,13 +27,16 @@
 */
 
 /**
- * \class Zeni::Sounds
+ * \class Zeni::Sound_Source_Pool
  *
  * \ingroup Zenilib
  *
- * \brief A Sound_Buffer Database Singleton
+ * \brief This class manages Sound_Sources.
  *
- * The Sounds Singleton stores Sound_Buffers to be played from Sound_Sources.
+ * This class assigns Sound_Source_HW to 'Sound_Source's on update.
+ *
+ * This avoids the problem of users generating more 'Sound_Source's than
+ * the hardware on a given computer actually supports.
  *
  * \author bazald
  *

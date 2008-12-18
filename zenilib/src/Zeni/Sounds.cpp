@@ -28,13 +28,12 @@
 
 #include <Zeni/Sounds.h>
 
+#include <Zeni/Database.hxx>
 #include <Zeni/Sound.hxx>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Mutex.hxx>
-#include <Zeni/Resource.hxx>
 #include <Zeni/Vector3f.hxx>
-#include <Zeni/XML.hxx>
 
 #include <iostream>
 #include <fstream>
@@ -44,112 +43,23 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : m_soundsfile("config/sounds.xml")
+    : Database("config/sounds.xml", "Sounds")
   {
-    // Ensure Sound is initialized
-    get_Sound();
-
-    reload();
-  }
-
-  Sounds::~Sounds() {
   }
 
   Sounds & get_Sounds() {
     static Sounds e_sounds;
     return e_sounds;
   }
-  
-  unsigned long Sounds::set_sound(const std::string &name, const std::string &filename) {
-    unsigned long id = get_Resource().assign();
-    m_sound_lookup[name] = id;
-    m_sounds[id] = Sound_Buffer(filename);
-    return id;
+
+  Sound_Buffer * Sounds::load(XML_Element &xml_element) {
+    const string filepath = xml_element["filepath"].to_string();
+
+    return new Sound_Buffer(filepath);
   }
 
-  void Sounds::clear_sound(const std::string &name) {
-    stdext::hash_map<string, unsigned long>::iterator it = m_sound_lookup.find(name);
-
-    if(it == m_sound_lookup.end())
-      throw Sound_Effect_Not_Found(name);
-
-    m_sounds.erase(it->second);
-    m_sound_lookup.erase(it);
-  }
-
-  unsigned long Sounds::get_sound_id(const string &sound) const {
-    stdext::hash_map<string, unsigned long>::const_iterator it = m_sound_lookup.find(sound);
-
-    if(it == m_sound_lookup.end() || !it->second)
-      throw Sound_Effect_Not_Found(sound);
-
-    return it->second;
-  }
-
-  const Sound_Buffer & Sounds::operator[](const std::string &sound) const {
-    return (*this)[get_sound_id(sound)];
-  }
-
-  const Sound_Buffer & Sounds::operator[](const unsigned long &sound_effect) const {
-    stdext::hash_map<unsigned long, Sound_Buffer>::const_iterator it = m_sounds.find(sound_effect);
-
-    if(it == m_sounds.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(sound_effect));
-      throw Sound_Effect_Not_Found(buf);
-    }
-
-    return it->second;
-  }
-
-  void Sounds::reload(const string &soundsfile) {
-    if(soundsfile.length())
-      m_soundsfile = soundsfile;
-
-    init();
-  }
-
-  void Sounds::init() {
-    get_Sound_Source_Pool().purge();
-
-    m_sound_lookup.clear();
-    m_sounds.clear();
-
-    XML_Reader sounds_xml(m_soundsfile.c_str());
-    XML_Element sounds = sounds_xml["Sounds"];
-    string name;
-    bool error = false;
-
-    try {
-      for(XML_Element it = sounds.first();; it = it.next()) {
-        const string name = it.value();
-        error = true;
-        const string filepath = it["filepath"].to_string();
-        error = false;
-
-        try {
-          unsigned long id = get_Resource().assign();
-          m_sound_lookup[name] = id;
-          m_sounds[id] = Sound_Buffer(filepath);
-        }
-        catch(Sound_Buffer_Init_Failure &) {
-          cerr << "Sounds: Error Loading '" << name << "' from '" << filepath << "'\n";
-          throw;
-        }
-      }
-    }
-    catch(Bad_XML_Access &)
-    {
-      if(error) {
-        cerr << "Error loading Sound '" << name << "'\n";
-        throw;
-      }
-    }
+  bool Sounds::keep(const Sound_Buffer &) {
+    return false;
   }
 
 }

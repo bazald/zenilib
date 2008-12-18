@@ -53,6 +53,13 @@ namespace Zeni {
   Sound_Source_Pool::~Sound_Source_Pool() {
     purge();
 
+    for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
+        ++it)
+    {
+      (*it)->m_remove_from_Pool_on_destruction = false;
+    }
+
     if(delete_m_replacement_policy)
       delete m_replacement_policy;
   }
