@@ -50,7 +50,6 @@
 #define ZENI_MATERIAL_H
 
 #include <Zeni/Color.h>
-#include <Zeni/Texture.h>
 
 #include <string>
 
@@ -91,18 +90,23 @@ namespace Zeni {
     void set_texture(const std::string &texture); ///< Set the texture identifier
 
 #ifndef DISABLE_GL
-    void set(Video_GL &screen, const int &optimization) const;
-    void unset(Video_GL &screen, const int &optimization) const;
+    void set(Video_GL &screen) const;
+    void unset(Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
-    void set(Video_DX9 &screen, const int &optimization) const;
-    void unset(Video_DX9 &screen, const int &optimization) const;
+    void set(Video_DX9 &screen) const;
+    void unset(Video_DX9 &screen) const;
 #endif
 
     bool operator<(const Material &rhs) const; ///< To provide an arbitrary total ordering. Do not depend on it remaining the same in the future.
 
     bool operator==(const Material &rhs) const; ///< A simple equality test. Close hits are misses.
+
+    // Optimizers
+    void optimize_to_follow(const Material &rhs); ///< If this Material will be set regularly after another Material, and only after that other Material, the set function can be optimized.
+    void optimize_to_precede(const Material &rhs); ///< If this Material will be set regularly before another Material, and only before that other Material, the unset function can be optimized.
+    void clear_optimization(); ///< Simply undo any previous optimizations.
 
     Color diffuse; ///< The diffuse Color
     Color ambient; ///< The ambient Color
@@ -114,6 +118,8 @@ namespace Zeni {
 
     std::string m_texture;
     mutable unsigned long m_texture_id;
+
+    unsigned int m_optimization;
   };
 
 }

@@ -96,10 +96,6 @@ namespace Zeni {
     return true;
   }
 
-  Point3f Vertex3f_Color::get_position() const {
-    return Vertex3f::position;
-  }
-
 #ifndef DISABLE_GL
   void Vertex3f_Color::render_to(Video_GL &screen) const {
     glBegin(GL_POINTS);
@@ -147,10 +143,6 @@ namespace Zeni {
 
   bool Vertex3f_Texture::is_3d() const {
     return true;
-  }
-
-  Point3f Vertex3f_Texture::get_position() const {
-    return Vertex3f::position;
   }
 
 #ifndef DISABLE_GL

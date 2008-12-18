@@ -50,7 +50,7 @@
 #include "Zeni/Net.cpp"
 #include "Zeni/Net_Primitives.cpp"
 #include "Zeni/Quaternion.cpp"
-#include "Zeni/Render_Wrapper.cpp"
+#include "Zeni/Renderable.cpp"
 #include "Zeni/Resource.cpp"
 #include "Zeni/Shader.cpp"
 #include "Zeni/Sound.cpp"

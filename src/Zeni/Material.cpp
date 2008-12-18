@@ -52,7 +52,8 @@ namespace Zeni {
     emissive(emissive_),
     m_power(power),
     m_texture(""),
-    m_texture_id(0)
+    m_texture_id(0),
+    m_optimization(0)
   {
     set_texture(texture);
   }
@@ -64,7 +65,8 @@ namespace Zeni {
     emissive(ZENI_DEFAULT_MATERIAL_EMISSIVE),
     m_power(ZENI_DEFAULT_MATERIAL_POWER),
     m_texture(""),
-    m_texture_id(0)
+    m_texture_id(0),
+    m_optimization(0)
   {
     set_texture(texture);
   }
@@ -88,25 +90,25 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  void Material::set(Video_GL &vgl, const int &optimization) const {
+  void Material::set(Video_GL &vgl) const {
     if(vgl.get_lighting()) {
       GLenum face = vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
 
-      if(!(optimization & (1 << 0)))
+      if(!(m_optimization & (1 << 0)))
         glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
-      if(!(optimization & (1 << 1)))
+      if(!(m_optimization & (1 << 1)))
         glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&diffuse));
-      if(!(optimization & (1 << 2)))
+      if(!(m_optimization & (1 << 2)))
         glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&specular));
-      if(!(optimization & (1 << 3)))
+      if(!(m_optimization & (1 << 3)))
         glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&emissive));
-      if(!(optimization & (1 << 4)))
+      if(!(m_optimization & (1 << 4)))
         glMaterialfv(face, GL_SHININESS, &m_power);
     }
     else
       vgl.set_color(diffuse);
 
-    if(!(optimization & (1 << 5)) &&
+    if(!(m_optimization & (1 << 5)) &&
        !m_texture.empty()) {
       try {
         vgl.apply_texture(m_texture_id);
@@ -120,29 +122,29 @@ namespace Zeni {
     }
   }
 
-  void Material::unset(Video_GL &vgl, const int &optimization) const {
-    if(!(optimization & (1 << 11)) &&
+  void Material::unset(Video_GL &vgl) const {
+    if(!(m_optimization & (1 << 11)) &&
        !m_texture.empty())
       vgl.unapply_texture();
   }
 #endif
 
 #ifndef DISABLE_DX9
-  void Material::set(Video_DX9 &vdx, const int &optimization) const {
+  void Material::set(Video_DX9 &vdx) const {
     if(vdx.get_lighting()) {
-      if(!(optimization & ((1 << 5) - 1)))
+      if(!(m_optimization & ((1 << 5) - 1)))
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
       vdx.set_color(diffuse);
 
-    if(!(optimization & (1 << 5)) &&
+    if(!(m_optimization & (1 << 5)) &&
        !m_texture.empty())
       vdx.apply_texture(m_texture);
   }
 
-  void Material::unset(Video_DX9 &vdx, const int &optimization) const {
-    if(!(optimization & (1 << 11)) &&
+  void Material::unset(Video_DX9 &vdx) const {
+    if(!(m_optimization & (1 << 11)) &&
        !m_texture.empty())
       vdx.unapply_texture();
   }
@@ -164,6 +166,40 @@ namespace Zeni {
       specular == rhs.specular &&
       emissive == rhs.emissive &&
       m_power == rhs.m_power;
+  }
+
+  void Material::optimize_to_follow(const Material &rhs) {
+    if(ambient == rhs.ambient)
+      m_optimization |= (1 << 0);
+    if(diffuse == rhs.diffuse)
+      m_optimization |= (1 << 1);
+    if(specular == rhs.specular)
+      m_optimization |= (1 << 2);
+    if(emissive == rhs.emissive)
+      m_optimization |= (1 << 3);
+    if(m_power == rhs.m_power)
+      m_optimization |= (1 << 4);
+    if(m_texture == rhs.m_texture)
+      m_optimization |= (1 << 5);
+  }
+
+  void Material::optimize_to_precede(const Material &rhs) {
+    if(ambient == rhs.ambient)
+      m_optimization |= (1 << 6);
+    if(diffuse == rhs.diffuse)
+      m_optimization |= (1 << 7);
+    if(specular == rhs.specular)
+      m_optimization |= (1 << 8);
+    if(emissive == rhs.emissive)
+      m_optimization |= (1 << 9);
+    if(m_power == rhs.m_power)
+      m_optimization |= (1 << 10);
+    if(m_texture == rhs.m_texture)
+      m_optimization |= (1 << 11);
+  }
+
+  void Material::clear_optimization() {
+    m_optimization = 0;
   }
 
 }

@@ -26,33 +26,46 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENI_RENDER_WRAPPER_HXX
-#define ZENI_RENDER_WRAPPER_HXX
+#include <Zeni/Renderable.hxx>
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Material.hxx>
+#include <Zeni/Video.hxx>
 
 namespace Zeni {
 
-  bool Render_Wrapper::operator<(const Render_Wrapper &rhs) const {
-    return this < &rhs;
+  Renderable::~Renderable() {
+    if(delete_m_material)
+      delete m_material;
   }
 
-  bool Render_Wrapper::operator==(const Render_Wrapper &) const {
-    return true;
+  void Renderable::give_Material(Material * const &material) {
+    if(delete_m_material)
+      delete m_material;
+    else
+      delete_m_material = true;
+
+    m_material = material;
   }
 
-  const Material & Material_Render_Wrapper::get_material() const {
-    return m_material;
+  void Renderable::lend_Material(Material * const &material) {
+    if(delete_m_material) {
+      delete m_material;
+      delete_m_material = false;
+    }
+
+    m_material = material;
   }
 
-  bool Material_Render_Wrapper::operator<(const Material_Render_Wrapper &rhs) const {
-    return m_material < rhs.m_material;
+  void Renderable::fax_Material(Material * const &material) {
+    give_Material(new Material(*material));
   }
 
-  bool Material_Render_Wrapper::operator==(const Material_Render_Wrapper &rhs) const {
-    return m_material == rhs.m_material;
+  void Renderable::pre_render() const {
+    get_Video().set_material(*m_material);
+  }
+
+  void Renderable::post_render() const {
+    get_Video().set_material(*m_material);
   }
 
 }
-
-#endif

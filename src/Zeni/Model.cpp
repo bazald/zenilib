@@ -137,23 +137,20 @@ namespace Zeni {
         if(flip_order)
           std::swap(ta, tc);
 
-        Render_Wrapper * const rw_ptr = reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat));
-
-        const Triangle<Vertex3f_Texture> triangle(Vertex3f_Texture(pa, na, ta),
-                                                  Vertex3f_Texture(pb, nb, tb),
-                                                  Vertex3f_Texture(pc, nc, tc),
-                                                  rw_ptr);
+        Triangle<Vertex3f_Texture> triangle(Vertex3f_Texture(pa, na, ta),
+                                            Vertex3f_Texture(pb, nb, tb),
+                                            Vertex3f_Texture(pc, nc, tc));
+        triangle.fax_Material(&mat);
 
         user_p->fax_triangle(&triangle);
       }
       else {
         const Uint32 argb = pseudo_color.get_argb();
-        Render_Wrapper * const rw_ptr = material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper();
 
-        const Triangle<Vertex3f_Color> triangle(Vertex3f_Color(pa, na, argb),
-                                                Vertex3f_Color(pb, nb, argb),
-                                                Vertex3f_Color(pc, nc, argb),
-                                                rw_ptr);
+        Triangle<Vertex3f_Color> triangle(Vertex3f_Color(pa, na, argb),
+                                          Vertex3f_Color(pb, nb, argb),
+                                          Vertex3f_Color(pc, nc, argb));
+        triangle.fax_Material(&mat);
 
         user_p->fax_triangle(&triangle);
       }

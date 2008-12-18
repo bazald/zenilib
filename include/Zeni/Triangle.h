@@ -47,7 +47,7 @@
 #ifndef ZENI_TRIANGLE_H
 #define ZENI_TRIANGLE_H
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 
 namespace Zeni {
 
@@ -57,18 +57,13 @@ namespace Zeni {
     Triangle();
     inline Triangle(const VERTEX &vertex0,
                     const VERTEX &vertex1, 
-                    const VERTEX &vertex2,
-                    Render_Wrapper * const &render_wrapper = new Render_Wrapper());
-    ~Triangle();
+                    const VERTEX &vertex2);
 
     Triangle(const Triangle<VERTEX> &rhs);
     Triangle<VERTEX> & operator=(const Triangle<VERTEX> &rhs);
 
     /// Tell the rendering system if we're using 3D coordinates
     virtual bool is_3d() const;
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the average of all vertices
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -78,8 +73,6 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const &render_wrapper); ///< Set the current Render_Wrapper
     Triangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Triangle
 
     Triangle<VERTEX> * get_duplicate_subt0() const; ///< Get quarter 0 of the Triangle; Can be used for software LOD increase
@@ -96,8 +89,6 @@ namespace Zeni {
     VERTEX c;
 
   private:
-    Render_Wrapper * m_render_wrapper;
-    
     void * m_alignment_rubbish;
   };
 

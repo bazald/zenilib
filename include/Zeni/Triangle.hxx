@@ -48,23 +48,20 @@ namespace Zeni {
   Triangle<VERTEX>::Triangle()
     : a(VERTEX()),
     b(VERTEX()),
-    c(VERTEX()),
-    m_render_wrapper(new Render_Wrapper())
+    c(VERTEX())
   {
   }
 
   template <typename VERTEX>
-  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, Render_Wrapper * const &render_wrapper)
+  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2)
     : a(vertex0),
     b(vertex1),
-    c(vertex2),
-    m_render_wrapper(render_wrapper)
+    c(vertex2)
   {
   }
 
   template <>
-  inline Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2, Render_Wrapper * const &render_wrapper)
-    : m_render_wrapper(render_wrapper)
+  inline Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
                              (vertex2.position - vertex0.position)).normalized();
@@ -86,8 +83,7 @@ namespace Zeni {
   }
 
   template <>
-  inline Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2, Render_Wrapper * const &render_wrapper)
-    : m_render_wrapper(render_wrapper)
+  inline Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2)
   {
     const Vector3f normal = ((vertex1.position - vertex0.position) %
                              (vertex2.position - vertex0.position)).normalized();
@@ -109,32 +105,22 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  Triangle<VERTEX>::~Triangle() {
-    delete m_render_wrapper;
-  }
-
-  template <typename VERTEX>
   Triangle<VERTEX>::Triangle(const Triangle<VERTEX> &rhs)
     : Renderable(rhs),
     a(rhs.a),
     b(rhs.b),
-    c(rhs.c),
-    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    c(rhs.c)
   {
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> & Triangle<VERTEX>::operator=(const Triangle<VERTEX> &rhs) {
-    if(this != &rhs) {
-      delete m_render_wrapper;
-      m_render_wrapper = 0;
+    reinterpret_cast<Renderable &>(*this) =
+      reinterpret_cast<const Renderable &>(rhs);
 
-      a = rhs.a;
-      b = rhs.b;
-      c = rhs.c;
-
-      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
-    }
+    a = rhs.a;
+    b = rhs.b;
+    c = rhs.c;
 
     return *this;
   }
@@ -144,51 +130,27 @@ namespace Zeni {
     return a.is_3d();
   }
 
-  template <typename VERTEX>
-  Point3f Triangle<VERTEX>::get_position() const {
-    return Point3f((a.position.x + b.position.x + c.position.x) * over_three,
-      (a.position.y + b.position.y + c.position.y) * over_three,
-      (a.position.z + b.position.z + c.position.z) * over_three);
-  }
-
 #ifndef DISABLE_GL
   template <typename VERTEX>
   void Triangle<VERTEX>::render_to(Video_GL &screen) const {
-    m_render_wrapper->prerender();
-
     glBegin(GL_TRIANGLES);
     a.subrender_to(screen);
     b.subrender_to(screen);
     c.subrender_to(screen);
     glEnd();
-
-    m_render_wrapper->postrender();
   }
 #endif
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
   void Triangle<VERTEX>::render_to(Video_DX9 &screen) const {
-    m_render_wrapper->prerender();
     screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 1, a.get_address(), sizeof(VERTEX));
-    m_render_wrapper->postrender();
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * Triangle<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper;
-  }
-
-  template <typename VERTEX>
-  void Triangle<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
-    delete m_render_wrapper;
-    m_render_wrapper = render_wrapper;
-  }
-
-  template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate() const {
-    return new Triangle<VERTEX>(a, b, c, m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(*this);
   }
 
   template <typename VERTEX>

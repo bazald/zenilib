@@ -46,24 +46,17 @@ namespace Zeni {
     : a(VERTEX()),
     b(VERTEX()),
     c(VERTEX()),
-    d(VERTEX()),
-    m_render_wrapper(new Render_Wrapper())
+    d(VERTEX())
   {
   }
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper * const &render_wrapper)
+  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3)
     : a(vertex0),
     b(vertex1),
     c(vertex2),
-    d(vertex3),
-    m_render_wrapper(render_wrapper)
+    d(vertex3)
   {
-  }
-
-  template <typename VERTEX>
-  Quadrilateral<VERTEX>::~Quadrilateral() {
-    delete m_render_wrapper;
   }
 
   template <typename VERTEX>
@@ -72,24 +65,19 @@ namespace Zeni {
     a(rhs.a),
     b(rhs.b),
     c(rhs.c),
-    d(rhs.d),
-    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    d(rhs.d)
   {
   }
 
   template <typename VERTEX>
   Quadrilateral<VERTEX> & Quadrilateral<VERTEX>::operator=(const Quadrilateral<VERTEX> &rhs) {
-    if(this != &rhs) {
-      delete m_render_wrapper;
-      m_render_wrapper = 0;
+    reinterpret_cast<Renderable &>(*this) =
+      reinterpret_cast<const Renderable &>(rhs);
 
-      a = rhs.a;
-      b = rhs.b;
-      c = rhs.c;
-      d = rhs.d;
-
-      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
-    }
+    a = rhs.a;
+    b = rhs.b;
+    c = rhs.c;
+    d = rhs.d;
 
     return *this;
   }
@@ -99,62 +87,42 @@ namespace Zeni {
     return a.is_3d();
   }
 
-  template <typename VERTEX>
-  Point3f Quadrilateral<VERTEX>::get_position() const {
-    return Point3f((a.position.x + b.position.x + c.position.x + d.position.x) * 0.25f,
-      (a.position.y + b.position.y + c.position.y + d.position.y) * 0.25f,
-      (a.position.z + b.position.z + c.position.z + d.position.z) * 0.25f);
-  }
-
 #ifndef DISABLE_GL
   template <typename VERTEX>
   void Quadrilateral<VERTEX>::render_to(Video_GL &screen) const {
-    m_render_wrapper->prerender();
-
     glBegin(GL_TRIANGLE_FAN);
     a.subrender_to(screen);
     b.subrender_to(screen);
     c.subrender_to(screen);
     d.subrender_to(screen);
     glEnd();
-
-    m_render_wrapper->postrender();
   }
 #endif
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
   void Quadrilateral<VERTEX>::render_to(Video_DX9 &screen) const {
-    m_render_wrapper->prerender();
     screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, a.get_address(), sizeof(VERTEX));
-    m_render_wrapper->postrender();
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * Quadrilateral<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper;
-  }
-
-  template <typename VERTEX>
-  void Quadrilateral<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
-    delete m_render_wrapper;
-    m_render_wrapper = render_wrapper;
-  }
-
-  template <typename VERTEX>
   Quadrilateral<VERTEX> * Quadrilateral<VERTEX>::get_duplicate() const {
-    return new Quadrilateral<VERTEX>(a, b, c, d, m_render_wrapper->get_duplicate());
+    return new Quadrilateral<VERTEX>(*this);
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t0() const {
-    return new Triangle<VERTEX>(a, b, c, m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * const t0 = new Triangle<VERTEX>(a, b, c);
+    t0->fax_Material(get_Material());
+    return t0;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t1() const {
-    return new Triangle<VERTEX>(a, c, d, m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * const t1 = new Triangle<VERTEX>(a, c, d);
+    t1->fax_Material(get_Material());
+    return t1;
   }
 
   template <typename VERTEX>

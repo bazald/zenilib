@@ -95,8 +95,8 @@ namespace Zeni {
     inline void set_ambient_lighting_impl(const Color &color); ///< Set ambient lighting on/off
     inline void set_light_impl(const int &number, const Light &light); ///< Set a particular Light
     inline void unset_light_impl(const int &number); ///< Unset a particular Light
-    inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
-    inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Unset a Material
+    inline void set_material_impl(const Material &material); ///< Set a Material
+    inline void unset_material_impl(const Material &material); ///< Unset a Material
 
     // Fog
     inline void set_fog_impl(const Fog &fog); ///< Set Fog

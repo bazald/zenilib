@@ -43,44 +43,32 @@ namespace Zeni {
   template <typename VERTEX>
   Line_Segment<VERTEX>::Line_Segment()
     : a(VERTEX()),
-    b(VERTEX()),
-    m_render_wrapper(new Render_Wrapper())
+    b(VERTEX())
   {
   }
 
   template <typename VERTEX>
-  Line_Segment<VERTEX>::Line_Segment(const VERTEX &vertex0, const VERTEX &vertex1, Render_Wrapper * const &render_wrapper)
+  Line_Segment<VERTEX>::Line_Segment(const VERTEX &vertex0, const VERTEX &vertex1)
     : a(vertex0),
-    b(vertex1),
-    m_render_wrapper(render_wrapper)
+    b(vertex1)
   {
-  }
-
-  template <typename VERTEX>
-  Line_Segment<VERTEX>::~Line_Segment() {
-    delete m_render_wrapper;
   }
 
   template <typename VERTEX>
   Line_Segment<VERTEX>::Line_Segment(const Line_Segment<VERTEX> &rhs)
     : Renderable(rhs),
     a(rhs.a),
-    b(rhs.b),
-    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    b(rhs.b)
   {
   }
 
   template <typename VERTEX>
   Line_Segment<VERTEX> & Line_Segment<VERTEX>::operator=(const Line_Segment<VERTEX> &rhs) {
-    if(this != &rhs) {
-      delete m_render_wrapper;
-      m_render_wrapper = 0;
+    reinterpret_cast<Renderable &>(*this) =
+      reinterpret_cast<const Renderable &>(rhs);
 
-      a = rhs.a;
-      b = rhs.b;
-
-      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
-    }
+    a = rhs.a;
+    b = rhs.b;
 
     return *this;
   }
@@ -90,50 +78,26 @@ namespace Zeni {
     return a.is_3d();
   }
 
-  template <typename VERTEX>
-  Point3f Line_Segment<VERTEX>::get_position() const {
-    return Point3f((a.position.x + b.position.x) * 0.5f,
-      (a.position.y + b.position.y) * 0.5f,
-      (a.position.z + b.position.z) * 0.5f);
-  }
-
 #ifndef DISABLE_GL
   template <typename VERTEX>
   void Line_Segment<VERTEX>::render_to(Video_GL &screen) const {
-    m_render_wrapper->prerender();
-
     glBegin(GL_LINES);
     a.subrender_to(screen);
     b.subrender_to(screen);
     glEnd();
-
-    m_render_wrapper->postrender();
   }
 #endif
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
   void Line_Segment<VERTEX>::render_to(Video_DX9 &screen) const {
-    m_render_wrapper->prerender();
     screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_LINELIST, 1, a.get_address(), sizeof(VERTEX));
-    m_render_wrapper->postrender();
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * Line_Segment<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper;
-  }
-
-  template <typename VERTEX>
-  void Line_Segment<VERTEX>::set_render_wrapper(Render_Wrapper * const &render_wrapper) {
-    delete m_render_wrapper;
-    m_render_wrapper = render_wrapper;
-  }
-
-  template <typename VERTEX>
   Line_Segment<VERTEX> * Line_Segment<VERTEX>::get_duplicate() const {
-    return new Line_Segment<VERTEX>(a, b, m_render_wrapper->get_duplicate());
+    return new Line_Segment<VERTEX>(*this);
   }
 
   template <typename VERTEX>

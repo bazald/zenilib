@@ -27,13 +27,14 @@
 */
 
 /**
- * \class Zeni::Line<VERTEX>
+ * \class Zeni::Renderable
  *
  * \ingroup Zenilib
  *
- * \brief An Abstraction of a Line
+ * \brief A Renderable Interface
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Line is rendered.
+ * This class provides an interface for anything that "knows how to render itself" 
+ * it all rendering engines supported by Zenilib.
  *
  * \author bazald
  *
@@ -41,48 +42,59 @@
  */
 
 #ifdef ZENI_INLINES
-#include <Zeni/Line_Segment.hxx>
+#include <Zeni/Renderable.hxx>
 #endif
 
-#ifndef ZENI_LINE_SEGMENT_H
-#define ZENI_LINE_SEGMENT_H
+#ifndef ZENI_RENDERABLE_H
+#define ZENI_RENDERABLE_H
 
-#include <Zeni/Renderable.h>
+#include <Zeni/Core.h>
 
 namespace Zeni {
 
-  template <typename VERTEX>
-  class Line_Segment : public Renderable {
-  public:
-    Line_Segment();
-    Line_Segment(const VERTEX &vertex0,
-                 const VERTEX &vertex1);
+  class Material;
 
-    Line_Segment(const Line_Segment<VERTEX> &rhs);
-    Line_Segment<VERTEX> & operator=(const Line_Segment<VERTEX> &rhs);
+  class Video_GL;
+  class Video_DX9;
+
+  // For any object that knows how to render itself
+  class Renderable {
+  public:
+    inline Renderable();
+    virtual ~Renderable();
+
+    inline Renderable(const Renderable &rhs);
+    inline Renderable & operator=(const Renderable &rhs);
 
     /// Tell the rendering system if we're using 3D coordinates
-    virtual bool is_3d() const;
+    virtual bool is_3d() const = 0;
 
 #ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
+    virtual void render_to(Video_GL &screen) const = 0; ///< Overridden for OpenGL rendering
 #endif
 
 #ifndef DISABLE_DX9
-    virtual void render_to(Video_DX9 &screen) const;
+    virtual void render_to(Video_DX9 &screen) const = 0; ///< Overridden for Direct3D9 rendering
 #endif
 
-    Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
+    virtual void pre_render() const;
+    virtual void post_render() const;
 
-    // Indexing
-    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
-    inline VERTEX & operator[](const int &index); ///< Get 'index'
+    /** Manage Render_Wrappers **/
 
-    VERTEX a;
-    VERTEX b;
+    inline Material * get_Material() const; ///< Set the Material
+    void give_Material(Material * const &material); ///< Set the Material
+    void lend_Material(Material * const &material); ///< Set the Material
+    void fax_Material(Material * const &material); ///< Set the Material
 
   private:
-    void * m_alignment_rubbish;
+    Material * m_material;
+    bool delete_m_material;
+  };
+
+
+  struct Invalid_Vertex_Index : public Error {
+    Invalid_Vertex_Index() : Error("Invalid Vertex Index") {}
   };
 
 }

@@ -80,7 +80,6 @@
 #define ZENI_MODEL_H
 
 #include <Zeni/Coordinate.h>
-#include <Zeni/Render_Wrapper.h>
 #include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 
