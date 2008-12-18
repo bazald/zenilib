@@ -135,7 +135,7 @@ namespace Zeni {
   }
 
   void Sprite::append_frame(const std::string &name) {
-    m_frames.push_back(make_pair(name, get_Textures().get_texture_id(name)));
+    m_frames.push_back(make_pair(name, get_Textures().get_id(name)));
   }
 
   int Sprite::find_frame(const std::string &name, const int &starting_point) const {
@@ -149,7 +149,7 @@ namespace Zeni {
   }
 
   void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_texture_id(name));
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_id(name));
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();

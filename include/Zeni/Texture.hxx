@@ -117,9 +117,9 @@ namespace Zeni {
     try {
       get_Textures().apply_texture(m_frames[m_frame].second);
     }
-    catch(Texture_Not_Found &) {
+    catch(Database_Entry_Not_Found &) {
       try {
-        m_frames[m_frame].second = get_Textures().get_texture_id(m_frames[m_frame].first);
+        m_frames[m_frame].second = get_Textures().get_id(m_frames[m_frame].first);
         get_Textures().apply_texture(m_frames[m_frame].second);
       }
       catch(...) {

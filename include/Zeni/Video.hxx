@@ -114,7 +114,7 @@ namespace Zeni {
   }
 
   void Video::apply_texture(const std::string &name) {
-    apply_texture(get_Textures().get_texture_id(name));
+    apply_texture(get_Textures().get_id(name));
   }
 
   const bool & Video::is_initialized() {

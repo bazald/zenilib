@@ -226,6 +226,8 @@ namespace Zeni {
     mutable bool m_playing;
     mutable bool m_paused;
     mutable bool m_stopped;
+
+    bool m_remove_from_Pool_on_destruction;
   };
 
   struct Sound_Source_HW_Init_Failure : public Error {

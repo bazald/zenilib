@@ -44,49 +44,28 @@
 #define ZENI_SOUNDS_H
 
 #include <Zeni/Core.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Resource.h>
+#include <Zeni/Database.h>
 #include <Zeni/Sound.h>
 
 #include <string>
-#include <list>
 
 namespace Zeni {
 
-  class Sounds {
+  class Sounds : public Database<Sound_Buffer> {
     // Get reference to only instance;
     friend Sounds & get_Sounds(); ///< Get access to the singleton.
 
     Sounds();
-    ~Sounds();
 
     // Undefined
     Sounds(const Sounds &);
     Sounds & operator=(const Sounds &);
 
-  public:
-    unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Buffer id by name.
-
-    const Sound_Buffer & operator[](const std::string &sound_effect) const; ///< Get a Sound_Buffer by name
-    const Sound_Buffer & operator[](const unsigned long &id) const; ///< Get a Sound_Buffer by id
-
-    unsigned long set_sound(const std::string &name, const std::string &filename); ///< Load a Sound_Buffer.
-    void clear_sound(const std::string &name); ///< Clear a sound by name.
-    void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Buffer database
-
-  private:
-    void init();
-
-    std::string m_soundsfile;
-    stdext::hash_map<std::string, unsigned long> m_sound_lookup;
-    stdext::hash_map<unsigned long, Sound_Buffer> m_sounds;
+    virtual Sound_Buffer * load(XML_Element &xml_element);
+    virtual bool keep(const Sound_Buffer &type);
   };
 
   Sounds & get_Sounds(); ///< Get access to the singleton.
-
-  struct Sound_Effect_Not_Found : public Error {
-    Sound_Effect_Not_Found(const std::string &identifier) : Error("Zeni Sound Effect '" + identifier + "' Not Found") {}
-  };
 
   struct Sounds_Init_Failure : public Error {
     Sounds_Init_Failure() : Error("Zeni Sounds Failed to Initialize Correctly") {}

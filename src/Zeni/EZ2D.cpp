@@ -106,14 +106,14 @@ namespace Zeni {
     const std::string &sprite) {
 
       return get_Textures().is_sprite(
-        get_Textures().get_texture_id(sprite));
+        get_Textures().get_id(sprite));
   }
 
   int sprite_num_frames(
     const std::string &sprite) {
 
       return get_Textures().get_num_frames(
-        get_Textures().get_texture_id(sprite));
+        get_Textures().get_id(sprite));
   }
 
   void set_sprite_frame(
@@ -121,7 +121,7 @@ namespace Zeni {
     const int &frame_number) {
 
       return get_Textures().set_current_frame(
-        get_Textures().get_texture_id(sprite),
+        get_Textures().get_id(sprite),
         frame_number);
   }
 
@@ -129,7 +129,7 @@ namespace Zeni {
     const std::string &sprite_name) {
 
       Texture * const texture = get_Textures()
-        [get_Textures().get_texture_id(sprite_name)];
+        [get_Textures().get_id(sprite_name)];
 
       Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
 
@@ -150,7 +150,7 @@ namespace Zeni {
     const std::string &sprite_name) {
 
       Texture * const texture = get_Textures()
-        [get_Textures().get_texture_id(sprite_name)];
+        [get_Textures().get_id(sprite_name)];
 
       Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
 

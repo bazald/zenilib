@@ -2119,6 +2119,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Database.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\EZ2D.h"
 				>
 			</File>
@@ -2313,6 +2317,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Coordinate.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Database.hxx"
 				>
 			</File>
 			<File

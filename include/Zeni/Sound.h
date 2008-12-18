@@ -90,17 +90,16 @@ namespace Zeni {
   class Sound_Source;
 
   class Sound_Buffer {
+    Sound_Buffer(const Sound_Buffer &rhs);
+    Sound_Buffer & operator=(const Sound_Buffer &rhs);
+
   public:
     Sound_Buffer();
-    Sound_Buffer(const Sound_Buffer &rhs); ///< Transfers the buffer rather than copying it (auto_ptr semantics)
     Sound_Buffer(const std::string &filename); ///< Load a Sound_Buffer from a file.  Only wav is guaranteed to be supported.
     ~Sound_Buffer();
 
     inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
     inline const float & get_duration() const; ///< Get the duration of the Sound_Buffer in seconds
-
-    /// Transfers the buffer rather than copying it (auto_ptr semantics)
-    Sound_Buffer & operator=(const Sound_Buffer &rhs);
 
     /// Ogg Vorbis Loader
     static std::pair<ALuint, float> load_ogg_vorbis(const std::string &filename);
