@@ -31,6 +31,7 @@
 
 // HXXed below
 #include <Zeni/Camera.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Quaternion.h>
 #include <Zeni/Video_DX9.h>
@@ -205,6 +206,23 @@ namespace Zeni {
 #endif
 
   void Video::render(const Renderable &renderable) {
+    class PrePostRenderActor {
+      PrePostRenderActor & operator=(const PrePostRenderActor &) {return *this;}
+
+    public:
+      PrePostRenderActor(const Renderable &renderable_)
+        : renderable(renderable_)
+      {
+        renderable.pre_render();
+      }
+
+      ~PrePostRenderActor() {
+        renderable.post_render();
+      }
+    private:
+      const Renderable &renderable;
+    } ppra(renderable);
+
     VIDEO_IV_FCN_CALL(render_impl, renderable);
   }
 
@@ -318,12 +336,12 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(unset_light_impl, number);
   }
 
-  void Video::set_material(const Material &material, const int &optimization) {
-    VIDEO_IV_FCN_CALL(set_material_impl, material, optimization);
+  void Video::set_material(const Material &material) {
+    VIDEO_IV_FCN_CALL(set_material_impl, material);
   }
 
-  void Video::unset_material(const Material &material, const int &optimization) {
-    VIDEO_IV_FCN_CALL(unset_material_impl, material, optimization);
+  void Video::unset_material(const Material &material) {
+    VIDEO_IV_FCN_CALL(unset_material_impl, material);
   }
 
   void Video::set_fog(const Fog &fog) {
@@ -448,6 +466,7 @@ namespace Zeni {
 #include <Zeni/Global_Undef.h>
 
 #include <Zeni/Camera.hxx>
+#include <Zeni/Renderable.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Quaternion.hxx>
 #include <Zeni/Video_DX9.hxx>

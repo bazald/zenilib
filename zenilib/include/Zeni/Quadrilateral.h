@@ -50,7 +50,7 @@
 #ifndef ZENI_Quadrilateral_H
 #define ZENI_Quadrilateral_H
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Triangle.h>
 
 namespace Zeni {
@@ -62,18 +62,13 @@ namespace Zeni {
     Quadrilateral(const VERTEX &vertex0,
                   const VERTEX &vertex1, 
                   const VERTEX &vertex2,
-                  const VERTEX &vertex3, 
-                  Render_Wrapper * const &render_wrapper = new Render_Wrapper());
-    ~Quadrilateral();
+                  const VERTEX &vertex3);
 
     Quadrilateral(const Quadrilateral<VERTEX> &rhs);
     Quadrilateral<VERTEX> & operator=(const Quadrilateral<VERTEX> &rhs);
 
     /// Tell the rendering system if we're using 3D coordinates
     virtual bool is_3d() const;
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the average of all vertices
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -83,8 +78,6 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const &render_wrapper); ///< Set the current Render_Wrapper
     Quadrilateral<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Quadrilateral
 
     Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral
@@ -100,8 +93,6 @@ namespace Zeni {
     VERTEX d;
 
   private:
-    Render_Wrapper * m_render_wrapper;
-    
     void * m_alignment_rubbish;
   };
 

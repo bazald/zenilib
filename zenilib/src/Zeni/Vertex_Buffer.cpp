@@ -32,7 +32,7 @@
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Quadrilateral.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Renderable.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Vertex2f.hxx>
 #include <Zeni/Vertex3f.hxx>
@@ -48,8 +48,8 @@ using namespace std;
 
 namespace Zeni {
 
-  Vertex_Buffer::Vertex_Buffer_Range::Vertex_Buffer_Range(Render_Wrapper *rw, const int &s, const int &ne)
-    : render_wrapper(rw), 
+  Vertex_Buffer::Vertex_Buffer_Range::Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne)
+    : material(m), 
     start(s), 
     num_elements(ne)
   {
@@ -68,7 +68,6 @@ namespace Zeni {
   }
 
   Vertex_Buffer::~Vertex_Buffer() {
-    clear_triangles(m_triangles_c);
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
   }
@@ -86,10 +85,10 @@ namespace Zeni {
     const Vertex2f_Color &v1 = triangle->b;
     const Vertex2f_Color &v2 = triangle->c;
 
-    const Triangle<Vertex3f_Color> facsimile(Vertex3f_Color(v0.position, v0.get_color()),
-                                             Vertex3f_Color(v1.position, v1.get_color()),
-                                             Vertex3f_Color(v2.position, v2.get_color()),
-                                             triangle->get_render_wrapper()->get_duplicate());
+    Triangle<Vertex3f_Color> facsimile(Vertex3f_Color(v0.position, v0.get_color()),
+                                       Vertex3f_Color(v1.position, v1.get_color()),
+                                       Vertex3f_Color(v2.position, v2.get_color()));
+    facsimile.fax_Material(triangle->get_Material());
 
     fax_triangle(&facsimile);
   }
@@ -107,10 +106,10 @@ namespace Zeni {
     const Vertex2f_Texture &v1 = triangle->b;
     const Vertex2f_Texture &v2 = triangle->c;
 
-    const Triangle<Vertex3f_Texture> facsimile(Vertex3f_Texture(v0.position, v0.texture_coordinate),
-                                               Vertex3f_Texture(v1.position, v1.texture_coordinate),
-                                               Vertex3f_Texture(v2.position, v2.texture_coordinate),
-                                               triangle->get_render_wrapper()->get_duplicate());
+    Triangle<Vertex3f_Texture> facsimile(Vertex3f_Texture(v0.position, v0.texture_coordinate),
+                                         Vertex3f_Texture(v1.position, v1.texture_coordinate),
+                                         Vertex3f_Texture(v2.position, v2.texture_coordinate));
+    facsimile.fax_Material(triangle->get_Material());
 
     fax_triangle(&facsimile);
   }
@@ -145,17 +144,12 @@ namespace Zeni {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
-
-    if(mrw)
-      if(mrw->get_material().get_texture().empty())
-        m_triangles_cm.push_back(triangle);
-      else {
-        delete triangle;
-        throw VBuf_Init_Failure();
-      }
-    else
-      m_triangles_c.push_back(triangle);
+    if(triangle->get_Material()->get_texture().empty())
+      m_triangles_cm.push_back(triangle);
+    else {
+      delete triangle;
+      throw VBuf_Init_Failure();
+    }
   }
 
   void Vertex_Buffer::fax_triangle(const Triangle<Vertex3f_Color> * const &triangle) {
@@ -169,9 +163,7 @@ namespace Zeni {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    const Material_Render_Wrapper *mrw = dynamic_cast<const Material_Render_Wrapper * const>(triangle->get_render_wrapper());
-
-    if(mrw && !mrw->get_material().get_texture().empty())
+    if(!triangle->get_Material()->get_texture().empty())
       m_triangles_t.push_back(triangle);
     else {
       delete triangle;
@@ -213,18 +205,16 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::debug_render() {
-    for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
-      get_Video().render(*m_triangles_c[i]);
     for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
       get_Video().render(*m_triangles_cm[i]);
     for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
       get_Video().render(*m_triangles_t[i]);
   }
 
-  template <typename VERTEX, typename RENDER_WRAPPER = Render_Wrapper>
+  template <typename VERTEX>
   struct SORTER {
     bool operator()(const Triangle<VERTEX> * const lhs, const Triangle<VERTEX> * const rhs) const {
-      return dynamic_cast<const RENDER_WRAPPER &>(*lhs->get_render_wrapper()) < dynamic_cast<const RENDER_WRAPPER &>(*rhs->get_render_wrapper());
+      return *lhs->get_Material() < *rhs->get_Material();
     }
   };
 
@@ -236,34 +226,33 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::sort_triangles() {
-    std::sort(m_triangles_c.begin(), m_triangles_c.end(), SORTER<Vertex3f_Color>());
-    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color, Material_Render_Wrapper>());
-    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture, Material_Render_Wrapper>());
+    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color>());
+    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
   }
 
-  template <typename VERTEX, typename RENDER_WRAPPER = Render_Wrapper>
+  template <typename VERTEX>
   struct DESCRIBER {
     bool operator()(vector<Triangle<VERTEX> *> &triangles,
                     vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
                     const int &triangles_done) const {
       int last = 0;
       if(!triangles.empty()) {
-        descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[0]->get_render_wrapper()->get_duplicate(), triangles_done, 1));
-        RENDER_WRAPPER *rw = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
-        rw->clear_optimization();
+        Material * material_ptr = new Material(*triangles[0]->get_Material());
+        descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(material_ptr, triangles_done, 1));
+        material_ptr->clear_optimization();
         for(unsigned int i = 1; i < triangles.size(); ++i) {
-          RENDER_WRAPPER *rw2 = const_cast<RENDER_WRAPPER *>(dynamic_cast<const RENDER_WRAPPER * const>(triangles[i]->get_render_wrapper()));
+          Material * material_ptr2 = triangles[i]->get_Material();
 
-          if(*rw == *rw2)
+          if(*material_ptr == *material_ptr2)
             ++descriptors[last]->num_elements;
           else {
-            descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(triangles[i]->get_render_wrapper()->get_duplicate(), triangles_done+i, 1));
+            material_ptr2 = new Material(*material_ptr2);
+            descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(material_ptr2, triangles_done+i, 1));
             ++last;
-            rw2 = dynamic_cast<RENDER_WRAPPER *>(descriptors[last]->render_wrapper.get());
-            rw2->clear_optimization();
-            rw2->optimize_to_follow(*rw);
-            rw->optimize_to_precede(*rw2);
-            rw = rw2;
+            material_ptr2->clear_optimization();
+            material_ptr2->optimize_to_follow(*material_ptr);
+            material_ptr->optimize_to_precede(*material_ptr2);
+            material_ptr = material_ptr2;
           }
         }
       }
@@ -372,20 +361,13 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::align_similar_normals() {
-    Zeni::align_similar_normals(m_triangles_c, m_descriptors_c);
     Zeni::align_similar_normals(m_triangles_cm, m_descriptors_cm);
     Zeni::align_similar_normals(m_triangles_t, m_descriptors_t);
   }
 
   void Vertex_Buffer::set_descriptors() {
-    {
-      int done = DESCRIBER<Vertex3f_Color>()(m_triangles_c, m_descriptors_c, 0);
-      DESCRIBER<Vertex3f_Color, Material_Render_Wrapper>()(m_triangles_cm, m_descriptors_cm, done);
-    }
-
-    {
-      DESCRIBER<Vertex3f_Texture, Material_Render_Wrapper>()(m_triangles_t, m_descriptors_t, 0);
-    }
+    DESCRIBER<Vertex3f_Color>()(m_triangles_cm, m_descriptors_cm, 0);
+    DESCRIBER<Vertex3f_Texture>()(m_triangles_t, m_descriptors_t, 0);
   }
 
 #ifndef DISABLE_GL
@@ -425,9 +407,9 @@ namespace Zeni {
     const unsigned int c_size = color_size();
     const unsigned int t_size = texel_size();
 
-    const unsigned int vbuf_c_size = v_size * (num_vertices_c() + num_vertices_cm());
-    const unsigned int nbuf_c_size = n_size * (num_vertices_c() + num_vertices_cm());
-    const unsigned int cbuf_size = c_size * (num_vertices_c() + num_vertices_cm());
+    const unsigned int vbuf_c_size = v_size * (num_vertices_cm());
+    const unsigned int nbuf_c_size = n_size * (num_vertices_cm());
+    const unsigned int cbuf_size = c_size * (num_vertices_cm());
     const unsigned int vbuf_t_size = v_size * (num_vertices_t());
     const unsigned int nbuf_t_size = n_size * (num_vertices_t());
     const unsigned int tbuf_size = t_size * (num_vertices_t());
@@ -440,19 +422,6 @@ namespace Zeni {
       unsigned char *buffered_verts = p_verts;
       unsigned char *buffered_normals = p_normals;
       unsigned char *buffered_colors = p_colors;
-
-      for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
-        for(int j = 0; j < 3; ++j) {
-          memcpy(buffered_verts, (*m_triangles_c[i])[j].get_address(), v_size);
-          buffered_verts += v_size;
-
-          memcpy(buffered_normals, reinterpret_cast<float *>((*m_triangles_c[i])[j].get_address())+3, n_size);
-          buffered_normals += n_size;
-
-          memcpy(buffered_colors, reinterpret_cast<float *>((*m_triangles_c[i])[j].get_address())+6, c_size);
-          swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
-          buffered_colors += c_size;
-        }
 
       for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
         for(int j = 0; j < 3; ++j) {
@@ -532,16 +501,17 @@ namespace Zeni {
       }
     }
 
-    clear_triangles(m_triangles_c);
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
   }
 
   static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
+    Video &vr = get_Video();
+
     for(unsigned int i = 0; i < descriptors.size(); ++i) {
-      descriptors[i]->render_wrapper->prerender();
+      vr.set_material(*descriptors[i]->material);
       glDrawArrays(GL_TRIANGLES, 3*descriptors[i]->start, 3*descriptors[i]->num_elements);
-      descriptors[i]->render_wrapper->postrender();
+      vr.unset_material(*descriptors[i]->material);
     }
   }
 
@@ -555,7 +525,7 @@ namespace Zeni {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
 
-    if(!m_descriptors_c.empty() || !m_descriptors_cm.empty()) {
+    if(!m_descriptors_cm.empty()) {
       // Bind Vertex Buffer
       if(m_pglDeleteBuffersARB)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
@@ -570,7 +540,6 @@ namespace Zeni {
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
       glColorPointer(4, GL_UNSIGNED_BYTE, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[2].alt);
 
-      Zeni::render(m_descriptors_c);
       Zeni::render(m_descriptors_cm);
 
       glDisableClientState(GL_COLOR_ARRAY);
@@ -637,8 +606,8 @@ namespace Zeni {
     unsigned int vertex_size;
     char *buffered;
 
-    if(!m_triangles_c.empty() || !m_triangles_cm.empty()) {
-      const unsigned int buf_size = vertex_c_size() * (num_vertices_c() + num_vertices_cm());
+    if(!m_triangles_cm.empty()) {
+      const unsigned int buf_size = vertex_c_size() * num_vertices_cm();
 
 #ifndef DISABLE_VBO
       if(FAILED
@@ -669,12 +638,6 @@ namespace Zeni {
       }
       else
         buffered = m_buf_c.data.alt;
-
-      for(unsigned int i = 0; i < m_triangles_c.size(); ++i)
-        for(unsigned int j = 0; j < 3; ++j) {
-          memcpy(buffered, (*m_triangles_c[i])[j].get_address(), vertex_size);
-          buffered += vertex_size;
-        }
 
       for(unsigned int i = 0; i < m_triangles_cm.size(); ++i)
         for(unsigned int j = 0; j < 3; ++j) {
@@ -729,7 +692,6 @@ namespace Zeni {
         m_buf_t.data.vbo->Unlock();
     }
 
-    clear_triangles(m_triangles_c);
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
   }
@@ -738,8 +700,9 @@ namespace Zeni {
     Vertex_Buffer_DX9::VBO_DX9 &vbo_dx9,
     const unsigned int &stride,
     Video_DX9 &vdx) {
+
       for(unsigned int i = 0; i < descriptors.size(); ++i) {
-        descriptors[i]->render_wrapper->prerender();
+        vdx.set_material(*descriptors[i]->material);
 
         if(vbo_dx9.is_vbo)
           vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST,
@@ -751,7 +714,7 @@ namespace Zeni {
                                                 vbo_dx9.data.alt + 3 * descriptors[i]->start,
                                                 stride);
 
-        descriptors[i]->render_wrapper->postrender();
+        vdx.unset_material(*descriptors[i]->material);
       }
   }
 
@@ -767,7 +730,6 @@ namespace Zeni {
     if(m_buf_c.data.vbo || m_buf_c.data.alt) {
       if(m_buf_c.is_vbo)
         vdx.get_d3d_device()->SetStreamSource(0, m_buf_c.data.vbo, 0, vertex_c_size());
-      Zeni::render(m_descriptors_c, m_buf_c, vertex_c_size(), vdx);
       Zeni::render(m_descriptors_cm, m_buf_c, vertex_c_size(), vdx);
     }
     if(m_buf_t.data.vbo || m_buf_t.data.alt) {

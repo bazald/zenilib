@@ -67,15 +67,15 @@ namespace Zeni {
 
   class Render_Wrapper;
 
-  class Vertex_Buffer  {
+  class Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
     Vertex_Buffer & operator=(const Vertex_Buffer &);
 
   public:
     struct Vertex_Buffer_Range {
-      Vertex_Buffer_Range(Render_Wrapper *rw, const int &s, const int &ne);
+      Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne);
 
-      std::auto_ptr<Render_Wrapper> render_wrapper;
+      std::auto_ptr<Material> material;
       int start;
       int num_elements;
     };
@@ -113,7 +113,6 @@ namespace Zeni {
   protected:
     virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
-    inline int num_vertices_c() const;
     inline int num_vertices_cm() const;
     inline int num_vertices_t() const;
 
@@ -126,11 +125,9 @@ namespace Zeni {
     // Align normals of similar vertices
     void align_similar_normals();
 
-    std::vector<Triangle<Vertex3f_Color> *> m_triangles_c;
     std::vector<Triangle<Vertex3f_Color> *> m_triangles_cm;
     std::vector<Triangle<Vertex3f_Texture> *> m_triangles_t;
 
-    std::vector<Vertex_Buffer_Range *> m_descriptors_c;
     std::vector<Vertex_Buffer_Range *> m_descriptors_cm;
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
 

@@ -31,6 +31,7 @@
 
 // HXXed below
 #include <Zeni/Font.h>
+#include <Zeni/Material.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Widget.h>
@@ -195,12 +196,14 @@ namespace Zeni {
     delete m_quad;
     m_quad = 0;
 
-    Vertex2f_Texture ul(get_upper_left(), Point2f(0.0f, 0.0f));
-    Vertex2f_Texture ll(get_lower_left(), Point2f(0.0f, 1.0f));
-    Vertex2f_Texture lr(get_lower_right(), Point2f(1.0f, 1.0f));
-    Vertex2f_Texture ur(get_upper_right(), Point2f(1.0f, 0.0f));
+    const Vertex2f_Texture ul(get_upper_left(), Point2f(0.0f, 0.0f));
+    const Vertex2f_Texture ll(get_lower_left(), Point2f(0.0f, 1.0f));
+    const Vertex2f_Texture lr(get_lower_right(), Point2f(1.0f, 1.0f));
+    const Vertex2f_Texture ur(get_upper_right(), Point2f(1.0f, 0.0f));
+    Material material(m_texture_name);
 
-    m_quad = new Quadrilateral<Vertex2f_Texture>(ul, ll, lr, ur, new Material_Render_Wrapper(Material(m_texture_name)));
+    m_quad = new Quadrilateral<Vertex2f_Texture>(ul, ll, lr, ur);
+    m_quad->fax_Material(&material);
   }
 
   Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
@@ -472,6 +475,7 @@ namespace Zeni {
 }
 
 #include <Zeni/Font.hxx>
+#include <Zeni/Material.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif

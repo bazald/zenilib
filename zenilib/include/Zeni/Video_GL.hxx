@@ -30,11 +30,13 @@
 #define ZENI_VIDEO_GL_HXX
 
 // HXXed below
-#include <Zeni/Color.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Material.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Shader.h>
+#include <Zeni/Texture.h>
+#include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 
 #include <Zeni/Video_GL.h>
@@ -169,12 +171,12 @@ namespace Zeni {
     glDisable(ln);
   }
 
-  void Video_GL::set_material_impl(const Material &material, const int &optimization) {
-    material.set(*this, optimization);
+  void Video_GL::set_material_impl(const Material &material) {
+    material.set(*this);
   }
 
-  void Video_GL::unset_material_impl(const Material &material, const int &optimization) {
-    material.unset(*this, optimization);
+  void Video_GL::unset_material_impl(const Material &material) {
+    material.unset(*this);
   }
 
   void Video_GL::set_fog_impl(const Fog &fog) {
@@ -302,11 +304,14 @@ namespace Zeni {
 
 #endif
 
-#include <Zeni/Color.hxx>
+#include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Renderable.hxx>
 #include <Zeni/Shader.hxx>
+#include <Zeni/Texture.hxx>
+#include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
 
 #endif

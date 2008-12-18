@@ -44,10 +44,6 @@ namespace Zeni {
     return m_align_normals;
   }
 
-  int Vertex_Buffer::num_vertices_c() const {
-    return int(3 * m_triangles_c.size());
-  }
-
   int Vertex_Buffer::num_vertices_cm() const {
     return int(3 * m_triangles_cm.size());
   }

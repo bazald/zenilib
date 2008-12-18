@@ -32,8 +32,10 @@
 // HXXed below
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Material.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Shader.h>
+#include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 
@@ -160,12 +162,12 @@ namespace Zeni {
     m_d3d_device->LightEnable(number, FALSE);
   }
 
-  void Video_DX9::set_material_impl(const Material &material, const int &optimization) {
-    material.set(*this, optimization);
+  void Video_DX9::set_material_impl(const Material &material) {
+    material.set(*this);
   }
 
-  void Video_DX9::unset_material_impl(const Material &material, const int &optimization) {
-    material.unset(*this, optimization);
+  void Video_DX9::unset_material_impl(const Material &material) {
+    material.unset(*this);
   }
 
   void Video_DX9::set_fog_impl(const Fog &fog) {
@@ -313,8 +315,10 @@ namespace Zeni {
 #include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Renderable.hxx>
 #include <Zeni/Shader.hxx>
+#include <Zeni/Texture.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
 

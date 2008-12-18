@@ -26,65 +26,43 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Line<VERTEX>
- *
- * \ingroup Zenilib
- *
- * \brief An Abstraction of a Line
- *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Line is rendered.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
+#ifndef ZENI_RENDERABLE_HXX
+#define ZENI_RENDERABLE_HXX
 
-#ifdef ZENI_INLINES
-#include <Zeni/Line_Segment.hxx>
-#endif
-
-#ifndef ZENI_LINE_SEGMENT_H
-#define ZENI_LINE_SEGMENT_H
+// HXXed below
+#include <Zeni/Material.h>
 
 #include <Zeni/Renderable.h>
 
 namespace Zeni {
 
-  template <typename VERTEX>
-  class Line_Segment : public Renderable {
-  public:
-    Line_Segment();
-    Line_Segment(const VERTEX &vertex0,
-                 const VERTEX &vertex1);
+  Renderable::Renderable()
+    : m_material(0),
+    delete_m_material(false)
+  {
+    static Material material;
+    m_material = &material;
+  }
 
-    Line_Segment(const Line_Segment<VERTEX> &rhs);
-    Line_Segment<VERTEX> & operator=(const Line_Segment<VERTEX> &rhs);
+  Renderable::Renderable(const Renderable &rhs)
+    : m_material(rhs.delete_m_material ? new Material(*rhs.m_material) : rhs.m_material),
+    delete_m_material(rhs.delete_m_material)
+  {
+  }
 
-    /// Tell the rendering system if we're using 3D coordinates
-    virtual bool is_3d() const;
+  Renderable & Renderable::operator=(const Renderable &rhs) {
+    m_material = rhs.delete_m_material ? new Material(*rhs.m_material) : rhs.m_material;
+    delete_m_material = rhs.delete_m_material;
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
-#endif
+    return *this;
+  }
 
-#ifndef DISABLE_DX9
-    virtual void render_to(Video_DX9 &screen) const;
-#endif
-
-    Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
-
-    // Indexing
-    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
-    inline VERTEX & operator[](const int &index); ///< Get 'index'
-
-    VERTEX a;
-    VERTEX b;
-
-  private:
-    void * m_alignment_rubbish;
-  };
+  Material * Renderable::get_Material() const {
+    return m_material;
+  }
 
 }
+
+#include <Zeni/Material.hxx>
 
 #endif
