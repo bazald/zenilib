@@ -41,9 +41,11 @@ namespace Zeni {
   Textures::Textures()
     : Database<Texture>("config/textures.xml", "Textures")
   {
+    init();
   }
 
   Textures::~Textures() {
+    uninit();
   }
 
   Textures & get_Textures() {

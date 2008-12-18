@@ -45,6 +45,11 @@ namespace Zeni {
   Sounds::Sounds()
     : Database("config/sounds.xml", "Sounds")
   {
+    init();
+  }
+
+  Sounds::~Sounds() {
+    uninit();
   }
 
   Sounds & get_Sounds() {

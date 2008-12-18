@@ -107,10 +107,10 @@ namespace Zeni {
         pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
-      const Point2f tex_offset(material->texture1_map.offset[0],
-                               material->texture1_map.offset[1]);
-      const Point2f tex_scale(material->texture1_map.scale[0],
-                              material->texture1_map.scale[1]);
+      const Point2f tex_offset(material ? material->texture1_map.offset[0] : 0.0f,
+                               material ? material->texture1_map.offset[1] : 0.0f);
+      const Point2f tex_scale(material ? material->texture1_map.scale[0] : 0.0f,
+                              material ? material->texture1_map.scale[1] : 0.0f);
 
       Point3f pa(mesh->vertices[face->index[0]][0], mesh->vertices[face->index[0]][1], mesh->vertices[face->index[0]][2]);
       const Point3f pb(mesh->vertices[face->index[1]][0], mesh->vertices[face->index[1]][1], mesh->vertices[face->index[1]][2]);

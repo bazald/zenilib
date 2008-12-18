@@ -80,10 +80,11 @@ namespace Zeni {
 
     void lose_resources(); ///< Wipe losable resources and prepare to reload them when they are next needed
 
-  private:
+  protected:
     void init();
     void uninit();
 
+  private:
     virtual void pre_init() {}
     virtual void post_init() {}
     virtual void pre_uninit() {}
