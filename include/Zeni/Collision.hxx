@@ -31,6 +31,8 @@
 
 #include <Zeni/Collision.h>
 
+#include <Zeni/Global.h>
+
 namespace Zeni_Collision {
 
   float Sphere::shortest_distance(const Plane &rhs) const {
@@ -57,7 +59,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Sphere::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Plane::shortest_distance(const Line &rhs) const {
@@ -81,7 +83,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Plane::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Line_Segment::shortest_distance(const Sphere &rhs) const {
@@ -114,7 +116,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Line_Segment::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Ray::shortest_distance(const Sphere &rhs) const {
@@ -147,7 +149,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Ray::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Line::shortest_distance(const Ray &rhs) const {
@@ -162,7 +164,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Line::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Infinite_Cylinder::shortest_distance(const Capsule &rhs) const {
@@ -174,7 +176,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Infinite_Cylinder::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Capsule::shortest_distance(const Sphere &rhs) const {
@@ -207,7 +209,7 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Capsule::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
   float Parallelepiped::shortest_distance(const Line &rhs) const {
@@ -225,9 +227,11 @@ namespace Zeni_Collision {
 
   template <typename TYPE>
   bool Parallelepiped::intersects(const TYPE &rhs) const {
-    return shortest_distance(rhs) < g_intersection_epsilon;
+    return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif
