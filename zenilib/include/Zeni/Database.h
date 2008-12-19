@@ -71,7 +71,7 @@ namespace Zeni {
 
     // Loaders
     unsigned long give(const std::string &name, TYPE * const &type); ///< Add an entry (which it will later delete)
-    unsigned long loan(const std::string &name, TYPE * const &type); ///< Add an entry (which it will NEVER delete)
+    unsigned long lend(const std::string &name, TYPE * const &type); ///< Add an entry (which it will NEVER delete)
     void clear(const std::string &name); ///< Clear an entry
 
     // Initialization Functions
@@ -100,7 +100,7 @@ namespace Zeni {
 
     stdext::hash_map<std::string, unsigned long> m_lookup;
     stdext::hash_map<unsigned long, TYPE *> m_database;
-    std::set<TYPE *> m_loaned;
+    std::set<TYPE *> m_lent;
   };
 
   struct Database_Entry_Not_Found : public Error {

@@ -183,8 +183,6 @@
 
 namespace Zeni_Collision {
 
-  extern const float g_intersection_epsilon;
-
   class Sphere;
   class Plane;
   class Line;

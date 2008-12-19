@@ -70,9 +70,9 @@ namespace Zeni {
   }
   
   template <class TYPE>
-  unsigned long Database<TYPE>::loan(const std::string &name, TYPE * const &type) {
+  unsigned long Database<TYPE>::lend(const std::string &name, TYPE * const &type) {
     const unsigned long retval = give_type(name, type);
-    m_loaned.insert(type);
+    m_lent.insert(type);
     return retval;
   }
 
@@ -87,12 +87,12 @@ namespace Zeni {
 
     assert(jt != m_database.end());
 
-    std::set<TYPE *>::iterator kt = m_loaned.find(jt->second);
+    std::set<TYPE *>::iterator kt = m_lent.find(jt->second);
 
-    if(kt == m_loaned.end())
+    if(kt == m_lent.end())
       delete jt->second;
     else
-      m_loaned.erase(kt);
+      m_lent.erase(kt);
 
     m_database.erase(it->second);
     m_lookup.erase(it);
@@ -185,15 +185,15 @@ namespace Zeni {
     pre_uninit();
 
     for(stdext::hash_map<unsigned long, TYPE *>::iterator it = m_database.begin(); it != m_database.end(); ++it) {  
-      set<TYPE *>::iterator jt = m_loaned.find(it->second);
+      set<TYPE *>::iterator jt = m_lent.find(it->second);
 
-      if(jt == m_loaned.end())
+      if(jt == m_lent.end())
         delete it->second;
       else
-        m_loaned.erase(jt);
+        m_lent.erase(jt);
     }
 
-    assert(m_loaned.empty());
+    assert(m_lent.empty());
     m_database.clear();
     m_lookup.clear();
 
@@ -214,14 +214,14 @@ namespace Zeni {
         it != type_lookup.end();
         ++it) {
       stdext::hash_map<unsigned long, TYPE *>::iterator jt = types.find(it->second);
-      set<TYPE *>::iterator kt = m_loaned.find(jt->second);
+      set<TYPE *>::iterator kt = m_lent.find(jt->second);
       
       if(keep(*jt->second))
         give(it->first, jt->second);
-      else if(kt == m_loaned.end())
+      else if(kt == m_lent.end())
         delete jt->second;
       else
-        m_loaned.erase(kt);
+        m_lent.erase(kt);
     }
 
     post_lose();
