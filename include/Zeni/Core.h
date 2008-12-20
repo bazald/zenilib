@@ -86,6 +86,9 @@ namespace Zeni {
     Core & operator=(const Core &);
 
   public:
+    const std::string & get_username();
+    std::string get_appdata_path(const std::string &unique_app_identifier);
+
     int get_num_joysticks() const; //< Get the number of joysticks attached to the system
 
     const std::string & get_joystick_name(const int &index) const; //< Get the name of a given joystick
@@ -100,7 +103,10 @@ namespace Zeni {
     void init_joysticks();
     void quit_joysticks();
 
-    std::vector<std::pair<SDL_Joystick *, std::string> > joystick;
+    std::string m_username;
+    std::string m_appdata_path;
+
+    std::vector<std::pair<SDL_Joystick *, std::string> > m_joystick;
   };
 
   Core & get_Core(); ///< Get access to the singleton.
