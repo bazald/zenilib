@@ -73,6 +73,8 @@
  *
  * \brief A 3D Point represented with floats
  *
+ * \note As of the 0.3.0.0 release, this inherits from Vector3f.
+ *
  * \author bazald
  *
  * Contact: bazald@zenipex.com

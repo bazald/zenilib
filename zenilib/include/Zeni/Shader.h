@@ -26,6 +26,62 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Shader_System
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A rendering context for Cg
+ *
+ * This Singleton is used by Shaders and should not need direct interaction.
+ * As this functionality is currently incomplete, its design will need to
+ * be reassessed later.
+ * Perhaps it is not even correct to use the Singleton patter.  (Though it
+ * has made initial development simpler.)
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Shader
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A base class for Vertex_Shader and Fragment_Shader
+ *
+ * Functionality shared between Vertex_Shader and Fragment_Shader is stored here.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Vertex_Shader
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A shader for manipulating vertex data as it is streamed through the GPU.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::Fragment_Shader
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A shader for manipulating fragment/pixel data as it is streamed through the GPU.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifdef ZENI_INLINES
 #include <Zeni/Shader.hxx>
 #endif

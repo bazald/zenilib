@@ -26,6 +26,32 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::XML_Element
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A node in an XML tree, possibly containing useful data.
+ *
+ * \note There is no functionality (currently) to cleanly exit an iteration through XML_Elements.  The only way out is to catch the Bad_XML_Access when thrown.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
+ * \class Zeni::XML_Reader
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A class to open an XML file and manage the root node.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifdef ZENI_INLINES
 #include <Zeni/XML.hxx>
 #endif

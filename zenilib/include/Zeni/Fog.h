@@ -78,9 +78,9 @@ namespace Zeni {
 
     FOG_TYPE type; ///< The type of the Fog
     Color color;   ///< Color muxed with the rendering
-    float density; //< used when (FOGTYPE == FOG_EXP || FOGTYPE == FOG_EXP2)
-    float start;   //< used when FOGTYPE == FOG_LINEAR
-    float end;     //< used when FOGTYPE == FOG_LINEAR
+    float density; ///< used when (FOGTYPE == FOG_EXP || FOGTYPE == FOG_EXP2)
+    float start;   ///< used when FOGTYPE == FOG_LINEAR
+    float end;     ///< used when FOGTYPE == FOG_LINEAR
   };
 
 }

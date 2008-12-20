@@ -35,6 +35,10 @@
  *
  * A Sound_Buffer stores sound data to be played from Sound_Sources.
  *
+ * \note Mono sounds work best.
+ *
+ * \warning Stereo sounds will not be affected by the positional audio system.  Furthermore, in a surround sound speaker setup, they may play only through the left and right channels.
+ *
  * \author bazald
  *
  * Contact: bazald@zenipex.com

@@ -31,9 +31,7 @@
  *
  * \ingroup Zenilib
  *
- * \brief A Vertex_Buffer that accepts both Triangle<Vertex3f_Color>s and Triangle<Vertex3f_Texture>s.
- *
- * \note All Triangles are expected to have either the base Render_Wrapper or a Material_Render_Wrapper.
+ * \brief A Vertex_Buffer that accepts Triangle and Quadrilaterals.
  *
  * \note Created with a call to get_Video().create_Vertex_Buffer()
  *

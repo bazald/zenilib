@@ -33,8 +33,6 @@
  *
  * \brief An Abstraction of a Triangle
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Triangle is rendered.
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
