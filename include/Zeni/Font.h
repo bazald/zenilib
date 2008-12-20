@@ -84,14 +84,18 @@ namespace Zeni {
   class Font {
   public:
     Font(); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to get_Video().create_Font()
+    Font(const bool &bold, const bool &italic,
+         const float &glyph_height,
+         const float &virtual_screen_height,
+         const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to get_Video().create_Font()
     virtual ~Font() {}
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
     inline const std::string & get_font_name() const; ///< Get the name of the font.
-    inline int get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
-    virtual int get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+    inline float get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
+    virtual float get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+    inline float get_virtual_screen_height() const; ///< Get the intended virtual screen height for the rendering of this Font
 
     /// Render text at screen position (x, y), with justification JUSTIFY.  Remember not to clip the screen if you want this to look good in OpenGL.
     virtual void render_text(const std::string &text, const Point2f &position,
@@ -99,7 +103,8 @@ namespace Zeni {
 
   private:
     bool m_bold, m_italic;
-    int m_glyph_height;
+    float m_glyph_height;
+    float m_virtual_screen_height;
     std::string m_font_name;
   };
 
@@ -108,25 +113,31 @@ namespace Zeni {
 
     struct Glyph {
       Glyph();
-      Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height);
+      Glyph(TTF_Font *font_, const char &c,
+            SDL_Surface *source,
+            SDL_Surface *render_target, const SDL_Rect &dstrect,
+            const int &total_width, const int &total_height,
+            const float &vratio);
 
-      inline int get_glyph_width() const;
+      inline float get_glyph_width() const;
 
       void render(const Point2f &position) const;
 
     private:
-      int m_glyph_width;
+      float m_glyph_width;
       Point2f m_upper_left_point, m_lower_right_point;
       Point2f m_upper_left_texel, m_lower_right_texel;
     };
 
   public:
     Font_FT(); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    Font_FT(const std::string &filepath, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
+    Font_FT(const std::string &filepath,
+            const bool &bold, const bool &italic,
+            const float &glyph_height,
+            const float &virtual_screen_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
     ~Font_FT();
 
-    virtual int get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+    virtual float get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
     virtual void render_text(const std::string &text, const Point2f &position,
       const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
@@ -134,7 +145,7 @@ namespace Zeni {
   private:
     Glyph *m_glyph[num_glyphs];
     Texture *m_texture;
-    int m_font_height;
+    float m_font_height;
   };
 
   struct Font_Type_Unsupported : Error {

@@ -10,6 +10,10 @@ For each entry in Fonts:
      They are deprecated.
      It is much better to find bold/italicized versions of Fonts
      than to use this feature.
+  5. 'virtual_screen_height' should match the virtual screen
+     resolution that will be used when rendering the given Font.
+     Using higher values will cause fonts to be blurry.
+     Using lower values will cause memory to be wasted.
 
 Only TrueType fonts are supported.
 -->
@@ -20,6 +24,7 @@ Only TrueType fonts are supported.
     <height>16</height>
     <bold>0</bold>
     <italics>0</italics>
+    <virtual_screen_height>600</virtual_screen_height>
   </token>
   -->
 </Fonts>

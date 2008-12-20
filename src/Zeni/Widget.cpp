@@ -444,7 +444,7 @@ namespace Zeni {
 
     const std::string t = get_text();
     const Font &f = get_font();
-    const int &mll = max_line_width();
+    const float mll = max_line_width();
 
     if(t.empty())
       return;
@@ -466,7 +466,7 @@ namespace Zeni {
 
       next_word.unformatted += t[i];
 
-      const int next_width = get_text_width(f, next_word.unformatted);
+      const float next_width = get_text_width(f, next_word.unformatted);
       next_word.unformatted_glyph_sides.push_back(next_width);
       if(type != Word::SPACE && next_width > mll)
         next_word.splittable = true;
@@ -477,7 +477,7 @@ namespace Zeni {
     for(list<Word>::iterator it = words.begin(); it != words.end(); ++it)
       append_word(*it);
 
-    int glyph_top = 0;
+    float glyph_top = 0.0f;
     for(vector<Line>::iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
       it->formatted = untablinebreak(it->unformatted);
       if(it->fpsplit)
@@ -492,13 +492,13 @@ namespace Zeni {
 
   void Text_Box::append_word(const Word &word) {
     const Font &f = get_font();
-    const int &mll = max_line_width();
+    const float mll = max_line_width();
 
     if(!word.unformatted.empty() && word.unformatted[0] == '\n')
       m_lines.push_back(Line());
 
     Line &l = *m_lines.rbegin();
-    int next_sum = get_text_width(f, l.unformatted + word.unformatted);
+    float next_sum = get_text_width(f, l.unformatted + word.unformatted);
 
     if(word.type != Word::SPACE && next_sum > mll && !word.fpsplit) {
       if(word.splittable) {
@@ -660,7 +660,7 @@ namespace Zeni {
     return untabbed_text;
   }
 
-  int Text_Box::get_text_width(const Font &font, const string &text) {
+  float Text_Box::get_text_width(const Font &font, const string &text) {
     const string untabbed_text = untablinebreak(text);
 
     if(font.get_text_width(" "))
@@ -676,8 +676,8 @@ namespace Zeni {
     return font.get_text_width(fake_text);
   }
 
-  int Text_Box::max_line_width() const {
-    return int(get_lower_right().x - get_upper_left().x);
+  float Text_Box::max_line_width() const {
+    return get_lower_right().x - get_upper_left().x;
   }
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {

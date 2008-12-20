@@ -429,8 +429,8 @@ namespace Zeni {
   }
 
   Font * Video::create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-    const int &glyph_height) {
-    VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height);
+    const float &glyph_height, const float &virtual_screen_height) {
+    VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
   Vertex_Buffer * Video::create_Vertex_Buffer() {

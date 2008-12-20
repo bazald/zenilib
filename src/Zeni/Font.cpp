@@ -45,15 +45,20 @@ namespace Zeni {
   Font::Font ()
     : m_bold(0),
     m_italic(0),
-    m_glyph_height(0)
+    m_glyph_height(0),
+    m_virtual_screen_height(0.0f)
   {
   }
 
-  Font::Font(const bool &bold, const bool &italic, const int &glyph_height, const std::string &font_name)
+  Font::Font(const bool &bold, const bool &italic,
+             const float &glyph_height,
+             const float &virtual_screen_height,
+             const std::string &font_name)
     : m_bold(bold),
     m_italic(italic),
     m_glyph_height(glyph_height),
-    m_font_name(font_name)
+    m_font_name(font_name),
+    m_virtual_screen_height(virtual_screen_height)
   {
   }
 
@@ -62,16 +67,21 @@ namespace Zeni {
   {
   }
 
-  Font_FT::Glyph::Glyph(TTF_Font *font_, const char &c, SDL_Surface *source, SDL_Surface *render_target, const SDL_Rect &dstrect, const int &total_width, const int &total_height)
+  Font_FT::Glyph::Glyph(TTF_Font *font_, const char &c,
+                        SDL_Surface *source,
+                        SDL_Surface *render_target, const SDL_Rect &dstrect,
+                        const int &total_width, const int &total_height,
+                        const float &vratio)
     : m_glyph_width(0)
   {
-    int minx, maxy;
-    TTF_GlyphMetrics(font_, c, &minx, 0, 0, &maxy, &m_glyph_width);
+    int minx, maxy, glyph_width;
+    TTF_GlyphMetrics(font_, c, &minx, 0, 0, &maxy, &glyph_width);
 
-    m_upper_left_point.x = float(minx);
-    m_upper_left_point.y = float(TTF_FontAscent(font_) - maxy);
-    m_lower_right_point.x = m_upper_left_point.x + source->w;
-    m_lower_right_point.y = m_upper_left_point.y + source->h;
+    m_glyph_width = glyph_width / vratio;
+    m_upper_left_point.x = float(minx) / vratio;
+    m_upper_left_point.y = float(TTF_FontAscent(font_) - maxy) / vratio;
+    m_lower_right_point.x = m_upper_left_point.x + source->w / vratio;
+    m_lower_right_point.y = m_upper_left_point.y + source->h / vratio;
 
     SDL_Rect dstrect2 = {dstrect.x, dstrect.y, Uint16(source->w), Uint16(source->h)};
 
@@ -104,11 +114,20 @@ namespace Zeni {
     memset(m_glyph, 0, num_glyphs * sizeof(Glyph *));
   }
 
-  Font_FT::Font_FT(const std::string &filepath, const bool &bold, const bool &italic, const int &glyph_height)
-    : Font(bold, italic, glyph_height, filepath),
-    m_font_height(0)
+  Font_FT::Font_FT(const std::string &filepath,
+                   const bool &bold, const bool &italic,
+                   const float &glyph_height,
+                   const float &virtual_screen_height)
+    : Font(bold, italic, glyph_height,
+           (virtual_screen_height < MINIMUM_VIRTUAL_SCREEN_HEIGHT ||
+           virtual_screen_height > MAXIMUM_VIRTUAL_SCREEN_HEIGHT) ?
+           float(get_Video().get_screen_height()) : virtual_screen_height,
+           filepath),
+    m_font_height(glyph_height)
   {
-    TTF_Font *font = TTF_OpenFont(filepath.c_str(), glyph_height);
+    const float vratio = get_Video().get_screen_height() / get_virtual_screen_height();
+
+    TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(glyph_height * vratio + 0.5f));
     if(!font)
       throw Font_Init_Failure();
 
@@ -123,10 +142,8 @@ namespace Zeni {
 
     /*** Determine Width & Height ***/
 
-    m_font_height = TTF_FontHeight(font);
-
-    int font_width = 0;
-    int font_height = 0;
+    float font_width = 0;
+    float font_height = 0;
     SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
     SDL_Surface *source[256] = {0};
     for(unsigned char c = 1; c; ++c) {
@@ -156,7 +173,7 @@ namespace Zeni {
     for(unsigned char c = 1; c; ++c) {
       dstrect.x = Sint16((c % 16) * font_width);
       dstrect.y = Sint16((c / 16) * font_height);
-      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h);
+      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h, vratio);
     }
 
     /*** Correct Transparency ***/
@@ -182,8 +199,8 @@ namespace Zeni {
       delete m_glyph[i];
   }
   
-  int Font_FT::get_text_width(const std::string &text) const {
-    int max_width = 0, width = 0;
+  float Font_FT::get_text_width(const std::string &text) const {
+    float max_width = 0.0f, width = 0.0f;
     unsigned int pos = 0;
 
     for(; pos < text.size(); ++pos)
@@ -192,7 +209,7 @@ namespace Zeni {
         width += m_glyph[int(text[pos])]->get_glyph_width();
       else {
         max_width = max(max_width, width);
-        width = 0;
+        width = 0.0f;
       }
 
     return max(max_width, width);

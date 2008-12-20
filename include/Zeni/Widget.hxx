@@ -377,7 +377,7 @@ namespace Zeni {
   }
 
   int Text_Box::get_max_lines() const {
-    return int(get_lower_right().y - get_upper_left().y) / get_font().get_text_height();
+    return int(get_lower_right().y - get_upper_left().y / get_font().get_text_height());
   }
 
   void Text_Box::set_bg_color(const Color &bg_color_) {
