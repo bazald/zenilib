@@ -26,6 +26,20 @@
 * the GNU General Public License.
 */
 
+/**
+ * \class Zeni::Chronometer<TIME>
+ *
+ * \ingroup Zenilib
+ *
+ * \brief A stoppable running timer.
+ *
+ * \note Takes 'Time' or 'Time_HQ' as its template argument.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
 #ifdef ZENI_INLINES
 #include <Zeni/Chronometer.hxx>
 #endif
@@ -43,13 +57,13 @@ namespace Zeni {
     Chronometer();
 
     // Controls
-    const TIME & start(); //< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
-    const TIME & stop(); //< Stop the Chronometer and get the current TIME.
-    void reset(); //< Reset the Chronometer.  This does NOT stop the Chronometer.
+    const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
+    const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
+    void reset(); ///< Reset the Chronometer.  This does NOT stop the Chronometer.
 
     // Accessors
-    typename TIME::Second_Type seconds(); //< Get the number of seconds counted by the Chronometer.
-    const bool & running(); //< Get whether the Chronometer is currently counting or stopped.
+    typename TIME::Second_Type seconds(); ///< Get the number of seconds counted by the Chronometer.
+    const bool & running(); ///< Get whether the Chronometer is currently counting or stopped.
 
   private:
     typename TIME::Second_Type m_seconds_counted;

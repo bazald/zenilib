@@ -36,8 +36,6 @@
  * I call it a Quadrilateral, but there is nothing forcing you to use it as such.
  * Really it is a triangle fan consisting of four vertices.
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Quadrilateral is rendered.
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com

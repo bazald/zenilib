@@ -158,7 +158,7 @@ namespace Zeni {
     int check_socket();
     
     /// Send data
-    void send(const void * const &data, const int &num_bytes); 
+    void send(const void * const &data, const int &num_bytes);
     void send(const std::string &data);
 
     /// Receive up to num_bytes
@@ -200,7 +200,7 @@ namespace Zeni {
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
     virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
-    virtual int receive(IPaddress &ip, std::string &data);
+    virtual int receive(IPaddress &ip, std::string &data); ///<
     
   private:
     UDPsocket sock;

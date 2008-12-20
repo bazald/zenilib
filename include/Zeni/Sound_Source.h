@@ -27,6 +27,25 @@
 */
 
 /**
+ * \class Zeni::Sound_Source_HW
+ *
+ * \ingroup Zenilib
+ *
+ * \brief Plays Sound Data
+ *
+ * This Sound_Source is directly tied to the OpenAL driver "hardware".
+ * This is the original Zeni::Sound_Source, which has been replaced
+ * by a much saner frontend to Sound_Source_Pool (which in turn manages
+ * the Sound_Source_HW objects).
+ *
+ * \warning Don't use this unless you find that you need to.
+ *
+ * \author bazald
+ *
+ * Contact: bazald@zenipex.com
+ */
+
+/**
  * \class Zeni::Sound_Source
  *
  * \ingroup Zenilib

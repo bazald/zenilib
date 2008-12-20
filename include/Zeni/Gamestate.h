@@ -124,32 +124,32 @@ namespace Zeni {
 
     // Converters
 
-    static char to_char(const SDL_keysym &ks); //< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
-    static SDLKey to_sym(const std::string &text_version); //< Convert a text representation to an actual sym
-    static std::string to_text(const SDLKey &sym); //< Convert a sym to a text representation
+    static char to_char(const SDL_keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
+    static SDLKey to_sym(const std::string &text_version); ///< Convert a text representation to an actual sym
+    static std::string to_text(const SDLKey &sym); ///< Convert a sym to a text representation
 
   protected:
     // Event handlers
 
     // Keyboard events
-    virtual void on_key(const SDL_KeyboardEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_key(const SDL_KeyboardEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Mouse events
-    virtual void on_mouse_motion(const SDL_MouseMotionEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_mouse_button(const SDL_MouseButtonEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_mouse_motion(const SDL_MouseMotionEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_mouse_button(const SDL_MouseButtonEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // "Joystick" events
-    virtual void on_joy_axis(const SDL_JoyAxisEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_ball(const SDL_JoyBallEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_hat(const SDL_JoyHatEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_button(const SDL_JoyButtonEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_joy_axis(const SDL_JoyAxisEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_joy_ball(const SDL_JoyBallEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_joy_hat(const SDL_JoyHatEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_joy_button(const SDL_JoyButtonEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Quit events
-    virtual void on_quit(const SDL_QuitEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_quit(const SDL_QuitEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Annoying events
-    virtual void on_system_wm_event(const SDL_SysWMEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_active(const SDL_ActiveEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_video_resize(const SDL_ResizeEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_video_expose(const SDL_ExposeEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_system_wm_event(const SDL_SysWMEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_active(const SDL_ActiveEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_video_resize(const SDL_ResizeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_video_expose(const SDL_ExposeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Custom events
-    virtual void on_user_event(const SDL_UserEvent &event); //< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_user_event(const SDL_UserEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 
   private:
     inline void increment();
