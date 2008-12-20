@@ -252,3 +252,5 @@ NEXT_LINE:
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

@@ -648,3 +648,5 @@ namespace Zeni_Collision {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

@@ -37,18 +37,20 @@
 #include <Zeni/Camera.h>
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   Vector3f Camera::get_forward() const {
-    return orientation * Vector3f(1.0f, 0.0f, 0.0f);
+    return orientation * ZENI_DEFAULT_FORWARD_VECTOR;
   }
 
   Vector3f Camera::get_up() const {
-    return orientation * Vector3f(0.0f, 0.0f, 1.0f);
+    return orientation * ZENI_DEFAULT_UP_VECTOR;
   }
 
   Vector3f Camera::get_left() const {
-    return orientation * Vector3f(0.0f, 1.0f, 0.0f);
+    return orientation * ZENI_DEFAULT_LEFT_VECTOR;
   }
   float Camera::get_fov_deg() const {
     return fov_rad * 180.0f / pi;
@@ -89,6 +91,8 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Matrix4f.hxx>

@@ -203,3 +203,5 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

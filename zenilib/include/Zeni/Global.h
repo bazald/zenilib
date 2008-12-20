@@ -36,6 +36,9 @@
 #define ZENI_DEFAULT_CAMERA_FAR_CLIP      (1000.0f)
 #define ZENI_DEFAULT_CAMERA_FOV           (pi / 2)
 #define ZENI_DEFAULT_CAMERA_TUNNEL_VISION (1.0f)
+#define ZENI_DEFAULT_FORWARD_VECTOR       (Vector3f(1.0f, 0.0f, 0.0f))
+#define ZENI_DEFAULT_UP_VECTOR            (Vector3f(0.0f, 0.0f, 1.0f))
+#define ZENI_DEFAULT_LEFT_VECTOR          (Vector3f(0.0f, 1.0f, 0.0f) /* UP % FORWARD */)
 
 // Fog.h
 #define ZENI_DEFAULT_FOG_COLOR   (Color(1.0f, 1.0f, 1.0f, 1.0f))

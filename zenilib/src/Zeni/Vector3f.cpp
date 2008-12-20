@@ -102,3 +102,5 @@ namespace Zeni {
     k = cos(phi) * magnitude;
   }
 }
+
+#include <Zeni/Global_Undef.h>

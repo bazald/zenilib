@@ -34,6 +34,8 @@
 
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   Camera::Camera(const Point3f &position_, const Quaternion &orientation_, const float &near_clip_, const float &far_clip_, const float &fov_rad_, const float &tunnel_vision_factor_)
@@ -44,24 +46,6 @@ namespace Zeni {
     fov_rad(fov_rad_),
     tunnel_vision_factor(tunnel_vision_factor_)
   {
-  }
-
-  void Camera::set_forward_and_up(const Vector3f &destination_forward, const Vector3f &destination_up) {
-    const Vector3f given_forward = Vector3f(1.0f, 0.0f, 0.0f);
-    const Vector3f given_up = Vector3f(0.0f, 0.0f, 1.0f);
-
-    const Vector3f axis0 = given_forward % destination_forward;
-    const float angle0 = given_forward.angle_between(destination_forward);
-
-    const Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
-
-    const Vector3f intermediate_up = rotation0 * given_up;
-    const Vector3f axis1 = intermediate_up % destination_up;
-    const float angle1 = intermediate_up.angle_between(destination_up);
-
-    const Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
-
-    orientation = rotation1 * rotation0;
   }
 
   void Camera::adjust_yaw(const float &theta) {
@@ -85,7 +69,7 @@ namespace Zeni {
   }
 
   void Camera::turn_left_xy(const float &theta) {
-    orientation = Quaternion::Axis_Angle(Vector3f(0.0f, 0.0f, 1.0f), theta) * orientation;
+    orientation = Quaternion::Axis_Angle(ZENI_DEFAULT_UP_VECTOR, theta) * orientation;
   }
 
   void Camera::look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal) {
@@ -93,7 +77,9 @@ namespace Zeni {
     const Vector3f left = (horizon_plane_normal % forward).normalized();
     const Vector3f up = (forward % left).normalized(); 
 
-    set_forward_and_up(forward, up);
+    orientation = Quaternion::Forward_Up(forward, up,
+                                         ZENI_DEFAULT_FORWARD_VECTOR,
+                                         ZENI_DEFAULT_UP_VECTOR);
   }
 
   void Camera::look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane) {
@@ -101,3 +87,5 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
