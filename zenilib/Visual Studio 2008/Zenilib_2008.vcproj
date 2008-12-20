@@ -1801,6 +1801,22 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\src\TinyXML\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TinyXML\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TinyXML\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TinyXML\tinyxmlparser.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Zeni\Vector3f.cpp"
 				>
 				<FileConfiguration
