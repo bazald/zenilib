@@ -67,7 +67,10 @@ namespace Zeni {
     return m_lower_right;
   }
   
-  void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(button != 1)
+      return;
+
     const bool inside = is_inside(pos);
 
     if(down)
@@ -179,9 +182,9 @@ namespace Zeni {
     m_radio_button_set->accept(*this);
   }
 
-  void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
-      (*it)->on_mouse_button(pos, down);
+      (*it)->on_mouse_button(pos, down, button);
   }
     
   void Radio_Button_Set::on_mouse_motion(const Point2i &pos) {
@@ -211,7 +214,10 @@ namespace Zeni {
     regenerate_slider_r();
   }
 
-  void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down) {
+  void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
+    if(button != 1)
+      return;
+
     if(down) {
       const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
 
@@ -359,13 +365,16 @@ namespace Zeni {
       }
   }
 
-  void Text_Box::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Text_Box::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(button != 1)
+      return;
+
     m_cursor_pos.x = int(pos.x - get_upper_left().x);
     m_cursor_pos.y = int(pos.y - get_upper_left().y);
 
     invalidate_edit_pos();
 
-    Widget_Button::on_mouse_button(pos, down);
+    Widget_Button::on_mouse_button(pos, down, button);
   }
 
   void Text_Box::on_accept() {
@@ -695,10 +704,10 @@ namespace Zeni {
     m_widget->on_key(m_keysym, m_down);
   }
 
-  void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     m_active = false;
 
-    m_widget->on_mouse_button(pos, down);
+    m_widget->on_mouse_button(pos, down, button);
   }
 
   void Widget_Input_Repeater::on_mouse_motion(const Point2i &pos) {
@@ -713,9 +722,9 @@ namespace Zeni {
       (*it)->on_key(keysym, down);
   }
 
-  void Widgets::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widgets::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->on_mouse_button(pos, down);
+      (*it)->on_mouse_button(pos, down, button);
   }
     
   void Widgets::on_mouse_motion(const Point2i &pos) {

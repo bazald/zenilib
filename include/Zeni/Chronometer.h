@@ -26,58 +26,39 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#ifdef ZENI_INLINES
+#include <Zeni/Chronometer.hxx>
+#endif
 
-#define ZENI_INLINES
+#ifndef ZENI_CHRONOMETER_H
+#define ZENI_CHRONOMETER_H
 
-#include <Zeni/Camera.h>
-#include <Zeni/Chronometer.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/Database.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Renderable.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sound_Source.h>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
 #include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
-#include <Zeni/XML.h>
+
+namespace Zeni {
+
+  template <class TIME>
+  class Chronometer {
+  public:
+    Chronometer();
+
+    // Controls
+    const TIME & start(); //< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
+    const TIME & stop(); //< Stop the Chronometer and get the current TIME.
+    void reset(); //< Reset the Chronometer.  This does NOT stop the Chronometer.
+
+    // Accessors
+    typename TIME::Second_Type seconds(); //< Get the number of seconds counted by the Chronometer.
+    const bool & running(); //< Get whether the Chronometer is currently counting or stopped.
+
+  private:
+    typename TIME::Second_Type m_seconds_counted;
+
+    TIME m_start_time;
+    TIME m_end_time;
+    bool m_running;
+  };
+
+}
 
 #endif
