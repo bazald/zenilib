@@ -28,6 +28,7 @@ library_scu = 'src/zenilib.cxx'
 
 program = [Glob('src/*.cpp')]
 library = [Glob('src/Zeni/*.cpp')]
+tinyxml = [Glob('src/TinyXML/*.cpp')]
 
 scu = ARGUMENTS.get('scu', 0)
 if scu == 'zeni' or scu == 'Zeni' or scu == 'ZENI':
@@ -110,6 +111,7 @@ if is_windows:
 else:
   program_name = 'zeniapp'
 library_name = 'zenilib'
+tinyxml_name = 'tinyxml'
 
 if is_windows:
   debug_optimization =   ' /Od              /Gy     /D "_DEBUG"     /RTC1 /MDd /ZI '
@@ -178,8 +180,10 @@ if is_windows:
 else:
   ccflags = defines + warnings + optimization + arch + profiling
   linkflags = arch + profiling
+  cpppath += ['/usr/local/include']
+  libpath += ['/usr/local/lib']
 
-libs += [library_name]
+libs += [library_name, tinyxml_name]
 
 env = Environment(
   CCFLAGS = ccflags,
@@ -200,6 +204,10 @@ env.Program(
 env.StaticLibrary(
   library_name,
   library)
+
+env.StaticLibrary(
+  tinyxml_name,
+  tinyxml)
 
 ### Provide help
 

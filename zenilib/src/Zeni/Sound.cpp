@@ -173,8 +173,8 @@ namespace Zeni {
   }
 
   Sound_Buffer::Loader::Loader(const string &filename)
-    : m_filename(filename),
-    m_duration(0.0f)
+    : m_duration(0.0f),
+    m_filename(filename)
   {
   }
 
@@ -233,19 +233,6 @@ namespace Zeni {
     alListenerfv(AL_POSITION, listener_position);
     alListenerfv(AL_VELOCITY, listener_velocity);
     alListenerfv(AL_ORIENTATION, listener_forward_and_up);
-
-    m_bgm = new Sound_Buffer();
-    if(!m_bgm) {
-      alutExit();
-      throw Sound_Init_Failure();
-    }
-
-    m_bgm_source = new Sound_Source(*m_bgm);
-    if(!m_bgm_source) {
-      delete m_bgm;
-      alutExit();
-      throw Sound_Init_Failure();
-    }
 #endif
   }
 
@@ -268,12 +255,9 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
+    assert_m_bgm();
+
     bool playing = m_bgm_source->is_playing() ? true : false;
-    float pitch = m_bgm_source->get_pitch();
-    float gain = m_bgm_source->get_gain();
-    Point3f position = m_bgm_source->get_position();
-    Vector3f velocity = m_bgm_source->get_velocity();
-    bool looping = m_bgm_source->is_looping();
 
     m_bgm_source->stop();
     m_bgm_source->set_buffer(get_Hello_World_Buffer());
@@ -281,17 +265,21 @@ namespace Zeni {
     m_bgm = 0;
 
     m_bgmusic = filename;
-    m_bgm = new Sound_Buffer(filename);
+    m_bgm = new Sound_Buffer(m_bgmusic);
     m_bgm_source->set_buffer(*m_bgm);
-    m_bgm_source->set_pitch(pitch);
-    m_bgm_source->set_gain(gain);
-    m_bgm_source->set_position(position);
-    m_bgm_source->set_velocity(velocity);
-    m_bgm_source->set_looping(looping);
+    m_bgm_source->set_time(0.0f);
 
     if(playing)
       m_bgm_source->play();
 #endif
+  }
+
+  void Sound::assert_m_bgm() {
+    if(!m_bgm)
+      m_bgm = new Sound_Buffer();
+
+    if(!m_bgm_source)
+      m_bgm_source = new Sound_Source(*m_bgm);
   }
 
 }

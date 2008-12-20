@@ -38,7 +38,7 @@ using namespace std;
 namespace Zeni {
 
   Colors::Colors()
-    : Database("config/colors.xml", "Colors")
+    : Database<Color>("config/colors.xml", "Colors")
   {
     init();
   }

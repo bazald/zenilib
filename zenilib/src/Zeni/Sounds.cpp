@@ -43,7 +43,7 @@ using namespace std;
 namespace Zeni {
 
   Sounds::Sounds()
-    : Database("config/sounds.xml", "Sounds")
+    : Database<Sound_Buffer>("config/sounds.xml", "Sounds")
   {
     init();
   }

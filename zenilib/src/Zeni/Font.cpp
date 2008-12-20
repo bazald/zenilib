@@ -57,8 +57,8 @@ namespace Zeni {
     : m_bold(bold),
     m_italic(italic),
     m_glyph_height(glyph_height),
-    m_font_name(font_name),
-    m_virtual_screen_height(virtual_screen_height)
+    m_virtual_screen_height(virtual_screen_height),
+    m_font_name(font_name)
   {
   }
 
@@ -150,8 +150,8 @@ namespace Zeni {
       //char t[2] = {c, '\0'};
       //source[c] = TTF_RenderText_Blended(font, t, color2);
       source[c] = TTF_RenderGlyph_Blended(font, c, color2);
-      font_width = max(font_width, source[c] ? source[c]->w : 0);
-      font_height = max(font_height, source[c] ? source[c]->h : 0);
+      font_width = max(font_width, float(source[c] ? source[c]->w : 0));
+      font_height = max(font_height, float(source[c] ? source[c]->h : 0));
     }
 
     /*** Initialize Intermediate SDL Surface ***/
