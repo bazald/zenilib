@@ -43,7 +43,7 @@ namespace Zeni {
   Quaternion Quaternion::Axis_Angle(const Vector3f &v, const float &theta) {
     const float half_theta = 0.5f * theta;
 
-    return Quaternion(cos(half_theta), sin(half_theta) * v);
+    return Quaternion(cos(half_theta), sin(half_theta) * v.normalized());
   }
   
   Quaternion Quaternion::Forward_Up(const Vector3f &destination_forward,
@@ -51,13 +51,13 @@ namespace Zeni {
                                     const Vector3f &default_forward,
                                     const Vector3f &default_up)
   {
-    const Vector3f axis0 = (default_forward % destination_forward).normalized();
+    const Vector3f axis0 = default_forward % destination_forward;
     const float angle0 = default_forward.angle_between(destination_forward);
 
     const Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
 
     const Vector3f intermediate_up = rotation0 * default_up;
-    const Vector3f axis1 = (intermediate_up % destination_up).normalized();
+    const Vector3f axis1 = intermediate_up % destination_up;
     const float angle1 = intermediate_up.angle_between(destination_up);
 
     const Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
