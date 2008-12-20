@@ -30,6 +30,7 @@
 #define ZENI_VIDEO_DX9_HXX
 
 // HXXed below
+#include <Zeni/Color.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
 #include <Zeni/Material.h>
@@ -312,7 +313,7 @@ namespace Zeni {
 
 #include <Zeni/Global_Undef.h>
 
-#include <Zeni/Fonts.h>
+#include <Zeni/Color.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Material.hxx>

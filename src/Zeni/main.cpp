@@ -231,10 +231,10 @@ int main(int argc, char *argv[]) {
 #else
   if(!SetDllDirectory("bin")) {
 #endif
-#endif
     cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
     return -1;
   }
+#endif
 
   return main2(argc, argv);
 }

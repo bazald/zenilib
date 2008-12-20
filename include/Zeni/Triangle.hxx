@@ -155,22 +155,30 @@ namespace Zeni {
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt0() const {
-    return new Triangle<VERTEX>(a, b.interpolate_to(0.5f, a), c.interpolate_to(0.5f, a), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a, b.interpolate_to(0.5f, a), c.interpolate_to(0.5f, a));
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt1() const {
-    return new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b, c.interpolate_to(0.5f, b), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b, c.interpolate_to(0.5f, b));
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt2() const {
-    return new Triangle<VERTEX>(a.interpolate_to(0.5f, c), b.interpolate_to(0.5f, c), c, m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, c), b.interpolate_to(0.5f, c), c);
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt3() const {
-    return new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b.interpolate_to(0.5f, c), c.interpolate_to(0.5f, a), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b.interpolate_to(0.5f, c), c.interpolate_to(0.5f, a));
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>

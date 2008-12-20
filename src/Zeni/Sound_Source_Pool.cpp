@@ -28,6 +28,7 @@
 
 #include <Zeni/Sound_Source_Pool.h>
 
+#include <Zeni/Sound.hxx>
 #include <Zeni/Sound_Source.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Mutex.hxx>

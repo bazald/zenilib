@@ -39,7 +39,7 @@ using namespace std;
 namespace Zeni {
 
   Fonts::Fonts()
-    : Database("config/fonts.xml", "Fonts")
+    : Database<Font>("config/fonts.xml", "Fonts")
   {
     TTF_Init();
 

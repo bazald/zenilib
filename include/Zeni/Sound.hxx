@@ -59,6 +59,8 @@ namespace Zeni {
     ALfloat listener_position[3] = {position.x, position.y, position.z};
     alListenerfv(AL_POSITION, listener_position);
 
+    assert_m_bgm();
+
     m_bgm_source->set_position(position);
 #endif
   }
@@ -71,6 +73,8 @@ namespace Zeni {
 #ifndef DISABLE_AL
     ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
     alListenerfv(AL_VELOCITY, listener_velocity);
+
+    assert_m_bgm();
 
     m_bgm_source->set_velocity(velocity);
 #endif
@@ -92,7 +96,6 @@ namespace Zeni {
   }
 
   Point3f Sound::get_listener_position() const {
-    return m_bgm_source->get_position();
     ALfloat listener_position[3] = {0.0f, 0.0f, 0.0f};
 #ifndef DISABLE_AL
     alGetListenerfv(AL_POSITION, listener_position);
@@ -122,6 +125,8 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
+    assert_m_bgm();
+
     m_bgm_source->set_pitch(pitch);
 #endif
   }
@@ -132,8 +137,9 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_gain(gain);
+    assert_m_bgm();
+
+    m_bgm_source->set_gain(gain);
 #endif
   }
 
@@ -143,8 +149,9 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_looping(looping);
+    assert_m_bgm();
+
+    m_bgm_source->set_looping(looping);
 #endif
   }
 
@@ -154,48 +161,69 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_time(time);
+    assert_m_bgm();
+
+    m_bgm_source->set_time(time);
 #endif
   }
 
   float Sound::get_BGM_pitch() {
+    assert_m_bgm();
+
     return m_bgm_source->get_pitch();
   }
 
   float Sound::get_BGM_gain() {
+    assert_m_bgm();
+
     return m_bgm_source->get_gain();
   }
 
   bool Sound::is_BGM_looping() {
+    assert_m_bgm();
+
     return m_bgm_source->is_looping();
   }
 
   float Sound::get_BGM_time() {
+    assert_m_bgm();
+
     return m_bgm_source->get_time();
   }
 
   bool Sound::playing_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_playing();
   }
 
   bool Sound::paused_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_paused();
   }
 
   bool Sound::stopped_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_stopped();
   }
 
   void Sound::play_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->play();
   }
 
   void Sound::pause_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->pause();
   }
   
   void Sound::stop_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->stop();
   }
 
