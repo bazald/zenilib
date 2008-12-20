@@ -26,58 +26,66 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+#ifndef ZENI_CHRONOMETER_HXX
+#define ZENI_CHRONOMETER_HXX
 
-#define ZENI_INLINES
-
-#include <Zeni/Camera.h>
-#include <Zeni/Chronometer.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/Database.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Renderable.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sound_Source.h>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
+// HXXed below
 #include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
-#include <Zeni/Widget.h>
-#include <Zeni/XML.h>
+
+#include <Zeni/Chronometer.h>
+#include <cassert>
+
+namespace Zeni {
+
+  template <class TIME>
+  Chronometer<TIME>::Chronometer()
+    : m_seconds_counted(0.0f),
+    m_running(false)
+  {
+  }
+
+  template <class TIME>
+  const TIME & Chronometer<TIME>::start() {
+    assert(!m_running);
+
+    m_running = true;
+    m_start_time.update();
+
+    return m_start_time;
+  }
+
+  template <class TIME>
+  const TIME & Chronometer<TIME>::stop() {
+    m_end_time.update();
+
+    assert(m_running);
+
+    m_running = false;
+    m_seconds_counted += m_end_time.get_seconds_since(m_start_time);
+
+    return m_end_time;
+  }
+
+  template <class TIME>
+  void Chronometer<TIME>::reset() {
+    m_start_time.update();
+    m_seconds_counted = 0.0f;
+  }
+
+  template <class TIME>
+  typename TIME::Second_Type Chronometer<TIME>::seconds() {
+    return m_seconds_counted + (m_running ?
+                                m_start_time.get_seconds_passed() :
+                                0.0f);
+  }
+
+  template <class TIME>
+  const bool & Chronometer<TIME>::running() {
+    return m_running;
+  }
+
+}
+
+#include <Zeni/Chronometer.hxx>
 
 #endif

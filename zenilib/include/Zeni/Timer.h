@@ -107,6 +107,9 @@ namespace Zeni {
 
   class Time {
   public:
+    typedef int Tick_Type;
+    typedef float Second_Type;
+
     Time(); ///< Initialize to the current time
     Time(const int &ticks);
     inline Time & operator=(const int &ticks);
@@ -165,6 +168,9 @@ namespace Zeni {
 
   class Time_HQ {
   public:
+    typedef HQ_Tick_Type Tick_Type;
+    typedef long double Second_Type;
+
     Time_HQ(); ///< Initialize to the current time
     Time_HQ(const HQ_Tick_Type &ticks);
     Time_HQ(const HQ_Tick_Type &ticks, const HQ_Tick_Type &ticks_per_second);

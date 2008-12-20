@@ -51,13 +51,15 @@ namespace Zeni {
 
   void Widget::on_event(const SDL_MouseButtonEvent &event) {
     on_mouse_button(Point2i(event.x, event.y),
-                    event.type == SDL_MOUSEBUTTONDOWN);
+                    event.type == SDL_MOUSEBUTTONDOWN,
+                    event.button);
   }
 
   void Widget::on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector) {
     const Point2f projected = projector.unproject(Point2f(event.x, event.y));
     on_mouse_button(Point2i(int(projected.x), int(projected.y)),
-                    event.type == SDL_MOUSEBUTTONDOWN);
+                    event.type == SDL_MOUSEBUTTONDOWN,
+                    event.button);
   }
 
   void Widget::on_event(const SDL_MouseMotionEvent &event) {
