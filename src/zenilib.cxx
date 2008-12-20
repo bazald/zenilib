@@ -28,6 +28,11 @@
 
 #include <zenilib.h>
 
+#include "TinyXML/tinystr.cpp"
+#include "TinyXML/tinyxml.cpp"
+#include "TinyXML/tinyxmlerror.cpp"
+#include "TinyXML/tinyxmlparser.cpp"
+
 #include "Zeni/Camera.cpp"
 #include "Zeni/Collision.cpp"
 #include "Zeni/Color.cpp"
