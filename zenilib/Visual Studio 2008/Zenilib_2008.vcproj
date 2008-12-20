@@ -2099,6 +2099,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Chronometer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Collision.h"
 				>
 			</File>
@@ -2305,6 +2309,10 @@
 			>
 			<File
 				RelativePath="..\include\Zeni\Camera.hxx"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Chronometer.hxx"
 				>
 			</File>
 			<File
