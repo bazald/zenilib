@@ -252,6 +252,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Font.h>
 #include <Zeni/Line_Segment.h>
+#include <Zeni/Projector.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
@@ -276,7 +277,9 @@ namespace Zeni {
 
     inline void on_event(const SDL_KeyboardEvent &event);
     inline void on_event(const SDL_MouseButtonEvent &event);
+    inline void on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector);
     inline void on_event(const SDL_MouseMotionEvent &event);
+    inline void on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector);
 
     virtual void on_key(const SDL_keysym & /*keysym*/, const bool & /*down*/) {}
     virtual void on_mouse_button(const Point2i &pos, const bool &down) = 0;

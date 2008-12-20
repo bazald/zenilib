@@ -32,6 +32,7 @@
 // HXXed below
 #include <Zeni/Font.h>
 #include <Zeni/Material.h>
+#include <Zeni/Projector.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Widget.h>
@@ -49,11 +50,23 @@ namespace Zeni {
   }
 
   void Widget::on_event(const SDL_MouseButtonEvent &event) {
-    on_mouse_button(Point2i(event.x, event.y), event.type == SDL_MOUSEBUTTONDOWN);
+    on_mouse_button(Point2i(event.x, event.y),
+                    event.type == SDL_MOUSEBUTTONDOWN);
+  }
+
+  void Widget::on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector) {
+    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    on_mouse_button(Point2i(int(projected.x), int(projected.y)),
+                    event.type == SDL_MOUSEBUTTONDOWN);
   }
 
   void Widget::on_event(const SDL_MouseMotionEvent &event) {
     on_mouse_motion(Point2i(event.x, event.y));
+  }
+
+  void Widget::on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector) {
+    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    on_mouse_motion(Point2i(int(projected.x), int(projected.y)));
   }
 
   Point2f Widget_Positioned::get_lower_left() const {
@@ -476,6 +489,7 @@ namespace Zeni {
 
 #include <Zeni/Font.hxx>
 #include <Zeni/Material.hxx>
+#include <Zeni/Projector.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif

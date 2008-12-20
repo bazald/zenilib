@@ -75,6 +75,7 @@
 #ifndef ZENI_PROJECTOR_H
 #define ZENI_PROJECTOR_H
 
+#include <Zeni/Camera.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
