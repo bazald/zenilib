@@ -194,7 +194,7 @@ namespace Zeni {
     inline Texture * load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
+      const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
 
     // Initialization Functions

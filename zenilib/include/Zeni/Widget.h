@@ -574,7 +574,7 @@ namespace Zeni {
       Word(const Type &type_ = NONSENSE) : unformatted_glyph_sides(1, 0), type(type_), splittable(false), fpsplit(false) {}
 
       std::string unformatted;
-      std::vector<int> unformatted_glyph_sides;
+      std::vector<float> unformatted_glyph_sides;
       Type type;
       bool splittable;
       bool fpsplit; // indicates it has been split already and a '-' should be appended
@@ -584,7 +584,7 @@ namespace Zeni {
       Line() : glyph_top(0), endled(false) {}
 
       std::string formatted;
-      int glyph_top;
+      float glyph_top;
       bool endled;
     };
 
@@ -596,8 +596,8 @@ namespace Zeni {
 
     std::string clean_string(const std::string &unclean_string) const;
     std::string untablinebreak(const std::string &tabbed_text) const;
-    int get_text_width(const Font &font, const std::string &text); 
-    int max_line_width() const;
+    float get_text_width(const Font &font, const std::string &text); 
+    float max_line_width() const;
 
     inline void invalidate_edit_pos();
 

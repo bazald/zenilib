@@ -59,11 +59,12 @@ namespace Zeni {
 
   Font * Fonts::load(XML_Element &xml_element) {
     const string filepath = xml_element["filepath"].to_string();
-    const int height = xml_element["height"].to_int();
+    const float height = xml_element["height"].to_float();
     const bool bold = xml_element["bold"].to_bool();
     const bool italics = xml_element["italics"].to_bool();
+    const float virtual_screen_height = xml_element["virtual_screen_height"].to_float();
 
-    return get_Video().create_Font(filepath, bold, italics, height);
+    return get_Video().create_Font(filepath, bold, italics, height, virtual_screen_height);
   }
 
 }

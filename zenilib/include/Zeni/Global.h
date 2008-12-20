@@ -81,6 +81,10 @@
 // Collision.cpp
 #define ZENI_COLLISION_EPSILON (0.0001f)
 
+// Font.cpp
+#define MINIMUM_VIRTUAL_SCREEN_HEIGHT (320.0f)
+#define MAXIMUM_VIRTUAL_SCREEN_HEIGHT (9600.0f)
+
 // Gamestate.cpp
 #define ZENI_DEFAULT_II_MIN_CONFIDENCE (0.1f)
 #define ZENI_DEFAULT_II_MAX_CONFIDENCE (1.0f)
