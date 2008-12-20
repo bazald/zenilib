@@ -30,6 +30,7 @@
 #define ZENI_PROJECTOR_HXX
 
 // HXXed below
+#include <Zeni/Camera.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
@@ -158,6 +159,7 @@ namespace Zeni {
 
 }
 
+#include <Zeni/Camera.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Matrix4f.hxx>

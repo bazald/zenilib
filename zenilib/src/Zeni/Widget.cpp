@@ -296,7 +296,9 @@ namespace Zeni {
           }
           break;
         case SDLK_HOME:
-          if(m_cursor_index.x) {
+          if(keysym.mod & KMOD_CTRL)
+            seek_cursor(0);
+          else if(m_cursor_index.x) {
             int cursor_pos = get_cursor_pos() - m_cursor_index.x;
             if(m_lines[m_cursor_index.y].endled)
               ++cursor_pos;
@@ -306,7 +308,9 @@ namespace Zeni {
           break;
         case SDLK_END:
           {
-            int cursor_pos = get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
+            int cursor_pos = keysym.mod & KMOD_CTRL ?
+                             get_max_cursor_seek() :
+                             get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
             
             seek_cursor(cursor_pos);
           }
