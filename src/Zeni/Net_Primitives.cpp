@@ -447,3 +447,5 @@ namespace Zeni {
     return is;
   }
 }
+
+#include <Zeni/Global_Undef.h>

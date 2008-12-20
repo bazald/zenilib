@@ -742,3 +742,5 @@ namespace Zeni {
 #endif
 
 }
+
+#include <Zeni/Global_Undef.h>

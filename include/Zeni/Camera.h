@@ -79,7 +79,6 @@ namespace Zeni {
     inline float get_tunnel_vision_factor() const; ///< Get the tunnel vision factor a.k.a. how far to pull back the focal point, scaling the near distance and keeping all else equal.
 
     // Modifiers
-    void set_forward_and_up(const Vector3f &forward, const Vector3f &up); ///< Set the orientation of the camera
     inline void set_fov_deg(const float &degrees); ///< Set the field of view (in the y-axis) in degrees.
 
     // Convenience Functions
@@ -100,7 +99,7 @@ namespace Zeni {
     void move_left_xy(const float &distance); ///< Move the camera in the left direction, projected onto the xy-plane.
     void turn_left_xy(const float &theta); ///< Turn the camera left about the z-axis.
 
-    void look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal = Vector3f(0.0f, 0.0f, 1.0f)); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for a Plane with the given normal Vector3f.
+    void look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal = ZENI_DEFAULT_UP_VECTOR); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for a Plane with the given normal Vector3f.
     void look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for the given Plane.
 
     Point3f position;

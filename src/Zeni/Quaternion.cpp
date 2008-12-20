@@ -45,6 +45,25 @@ namespace Zeni {
 
     return Quaternion(cos(half_theta), sin(half_theta) * v);
   }
+  
+  Quaternion Quaternion::Forward_Up(const Vector3f &destination_forward,
+                                    const Vector3f &destination_up,
+                                    const Vector3f &default_forward,
+                                    const Vector3f &default_up)
+  {
+    const Vector3f axis0 = (default_forward % destination_forward).normalized();
+    const float angle0 = default_forward.angle_between(destination_forward);
+
+    const Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
+
+    const Vector3f intermediate_up = rotation0 * default_up;
+    const Vector3f axis1 = (intermediate_up % destination_up).normalized();
+    const float angle1 = intermediate_up.angle_between(destination_up);
+
+    const Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
+
+    return rotation1 * rotation0;
+  }
 
   Quaternion::Quaternion(const float &yaw, const float &pitch, const float &roll) {
     const float half_yaw = 0.5f * yaw;
@@ -95,3 +114,5 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

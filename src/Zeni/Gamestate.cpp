@@ -876,3 +876,5 @@ default: return "SDLK_UNKNOWN";
   bool Quit_Event::fired = false;
 
 }
+
+#include <Zeni/Global_Undef.h>
