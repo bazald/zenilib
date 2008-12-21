@@ -57,15 +57,19 @@ namespace Zeni {
   }
 
   void Renderable::fax_Material(Material * const &material) {
-    give_Material(new Material(*material));
+    give_Material(material ?
+                  new Material(*material) :
+                  0);
   }
 
   void Renderable::pre_render() const {
-    get_Video().set_material(*m_material);
+    if(m_material)
+      get_Video().set_material(*m_material);
   }
 
   void Renderable::post_render() const {
-    get_Video().set_material(*m_material);
+    if(m_material)
+      get_Video().unset_material(*m_material);
   }
 
 }
