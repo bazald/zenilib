@@ -1,3 +1,14 @@
+*** ENABLING DEBUGGING ***
+
+Unfortunately, this must be done on a per-host and per-user basis:
+
+  1. Right-click on project Zeniapp in the Solution Explorer.
+  2. Left-click on Properties in the menu that pops up.
+  3. Navigate to 'Configuration Properties'/'Debugging'
+  4. For 'All Configurations' in 'Win32' and in 'x64'
+     Set the 'Working Directory' to '..'
+     Set the 'Environment' to 'PATH=bin;bin\x64'
+
 *** ENABLING AND DISABLING LIBRARIES ***
 
 (A)  Direct3D 9     OpenGL         OpenAL
