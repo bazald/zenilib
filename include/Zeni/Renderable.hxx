@@ -40,19 +40,23 @@ namespace Zeni {
     : m_material(0),
     delete_m_material(false)
   {
-    static Material material;
-    m_material = &material;
   }
 
   Renderable::Renderable(const Renderable &rhs)
-    : m_material(rhs.delete_m_material ? new Material(*rhs.m_material) : rhs.m_material),
-    delete_m_material(rhs.delete_m_material)
+    : m_material(0),
+    delete_m_material(false)
   {
+    if(rhs.delete_m_material)
+      fax_Material(rhs.m_material);
+    else
+      lend_Material(rhs.m_material);
   }
 
   Renderable & Renderable::operator=(const Renderable &rhs) {
-    m_material = rhs.delete_m_material ? new Material(*rhs.m_material) : rhs.m_material;
-    delete_m_material = rhs.delete_m_material;
+    if(rhs.delete_m_material)
+      fax_Material(rhs.m_material);
+    else
+      lend_Material(rhs.m_material);
 
     return *this;
   }
