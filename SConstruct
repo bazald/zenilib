@@ -26,6 +26,7 @@ elif is_linux or is_max:
 program_scu = 'src/zeniapp.cxx'
 library_scu = 'src/zenilib.cxx'
 
+launcher = ['Visual Studio 2008/Launcher.cpp']
 program = [Glob('src/*.cpp')]
 library = [Glob('src/Zeni/*.cpp')]
 tinyxml = [Glob('src/TinyXML/*.cpp')]
@@ -58,7 +59,7 @@ else:
 
 libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_gfx', 'SDL_ttf', 'SDL_net', 'Cg']
 if is_windows:
-  libs += ['lib3ds-2_0', 'user32']
+  libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
 else:
   libs += ['lib3ds']
 if is_windows:
@@ -106,6 +107,7 @@ if int(pedantic):
 
 ### Decide optimization
 
+launcher_name = 'Launch_Zeniapp'
 if is_windows:
   program_name = 'Zeniapp'
 else:
@@ -123,9 +125,11 @@ else:
 debug = ARGUMENTS.get('debug', 0)
 if int(debug):
   if is_win64:
+    launcher_name += '_x64d'
     program_name += '_x64d'
     library_name += '_x64d'
   else:
+    launcher_name += '_d'
     program_name += '_d'
     library_name += '_d'
   if is_windows:
@@ -135,6 +139,7 @@ else:
   if is_windows:
     link_optimization = ' /INCREMENTAL:NO /OPT:REF /OPT:ICF /LTCG '
     if is_win64:
+      launcher_name += '_x64'
       program_name += '_x64'
       library_name += '_x64'
   optimization = release_optimization;
@@ -183,7 +188,9 @@ else:
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
 
-libs += [library_name, tinyxml_name]
+libs += [library_name]
+if not is_windows:
+  libs += [tinyxml_name]
 
 env = Environment(
   CCFLAGS = ccflags,
@@ -205,9 +212,14 @@ env.StaticLibrary(
   library_name,
   library)
 
-env.StaticLibrary(
-  tinyxml_name,
-  tinyxml)
+if is_windows:
+  env.Program(
+    launcher_name,
+    launcher)
+else:
+  env.StaticLibrary(
+    tinyxml_name,
+    tinyxml)
 
 ### Provide help
 
@@ -225,5 +237,7 @@ if not is_windows:
 opts.Add('scu', 'Set to \'scu\' to use SCU for everything or set to \'zeni\' to use SCU on zenilib only', 0)
 if not is_windows:
   opts.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', 0)
+if is_windows:
+  opts.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', 0)
 opts.Update(env)
 Help(opts.GenerateHelpText(env))
