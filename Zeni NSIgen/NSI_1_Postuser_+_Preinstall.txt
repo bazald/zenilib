@@ -1,10 +1,10 @@
 ; User Defines End
 
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${EXECUTABLE_FILE}"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
-SetCompressor lzma
+SetCompressor /solid lzma
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -31,12 +31,8 @@ SetCompressor lzma
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
-!define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME_X32}"
+!define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME_X86}"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchZeniappX86"
-!define MUI_FINISHPAGE_RUN
-!define MUI_FINISHPAGE_RUN_NOTCHECKED
-!define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME_X64}"
-!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchZeniappX64"
 !define MUI_FINISHPAGE_SHOWREADME_CHECKED
 !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
 !insertmacro MUI_PAGE_FINISH
@@ -54,9 +50,9 @@ Function LaunchZeniappX86
   ExecShell "" "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk"
 FunctionEnd
 
-Function LaunchZeniappX64
-  ExecShell "" "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk"
-FunctionEnd
+;Function LaunchZeniappX64
+;  ExecShell "" "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk"
+;FunctionEnd
 
 ; MUI end ------
 

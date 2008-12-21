@@ -1,4 +1,4 @@
-Zenipex Library           (Most Recently Updated at 0.2.6.0)
+Zenipex Library           (Most Recently Updated at 0.3.0.0)
 ============================================================
 
 Contents
@@ -85,48 +85,29 @@ This software is known to operate on:
 - Windows: XP, Vista x64
 - Linux: {Ku,U,Xu}buntu
 
-It should be possible to build it on any platform supporting:
+It should be possible to build it on any platform supported by:
 
-The Simple Directmedia Layer (SDL) [http://www.libsdl.org/download-1.2.php]
+DirectX    9.0c 2008         (Proprietary)           http://msdn.microsoft.com/directx/sdk/
+OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
+OpenGL                       (Proprietary)
 
-Direct3D 9 [http://msdn.microsoft.com/directx/]
-     and/or
-OpenGL [http://www.opengl.org/]
-        - Required for graphics
-
-OpenAL [http://www.openal.org/downloads.html]
-     and
-ALUT [http://www.openal.org/downloads.html]
-     and
-libogg [http://xiph.org/downloads/]
-     and
-libvorbis [http://xiph.org/downloads/]
-        - Required for sound
-
-SDL_image [http://www.libsdl.org/projects/SDL_image/]
-     and
-libjpeg [http://gnuwin32.sourceforge.net/packages/jpeg.htm]
-     and
-libpng [http://www.libpng.org/pub/png/libpng.html]
-     and
-zlib [http://www.zlib.net/]
-        - Required for texture loading for OpenGL
-
-SDL_gfx [http://www.ferzkopp.net/joomla/content/view/19/14/]
-        - Possibly required for texture resizing for OpenGL
-        - Not required if images loaded are already in the 
-          correcty format (both width and height powers of 2)
-
-SDL_net [http://www.libsdl.org/projects/SDL_net/]
-        - For TCP/UDP networking
-
-SDL_ttf [http://www.libsdl.org/projects/SDL_ttf/]
-        - Required for text rendering in OpenGL
-
-lib3ds [http://lib3ds.sourceforge.net/]
-        - Required for model loading and rendering
-
-
+ALUT       1.1.0             (GNU LGPL)              http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
+Cg Toolkit 2.1 November 2008 (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
+FreeType2  2.3.7             (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
+GLEW       1.5.1             (BSD License)           http://glew.sourceforge.net/
+lib3ds     2.0 RC 1          (GNU LGPL)              http://lib3ds.sourceforge.net/
+libjpeg    6b4               (BSD License)           http://gnuwin32.sourceforge.net/packages/jpeg.htm
+libogg     1.1.3             (Xiph BSD-like License) http://xiph.org/downloads/
+libpng     1.2.33            (zlib/libpng License)   http://www.libpng.org/pub/png/libpng.html
+libtiff    3.8.2             (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
+libvorbis  1.2.0             (Xiph BSD-like License) http://xiph.org/downloads/
+SDL        1.2.13            (GNU LGPL)              http://www.libsdl.org/download-1.2.php
+SDL_gfx    2.0.17            (GNU LGPL)              http://www.ferzkopp.net/joomla/content/view/19/14/
+SDL_image  1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
+SDL_net    1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
+SDL_ttf    2.0.9             (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/
+TinyXML    2.5.3             (zlib/libpng License)   http://sourceforge.net/project/showfiles.php?group_id=13559
+zlib       1.2.3             (zlib/libpng License)   http://www.zlib.net/
 
 4. Documentation
 ================
