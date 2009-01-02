@@ -28,6 +28,8 @@
 
 #include <Zeni/Net_Primitives.h>
 
+#include <sstream>
+
 #include <Zeni/Global.h>
 
 using namespace std;
@@ -128,6 +130,12 @@ namespace Zeni {
     return buf;
   }
 
+  string ftoa(const float &number, const unsigned int &precision) {
+    ostringstream oss;
+    oss << std::setprecision(precision) << number;
+    return oss.str();
+  }
+
   string dtoa(const double &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
@@ -137,6 +145,12 @@ namespace Zeni {
   #endif
       (buf, "%f", number);
     return buf;
+  }
+
+  string dtoa(const double &number, const unsigned int &precision) {
+    ostringstream oss;
+    oss << std::setprecision(precision) << number;
+    return oss.str();
   }
 
   string ldtoa(const long double &number) {

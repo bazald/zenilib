@@ -92,7 +92,9 @@ namespace Zeni {
   std::string ultoa(const unsigned long &number);
   std::string ltoa(const long &number);
   std::string ftoa(const float &number);
+  std::string ftoa(const float &number, const unsigned int &precision);
   std::string dtoa(const double &number);
+  std::string dtoa(const double &number, const unsigned int &precision);
   std::string ldtoa(const long double &number);
   std::string iptoa(const IPaddress &address);
 

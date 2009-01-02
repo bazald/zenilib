@@ -68,7 +68,7 @@ namespace Zeni {
   }
   
   void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
-    if(button != 1)
+    if(button != SDL_BUTTON_LEFT)
       return;
 
     const bool inside = is_inside(pos);
@@ -215,7 +215,7 @@ namespace Zeni {
   }
 
   void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
-    if(button != 1)
+    if(button != SDL_BUTTON_LEFT)
       return;
 
     if(down) {
@@ -366,7 +366,7 @@ namespace Zeni {
   }
 
   void Text_Box::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
-    if(button != 1)
+    if(button != SDL_BUTTON_LEFT)
       return;
 
     m_cursor_pos.x = int(pos.x - get_upper_left().x);

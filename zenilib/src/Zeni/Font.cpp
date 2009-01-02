@@ -63,7 +63,7 @@ namespace Zeni {
   }
 
   Font_FT::Glyph::Glyph()
-    : m_glyph_width(0)
+    : m_glyph_width(0.0f)
   {
   }
 
@@ -94,10 +94,10 @@ namespace Zeni {
     SDL_FreeSurface(source);
   }
 
-  void Font_FT::Glyph::render(const Point2f &position) const {
+  void Font_FT::Glyph::render(const Point2f &position, const float &vratio) const {
     static Video &vr = get_Video();
-    const float &x = position.x;
-    const float &y = position.y;
+    const float x = int(position.x * vratio + 0.5f) / vratio;
+    const float y = int(position.y * vratio + 0.5f) / vratio;
 
     Quadrilateral<Vertex2f_Texture> rect
       (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel),
@@ -109,7 +109,8 @@ namespace Zeni {
   }
 
   Font_FT::Font_FT()
-    : m_font_height(0)
+    : m_font_height(0.0f),
+    m_vratio(0.0f)
   {
     memset(m_glyph, 0, num_glyphs * sizeof(Glyph *));
   }
@@ -123,11 +124,10 @@ namespace Zeni {
            virtual_screen_height > MAXIMUM_VIRTUAL_SCREEN_HEIGHT) ?
            float(get_Video().get_screen_height()) : virtual_screen_height,
            filepath),
-    m_font_height(glyph_height)
+    m_font_height(glyph_height),
+    m_vratio(get_Video().get_screen_height() / get_virtual_screen_height())
   {
-    const float vratio = get_Video().get_screen_height() / get_virtual_screen_height();
-
-    TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(glyph_height * vratio + 0.5f));
+    TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(glyph_height * m_vratio + 0.5f));
     if(!font)
       throw Font_Init_Failure();
 
@@ -173,7 +173,7 @@ namespace Zeni {
     for(unsigned char c = 1; c; ++c) {
       dstrect.x = Sint16((c % 16) * font_width);
       dstrect.y = Sint16((c / 16) * font_height);
-      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h, vratio);
+      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h, m_vratio);
     }
 
     /*** Correct Transparency ***/
@@ -258,7 +258,7 @@ NEXT_LINE:
         goto NEXT_LINE;
       }
       else if(m_glyph[int(text[i])]) {
-        m_glyph[int(text[i])]->render(Point2f(cx, cy));
+        m_glyph[int(text[i])]->render(Point2f(cx, cy), m_vratio);
         cx += m_glyph[int(text[i])]->get_glyph_width();
       }
     }
