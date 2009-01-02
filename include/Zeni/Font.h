@@ -121,7 +121,7 @@ namespace Zeni {
 
       inline float get_glyph_width() const;
 
-      void render(const Point2f &position) const;
+      void render(const Point2f &position, const float &vratio) const;
 
     private:
       float m_glyph_width;
@@ -146,6 +146,7 @@ namespace Zeni {
     Glyph *m_glyph[num_glyphs];
     Texture *m_texture;
     float m_font_height;
+    float m_vratio;
   };
 
   struct Font_Type_Unsupported : Error {
