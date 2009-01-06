@@ -83,12 +83,24 @@ namespace Zeni {
     return g_multisampling;
   }
 
-  const bool & Video::zwrite_enabled() const {
+  const bool & Video::is_zwrite_enabled() const {
     return m_zwrite;
   }
 
-  const bool & Video::ztest_enabled() const {
+  const bool & Video::is_ztest_enabled() const {
     return m_ztest;
+  }
+
+  const bool & Video::is_alpha_test_enabled() const {
+    return m_alpha_test;
+  }
+
+  const Video::TEST & Video::get_alpha_test_function() const {
+    return m_alpha_function;
+  }
+
+  const float & Video::get_alpha_test_value() const {
+    return m_alpha_value;
   }
 
   void Video::set_2d() {
@@ -292,6 +304,16 @@ namespace Zeni {
     m_ztest = enabled;
 
     VIDEO_IV_FCN_CALL(set_ztest_impl, enabled);
+  }
+
+  void Video::set_alpha_test(const bool &enabled,
+                             const TEST &test,
+                             const float &value) {
+    m_alpha_test = enabled;
+    m_alpha_function = test;
+    m_alpha_value = value;
+
+    VIDEO_IV_FCN_CALL(set_alpha_test_impl, enabled, test, value);
   }
 
   void Video::set_color(const Color &color) {

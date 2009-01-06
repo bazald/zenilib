@@ -104,6 +104,33 @@ namespace Zeni {
       glDisable(GL_DEPTH_TEST);
   }
 
+  void Video_GL::set_alpha_test_impl(const bool &enabled,
+                                     const TEST &test,
+                                     const float &value) {
+    GLenum func;
+
+    switch(test) {
+      case ZENI_NEVER:            func = GL_NEVER;    break;
+      case ZENI_LESS:             func = GL_LESS;     break;
+      case ZENI_EQUAL:            func = GL_EQUAL;    break;
+      case ZENI_GREATER:          func = GL_GREATER;  break;
+      case ZENI_NOT_EQUAL:        func = GL_NOTEQUAL; break;
+      case ZENI_LESS_OR_EQUAL:    func = GL_LEQUAL;   break;
+      case ZENI_GREATER_OR_EQUAL: func = GL_GEQUAL;   break;
+      case ZENI_ALWAYS:           func = GL_ALWAYS;   break;
+      default:
+        assert(false);
+        return;
+    }
+
+    if(enabled)
+      glEnable(GL_ALPHA_TEST);
+    else
+      glDisable(GL_ALPHA_TEST);
+
+    glAlphaFunc(func, value); 
+  }
+
   void Video_GL::set_color_impl(const Color &color) {
     glColor4f(color.r, color.g, color.b, color.a);
   }

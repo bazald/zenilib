@@ -29,6 +29,7 @@
 #include <Zeni/Net_Primitives.h>
 
 #include <sstream>
+#include <iomanip>
 
 #include <Zeni/Global.h>
 

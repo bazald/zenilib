@@ -172,6 +172,7 @@ namespace Zeni {
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
     set_ambient_lighting(Color());
+    set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
 
     // Manage extensions
     union {

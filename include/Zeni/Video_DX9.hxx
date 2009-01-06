@@ -68,7 +68,8 @@ namespace Zeni {
   }
 
   void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
-    Matrix4f world = Matrix4f::Identity();
+    Matrix4f world = Matrix4f::Scale(Vector3f(1.0f, 1.0f, 0.5f)) *
+                     Matrix4f::Translate(Vector3f(0.0f, 0.0f, 1.0f));
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
     m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
@@ -106,6 +107,36 @@ namespace Zeni {
     }
     else
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+  }
+
+  void Video_DX9::set_alpha_test_impl(const bool &enabled,
+                                      const TEST &test,
+                                      const float &value) {
+    D3DCMPFUNC func;
+
+    switch(test) {
+      case ZENI_NEVER:            func = D3DCMP_NEVER;        break;
+      case ZENI_LESS:             func = D3DCMP_LESS;         break;
+      case ZENI_EQUAL:            func = D3DCMP_EQUAL;        break;
+      case ZENI_GREATER:          func = D3DCMP_GREATER;      break;
+      case ZENI_NOT_EQUAL:        func = D3DCMP_NOTEQUAL;     break;
+      case ZENI_LESS_OR_EQUAL:    func = D3DCMP_LESSEQUAL;    break;
+      case ZENI_GREATER_OR_EQUAL: func = D3DCMP_GREATEREQUAL; break;
+      case ZENI_ALWAYS:           func = D3DCMP_ALWAYS;       break;
+      default:
+        assert(false);
+        return;
+    }
+
+    int ref = static_cast<int>(255.0f * value + 0.5f);
+    if(ref < 0)
+      ref = 0;
+    else if(ref > 0xFF)
+      ref = 0xFF;
+
+    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, enabled);
+    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, ref);
+    m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, func);
   }
 
   void Video_DX9::set_color_impl(const Color &color) {

@@ -104,6 +104,15 @@ namespace Zeni {
     Video & operator=(const Video &);
 
   public:
+    enum TEST {ZENI_NEVER = 0,
+               ZENI_LESS = 1,
+               ZENI_EQUAL = 2,
+               ZENI_GREATER = 4,
+               ZENI_NOT_EQUAL = 8,
+               ZENI_LESS_OR_EQUAL = 3,
+               ZENI_GREATER_OR_EQUAL = 6,
+               ZENI_ALWAYS = 15};
+
     // Rendering functions
     virtual void render_all() = 0; ///< Render the scene
     inline void render(const Renderable &renderable); ///< Render a Renderable
@@ -121,8 +130,11 @@ namespace Zeni {
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
     inline int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
     inline bool has_vertex_buffers() const; ///< Determine whether Vertex_Buffers are supported
-    inline const bool & zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
-    inline const bool & ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
+    inline const bool & is_zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
+    inline const bool & is_ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
+    inline const bool & is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
+    inline const TEST & get_alpha_test_function() const; ///< Determine which alpha test is in use
+    inline const float & get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
 
     // Modifiers
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
@@ -130,10 +142,11 @@ namespace Zeni {
     inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
     inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
     inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
-    inline void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
-    inline void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
+    inline void set_backface_culling(const bool &on); ///< Set backface culling on/off
+    inline void set_vertical_sync(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
     inline void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
+    inline void set_alpha_test(const bool &enabled, const TEST &test = ZENI_ALWAYS, const float &value = 0.0f); ///< Set the alpha test
 
     // Color and Texturing
     inline const Color & get_color() const; ///< Get the current color
@@ -256,6 +269,10 @@ namespace Zeni {
 
     bool m_zwrite;
     bool m_ztest;
+
+    bool m_alpha_test;
+    TEST m_alpha_function;
+    float m_alpha_value;
   };
 
   Video & get_Video(); ///< Get access to the singleton.

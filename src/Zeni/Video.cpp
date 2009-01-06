@@ -54,7 +54,10 @@ namespace Zeni {
     m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
     m_preview(Matrix4f::Translate(Vector3f(-0.5f, -0.5f, 0.0f)) *
       Matrix4f::Scale(Vector3f(0.5f, -0.5f, -1.0f)) *
-      Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f)))
+      Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f))),
+    m_alpha_test(false),
+    m_alpha_function(Video::ZENI_ALWAYS),
+    m_alpha_value(0.0f)
   {
   }
 

@@ -108,7 +108,7 @@ namespace Zeni {
 
     return Matrix4f(-2.0f / denom_x, 0.0f, 0.0f, t_x,
                     0.0f, -2.0f / denom_y, 0.0f, t_y,
-                    0.0f, 0.0f, 2.0f / denom_z, t_z,
+                    0.0f, 0.0f, -2.0f / denom_z, t_z,
                     0.0f, 0.0f, 0.0f, 1.0f);
   }
 

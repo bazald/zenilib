@@ -248,6 +248,7 @@ namespace Zeni {
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
     set_ambient_lighting(m_ambient_color);
+    set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
   }
 
   void Video_DX9::destroy_device() {

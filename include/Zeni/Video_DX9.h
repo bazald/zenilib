@@ -82,10 +82,11 @@ namespace Zeni {
     // Modifiers
     inline void set_2d_view_impl(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
     inline void set_3d_view_impl(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
-    inline void set_backface_culling_impl(const bool &on = true); ///< Set backface culling on/off
-    inline void set_vertical_sync_impl(const bool &on = true); ///< Set vertical_sync on/off
+    inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
+    inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
     inline void set_ztest_impl(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
+    inline void set_alpha_test_impl(const bool &enabled, const TEST &test, const float &value); ///< Set the alpha test
 
     // Color and Texturing
     inline void set_color_impl(const Color & /*color*/); ///< Set the current color
