@@ -144,7 +144,8 @@ namespace Zeni {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    if(triangle->get_Material()->get_texture().empty())
+    if(!triangle->get_Material() ||
+       triangle->get_Material()->get_texture().empty())
       m_triangles_cm.push_back(triangle);
     else {
       delete triangle;
@@ -163,7 +164,8 @@ namespace Zeni {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    if(!triangle->get_Material()->get_texture().empty())
+    if(triangle->get_Material() &&
+       !triangle->get_Material()->get_texture().empty())
       m_triangles_t.push_back(triangle);
     else {
       delete triangle;
@@ -214,7 +216,8 @@ namespace Zeni {
   template <typename VERTEX>
   struct SORTER {
     bool operator()(const Triangle<VERTEX> * const lhs, const Triangle<VERTEX> * const rhs) const {
-      return *lhs->get_Material() < *rhs->get_Material();
+      return rhs->get_Material() && (!lhs->get_Material() ||
+                                     *lhs->get_Material() < *rhs->get_Material());
     }
   };
 
@@ -226,8 +229,8 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::sort_triangles() {
-    std::sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color>());
-    std::sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
+    std::stable_sort(m_triangles_cm.begin(), m_triangles_cm.end(), SORTER<Vertex3f_Color>());
+    std::stable_sort(m_triangles_t.begin(), m_triangles_t.end(), SORTER<Vertex3f_Texture>());
   }
 
   template <typename VERTEX>
@@ -237,21 +240,26 @@ namespace Zeni {
                     const int &triangles_done) const {
       int last = 0;
       if(!triangles.empty()) {
-        Material * material_ptr = new Material(*triangles[0]->get_Material());
+        Material * material_ptr = triangles[0]->get_Material() ?
+                                  new Material(*triangles[0]->get_Material()) :
+                                  0;
         descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(material_ptr, triangles_done, 1));
-        material_ptr->clear_optimization();
+        if(material_ptr)
+          material_ptr->clear_optimization();
         for(unsigned int i = 1; i < triangles.size(); ++i) {
           Material * material_ptr2 = triangles[i]->get_Material();
 
-          if(*material_ptr == *material_ptr2)
+          if(material_ptr ? *material_ptr == *material_ptr2 : !material_ptr2)
             ++descriptors[last]->num_elements;
           else {
             material_ptr2 = new Material(*material_ptr2);
             descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(material_ptr2, triangles_done+i, 1));
             ++last;
             material_ptr2->clear_optimization();
-            material_ptr2->optimize_to_follow(*material_ptr);
-            material_ptr->optimize_to_precede(*material_ptr2);
+            if(material_ptr) {
+              material_ptr2->optimize_to_follow(*material_ptr);
+              material_ptr->optimize_to_precede(*material_ptr2);
+            }
             material_ptr = material_ptr2;
           }
         }
@@ -509,9 +517,11 @@ namespace Zeni {
     Video &vr = get_Video();
 
     for(unsigned int i = 0; i < descriptors.size(); ++i) {
-      vr.set_material(*descriptors[i]->material);
+      if(descriptors[i]->material.get())
+        vr.set_material(*descriptors[i]->material);
       glDrawArrays(GL_TRIANGLES, 3*descriptors[i]->start, 3*descriptors[i]->num_elements);
-      vr.unset_material(*descriptors[i]->material);
+      if(descriptors[i]->material.get())
+        vr.unset_material(*descriptors[i]->material);
     }
   }
 
