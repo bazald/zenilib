@@ -30,143 +30,150 @@
 #include <Zeni/Gamestate.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
+#include <Zeni/XML.hxx>
 
 #include <cassert>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 
+#ifdef _WINDOWS
+#include <direct.h>
+#endif
+
 using namespace std;
 using namespace Zeni;
 
-/*** INI File Parsers ***/
+static void load_config() {
+  XML_Reader config_xml("config/zenilib.xml");
+  XML_Element zenilib = config_xml["Zenilib"];
 
-/// Video_Options stores information used to control the creation of the Video system and Textures
-struct Video_Options {
-  Video_Base::VIDEO_MODE vm;
-  int anisotropy, multisampling;
-  bool vsync, bilinear, mipmapping, fullscreen;
-  int width, height;
-};
+  struct {
+    struct {
+      int anisotropy;
+      bool bilinear_filtering;
+      bool mipmapping;
+    } textures;
 
-struct Corrupt_INI : public Error {
-  Corrupt_INI() : Error("Corrupt INI file could not be parsed!") {}
-};
+    struct {
+      Video_Base::VIDEO_MODE api;
+      bool full_screen;
+      int multisampling;
 
-/// A basic INI parser for Video_Options
-static Video_Options handle_video_options(istream &is) {
-  Video_Options vopts = {Video::get_video_mode(),
-    Textures::get_anisotropic_filtering(),
-    Video::get_multisampling(),
-    Video::get_vertical_sync(),
-    Textures::get_bilinear_filtering(),
-    Textures::get_mipmapping(),
-    Video::is_fullscreen(),
-    Video::get_screen_width(),
-    Video::get_screen_height()};
+      struct {
+        int width;
+        int height;
+      } resolution;
 
-  string line;
-  for(getline(is, line); is && !line.empty(); getline(is, line)) {
-    {
-      string l2;
-      for(unsigned int i = 0; i < line.length(); ++i)
-        if(line[i] != '\r')
-          l2 += line[i];
-      line = l2;
-    }
-
-    if(line.empty())
-      break;
-    if(line[0] == '#')
-      continue;
-
-    int break_point = int(line.find('='));
-    if(break_point == -1) {
-      cerr << "No equals sign: " << line << endl;
-      throw Corrupt_INI();
-    }
-
-    string id = line.substr(0, break_point),
-      value = line.substr(break_point + 1, line.length() - break_point - 1);
-
-    if(id == "RenderingEngine") {
-#ifndef DISABLE_GL
-      if(value == "OpenGL")
-        vopts.vm = Video_Base::ZENI_VIDEO_GL;
-      else
-#endif
-#ifndef DISABLE_DX9
-        if(value == "DX9")
-          vopts.vm = Video_Base::ZENI_VIDEO_DX9;
-        else
-#endif
-          vopts.vm = Video_Base::ZENI_VIDEO_ANY;
-    }
-    else if(id == "Anisotropy")
-      vopts.anisotropy = atoi(value.c_str());
-    else if(id == "Multisampling")
-      vopts.multisampling = atoi(value.c_str());
-    else if(id == "V-Sync")
-      vopts.vsync = atoi(value.c_str()) > 0;
-    else if(id == "Bilinear")
-      vopts.bilinear = atoi(value.c_str()) > 0;
-    else if(id == "Mipmapping")
-      vopts.mipmapping = atoi(value.c_str()) > 0;
-    else if(id == "FullScreen")
-      vopts.fullscreen = atoi(value.c_str()) > 0;
-    else if(id == "Width")
-      vopts.width = atoi(value.c_str());
-    else if(id == "Height")
-      vopts.height = atoi(value.c_str());
-    else
-      cerr << "Unrecognized Video Option: " << line << endl;
-  }
-
-  return vopts;
-}
-
-static void load_ini() {
-  Video_Options vopts = {Video::get_video_mode(),
-    Textures::get_anisotropic_filtering(),
-    Video::get_multisampling(), 
-    Video::get_vertical_sync(),
-    Textures::get_bilinear_filtering(),
-    Textures::get_mipmapping(),
-    Video::is_fullscreen(),
-    Video::get_screen_width(),
-    Video::get_screen_height()};
+      bool vertical_sync;
+    } video;
+  } config;
 
   {
-    ifstream fin("zeniapp.ini");
+    XML_Element textures = zenilib["Textures"];
 
-    string line;
-    for(getline(fin, line); fin && line.length(); getline(fin, line)) {
-      if(line[0] == '#')
-        continue;
+    config.textures.anisotropy = textures["Anisotropy"].to_int();
+    if(config.textures.anisotropy < 0)
+      config.textures.anisotropy = 16;
 
-      int start = int(line.find('[')), end = int(line.find(']'));
-      if(start == -1 || end <= start) {
-        cerr << "Bad Section Marker: " << line << endl;
-        throw Corrupt_INI();
-      }
+    config.textures.bilinear_filtering = textures["Bilinear_Filtering"].to_bool();
 
-      string id = line.substr(start + 1, end - start - 1);
+    config.textures.mipmapping = textures["Mipmapping"].to_bool();
+  }
 
-      if(id == "Video Options")
-        vopts = handle_video_options(fin);
+  {
+    XML_Element video = zenilib["Video"];
+
+    const string api = video["API"].to_string();
+#ifndef DISABLE_GL
+    if(api == "OpenGL")
+      config.video.api = Video_Base::ZENI_VIDEO_GL;
+    else
+#endif
+#ifndef DISABLE_DX9
+      if(api == "DX9")
+        config.video.api = Video_Base::ZENI_VIDEO_DX9;
       else
-        cerr << "Unrecognized Section Marker: " << line << endl;
+#endif
+        config.video.api = Video_Base::ZENI_VIDEO_ANY;
+
+    config.video.full_screen = video["Full_Screen"].to_bool();
+
+    config.video.multisampling = video["Multisampling"].to_int();
+    if(config.video.multisampling < 0)
+      config.video.multisampling = 16;
+
+    {
+      XML_Element screen_resolution = video["Resolution"];
+
+      config.video.resolution.width = screen_resolution["Width"].to_int();
+
+      config.video.resolution.height = screen_resolution["Height"].to_int();
     }
+
+    config.video.vertical_sync = video["Vertical_Sync"].to_bool();
   }
 
   // Start engines
-  Video::preinit(vopts.vm, vopts.width, vopts.height, vopts.fullscreen, vopts.multisampling, true);
-  if(Video::get_reference().get_vertical_sync() != vopts.vsync)
-    Video::get_reference().set_vertical_sync(vopts.vsync);
-  Textures::set_texturing_mode(vopts.anisotropy, vopts.bilinear, vopts.mipmapping);
+  Video::preinit(config.video.api,
+                 config.video.resolution.width,
+                 config.video.resolution.height,
+                 config.video.full_screen,
+                 config.video.multisampling,
+                 true);
+  if(get_Video().get_vertical_sync() != config.video.vertical_sync)
+    get_Video().set_vertical_sync(config.video.vertical_sync);
+
+  Textures::set_texturing_mode(config.textures.anisotropy,
+                               config.textures.bilinear_filtering,
+                               config.textures.mipmapping);
 }
 
 /*** main ***/
+
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_net.h>
+#include <SDL/SDL_ttf.h>
+
+#ifndef DISABLE_AL
+#include <AL/alut.h>
+static std::string alErrorString(const ALenum &err) {
+  switch(err) {
+    case AL_NO_ERROR:          return "AL_NO_ERROR";          break;
+    case AL_INVALID_NAME:      return "AL_INVALID_NAME";      break;
+    case AL_INVALID_ENUM:      return "AL_INVALID_ENUM";      break;
+    case AL_INVALID_VALUE:     return "AL_INVALID_VALUE";     break;
+    case AL_INVALID_OPERATION: return "AL_INVALID_OPERATION"; break;
+    case AL_OUT_OF_MEMORY:     return "AL_OUT_OF_MEMORY";     break;
+    default:                   return "AL_UNKNOWN_ERROR";     break;
+  }
+}
+#endif
+
+static void print_errors() {
+  cerr << "Printing all possible error strings:\n";
+
+  cerr << "SDL       : " << (strlen(SDL_GetError()   ) ? SDL_GetError()    : "no error") << endl;
+  cerr << "SDL_image : " << (strlen(IMG_GetError ()  ) ? IMG_GetError ()   : "no error") << endl;
+  cerr << "SDL_net   : " << (strlen(SDLNet_GetError()) ? SDLNet_GetError() : "no error") << endl;
+  cerr << "SDL_ttf   : " << (strlen(TTF_GetError()   ) ? TTF_GetError()    : "no error") << endl;
+
+#ifndef DISABLE_DX9
+  //DXGetErrorString?
+#endif
+
+#ifndef DISABLE_GL
+  cerr << "OpenGL    : " << gluErrorString(glGetError()) << endl;
+#endif
+
+#ifndef DISABLE_AL
+  cerr << "OpenAL    : " << alErrorString(alGetError()) << endl;
+#endif
+
+#ifndef DISABLE_CG
+  cerr << "Cg        : " << cgGetErrorString(cgGetError()) << endl;
+#endif
+}
 
 inline int main2(const int &argc, const char * const argv[]) {
   srand(static_cast<unsigned int>(time(0)));
@@ -177,13 +184,13 @@ inline int main2(const int &argc, const char * const argv[]) {
 
   try {
     // Primarily to set up IO redirection
-    Core::get_reference();
-    
-    // Load INI
-    load_ini();
+    get_Core();
+
+    // Load config
+    load_config();
     
     // Run Game
-    Game::get_reference(&args).run();
+    get_Game(&args).run();
   }
   catch(Quit_Event &nonerror) {
     cerr << nonerror.msg << endl;
@@ -194,11 +201,17 @@ inline int main2(const int &argc, const char * const argv[]) {
 #endif
   catch(Error &error) {
     cerr << error.msg << endl;
+
+    print_errors();
+
     assert("Error caught in main - Please see stderr.txt" == 0);
     return 1;
   }
   catch(...) {
     cerr << "Unknown Error (Not of Type 'Zeni::Error')";
+
+    print_errors();
+
     assert("Unknown Error caught in main" == 0);
     throw;
   }
@@ -206,9 +219,22 @@ inline int main2(const int &argc, const char * const argv[]) {
 #pragma warning( pop )
 #endif
 
+  print_errors();
+
   return 0;
 }
 
 int main(int argc, char *argv[]) {
+#ifdef _WINDOWS
+#ifdef X64
+  if(!SetDllDirectory("bin\x64")) {
+#else
+  if(!SetDllDirectory("bin")) {
+#endif
+    cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
+    return -1;
+  }
+#endif
+
   return main2(argc, argv);
 }

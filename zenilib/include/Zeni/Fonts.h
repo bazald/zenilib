@@ -45,15 +45,17 @@
 #ifndef ZENI_FONTS_H
 #define ZENI_FONTS_H
 
+#include <Zeni/Database.h>
 #include <Zeni/Font.h>
-#include <Zeni/Hash_Map.h>
 
-#include <string>
 #include <vector>
 
 namespace Zeni {
 
-  class Fonts {
+  class Fonts : public Database<Font> {
+    // Get reference to only instance;
+    friend Fonts & get_Fonts(); ///< Get access to the singleton.
+
     Fonts();
     ~Fonts();
 
@@ -61,38 +63,10 @@ namespace Zeni {
     Fonts(const Fonts &);
     Fonts & operator=(const Fonts &);
 
-  public:
-    // Get reference to only instance;
-    static Fonts & get_reference(); ///< Get access to the singleton.
-
-    unsigned long get_font_id(const std::string &font) const; ///< Get a font id by name.
-    Font & get_font(const std::string &font) const; ///< Get a reference to a font by name.
-    Font & get_font(const unsigned long &id) const; ///< Get a reference to a font by id.
-
-    unsigned long set_font(const std::string &name, Font * const font); ///< Set a font by name.
-    void clear_font(const std::string &name); ///< Clear a font by name.
-    void reload(const std::string &filename = ""); ///< Reload the database or choose a new one.
-
-    void lose_resources(); ///< Wipe all resources and prepare to reload them when they are next needed
-
-  private:
-    
-    void init();
-    void uninit();
-
-    stdext::hash_map<std::string, unsigned long> m_font_lookup;
-    stdext::hash_map<unsigned long, Font *> m_fonts;
-
-    std::string m_filename;
+    virtual Font * load(XML_Element &xml_element);
   };
 
-  struct Fonts_Init_Failure : Error {
-    Fonts_Init_Failure() : Error("Zeni Fonts Initialization Failure!") {}
-  };
-
-  struct Font_Not_Found : Error {
-    Font_Not_Found(const std::string &identifier) : Error("Zeni Font '" + identifier + "' Not Found") {}
-  };
+  Fonts & get_Fonts(); ///< Get access to the singleton.
 
 }
 

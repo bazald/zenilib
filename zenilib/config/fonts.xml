@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!-- Fonts to load into the Fonts Database in Zenilib
+
+For each entry in Fonts:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'filepath' should be the path from within 'zenilib/'
+  3. 'height' should be the number of pixels high you want the Font.
+  4. 'bold' and 'italics' and boolean flags
+     They are deprecated.
+     It is much better to find bold/italicized versions of Fonts
+     than to use this feature.
+  5. 'virtual_screen_height' should match the virtual screen
+     resolution that will be used when rendering the given Font.
+     Using higher values will cause fonts to be blurry.
+     Using lower values will cause memory to be wasted.
+
+Only TrueType fonts are supported.
+-->
+<Fonts>
+  <!--
+  <token>
+    <filepath>fonts/font.ttf</filepath>
+    <height>16</height>
+    <bold>0</bold>
+    <italics>0</italics>
+    <virtual_screen_height>600</virtual_screen_height>
+  </token>
+  -->
+</Fonts>

@@ -51,13 +51,13 @@
 
 #ifndef DISABLE_GL
 
-#include <GL/gl.h>
-#include <GL/glext.h>
+#include <GL/glew.h>
 
 namespace Zeni {
 
   class Video_GL : public Video {
     friend class Video;
+    friend Video & get_Video();
 
     Video_GL();
     ~Video_GL();
@@ -78,10 +78,11 @@ namespace Zeni {
     // Modifiers
     inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {} ///< Set a 2D view for a viewport
     inline void set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/) {} ///< Set a 3D view for a viewport
-    inline void set_backface_culling_impl(const bool &on = true); ///< Set backface culling on/off
-    inline void set_vertical_sync_impl(const bool &on = true); ///< Set vertical_sync on/off
+    inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
+    inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
     inline void set_ztest_impl(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
+    inline void set_alpha_test_impl(const bool &enabled, const TEST &test, const float &value); ///< Set the alpha test
 
     // Color and Texturing
     inline void set_color_impl(const Color &color); ///< Set the current color
@@ -92,14 +93,23 @@ namespace Zeni {
 
     // Lighting and Materials
     inline void set_lighting_impl(const bool &on = true); ///< Set lighting on/off
-    inline void set_normal_interpolation_impl(const bool &on = true); ///< Set normal interpolation on/off
     inline void set_ambient_lighting_impl(const Color &color); ///< Set ambient lighting on/off
-    inline void set_light_impl(const int &number, const Light * const light = 0); ///< Set a particular Light
-    inline void set_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
-    inline void unset_material_impl(const Material &material, const int &optimization = 0); ///< Set a Material
+    inline void set_light_impl(const int &number, const Light &light); ///< Set a particular Light
+    inline void unset_light_impl(const int &number); ///< Unset a particular Light
+    inline void set_material_impl(const Material &material); ///< Set a Material
+    inline void unset_material_impl(const Material &material); ///< Unset a Material
 
     // Fog
-    inline void set_fog_impl(const Fog * const fog = 0); ///< Set Fog on/off
+    inline void set_fog_impl(const Fog &fog); ///< Set Fog
+    inline void unset_fog_impl(); ///< Unset Fog
+
+#ifndef DISABLE_CG
+    // Shaders
+    inline void set_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void set_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_vertex_shader_impl(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+#endif
 
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
@@ -120,8 +130,13 @@ namespace Zeni {
     inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture_impl(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
+      const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer_impl(); ///< Function for creating a Vertex_Buffer
+
+    // Initialization Functions
+    inline void initialize_impl(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
+    inline void initialize_impl(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Vertex_Shader
+    inline void initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Fragment_Shader
 
     // Vertex Buffer Functions
     inline void pglBindBufferARB(const GLenum target, const GLuint buffer) const; ///< The glBindBufferARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false

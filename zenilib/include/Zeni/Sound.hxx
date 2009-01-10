@@ -29,6 +29,9 @@
 #ifndef ZENI_SOUND_HXX
 #define ZENI_SOUND_HXX
 
+// HXXed below
+#include <Zeni/Sound_Source.h>
+
 #include <Zeni/Sound.h>
 
 namespace Zeni {
@@ -40,242 +43,11 @@ namespace Zeni {
     return m_buffer;
   }
 
-  void Sound_Source::set_buffer(const Sound_Buffer &
-#ifndef DISABLE_AL
-    buffer
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcei(m_source, AL_BUFFER, buffer.get_id());
-#endif
-  }
+  const float & Sound_Buffer::get_duration() const {
+    if(m_loader)
+      finish_loading();
 
-  void Sound_Source::set_buffer(const ALuint &
-#ifndef DISABLE_AL
-    buffer
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcei(m_source, AL_BUFFER, buffer);
-#endif
-  }
-
-  void Sound_Source::set_pitch(const float &
-#ifndef DISABLE_AL
-    pitch
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_PITCH, pitch);
-#endif
-  }
-
-  void Sound_Source::set_gain(const float &
-#ifndef DISABLE_AL
-    gain
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_GAIN, gain);
-#endif
-  }
-
-  void Sound_Source::set_position(const Point3f &
-#ifndef DISABLE_AL
-    position
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
-#endif
-  }
-
-  void Sound_Source::set_velocity(const Vector3f &
-#ifndef DISABLE_AL
-    velocity
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
-#endif
-  }
-
-  void Sound_Source::set_looping(const bool &
-#ifndef DISABLE_AL
-    looping
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcei(m_source, AL_LOOPING, looping);
-#endif
-  }
-
-  void Sound_Source::set_time(const float &
-#ifndef DISABLE_AL
-    time
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_SEC_OFFSET, time);
-#endif
-  }
-  
-  void Sound_Source::set_near_clamp(const float &
-#ifndef DISABLE_AL
-    near_clamp
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_REFERENCE_DISTANCE, near_clamp);
-#endif
-  }
-
-  void Sound_Source::set_far_clamp(const float &
-#ifndef DISABLE_AL
-    far_clamp
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_MAX_DISTANCE, far_clamp);
-#endif
-  }
-
-  void Sound_Source::set_rolloff(const float &
-#ifndef DISABLE_AL
-    rolloff
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alSourcef(m_source, AL_ROLLOFF_FACTOR, rolloff);
-#endif
-  }
-
-  ALuint Sound_Source::get_buffer() const {
-    ALint buffer = 0;
-#ifndef DISABLE_AL
-    alGetSourcei(m_source, AL_BUFFER, &buffer);
-#endif
-    return buffer;
-  }
-
-  float Sound_Source::get_pitch() const {
-    float pitch = 1.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_PITCH, &pitch);
-#endif
-    return pitch;
-  }
-
-  float Sound_Source::get_gain() const {
-    float gain = 1.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_GAIN, &gain);
-#endif
-    return gain;
-  }
-
-  Point3f Sound_Source::get_position() const {
-    Point3f position;
-#ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<float *>(&position));
-#endif
-    return position;
-  }
-
-  Vector3f Sound_Source::get_velocity() const {
-    Vector3f velocity;
-#ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<float *>(&velocity));
-#endif
-    return velocity;
-  }
-
-  bool Sound_Source::is_looping() const {
-    ALint looping = AL_FALSE;
-#ifndef DISABLE_AL
-    alGetSourcei(m_source, AL_LOOPING, &looping);
-#endif
-    return looping != AL_FALSE;
-  }
-
-  float Sound_Source::get_time() const {
-    float time = 0.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_SEC_OFFSET, &time);
-#endif
-    return time;
-  }
-  
-  float Sound_Source::get_near_clamp() const {
-    float near_clamp = 10.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_REFERENCE_DISTANCE, &near_clamp);
-#endif
-    return near_clamp;
-  }
-
-  float Sound_Source::get_far_clamp() const {
-    float far_clamp = 1000.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_MAX_DISTANCE, &far_clamp);
-#endif
-    return far_clamp;
-  }
-
-  float Sound_Source::get_rolloff() const {
-    float rolloff = 1.0f;
-#ifndef DISABLE_AL
-    alGetSourcef(m_source, AL_ROLLOFF_FACTOR, &rolloff);
-#endif
-    return rolloff;
-  }
-
-  void Sound_Source::play() {
-#ifndef DISABLE_AL
-    alSourcePlay(m_source);
-#endif
-  }
-
-  void Sound_Source::pause() {
-#ifndef DISABLE_AL
-    alSourcePause(m_source);
-#endif
-  }
-
-  void Sound_Source::stop() {
-#ifndef DISABLE_AL
-    alSourceStop(m_source);
-#endif
-  }
-
-  bool Sound_Source::is_playing() {
-#ifndef DISABLE_AL
-    ALenum state = AL_STOPPED;
-    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-    return state == AL_PLAYING;
-#else
-    return false;
-#endif
-  }
-
-  bool Sound_Source::is_paused() {
-#ifndef DISABLE_AL
-    ALenum state = AL_STOPPED;
-    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-    return state == AL_PAUSED;
-#else
-    return false;
-#endif
-  }
-
-  bool Sound_Source::is_stopped() {
-#ifndef DISABLE_AL
-    ALenum state = AL_STOPPED;
-    alGetSourcei(m_source, AL_SOURCE_STATE, &state);
-    return state == AL_STOPPED;
-#else
-    return true;
-#endif
+    return m_duration;
   }
 
   void Sound::set_listener_position(const Point3f &
@@ -286,6 +58,8 @@ namespace Zeni {
 #ifndef DISABLE_AL
     ALfloat listener_position[3] = {position.x, position.y, position.z};
     alListenerfv(AL_POSITION, listener_position);
+
+    assert_m_bgm();
 
     m_bgm_source->set_position(position);
 #endif
@@ -299,6 +73,8 @@ namespace Zeni {
 #ifndef DISABLE_AL
     ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
     alListenerfv(AL_VELOCITY, listener_velocity);
+
+    assert_m_bgm();
 
     m_bgm_source->set_velocity(velocity);
 #endif
@@ -320,7 +96,6 @@ namespace Zeni {
   }
 
   Point3f Sound::get_listener_position() const {
-    return m_bgm_source->get_position();
     ALfloat listener_position[3] = {0.0f, 0.0f, 0.0f};
 #ifndef DISABLE_AL
     alGetListenerfv(AL_POSITION, listener_position);
@@ -350,6 +125,8 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
+    assert_m_bgm();
+
     m_bgm_source->set_pitch(pitch);
 #endif
   }
@@ -360,8 +137,9 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_gain(gain);
+    assert_m_bgm();
+
+    m_bgm_source->set_gain(gain);
 #endif
   }
 
@@ -371,8 +149,9 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_looping(looping);
+    assert_m_bgm();
+
+    m_bgm_source->set_looping(looping);
 #endif
   }
 
@@ -382,51 +161,74 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    if(m_bgm_source)
-      m_bgm_source->set_time(time);
+    assert_m_bgm();
+
+    m_bgm_source->set_time(time);
 #endif
   }
 
   float Sound::get_BGM_pitch() {
+    assert_m_bgm();
+
     return m_bgm_source->get_pitch();
   }
 
   float Sound::get_BGM_gain() {
+    assert_m_bgm();
+
     return m_bgm_source->get_gain();
   }
 
   bool Sound::is_BGM_looping() {
+    assert_m_bgm();
+
     return m_bgm_source->is_looping();
   }
 
   float Sound::get_BGM_time() {
+    assert_m_bgm();
+
     return m_bgm_source->get_time();
   }
 
   bool Sound::playing_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_playing();
   }
 
   bool Sound::paused_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_paused();
   }
 
   bool Sound::stopped_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->is_stopped();
   }
 
   void Sound::play_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->play();
   }
 
   void Sound::pause_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->pause();
   }
   
   void Sound::stop_BGM() {
+    assert_m_bgm();
+
     return m_bgm_source->stop();
   }
 
 }
+
+#include <Zeni/Sound_Source.hxx>
 
 #endif

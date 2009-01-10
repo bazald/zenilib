@@ -119,11 +119,16 @@
 #include <string>
 #include <list>
 
+#include <Zeni/Global.h>
+
 struct SDL_Thread;
 
 namespace Zeni {
 
   class Net {
+    // Get reference to only instance;
+    friend Net & get_Net(); ///< Get access to the singleton.
+
     Net();
     ~Net();
 
@@ -132,14 +137,13 @@ namespace Zeni {
     Net & operator=(const Net &);
 
   public:
-    // Get reference to only instance; Might throw Sound_Init_Failure
-    static Net & get_reference();
-
     /// Default port 0 indicates a pure lookup with no intention of connecting.
     inline IPaddress resolve_host(const std::string &host, const unsigned short &port = 0);
     /// If you want to find a URL associated with an IP address
     inline std::string reverse_lookup(IPaddress ip);
   };
+
+  Net & get_Net(); ///< Get access to the singleton.
 
   class TCP_Socket {
     TCP_Socket(const TCP_Socket &);
@@ -154,7 +158,7 @@ namespace Zeni {
     int check_socket();
     
     /// Send data
-    void send(const void * const &data, const int &num_bytes); 
+    void send(const void * const &data, const int &num_bytes);
     void send(const std::string &data);
 
     /// Receive up to num_bytes
@@ -196,7 +200,7 @@ namespace Zeni {
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
     virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
-    virtual int receive(IPaddress &ip, std::string &data);
+    virtual int receive(IPaddress &ip, std::string &data); ///<
     
   private:
     UDPsocket sock;
@@ -256,7 +260,7 @@ namespace Zeni {
       Chunk_Collector operator=(const Chunk_Collector &);
       
     public:
-      Chunk_Collector(const Uint16 &size = 64)
+      Chunk_Collector(const Uint16 &size = ZENI_DEFAULT_CHUNK_SIZE)
         : m_size(size)
       {
         assert(m_size);
@@ -275,7 +279,7 @@ namespace Zeni {
     };
     
   public:
-    Split_UDP_Socket(const Uint16 &port, const Uint16 &chunk_sets = 64, const Uint16 &chunk_size = 960);
+    Split_UDP_Socket(const Uint16 &port, const Uint16 &chunk_sets = ZENI_DEFAULT_CHUNK_SETS, const Uint16 &chunk_size = ZENI_DEFAULT_CHUNK_SIZE);
 
     /// Send data to an IPaddress
     virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
@@ -310,5 +314,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

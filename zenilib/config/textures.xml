@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<!-- Images to load into the Textures Database in Zenilib
+
+For each entry in Textures:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'filepath' should be the path from within 'zenilib/'
+  3. 'tile' should be 0 for best quality if tiling is unnecessary
+     'tile' should be 1 to enable tiling
+     
+     If 'tile' is 1 and tiling is not desired, floating point
+     error can make things look worse at the edges of tiles.
+
+The following formats are supported:
+
+  1. PNG is supported with 8 bits per channel.
+  2. BMP is fully supported AFAIK.
+  3. TIFF is supported with 8 bits per channel.
+     TIFF supports deflate and JPEG compression.
+
+The following things are unsupported:
+
+  1. JPEG and GIF images
+  2. Indexed color
+  3. Indexed transparency
+  4. Anything other than 8 bits per channel
+-->
+<Textures>
+  <!--
+  <token>
+    <filepath>textures/image.png</filepath>
+    <tile>0</tile>
+  </token>
+  -->
+</Textures>

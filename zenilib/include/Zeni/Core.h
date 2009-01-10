@@ -75,6 +75,9 @@ namespace Zeni {
   };
 
   class Core {
+    // Get reference to only instance; Might throw Core_Init_Failure
+    friend Core & get_Core(); ///< Get access to the singleton.
+
     Core();
     ~Core();
 
@@ -83,15 +86,37 @@ namespace Zeni {
     Core & operator=(const Core &);
 
   public:
-    // Get reference to only instance; Might throw Core_Init_Failure
-    static Core & get_reference();
+    const std::string & get_username();
+    std::string get_appdata_path(const std::string &unique_app_identifier);
+
+    int get_num_joysticks() const; ///< Get the number of joysticks attached to the system
+
+    const std::string & get_joystick_name(const int &index) const; ///< Get the name of a given joystick
+    int get_joystick_num_axes(const int &index) const; ///< Get the number of axes for a joystick
+    int get_joystick_num_balls(const int &index) const; ///< Get the number of balls for a joystick
+    int get_joystick_num_hats(const int &index) const; ///< Get the number of hats for a joystick
+    int get_joystick_num_buttons(const int &index) const; ///< Get the number of buttons for a joystick
+
+    void regenerate_joysticks(); ///< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
 
   private:
-    std::vector<SDL_Joystick *> joystick;
+    void init_joysticks();
+    void quit_joysticks();
+
+    std::string m_username;
+    std::string m_appdata_path;
+
+    std::vector<std::pair<SDL_Joystick *, std::string> > m_joystick;
   };
+
+  Core & get_Core(); ///< Get access to the singleton.
 
   struct Core_Init_Failure : public Error {
     Core_Init_Failure() : Error("Zeni Core Failed to Initialize Correctly") {}
+  };
+
+  struct Joystick_Init_Failure : public Error {
+    Joystick_Init_Failure() : Error("Zeni Joystick Failed to Initialize Correctly") {}
   };
 
 }

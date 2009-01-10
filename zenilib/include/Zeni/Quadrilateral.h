@@ -36,8 +36,6 @@
  * I call it a Quadrilateral, but there is nothing forcing you to use it as such.
  * Really it is a triangle fan consisting of four vertices.
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Quadrilateral is rendered.
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
@@ -50,7 +48,7 @@
 #ifndef ZENI_Quadrilateral_H
 #define ZENI_Quadrilateral_H
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Triangle.h>
 
 namespace Zeni {
@@ -58,20 +56,17 @@ namespace Zeni {
   template <typename VERTEX>
   class Quadrilateral : public Renderable {
   public:
-    /// The best way to create a Quadrilateral
-    Quadrilateral(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      const VERTEX &vertex2 = VERTEX(), const VERTEX &vertex3 = VERTEX(), 
-      Render_Wrapper *render_wrapper = new Render_Wrapper());
-    ~Quadrilateral();
+    Quadrilateral();
+    Quadrilateral(const VERTEX &vertex0,
+                  const VERTEX &vertex1, 
+                  const VERTEX &vertex2,
+                  const VERTEX &vertex3);
 
     Quadrilateral(const Quadrilateral<VERTEX> &rhs);
     Quadrilateral<VERTEX> & operator=(const Quadrilateral<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the aveage of all vertices
+    /// Tell the rendering system if we're using 3D coordinates
+    virtual bool is_3d() const;
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -81,16 +76,22 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
     Quadrilateral<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Quadrilateral
 
     Triangle<VERTEX> * get_duplicate_t0() const; ///< Get the first half of the Quadrilateral
     Triangle<VERTEX> * get_duplicate_t1() const; ///< Get the second half of the Quadrilateral
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+    VERTEX c;
+    VERTEX d;
+
   private:
-    VERTEX m_vertex[4];
-    Render_Wrapper * m_render_wrapper;
+    void * m_alignment_rubbish;
   };
 
 }

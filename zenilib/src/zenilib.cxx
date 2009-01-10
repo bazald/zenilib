@@ -28,6 +28,11 @@
 
 #include <zenilib.h>
 
+#include "TinyXML/tinystr.cpp"
+#include "TinyXML/tinyxml.cpp"
+#include "TinyXML/tinyxmlerror.cpp"
+#include "TinyXML/tinyxmlparser.cpp"
+
 #include "Zeni/Camera.cpp"
 #include "Zeni/Collision.cpp"
 #include "Zeni/Color.cpp"
@@ -50,9 +55,12 @@
 #include "Zeni/Net.cpp"
 #include "Zeni/Net_Primitives.cpp"
 #include "Zeni/Quaternion.cpp"
-#include "Zeni/Render_Wrapper.cpp"
+#include "Zeni/Renderable.cpp"
 #include "Zeni/Resource.cpp"
+#include "Zeni/Shader.cpp"
 #include "Zeni/Sound.cpp"
+#include "Zeni/Sound_Source.cpp"
+#include "Zeni/Sound_Source_Pool.cpp"
 #include "Zeni/Sounds.cpp"
 #include "Zeni/Texture.cpp"
 #include "Zeni/Textures.cpp"

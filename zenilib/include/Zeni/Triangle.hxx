@@ -30,138 +30,176 @@
 #define ZENI_TRIANGLE_HXX
 
 // HXXed below
+#include <Zeni/Vertex3f.h>
 #include <Zeni/Video_DX9.h>
 
 #include <Zeni/Triangle.h>
 
 // Not HXXed
 #include <Zeni/Vector3f.h>
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <cassert>
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
   template <typename VERTEX>
-  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, Render_Wrapper *render_wrapper)
-    : m_render_wrapper(render_wrapper)
+  Triangle<VERTEX>::Triangle()
+    : a(VERTEX()),
+    b(VERTEX()),
+    c(VERTEX())
   {
-    m_vertex[0] = vertex0;
-    m_vertex[1] = vertex1;
-    m_vertex[2] = vertex2;
   }
 
   template <typename VERTEX>
-  Triangle<VERTEX>::~Triangle() {
-    delete m_render_wrapper;
+  Triangle<VERTEX>::Triangle(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2)
+    : a(vertex0),
+    b(vertex1),
+    c(vertex2)
+  {
+  }
+
+  template <>
+  inline Triangle<Vertex3f_Color>::Triangle(const Vertex3f_Color &vertex0, const Vertex3f_Color &vertex1, const Vertex3f_Color &vertex2)
+  {
+    const Vector3f normal = ((vertex1.position - vertex0.position) %
+                             (vertex2.position - vertex0.position)).normalized();
+
+    if(INFINTESSIMAL_SQUARED(vertex0.normal.magnitude2()))
+      a = Vertex3f_Color(vertex0.position, normal, vertex0.get_color());
+    else
+      a = vertex0;
+
+    if(INFINTESSIMAL_SQUARED(vertex1.normal.magnitude2()))
+      b = Vertex3f_Color(vertex1.position, normal, vertex1.get_color());
+    else
+      b = vertex1;
+
+    if(INFINTESSIMAL_SQUARED(vertex2.normal.magnitude2()))
+      c = Vertex3f_Color(vertex2.position, normal, vertex2.get_color());
+    else
+      c = vertex2;
+  }
+
+  template <>
+  inline Triangle<Vertex3f_Texture>::Triangle(const Vertex3f_Texture &vertex0, const Vertex3f_Texture &vertex1, const Vertex3f_Texture &vertex2)
+  {
+    const Vector3f normal = ((vertex1.position - vertex0.position) %
+                             (vertex2.position - vertex0.position)).normalized();
+
+    if(INFINTESSIMAL_SQUARED(vertex0.normal.magnitude2()))
+      a = Vertex3f_Texture(vertex0.position, normal, vertex0.texture_coordinate);
+    else
+      a = vertex0;
+
+    if(INFINTESSIMAL_SQUARED(vertex1.normal.magnitude2()))
+      b = Vertex3f_Texture(vertex1.position, normal, vertex1.texture_coordinate);
+    else
+      b = vertex1;
+
+    if(INFINTESSIMAL_SQUARED(vertex2.normal.magnitude2()))
+      c = Vertex3f_Texture(vertex2.position, normal, vertex2.texture_coordinate);
+    else
+      c = vertex2;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX>::Triangle(const Triangle<VERTEX> &rhs)
     : Renderable(rhs),
-    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    a(rhs.a),
+    b(rhs.b),
+    c(rhs.c)
   {
-    m_vertex[0] = rhs.m_vertex[0];
-    m_vertex[1] = rhs.m_vertex[1];
-    m_vertex[2] = rhs.m_vertex[2];
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> & Triangle<VERTEX>::operator=(const Triangle<VERTEX> &rhs) {
-    if(this != &rhs) {
-      delete m_render_wrapper;
-      m_render_wrapper = 0;
+    reinterpret_cast<Renderable &>(*this) =
+      reinterpret_cast<const Renderable &>(rhs);
 
-      m_vertex[0] = rhs.m_vertex[0];
-      m_vertex[1] = rhs.m_vertex[1];
-      m_vertex[2] = rhs.m_vertex[2];
-
-      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
-    }
+    a = rhs.a;
+    b = rhs.b;
+    c = rhs.c;
 
     return *this;
   }
 
   template <typename VERTEX>
-  const VERTEX & Triangle<VERTEX>::get_vertex(const int &index) const {
-    assert(-1 < index && index < 3);
-    return m_vertex[index];
-  }
-
-  template <typename VERTEX>
-  void Triangle<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
-    assert(-1 < index && index < 3);
-    m_vertex[index] = vertex;
-  }
-
-  template <typename VERTEX>
-  Point3f Triangle<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x) * over_three,
-      (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y) * over_three,
-      (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z) * over_three);
+  bool Triangle<VERTEX>::is_3d() const {
+    return a.is_3d();
   }
 
 #ifndef DISABLE_GL
   template <typename VERTEX>
   void Triangle<VERTEX>::render_to(Video_GL &screen) const {
-    m_render_wrapper->prerender();
-
     glBegin(GL_TRIANGLES);
-    m_vertex[0].subrender_to(screen);
-    m_vertex[1].subrender_to(screen);
-    m_vertex[2].subrender_to(screen);
+    a.subrender_to(screen);
+    b.subrender_to(screen);
+    c.subrender_to(screen);
     glEnd();
-
-    m_render_wrapper->postrender();
   }
 #endif
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
   void Triangle<VERTEX>::render_to(Video_DX9 &screen) const {
-    m_render_wrapper->prerender();
-    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 1, m_vertex[0].get_address(), sizeof(VERTEX));
-    m_render_wrapper->postrender();
+    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 1, a.get_address(), sizeof(VERTEX));
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * Triangle<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper;
-  }
-
-  template <typename VERTEX>
-  void Triangle<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
-    delete m_render_wrapper;
-    m_render_wrapper = render_wrapper;
-  }
-
-  template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_render_wrapper->get_duplicate());
+    return new Triangle<VERTEX>(*this);
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt0() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1].interpolate_to(0.5f, m_vertex[0]), m_vertex[2].interpolate_to(0.5f, m_vertex[0]), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a, b.interpolate_to(0.5f, a), c.interpolate_to(0.5f, a));
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt1() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[1]), m_vertex[1], m_vertex[2].interpolate_to(0.5f, m_vertex[1]), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b, c.interpolate_to(0.5f, b));
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt2() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[2]), m_vertex[1].interpolate_to(0.5f, m_vertex[2]), m_vertex[2], m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, c), b.interpolate_to(0.5f, c), c);
+    triangle->fax_Material(get_Material());
+    return triangle;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Triangle<VERTEX>::get_duplicate_subt3() const {
-    return new Triangle<VERTEX>(m_vertex[0].interpolate_to(0.5f, m_vertex[1]), m_vertex[1].interpolate_to(0.5f, m_vertex[2]), m_vertex[2].interpolate_to(0.5f, m_vertex[0]), m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * triangle = new Triangle<VERTEX>(a.interpolate_to(0.5f, b), b.interpolate_to(0.5f, c), c.interpolate_to(0.5f, a));
+    triangle->fax_Material(get_Material());
+    return triangle;
+  }
+
+  template <typename VERTEX>
+  const VERTEX & Triangle<VERTEX>::operator[](const int &index) const {
+    assert(-1 < index && index < 3);
+    const VERTEX * const ptr = &a;
+    return ptr[index];
+  }
+
+  template <typename VERTEX>
+  VERTEX & Triangle<VERTEX>::operator[](const int &index) {
+    assert(-1 < index && index < 3);
+    VERTEX * const ptr = &a;
+    return ptr[index];
   }
 
 }
 
+#include <Zeni/Global_Undef.h>
+
 #include <Zeni/Video_DX9.hxx>
+#include <Zeni/Vertex3f.hxx>
 
 #endif

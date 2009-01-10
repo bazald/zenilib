@@ -28,8 +28,7 @@
 
 #include <Zeni/Fonts.h>
 
-#include <Zeni/Video_GL.h>
-#include <Zeni/Resource.hxx>
+#include <Zeni/Database.hxx>
 #include <Zeni/Video.hxx>
 
 #include <iostream>
@@ -40,129 +39,32 @@ using namespace std;
 namespace Zeni {
 
   Fonts::Fonts()
-    : m_filename("config/fonts.txt")
+    : Database<Font>("config/fonts.xml", "Fonts")
   {
+    TTF_Init();
+
     init();
   }
 
   Fonts::~Fonts() {
     uninit();
+
+    TTF_Quit();
   }
 
-  Fonts & Fonts::get_reference() {
+  Fonts & get_Fonts() {
     static Fonts e_fonts;
     return e_fonts;
   }
 
-  unsigned long Fonts::get_font_id(const string &font) const {
-    stdext::hash_map<string, unsigned long>::const_iterator it = m_font_lookup.find(font);
+  Font * Fonts::load(XML_Element &xml_element) {
+    const string filepath = xml_element["filepath"].to_string();
+    const float height = xml_element["height"].to_float();
+    const bool bold = xml_element["bold"].to_bool();
+    const bool italics = xml_element["italics"].to_bool();
+    const float virtual_screen_height = xml_element["virtual_screen_height"].to_float();
 
-    if(it == m_font_lookup.end() || !it->second)
-      throw Font_Not_Found(font);
-
-    return it->second;
-  }
-
-  Font & Fonts::get_font(const string &font) const {
-    return get_font(get_font_id(font));
-  }
-
-  Font & Fonts::get_font(const unsigned long &font) const {
-    stdext::hash_map<unsigned long, Font *>::const_iterator it = m_fonts.find(font);
-
-    if(it == m_fonts.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(font));
-      throw Font_Not_Found(buf);
-    }
-
-    return *it->second;
-  }
-
-  unsigned long Fonts::set_font(const std::string &name, Font * const font) {
-    {
-      stdext::hash_map<std::string, unsigned long>::iterator it = m_font_lookup.find(name);
-      if(it != m_font_lookup.end()) {
-        stdext::hash_map<unsigned long, Font *>::iterator jt = m_fonts.find(it->second);
-        delete jt->second;
-        m_fonts.erase(jt);
-        m_font_lookup.erase(it);
-      }
-    }
-
-    unsigned long id = Resource::get_reference().assign();
-    m_font_lookup[name] = id;
-    m_fonts[id] = font;
-    return id;
-  }
-
-  void Fonts::clear_font(const std::string &name) {
-    stdext::hash_map<string, unsigned long>::iterator it = m_font_lookup.find(name);
-
-    if(it == m_font_lookup.end())
-      throw Font_Not_Found(name);
-
-    m_fonts.erase(it->second);
-    m_font_lookup.erase(it);
-  }
-
-  void Fonts::reload(const string &filename) {
-    if(filename.length()) {
-      m_filename = filename;
-    }
-    
-    lose_resources();
-    init();
-  }
-
-  void Fonts::init() {
-    ifstream fin(m_filename.c_str());
-
-    if(!fin)
-      throw Fonts_Init_Failure();
-
-    TTF_Init();
-
-    Video &vr = Video::get_reference();
-    
-    string name, codename, color;
-    bool bold, italic;
-    int height;
-    while(fin >> name >> bold >> italic >> height >> ws) {
-      getline(fin, codename);
-      while(!codename.empty() && isspace(codename[codename.size() - 1]))
-        codename.resize(codename.size() - 1);
-
-      try {
-        Font *font = vr.create_Font(codename, bold, italic, height);
-
-        unsigned long id = Resource::get_reference().assign();
-        m_font_lookup[name] = id;
-        m_fonts[id] = font;
-      }
-      catch(Font_Init_Failure &) {
-        uninit();
-        cerr << "Fonts: Error Loading '" << name << "' from '" << codename << "'\n";
-        throw;
-      }
-    }
-  }
-
-  void Fonts::uninit() {
-    for(stdext::hash_map<unsigned long, Font *>::iterator it = m_fonts.begin(); it != m_fonts.end(); ++it)
-      delete it->second;
-    m_fonts.clear();
-    m_font_lookup.clear();
-    TTF_Quit();
-  }
-
-  void Fonts::lose_resources() {
-    uninit();
+    return get_Video().create_Font(filepath, bold, italics, height, virtual_screen_height);
   }
 
 }

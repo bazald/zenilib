@@ -30,16 +30,20 @@
 #define ZENI_VIDEO_GL_HXX
 
 // HXXed below
-#include <Zeni/Color.h>
-#include <Zeni/Fog.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Material.h>
+#include <Zeni/Renderable.h>
+#include <Zeni/Shader.h>
+#include <Zeni/Texture.h>
+#include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 
 #include <Zeni/Video_GL.h>
 
 // Not HXXed
+#include <Zeni/Fog.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Vertex_Buffer.h>
 
 #ifndef DISABLE_GL
@@ -63,14 +67,9 @@ namespace Zeni {
       // Enable Backface Culling
       glEnable(GL_CULL_FACE);
       glCullFace(GL_BACK);
-
-      glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
     }
-    else {
+    else
       glDisable(GL_CULL_FACE);
-
-      glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-    }
   }
 
 #ifdef DISABLEWGL
@@ -105,16 +104,43 @@ namespace Zeni {
       glDisable(GL_DEPTH_TEST);
   }
 
+  void Video_GL::set_alpha_test_impl(const bool &enabled,
+                                     const TEST &test,
+                                     const float &value) {
+    GLenum func;
+
+    switch(test) {
+      case ZENI_NEVER:            func = GL_NEVER;    break;
+      case ZENI_LESS:             func = GL_LESS;     break;
+      case ZENI_EQUAL:            func = GL_EQUAL;    break;
+      case ZENI_GREATER:          func = GL_GREATER;  break;
+      case ZENI_NOT_EQUAL:        func = GL_NOTEQUAL; break;
+      case ZENI_LESS_OR_EQUAL:    func = GL_LEQUAL;   break;
+      case ZENI_GREATER_OR_EQUAL: func = GL_GEQUAL;   break;
+      case ZENI_ALWAYS:           func = GL_ALWAYS;   break;
+      default:
+        assert(false);
+        return;
+    }
+
+    if(enabled)
+      glEnable(GL_ALPHA_TEST);
+    else
+      glDisable(GL_ALPHA_TEST);
+
+    glAlphaFunc(func, value); 
+  }
+
   void Video_GL::set_color_impl(const Color &color) {
-    glColor4f(color.r(), color.g(), color.b(), color.a());
+    glColor4f(color.r, color.g, color.b, color.a);
   }
 
   void Video_GL::set_clear_color_impl(const Color &color) {
-    glClearColor(color.r(), color.g(), color.b(), 0.0f);
+    glClearColor(color.r, color.g, color.b, 0.0f);
   }
 
   void Video_GL::apply_texture_impl(const unsigned long &id) {
-    Textures::get_reference().apply_texture(id);
+    get_Textures().apply_texture(id);
   }
 
   void Video_GL::apply_texture_impl(const Texture &texture) {
@@ -123,7 +149,6 @@ namespace Zeni {
 
   void Video_GL::unapply_texture_impl() {
     glDisable(GL_TEXTURE_2D);
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
   }
 
   void Video_GL::set_lighting_impl(const bool &on) {
@@ -133,20 +158,14 @@ namespace Zeni {
       glDisable(GL_LIGHTING);
   }
 
-  void Video_GL::set_normal_interpolation_impl(const bool &on) {
-    if(on)
-      glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    else
-      glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
-  }
-
   void Video_GL::set_ambient_lighting_impl(const Color &color) {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, reinterpret_cast<const GLfloat *>(&color));
   }
 
-  void Video_GL::set_light_impl(const int &number, const Light *light) {
+  void Video_GL::set_light_impl(const int &number, const Light &light) {
     GLint ln;
     switch(number) {
+    case 0: ln = GL_LIGHT0; break;
     case 1: ln = GL_LIGHT1; break;
     case 2: ln = GL_LIGHT2; break;
     case 3: ln = GL_LIGHT3; break;
@@ -154,33 +173,65 @@ namespace Zeni {
     case 5: ln = GL_LIGHT5; break;
     case 6: ln = GL_LIGHT6; break;
     case 7: ln = GL_LIGHT7; break;
-    case 0: 
     default:
-      ln = GL_LIGHT0; break;
+      throw Light_Out_of_Range();
     }
 
-    if(light)
-      light->set(ln, *this);
-    else
-      glDisable(ln);
+    light.set(ln, *this);
   }
 
-  void Video_GL::set_material_impl(const Material &material, const int &optimization) {
-    material.set(*this, optimization);
-  }
-
-  void Video_GL::unset_material_impl(const Material &material, const int &optimization) {
-    material.unset(*this, optimization);
-  }
-
-  void Video_GL::set_fog_impl(const Fog * const fog) {
-    if(fog) {
-      glEnable(GL_FOG);
-      fog->set(*this);
+  void Video_GL::unset_light_impl(const int &number) {
+    GLint ln;
+    switch(number) {
+    case 0: ln = GL_LIGHT0; break;
+    case 1: ln = GL_LIGHT1; break;
+    case 2: ln = GL_LIGHT2; break;
+    case 3: ln = GL_LIGHT3; break;
+    case 4: ln = GL_LIGHT4; break;
+    case 5: ln = GL_LIGHT5; break;
+    case 6: ln = GL_LIGHT6; break;
+    case 7: ln = GL_LIGHT7; break;
+    default:
+      throw Light_Out_of_Range();
     }
-    else
-      glDisable(GL_FOG);
+
+    glDisable(ln);
   }
+
+  void Video_GL::set_material_impl(const Material &material) {
+    material.set(*this);
+  }
+
+  void Video_GL::unset_material_impl(const Material &material) {
+    material.unset(*this);
+  }
+
+  void Video_GL::set_fog_impl(const Fog &fog) {
+    glEnable(GL_FOG);
+    fog.set(*this);
+  }
+
+  void Video_GL::unset_fog_impl() {
+    glDisable(GL_FOG);
+  }
+
+#ifndef DISABLE_CG
+  void Video_GL::set_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::set_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::unset_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.unset(*this);
+  }
+
+  void Video_GL::unset_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.unset(*this);
+  }
+#endif
 
   void Video_GL::select_world_matrix_impl() {
     glMatrixMode(GL_MODELVIEW);
@@ -238,13 +289,27 @@ namespace Zeni {
     return new Texture_GL(surface, repeat);
   }
 
-  Font * Video_GL::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
-    return new Font_FT(filename, bold, italic, glyph_height);
+  Font * Video_GL::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {
+    return new Font_FT(filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
   Vertex_Buffer * Video_GL::create_Vertex_Buffer_impl() {
     return new Vertex_Buffer_GL();
   }
+
+#ifndef DISABLE_CG
+  void Video_GL::initialize_impl(Shader_System &shader_system) {
+    shader_system.init(*this);
+  }
+
+  void Video_GL::initialize_impl(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
+  }
+
+  void Video_GL::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
+  }
+#endif
 
   void Video_GL::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
     m_pglBindBufferARB(target, buffer);
@@ -266,11 +331,14 @@ namespace Zeni {
 
 #endif
 
-#include <Zeni/Color.hxx>
-#include <Zeni/Fog.hxx>
+#include <Zeni/Fonts.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Renderable.hxx>
+#include <Zeni/Shader.hxx>
+#include <Zeni/Texture.hxx>
+#include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
 
 #endif

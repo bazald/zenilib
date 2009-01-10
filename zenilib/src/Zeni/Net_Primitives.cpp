@@ -28,6 +28,11 @@
 
 #include <Zeni/Net_Primitives.h>
 
+#include <sstream>
+#include <iomanip>
+
+#include <Zeni/Global.h>
+
 using namespace std;
 
 /*** IPaddress functions ***/
@@ -72,7 +77,7 @@ namespace Zeni {
   /*** Simple Helper Functions ***/
 
   string uitoa(const unsigned int &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -83,7 +88,7 @@ namespace Zeni {
   }
 
   string itoa(const int &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -94,7 +99,7 @@ namespace Zeni {
   }
 
   string ultoa(const unsigned long &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -105,7 +110,7 @@ namespace Zeni {
   }
 
   string ltoa(const long &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -116,7 +121,7 @@ namespace Zeni {
   }
 
   string ftoa(const float &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -124,10 +129,16 @@ namespace Zeni {
   #endif
       (buf, "%f", number);
     return buf;
+  }
+
+  string ftoa(const float &number, const unsigned int &precision) {
+    ostringstream oss;
+    oss << std::setprecision(precision) << number;
+    return oss.str();
   }
 
   string dtoa(const double &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -137,8 +148,14 @@ namespace Zeni {
     return buf;
   }
 
+  string dtoa(const double &number, const unsigned int &precision) {
+    ostringstream oss;
+    oss << std::setprecision(precision) << number;
+    return oss.str();
+  }
+
   string ldtoa(const long double &number) {
-    char buf[64];
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
   #else
@@ -445,3 +462,5 @@ namespace Zeni {
     return is;
   }
 }
+
+#include <Zeni/Global_Undef.h>

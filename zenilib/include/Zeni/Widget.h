@@ -252,6 +252,7 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Font.h>
 #include <Zeni/Line_Segment.h>
+#include <Zeni/Projector.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
@@ -261,6 +262,8 @@
 #include <string>
 #include <vector>
 #include <set>
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
@@ -274,10 +277,12 @@ namespace Zeni {
 
     inline void on_event(const SDL_KeyboardEvent &event);
     inline void on_event(const SDL_MouseButtonEvent &event);
+    inline void on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector);
     inline void on_event(const SDL_MouseMotionEvent &event);
+    inline void on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector);
 
     virtual void on_key(const SDL_keysym & /*keysym*/, const bool & /*down*/) {}
-    virtual void on_mouse_button(const Point2i &pos, const bool &down) = 0;
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button) = 0;
     virtual void on_mouse_motion(const Point2i &pos) = 0;
 
     virtual void render() const = 0;
@@ -377,7 +382,7 @@ namespace Zeni {
     virtual const Point2f & get_upper_left() const;
     virtual const Point2f & get_lower_right() const;
 
-    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
     // Called when the cursor passes over the button
@@ -451,7 +456,7 @@ namespace Zeni {
     friend class Radio_Button;
 
   public:
-    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
     inline void accept(Radio_Button &radio_button);
@@ -460,18 +465,21 @@ namespace Zeni {
     virtual void render() const;
 
   private:
-    inline void add_Radio_Button(Radio_Button &radio_button);
-    inline void remove_Radio_Button(Radio_Button &radio_button);
+    inline void lend_Radio_Button(Radio_Button &radio_button);
+    inline void unlend_Radio_Button(Radio_Button &radio_button);
 
     std::set<Radio_Button *> m_radio_buttons;
   };
 
   class Radio_Button : public Check_Box {
+    friend class Radio_Button_Set;
+
   public:
     inline Radio_Button(Radio_Button_Set &radio_button_set_,
                         const Point2f &upper_left_, const Point2f &lower_right_,
                         const Color &border_color_, const Color &check_color_,
                         const bool &checked_ = false, const bool &toggleable_ = true);
+    inline ~Radio_Button();
 
     virtual void on_accept();
 
@@ -485,7 +493,7 @@ namespace Zeni {
            const float &slider_radius_,
            const Color &line_color_,
            const Color &slider_color_,
-           const float &slider_position_ = 0.5f);
+           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
@@ -498,7 +506,7 @@ namespace Zeni {
     inline void set_slider_color(const Color &slider_color_);
     inline void set_slider_position(const float &slider_position_);
 
-    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
 
     virtual void on_mouse_motion(const Zeni::Point2i &pos);
 
@@ -524,11 +532,13 @@ namespace Zeni {
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
              const Color &bg_color_,
              const std::string &font_name_, const std::string &text_, const Color &text_color_,
-             const bool &editable_ = false, const JUSTIFY &justify_ = ZENI_LEFT, const int &tab_spaces_ = 5);
+             const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
+             const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
+             const int &tab_spaces_ = ZENI_DEFAULT_TAB_SPACES);
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 
-    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_accept();
 
     inline const Color & get_bg_color() const;
@@ -567,7 +577,7 @@ namespace Zeni {
       Word(const Type &type_ = NONSENSE) : unformatted_glyph_sides(1, 0), type(type_), splittable(false), fpsplit(false) {}
 
       std::string unformatted;
-      std::vector<int> unformatted_glyph_sides;
+      std::vector<float> unformatted_glyph_sides;
       Type type;
       bool splittable;
       bool fpsplit; // indicates it has been split already and a '-' should be appended
@@ -577,7 +587,7 @@ namespace Zeni {
       Line() : glyph_top(0), endled(false) {}
 
       std::string formatted;
-      int glyph_top;
+      float glyph_top;
       bool endled;
     };
 
@@ -589,8 +599,8 @@ namespace Zeni {
 
     std::string clean_string(const std::string &unclean_string) const;
     std::string untablinebreak(const std::string &tabbed_text) const;
-    int get_text_width(const Font &font, const std::string &text); 
-    int max_line_width() const;
+    float get_text_width(const Font &font, const std::string &text); 
+    float max_line_width() const;
 
     inline void invalidate_edit_pos();
 
@@ -626,7 +636,7 @@ namespace Zeni {
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
     
     /// on_mouse_button deactivates the repeater (if active) and then passes input to the Widget
-    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     /// on_mouse_motion input is simply passed through
     virtual void on_mouse_motion(const Point2i &pos);
 
@@ -651,12 +661,12 @@ namespace Zeni {
 
   class Widgets : public Widget {
   public:
-    inline void add_Widget(Widget &widget);
-    inline void remove_Widget(Widget &widget);
+    inline void lend_Widget(Widget &widget);
+    inline void unlend_Widget(Widget &widget);
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 
-    virtual void on_mouse_button(const Point2i &pos, const bool &down);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
     virtual void render() const;
@@ -666,5 +676,7 @@ namespace Zeni {
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

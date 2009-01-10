@@ -32,90 +32,44 @@
 // HXXed below
 #include <Zeni/Coordinate.h>
 #include <Zeni/Matrix4f.h>
+#include <Zeni/Quaternion.h>
 
 #include <Zeni/Camera.h>
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
-  const Point3f & Camera::get_position() const {
-    return m_position;
+  Vector3f Camera::get_forward() const {
+    return orientation * ZENI_DEFAULT_FORWARD_VECTOR;
   }
 
-  const Vector3f & Camera::get_forward() const {
-    return m_forward;
-  }
-
-  const Vector3f & Camera::get_up() const {
-    return m_up;
+  Vector3f Camera::get_up() const {
+    return orientation * ZENI_DEFAULT_UP_VECTOR;
   }
 
   Vector3f Camera::get_left() const {
-    return m_up % m_forward;
+    return orientation * ZENI_DEFAULT_LEFT_VECTOR;
   }
-
-  float Camera::get_near_clip() const {
-    return m_near_clip;
-  }
-
-  float Camera::get_far_clip() const {
-    return m_far_clip;
-  }
-
   float Camera::get_fov_deg() const {
-    return m_fov_rad * 180.0f / pi;
-  }
-
-  float Camera::get_fov_rad() const {
-    return m_fov_rad;
-  }
-
-  float Camera::get_tunnel_vision_factor() const {
-    return m_tunnel_vision_factor;
-  }
-
-  void Camera::set_position(const Point3f &point) {
-    m_position = point;
-  }
-
-  void Camera::set_forward(const Vector3f &forward) {
-    m_forward = forward.normalized();
-  }
-
-  void Camera::set_up(const Vector3f &up) {
-    m_up = up.normalized();
-  }
-
-  void Camera::set_near_clip(const float &distance) {
-    m_near_clip = distance;
-  }
-
-  void Camera::set_far_clip(const float &distance) {
-    m_far_clip = distance;
+    return fov_rad * 180.0f / pi;
   }
 
   void Camera::set_fov_deg(const float &degrees) {
-    m_fov_rad = degrees * pi / 180.0f;
-  }
-
-  void Camera::set_fov_rad(const float &radians) {
-    m_fov_rad = radians;
-  }
-
-  void Camera::set_tunnel_vision_factor(const float &tunnel_vision_factor) {
-    m_tunnel_vision_factor = tunnel_vision_factor;
+    fov_rad = degrees * pi / 180.0f;
   }
 
   Point3f Camera::get_tunneled_position() const {
-    return m_position + (1.0f - m_tunnel_vision_factor) * m_near_clip * m_forward;
+    return position + (1.0f - tunnel_vision_factor) * near_clip * get_forward();
   }
 
   float Camera::get_tunneled_near_clip() const {
-    return m_near_clip * m_tunnel_vision_factor;
+    return near_clip * tunnel_vision_factor;
   }
 
   float Camera::get_tunneled_far_clip() const {
-    return m_far_clip - m_near_clip + get_tunneled_near_clip();
+    return far_clip - near_clip + get_tunneled_near_clip();
   }
 
   float Camera::get_tunneled_fov_deg() const {
@@ -123,11 +77,11 @@ namespace Zeni {
   }
 
   float Camera::get_tunneled_fov_rad() const {
-    return 2.0f * std::atan((m_near_clip * std::tan(0.5f * m_fov_rad)) / get_tunneled_near_clip());
+    return 2.0f * std::atan((near_clip * std::tan(0.5f * fov_rad)) / get_tunneled_near_clip());
   }
 
   Matrix4f Camera::get_view_matrix() const {
-    return Matrix4f::View(get_tunneled_position(), m_forward, m_up);
+    return Matrix4f::View(get_tunneled_position(), get_forward(), get_up());
   }
 
   Matrix4f Camera::get_projection_matrix(const std::pair<Point2i, Point2i> &viewport) const {
@@ -136,13 +90,12 @@ namespace Zeni {
       get_tunneled_near_clip(), get_tunneled_far_clip());
   }
 
-  void Camera::adjust_position(const Vector3f &by) {
-    m_position += by;
-  }
-
 }
+
+#include <Zeni/Global_Undef.h>
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Matrix4f.hxx>
+#include <Zeni/Quaternion.hxx>
 
 #endif

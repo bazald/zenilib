@@ -35,7 +35,7 @@
  *
  * A Texture can be applied to polygons in any supported rendering engine.
  *
- * \note Created with a call to Video::get_reference().load_Texture(...)
+ * \note Created with a call to get_Video().load_Texture(...)
  *
  * \author bazald
  *
@@ -57,7 +57,7 @@
 #include <vector>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 #ifndef DISABLE_DX9
 #include <d3dx9.h>

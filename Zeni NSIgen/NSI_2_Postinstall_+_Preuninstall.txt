@@ -5,8 +5,8 @@ SectionEnd
 Section -Redist
   SetShellVarContext all
 
-  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_2.0.50727.762.exe" /q:a /c:"msiexec /i vcredist.msi /qn"'
   ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x64_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
   ExecWait '"$INSTDIR\redist\directx\DXSETUP.exe" /silent'
   ExecWait '"$INSTDIR\redist\openal\oalinst_2.0.3.0.exe" /silent'
 SectionEnd
@@ -17,11 +17,13 @@ Section -Icons
 ;Link to Start Menu
 
   CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${EXECUTABLE_FILE}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X86}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X64}"
 
 ;Link to Desktop
 
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${EXECUTABLE_FILE}"
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME_X86}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X86}"
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME_X64}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X64}"
 
 ;Link to Website
 
@@ -47,10 +49,10 @@ Section -Post
   SetShellVarContext all
 
   WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${EXECUTABLE_FILE}"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${PRODUCT_NAME}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${EXECUTABLE_FILE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${EXECUTABLE_FILE_X86}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
@@ -74,9 +76,11 @@ Section Uninstall
   Delete "$INSTDIR\stdout.txt"
 
 ;Links
-  Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+  Delete "$DESKTOP\${PRODUCT_NAME_X64}.lnk"
+  Delete "$DESKTOP\${PRODUCT_NAME_X86}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\Uninstall.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_PUBLISHER}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${ZENIPEX_LIBRARY}.lnk"

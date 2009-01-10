@@ -45,11 +45,15 @@ namespace Zeni {
     return m_italic;
   }
 
-  int Font::get_text_height() const {
+  float Font::get_text_height() const {
     return m_glyph_height;
   }
 
-  int Font_FT::Glyph::get_glyph_width() const {
+  float Font::get_virtual_screen_height() const {
+    return m_virtual_screen_height;
+  }
+
+  float Font_FT::Glyph::get_glyph_width() const {
     return m_glyph_width;
   }
 

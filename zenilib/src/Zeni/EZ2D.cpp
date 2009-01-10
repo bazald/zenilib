@@ -50,18 +50,16 @@ namespace Zeni {
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
         tx1 = 1.0f - tx0;
 
-      Material material(image_name);
-      material.set_ambient(color_filter);
-      material.set_diffuse(color_filter);
+      Material material(image_name, color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f)),
         Vertex2f_Texture(Point2f(upper_left.x, lower_right.y), Point2f(tx0, 1.0f)),
         Vertex2f_Texture(Point2f(lower_right.x, lower_right.y), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f)),
-        new Material_Render_Wrapper(material));
+        Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f)));
+      q.lend_Material(&material);
 
-      Video::get_reference().render(q);
+      get_Video().render(q);
   }
 
 
@@ -92,50 +90,48 @@ namespace Zeni {
         tx0 = horizontally_flipped ? 1.0f : 0.0f,
         tx1 = 1.0f - tx0;
 
-      Material material(image_name);
-      material.set_ambient(color_filter);
-      material.set_diffuse(color_filter);
+      Material material(image_name, color_filter);
 
       Quadrilateral<Vertex2f_Texture> q(
         Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f)),
         Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f)),
         Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f)),
-        new Material_Render_Wrapper(material));
+        Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f)));
+      q.lend_Material(&material);
 
-      Video::get_reference().render(q);
+      get_Video().render(q);
   }
 
   bool is_sprite(
     const std::string &sprite) {
 
-      return Textures::get_reference().is_sprite(
-        Textures::get_reference().get_texture_id(sprite));
+      return get_Textures().is_sprite(
+        get_Textures().get_id(sprite));
   }
 
   int sprite_num_frames(
     const std::string &sprite) {
 
-      return Textures::get_reference().get_num_frames(
-        Textures::get_reference().get_texture_id(sprite));
+      return get_Textures().get_num_frames(
+        get_Textures().get_id(sprite));
   }
 
   void set_sprite_frame(
     const std::string &sprite,
     const int &frame_number) {
 
-      return Textures::get_reference().set_current_frame(
-        Textures::get_reference().get_texture_id(sprite),
+      return get_Textures().set_current_frame(
+        get_Textures().get_id(sprite),
         frame_number);
   }
 
   void increment_sprite_frame(
     const std::string &sprite_name) {
 
-      Texture * const texture = Textures::get_reference().get_texture(
-        Textures::get_reference().get_texture_id(sprite_name));
+      Texture &texture = get_Textures()
+        [get_Textures().get_id(sprite_name)];
 
-      Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
+      Sprite * const sprite = dynamic_cast<Sprite *>(&texture);
 
       if(!sprite)
         throw Sprite_Function_Misapplied();
@@ -153,10 +149,10 @@ namespace Zeni {
   void decrement_sprite_frame(
     const std::string &sprite_name) {
 
-      Texture * const texture = Textures::get_reference().get_texture(
-        Textures::get_reference().get_texture_id(sprite_name));
+      Texture &texture = get_Textures()
+        [get_Textures().get_id(sprite_name)];
 
-      Sprite * const sprite = dynamic_cast<Sprite * const>(texture);
+      Sprite * const sprite = dynamic_cast<Sprite *>(&texture);
 
       if(!sprite)
         throw Sprite_Function_Misapplied();

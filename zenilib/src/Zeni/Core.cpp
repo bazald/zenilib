@@ -32,6 +32,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
+
+#ifdef _WINDOWS
+#include <shlobj.h>
+#endif
 
 using namespace std;
 
@@ -41,8 +46,12 @@ namespace Zeni {
   static streambuf * cout_bak = 0;
 
   Core::Core()
-    : joystick(0)
+    : m_username("username"),
+    m_appdata_path("./"),
+    m_joystick(0)
   {
+    /** Redirect output **/
+
     static ofstream cerr_file("stderr.txt");
     static ofstream cout_file("stdout.txt");
     
@@ -56,19 +65,53 @@ namespace Zeni {
       cout.rdbuf(cout_file.rdbuf());
     }
 
-    if(SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
+    /** Get username **/
+
+#ifdef _WINDOWS
+    char username[MAX_PATH];
+    DWORD username_len = sizeof(username);
+    if(!GetUserName(username, &username_len))
+      throw Core_Init_Failure();
+#else
+    char username[4096];
+    FILE * whoami = popen("whoami", "r");
+    fgets(username, sizeof(username), whoami);
+    pclose(whoami);
+    int username_len = strlen(username);
+    if(username_len)
+      username[username_len - 1] = 0;
+#endif
+    m_username = username;
+
+    /** Get appdata path **/
+
+#ifdef _WINDOWS
+	  char appdata_path[MAX_PATH];
+    if(SHGetFolderPath(0, CSIDL_APPDATA | CSIDL_FLAG_CREATE, 0, SHGFP_TYPE_CURRENT, appdata_path) != S_OK)
+      throw Core_Init_Failure();
+#else
+    char appdata_path[4096];
+    FILE * pwd = popen("cd ~/ && pwd", "r");
+    fgets(appdata_path, sizeof(appdata_path), pwd);
+    pclose(pwd);
+    int appdata_path_len = strlen(appdata_path);
+    if(appdata_path_len)
+      appdata_path[appdata_path_len - 1] = 0;
+#endif
+    m_appdata_path = appdata_path;
+
+    /** Initialize SDL itself **/
+
+    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
       throw Core_Init_Failure();
 
-    SDL_JoystickEventState(SDL_ENABLE);
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      joystick.push_back(SDL_JoystickOpen(i));
+    /** Initialize Joysticks **/
+
+    init_joysticks();
   }
 
   Core::~Core() {
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      SDL_JoystickClose(joystick[i]);
-    joystick.clear();
-    SDL_JoystickEventState(SDL_DISABLE);
+    quit_joysticks();
 
     SDL_Quit();
 
@@ -78,9 +121,85 @@ namespace Zeni {
       cerr.rdbuf(cerr_bak);
   }
 
-  Core & Core::get_reference() {
+  Core & get_Core() {
     static Core e_core;
     return e_core;
+  }
+
+  const std::string & Core::get_username() {
+    return m_username;
+  }
+
+  std::string Core::get_appdata_path(const std::string &unique_app_identifier) {
+#ifdef _WINDOWS
+    return m_appdata_path + "\\" + unique_app_identifier + "\\";
+#else
+    return m_appdata_path + "/." + unique_app_identifier + "/";
+#endif
+  }
+
+  int Core::get_num_joysticks() const {
+    return int(m_joystick.size());
+  }
+
+  const std::string & Core::get_joystick_name(const int &index) const {
+    assert(-1 < index && index < int(m_joystick.size()));
+    return m_joystick[index].second;
+  }
+  
+  int Core::get_joystick_num_axes(const int &index) const {
+    assert(-1 < index && index < int(m_joystick.size()));
+    return SDL_JoystickNumAxes(m_joystick[index].first);
+  }
+
+  int Core::get_joystick_num_balls(const int &index) const {
+    assert(-1 < index && index < int(m_joystick.size()));
+    return SDL_JoystickNumBalls(m_joystick[index].first);
+  }
+
+  int Core::get_joystick_num_hats(const int &index) const {
+    assert(-1 < index && index < int(m_joystick.size()));
+    return SDL_JoystickNumAxes(m_joystick[index].first);
+  }
+
+  int Core::get_joystick_num_buttons(const int &index) const {
+    assert(-1 < index && index < int(m_joystick.size()));
+    return SDL_JoystickNumAxes(m_joystick[index].first);
+  }
+
+  void Core::regenerate_joysticks() {
+    quit_joysticks();
+    init_joysticks();
+  }
+  
+  void Core::init_joysticks() {
+    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
+      throw Joystick_Init_Failure();
+
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
+      m_joystick.push_back(make_pair(SDL_JoystickOpen(i),
+                                    SDL_JoystickName(i)));
+
+      if(!m_joystick[i].first) {
+        m_joystick.pop_back();
+        quit_joysticks();
+
+        throw Joystick_Init_Failure();
+      }
+    }
+
+    SDL_JoystickEventState(SDL_ENABLE);
+  }
+
+  void Core::quit_joysticks() {
+    SDL_JoystickEventState(SDL_DISABLE);
+
+    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+      SDL_JoystickClose(m_joystick[i].first);
+
+    m_joystick.clear();
+
+    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
 
 }

@@ -36,7 +36,7 @@
 #include <cassert>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 
 namespace Zeni {
@@ -46,17 +46,21 @@ namespace Zeni {
   }
 
   Vertex3f::Vertex3f(const Point3f &position, const Vector3f &normal)
-    : m_position(position),
-    m_normal(normal)
+    : position(position),
+    normal(normal)
   {
   }
 
   Vertex3f::~Vertex3f() {
   }
 
+  Point3f Vertex3f::get_position() const {
+    return position;
+  }
+
   Vertex3f * Vertex3f_Color::interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs) const {
-    return new Vertex3f_Color(get_position().interpolate_to(rhs_part, rhs.get_position()), 
-      0.5f*(get_normal() + rhs.get_normal()), 
+    return new Vertex3f_Color(position.interpolate_to(rhs_part, rhs.position), 
+      0.5f*(normal + rhs.normal), 
       Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
   }
 
@@ -88,8 +92,8 @@ namespace Zeni {
   {
   }
 
-  Point3f Vertex3f_Color::get_position() const {
-    return Vertex3f::get_position();
+  bool Vertex3f_Color::is_3d() const {
+    return true;
   }
 
 #ifndef DISABLE_GL
@@ -104,8 +108,8 @@ namespace Zeni {
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
-    glNormal3f(get_normal().i, get_normal().j, get_normal().k);
-    glVertex3f(get_position().x, get_position().y, get_position().z);
+    glNormal3f(normal.i, normal.j, normal.k);
+    glVertex3f(position.x, position.y, position.z);
   }
 #endif
 
@@ -121,24 +125,24 @@ namespace Zeni {
 
   Vertex3f_Texture::Vertex3f_Texture(const Point3f &position_, const Vector3f &normal_, const Point2f &texture_coordinate_)
     : Vertex3f(position_, normal_),
-    m_texture_coordinate(texture_coordinate_)
+    texture_coordinate(texture_coordinate_)
   {
   }
 
-  Vertex3f_Texture::Vertex3f_Texture(const Point3f &position, const Point2f &texture_coordinate)
+  Vertex3f_Texture::Vertex3f_Texture(const Point3f &position, const Point2f &texture_coordinate_)
     : Vertex3f(position),
-    m_texture_coordinate(texture_coordinate)
+    texture_coordinate(texture_coordinate_)
   {
   }
 
   Vertex3f * Vertex3f_Texture::interpolate_to(const float &rhs_part, const Vertex3f_Texture &rhs) const {
-    return new Vertex3f_Texture(get_position().interpolate_to(rhs_part, rhs.get_position()), 
-      0.5f*(get_normal() + rhs.get_normal()), 
-      m_texture_coordinate.interpolate_to(rhs_part, rhs.m_texture_coordinate));
+    return new Vertex3f_Texture(position.interpolate_to(rhs_part, rhs.position), 
+      0.5f*(normal + rhs.normal), 
+      texture_coordinate.interpolate_to(rhs_part, rhs.texture_coordinate));
   }
 
-  Point3f Vertex3f_Texture::get_position() const {
-    return Vertex3f::get_position();
+  bool Vertex3f_Texture::is_3d() const {
+    return true;
   }
 
 #ifndef DISABLE_GL
@@ -147,9 +151,9 @@ namespace Zeni {
   }
 
   void Vertex3f_Texture::subrender_to(Video_GL &) const {
-    glTexCoord2f(m_texture_coordinate.x, m_texture_coordinate.y);
-    glNormal3f(get_normal().i, get_normal().j, get_normal().k);
-    glVertex3f(get_position().x, get_position().y, get_position().z);
+    glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
+    glNormal3f(normal.i, normal.j, normal.k);
+    glVertex3f(position.x, position.y, position.z);
   }
 #endif
 

@@ -65,13 +65,16 @@
 namespace Zeni {
 
   class Camera;
-  class Fog;
+  struct Fog;
   class Font;
-  class Light;
+  class Fragment_Shader;
+  struct Light;
   class Material;
   class Renderable;
+  class Shader_System;
   class Texture;
   class Vertex_Buffer;
+  class Vertex_Shader;
 
   class Video_Base {
   public:
@@ -88,6 +91,9 @@ namespace Zeni {
   };
 
   class Video : public Video_Base::IV {
+    // Get reference to only instance;
+    friend Video & get_Video(); ///< Get access to the singleton.
+
   protected:
     Video(const Video_Base::VIDEO_MODE &vtype_);
     virtual ~Video() = 0;
@@ -98,8 +104,14 @@ namespace Zeni {
     Video & operator=(const Video &);
 
   public:
-    // Get reference to only instance; Might throw Video_Init_Failure
-    static Video & get_reference(); ///< Get access to the singleton
+    enum TEST {ZENI_NEVER = 0,
+               ZENI_LESS = 1,
+               ZENI_EQUAL = 2,
+               ZENI_GREATER = 4,
+               ZENI_NOT_EQUAL = 8,
+               ZENI_LESS_OR_EQUAL = 3,
+               ZENI_GREATER_OR_EQUAL = 6,
+               ZENI_ALWAYS = 15};
 
     // Rendering functions
     virtual void render_all() = 0; ///< Render the scene
@@ -118,8 +130,11 @@ namespace Zeni {
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
     inline int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
     inline bool has_vertex_buffers() const; ///< Determine whether Vertex_Buffers are supported
-    inline const bool & zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
-    inline const bool & ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
+    inline const bool & is_zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
+    inline const bool & is_ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
+    inline const bool & is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
+    inline const TEST & get_alpha_test_function() const; ///< Determine which alpha test is in use
+    inline const float & get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
 
     // Modifiers
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
@@ -127,10 +142,11 @@ namespace Zeni {
     inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
     inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
     inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
-    inline void set_backface_culling(const bool &on = true); ///< Set backface culling on/off
-    inline void set_vertical_sync(const bool &on = true); ///< Set vertical_sync on/off
+    inline void set_backface_culling(const bool &on); ///< Set backface culling on/off
+    inline void set_vertical_sync(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
     inline void set_ztest(const bool &enabled); ///< Enable or disable testing of the Z-Buffer
+    inline void set_alpha_test(const bool &enabled, const TEST &test = ZENI_ALWAYS, const float &value = 0.0f); ///< Set the alpha test
 
     // Color and Texturing
     inline const Color & get_color() const; ///< Get the current color
@@ -144,14 +160,23 @@ namespace Zeni {
 
     // Lighting and Materials
     inline void set_lighting(const bool &on = true); ///< Set lighting on/off
-    inline void set_normal_interpolation(const bool &on = true); ///< Set normal interpolation on/off
     inline void set_ambient_lighting(const Color &color); ///< Set ambient lighting on/off
-    inline void set_light(const int &number, const Light * const light = 0); ///< Set a particular Light
-    inline void set_material(const Material &material, const int &optimization = 0); ///< Set a Material
-    inline void unset_material(const Material &material, const int &optimization = 0); ///< Set a Material
+    inline void set_light(const int &number, const Light &light); ///< Set a particular Light
+    inline void unset_light(const int &number); ///< Unset a particular Light
+    inline void set_material(const Material &material); ///< Set a Material
+    inline void unset_material(const Material &material); ///< Unset a Material
 
     // Fog
-    inline void set_fog(const Fog * const fog = 0); ///< Set Fog on/off
+    inline void set_fog(const Fog &fog); ///< Set Fog
+    inline void unset_fog(); ///< Unset Fog
+
+#ifndef DISABLE_CG
+    // Shaders
+    inline void set_vertex_shader(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void set_fragment_shader(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_vertex_shader(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
+    inline void unset_fragment_shader(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
+#endif
 
     // Model/World Transformation Stack Functions
     inline void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
@@ -182,8 +207,13 @@ namespace Zeni {
     inline Texture * load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-      const int &glyph_height); ///< Function for creating a Font; used internally by Fonts
+      const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
+
+    // Initialization Functions
+    inline void initialize(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
+    inline void initialize(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Vertex_Shader
+    inline void initialize(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function); ///< Function for initializing a Fragment_Shader
 
     // Initialization Checks and Changes
     inline static const bool & is_initialized(); ///< Determine whether Video is already initialized
@@ -239,7 +269,13 @@ namespace Zeni {
 
     bool m_zwrite;
     bool m_ztest;
+
+    bool m_alpha_test;
+    TEST m_alpha_function;
+    float m_alpha_value;
   };
+
+  Video & get_Video(); ///< Get access to the singleton.
 
   struct Video_Init_Failure : public Error {
     Video_Init_Failure() : Error("Zeni Video Failed to Initialize Correctly") {}
@@ -247,6 +283,10 @@ namespace Zeni {
 
   struct Video_Initialized : public Error {
     Video_Initialized() : Error("Zeni Video Already Initialized") {}
+  };
+
+  struct Light_Out_of_Range : public Error {
+    Light_Out_of_Range() : Error("Light Set Out of Range [0,7]") {}
   };
 
 }

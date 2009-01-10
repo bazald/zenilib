@@ -31,11 +31,9 @@
  *
  * \ingroup Zenilib
  *
- * \brief A Vertex_Buffer that accepts both Triangle<Vertex3f_Color>s and Triangle<Vertex3f_Texture>s.
+ * \brief A Vertex_Buffer that accepts Triangle and Quadrilaterals.
  *
- * \note All Triangles are expected to have either the base Render_Wrapper or a Material_Render_Wrapper.
- *
- * \note Created with a call to Video::get_reference().create_Vertex_Buffer()
+ * \note Created with a call to get_Video().create_Vertex_Buffer()
  *
  * \author bazald
  *
@@ -60,22 +58,22 @@
 #include <d3dx9.h>
 #endif
 #ifndef DISABLE_GL
-#include <GL/glext.h>
+#include <GL/glew.h>
 #endif
 
 namespace Zeni {
 
   class Render_Wrapper;
 
-  class Vertex_Buffer  {
+  class Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
-    Vertex_Buffer operator=(const Vertex_Buffer &);
+    Vertex_Buffer & operator=(const Vertex_Buffer &);
 
   public:
     struct Vertex_Buffer_Range {
-      Vertex_Buffer_Range(Render_Wrapper *rw, const int &s, const int &ne);
+      Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne);
 
-      std::auto_ptr<Render_Wrapper> render_wrapper;
+      std::auto_ptr<Material> material;
       int start;
       int num_elements;
     };
@@ -86,15 +84,25 @@ namespace Zeni {
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Vertex_Buffer should try to fix broken normals in the prerender phase;
     inline bool will_do_normal_alignment() const; // Find out whether Vertex_Buffer is set to try to fix broken normals in the prerender phase;
 
-    void add_triangle(Triangle<Vertex2f_Color> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
-    void add_triangle(Triangle<Vertex2f_Texture> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex2f_Color> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex2f_Texture> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
+    void give_triangle(Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_triangle(const Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_quadrilateral(Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
-    void add_triangle(Triangle<Vertex3f_Color> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
-    void add_triangle(Triangle<Vertex3f_Texture> *triangle, const bool &give_ownership = true); ///< Add a Triangle to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex3f_Color> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
-    void add_quadrilateral(Quadrilateral<Vertex3f_Texture> *quadrilateral, const bool &give_ownership = true); ///< Add a Quadrilateral to the Vertex_Buffer
+    void give_triangle(Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_triangle(const Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+
+    void give_triangle(Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_triangle(const Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_quadrilateral(Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+
+    void give_triangle(Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_triangle(const Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
@@ -103,7 +111,6 @@ namespace Zeni {
   protected:
     virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
-    inline int num_vertices_c() const;
     inline int num_vertices_cm() const;
     inline int num_vertices_t() const;
 
@@ -116,11 +123,9 @@ namespace Zeni {
     // Align normals of similar vertices
     void align_similar_normals();
 
-    std::vector<Triangle<Vertex3f_Color> *> m_triangles_c;
     std::vector<Triangle<Vertex3f_Color> *> m_triangles_cm;
     std::vector<Triangle<Vertex3f_Texture> *> m_triangles_t;
 
-    std::vector<Vertex_Buffer_Range *> m_descriptors_c;
     std::vector<Vertex_Buffer_Range *> m_descriptors_cm;
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
 

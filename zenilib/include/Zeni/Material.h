@@ -50,16 +50,17 @@
 #define ZENI_MATERIAL_H
 
 #include <Zeni/Color.h>
-#include <Zeni/Texture.h>
 
 #include <string>
 
 #ifndef DISABLE_GL
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
@@ -69,56 +70,60 @@ namespace Zeni {
   class Material {
   public:
     /// An Alternative to the numerous setter functions
-    Material(const Color &ambient = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f), 
-      const Color &specular = Color(1.0f, 0.2f, 0.2f, 0.2f), 
-      const Color &emissive = Color(1.0f, 0.0f, 0.0f, 0.0f), const float &power = 1.0f,
-      const std::string &texture = "");
-    Material(const std::string &texture, const Color &ambient_and_diffuse = Color(1.0f, 1.0f, 1.0f, 1.0f));
+    Material(const Color &ambient = ZENI_DEFAULT_MATERIAL_DIFFUSE, 
+             const Color &diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE, 
+             const Color &specular = ZENI_DEFAULT_MATERIAL_SPECULAR, 
+             const Color &emissive = ZENI_DEFAULT_MATERIAL_EMISSIVE,
+             const float &power = ZENI_DEFAULT_MATERIAL_POWER,
+             const std::string &texture = "");
+    Material(const std::string &texture,
+             const Color &ambient_and_diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE);
 
     // Accessors
-    inline const Color & get_ambient() const; ///< Get the ambient Color
-    inline const Color & get_diffuse() const; ///< Get the diffuse Color
-    inline const Color & get_specular() const; ///< Get the specular Color
-    inline const Color & get_emissive() const; ///< Get the emissive Color
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)
     float get_shininess() const; ///< Get the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
     inline const std::string & get_texture() const; ///< Get the texture identifier
 
     // Modifiers
-    inline void set_ambient(const Color &ambient); ///< Set the ambient Color
-    inline void set_diffuse(const Color &diffuse); ///< Set the diffuse Color
-    inline void set_specular(const Color &specular); ///< Set the specular Color
-    inline void set_emissive(const Color &emissive); ///< Set the emissive Color
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
     void set_texture(const std::string &texture); ///< Set the texture identifier
 
 #ifndef DISABLE_GL
-    void set(Video_GL &screen, const int &optimization) const;
-    void unset(Video_GL &screen, const int &optimization) const;
+    void set(Video_GL &screen) const;
+    void unset(Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
-    void set(Video_DX9 &screen, const int &optimization) const;
-    void unset(Video_DX9 &screen, const int &optimization) const;
+    void set(Video_DX9 &screen) const;
+    void unset(Video_DX9 &screen) const;
 #endif
 
     bool operator<(const Material &rhs) const; ///< To provide an arbitrary total ordering. Do not depend on it remaining the same in the future.
 
     bool operator==(const Material &rhs) const; ///< A simple equality test. Close hits are misses.
 
+    // Optimizers
+    void optimize_to_follow(const Material &rhs); ///< If this Material will be set regularly after another Material, and only after that other Material, the set function can be optimized.
+    void optimize_to_precede(const Material &rhs); ///< If this Material will be set regularly before another Material, and only before that other Material, the unset function can be optimized.
+    void clear_optimization(); ///< Simply undo any previous optimizations.
+
+    Color diffuse; ///< The diffuse Color
+    Color ambient; ///< The ambient Color
+    Color specular; ///< The specular Color
+    Color emissive; ///< The emissive Color
+
   private:
-    Color m_diffuse;
-    Color m_ambient;
-    Color m_specular;
-    Color m_emissive;
     float m_power;
 
     std::string m_texture;
     mutable unsigned long m_texture_id;
+
+    unsigned int m_optimization;
   };
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

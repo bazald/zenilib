@@ -33,44 +33,12 @@
 
 namespace Zeni {
 
-  const Color & Material::get_ambient() const {
-    return m_ambient;
-  }
-
-  const Color & Material::get_diffuse() const {
-    return m_diffuse;
-  }
-
-  const Color & Material::get_specular() const {
-    return m_specular;
-  }
-
-  const Color & Material::get_emissive() const {
-    return m_emissive;
-  }
-
   float Material::get_power() const {
     return m_power;
   }
 
   const std::string & Material::get_texture() const {
     return m_texture;
-  }
-
-  void Material::set_ambient(const Color &ambient) {
-    m_ambient = ambient;
-  }
-
-  void Material::set_diffuse(const Color &diffuse) {
-    m_diffuse = diffuse;
-  }
-
-  void Material::set_specular(const Color &specular) {
-    m_specular = specular;
-  }
-
-  void Material::set_emissive(const Color &emissive) {
-    m_emissive = emissive;
   }
 
   void Material::set_power(const float &power) {

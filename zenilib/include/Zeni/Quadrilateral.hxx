@@ -31,128 +31,117 @@
 
 // HXXed below
 #include <Zeni/Triangle.h>
+#include <Zeni/Vertex3f.h>
 
 #include <Zeni/Quadrilateral.h>
 
 // Not HXXed
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <cassert>
 
 namespace Zeni {
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3, Render_Wrapper *render_wrapper)
-    : m_render_wrapper(render_wrapper)
+  Quadrilateral<VERTEX>::Quadrilateral()
+    : a(VERTEX()),
+    b(VERTEX()),
+    c(VERTEX()),
+    d(VERTEX())
   {
-    m_vertex[0] = vertex0;
-    m_vertex[1] = vertex1;
-    m_vertex[2] = vertex2;
-    m_vertex[3] = vertex3;
   }
 
   template <typename VERTEX>
-  Quadrilateral<VERTEX>::~Quadrilateral() {
-    delete m_render_wrapper;
+  Quadrilateral<VERTEX>::Quadrilateral(const VERTEX &vertex0, const VERTEX &vertex1, const VERTEX &vertex2, const VERTEX &vertex3)
+    : a(vertex0),
+    b(vertex1),
+    c(vertex2),
+    d(vertex3)
+  {
   }
 
   template <typename VERTEX>
   Quadrilateral<VERTEX>::Quadrilateral(const Quadrilateral<VERTEX> &rhs)
     : Renderable(rhs),
-    m_render_wrapper(rhs.m_render_wrapper->get_duplicate())
+    a(rhs.a),
+    b(rhs.b),
+    c(rhs.c),
+    d(rhs.d)
   {
-    m_vertex[0] = rhs.m_vertex[0];
-    m_vertex[1] = rhs.m_vertex[1];
-    m_vertex[2] = rhs.m_vertex[2];
-    m_vertex[3] = rhs.m_vertex[3];
   }
 
   template <typename VERTEX>
   Quadrilateral<VERTEX> & Quadrilateral<VERTEX>::operator=(const Quadrilateral<VERTEX> &rhs) {
-    if(this != &rhs) {
-      delete m_render_wrapper;
-      m_render_wrapper = 0;
+    reinterpret_cast<Renderable &>(*this) =
+      reinterpret_cast<const Renderable &>(rhs);
 
-      m_vertex[0] = rhs.m_vertex[0];
-      m_vertex[1] = rhs.m_vertex[1];
-      m_vertex[2] = rhs.m_vertex[2];
-      m_vertex[3] = rhs.m_vertex[3];
-
-      m_render_wrapper = rhs.m_render_wrapper->get_duplicate();
-    }
+    a = rhs.a;
+    b = rhs.b;
+    c = rhs.c;
+    d = rhs.d;
 
     return *this;
   }
 
   template <typename VERTEX>
-  const VERTEX & Quadrilateral<VERTEX>::get_vertex(const int &index) const {
-    assert(-1 < index && index < 4);
-    return m_vertex[index];
-  }
-
-  template <typename VERTEX>
-  void Quadrilateral<VERTEX>::set_vertex(const int &index, const VERTEX &vertex) {
-    assert(-1 < index && index < 4);
-    m_vertex[index] = vertex;
-  }
-
-  template <typename VERTEX>
-  Point3f Quadrilateral<VERTEX>::get_position() const {
-    return Point3f((m_vertex[0].get_position().x + m_vertex[1].get_position().x + m_vertex[2].get_position().x + m_vertex[3].get_position().x) * 0.25f,
-      (m_vertex[0].get_position().y + m_vertex[1].get_position().y + m_vertex[2].get_position().y + m_vertex[3].get_position().y) * 0.25f,
-      (m_vertex[0].get_position().z + m_vertex[1].get_position().z + m_vertex[2].get_position().z + m_vertex[3].get_position().z) * 0.25f);
+  bool Quadrilateral<VERTEX>::is_3d() const {
+    return a.is_3d();
   }
 
 #ifndef DISABLE_GL
   template <typename VERTEX>
   void Quadrilateral<VERTEX>::render_to(Video_GL &screen) const {
-    m_render_wrapper->prerender();
-
     glBegin(GL_TRIANGLE_FAN);
-    for(int i = 0; i < 4; ++i)
-      m_vertex[i].subrender_to(screen);
+    a.subrender_to(screen);
+    b.subrender_to(screen);
+    c.subrender_to(screen);
+    d.subrender_to(screen);
     glEnd();
-
-    m_render_wrapper->postrender();
   }
 #endif
 
 #ifndef DISABLE_DX9
   template <typename VERTEX>
   void Quadrilateral<VERTEX>::render_to(Video_DX9 &screen) const {
-    m_render_wrapper->prerender();
-    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, m_vertex[0].get_address(), sizeof(VERTEX));
-    m_render_wrapper->postrender();
+    screen.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, a.get_address(), sizeof(VERTEX));
   }
 #endif
 
   template <typename VERTEX>
-  const Render_Wrapper * Quadrilateral<VERTEX>::get_render_wrapper() const {
-    return m_render_wrapper;
-  }
-
-  template <typename VERTEX>
-  void Quadrilateral<VERTEX>::set_render_wrapper(Render_Wrapper * const render_wrapper) {
-    delete m_render_wrapper;
-    m_render_wrapper = render_wrapper;
-  }
-
-  template <typename VERTEX>
   Quadrilateral<VERTEX> * Quadrilateral<VERTEX>::get_duplicate() const {
-    return new Quadrilateral<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
+    return new Quadrilateral<VERTEX>(*this);
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t0() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[1], m_vertex[2], m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * const t0 = new Triangle<VERTEX>(a, b, c);
+    t0->fax_Material(get_Material());
+    return t0;
   }
 
   template <typename VERTEX>
   Triangle<VERTEX> * Quadrilateral<VERTEX>::get_duplicate_t1() const {
-    return new Triangle<VERTEX>(m_vertex[0], m_vertex[2], m_vertex[3], m_render_wrapper->get_duplicate());
+    Triangle<VERTEX> * const t1 = new Triangle<VERTEX>(a, c, d);
+    t1->fax_Material(get_Material());
+    return t1;
+  }
+
+  template <typename VERTEX>
+  const VERTEX & Quadrilateral<VERTEX>::operator[](const int &index) const {
+    assert(-1 < index && index < 4);
+    const VERTEX * const ptr = &a;
+    return ptr[index];
+  }
+
+  template <typename VERTEX>
+  VERTEX & Quadrilateral<VERTEX>::operator[](const int &index) {
+    assert(-1 < index && index < 4);
+    VERTEX * const ptr = &a;
+    return ptr[index];
   }
 
 }
 
 #include <Zeni/Triangle.hxx>
+#include <Zeni/Vertex3f.hxx>
 
 #endif

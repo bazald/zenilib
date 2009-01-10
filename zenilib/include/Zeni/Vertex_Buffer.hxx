@@ -29,6 +29,9 @@
 #ifndef ZENI_VERTEX_BUFFER_HXX
 #define ZENI_VERTEX_BUFFER_HXX
 
+// HXXed below
+#include <Zeni/Triangle.h>
+
 #include <Zeni/Vertex_Buffer.h>
 
 namespace Zeni {
@@ -39,10 +42,6 @@ namespace Zeni {
 
   bool Vertex_Buffer::will_do_normal_alignment() const {
     return m_align_normals;
-  }
-
-  int Vertex_Buffer::num_vertices_c() const {
-    return int(3 * m_triangles_c.size());
   }
 
   int Vertex_Buffer::num_vertices_cm() const {
@@ -87,5 +86,7 @@ namespace Zeni {
 #endif
 
 }
+
+#include <Zeni/Triangle.hxx>
 
 #endif

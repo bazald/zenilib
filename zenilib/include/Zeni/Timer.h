@@ -107,17 +107,20 @@ namespace Zeni {
 
   class Time {
   public:
+    typedef int Tick_Type;
+    typedef float Second_Type;
+
     Time(); ///< Initialize to the current time
     Time(const int &ticks);
     inline Time & operator=(const int &ticks);
 
     // Accessors
     // Time passed since last updated
-    inline int get_ticks_passed() const; ///< Get the number of clock ticks passed since current Time
-    inline float get_seconds_passed() const; ///< Get the number of seconds passed since current Time
+    inline int get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
+    inline float get_seconds_passed() const; ///< Get the number of seconds passed since this Time
     // From a specific time
-    inline int get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed since this Time
-    inline float get_seconds_since(const Time &time) const; ///< Get the number of seconds passed since this Time
+    inline int get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
+    inline float get_seconds_since(const Time &time) const; ///< Get the number of seconds passed between 'time' and this Time
 
     // Modifiers
     inline void update(); ///< Update to current Time
@@ -126,6 +129,9 @@ namespace Zeni {
   };
 
   class Timer {
+    // Get reference to only instance;
+    friend Timer & get_Timer(); ///< Get access to the singleton.
+
     Timer();
 
     // Undefined
@@ -133,9 +139,6 @@ namespace Zeni {
     Timer & operator=(const Timer &);
 
   public:
-    // Get reference to only instance;
-    static Timer & get_reference(); ///< Get access to the singleton
-
     // Accessors
     inline int get_ticks(); ///< Get the number of ticks passed since instantiation
     inline int get_ticks_per_second(); ///< Get the number of ticks per second
@@ -148,6 +151,8 @@ namespace Zeni {
     Mutex ticks_mutex;
     int m_ticks; // Wraps at around 49 days
   };
+
+  Timer & get_Timer(); ///< Get access to the singleton.
 
   /** High Quality Timer Below **/
 
@@ -163,6 +168,8 @@ namespace Zeni {
 
   class Time_HQ {
   public:
+    typedef HQ_Tick_Type Tick_Type;
+    typedef long double Second_Type;
 
     Time_HQ(); ///< Initialize to the current time
     Time_HQ(const HQ_Tick_Type &ticks);
@@ -171,11 +178,11 @@ namespace Zeni {
 
     // Accessors
     // Time passed since last updated
-    inline HQ_Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since current Time
-    inline long double get_seconds_passed() const; ///< Get the number of seconds passed since current Time
+    inline HQ_Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
+    inline long double get_seconds_passed() const; ///< Get the number of seconds passed since this Time
     // From a specific time
-    inline HQ_Tick_Type get_ticks_since(const Time_HQ &time) const; ///< Get the number of clock ticks passed since this Time
-    inline long double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed since this Time
+    inline HQ_Tick_Type get_ticks_since(const Time_HQ &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
+    inline long double get_seconds_since(const Time_HQ &time) const; ///< Get the number of seconds passed between 'time' and this Time
 
     // Modifiers
     inline void update(); ///< Update to current Time
@@ -185,6 +192,9 @@ namespace Zeni {
   };
 
   class Timer_HQ {
+    // Get reference to only instance;
+    friend Timer_HQ & get_Timer_HQ(); ///< Get access to the singleton.
+
     Timer_HQ();
 
     // Undefined
@@ -192,9 +202,6 @@ namespace Zeni {
     Timer_HQ & operator=(const Timer_HQ &);
 
   public:
-    // Get reference to only instance;
-    static Timer_HQ & get_reference(); ///< Get access to the singleton
-
     // Accessors
     inline HQ_Tick_Type get_ticks(); ///< Get the number of ticks passed since instantiation
     inline HQ_Tick_Type get_ticks_per_second(); ///< Get the number of ticks per second
@@ -214,6 +221,8 @@ namespace Zeni {
 
     bool m_available;
   };
+
+  Timer_HQ & get_Timer_HQ(); ///< Get access to the singleton.
 
 }
 

@@ -32,11 +32,13 @@
 #define ZENI_INLINES
 
 #include <Zeni/Camera.h>
+#include <Zeni/Chronometer.h>
 #include <Zeni/Collision.h>
 #include <Zeni/Color.h>
 #include <Zeni/Colors.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
+#include <Zeni/Database.h>
 #include <Zeni/EZ2D.h>
 #include <Zeni/Fog.h>
 #include <Zeni/Font.h>
@@ -56,9 +58,12 @@
 #include <Zeni/Projector.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Quaternion.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Resource.h>
+#include <Zeni/Shader.h>
 #include <Zeni/Sound.h>
+#include <Zeni/Sound_Source.h>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Sounds.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
@@ -73,5 +78,6 @@
 #include <Zeni/Video_DX9.h>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Widget.h>
+#include <Zeni/XML.h>
 
 #endif

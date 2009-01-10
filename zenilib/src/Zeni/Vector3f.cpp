@@ -30,6 +30,8 @@
 
 #include <cmath>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   const float pi = acos(-1.0f);
@@ -39,14 +41,14 @@ namespace Zeni {
   const float sqrt_two = sqrt(2.0f);
   const float sqrt_three = sqrt(3.0f);
 
-  extern const Vector3f vector_i(1, 0, 0);
-  extern const Vector3f vector_j(0, 1, 0);
-  extern const Vector3f vector_k(0, 0, 1);
+  const Vector3f vector_i(1, 0, 0);
+  const Vector3f vector_j(0, 1, 0);
+  const Vector3f vector_k(0, 0, 1);
 
   Vector3f & Vector3f::normalize() {
     float mplier = magnitude();
 
-    if(fabs(mplier) < 0.001f)
+    if(INFINTESSIMAL(mplier))
       return *this;
 
     mplier = 1.0f / mplier;
@@ -61,7 +63,7 @@ namespace Zeni {
   Vector3f Vector3f::normalized() const {
     float mplier = magnitude();
 
-    if(fabs(mplier) < 0.001f)
+    if(INFINTESSIMAL(mplier))
       return *this;
 
     mplier = 1.0f / mplier;
@@ -100,3 +102,5 @@ namespace Zeni {
     k = cos(phi) * magnitude;
   }
 }
+
+#include <Zeni/Global_Undef.h>

@@ -73,6 +73,8 @@
  *
  * \brief A 3D Point represented with floats
  *
+ * \note As of the 0.3.0.0 release, this inherits from Vector3f.
+ *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
@@ -84,6 +86,8 @@
 
 #ifndef ZENI_COORDINATE_H
 #define ZENI_COORDINATE_H
+
+#include <Zeni/Vector3f.h>
 
 #include <SDL/SDL_stdinc.h>
 
@@ -126,14 +130,13 @@ namespace Zeni {
     Sint32 x, y, z;
   };
 
-  struct Point3f {
+  struct Point3f : public Vector3f {
     inline Point3f();
     inline Point3f(const float &x_, const float &y_, const float &z_);
     inline explicit Point3f(const Point2f &rhs); ///< z is set to 0.0f
+    inline Point3f(const Vector3f &rhs);
 
-    Point3f interpolate_to(const float &rhs_part, const Point3f &rhs) const; ///< Get a point inbetween this point and another point of the same type.
-
-    float x, y, z;
+    Vector3f interpolate_to(const float &rhs_part, const Vector3f &rhs) const;
   };
 
 }

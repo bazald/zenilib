@@ -56,6 +56,9 @@
 namespace Zeni {
 
   class Resource {
+    // Get reference to only instance;
+    friend Resource & get_Resource(); ///< Get access to the singleton.
+
     Resource();
 
     // Undefined
@@ -63,15 +66,14 @@ namespace Zeni {
     Resource & operator=(const Resource &);
 
   public:
-    // Get reference to only instance;
-    static Resource & get_reference(); ///< Get access to the singleton.
-
     inline unsigned long assign(); ///< Get a value, unique within this run of the program
 
   private:
     Mutex m_mutex;
     unsigned long m_current;
   };
+
+  Resource & get_Resource(); ///< Get access to the singleton.
 
   struct Resource_Init_Failure : public Error {
     Resource_Init_Failure() : Error("Zeni Resource Failed to Initialize Correctly") {}

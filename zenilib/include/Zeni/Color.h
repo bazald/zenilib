@@ -53,17 +53,11 @@
 
 namespace Zeni {
 
-  class Color {
-  public:
+  struct Color {
     /// Set the red, green, blue, and alpha channels using the stored type, float
     Color(); ///< Default value is full white (opaque)
     Color(const float &a, const float &r, const float &g, const float &b); ///< ARGB order is used for consistency despite interal RGBA ordering
     Color(const unsigned long &argb);
-
-    inline const float & a() const; ///< Get the alpha channel [0.0f, 1.0f]
-    inline const float & r() const; ///< Get the red channel [0.0f, 1.0f]
-    inline const float & g() const; ///< Get the green channel [0.0f, 1.0f]
-    inline const float & b() const; ///< Get the blue channel [0.0f, 1.0f]
 
     inline unsigned char a_ub() const; ///< Get the alpha channel [0x00, 0xFF]
     inline unsigned char r_ub() const; ///< Get the red channel [0x00, 0xFF]
@@ -72,6 +66,7 @@ namespace Zeni {
 
     inline Uint32 get_rgba() const; ///< Get a Uint32 representation of 0xRRGGBBAA
     inline Uint32 get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB
+    inline Uint32 get_bgra() const; ///< Get a Uint32 representation of 0xBBGGRRAA - Endianness swap of rgba
 
     Color interpolate_to(const float &rhs_part, const Color &rhs) const; ///< Get a color that is inbetween this color and another color.
 
@@ -79,8 +74,14 @@ namespace Zeni {
 
     bool operator==(const Color &rhs) const; ///< A simple equality test. Close hits are misses.
 
-  private:
-    float rgba[4];
+    // Indexing
+    inline const float & operator[](const int &index) const; ///< Get 'index'
+    inline float & operator[](const int &index); ///< Get 'index'
+
+    float r;
+    float g;
+    float b;
+    float a;
   };
 
 }

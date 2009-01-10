@@ -54,32 +54,35 @@ namespace Zeni {
     m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
     m_preview(Matrix4f::Translate(Vector3f(-0.5f, -0.5f, 0.0f)) *
       Matrix4f::Scale(Vector3f(0.5f, -0.5f, -1.0f)) *
-      Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f)))
+      Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f))),
+    m_alpha_test(false),
+    m_alpha_function(Video::ZENI_ALWAYS),
+    m_alpha_value(0.0f)
   {
   }
 
   Video::~Video() {
   }
 
-  Video & Video::get_reference() {
-    if(!e_video)
-      switch(g_video_mode) {
+  Video & get_Video() {
+    if(!Video::e_video)
+      switch(Video::g_video_mode) {
       case Video_Base::ZENI_VIDEO_ANY:
 #ifndef DISABLE_GL
       case Video_Base::ZENI_VIDEO_GL:
-        e_video = new Video_GL();
+        Video::e_video = new Video_GL();
         break;
 #endif
 #ifndef DISABLE_DX9
       case Video_Base::ZENI_VIDEO_DX9:
-        e_video = new Video_DX9();
+        Video::e_video = new Video_DX9();
         break;
 #endif
       default:
         throw Video_Init_Failure();
     }
 
-    return *e_video;
+    return *Video::e_video;
   }
 
   void Video::preinit(const Video_Base::VIDEO_MODE &vm, const int &w, const int &h, const bool &full, const int &multisampling, const bool &show_frame_) {
@@ -117,7 +120,7 @@ namespace Zeni {
 
   void Video::init() {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     g_initialized = true;
 
     // Initialize SDL + Variablse

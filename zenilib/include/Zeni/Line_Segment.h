@@ -33,8 +33,6 @@
  *
  * \brief An Abstraction of a Line
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Line is rendered.
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
@@ -47,26 +45,22 @@
 #ifndef ZENI_LINE_SEGMENT_H
 #define ZENI_LINE_SEGMENT_H
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 
 namespace Zeni {
 
   template <typename VERTEX>
   class Line_Segment : public Renderable {
   public:
-    /// The best way to create a Line
-    Line_Segment(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      Render_Wrapper * const render_wrapper = new Render_Wrapper());
-    ~Line_Segment();
+    Line_Segment();
+    Line_Segment(const VERTEX &vertex0,
+                 const VERTEX &vertex1);
 
     Line_Segment(const Line_Segment<VERTEX> &rhs);
     Line_Segment<VERTEX> & operator=(const Line_Segment<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the aveage of all vertices
+    /// Tell the rendering system if we're using 3D coordinates
+    virtual bool is_3d() const;
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -76,13 +70,17 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
     Line_Segment<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Line
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+
   private:
-    VERTEX m_vertex[2];
-    Render_Wrapper * m_render_wrapper;
+    void * m_alignment_rubbish;
   };
 
 }

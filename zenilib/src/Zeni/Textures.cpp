@@ -28,7 +28,7 @@
 
 #include <Zeni/Textures.h>
 
-#include <Zeni/Resource.hxx>
+#include <Zeni/Database.hxx>
 #include <Zeni/Video.hxx>
 
 #include <iostream>
@@ -39,7 +39,7 @@ using namespace std;
 namespace Zeni {
 
   Textures::Textures()
-    : m_texturedb("config/textures.txt")
+    : Database<Texture>("config/textures.xml", "Textures")
   {
     init();
   }
@@ -48,153 +48,33 @@ namespace Zeni {
     uninit();
   }
 
-  Textures & Textures::get_reference() {
+  Textures & get_Textures() {
     static Textures e_texturedb;
     return e_texturedb;
   }
-  
-  unsigned long Textures::set_texture(const std::string &name, Texture * const texture) {
-    {
-      stdext::hash_map<std::string, unsigned long>::iterator it = m_texture_lookup.find(name);
-      if(it != m_texture_lookup.end()) {
-        stdext::hash_map<unsigned long, Texture *>::iterator jt = m_textures.find(it->second);
-        delete jt->second;
-        m_textures.erase(jt);
-        m_texture_lookup.erase(it);
-      }
-    }
-
-    if(!texture)
-      throw Null_Texture_Set();
-
-    unsigned long id = Resource::get_reference().assign();
-    m_texture_lookup[name] = id;
-    m_textures[id] = texture;
-    return id;
-  }
-
-  void Textures::clear_texture(const std::string &name) {
-    stdext::hash_map<string, unsigned long>::iterator it = m_texture_lookup.find(name);
-
-    if(it == m_texture_lookup.end())
-      throw Texture_Not_Found(name);
-
-    m_textures.erase(it->second);
-    m_texture_lookup.erase(it);
-  }
-
-  unsigned long Textures::get_texture_id(const string &texture) const {
-    stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(texture);
-
-    if(it == m_texture_lookup.end() || !it->second)
-      throw Texture_Not_Found(texture);
-
-    return it->second;
-  }
-
-  Texture * Textures::get_texture(const unsigned long &id) const {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-
-    if(it == m_textures.end() || !it->second) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    return it->second;
-  }
-
-  Texture * Textures::get_texture(const std::string &name) const {
-    return get_texture(get_texture_id(name));
-  }
 
   void Textures::apply_texture(const string &name) {
-    stdext::hash_map<string, unsigned long>::const_iterator it = m_texture_lookup.find(name);
-
-    try {
-      apply_texture(it->second);
-    }
-    catch(Texture_Not_Found &) {
-      std::cerr << "Missing Texture: " << name << std::endl;
-      throw;
-    }
+    (*this)[name].apply_texture();
   }
 
   void Textures::apply_texture(const unsigned long &id) {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-
-    if(it == m_textures.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    it->second->apply_texture();
+    (*this)[id].apply_texture();
   }
 
   bool Textures::is_sprite(const unsigned long &id) {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-    
-    if(it == m_textures.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    return dynamic_cast<Sprite *>(it->second) != 0;
+    return dynamic_cast<const Sprite *>(&(*this)[id]) != 0;
   }
   
   int Textures::get_num_frames(const unsigned long &id) {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-    
-    if(it == m_textures.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    const Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
-      return 0;
+      throw Sprite_Function_Misapplied();
 
     return sprite->get_num_frames();
   }
 
   int Textures::get_current_frame(const unsigned long &id) {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-    
-    if(it == m_textures.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    const Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
       throw Sprite_Function_Misapplied();
 
@@ -202,20 +82,7 @@ namespace Zeni {
   }
 
   void Textures::set_current_frame(const unsigned long &id, const int &frame_number) {
-    stdext::hash_map<unsigned long, Texture *>::const_iterator it = m_textures.find(id);
-    
-    if(it == m_textures.end()) {
-      char buf[64];
-#ifdef _WINDOWS
-      sprintf_s
-#else
-      sprintf
-#endif
-        (buf, "ID = %u", static_cast<unsigned int>(id));
-      throw Texture_Not_Found(buf);
-    }
-
-    Sprite *sprite = dynamic_cast<Sprite *>(it->second);
+    Sprite *sprite = dynamic_cast<Sprite *>(&(*this)[id]);
     if(!sprite)
       throw Sprite_Function_Misapplied();
 
@@ -223,18 +90,16 @@ namespace Zeni {
   }
 
   void Textures::set_texturing_mode(const int &anisotropic_filtering_, const bool &bilinear_filtering_, const bool &mipmapping_) {
-    const int af = anisotropic_filtering_ == -1 ? Video::get_reference().get_maximum_anisotropy() : anisotropic_filtering_;
+    const int af = anisotropic_filtering_ == -1 ? get_Video().get_maximum_anisotropy() : anisotropic_filtering_;
     
-    if(m_loaded && ((af != m_anisotropic_filtering) | (bilinear_filtering_ ^ m_bilinear_filtering) | (mipmapping_ ^ m_mipmapping))) {
-      Textures &tr = get_reference();
-      
-      tr.uninit();
-      
+    if(m_loaded && ((af != m_anisotropic_filtering) | (bilinear_filtering_ != m_bilinear_filtering) | (mipmapping_ != m_mipmapping))) {
+      Textures &tr = get_Textures();
+
       m_anisotropic_filtering = af;
       m_bilinear_filtering = bilinear_filtering_;
       m_mipmapping = mipmapping_;
-      
-      tr.init();
+
+      tr.reload();
     }
     else {
       m_anisotropic_filtering = af;
@@ -243,75 +108,27 @@ namespace Zeni {
     }
   }
 
-  void Textures::reload(const string &texturedb) {
-    if(texturedb.length())
-      m_texturedb = texturedb;
-
-    reload();
-  }
-
-  void Textures::reload() {
-    lose_resources();
-    init();
-  }
-
-  void Textures::init() {
-    m_texture_lookup.clear();
-    m_textures.clear();
-    
-    ifstream tdbin(m_texturedb.c_str());
-
-    if(!tdbin)
-      throw Texture_Init_Failure();
-    
-    Video &vr = Video::get_reference();
-
-    string fileName, name;
-    bool repeat;
-    while(tdbin >> name >> fileName >> repeat) {
-      try {
-        Texture * const texture = vr.load_Texture(fileName, repeat, m_lazy_loading);
-            
-        const unsigned long id = Resource::get_reference().assign();
-        m_texture_lookup[name] = id;
-        m_textures[id] = texture;
-      }
-      catch(Texture_Init_Failure &) {
-        cerr << "Textures: Error Loading '" << name << "' from '" << fileName << "'\n";
-        throw;
-      }
-    }
-
+  void Textures::post_init() {
     m_loaded = true;
   }
 
-  void Textures::uninit() {
-    for(stdext::hash_map<unsigned long, Texture *>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
-      delete it->second;
-    m_textures.clear();
-    m_texture_lookup.clear();
+  void Textures::post_uninit() {
     m_loaded = false;
   }
 
-  void Textures::lose_resources() {
-    stdext::hash_map<std::string, unsigned long> texture_lookup;
-    stdext::hash_map<unsigned long, Texture *> textures;
-    
-    texture_lookup.swap(m_texture_lookup);
-    textures.swap(m_textures);
-    
-    for(stdext::hash_map<std::string, unsigned long>::iterator it = texture_lookup.begin();
-        it != texture_lookup.end();
-        ++it) {
-      stdext::hash_map<unsigned long, Texture *>::iterator jt = textures.find(it->second);
-      
-      if(dynamic_cast<Sprite *>(jt->second))
-        set_texture(it->first, jt->second);
-      else
-        delete jt->second;
-    }
-    
+  void Textures::post_lose() {
     m_loaded = false;
+  }
+
+  Texture * Textures::load(XML_Element &xml_element) {
+    const string filepath = xml_element["filepath"].to_string();
+    const bool tile = xml_element["tile"].to_bool();
+
+    return get_Video().load_Texture(filepath, tile, m_lazy_loading);
+  }
+
+  bool Textures::keep(const Texture &type) {
+    return dynamic_cast<const Sprite *>(&type) != 0;
   }
 
   bool Textures::m_loaded = false;

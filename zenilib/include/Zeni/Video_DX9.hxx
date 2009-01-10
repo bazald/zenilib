@@ -26,29 +26,36 @@
 * the GNU General Public License.
 */
 
-
 #ifndef ZENI_VIDEO_DX9_HXX
 #define ZENI_VIDEO_DX9_HXX
 
 // HXXed below
-#include <Zeni/Fog.h>
+#include <Zeni/Color.h>
 #include <Zeni/Game.h>
 #include <Zeni/Light.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Material.h>
+#include <Zeni/Renderable.h>
+#include <Zeni/Shader.h>
+#include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 
 #include <Zeni/Video_DX9.h>
 
 // Not HXXed
+#include <Zeni/Fog.h>
 #include <Zeni/Fonts.h>
 #include <Zeni/Vertex_Buffer.h>
+
+#include <Zeni/Global.h>
 
 #ifndef DISABLE_DX9
 
 namespace Zeni {
 
   void Video_DX9::render_impl(const Renderable &renderable) {
+    set_fvf(renderable.is_3d());
+
     renderable.render_to(*this);
   }
 
@@ -61,27 +68,20 @@ namespace Zeni {
   }
 
   void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
-    m_3d = false;
-
-    Matrix4f world = Matrix4f::Identity();
+    Matrix4f world = Matrix4f::Scale(Vector3f(1.0f, 1.0f, 0.5f)) *
+                     Matrix4f::Translate(Vector3f(0.0f, 0.0f, 1.0f));
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
     m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
     m_matrix_stack->LoadMatrix(world_ptr);
-
-    set_fvf();
   }
 
   void Video_DX9::set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
-    m_3d = true;
-
     Matrix4f world = Matrix4f::Identity();
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
 
     m_d3d_device->SetTransform(D3DTS_WORLD, world_ptr);
     m_matrix_stack->LoadMatrix(world_ptr);
-
-    set_fvf();
   }
 
   void Video_DX9::set_backface_culling_impl(const bool &on) {
@@ -109,12 +109,42 @@ namespace Zeni {
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
   }
 
+  void Video_DX9::set_alpha_test_impl(const bool &enabled,
+                                      const TEST &test,
+                                      const float &value) {
+    D3DCMPFUNC func;
+
+    switch(test) {
+      case ZENI_NEVER:            func = D3DCMP_NEVER;        break;
+      case ZENI_LESS:             func = D3DCMP_LESS;         break;
+      case ZENI_EQUAL:            func = D3DCMP_EQUAL;        break;
+      case ZENI_GREATER:          func = D3DCMP_GREATER;      break;
+      case ZENI_NOT_EQUAL:        func = D3DCMP_NOTEQUAL;     break;
+      case ZENI_LESS_OR_EQUAL:    func = D3DCMP_LESSEQUAL;    break;
+      case ZENI_GREATER_OR_EQUAL: func = D3DCMP_GREATEREQUAL; break;
+      case ZENI_ALWAYS:           func = D3DCMP_ALWAYS;       break;
+      default:
+        assert(false);
+        return;
+    }
+
+    int ref = static_cast<int>(255.0f * value + 0.5f);
+    if(ref < 0)
+      ref = 0;
+    else if(ref > 0xFF)
+      ref = 0xFF;
+
+    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, enabled);
+    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, ref);
+    m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, func);
+  }
+
   void Video_DX9::set_color_impl(const Color &color) {
     m_d3d_device->SetRenderState(D3DRS_TEXTUREFACTOR, color.get_argb());
   }
 
   void Video_DX9::apply_texture_impl(const unsigned long &id) {
-    Textures::get_reference().apply_texture(id);
+    get_Textures().apply_texture(id);
 
     m_textured = true;
 
@@ -122,9 +152,9 @@ namespace Zeni {
   }
 
   void Video_DX9::apply_texture_impl(const Texture &texture) {
-    m_textured = true;
-
     texture.apply_texture();
+
+    m_textured = true;
 
     set_fvf();
   }
@@ -143,12 +173,6 @@ namespace Zeni {
   void Video_DX9::set_lighting_impl(const bool &on) {
     m_d3d_device->SetRenderState(D3DRS_LIGHTING, on);
     m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, on);
-
-    set_fvf();
-  }
-
-  void Video_DX9::set_normal_interpolation_impl(const bool & /*on*/) {
-    /* !!TODO!! */
   }
 
   void Video_DX9::set_ambient_lighting_impl(const Color &color) {
@@ -156,31 +180,55 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_AMBIENT, color.get_argb());
   }
 
-  void Video_DX9::set_light_impl(const int &number, const Light *light) {
-    if(light)
-      light->set(number, *this);
-    else
-      m_d3d_device->LightEnable(number, FALSE);
+  void Video_DX9::set_light_impl(const int &number, const Light &light) {
+    if(number < 0 || 7 < number)
+      throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
+
+    light.set(number, *this);
   }
 
-  void Video_DX9::set_material_impl(const Material &material, const int &optimization) {
-    material.set(*this, optimization);
+  void Video_DX9::unset_light_impl(const int &number) {
+    if(number < 0 || 7 < number)
+      throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
+
+    m_d3d_device->LightEnable(number, FALSE);
   }
 
-  void Video_DX9::unset_material_impl(const Material &material, const int &optimization) {
-    material.unset(*this, optimization);
+  void Video_DX9::set_material_impl(const Material &material) {
+    material.set(*this);
   }
 
-  void Video_DX9::set_fog_impl(const Fog * const fog) {
-    if(fog) {
-      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
-      fog->set(*this);
-    }
-    else {
-      m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
-      m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
-    }
+  void Video_DX9::unset_material_impl(const Material &material) {
+    material.unset(*this);
   }
+
+  void Video_DX9::set_fog_impl(const Fog &fog) {
+    m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
+    fog.set(*this);
+  }
+
+  void Video_DX9::unset_fog_impl() {
+    m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
+    m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
+  }
+
+#ifndef DISABLE_CG
+  void Video_DX9::set_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_DX9::set_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_DX9::unset_vertex_shader_impl(const Vertex_Shader &shader) {
+    shader.unset(*this);
+  }
+
+  void Video_DX9::unset_fragment_shader_impl(const Fragment_Shader &shader) {
+    shader.unset(*this);
+  }
+#endif
 
   void Video_DX9::push_world_stack_impl() {
     get_matrix_stack()->Push();
@@ -236,13 +284,27 @@ namespace Zeni {
     return new Texture_DX9(surface, repeat);
   }
 
-  Font * Video_DX9::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const int &glyph_height) {
-    return new Font_FT(filename, bold, italic, glyph_height);
+  Font * Video_DX9::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {
+    return new Font_FT(filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
   Vertex_Buffer * Video_DX9::create_Vertex_Buffer_impl() {
     return new Vertex_Buffer_DX9();
   }
+
+#ifndef DISABLE_CG
+  void Video_DX9::initialize_impl(Shader_System &shader_system) {
+    shader_system.init(*this);
+  }
+
+  void Video_DX9::initialize_impl(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
+  }
+
+  void Video_DX9::initialize_impl(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
+  }
+#endif
 
   void Video_DX9::uninit_impl() {
     destroy_device();
@@ -273,18 +335,22 @@ namespace Zeni {
   }
 
   float Video_DX9::get_dpi_ratio() {
-    return m_dpi / 96.0f;
+    return m_dpi / ZENI_STANDARD_DPI;
   }
 
 }
 
 #endif
 
-#include <Zeni/Fog.hxx>
-#include <Zeni/Fonts.h>
+#include <Zeni/Global_Undef.h>
+
+#include <Zeni/Color.hxx>
 #include <Zeni/Game.hxx>
 #include <Zeni/Light.hxx>
-#include <Zeni/Render_Wrapper.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Renderable.hxx>
+#include <Zeni/Shader.hxx>
+#include <Zeni/Texture.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Video.hxx>
 

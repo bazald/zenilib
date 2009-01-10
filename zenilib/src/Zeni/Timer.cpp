@@ -38,16 +38,16 @@ namespace Zeni {
   }
 
   Time::Time()
-    : m_ticks(Timer::get_reference().get_ticks())
+    : m_ticks(get_Timer().get_ticks())
   {
   }
 
   Timer::Timer() {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
   }
 
-  Timer & Timer::get_reference() {
+  Timer & get_Timer() {
     static Timer timer;
     return timer;
   }
@@ -79,7 +79,7 @@ namespace Zeni {
 
   Time_HQ::Time_HQ(const HQ_Tick_Type &ticks)
     : m_ticks(ticks),
-    m_ticks_per_second(Timer_HQ::get_reference().get_ticks_per_second())
+    m_ticks_per_second(get_Timer_HQ().get_ticks_per_second())
   {
   }
 
@@ -90,8 +90,8 @@ namespace Zeni {
   }
 
   Time_HQ::Time_HQ()
-    : m_ticks(Timer_HQ::get_reference().get_ticks()),
-    m_ticks_per_second(Timer_HQ::get_reference().get_ticks_per_second())
+    : m_ticks(get_Timer_HQ().get_ticks()),
+    m_ticks_per_second(get_Timer_HQ().get_ticks_per_second())
   {
   }
 
@@ -104,15 +104,13 @@ namespace Zeni {
 
     if(m_available)
       m_ticks_per_second = unsigned long(lpFrequency.QuadPart);
-    else
-      Core::get_reference();
 #else
     m_available = true;
     m_ticks_per_second = 1000000;
 #endif
   }
 
-  Timer_HQ & Timer_HQ::get_reference() {
+  Timer_HQ & get_Timer_HQ() {
     static Timer_HQ timer;
     return timer;
   }

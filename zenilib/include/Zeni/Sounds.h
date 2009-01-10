@@ -44,16 +44,17 @@
 #define ZENI_SOUNDS_H
 
 #include <Zeni/Core.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Resource.h>
+#include <Zeni/Database.h>
 #include <Zeni/Sound.h>
 
 #include <string>
-#include <list>
 
 namespace Zeni {
 
-  class Sounds {
+  class Sounds : public Database<Sound_Buffer> {
+    // Get reference to only instance;
+    friend Sounds & get_Sounds(); ///< Get access to the singleton.
+
     Sounds();
     ~Sounds();
 
@@ -61,55 +62,10 @@ namespace Zeni {
     Sounds(const Sounds &);
     Sounds & operator=(const Sounds &);
 
-  public:
-    // Get reference to only instance;
-    static Sounds & get_reference(); ///< Get access to the singleton.
-
-    unsigned long set_sound(const std::string &name, const std::string &filename); ///< Load a Sound_Buffer.
-    void clear_sound(const std::string &name); ///< Clear a sound by name.
-    unsigned long get_sound_id(const std::string &sound_effect) const; ///< Get a Sound_Buffer id by name.
-    const Sound_Buffer & get_sound(const std::string &sound_effect) const; ///< Get a Sound_Buffer
-    const Sound_Buffer & get_sound(const unsigned long &id) const; ///< Get a Sound_Buffer
-
-    void reload(const std::string &sounds = ""); ///< (Re)Load a Sound_Buffer database
-
-    /// Best Effort Sound Player
-    
-    enum Replacement_Policy {BESP_NONE, // No Replacment of Playing Sounds
-                             BESP_OLDEST}; // Oldest
-
-    Replacement_Policy get_Replacement_Policy() const; ///< Get the BESP Replacement_Policy
-    void set_Replacement_Policy(const Replacement_Policy &replacement_policy); ///< Set the BESP Replacement_Policy
-
-    bool play_sound(const std::string &sound_effect); ///< Play a Sound_Buffer
-    bool play_sound(const unsigned long &id); ///< Play a Sound_Buffer
-
-    void pause_all(); ///< Pause all BESP Sound_Sources.
-    void unpause_all(); ///< Unpause all paused BESP Sound_Sources.
-    void purge(); ///< Purge all BESP Sound_Sources
-
-    Sound_Source * take_Sound_Source(); ///< Request a Sound_Source from the BESP system
-    void give_Sound_Source(Sound_Source * const &sound_source); ///< Add a Sound_Source to the BESP system; BESP will then play the Sound_Source
-
-  private:
-    void init();
-
-    std::string m_soundsfile;
-    stdext::hash_map<std::string, unsigned long> m_sound_lookup;
-    stdext::hash_map<unsigned long, Sound_Buffer> m_sounds;
-
-    /// Best Effort Sound Player
-    std::list<Sound_Source *> m_sound_sources;
-    Replacement_Policy m_replacement_policy;
+    virtual Sound_Buffer * load(XML_Element &xml_element);
   };
 
-  struct Sound_Effect_Not_Found : public Error {
-    Sound_Effect_Not_Found(const std::string &identifier) : Error("Zeni Sound Effect '" + identifier + "' Not Found") {}
-  };
-
-  struct Sounds_Init_Failure : public Error {
-    Sounds_Init_Failure() : Error("Zeni Sounds Failed to Initialize Correctly") {}
-  };
+  Sounds & get_Sounds(); ///< Get access to the singleton.
 
 }
 

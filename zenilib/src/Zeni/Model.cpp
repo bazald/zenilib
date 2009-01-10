@@ -74,7 +74,9 @@ namespace Zeni {
 
     /*** BEGIN NEW FLIP-TEST ***/
 
-    const Vector3f scl_track = reinterpret_cast<const Vector3f &>(node->scl_track.keys->value);
+    const Vector3f scl_track(node->scl_track.keys->value[0],
+                             node->scl_track.keys->value[1],
+                             node->scl_track.keys->value[2]);
     const bool flip_order = scl_track.i * scl_track.j * scl_track.k < 0.0f;
 
     /*** END NEW FLIP-TEST ***/
@@ -105,8 +107,10 @@ namespace Zeni {
         pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
       }
 
-      const Point2f &tex_offset = reinterpret_cast<Point2f &>(material->texture1_map.offset);
-      const Point2f &tex_scale = reinterpret_cast<Point2f &>(material->texture1_map.scale);
+      const Point2f tex_offset(material ? material->texture1_map.offset[0] : 0.0f,
+                               material ? material->texture1_map.offset[1] : 0.0f);
+      const Point2f tex_scale(material ? material->texture1_map.scale[0] : 0.0f,
+                              material ? material->texture1_map.scale[1] : 0.0f);
 
       Point3f pa(mesh->vertices[face->index[0]][0], mesh->vertices[face->index[0]][1], mesh->vertices[face->index[0]][2]);
       const Point3f pb(mesh->vertices[face->index[1]][0], mesh->vertices[face->index[1]][1], mesh->vertices[face->index[1]][2]);
@@ -133,21 +137,22 @@ namespace Zeni {
         if(flip_order)
           std::swap(ta, tc);
 
-        Render_Wrapper * const rw_ptr = reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat));
+        Triangle<Vertex3f_Texture> triangle(Vertex3f_Texture(pa, na, ta),
+                                            Vertex3f_Texture(pb, nb, tb),
+                                            Vertex3f_Texture(pc, nc, tc));
+        triangle.fax_Material(&mat);
 
-        user_p->add_triangle(new Triangle<Vertex3f_Texture>(Vertex3f_Texture(pa, na, ta),
-                                                            Vertex3f_Texture(pb, nb, tb),
-                                                            Vertex3f_Texture(pc, nc, tc),
-                                                            rw_ptr));
+        user_p->fax_triangle(&triangle);
       }
       else {
         const Uint32 argb = pseudo_color.get_argb();
-        Render_Wrapper * const rw_ptr = material ? reinterpret_cast<Render_Wrapper *>(new Material_Render_Wrapper(mat)) : new Render_Wrapper();
 
-        user_p->add_triangle(new Triangle<Vertex3f_Color>(Vertex3f_Color(pa, na, argb),
-                                                          Vertex3f_Color(pb, nb, argb),
-                                                          Vertex3f_Color(pc, nc, argb),
-                                                          rw_ptr));
+        Triangle<Vertex3f_Color> triangle(Vertex3f_Color(pa, na, argb),
+                                          Vertex3f_Color(pb, nb, argb),
+                                          Vertex3f_Color(pc, nc, argb));
+        triangle.fax_Material(&mat);
+
+        user_p->fax_triangle(&triangle);
       }
 
       normal+=3;
@@ -250,7 +255,7 @@ namespace Zeni {
 
   Point3f Model::get_position() const {
     GUARANTEED_FINISHED_BEGIN(m_loader);
-    return m_translate + m_scale.multiply_by(Quaternion(m_rotate, m_rotate_angle) * Vector3f(m_position));
+    return m_translate + m_scale.multiply_by(Quaternion::Axis_Angle(m_rotate, m_rotate_angle) * Vector3f(m_position));
     GUARANTEED_FINISHED_END();
   }
 
@@ -302,7 +307,7 @@ namespace Zeni {
       if(!node_mesh)
         throw Model_Render_Failure();
 
-      mv(*this, reinterpret_cast<Lib3dsMeshInstanceNode * const &>(node), node_mesh);
+      mv(*this, reinterpret_cast<Lib3dsMeshInstanceNode * const>(node), node_mesh);
     }
   }
 
@@ -312,7 +317,7 @@ namespace Zeni {
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     vr.push_world_stack();
 
@@ -329,7 +334,7 @@ namespace Zeni {
   }
 
   void Model_Renderer::operator()(const Model &model, Lib3dsMeshInstanceNode * const &node, Lib3dsMesh * const &mesh) {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     if(!mesh || !mesh->user_ptr)
       create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);
@@ -342,7 +347,9 @@ namespace Zeni {
 
     if(node) {
       vr.transform_scene(reinterpret_cast<const Matrix4f &>(node->base.matrix));
-      vr.translate_scene(-reinterpret_cast<const Vector3f &>(node->pivot));
+      vr.translate_scene(Vector3f(-node->pivot[0],
+                                  -node->pivot[1],
+                                  -node->pivot[2]));
     }
     vr.transform_scene(reinterpret_cast<const Matrix4f &>(mesh->matrix).inverted());
 

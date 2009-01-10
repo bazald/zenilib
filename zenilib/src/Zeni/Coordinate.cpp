@@ -31,29 +31,27 @@
 namespace Zeni {
 
   Point2i Point2i::interpolate_to(const float &rhs_part, const Point2i &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
+    const float lhs_part = 1.0f - rhs_part;
     return Point2i(int(lhs_part * x + rhs_part * rhs.x), 
-      int(lhs_part * y + rhs_part * rhs.y));
+                   int(lhs_part * y + rhs_part * rhs.y));
   }
 
   Point2f Point2f::interpolate_to(const float &rhs_part, const Point2f &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
+    const float lhs_part = 1.0f - rhs_part;
     return Point2f(lhs_part * x + rhs_part * rhs.x, 
-      lhs_part * y + rhs_part * rhs.y);
+                   lhs_part * y + rhs_part * rhs.y);
   }
 
   Point3i Point3i::interpolate_to(const float &rhs_part, const Point3i &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
+    const float lhs_part = 1.0f - rhs_part;
     return Point3i(int(lhs_part * x + rhs_part * rhs.x), 
-      int(lhs_part * y + rhs_part * rhs.y), 
-      int(lhs_part * z + rhs_part * rhs.z));
+                   int(lhs_part * y + rhs_part * rhs.y), 
+                   int(lhs_part * z + rhs_part * rhs.z));
   }
 
-  Point3f Point3f::interpolate_to(const float &rhs_part, const Point3f &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Point3f(lhs_part * x + rhs_part * rhs.x, 
-      lhs_part * y + rhs_part * rhs.y, 
-      lhs_part * z + rhs_part * rhs.z);
+  Vector3f Point3f::interpolate_to(const float &rhs_part, const Vector3f &rhs) const {
+    const float lhs_part = 1.0f - rhs_part;
+    return lhs_part * *this + rhs_part * rhs;
   }
 
   const int Point2i::z = 0;

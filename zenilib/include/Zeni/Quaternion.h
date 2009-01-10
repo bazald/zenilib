@@ -58,9 +58,16 @@ namespace Zeni {
   struct Quaternion {
     inline Quaternion();
     Quaternion(const float &time, const Vector3f &space); ///< For advanced use only
-    Quaternion(const Vector3f &v, const float &theta); ///< Set the rotation in radians left about an axis;
     Quaternion(const float &yaw, const float &pitch, const float &roll);
     Quaternion(const Quaternion &rhs);
+
+    /// Create a Quaternion from an Axis/Angle pair
+    static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
+    /// Create a Quaternion from a Forward/Up Vector3f pair
+    static Quaternion Forward_Up(const Vector3f &destination_forward,
+                                 const Vector3f &destination_up,
+                                 const Vector3f &default_forward,
+                                 const Vector3f &default_up);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum
@@ -101,6 +108,10 @@ namespace Zeni {
     inline Vector3f operator*(const Vector3f &rhs) const; ///< Rotate a vector, maintaining constant magnitude
     inline std::pair<Vector3f, float> get_rotation() const; ///< Get the rotation in radians left about an axis
     inline Matrix4f get_matrix() const; ///< Get the matrix form of the rotation in row-major order
+
+    // Indexing
+    inline const float & operator[](const int &index) const; ///< Get 'index'
+    inline float & operator[](const int &index); ///< Get 'index'
 
     float time;
 	  Vector3f space;

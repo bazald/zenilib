@@ -31,6 +31,8 @@
 
 // HXXed below
 #include <Zeni/Font.h>
+#include <Zeni/Material.h>
+#include <Zeni/Projector.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Widget.h>
@@ -48,11 +50,25 @@ namespace Zeni {
   }
 
   void Widget::on_event(const SDL_MouseButtonEvent &event) {
-    on_mouse_button(Point2i(event.x, event.y), event.type == SDL_MOUSEBUTTONDOWN);
+    on_mouse_button(Point2i(event.x, event.y),
+                    event.type == SDL_MOUSEBUTTONDOWN,
+                    event.button);
+  }
+
+  void Widget::on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector) {
+    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    on_mouse_button(Point2i(int(projected.x), int(projected.y)),
+                    event.type == SDL_MOUSEBUTTONDOWN,
+                    event.button);
   }
 
   void Widget::on_event(const SDL_MouseMotionEvent &event) {
     on_mouse_motion(Point2i(event.x, event.y));
+  }
+
+  void Widget::on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector) {
+    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    on_mouse_motion(Point2i(int(projected.x), int(projected.y)));
   }
 
   Point2f Widget_Positioned::get_lower_left() const {
@@ -87,7 +103,7 @@ namespace Zeni {
   void Widget_Text::set_color(const Color &color_) {m_color = color_;}
 
   void Widget_Text::render(const Point2f &center) const {
-    const Font &font = Fonts::get_reference().get_font(m_font_name);
+    const Font &font = get_Fonts()[m_font_name];
 
     const float x = center.x;
     const float y = center.y - 0.5f * font.get_text_height();
@@ -195,12 +211,14 @@ namespace Zeni {
     delete m_quad;
     m_quad = 0;
 
-    Vertex2f_Texture ul(get_upper_left(), Point2f(0.0f, 0.0f));
-    Vertex2f_Texture ll(get_lower_left(), Point2f(0.0f, 1.0f));
-    Vertex2f_Texture lr(get_lower_right(), Point2f(1.0f, 1.0f));
-    Vertex2f_Texture ur(get_upper_right(), Point2f(1.0f, 0.0f));
+    const Vertex2f_Texture ul(get_upper_left(), Point2f(0.0f, 0.0f));
+    const Vertex2f_Texture ll(get_lower_left(), Point2f(0.0f, 1.0f));
+    const Vertex2f_Texture lr(get_lower_right(), Point2f(1.0f, 1.0f));
+    const Vertex2f_Texture ur(get_upper_right(), Point2f(1.0f, 0.0f));
+    Material material(m_texture_name);
 
-    m_quad = new Quadrilateral<Vertex2f_Texture>(ul, ll, lr, ur, new Material_Render_Wrapper(Material(m_texture_name)));
+    m_quad = new Quadrilateral<Vertex2f_Texture>(ul, ll, lr, ur);
+    m_quad->fax_Material(&material);
   }
 
   Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
@@ -253,7 +271,12 @@ namespace Zeni {
     : Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_),
     m_radio_button_set(&radio_button_set_)
   {
-    radio_button_set_.add_Radio_Button(*this);
+    radio_button_set_.lend_Radio_Button(*this);
+  }
+
+  Radio_Button::~Radio_Button() {
+    if(m_radio_button_set)
+      m_radio_button_set->unlend_Radio_Button(*this);
   }
 
   void Radio_Button_Set::accept(Radio_Button &radio_button) {
@@ -266,12 +289,13 @@ namespace Zeni {
       (*it)->set_checked(false);
   }
 
-  void Radio_Button_Set::add_Radio_Button(Radio_Button &radio_button) {
+  void Radio_Button_Set::lend_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.insert(&radio_button);
   }
 
-  void Radio_Button_Set::remove_Radio_Button(Radio_Button &radio_button) {
+  void Radio_Button_Set::unlend_Radio_Button(Radio_Button &radio_button) {
     m_radio_buttons.erase(&radio_button);
+    radio_button.m_radio_button_set = 0;
   }
 
   Point2f Slider::get_end_point_a() const {
@@ -301,8 +325,8 @@ namespace Zeni {
   void Slider::set_line_color(const Color &line_color_) {
     m_line_color = line_color_;
 
-    m_line_segment_r.set_vertex(0, Vertex2f_Color(get_end_point_a(), m_line_color));
-    m_line_segment_r.set_vertex(1, Vertex2f_Color(get_end_point_b(), m_line_color));
+    m_line_segment_r.a = Vertex2f_Color(get_end_point_a(), m_line_color);
+    m_line_segment_r.b = Vertex2f_Color(get_end_point_b(), m_line_color);
   }
 
   void Slider::set_slider_color(const Color &slider_color_) {
@@ -331,8 +355,8 @@ namespace Zeni {
     const Point3f &midpt = p0 + m_slider_position * v;
     const Vector3f &n2 = m_slider_radius * n.normalized();
 
-    m_slider_r.set_vertex(0, Vertex2f_Color(Point2f(midpt - n2), m_slider_color));
-    m_slider_r.set_vertex(1, Vertex2f_Color(Point2f(midpt + n2), m_slider_color));
+    m_slider_r.a = Vertex2f_Color(Point2f(midpt - n2), m_slider_color);
+    m_slider_r.b = Vertex2f_Color(Point2f(midpt + n2), m_slider_color);
   }
   
   const Color & Text_Box::get_bg_color() const {
@@ -344,7 +368,7 @@ namespace Zeni {
   }
 
   const Font & Text_Box::get_font() const {
-    return Fonts::get_reference().get_font(m_text.get_font_name());
+    return get_Fonts()[m_text.get_font_name()];
   }
 
   const std::string & Text_Box::get_text() const {
@@ -368,7 +392,7 @@ namespace Zeni {
   }
 
   int Text_Box::get_max_lines() const {
-    return int(get_lower_right().y - get_upper_left().y) / get_font().get_text_height();
+    return int(get_lower_right().y - get_upper_left().y / get_font().get_text_height());
   }
 
   void Text_Box::set_bg_color(const Color &bg_color_) {
@@ -444,7 +468,7 @@ namespace Zeni {
     if(!m_active)
       return;
 
-    const Time current_time = Timer::get_reference().get_time();
+    const Time current_time = get_Timer().get_time();
     const int ticks = current_time.get_ticks_since(m_last_repeated);
 
     if(m_delay_finished && ticks > m_repeat_interval ||
@@ -455,17 +479,19 @@ namespace Zeni {
     }
   }
 
-  void Widgets::add_Widget(Widget &widget) {
+  void Widgets::lend_Widget(Widget &widget) {
     m_widgets.insert(&widget);
   }
 
-  void Widgets::remove_Widget(Widget &widget) {
+  void Widgets::unlend_Widget(Widget &widget) {
     m_widgets.erase(&widget);
   }
 
 }
 
 #include <Zeni/Font.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Projector.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif

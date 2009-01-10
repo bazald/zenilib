@@ -28,33 +28,38 @@
 
 #include <Zeni/Game.hxx>
 
-#include <Zeni/Gamestate_One.h>
-
 #include <Zeni/Gamestate.hxx>
+#include <Zeni/Gamestate_One.h>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
-    : time(Timer::get_reference().get_time()), ticks_passed(0), fps(0x36), fps_next(0)
+    : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
   {
     m_states.push(Gamestate(new Gamestate_One(args)));
   }
 
-  Game & Game::get_reference(const std::vector<std::string> * const args) {
+  Game & get_Game(const std::vector<std::string> * const &args) {
     static Game e_game(args);
     return e_game;
   }
-  
+
   void Game::run() {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
+    Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     
     for(;;) {
       for(SDL_Event event; SDL_PollEvent(&event);)
         on_event(event);
       
       perform_logic();
+
+      sspr.update();
       
       vr.render_all();
     }
@@ -70,3 +75,5 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

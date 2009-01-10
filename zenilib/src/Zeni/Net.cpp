@@ -38,7 +38,7 @@ namespace Zeni {
 
   Net::Net() {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
 
     if(SDLNet_Init())
       throw Net_Init_Failure();
@@ -48,7 +48,7 @@ namespace Zeni {
     SDLNet_Quit();
   }
 
-  Net & Net::get_reference() {
+  Net & get_Net() {
     static Net e_net;
     return e_net;
   }
@@ -57,7 +57,7 @@ namespace Zeni {
     : sock(0),
       sockset(0)
   {
-    Net::get_reference();
+    get_Net();
 
     if(!ip.host)
       throw TCP_Socket_Init_Failure();
@@ -138,7 +138,7 @@ namespace Zeni {
   TCP_Listener::TCP_Listener(const unsigned short &port)
     : sock(0)
   {
-    Net::get_reference();
+    get_Net();
 
     IPaddress ip = {0, 0};
     SDLNet_Write16(port, &ip.port);
@@ -159,7 +159,7 @@ namespace Zeni {
   UDP_Socket::UDP_Socket(const unsigned short &port)
     : sock(0)
   {
-    Net::get_reference();
+    get_Net();
 
     sock = SDLNet_UDP_Open(port);
     if(!sock)

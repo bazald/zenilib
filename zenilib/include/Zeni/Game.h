@@ -59,6 +59,9 @@
 namespace Zeni {
 
   class Game {
+    // Get reference to only instance;
+    friend Game & get_Game(const std::vector<std::string> * const &args = 0); ///< Get access to the singleton.
+
     Game(const std::vector<std::string> * const args = 0);
 
     // Undefined
@@ -66,9 +69,6 @@ namespace Zeni {
     Game & operator=(const Game &);
 
   public:
-    // Get reference to only instance
-    static Game & get_reference(const std::vector<std::string> * const args = 0); ///< Get access to the singleton.
-
     inline Gamestate_Base & get_current_state(); ///< Get a reference to the current Gamestate.
 
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
@@ -90,6 +90,8 @@ namespace Zeni {
     Time time;
     int ticks_passed, fps, fps_next;
   };
+
+  Game & get_Game(const std::vector<std::string> * const &args); ///< Get access to the singleton.
 
   struct Zero_Gamestate : public Error {
     Zero_Gamestate() : Error("Zeni Gamestate State is Empty") {}

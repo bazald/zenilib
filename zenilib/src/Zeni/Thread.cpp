@@ -29,8 +29,9 @@
 #include <Zeni/Thread.h>
 
 #include <Zeni/Gamestate.h>
-
 #include <Zeni/Mutex.hxx>
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
@@ -43,17 +44,17 @@ namespace Zeni {
       task.m_done = true;
     }
     catch(Quit_Event &nonerror) {
-      task.status = 1;
+      task.status = NO_ERROR_STATUS;
       task.msg = nonerror.msg;
       task.m_done = true;
     }
     catch(Error &error) {
-      task.status = 0x32202;
+      task.status = ZENI_ERROR_STATUS;
       task.msg = error.msg;
       task.m_done = true;
     }
     catch(...) {
-      task.status = -1;
+      task.status = OTHER_ERROR_STATUS;
       task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
       task.m_done = true;
     }
@@ -78,19 +79,19 @@ namespace Zeni {
         task.status = task.run();
       }
       catch(Quit_Event &nonerror) {
-        task.status = 1;
+        task.status = NO_ERROR_STATUS;
         task.msg = nonerror.msg;
         task.m_done = task.m_terminated = true;
         return task.status;
       }
       catch(Error &error) {
-        task.status = 0x32202;
+        task.status = ZENI_ERROR_STATUS;
         task.msg = error.msg;
         task.m_done = task.m_terminated = true;
         return task.status;
       }
       catch(...) {
-        task.status = -1;
+        task.status = OTHER_ERROR_STATUS;
         task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
         task.m_done = task.m_terminated = true;
         return task.status;
@@ -113,7 +114,7 @@ namespace Zeni {
     : m_impl(0), m_status(status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(fn, data);
   }
@@ -122,7 +123,7 @@ namespace Zeni {
     : m_impl(0), m_status(&task.status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(run_task, &task);
   }
@@ -131,7 +132,7 @@ namespace Zeni {
     : m_impl(0), m_status(&task.status)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
     
     m_impl = SDL_CreateThread(run_repeatable_task, &task);
   }
@@ -145,3 +146,5 @@ namespace Zeni {
   }
   
 }
+
+#include <Zeni/Global_Undef.h>

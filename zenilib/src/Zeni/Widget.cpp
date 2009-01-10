@@ -52,11 +52,11 @@ namespace Zeni {
   }
 
   void Widget_Rectangle_Color::render() const {
-    Video::get_reference().render(*m_quad);
+    get_Video().render(*m_quad);
   }
 
   void Widget_Rectangle_Texture::render() const {
-    Video::get_reference().render(*m_quad);
+    get_Video().render(*m_quad);
   }
 
   const Point2f & Widget_Button::get_upper_left() const {
@@ -67,7 +67,10 @@ namespace Zeni {
     return m_lower_right;
   }
   
-  void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(button != SDL_BUTTON_LEFT)
+      return;
+
     const bool inside = is_inside(pos);
 
     if(down)
@@ -135,7 +138,7 @@ namespace Zeni {
   }
   
   void Check_Box::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     Vertex2f_Color ul(get_upper_left(), m_border_color);
     Vertex2f_Color ll(get_lower_left(), m_border_color);
@@ -145,13 +148,13 @@ namespace Zeni {
     Line_Segment<Vertex2f_Color> line_seg(ul, ll);
     vr.render(line_seg);
 
-    line_seg.set_vertex(0, lr);
+    line_seg.a = lr;
     vr.render(line_seg);
 
-    line_seg.set_vertex(1, ur);
+    line_seg.b = ur;
     vr.render(line_seg);
 
-    line_seg.set_vertex(0, ul);
+    line_seg.a = ul;
     vr.render(line_seg);
 
     if(m_checked) {
@@ -160,12 +163,12 @@ namespace Zeni {
       lr.set_color(m_check_color);
       ur.set_color(m_check_color);
 
-      line_seg.set_vertex(0, ul);
-      line_seg.set_vertex(1, lr);
+      line_seg.a = ul;
+      line_seg.b = lr;
       vr.render(line_seg);
 
-      line_seg.set_vertex(0, ll);
-      line_seg.set_vertex(1, ur);
+      line_seg.a = ll;
+      line_seg.b = ur;
       vr.render(line_seg);
     }
   }
@@ -179,9 +182,9 @@ namespace Zeni {
     m_radio_button_set->accept(*this);
   }
 
-  void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
-      (*it)->on_mouse_button(pos, down);
+      (*it)->on_mouse_button(pos, down, button);
   }
     
   void Radio_Button_Set::on_mouse_motion(const Point2i &pos) {
@@ -211,7 +214,10 @@ namespace Zeni {
     regenerate_slider_r();
   }
 
-  void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down) {
+  void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
+    if(button != SDL_BUTTON_LEFT)
+      return;
+
     if(down) {
       const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
 
@@ -241,7 +247,7 @@ namespace Zeni {
   }
 
   void Slider::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     vr.render(m_line_segment_r);
     vr.render(m_slider_r);
@@ -296,7 +302,9 @@ namespace Zeni {
           }
           break;
         case SDLK_HOME:
-          if(m_cursor_index.x) {
+          if(keysym.mod & KMOD_CTRL)
+            seek_cursor(0);
+          else if(m_cursor_index.x) {
             int cursor_pos = get_cursor_pos() - m_cursor_index.x;
             if(m_lines[m_cursor_index.y].endled)
               ++cursor_pos;
@@ -306,7 +314,9 @@ namespace Zeni {
           break;
         case SDLK_END:
           {
-            int cursor_pos = get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
+            int cursor_pos = keysym.mod & KMOD_CTRL ?
+                             get_max_cursor_seek() :
+                             get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
             
             seek_cursor(cursor_pos);
           }
@@ -355,13 +365,16 @@ namespace Zeni {
       }
   }
 
-  void Text_Box::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Text_Box::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(button != SDL_BUTTON_LEFT)
+      return;
+
     m_cursor_pos.x = int(pos.x - get_upper_left().x);
     m_cursor_pos.y = int(pos.y - get_upper_left().y);
 
     invalidate_edit_pos();
 
-    Widget_Button::on_mouse_button(pos, down);
+    Widget_Button::on_mouse_button(pos, down, button);
   }
 
   void Text_Box::on_accept() {
@@ -402,7 +415,7 @@ namespace Zeni {
   }
 
   void Text_Box::render() const {
-    Video &vr = Video::get_reference();
+    Video &vr = get_Video();
 
     m_bg.render();
 
@@ -422,7 +435,7 @@ namespace Zeni {
       f.render_text(m_lines[i].formatted, Point2f(x_pos, y_offset + m_lines[i].glyph_top), c, m_justify);
 
     if(m_cursor_index.x != -1 && m_cursor_index.y != -1
-      && !((Timer::get_reference().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // render every other second
+      && !((get_Timer().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // HACK: render every other second
        )
     {
       const Point2f p0(get_upper_left().x + m_lines[m_cursor_index.y].unformatted_glyph_sides[m_cursor_index.x],
@@ -444,7 +457,7 @@ namespace Zeni {
 
     const std::string t = get_text();
     const Font &f = get_font();
-    const int &mll = max_line_width();
+    const float mll = max_line_width();
 
     if(t.empty())
       return;
@@ -466,7 +479,7 @@ namespace Zeni {
 
       next_word.unformatted += t[i];
 
-      const int next_width = get_text_width(f, next_word.unformatted);
+      const float next_width = get_text_width(f, next_word.unformatted);
       next_word.unformatted_glyph_sides.push_back(next_width);
       if(type != Word::SPACE && next_width > mll)
         next_word.splittable = true;
@@ -477,7 +490,7 @@ namespace Zeni {
     for(list<Word>::iterator it = words.begin(); it != words.end(); ++it)
       append_word(*it);
 
-    int glyph_top = 0;
+    float glyph_top = 0.0f;
     for(vector<Line>::iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
       it->formatted = untablinebreak(it->unformatted);
       if(it->fpsplit)
@@ -492,13 +505,13 @@ namespace Zeni {
 
   void Text_Box::append_word(const Word &word) {
     const Font &f = get_font();
-    const int &mll = max_line_width();
+    const float mll = max_line_width();
 
     if(!word.unformatted.empty() && word.unformatted[0] == '\n')
       m_lines.push_back(Line());
 
     Line &l = *m_lines.rbegin();
-    int next_sum = get_text_width(f, l.unformatted + word.unformatted);
+    float next_sum = get_text_width(f, l.unformatted + word.unformatted);
 
     if(word.type != Word::SPACE && next_sum > mll && !word.fpsplit) {
       if(word.splittable) {
@@ -597,7 +610,7 @@ namespace Zeni {
     m_cursor_index.x = i;
     m_cursor_index.y = j;
 
-    m_last_seek = Timer::get_reference().get_time();
+    m_last_seek = get_Timer().get_time();
   }
 
   void Text_Box::seek_cursor(const int &cursor_pos) {
@@ -625,7 +638,7 @@ namespace Zeni {
       m_cursor_index.y = j;
     }
 
-    m_last_seek = Timer::get_reference().get_time();
+    m_last_seek = get_Timer().get_time();
   }
   
   void Text_Box::set_focus(const bool &value) {
@@ -660,7 +673,7 @@ namespace Zeni {
     return untabbed_text;
   }
 
-  int Text_Box::get_text_width(const Font &font, const string &text) {
+  float Text_Box::get_text_width(const Font &font, const string &text) {
     const string untabbed_text = untablinebreak(text);
 
     if(font.get_text_width(" "))
@@ -676,25 +689,25 @@ namespace Zeni {
     return font.get_text_width(fake_text);
   }
 
-  int Text_Box::max_line_width() const {
-    return int(get_lower_right().x - get_upper_left().x);
+  float Text_Box::max_line_width() const {
+    return get_lower_right().x - get_upper_left().x;
   }
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
     m_keysym = keysym;
     m_down = down;
 
-    m_last_repeated = Timer::get_reference().get_time();
+    m_last_repeated = get_Timer().get_time();
     m_active = true;
     m_delay_finished = false;
 
     m_widget->on_key(m_keysym, m_down);
   }
 
-  void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     m_active = false;
 
-    m_widget->on_mouse_button(pos, down);
+    m_widget->on_mouse_button(pos, down, button);
   }
 
   void Widget_Input_Repeater::on_mouse_motion(const Point2i &pos) {
@@ -709,9 +722,9 @@ namespace Zeni {
       (*it)->on_key(keysym, down);
   }
 
-  void Widgets::on_mouse_button(const Point2i &pos, const bool &down) {
+  void Widgets::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->on_mouse_button(pos, down);
+      (*it)->on_mouse_button(pos, down, button);
   }
     
   void Widgets::on_mouse_motion(const Point2i &pos) {

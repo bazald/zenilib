@@ -30,47 +30,50 @@
 
 namespace Zeni {
 
-  Color::Color() {
-    rgba[0] = 1.0f;
-    rgba[1] = 1.0f;
-    rgba[2] = 1.0f;
-    rgba[3] = 1.0f;
+  Color::Color()
+    : r(1.0f),
+      g(1.0f),
+      b(1.0f),
+      a(1.0f)
+  {
   }
 
-  Color::Color(const float &a, const float &r, const float &g, const float &b) {
-    rgba[0] = r;
-    rgba[1] = g;
-    rgba[2] = b;
-    rgba[3] = a;
+  Color::Color(const float &a_, const float &r_, const float &g_, const float &b_)
+    : r(r_),
+      g(g_),
+      b(b_),
+      a(a_)
+  {
   }
 
-  Color::Color(const unsigned long &argb) {
-    rgba[0] = ((argb >> 16) & 0xFF) / 256.0f;
-    rgba[1] = ((argb >> 8) & 0xFF) / 256.0f;
-    rgba[2] = (argb & 0xFF) / 256.0f;
-    rgba[3] = ((argb >> 24) & 0xFF) / 256.0f;
+  Color::Color(const unsigned long &argb)
+    : r(((argb >> 16) & 0xFF) / 256.0f),
+      g(((argb >> 8) & 0xFF) / 256.0f),
+      b((argb & 0xFF) / 256.0f),
+      a(((argb >> 24) & 0xFF) / 256.0f)
+  {
   }
 
   Color Color::interpolate_to(const float &rhs_part, const Color &rhs) const {
     float lhs_part = 1.0f - rhs_part;
-    return Color(lhs_part * rgba[1] + rhs_part * rhs.rgba[1], 
-                 lhs_part * rgba[2] + rhs_part * rhs.rgba[2], 
-                 lhs_part * rgba[3] + rhs_part * rhs.rgba[3],
-                 lhs_part * rgba[0] + rhs_part * rhs.rgba[0]);
+    return Color(lhs_part * a + rhs_part * rhs.a, 
+                 lhs_part * r + rhs_part * rhs.r, 
+                 lhs_part * g + rhs_part * rhs.g,
+                 lhs_part * b + rhs_part * rhs.b);
   }
 
   bool Color::operator<(const Color &rhs) const {
-    return rgba[0] < rhs.rgba[0] || rgba[0] == rhs.rgba[0] &&
-      (rgba[1] < rhs.rgba[1] || rgba[1] == rhs.rgba[1] &&
-      (rgba[2] < rhs.rgba[2] || rgba[2] == rhs.rgba[2] &&
-      rgba[3] < rhs.rgba[3]));
+    return a < rhs.a || a == rhs.a &&
+          (r < rhs.r || r == rhs.r &&
+          (g < rhs.g || g == rhs.g &&
+           b < rhs.b));
   }
 
   bool Color::operator==(const Color &rhs) const {
-    return rgba[0] == rhs.rgba[0] &&
-      rgba[1] == rhs.rgba[1] &&
-      rgba[2] == rhs.rgba[2] &&
-      rgba[3] == rhs.rgba[3];
+    return a == rhs.a &&
+            r == rhs.r &&
+            g == rhs.g &&
+            b == rhs.b;
   }
 
 }

@@ -30,29 +30,61 @@
 
 #ifndef DISABLE_GL
 #include <SDL/SDL_rotozoom.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
 #endif
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
   int Texture::build_from_surface(SDL_Surface * &surface) {
-    bool width_pow2 = false, height_pow2 = false;
-
-    for(int i = 1; i; i <<= 1) {
-      if(surface->w == i)
+    int next_w = 1;
+    bool width_pow2 = false;
+    for(; next_w; next_w <<= 1)
+      if(next_w > surface->w)
+        break;
+      else if(surface->w == next_w) {
         width_pow2 = true;
-      if(surface->h == i)
+        break;
+      }
+
+    int next_h = 1;
+    bool height_pow2 = false;
+    for(; next_h; next_h <<= 1)
+      if(next_h > surface->h)
+        break;
+      else if(surface->h == next_h) {
         height_pow2 = true;
-    }
+        break;
+      }
+
+    double scale_w = next_w;
+    double scale_h = next_h;
 
     if(!width_pow2 || !height_pow2) {
-      float next_w = pow(2.0f, ceil(log(float(surface->w))/log(2.0f)));
-      float next_h = pow(2.0f, ceil(log(float(surface->h))/log(2.0f)));
+      int actual_w, actual_h;
+      for(int i = 0; i < END_OF_TIME; ++i) {
+        zoomSurfaceSize(surface->w, surface->h,
+                        scale_w/surface->w, scale_h/surface->h,
+                        &actual_w, &actual_h);
 
-      SDL_Surface *surf2 = rotozoomSurfaceXY(surface, 0,
-        next_w/surface->w,
-        next_h/surface->h, 1);
+        if(next_w == actual_w &&
+           next_h == actual_h)
+          break;
+
+        if(actual_w < next_w)
+          scale_w += 0.5;
+        else if(actual_w > next_w)
+          scale_w -= 0.5;
+
+        if(actual_h < next_h)
+          scale_h += 0.5;
+        else if(actual_h > next_h)
+          scale_h -= 0.5;
+      };
+
+      SDL_Surface *surf2 = zoomSurface(surface,
+        scale_w/surface->w,
+        scale_h/surface->h, 1);
 
       if(surf2) {
         SDL_FreeSurface(surface);
@@ -103,7 +135,7 @@ namespace Zeni {
   }
 
   void Sprite::append_frame(const std::string &name) {
-    m_frames.push_back(make_pair(name, Textures::get_reference().get_texture_id(name)));
+    m_frames.push_back(make_pair(name, get_Textures().get_id(name)));
   }
 
   int Sprite::find_frame(const std::string &name, const int &starting_point) const {
@@ -117,7 +149,7 @@ namespace Zeni {
   }
 
   void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, Textures::get_reference().get_texture_id(name));
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_id(name));
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();
@@ -210,7 +242,7 @@ namespace Zeni {
       (Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST));
 
     if(Textures::get_anisotropic_filtering()) {
-      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > Video::get_reference().get_maximum_anisotropy())
+      if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > get_Video().get_maximum_anisotropy())
         throw Invalid_Anisotropy_Setting();
 
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
@@ -274,7 +306,7 @@ namespace Zeni {
   }
 
   void Texture_DX9::set_sampler_states() {
-    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
@@ -297,7 +329,7 @@ namespace Zeni {
   }
 
   IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface) {
-    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(Video::get_reference());
+    Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     IDirect3DTexture9 * ppTexture;
 
@@ -357,7 +389,7 @@ namespace Zeni {
   }
   
   void Texture_DX9::load(const std::string &filename) const {
-    //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(Video::get_reference());
+    //Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
 
     //set_sampler_states();
 
@@ -383,3 +415,5 @@ namespace Zeni {
 #endif
 
 }
+
+#include <Zeni/Global_Undef.h>

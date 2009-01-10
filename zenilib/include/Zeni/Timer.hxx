@@ -44,7 +44,7 @@ namespace Zeni {
   }
 
   int Time::get_ticks_passed() const {
-    return Timer::get_reference().get_ticks() - m_ticks;
+    return get_Timer().get_ticks() - m_ticks;
   }
 
   float Time::get_seconds_passed() const {
@@ -60,7 +60,7 @@ namespace Zeni {
   }
 
   void Time::update() {
-    m_ticks = Timer::get_reference().get_ticks();
+    m_ticks = get_Timer().get_ticks();
   }
 
   int Timer::get_ticks() {
@@ -89,12 +89,12 @@ namespace Zeni {
 
   Time_HQ & Time_HQ::operator=(const HQ_Tick_Type &ticks) {
     m_ticks = ticks;
-    m_ticks_per_second = Timer_HQ::get_reference().get_ticks_per_second();
+    m_ticks_per_second = get_Timer_HQ().get_ticks_per_second();
     return *this;
   }
 
   HQ_Tick_Type Time_HQ::get_ticks_passed() const {
-    return Timer_HQ::get_reference().get_ticks() - m_ticks;
+    return get_Timer_HQ().get_ticks() - m_ticks;
   }
 
   long double Time_HQ::get_seconds_passed() const {
@@ -110,7 +110,7 @@ namespace Zeni {
   }
 
   void Time_HQ::update() {
-    m_ticks = Timer_HQ::get_reference().get_ticks();
+    m_ticks = get_Timer_HQ().get_ticks();
   }
 
   HQ_Tick_Type Timer_HQ::get_ticks() {

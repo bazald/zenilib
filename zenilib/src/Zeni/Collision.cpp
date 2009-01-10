@@ -28,9 +28,12 @@
 
 #include <Zeni/Collision.hxx>
 
+#include <Zeni/Coordinate.hxx>
 #include <Zeni/Vector3f.hxx>
 
 #include <cmath>
+
+#include <Zeni/Global.h>
 
 using namespace Zeni;
 using std::make_pair;
@@ -38,8 +41,6 @@ using std::max;
 using std::min;
 
 namespace Zeni_Collision {
-
-  const float g_intersection_epsilon = 0.0001f;
 
   /* Begin Helpers and Templates
    *
@@ -127,7 +128,7 @@ namespace Zeni_Collision {
     float sc_numer = uv * vw - vv * uw, sc_denom;
     float tc_numer = uu * vw - uv * uw, tc_denom;
 
-    if(denom > g_intersection_epsilon) {
+    if(denom > ZENI_COLLISION_EPSILON) {
       sc_denom = denom;
       
       if(LINE_TYPE1::has_lower_bound() && sc_numer < 0.0f) {
@@ -189,10 +190,10 @@ namespace Zeni_Collision {
 
     int valid_axes = 0;
     float invalid_axes_distance2 = 0.0f;
-    float min_max = 42.0f;
-    float max_min = 42.0f;
+    float min_max = END_OF_TIME;
+    float max_min = END_OF_TIME;
 
-    if(fabs(direction.i) > g_intersection_epsilon) {
+    if(fabs(direction.i) > ZENI_COLLISION_EPSILON) {
       if(!valid_axes || real_max.i < min_max) min_max = real_max.i;
       if(!valid_axes || real_min.i > max_min) max_min = real_min.i;
       ++valid_axes;
@@ -206,7 +207,7 @@ namespace Zeni_Collision {
       invalid_axes_distance2 += diff * diff;
     }
 
-    if(fabs(direction.j) > g_intersection_epsilon) {
+    if(fabs(direction.j) > ZENI_COLLISION_EPSILON) {
       if(!valid_axes || real_max.j < min_max) min_max = real_max.j;
       if(!valid_axes || real_min.j > max_min) max_min = real_min.j;
       ++valid_axes;
@@ -220,7 +221,7 @@ namespace Zeni_Collision {
       invalid_axes_distance2 += diff * diff;
     }
 
-    if(fabs(direction.k) > g_intersection_epsilon) {
+    if(fabs(direction.k) > ZENI_COLLISION_EPSILON) {
       if(!valid_axes || real_max.k < min_max) min_max = real_max.k;
       if(!valid_axes || real_min.k > max_min) max_min = real_min.k;
       ++valid_axes;
@@ -289,7 +290,7 @@ namespace Zeni_Collision {
 
   float Plane::shortest_distance(const Plane &rhs) const {
     const Vector3f line_normal = normal % rhs.normal;
-    if(line_normal.magnitude() < g_intersection_epsilon)
+    if(line_normal.magnitude() < ZENI_COLLISION_EPSILON)
       return shortest_distance(rhs.point);
 
     return 0.0f;
@@ -647,3 +648,5 @@ namespace Zeni_Collision {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>

@@ -59,7 +59,7 @@
 
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 
 #include <string>
 
@@ -72,8 +72,6 @@ namespace Zeni {
     virtual ~Vertex2f();
 
     virtual Point3f get_position() const;
-    inline void set_position(const Point3f &position);
-    inline void set_position(const Point2f &position);
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #ifdef _WINDOWS
@@ -86,7 +84,9 @@ namespace Zeni {
 #ifdef X64
     float m_alignment_rubbish;
 #endif
-    Point3f m_position;
+
+  public:
+    Point3f position;
   };
 
   class Vertex2f_Color : public Renderable, public Vertex2f {
@@ -104,7 +104,7 @@ namespace Zeni {
 
     // Begin rendering functions
 
-    virtual Point3f get_position() const; ///< Get the current position
+    virtual bool is_3d() const; ///< Tell the rendering system if we're using 3D coordinates
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -127,12 +127,9 @@ namespace Zeni {
 
     Vertex2f * interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture
 
-    inline Point2f get_texture_coordinate() const; ///< Get the current Texture coordinate
-    inline void set_texture_coordinate(const Point2f &texture_coordinate); ///< Set the current Texture coordinate
-
     // Begin rendering functions
 
-    virtual Point3f get_position() const; ///< Get the current position
+    virtual bool is_3d() const; ///< Tell the rendering system if we're using 3D coordinates
 
     // NOTE: Not really meaningful to render a textured point in isolation;
     //       assert(false) for all but subrender_to(Video_GL &)
@@ -146,8 +143,7 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-  private:
-    Point2f m_texture_coordinate;
+    Point2f texture_coordinate;
   };
 
 }

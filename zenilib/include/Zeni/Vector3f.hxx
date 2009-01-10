@@ -29,9 +29,6 @@
 #ifndef ZENI_VECTOR3F_HXX
 #define ZENI_VECTOR3F_HXX
 
-// HXXed below
-#include <Zeni/Coordinate.h>
-
 #include <Zeni/Vector3f.h>
 
 // Not HXXed
@@ -53,15 +50,6 @@ namespace Zeni {
   Vector3f::Vector3f(const Vector3f &rhs)
     : i(rhs.i), j(rhs.j), k(rhs.k)
   {
-  }
-
-  Vector3f::Vector3f(const Point3f &rhs)
-    : i(rhs.x), j(rhs.y), k(rhs.z)
-  {
-  }
-
-  Vector3f::operator Point3f() const {
-    return Point3f(i, j, k);
   }
 
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {
@@ -138,33 +126,6 @@ namespace Zeni {
     return rhs * lhs;
   }
 
-  // Vector Addition / Subtraction to a Point
-  Point3f operator+(const Point3f &lhs, const Vector3f &rhs) {
-    return Point3f(lhs.x + rhs.i, lhs.y + rhs.j, lhs.z + rhs.k);
-  }
-
-  Point3f & operator+=(Point3f &lhs, const Vector3f &rhs) {
-    lhs.x += rhs.i;
-    lhs.y += rhs.j;
-    lhs.z += rhs.k;
-    return lhs;
-  }
-
-  Point3f operator-(const Point3f &lhs, const Vector3f &rhs) {
-    return Point3f(lhs.x - rhs.i, lhs.y - rhs.j, lhs.z - rhs.k);
-  }
-
-  Point3f & operator-=(Point3f &lhs, const Vector3f &rhs) {
-    lhs.x -= rhs.i;
-    lhs.y -= rhs.j;
-    lhs.z -= rhs.k;
-    return lhs;
-  }
-
-  Vector3f operator-(const Point3f &lhs, const Point3f &rhs) {
-    return Vector3f(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
-  }
-
   float Vector3f::magnitude2() const {
     return i * i + j * j + k * k;
   }
@@ -205,7 +166,7 @@ namespace Zeni {
     return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
   }
 
-  inline float Vector3f::angle_between(const Vector3f &rhs) const {
+  float Vector3f::angle_between(const Vector3f &rhs) const {
     const float a = magnitude();
     const float b = rhs.magnitude();
     const float c = (rhs - *this).magnitude();
@@ -213,7 +174,7 @@ namespace Zeni {
     return acos((a * a + b * b - c * c) / (2 * a * b));
   }
   
-  const float Vector3f::operator[](const int &index) const {
+  const float & Vector3f::operator[](const int &index) const {
     assert(-1 < index && index < 3);
     const float * const ptr = &i;
     return ptr[index];
@@ -226,7 +187,5 @@ namespace Zeni {
   }
 
 }
-
-#include <Zeni/Coordinate.hxx>
 
 #endif

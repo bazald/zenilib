@@ -31,12 +31,15 @@
 
 // HXXed below
 #include <Zeni/Camera.h>
+#include <Zeni/Renderable.h>
 #include <Zeni/Textures.h>
 #include <Zeni/Quaternion.h>
 #include <Zeni/Video_DX9.h>
 #include <Zeni/Video_GL.h>
 
 #include <Zeni/Video.h>
+
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
@@ -80,12 +83,24 @@ namespace Zeni {
     return g_multisampling;
   }
 
-  const bool & Video::zwrite_enabled() const {
+  const bool & Video::is_zwrite_enabled() const {
     return m_zwrite;
   }
 
-  const bool & Video::ztest_enabled() const {
+  const bool & Video::is_ztest_enabled() const {
     return m_ztest;
+  }
+
+  const bool & Video::is_alpha_test_enabled() const {
+    return m_alpha_test;
+  }
+
+  const Video::TEST & Video::get_alpha_test_function() const {
+    return m_alpha_function;
+  }
+
+  const float & Video::get_alpha_test_value() const {
+    return m_alpha_value;
   }
 
   void Video::set_2d() {
@@ -112,7 +127,7 @@ namespace Zeni {
   }
 
   void Video::apply_texture(const std::string &name) {
-    apply_texture(Textures::get_reference().get_texture_id(name));
+    apply_texture(get_Textures().get_id(name));
   }
 
   const bool & Video::is_initialized() {
@@ -162,7 +177,7 @@ namespace Zeni {
       case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
-    exit(42); /* cannot be called, but suppresses a warning */ \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
   }
 
 #define \
@@ -172,7 +187,7 @@ namespace Zeni {
       case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
-    exit(42); /* cannot be called, but suppresses a warning */ \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
   }
 
 #else
@@ -203,6 +218,23 @@ namespace Zeni {
 #endif
 
   void Video::render(const Renderable &renderable) {
+    class PrePostRenderActor {
+      PrePostRenderActor & operator=(const PrePostRenderActor &) {return *this;}
+
+    public:
+      PrePostRenderActor(const Renderable &renderable_)
+        : renderable(renderable_)
+      {
+        renderable.pre_render();
+      }
+
+      ~PrePostRenderActor() {
+        renderable.post_render();
+      }
+    private:
+      const Renderable &renderable;
+    } ppra(renderable);
+
     VIDEO_IV_FCN_CALL(render_impl, renderable);
   }
 
@@ -227,7 +259,7 @@ namespace Zeni {
                                                        camera2d.second.x + offset.x,
                                                        camera2d.second.y + offset.y,
                                                        camera2d.first.y + offset.y,
-                                                       -1.0f, 1.0f);
+                                                       ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
 
     set_viewport(viewport);
@@ -274,6 +306,16 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_ztest_impl, enabled);
   }
 
+  void Video::set_alpha_test(const bool &enabled,
+                             const TEST &test,
+                             const float &value) {
+    m_alpha_test = enabled;
+    m_alpha_function = test;
+    m_alpha_value = value;
+
+    VIDEO_IV_FCN_CALL(set_alpha_test_impl, enabled, test, value);
+  }
+
   void Video::set_color(const Color &color) {
     m_color = color;
 
@@ -304,31 +346,51 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_lighting_impl, on);
   }
 
-  void Video::set_normal_interpolation(const bool &on) {
-    g_normal_interp = on;
-
-    VIDEO_IV_FCN_CALL(set_normal_interpolation_impl, on);
-  }
-
   void Video::set_ambient_lighting(const Color &color) {
     VIDEO_IV_FCN_CALL(set_ambient_lighting_impl, color);
   }
 
-  void Video::set_light(const int &number, const Light * const light) {
+  void Video::set_light(const int &number, const Light &light) {
     VIDEO_IV_FCN_CALL(set_light_impl, number, light);
   }
 
-  void Video::set_material(const Material &material, const int &optimization) {
-    VIDEO_IV_FCN_CALL(set_material_impl, material, optimization);
+  void Video::unset_light(const int &number) {
+    VIDEO_IV_FCN_CALL(unset_light_impl, number);
   }
 
-  void Video::unset_material(const Material &material, const int &optimization) {
-    VIDEO_IV_FCN_CALL(unset_material_impl, material, optimization);
+  void Video::set_material(const Material &material) {
+    VIDEO_IV_FCN_CALL(set_material_impl, material);
   }
 
-  void Video::set_fog(const Fog * const fog) {
+  void Video::unset_material(const Material &material) {
+    VIDEO_IV_FCN_CALL(unset_material_impl, material);
+  }
+
+  void Video::set_fog(const Fog &fog) {
     VIDEO_IV_FCN_CALL(set_fog_impl, fog);
   }
+
+  void Video::unset_fog() {
+    VIDEO_IV_FCN_CALL(unset_fog_impl, );
+  }
+
+#ifndef DISABLE_CG
+  void Video::set_vertex_shader(const Vertex_Shader &shader) {
+    VIDEO_IV_FCN_CALL(set_vertex_shader_impl, shader);
+  }
+
+  void Video::set_fragment_shader(const Fragment_Shader &shader) {
+    VIDEO_IV_FCN_CALL(set_fragment_shader_impl, shader);
+  }
+
+  void Video::unset_vertex_shader(const Vertex_Shader &shader) {
+    VIDEO_IV_FCN_CALL(unset_vertex_shader_impl, shader);
+  }
+
+  void Video::unset_fragment_shader(const Fragment_Shader &shader) {
+    VIDEO_IV_FCN_CALL(unset_fragment_shader_impl, shader);
+  }
+#endif
 
   void Video::select_world_matrix() {
     VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
@@ -389,13 +451,27 @@ namespace Zeni {
   }
 
   Font * Video::create_Font(const std::string &filename, const bool &bold, const bool &italic, 
-    const int &glyph_height) {
-    VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height);
+    const float &glyph_height, const float &virtual_screen_height) {
+    VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
   Vertex_Buffer * Video::create_Vertex_Buffer() {
     VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, );
   }
+
+#ifndef DISABLE_CG
+  void Video::initialize(Shader_System &shader_system) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader_system);
+  }
+
+  void Video::initialize(Vertex_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader, filename, entry_function);
+  }
+
+  void Video::initialize(Fragment_Shader &shader, const std::string &filename, const std::string &entry_function) {
+    VIDEO_IV_FCN_CALL(initialize_impl, shader, filename, entry_function);
+  }
+#endif
 
   void Video::uninit() {
     SDL_FreeSurface(m_display_surface);
@@ -409,7 +485,10 @@ namespace Zeni {
 #undef VIDEO_IV_FCN_CALL_CONST
 }
 
+#include <Zeni/Global_Undef.h>
+
 #include <Zeni/Camera.hxx>
+#include <Zeni/Renderable.hxx>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Quaternion.hxx>
 #include <Zeni/Video_DX9.hxx>

@@ -33,8 +33,6 @@
  *
  * \brief An Abstraction of a Triangle
  *
- * \note Use a Texture_Render_Wrapper to avoid having to manually set and unset a texture each time the Triangle is rendered.
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
@@ -47,26 +45,23 @@
 #ifndef ZENI_TRIANGLE_H
 #define ZENI_TRIANGLE_H
 
-#include <Zeni/Render_Wrapper.h>
+#include <Zeni/Renderable.h>
 
 namespace Zeni {
 
   template <typename VERTEX>
   class Triangle : public Renderable {
   public:
-    /// The best way to create a Triangle
-    Triangle(const VERTEX &vertex0 = VERTEX(), const VERTEX &vertex1 = VERTEX(), 
-      const VERTEX &vertex2 = VERTEX(), Render_Wrapper *render_wrapper = new Render_Wrapper());
-    ~Triangle();
+    Triangle();
+    inline Triangle(const VERTEX &vertex0,
+                    const VERTEX &vertex1, 
+                    const VERTEX &vertex2);
 
     Triangle(const Triangle<VERTEX> &rhs);
     Triangle<VERTEX> & operator=(const Triangle<VERTEX> &rhs);
 
-    const VERTEX & get_vertex(const int &index) const; ///< Get a vertex
-    void set_vertex(const int &index, const VERTEX &vertex); ///< Set a vertex
-
-    // The "position" is the average of the three vertices
-    virtual Point3f get_position() const; ///< Get the aveage of all vertices
+    /// Tell the rendering system if we're using 3D coordinates
+    virtual bool is_3d() const;
 
 #ifndef DISABLE_GL
     virtual void render_to(Video_GL &screen) const;
@@ -76,8 +71,6 @@ namespace Zeni {
     virtual void render_to(Video_DX9 &screen) const;
 #endif
 
-    const Render_Wrapper * get_render_wrapper() const; ///< Get the current Render_Wrapper
-    void set_render_wrapper(Render_Wrapper * const render_wrapper); ///< Set the current Render_Wrapper
     Triangle<VERTEX> * get_duplicate() const; ///< Get a duplicate of the Triangle
 
     Triangle<VERTEX> * get_duplicate_subt0() const; ///< Get quarter 0 of the Triangle; Can be used for software LOD increase
@@ -85,9 +78,16 @@ namespace Zeni {
     Triangle<VERTEX> * get_duplicate_subt2() const; ///< Get quarter 2 of the Triangle; Can be used for software LOD increase
     Triangle<VERTEX> * get_duplicate_subt3() const; ///< Get quarter 3 of the Triangle; Can be used for software LOD increase
 
+    // Indexing
+    inline const VERTEX & operator[](const int &index) const; ///< Get 'index'
+    inline VERTEX & operator[](const int &index); ///< Get 'index'
+
+    VERTEX a;
+    VERTEX b;
+    VERTEX c;
+
   private:
-    VERTEX m_vertex[3];
-    Render_Wrapper * m_render_wrapper;
+    void * m_alignment_rubbish;
   };
 
 }

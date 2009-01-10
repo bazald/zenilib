@@ -17,12 +17,15 @@
 * 02110-1301 USA.
 */
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <windows.h>
 
 using namespace std;
+
+bool g_x64 = false;
 
 /** String Manipulation Functions **/
 
@@ -69,8 +72,10 @@ string to_upper(string str) {
 /** Stream Dumper **/
 
 void dump(ostream &os, istream &is) {
-  char c;
-  while(is.get(c) && os.put(c));
+  string s;
+  while(getline(is, s))
+    if(g_x64 || s.find("x64") == -1 && s.find("X64") == -1)
+      os << s << endl;
 }
 
 /** NSIS Helpers **/
@@ -186,6 +191,22 @@ void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &h
 /** Main **/
 
 int main(int argc, char * argv[]) {
+  char c;
+  cout << "Include Support for x64 [Y/N]? ";
+  for(;;) {
+    if(!cin.get(c))
+      abort();
+
+    if(c == 'y' || c == 'Y')
+      g_x64 = true;
+    else if(c == 'n' || c == 'N')
+      g_x64 = false;
+    else
+      continue;
+
+    break;
+  }
+
   ofstream nsi("Zenilib.nsi");
   ifstream nsi_0("Zeni NSIgen\\NSI_0_Preuser.txt");
   ifstream nsi_u("Zeni NSIS Settings.txt");

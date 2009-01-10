@@ -40,13 +40,16 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
-#include <GL/gl.h>
-#include <GL/glext.h>
+#include <GL/glew.h>
 #include <iostream>
 
+namespace SDL {
+  #include <SDL/SDL.h>
+  #include <SDL/SDL_opengl.h>
+}
+
 using namespace std;
+using namespace SDL;
 
 namespace Zeni {
 
@@ -84,11 +87,11 @@ namespace Zeni {
     glViewport(0, 0, get_screen_width(), get_screen_height());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    Game::get_reference().render();
+    get_Game().render();
     
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
-   Timer &tr = Timer::get_reference();
+   Timer &tr = get_Timer();
    
    if(get_vertical_sync()) {
      Time buffer_swap_start_time = tr.get_time();
@@ -134,8 +137,13 @@ namespace Zeni {
     set_opengl_flag(true);
     Video::init();
 
-    glViewport(0, 0, get_screen_width(), get_screen_height());
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    {
+      const GLenum err = glewInit();
+      if(GLEW_OK != err) {
+        cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
+        throw Video_Init_Failure();
+      }
+    }
 
     // Set Fill/Shade Mode
     glShadeModel(GL_SMOOTH);
@@ -147,9 +155,14 @@ namespace Zeni {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
+    // Set lighting variables
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
     // Initialize Assorted Variables
-    glPointSize(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
-    glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    //glPointSize(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
+    //glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
 
     // Finish with a few function calls
     set_2d();
@@ -159,7 +172,7 @@ namespace Zeni {
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
     set_ambient_lighting(Color());
-    set_normal_interpolation(get_normal_interpolation());
+    set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
 
     // Manage extensions
     union {

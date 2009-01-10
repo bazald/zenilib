@@ -36,12 +36,13 @@
 #include <SDL/SDL.h>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 #ifndef DISABLE_AL
 #include <vorbis/vorbisfile.h>
 #endif
 
-using std::string;
+using namespace std;
 
 namespace Zeni {
 
@@ -50,40 +51,44 @@ namespace Zeni {
       m_loader(0),
       m_thread(0)
   {
+    get_Sound();
+
 #ifndef DISABLE_AL
     m_buffer = alutCreateBufferHelloWorld();
 
     if(m_buffer == AL_NONE) {
-      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
+      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
       throw Sound_Buffer_Init_Failure();
     }
 #endif
   }
 
-  Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
-    : m_buffer(0),
-      m_loader(0),
-      m_thread(0)
-  {
-#ifndef DISABLE_AL
-    m_buffer = alutCreateBufferHelloWorld();
-
-    if(m_buffer == AL_NONE) {
-      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
-      throw Sound_Buffer_Init_Failure();
-    }
-#endif
-
-    std::swap(m_buffer, rhs.m_buffer);
-    std::swap(m_loader, rhs.m_loader);
-    std::swap(m_thread, rhs.m_thread);
-  }
+//  Sound_Buffer::Sound_Buffer(const Sound_Buffer &rhs)
+//    : m_buffer(0),
+//      m_loader(0),
+//      m_thread(0)
+//  {
+//#ifndef DISABLE_AL
+//    m_buffer = alutCreateBufferHelloWorld();
+//
+//    if(m_buffer == AL_NONE) {
+//      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
+//      throw Sound_Buffer_Init_Failure();
+//    }
+//#endif
+//
+//    swap(m_buffer, rhs.m_buffer);
+//    swap(m_loader, rhs.m_loader);
+//    swap(m_thread, rhs.m_thread);
+//  }
 
   Sound_Buffer::Sound_Buffer(const string &filename)
     : m_buffer(AL_NONE),
       m_loader(0),
       m_thread(0)
   {
+    get_Sound();
+
     m_loader = new Loader(filename);
     m_thread = new Thread(*m_loader);
   }
@@ -98,15 +103,15 @@ namespace Zeni {
 #endif
   }
 
-  Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
-    Sound_Buffer temp(rhs);
-    std::swap(m_buffer, temp.m_buffer);
-    std::swap(m_loader, temp.m_loader);
-    std::swap(m_thread, temp.m_thread);
-    return *this;
-  }
+  //Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
+  //  Sound_Buffer temp(rhs);
+  //  swap(m_buffer, temp.m_buffer);
+  //  swap(m_loader, temp.m_loader);
+  //  swap(m_thread, temp.m_thread);
+  //  return *this;
+  //}
 
-  ALuint Sound_Buffer::load_ogg_vorbis(const std::string &
+  pair<ALuint, float> Sound_Buffer::load_ogg_vorbis(const string &
 #ifndef DISABLE_AL
     filename
 #endif
@@ -118,33 +123,36 @@ namespace Zeni {
 
     OggVorbis_File oggFile;
     if(ov_fopen(const_cast<char *>(filename.c_str()), &oggFile))
-      return AL_NONE;
+      return make_pair(AL_NONE, 0.0f);
 
     /*** Get Information About the Audio File ***/
 
     vorbis_info *pInfo = ov_info(&oggFile, -1);
-    const ALenum format = pInfo->channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+    const ALenum format = pInfo->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
     const ALsizei freq = pInfo->rate;
+    const ALsizei bytes_per_sample = format == AL_FORMAT_STEREO16 ? 4 : 2;
+    const ogg_int64_t num_samples = ov_pcm_total(&oggFile, -1);
+    const ogg_int64_t pcm_size = num_samples * bytes_per_sample;
+    const float duration = float(num_samples) / freq;
+
+#ifndef NDEBUG
+    if(format == AL_FORMAT_STEREO16)
+      cerr << "WARNING: '" << filename << "' is stereo and will be unaffected by the OpenAL positional audio system." << endl;
+#endif
 
     /*** Load the Audio File ***/
 
-    std::vector<char> buffer;
-    static const int buffer_size = 4096;
-    char array[buffer_size];
-    for(;;) {
-      const long bytes = ov_read(&oggFile, array, buffer_size, 0, 2, 1, 0);
+    int bytes = 0;
+    int buffer_size = int(pcm_size);
+    vector<char> buffer(buffer_size);
+    for(char *begin = &buffer[0], *end = begin + pcm_size;
+        begin != end;
+        begin += bytes, buffer_size -= bytes) {
+      bytes = ov_read(&oggFile, begin, buffer_size, 0, 2, 1, 0);
 
-      if(bytes > 0)
-        buffer.insert(buffer.end(), array, array + bytes);
-      else {
+      if(!bytes) {
         ov_clear(&oggFile);
-
-        if(!bytes)
-          break;
-        else {
-          ov_clear(&oggFile);
-          throw Sound_Buffer_Init_Failure();
-        }
+        throw Sound_Buffer_Init_Failure();
       }
     }
 
@@ -154,31 +162,35 @@ namespace Zeni {
     alGenBuffers(1, &bufferID);
     alBufferData(bufferID, format, &buffer[0], static_cast<ALsizei>(buffer.size()), freq);
 
-    return bufferID;
+    return make_pair(bufferID, duration);
 
 #else
 
-    return AL_NONE;
+    return make_pair(AL_NONE, 0.0f);
 
 #endif
 
   }
 
-  Sound_Buffer::Loader::Loader(const std::string &filename)
-    : m_filename(filename)
+  Sound_Buffer::Loader::Loader(const string &filename)
+    : m_duration(0.0f),
+    m_filename(filename)
   {
   }
 
   int Sound_Buffer::Loader::function() {
 #ifndef DISABLE_AL
-    m_buffer = load_ogg_vorbis(m_filename);
-    if(m_buffer == AL_NONE)
-      m_buffer = alutCreateBufferFromFile(m_filename.c_str());
+    pair<ALuint, float> loaded_ogg = load_ogg_vorbis(m_filename);
+    //if(loaded_ogg.first == AL_NONE)
+    //  loaded_ogg.first = alutCreateBufferFromFile(m_filename.c_str());
 
-    if(m_buffer == AL_NONE) {
-      std::cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
+    if(loaded_ogg.first == AL_NONE) {
+      cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << endl;
       return -1;
     }
+
+    m_buffer = loaded_ogg.first;
+    m_duration = loaded_ogg.second;
 #endif
 
     return 0;
@@ -190,6 +202,7 @@ namespace Zeni {
 
     const int status = m_loader->status;
     m_buffer = m_loader->m_buffer;
+    m_duration = m_loader->m_duration;
 
     delete m_loader;
     m_loader = 0;
@@ -198,100 +211,12 @@ namespace Zeni {
       throw Sound_Buffer_Init_Failure();
   }
 
-  Sound_Source::Sound_Source()
-    : m_source(AL_NONE)
-  {
-    static Sound_Buffer hello_world_buffer;
-    init(hello_world_buffer.get_id());
-  }
-
-  Sound_Source::Sound_Source(const Sound_Source &rhs)
-    : m_source(rhs.m_source)
-  {
-    rhs.m_source = AL_NONE;
-
-    static Sound_Buffer hello_world_buffer;
-    const_cast<Sound_Source &>(rhs).init(hello_world_buffer.get_id());
-  }
-
-  Sound_Source::Sound_Source(const Sound_Buffer &buffer, const float &pitch, const float &gain,
-    const Point3f &position, const Vector3f &velocity, const bool &looping)
-    : m_source(AL_NONE)
-  {
-    init(buffer.get_id(), pitch, gain, position, velocity, looping);
-  }
-
-  Sound_Source::Sound_Source(const ALuint &buffer, const float &pitch, const float &gain,
-    const Point3f &position, const Vector3f &velocity, const bool &looping)
-    : m_source(AL_NONE)
-  {
-    init(buffer, pitch, gain, position, velocity, looping);
-  }
-
-  Sound_Source::~Sound_Source() {
-#ifndef DISABLE_AL
-    if(m_source != AL_NONE && !Quit_Event::has_fired())
-      alDeleteSources(1, &m_source);
-#endif
-  }
-
-  void Sound_Source::init(const ALuint &
-#ifndef DISABLE_AL
-    buffer
-#endif
-    , const float &
-#ifndef DISABLE_AL
-    pitch
-#endif
-    , const float &
-#ifndef DISABLE_AL
-    gain
-#endif
-    , const Point3f &
-#ifndef DISABLE_AL
-    position
-#endif
-    , const Vector3f &
-#ifndef DISABLE_AL
-    velocity
-#endif
-    , const bool &
-#ifndef DISABLE_AL
-    looping
-#endif
-    ) {
-#ifndef DISABLE_AL
-    alGenSources(1, &m_source);
-
-    if(m_source == AL_NONE) {
-      std::cerr << "ALUT error" << ": " << alutGetErrorString(alutGetError()) << std::endl;
-      throw Sound_Source_Init_Failure();
-    }
-
-    alSourcei(m_source, AL_BUFFER, buffer);
-    alSourcef(m_source, AL_PITCH, pitch);
-    alSourcef(m_source, AL_GAIN, gain);
-    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
-    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
-    alSourcei(m_source, AL_LOOPING, looping);
-#endif
-
-    set_near_clamp();
-    set_far_clamp();
-  }
-
-  Sound_Source & Sound_Source::operator=(const Sound_Source &rhs) {
-    Sound_Source temp(rhs);
-    std::swap(m_source, temp.m_source);
-    return *this;
-  }
-
   Sound::Sound()
     : m_bgm(0),
     m_bgm_source(0)
   {
     // Ensure Core is initialized
-    Core::get_reference();
+    get_Core();
 
 #ifndef DISABLE_AL
     if(!alutInit(0, 0))
@@ -299,7 +224,7 @@ namespace Zeni {
 
     // Check for Vorbis extension functionality; seems to always fail :(
     alIsExtensionPresent("AL_EXT_vorbis");
-    std::cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << std::endl;
+    cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
     ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
@@ -308,19 +233,6 @@ namespace Zeni {
     alListenerfv(AL_POSITION, listener_position);
     alListenerfv(AL_VELOCITY, listener_velocity);
     alListenerfv(AL_ORIENTATION, listener_forward_and_up);
-
-    m_bgm = new Sound_Buffer();
-    if(!m_bgm) {
-      alutExit();
-      throw Sound_Init_Failure();
-    }
-
-    m_bgm_source = new Sound_Source(*m_bgm);
-    if(!m_bgm_source) {
-      delete m_bgm;
-      alutExit();
-      throw Sound_Init_Failure();
-    }
 #endif
   }
 
@@ -332,7 +244,7 @@ namespace Zeni {
 #endif
   }
 
-  Sound & Sound::get_reference() {
+  Sound & get_Sound() {
     static Sound e_sound;
     return e_sound;
   }
@@ -343,26 +255,31 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
+    assert_m_bgm();
+
     bool playing = m_bgm_source->is_playing() ? true : false;
-    float pitch = m_bgm_source->get_pitch();
-    float gain = m_bgm_source->get_gain();
-    Point3f position = m_bgm_source->get_position();
-    Vector3f velocity = m_bgm_source->get_velocity();
-    bool looping = m_bgm_source->is_looping();
 
     m_bgm_source->stop();
-    delete m_bgm_source;
-    m_bgm_source = 0;
+    m_bgm_source->set_buffer(get_Hello_World_Buffer());
     delete m_bgm;
     m_bgm = 0;
 
     m_bgmusic = filename;
-    m_bgm = new Sound_Buffer(filename);
-    m_bgm_source = new Sound_Source(*m_bgm, pitch, gain, position, velocity, looping);
+    m_bgm = new Sound_Buffer(m_bgmusic);
+    m_bgm_source->set_buffer(*m_bgm);
+    m_bgm_source->set_time(0.0f);
 
     if(playing)
       m_bgm_source->play();
 #endif
+  }
+
+  void Sound::assert_m_bgm() {
+    if(!m_bgm)
+      m_bgm = new Sound_Buffer();
+
+    if(!m_bgm_source)
+      m_bgm_source = new Sound_Source(*m_bgm);
   }
 
 }
