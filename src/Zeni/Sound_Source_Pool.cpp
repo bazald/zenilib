@@ -291,6 +291,11 @@ namespace Zeni {
   void Sound_Source_Pool::remove_Sound_Source(Sound_Source &sound_source) {
     sound_source.stop();
 
+    if(sound_source.m_hw) {
+      m_assigned_hw.erase(sound_source.m_hw);
+      delete sound_source.m_hw;
+    }
+
     m_handles.erase(std::find(m_handles.begin(), m_handles.end(), &sound_source));
   }
 
