@@ -141,26 +141,30 @@ namespace Zeni {
         it != m_handles.end();
         ++it)
     {
-      (*it)->unassign();
+      if((*it)->is_assigned()) {
+        Sound_Source_HW * hw = (*it)->unassign();
+        hw->stop();
+        delete hw;
+      }
     }
-
-    for(set<Sound_Source_HW *>::iterator it = m_assigned_hw.begin();
-        it != m_assigned_hw.end();
-        ++it)
-    {
-      Sound_Source_HW * hw = *it;
-
-      hw->stop();
-      delete hw;
-    }
-
-    m_assigned_hw.clear();
   }
 
   void Sound_Source_Pool::update() {
     vector<Sound_Source_HW *> unassigned_hw;
     const size_t needed_hw = m_handles.size();
-    size_t given_hw = m_assigned_hw.size();
+    size_t given_hw = 0;
+
+    /*** Find out how much Sound_Source_HW is needed ***/
+
+    for(vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
+        ++it)
+    {
+      if((*it)->is_assigned())
+        ++given_hw;
+    }
+
+    /*** Acquire more Sound_Source_HW if needed (and if possible) ***/
 
     try {
       while(needed_hw > given_hw
@@ -176,43 +180,29 @@ namespace Zeni {
     {
     }
 
-    if(given_hw == needed_hw) {
-      vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
+    /*** Strip Sound_Source_HW from low priority 'Sound_Source's, as needed ***/
 
-      for(vector<Sound_Source *>::iterator it = m_handles.begin();
-          it != m_handles.end();
-          ++it)
-      {
-        Sound_Source &source = **it;
-        if(!source.is_assigned()) {
-          source.assign(**jt);
-          m_assigned_hw.insert(*jt);
-          ++jt;
-        }
-      }
-    }
-    else {
+    if(given_hw < needed_hw) {
       std::stable_sort(m_handles.rbegin(), m_handles.rend(), *m_replacement_policy);
 
-      const size_t cutoff = needed_hw - given_hw;
-
-      for(size_t i = 0; i != cutoff; ++i) {
+      for(size_t i = given_hw; i != needed_hw; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(source.is_assigned())
           unassigned_hw.push_back(source.unassign());
       }
+    }
 
-      vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
+    /*** Assign Sound_Source_HW to high priority 'Sound_Source's ***/
 
-      for(size_t i = cutoff; i != needed_hw; ++i) {
-        Sound_Source &source = *m_handles[i];
+    vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
-        if(!source.is_assigned()) {
-          source.assign(**jt);
-          m_assigned_hw.insert(*jt);
-          ++jt;
-        }
+    for(size_t i = 0; i != given_hw; ++i) {
+      Sound_Source &source = *m_handles[i];
+
+      if(!source.is_assigned()) {
+        source.assign(**jt);
+        ++jt;
       }
     }
   }
@@ -292,8 +282,8 @@ namespace Zeni {
     sound_source.stop();
 
     if(sound_source.m_hw) {
-      m_assigned_hw.erase(sound_source.m_hw);
       delete sound_source.m_hw;
+      sound_source.m_hw = 0;
     }
 
     m_handles.erase(std::find(m_handles.begin(), m_handles.end(), &sound_source));
