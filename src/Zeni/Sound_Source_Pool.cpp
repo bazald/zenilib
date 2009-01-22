@@ -182,10 +182,12 @@ namespace Zeni {
 
     /*** Strip Sound_Source_HW from low priority 'Sound_Source's, as needed ***/
 
-    if(given_hw < needed_hw) {
-      std::stable_sort(m_handles.rbegin(), m_handles.rend(), *m_replacement_policy);
+    const size_t cut = needed_hw - given_hw;
 
-      for(size_t i = given_hw; i != needed_hw; ++i) {
+    if(cut) {
+      std::stable_sort(m_handles.begin(), m_handles.end(), *m_replacement_policy);
+
+      for(size_t i = 0; i != cut; ++i) {
         Sound_Source &source = *m_handles[i];
 
         if(source.is_assigned())
@@ -197,7 +199,7 @@ namespace Zeni {
 
     vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
-    for(size_t i = 0; i != given_hw; ++i) {
+    for(size_t i = cut; i != needed_hw; ++i) {
       Sound_Source &source = *m_handles[i];
 
       if(!source.is_assigned()) {
