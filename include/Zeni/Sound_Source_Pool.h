@@ -99,7 +99,6 @@ namespace Zeni {
     void insert_Sound_Source(Sound_Source &sound_source); // on Sound_Source construction
     void remove_Sound_Source(Sound_Source &sound_source); // on Sound_Source destruction
 
-    std::set<Sound_Source_HW *> m_assigned_hw;
     std::vector<Sound_Source *> m_handles;
 
     Replacement_Policy * m_replacement_policy;
