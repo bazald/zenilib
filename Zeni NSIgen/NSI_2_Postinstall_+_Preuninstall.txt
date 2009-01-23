@@ -1,5 +1,6 @@
 ; Zenipex Automagic Ends
 
+  SetOutPath "$INSTDIR"
 SectionEnd
 
 Section -Redist
