@@ -6,8 +6,8 @@ SectionEnd
 Section -Redist
   SetShellVarContext all
 
-  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
-  ExecWait '"$INSTDIR\redist\visualc\vcredist_x64_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30729.17.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x64_9.0.30729.17.exe" /quiet /passive /C /T:$TEMP"'
   ExecWait '"$INSTDIR\redist\directx\DXSETUP.exe" /silent'
   ExecWait '"$INSTDIR\redist\openal\oalinst_2.0.3.0.exe" /silent'
 SectionEnd
