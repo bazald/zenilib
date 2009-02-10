@@ -65,6 +65,8 @@ namespace Zeni {
     virtual Color * load(XML_Element &xml_element);
   };
 
+  Colors & get_Colors(); ///< Get access to the singleton.
+
 }
 
 #endif
