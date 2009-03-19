@@ -715,6 +715,7 @@ namespace Zeni {
   }
 
   void Widget_Input_Repeater::render() const {
+    m_widget->render();
   }
 
   void Widgets::on_key(const SDL_keysym &keysym, const bool &down) {
