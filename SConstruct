@@ -96,6 +96,8 @@ if is_windows:
   if int(nowgl):
     defines += disable_wgl
 
+use_soar = int(ARGUMENTS.get('soar', 0))
+
 ### Decide pedantism
 
 warnings = ' -Wall -Wno-variadic-macros '
@@ -187,6 +189,12 @@ else:
   linkflags = arch + profiling
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
+  if use_soar:
+    cpppath += ['../SoarSuite/Core/ClientSML/include/']
+    cpppath += ['../SoarSuite/Core/ConnectionSML/include/']
+    cpppath += ['../SoarSuite/Core/shared/']
+    libpath += ['../SoarSuite/SoarLibrary/lib/']
+    libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
 libs += [library_name]
 if not is_windows:
@@ -236,6 +244,7 @@ if not is_windows:
   opts.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', 0)
 opts.Add('scu', 'Set to \'scu\' to use SCU for everything or set to \'zeni\' to use SCU on zenilib only', 0)
 if not is_windows:
+  opts.Add('soar', 'Set to 1 to use Soar', 0)
   opts.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', 0)
 if is_windows:
   opts.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', 0)
