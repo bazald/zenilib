@@ -193,6 +193,7 @@ else:
     cpppath += ['../SoarSuite/Core/ClientSML/include/']
     cpppath += ['../SoarSuite/Core/ConnectionSML/include/']
     cpppath += ['../SoarSuite/Core/shared/']
+    cpppath += ['../SoarSuite/Tools/TOHSML/']
     libpath += ['../SoarSuite/SoarLibrary/lib/']
     libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
