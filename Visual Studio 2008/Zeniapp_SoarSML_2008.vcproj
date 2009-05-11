@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
+				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -323,7 +323,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
+				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -517,7 +517,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
+				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -715,7 +715,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
+				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
