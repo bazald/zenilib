@@ -119,6 +119,7 @@ namespace Zeni {
 
     // Accessors
     inline static const Video_Base::VIDEO_MODE & get_video_mode(); ///< Get the current VIDEO_MODE
+    inline static const bool & is_enabled(); ///< Determine whether the use of rendering is desired
     inline static const int & get_screen_width(); ///< Get the width of the screen
     inline static const int & get_screen_height(); ///< Get the height of the screen
     inline static const bool & is_fullscreen(); ///< Determine whether the screen is windowed or full screen
@@ -221,6 +222,7 @@ namespace Zeni {
     static void preinit(const Video_Base::VIDEO_MODE &vm = Video_Base::ZENI_VIDEO_ANY, const int &w = 800, 
       const int &h = 600, const bool &full = false, const int &multisampling = 1, 
       const bool &show_frame_ = true); ///< Sets values for Video initialization
+    static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open
 
   protected:
     inline SDL_Surface * get_display_surface();
@@ -242,6 +244,7 @@ namespace Zeni {
     SDL_Surface *m_display_surface, *m_icon_surface;
 
     static Video_Base::VIDEO_MODE g_video_mode;
+    static bool g_enabled;
 
     static int g_screen_width;
     static int g_screen_height;

@@ -50,18 +50,18 @@ namespace Zeni {
   }
 
   void Game::run() {
-    Video &vr = get_Video();
     Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     
     for(;;) {
       for(SDL_Event event; SDL_PollEvent(&event);)
         on_event(event);
-      
+
       perform_logic();
 
       sspr.update();
-      
-      vr.render_all();
+
+      if(Video::is_enabled())
+        get_Video().render_all();
     }
   }
 

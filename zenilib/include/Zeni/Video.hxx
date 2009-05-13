@@ -47,6 +47,10 @@ namespace Zeni {
     return g_video_mode;
   }
 
+  const bool & Video::is_enabled() {
+    return g_enabled;
+  }
+
   const int & Video::get_screen_width() {
     return g_screen_width;
   }

@@ -59,6 +59,8 @@ namespace Zeni {
     m_alpha_function(Video::ZENI_ALWAYS),
     m_alpha_value(0.0f)
   {
+    if(!g_enabled)
+      throw Video_Init_Failure();
   }
 
   Video::~Video() {
@@ -95,6 +97,10 @@ namespace Zeni {
     g_screen_full = full;
     g_multisampling = multisampling;
     g_screen_show_frame = show_frame_;
+  }
+
+  void Video::set_enabled(const bool &enabled) {
+    g_enabled = enabled;
   }
 
   void Video::set_tt(const string &title, const string &taskmsg) {
@@ -173,6 +179,7 @@ namespace Zeni {
 
   Video *Video::e_video = 0;
   Video_Base::VIDEO_MODE Video::g_video_mode = Video_Base::ZENI_VIDEO_ANY;
+  bool Video::g_enabled = true;
   int Video::g_screen_width = 0;
   int Video::g_screen_height = 0;
   bool Video::g_screen_full = false;
