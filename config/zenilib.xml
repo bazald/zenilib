@@ -50,6 +50,7 @@
   <Video>
     <!--<API>DX9</API>-->
     <!--<API>OpenGL</API>-->
+    <!--<API>Disabled</API>-->
     <API>OpenGL</API>
     <Full_Screen>0</Full_Screen>
     <Multisampling>0</Multisampling>

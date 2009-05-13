@@ -95,7 +95,12 @@ static void load_config() {
         config.video.api = Video_Base::ZENI_VIDEO_DX9;
       else
 #endif
+      {
         config.video.api = Video_Base::ZENI_VIDEO_ANY;
+
+        if(api == "Disabled")
+          Video::set_enabled(false);
+      }
 
     config.video.full_screen = video["Full_Screen"].to_bool();
 
@@ -121,8 +126,9 @@ static void load_config() {
                  config.video.full_screen,
                  config.video.multisampling,
                  true);
-  if(get_Video().get_vertical_sync() != config.video.vertical_sync)
-    get_Video().set_vertical_sync(config.video.vertical_sync);
+  if(Video::is_enabled())
+    if(get_Video().get_vertical_sync() != config.video.vertical_sync)
+      get_Video().set_vertical_sync(config.video.vertical_sync);
 
   Textures::set_texturing_mode(config.textures.anisotropy,
                                config.textures.bilinear_filtering,
