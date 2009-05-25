@@ -121,10 +121,36 @@ namespace Zeni {
   }
 
   Texture * Textures::load(XML_Element &xml_element) {
-    const string filepath = xml_element["filepath"].to_string();
-    const bool tile = xml_element["tile"].to_bool();
+    bool is_sprite = false;
+    try {
+      is_sprite = xml_element["is_sprite"].to_bool();
+    }
+    catch(Bad_XML_Access &)
+    {
+      /// not a Sprite
+    }
 
-    return get_Video().load_Texture(filepath, tile, m_lazy_loading);
+    if(!is_sprite) {
+      const string filepath = xml_element["filepath"].to_string();
+      const bool tile = xml_element["tile"].to_bool();
+
+      return get_Video().load_Texture(filepath, tile, m_lazy_loading);
+    }
+    else {
+      Sprite * s = new Sprite();
+
+      try {
+        for(XML_Element texture = xml_element.first();; texture = texture.next())
+          if(texture.value() != "is_sprite")
+            s->append_frame(texture.to_string());
+      }
+      catch(Bad_XML_Access &)
+      {
+        /// Done collecting frames
+      }
+
+      return s;
+    }
   }
 
   bool Textures::keep(const Texture &type) {

@@ -1,15 +1,26 @@
 <?xml version="1.0" ?>
 <!-- Images to load into the Textures Database in Zenilib
+     Sprites to build in the Textures Database in Zenilib
 
-For each entry in Textures:
+For each Texture entry in Textures:
 
   1. 'token' should match the name you want to use in C++
-  2. 'filepath' should be the path from within 'zenilib/'
-  3. 'tile' should be 0 for best quality if tiling is unnecessary
+  2. 'is_sprite' should 0 or absent
+  3. 'filepath' should be the path from within 'zenilib/'
+  4. 'tile' should be 0 for best quality if tiling is unnecessary
      'tile' should be 1 to enable tiling
      
      If 'tile' is 1 and tiling is not desired, floating point
      error can make things look worse at the edges of tiles.
+
+For each Sprite entry in Textures:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'is_sprite' should be 1
+  3. 'frame's should be the tokens of existing Textures
+     
+     All 'frame's must have been defined earlier in the file.
+     'frame's defined later in the file will be ignored.
 
 The following formats are supported:
 
@@ -31,5 +42,14 @@ The following things are unsupported:
     <filepath>textures/image.png</filepath>
     <tile>0</tile>
   </token>
+  -->
+  <!--
+  <sprite_token>
+    <is_sprite>1</is_sprite>
+    <frame>one</frame>
+    <frame>two</frame>
+    <frame>three</frame>
+    <frame>four</frame>
+  </sprite_token>
   -->
 </Textures>
