@@ -139,15 +139,9 @@ namespace Zeni {
     else {
       Sprite * s = new Sprite();
 
-      try {
-        for(XML_Element texture = xml_element.first();; texture = texture.next())
-          if(texture.value() != "is_sprite")
-            s->append_frame(texture.to_string());
-      }
-      catch(Bad_XML_Access &)
-      {
-        /// Done collecting frames
-      }
+      for(XML_Element texture = xml_element.first(); texture.good(); texture = texture.next())
+        if(texture.value() != "is_sprite")
+          s->append_frame(texture.to_string());
 
       return s;
     }

@@ -152,17 +152,14 @@ namespace Zeni {
     XML_Reader types_xml(m_filename.c_str());
     XML_Element types = types_xml[m_xml_identifier];
     std::string name;
-    bool error = false;
 
     try {
-      for(XML_Element it = types.first();; it = it.next()) {
+      for(XML_Element it = types.first(); it.good(); it = it.next()) {
         const std::string name = it.value();
 
-        error = true;
         TYPE * const type = load(it);
         if(!type)
           throw Bad_XML_Access();
-        error = false;
 
         const unsigned long id = get_Resource().assign();
         m_lookup[name] = id;
@@ -171,10 +168,8 @@ namespace Zeni {
     }
     catch(Bad_XML_Access &)
     {
-      if(error) {
-        std::cerr << "Error loading '" << m_xml_identifier << "' entry '" << name << "'\n";
-        throw;
-      }
+      std::cerr << "Error loading '" << m_xml_identifier << "' entry '" << name << "'\n";
+      throw;
     }
 
     post_init();
