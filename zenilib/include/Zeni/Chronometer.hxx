@@ -82,15 +82,10 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::set(const typename TIME::Second_Type &time) {
-    const bool restart = m_running;
-
-    if(restart)
-      stop();
+    if(m_running)
+      m_start_time.update();
 
     m_seconds_counted = time;
-
-    if(restart)
-      start();
   }
 
   template <class TIME>
@@ -106,15 +101,13 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::scale(const typename TIME::Second_Type &scaling_factor) {
-    const bool restart = m_running;
-
-    if(restart)
-      stop();
+    if(m_running) {
+      m_end_time.update();
+      m_seconds_counted += m_end_time.get_seconds_since(m_start_time) * m_scaling_factor;
+      m_start_time = m_end_time;
+    }
 
     m_scaling_factor = scaling_factor;
-
-    if(restart)
-      start();
   }
 
 }
