@@ -66,6 +66,7 @@ namespace Zeni {
 
   class XML_Element {
   public:
+    inline XML_Element();
     inline XML_Element(const TiXmlHandle &handle);
 
     /// Get a named subelement
@@ -83,6 +84,8 @@ namespace Zeni {
     inline float to_float() const; ///< Get the contained string as a floating point number
     inline double to_double() const; ///< Get the contained string as a double precision floating point number
     inline std::string to_string() const; ///< Get the contained string
+
+    inline bool good() const; ///< Test to see if the Element is valid
 
   private:
     TiXmlHandle m_handle;
