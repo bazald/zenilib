@@ -167,4 +167,11 @@ namespace Zeni {
         sprite->set_current_frame(framecap - 1);
   }
 
+  
+  void play_sound(
+    const std::string &sound_name) {
+
+      get_Sound_Source_Pool().play_and_destroy(new Sound_Source(get_Sounds()[sound_name]));
+  }
+
 }

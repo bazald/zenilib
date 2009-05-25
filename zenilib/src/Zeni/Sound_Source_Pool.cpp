@@ -137,6 +137,14 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::purge() {
+    for(vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
+        it != m_playing_and_destroying.end();
+        ++it)
+    {
+      delete *it;
+    }
+    m_playing_and_destroying.clear();
+
     for(vector<Sound_Source *>::iterator it = m_handles.begin();
         it != m_handles.end();
         ++it)
@@ -150,6 +158,23 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::update() {
+    /*** Handle the playing and destroying ***/
+
+    vector<Sound_Source *> keepers;
+    keepers.reserve(m_playing_and_destroying.size());
+    for(vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
+        it != m_playing_and_destroying.end();
+        ++it)
+    {
+      if((*it)->is_playing())
+        keepers.push_back(*it);
+      else
+        delete *it;
+    }
+    m_playing_and_destroying.swap(keepers);
+
+    /*** Do the regular update ***/
+
     vector<Sound_Source_HW *> unassigned_hw;
     const size_t needed_hw = m_handles.size();
     size_t given_hw = 0;
@@ -209,63 +234,10 @@ namespace Zeni {
     }
   }
 
-  //Sound_Source_HW * Sound_Source_Pool::take_Sound_Source() {
-  //  Sound_Source_HW *ss_ptr = 0;
-
-  //  { // Reuse and Recycle
-  //    list<Sound_Source_HW *> keepers;
-
-  //    for(list<Sound_Source_HW *>::iterator it = m_sound_sources.begin();
-  //        it != m_sound_sources.end();
-  //        ++it)
-  //    {
-  //      if((*it)->is_playing())
-  //        keepers.push_back(*it);
-  //      else if(ss_ptr)
-  //        delete *it;
-  //      else
-  //        ss_ptr = *it;
-  //    }
-
-  //    m_sound_sources.swap(keepers);
-  //  }
-
-  //  try {
-  //    if(ss_ptr)
-  //      return ss_ptr;
-  //    else
-  //      return new Sound_Source_HW();
-  //  }
-  //  catch(Sound_Source_HW_Init_Failure &) {
-  //    if(m_sound_sources.empty())
-  //      throw;
-
-  //    // Replace
-
-  //    switch(m_replacement_policy) {
-  //      case BESP_NONE:
-  //        throw;
-
-  //      case BESP_OLDEST:
-  //        ss_ptr = m_sound_sources.front();
-  //        m_sound_sources.pop_front();
-  //        break;
-
-  //      default:
-  //        throw;
-  //    }
-
-  //    ss_ptr->stop();
-  //    return ss_ptr;
-  //  }
-  //}
-
-  //void Sound_Source_Pool::give_Sound_Source(Sound_Source_HW * const &sound_source) {
-  //  if(sound_source) {
-  //    sound_source->play();
-  //    m_sound_sources.push_back(sound_source);
-  //  }
-  //}
+  void Sound_Source_Pool::play_and_destroy(Sound_Source * const &sound_source) {
+    m_playing_and_destroying.push_back(sound_source);
+    sound_source->play();
+  }
 
   void Sound_Source_Pool::set_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
     assert(replacement_policy);
