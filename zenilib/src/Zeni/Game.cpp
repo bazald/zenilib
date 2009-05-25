@@ -53,8 +53,15 @@ namespace Zeni {
     Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     
     for(;;) {
-      for(SDL_Event event; SDL_PollEvent(&event);)
+      for(SDL_Event event; SDL_PollEvent(&event);) {
+        if(event.type == SDL_KEYDOWN) {
+          const SDL_keysym &s = event.key.keysym;
+          if(s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
+            throw Quit_Event();
+        }
+
         on_event(event);
+      }
 
       perform_logic();
 

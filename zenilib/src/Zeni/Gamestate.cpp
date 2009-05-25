@@ -49,12 +49,7 @@ namespace Zeni {
     case SDL_ACTIVEEVENT:
       on_active(event.active);
       break;
-    case SDL_KEYDOWN:  
-      {
-        const SDL_keysym &s = event.key.keysym;
-        if(s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
-          throw Quit_Event();
-      }
+    case SDL_KEYDOWN:
     case SDL_KEYUP:
       on_key(event.key);
       break;
@@ -102,7 +97,12 @@ namespace Zeni {
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
     if(event.keysym.sym == SDLK_ESCAPE &&
        event.state == SDL_PRESSED)
-        get_Game().pop_state();
+    {
+      Game &game = get_Game();
+
+      if(game.size() > 1u)
+        game.pop_state();
+    }
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {

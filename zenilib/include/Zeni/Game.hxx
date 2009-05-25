@@ -44,6 +44,10 @@ namespace Zeni {
     return m_states.top().get();
   }
 
+  size_t Game::size() const {
+    return m_states.size();
+  }
+
   void Game::push_state(const Gamestate &state) {
     m_states.push(state);
   }

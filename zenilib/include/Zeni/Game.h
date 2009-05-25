@@ -71,6 +71,7 @@ namespace Zeni {
   public:
     inline Gamestate_Base & get_current_state(); ///< Get a reference to the current Gamestate.
 
+    inline size_t size() const; ///< Get the current size of the Gamestate stack.
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
     inline Gamestate pop_state(); ///< Pop a Gamestate off the stack. Pop the current Gamestate with caution. All members will instantly become invalid.
 
