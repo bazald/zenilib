@@ -56,14 +56,20 @@ namespace Zeni {
   public:
     Chronometer();
 
-    // Controls
+    // Starting and Stopping
+    const bool & running(); ///< Get whether the Chronometer is currently counting or stopped.
     const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
     const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
+
+
+    // Time Accessor and Modifiers
+    typename TIME::Second_Type seconds(); ///< Get the number of seconds counted by the Chronometer.
+    void set(const typename TIME::Second_Type &time); ///< Set the number of seconds counted by the Chronometer.
     void reset(); ///< Reset the Chronometer.  This does NOT stop the Chronometer.
 
-    // Accessors
-    typename TIME::Second_Type seconds(); ///< Get the number of seconds counted by the Chronometer.
-    const bool & running(); ///< Get whether the Chronometer is currently counting or stopped.
+    // Scaling
+    const typename TIME::Second_Type & scaling_factor() const; ///< Get the scaling factor.
+    void scale(const typename TIME::Second_Type &scaling_factor = typename TIME::Second_Type(1)); ///< Scale the amount of time that passes by some amount.
 
   private:
     typename TIME::Second_Type m_seconds_counted;
@@ -71,6 +77,8 @@ namespace Zeni {
     TIME m_start_time;
     TIME m_end_time;
     bool m_running;
+
+    typename TIME::Second_Type m_scaling_factor;
   };
 
 }
