@@ -108,17 +108,17 @@ namespace Zeni {
 
     Sound_Source_HW();
     Sound_Source_HW(const Sound_Buffer &buffer,
-                 const float &pitch = ZENI_DEFAULT_PITCH,
-                 const float &gain = ZENI_DEFAULT_GAIN,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
+                    const float &pitch = ZENI_DEFAULT_PITCH,
+                    const float &gain = ZENI_DEFAULT_GAIN,
+                    const Point3f &position = Point3f(),
+                    const Vector3f &velocity = Vector3f(),
+                    const bool &looping = false);
     Sound_Source_HW(const ALuint &buffer,
-                 const float &pitch = ZENI_DEFAULT_PITCH,
-                 const float &gain = ZENI_DEFAULT_GAIN,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
+                    const float &pitch = ZENI_DEFAULT_PITCH,
+                    const float &gain = ZENI_DEFAULT_GAIN,
+                    const Point3f &position = Point3f(),
+                    const Vector3f &velocity = Vector3f(),
+                    const bool &looping = false);
     ~Sound_Source_HW();
 
   public:

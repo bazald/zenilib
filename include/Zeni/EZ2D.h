@@ -99,6 +99,12 @@ namespace Zeni {
   void decrement_sprite_frame(
     const std::string &image_name);
 
+  /**
+   * Play a sound effect.
+   */
+  void play_sound(
+    const std::string &sound_name);
+
 }
 
 #endif

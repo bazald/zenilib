@@ -48,8 +48,6 @@
 
 #include <Zeni/Sound_Source.h>
 
-#include <list>
-
 namespace Zeni {
 
   class Sound_Source_Pool {
@@ -90,9 +88,11 @@ namespace Zeni {
 
     void pause_all(); ///< Pause all Sound_Sources.
     void unpause_all(); ///< Unpause all paused Sound_Sources.
-    void purge(); ///< Purge all Sound_Source_HW
+    void purge(); ///< Purge all Sound_Source_HW and all playing_and_destroying (created by play_sound(...))
 
     void update(); ///< Redistribute hardware Sound_Sources according to the Replacement_Policy.  Newer Sound_Sources are implicitly prioritized over older Sound_Sources.  (Called automatically)
+
+    void play_and_destroy(Sound_Source * const &sound_source); ///< Play a Sound_Source and destroy it; Used by play_sound(...)
 
   private:
     void set_Replacement_Policy(Replacement_Policy * const &replacement_policy); ///< Set the Replacement_Policy directly
@@ -103,6 +103,8 @@ namespace Zeni {
 
     Replacement_Policy * m_replacement_policy;
     bool delete_m_replacement_policy;
+
+    std::vector<Sound_Source *> m_playing_and_destroying;
   };
 
   Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.
