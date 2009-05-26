@@ -43,9 +43,9 @@ namespace Zeni {
       task.status = task.run();
       task.m_done = true;
     }
-    catch(Quit_Event &nonerror) {
+    catch(Quit_Event &) {
       task.status = NO_ERROR_STATUS;
-      task.msg = nonerror.msg;
+      task.msg = "Task completed normally.";
       task.m_done = true;
     }
     catch(Error &error) {
@@ -78,9 +78,9 @@ namespace Zeni {
       try {
         task.status = task.run();
       }
-      catch(Quit_Event &nonerror) {
+      catch(Quit_Event &) {
         task.status = NO_ERROR_STATUS;
-        task.msg = nonerror.msg;
+        task.msg = "Repeatable Task completed normally.";
         task.m_done = task.m_terminated = true;
         return task.status;
       }
