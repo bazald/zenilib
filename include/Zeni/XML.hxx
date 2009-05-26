@@ -33,38 +33,37 @@
 
 namespace Zeni {
 
-  XML_Element::XML_Element()
-    : m_handle(0)
-  {
-  }
-
   XML_Element::XML_Element(const TiXmlHandle &handle_)
     : m_handle(handle_)
   {
-    if(!m_handle.ToNode())
-      throw Bad_XML_Access();
   }
 
   XML_Element XML_Element::operator[](const std::string &field) const {
-    return XML_Element(m_handle.FirstChildElement(field.c_str()));
+    if(!m_handle.ToNode())
+      throw Bad_XML_Access();
+
+    TiXmlNode * node = child(field);
+    return XML_Element(node ? node->ToElement() : 0);
   }
 
   XML_Element XML_Element::first() const {
+    if(!m_handle.ToNode())
+      throw Bad_XML_Access();
+
     return XML_Element(m_handle.FirstChildElement());
   }
 
   XML_Element XML_Element::next() const {
-    TiXmlNode * node = m_handle.ToNode();
-    TiXmlElement * const element(node ? node->NextSiblingElement() : 0);
+    if(!m_handle.ToNode())
+      throw Bad_XML_Access();
 
-    if(element)
-      return XML_Element(element);
-    else
-      return XML_Element();
+    TiXmlNode * node = m_handle.ToNode();
+    return XML_Element(node ? node->NextSiblingElement() : 0);
   }
 
   std::string XML_Element::value() const {
-    assert(m_handle.ToElement());
+    if(!good())
+      throw Bad_XML_Access();
 
     TiXmlElement * element = m_handle.ToElement();
     if(!element)
@@ -90,7 +89,8 @@ namespace Zeni {
   }
 
   std::string XML_Element::to_string() const {
-    assert(m_handle.ToElement());
+    if(!good())
+      throw Bad_XML_Access();
 
     TiXmlElement *element = m_handle.ToElement();
     if(!element)
@@ -105,6 +105,11 @@ namespace Zeni {
 
   bool XML_Element::good() const {
     return m_handle.ToElement() != 0;
+  }
+
+  TiXmlNode * XML_Element::child(const std::string &field) const {
+    TiXmlNode * node = m_handle.ToNode();
+    return node ? node->FirstChild(field.c_str()) : 0;
   }
 
   XML_Reader::XML_Reader(const std::string &filename)
