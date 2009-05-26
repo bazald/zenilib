@@ -66,7 +66,6 @@ namespace Zeni {
 
   class XML_Element {
   public:
-    inline XML_Element();
     inline XML_Element(const TiXmlHandle &handle);
 
     /// Get a named subelement
@@ -88,6 +87,8 @@ namespace Zeni {
     inline bool good() const; ///< Test to see if the Element is valid
 
   private:
+    inline TiXmlNode * child(const std::string &field) const;
+
     TiXmlHandle m_handle;
   };
 

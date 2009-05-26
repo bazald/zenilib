@@ -121,14 +121,8 @@ namespace Zeni {
   }
 
   Texture * Textures::load(XML_Element &xml_element) {
-    bool is_sprite = false;
-    try {
-      is_sprite = xml_element["is_sprite"].to_bool();
-    }
-    catch(Bad_XML_Access &)
-    {
-      /// not a Sprite
-    }
+    const XML_Element is_sprite_e = xml_element["is_sprite"];
+    const bool is_sprite = is_sprite_e.good() && is_sprite_e.to_bool();
 
     if(!is_sprite) {
       const string filepath = xml_element["filepath"].to_string();
