@@ -31,6 +31,8 @@
 #include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.hxx>
+#include <Zeni/Sounds.h>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Vertex2f.hxx>

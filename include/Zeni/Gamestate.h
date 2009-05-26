@@ -215,8 +215,8 @@ namespace Zeni {
     std::map<int, Zeni_Input_ID> m_rii;
   };
 
-  struct Quit_Event : public Error {
-    Quit_Event() : Error("Quit Event Detected") {fired = true;}
+  struct Quit_Event {
+    Quit_Event() {fired = true;}
 
     static void fire() {throw Quit_Event();}
     static bool has_fired() {return fired;}

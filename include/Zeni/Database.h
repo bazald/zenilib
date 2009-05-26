@@ -107,6 +107,10 @@ namespace Zeni {
     Database_Entry_Not_Found(const std::string &identifier) : Error("Zeni Database Entry '" + identifier + "' Not Found") {}
   };
 
+  struct Database_Load_Entry_Failed : public Error {
+    Database_Load_Entry_Failed(const std::string &identifier) : Error("Zeni Database Entry '" + identifier + "' Could Not Be Loaded") {}
+  };
+
   struct Null_Database_Entry_Set : public Error {
     Null_Database_Entry_Set() : Error("Null Entry Added to Zeni Database") {}
   };

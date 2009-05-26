@@ -45,7 +45,7 @@ using namespace std;
 using namespace Zeni;
 
 static void load_config() {
-  XML_Reader config_xml("config/zenilib.xml");
+  XML_Document config_xml("config/zenilib.xml");
   XML_Element zenilib = config_xml["Zenilib"];
 
   struct {
@@ -198,8 +198,8 @@ inline int main2(const int &argc, const char * const argv[]) {
     // Run Game
     get_Game(&args).run();
   }
-  catch(Quit_Event &nonerror) {
-    cerr << nonerror.msg << endl;
+  catch(Quit_Event &) {
+    cerr << "Exiting normally." << endl;
   }
 #ifdef _WINDOWS
 #pragma warning( push )
