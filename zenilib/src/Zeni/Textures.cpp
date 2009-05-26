@@ -120,8 +120,8 @@ namespace Zeni {
     m_loaded = false;
   }
 
-  Texture * Textures::load(XML_Element &xml_element) {
-    const XML_Element is_sprite_e = xml_element["is_sprite"];
+  Texture * Textures::load(XML_Element_c &xml_element) {
+    const XML_Element_c is_sprite_e = xml_element["is_sprite"];
     const bool is_sprite = is_sprite_e.good() && is_sprite_e.to_bool();
 
     if(!is_sprite) {
@@ -133,7 +133,7 @@ namespace Zeni {
     else {
       Sprite * s = new Sprite();
 
-      for(XML_Element texture = xml_element.first(); texture.good(); texture = texture.next())
+      for(XML_Element_c texture = xml_element.first(); texture.good(); texture = texture.next())
         if(texture.value() != "is_sprite")
           s->append_frame(texture.to_string());
 

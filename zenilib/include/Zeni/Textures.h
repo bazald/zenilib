@@ -94,7 +94,7 @@ namespace Zeni {
     virtual void post_uninit();
     virtual void post_lose();
 
-    virtual Texture * load(XML_Element &xml_element);
+    virtual Texture * load(XML_Element_c &xml_element);
     virtual bool keep(const Texture &type);
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
