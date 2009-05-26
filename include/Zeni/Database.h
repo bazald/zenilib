@@ -92,7 +92,7 @@ namespace Zeni {
     virtual void pre_lose() {}
     virtual void post_lose() {}
 
-    virtual TYPE * load(XML_Element &xml_element) = 0;
+    virtual TYPE * load(XML_Element_c &xml_element) = 0;
     virtual bool keep(const TYPE &type); ///< Default behavior is to keep none. lose_resources then behaves identically to uninit.
 
     std::string m_filename;

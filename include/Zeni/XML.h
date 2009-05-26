@@ -64,16 +64,16 @@
 
 namespace Zeni {
 
-  class XML_Element {
+  class XML_Element_c {
   public:
-    inline XML_Element(const TiXmlHandle &handle);
+    inline XML_Element_c(const TiXmlHandle &handle);
 
     /** Tree Traversal **/
 
-    inline XML_Element operator[](const std::string &field) const; ///< Get a named subelement
+    inline XML_Element_c operator[](const std::string &field) const; ///< Get a named subelement
 
-    inline XML_Element first() const; ///< Get the first subelement
-    inline XML_Element next() const; ///< Get the next subelement
+    inline XML_Element_c first() const; ///< Get the first subelement
+    inline XML_Element_c next() const; ///< Get the next subelement
 
     /** Basic Element Functionality **/
 
@@ -88,6 +88,24 @@ namespace Zeni {
     inline double to_double() const; ///< Get the contained string as a double precision floating point number
     inline std::string to_string() const; ///< Get the contained string
 
+  protected:
+    inline TiXmlNode * child(const std::string &field) const;
+    inline TiXmlNode * first_child() const;
+
+    TiXmlHandle m_handle;
+  };
+
+  class XML_Element : public XML_Element_c {
+  public:
+    inline XML_Element(const TiXmlHandle &handle);
+
+    /** Tree Traversal **/
+
+    inline XML_Element operator[](const std::string &field); ///< Get a named subelement
+
+    inline XML_Element first(); ///< Get the first subelement
+    inline XML_Element next(); ///< Get the next subelement
+
     /** Tree Modifiers **/
 
     inline void create_child(const std::string &field); ///< Create a child node
@@ -100,12 +118,6 @@ namespace Zeni {
     inline void set_float(const float &f); ///< Set the contained string as a floating point number
     inline void set_double(const double &d); ///< Set the contained string as a double precision floating point number
     inline void set_string(const std::string &s); ///< Set the contained string
-
-  private:
-    inline TiXmlNode * child(const std::string &field) const;
-    inline TiXmlNode * first_child() const;
-
-    TiXmlHandle m_handle;
   };
 
   class XML_Document {
@@ -126,9 +138,11 @@ namespace Zeni {
 
     /** Tree Traversal **/
 
-    inline XML_Element operator[](const std::string &field) const; ///< Get a named subelement
+    inline XML_Element_c operator[](const std::string &field) const; ///< Get a named subelement
+    inline XML_Element operator[](const std::string &field); ///< Get a named subelement
 
-    inline XML_Element first() const; ///< Get the first subelement
+    inline XML_Element_c first() const; ///< Get the first subelement
+    inline XML_Element first(); ///< Get the first subelement
 
     /** Manipulation Functions **/
 

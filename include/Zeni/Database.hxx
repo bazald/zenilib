@@ -150,11 +150,11 @@ namespace Zeni {
     m_database.clear();
 
     XML_Document types_xml(m_filename.c_str());
-    XML_Element types = types_xml[m_xml_identifier];
+    XML_Element_c types = types_xml[m_xml_identifier];
     std::string name;
 
     try {
-      for(XML_Element it = types.first(); it.good(); it = it.next()) {
+      for(XML_Element_c it = types.first(); it.good(); it = it.next()) {
         const std::string name = it.value();
 
         TYPE * const type = load(it);

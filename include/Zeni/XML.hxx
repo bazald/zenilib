@@ -36,14 +36,115 @@
 
 namespace Zeni {
 
-  XML_Element::XML_Element(const TiXmlHandle &handle_)
+  XML_Element_c::XML_Element_c(const TiXmlHandle &handle_)
     : m_handle(handle_)
   {
   }
 
-  XML_Element XML_Element::operator[](const std::string &field) const {
+  XML_Element_c XML_Element_c::operator[](const std::string &field) const {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element attempted to access field '" << field << "'\n";
+      std::cerr << "Bad XML_Element_c attempted to access field '" << field << "'\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlNode * node = child(field);
+    return XML_Element_c(node ? node->ToElement() : 0);
+  }
+
+  XML_Element_c XML_Element_c::first() const {
+    if(!m_handle.ToNode()) {
+      std::cerr << "Bad XML_Element_c attempted to access first field\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlNode * node = first_child();
+    return XML_Element_c(node ? node->ToElement() : 0);
+  }
+
+  XML_Element_c XML_Element_c::next() const {
+    if(!m_handle.ToNode()) {
+      std::cerr << "Bad XML_Element_c attempted to access next field\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlNode * node = m_handle.ToNode();
+    return XML_Element_c(node ? node->NextSiblingElement() : 0);
+  }
+
+  bool XML_Element_c::good() const {
+    return m_handle.ToElement() != 0;
+  }
+
+  std::string XML_Element_c::value() const {
+    if(!good()) {
+      std::cerr << "Bad XML_Element_c attempted to access value\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlElement * element = m_handle.ToElement();
+    if(!element) {
+      std::cerr << "XML_Element_c invalid\n";
+      throw XML_Element_Ungood();
+    }
+
+    return element->Value();
+  }
+
+  bool XML_Element_c::to_bool() const {
+    return to_int() != 0;
+  }
+
+  int XML_Element_c::to_int() const {
+    return atoi(to_string().c_str());
+  }
+
+  float XML_Element_c::to_float() const {
+    return float(atof(to_string().c_str()));
+  }
+
+  double XML_Element_c::to_double() const {
+    return atof(to_string().c_str());
+  }
+
+  std::string XML_Element_c::to_string() const {
+    if(!good()) {
+      std::cerr << "Bad XML_Element_c attempted to_string()\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlElement *element = m_handle.ToElement();
+    if(!element) {
+      std::cerr << "XML_Element_c invalid\n";
+      throw XML_Element_Ungood();
+    }
+
+    const char * text = element->GetText();
+    if(!text) {
+      std::cerr << "XML_Element_c attempted to_string() on non-leaf node\n";
+      throw XML_Element_Nonleaf();
+    }
+
+    return text;
+  }
+
+  TiXmlNode * XML_Element_c::child(const std::string &field) const {
+    TiXmlNode * node = m_handle.ToNode();
+    return node ? node->FirstChild(field.c_str()) : 0;
+  }
+
+  TiXmlNode * XML_Element_c::first_child() const {
+    TiXmlNode * node = m_handle.ToNode();
+    return node ? node->FirstChild() : 0;
+  }
+
+  XML_Element::XML_Element(const TiXmlHandle &handle_)
+    : XML_Element_c(handle_)
+  {
+  }
+
+  XML_Element XML_Element::operator[](const std::string &field) {
+    if(!m_handle.ToNode()) {
+      std::cerr << "Bad XML_Element_c attempted to access field '" << field << "'\n";
       throw XML_Element_Ungood();
     }
 
@@ -51,9 +152,9 @@ namespace Zeni {
     return XML_Element(node ? node->ToElement() : 0);
   }
 
-  XML_Element XML_Element::first() const {
+  XML_Element XML_Element::first() {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element attempted to access first field\n";
+      std::cerr << "Bad XML_Element_c attempted to access first field\n";
       throw XML_Element_Ungood();
     }
 
@@ -61,9 +162,9 @@ namespace Zeni {
     return XML_Element(node ? node->ToElement() : 0);
   }
 
-  XML_Element XML_Element::next() const {
+  XML_Element XML_Element::next() {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element attempted to access next field\n";
+      std::cerr << "Bad XML_Element_c attempted to access next field\n";
       throw XML_Element_Ungood();
     }
 
@@ -71,83 +172,27 @@ namespace Zeni {
     return XML_Element(node ? node->NextSiblingElement() : 0);
   }
 
-  bool XML_Element::good() const {
-    return m_handle.ToElement() != 0;
-  }
-
-  std::string XML_Element::value() const {
-    if(!good()) {
-      std::cerr << "Bad XML_Element attempted to access value\n";
-      throw XML_Element_Ungood();
-    }
-
-    TiXmlElement * element = m_handle.ToElement();
-    if(!element) {
-      std::cerr << "XML_Element invalid\n";
-      throw XML_Element_Ungood();
-    }
-
-    return element->Value();
-  }
-
-  bool XML_Element::to_bool() const {
-    return to_int() != 0;
-  }
-
-  int XML_Element::to_int() const {
-    return atoi(to_string().c_str());
-  }
-
-  float XML_Element::to_float() const {
-    return float(atof(to_string().c_str()));
-  }
-
-  double XML_Element::to_double() const {
-    return atof(to_string().c_str());
-  }
-
-  std::string XML_Element::to_string() const {
-    if(!good()) {
-      std::cerr << "Bad XML_Element attempted to_string()\n";
-      throw XML_Element_Ungood();
-    }
-
-    TiXmlElement *element = m_handle.ToElement();
-    if(!element) {
-      std::cerr << "XML_Element invalid\n";
-      throw XML_Element_Ungood();
-    }
-
-    const char * text = element->GetText();
-    if(!text) {
-      std::cerr << "XML_Element attempted to_string() on non-leaf node\n";
-      throw XML_Element_Nonleaf();
-    }
-
-    return text;
-  }
-
   void XML_Element::create_child(const std::string &field) {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element attempted to create_child(...)\n";
+      std::cerr << "Bad XML_Element_c attempted to create_child(...)\n";
       throw XML_Element_Ungood();
     }
 
     TiXmlElement * element = new TiXmlElement(field.c_str());
     if(!m_handle.ToNode()->LinkEndChild(element)) {
-      std::cerr << "XML_Element failed to create a child\n";
+      std::cerr << "XML_Element_c failed to create a child\n";
       throw XML_Create_Child_Failure();
     }
   }
 
   void XML_Element::remove_child(const XML_Element &child) {
     if(!good() || !child.good()) {
-      std::cerr << "Bad XML_Element attempted to remove_child(...)\n";
+      std::cerr << "Bad XML_Element_c attempted to remove_child(...)\n";
       throw XML_Element_Ungood();
     }
 
     if(!m_handle.ToNode()->RemoveChild(child.m_handle.ToNode())) {
-      std::cerr << "XML_Element failed to remove a child\n";
+      std::cerr << "XML_Element_c failed to remove a child\n";
       throw XML_Remove_Child_Failure();
     }
   }
@@ -170,7 +215,7 @@ namespace Zeni {
 
   void XML_Element::set_string(const std::string &s) {
     if(!good()) {
-      std::cerr << "Bad XML_Element attempted set_string(...)\n";
+      std::cerr << "Bad XML_Element_c attempted set_string(...)\n";
       throw XML_Element_Ungood();
     }
 
@@ -183,19 +228,9 @@ namespace Zeni {
       m_handle.ToNode()->ReplaceChild(node, replacement);
     }
     else {
-      std::cerr << "XML_Element attempted set_string(...) on non-leaf node\n";
+      std::cerr << "XML_Element_c attempted set_string(...) on non-leaf node\n";
       throw XML_Element_Nonleaf();
     }
-  }
-
-  TiXmlNode * XML_Element::child(const std::string &field) const {
-    TiXmlNode * node = m_handle.ToNode();
-    return node ? node->FirstChild(field.c_str()) : 0;
-  }
-
-  TiXmlNode * XML_Element::first_child() const {
-    TiXmlNode * node = m_handle.ToNode();
-    return node ? node->FirstChild() : 0;
   }
 
   XML_Document::XML_Document()
@@ -257,7 +292,7 @@ namespace Zeni {
     }
   }
 
-  XML_Element XML_Document::operator[](const std::string &field) const {
+  XML_Element_c XML_Document::operator[](const std::string &field) const {
     if(!good()) {
       std::cerr << "Bad XML_Document attempted to access field '" << field << "'\n";
       throw XML_Document_Ungood();
@@ -266,7 +301,25 @@ namespace Zeni {
     return (*m_root)[field];
   }
 
-  XML_Element XML_Document::first() const {
+  XML_Element XML_Document::operator[](const std::string &field) {
+    if(!good()) {
+      std::cerr << "Bad XML_Document attempted to access field '" << field << "'\n";
+      throw XML_Document_Ungood();
+    }
+
+    return (*m_root)[field];
+  }
+
+  XML_Element_c XML_Document::first() const {
+    if(!good()) {
+      std::cerr << "Bad XML_Document attempted to access first field\n";
+      throw XML_Document_Ungood();
+    }
+
+    return m_root->first();
+  }
+
+  XML_Element XML_Document::first() {
     if(!good()) {
       std::cerr << "Bad XML_Document attempted to access first field\n";
       throw XML_Document_Ungood();

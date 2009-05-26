@@ -62,7 +62,7 @@ namespace Zeni {
     Sounds(const Sounds &);
     Sounds & operator=(const Sounds &);
 
-    virtual Sound_Buffer * load(XML_Element &xml_element);
+    virtual Sound_Buffer * load(XML_Element_c &xml_element);
   };
 
   Sounds & get_Sounds(); ///< Get access to the singleton.

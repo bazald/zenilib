@@ -46,7 +46,7 @@ using namespace Zeni;
 
 static void load_config() {
   XML_Document config_xml("config/zenilib.xml");
-  XML_Element zenilib = config_xml["Zenilib"];
+  XML_Element_c zenilib = config_xml["Zenilib"];
 
   struct {
     struct {
@@ -70,7 +70,7 @@ static void load_config() {
   } config;
 
   {
-    XML_Element textures = zenilib["Textures"];
+    XML_Element_c textures = zenilib["Textures"];
 
     config.textures.anisotropy = textures["Anisotropy"].to_int();
     if(config.textures.anisotropy < 0)
@@ -82,7 +82,7 @@ static void load_config() {
   }
 
   {
-    XML_Element video = zenilib["Video"];
+    XML_Element_c video = zenilib["Video"];
 
     const string api = video["API"].to_string();
 #ifndef DISABLE_GL
@@ -109,7 +109,7 @@ static void load_config() {
       config.video.multisampling = 16;
 
     {
-      XML_Element screen_resolution = video["Resolution"];
+      XML_Element_c screen_resolution = video["Resolution"];
 
       config.video.resolution.width = screen_resolution["Width"].to_int();
 
