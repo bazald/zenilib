@@ -244,6 +244,38 @@ namespace Zeni {
     m_text(font_name_, text_, text_color_)
   {
   }
+
+  const std::string & Text_Button::get_font_name() const {
+    return m_text.get_font_name();
+  }
+
+  const std::string & Text_Button::get_text() const {
+    return m_text.get_text();
+  }
+
+  const Color & Text_Button::get_text_color() const {
+    return m_text.get_color();
+  }
+
+  const Color & Text_Button::get_bg_color() const {
+    return m_bg.get_color();
+  }
+
+  void Text_Button::set_font_name(const std::string &font_name_) {
+    m_text.set_font_name(font_name_);
+  }
+
+  void Text_Button::set_text(const std::string &text_) {
+    m_text.set_text(text_);
+  }
+
+  void Text_Button::set_text_color(const Color &color_) {
+    m_text.set_color(color_);
+  }
+
+  void Text_Button::set_bg_color(const Color &color_) {
+    m_bg.set_color(color_);
+  }
   
   Check_Box::Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                        const Color &border_color_, const Color &check_color_,
@@ -320,6 +352,18 @@ namespace Zeni {
 
   const float & Slider::get_slider_position() const {
     return m_slider_position;
+  }
+
+  void Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
+    m_line_segment = Zeni_Collision::Line_Segment(Point3f(end_point_a_), Point3f(end_point_b_));
+    m_line_segment_r.a.position = Point3f(end_point_a_);
+    m_line_segment_r.b.position = Point3f(end_point_b_);
+    regenerate_slider_r();
+  }
+
+  void Slider::set_slider_radius(const float &radius_) {
+    m_slider_radius = radius_;
+    regenerate_slider_r();
   }
 
   void Slider::set_line_color(const Color &line_color_) {

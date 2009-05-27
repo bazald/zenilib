@@ -322,7 +322,7 @@ namespace Zeni {
   class Widget_Rectangle : public Widget_Positioned {
   public:
     inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
-    
+ 
     virtual const Point2f & get_upper_left() const;
     virtual const Point2f & get_lower_right() const;
 
@@ -338,7 +338,7 @@ namespace Zeni {
     inline Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
                                   const Color &color_);
     inline ~Widget_Rectangle_Color();
-    
+
     inline Widget_Rectangle_Color(const Widget_Rectangle_Color &rhs);
     inline Widget_Rectangle_Color & operator=(const Widget_Rectangle_Color &rhs);
 
@@ -418,6 +418,16 @@ namespace Zeni {
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
                        const Color &bg_color_,
                        const std::string &font_name_, const std::string &text_, const Color &text_color_);
+
+    inline const std::string & get_font_name() const;
+    inline const std::string & get_text() const;
+    inline const Color & get_text_color() const;
+    inline const Color & get_bg_color() const;
+
+    inline void set_font_name(const std::string &font_name_);
+    inline void set_text(const std::string &text_);
+    inline void set_text_color(const Color &color_);
+    inline void set_bg_color(const Color &color_);
 
     virtual void render() const;
 
@@ -502,6 +512,8 @@ namespace Zeni {
     inline const Color & get_slider_color() const;
     inline const float & get_slider_position() const;
 
+    inline void set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_);
+    inline void set_slider_radius(const float &radius_);
     inline void set_line_color(const Color &line_color_);
     inline void set_slider_color(const Color &slider_color_);
     inline void set_slider_position(const float &slider_position_);
@@ -509,6 +521,7 @@ namespace Zeni {
     virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Zeni::Point2i &pos);
 
+    virtual void on_slide();
     virtual void on_accept();
 
     virtual void render() const;
@@ -525,6 +538,7 @@ namespace Zeni {
     Zeni::Line_Segment<Vertex2f_Color> m_slider_r;
 
     float m_slider_position;
+    float m_backup_position;
     bool m_down;
   };
 
@@ -545,7 +559,7 @@ namespace Zeni {
     inline int get_value() const;
     inline void set_value(const int &value);
 
-    virtual void on_accept();
+    virtual void on_slide();
 
   private:
     Range m_range;
@@ -564,6 +578,10 @@ namespace Zeni {
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_accept();
+
+    virtual void on_focus();
+    virtual void on_unfocus();
+    virtual void on_change();
 
     inline const Color & get_bg_color() const;
     inline const std::string & get_font_name() const;

@@ -102,7 +102,7 @@ namespace Zeni {
 
   void Video_DX9::set_ztest_impl(const bool &enabled) {
     if(enabled) {
-      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
+      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
     }
     else
