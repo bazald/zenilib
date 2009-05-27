@@ -230,8 +230,8 @@ namespace Zeni {
       else
         m_down = false;
     }
-    else
-      m_down = false;
+    else if(m_down)
+      on_accept();
   }
 
   void Slider::on_mouse_motion(const Zeni::Point2i &pos) {
@@ -246,11 +246,33 @@ namespace Zeni {
     }
   }
 
+  void Slider::on_accept() {
+    m_down = false;
+  }
+
   void Slider::render() const {
     Video &vr = get_Video();
 
     vr.render(m_line_segment_r);
     vr.render(m_slider_r);
+  }
+
+  Slider_Int::Slider_Int(const Range &range,
+                         const Point2f &end_point_a_, const Point2f &end_point_b_,
+                         const float &slider_radius_,
+                         const Color &line_color_,
+                         const Color &slider_color_,
+                         const float &slider_position_)
+  : Slider(end_point_a_, end_point_b_, slider_radius_, line_color_, slider_color_, slider_position_),
+  m_range(range)
+  {
+    assert(range.first < range.second);
+    set_value(get_value());
+  }
+
+  void Slider_Int::on_accept() {
+    Slider::on_accept();
+    set_value(get_value());
   }
 
   Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
