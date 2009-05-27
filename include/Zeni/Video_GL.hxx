@@ -98,7 +98,7 @@ namespace Zeni {
   void Video_GL::set_ztest_impl(const bool &enabled) {
     if(enabled) {
       glEnable(GL_DEPTH_TEST);
-      glDepthFunc(GL_LESS);
+      glDepthFunc(GL_LEQUAL);
     }
     else
       glDisable(GL_DEPTH_TEST);

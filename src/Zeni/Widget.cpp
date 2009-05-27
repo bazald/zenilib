@@ -224,8 +224,10 @@ namespace Zeni {
       const std::pair<float, float> test = m_line_segment.nearest_point(mouse_pos);
       if(test.first < m_slider_radius) {
         m_down = true;
+        m_backup_position = m_slider_position;
         m_slider_position = test.second;
         regenerate_slider_r();
+        on_slide();
       }
       else
         m_down = false;
@@ -242,8 +244,17 @@ namespace Zeni {
       if(test.first < m_slider_radius) {
         m_slider_position = test.second;
         regenerate_slider_r();
+        on_slide();
+      }
+      else {
+        m_slider_position = m_backup_position;
+        regenerate_slider_r();
+        on_slide();
       }
     }
+  }
+
+  void Slider::on_slide() {
   }
 
   void Slider::on_accept() {
@@ -270,8 +281,8 @@ namespace Zeni {
     set_value(get_value());
   }
 
-  void Slider_Int::on_accept() {
-    Slider::on_accept();
+  void Slider_Int::on_slide() {
+    Slider::on_slide();
     set_value(get_value());
   }
 
@@ -306,6 +317,8 @@ namespace Zeni {
               m_text.set_text(t0 + t1);
               format();
               seek(m_edit_pos - 1);
+
+              on_change();
             }
           }
           break;
@@ -320,6 +333,8 @@ namespace Zeni {
               m_text.set_text(t0 + t1);
               format();
               seek(m_edit_pos);
+
+              on_change();
             }
           }
           break;
@@ -381,6 +396,8 @@ namespace Zeni {
               m_text.set_text(next);
               format();
               seek(m_edit_pos + 1);
+
+              on_change();
             }
           }
           break;
@@ -394,9 +411,19 @@ namespace Zeni {
     m_cursor_pos.x = int(pos.x - get_upper_left().x);
     m_cursor_pos.y = int(pos.y - get_upper_left().y);
 
+    const bool was_focused = m_edit_pos != -1;
     invalidate_edit_pos();
 
     Widget_Button::on_mouse_button(pos, down, button);
+
+    if(m_edit_pos == -1) {
+      if(was_focused)
+        on_unfocus();
+    }
+    else {
+      if(!was_focused)
+        on_focus();
+    }
   }
 
   void Text_Box::on_accept() {
@@ -434,6 +461,15 @@ namespace Zeni {
 
     seek(m_edit_pos);
 #endif
+  }
+
+  void Text_Box::on_focus() {
+  }
+
+  void Text_Box::on_unfocus() {
+  }
+
+  void Text_Box::on_change() {
   }
 
   void Text_Box::render() const {
@@ -664,10 +700,18 @@ namespace Zeni {
   }
   
   void Text_Box::set_focus(const bool &value) {
-    if(value)
+    if(value) {
+      const bool was_focused = m_edit_pos != -1;
       seek(get_max_seek());
-    else
+      if(!was_focused)
+        on_focus();
+    }
+    else {
+      const bool was_focused = m_edit_pos != -1;
       invalidate_edit_pos();
+      if(was_focused)
+        on_unfocus();
+    }
   }
 
   string Text_Box::clean_string(const string &unclean_string) const {
