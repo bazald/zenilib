@@ -41,7 +41,7 @@
 #include <Zeni/Fonts.h>
 
 #undef min
-//#include <algorithm>
+#include <cassert>
 
 namespace Zeni {
 
@@ -358,7 +358,25 @@ namespace Zeni {
     m_slider_r.a = Vertex2f_Color(Point2f(midpt - n2), m_slider_color);
     m_slider_r.b = Vertex2f_Color(Point2f(midpt + n2), m_slider_color);
   }
-  
+
+  const Slider_Int::Range & Slider_Int::get_range() const {
+    return m_range;
+  }
+
+  void Slider_Int::set_range(const Range &range_) {
+    assert(range_.first < range_.second);
+    m_range = range_;
+  }
+
+  int Slider_Int::get_value() const {
+    return int(get_slider_position() * (m_range.second - m_range.first) + 0.5f) + m_range.first;
+  }
+
+  void Slider_Int::set_value(const int &value) {
+    const int clamped = value < m_range.first ? m_range.first : value > m_range.second ? m_range.second : value;
+    set_slider_position(float(clamped - m_range.first) / (m_range.second - m_range.first));
+  }
+
   const Color & Text_Box::get_bg_color() const {
     return m_bg.get_color();
   }

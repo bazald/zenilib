@@ -439,7 +439,7 @@ namespace Zeni {
     inline void set_border_color(const Color &border_color_);
     inline void set_check_color(const Color &check_color_);
     inline const void set_checked(const bool &checked_);
-    
+
     virtual void on_accept();
 
     virtual void render() const;
@@ -486,7 +486,7 @@ namespace Zeni {
   private:
     Radio_Button_Set * m_radio_button_set;
   };
-  
+
   class Slider : public Widget {
   public:
     Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
@@ -507,8 +507,9 @@ namespace Zeni {
     inline void set_slider_position(const float &slider_position_);
 
     virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
-
     virtual void on_mouse_motion(const Zeni::Point2i &pos);
+
+    virtual void on_accept();
 
     virtual void render() const;
 
@@ -525,6 +526,29 @@ namespace Zeni {
 
     float m_slider_position;
     bool m_down;
+  };
+
+  class Slider_Int : public Slider {
+  public:
+    typedef std::pair<int, int> Range;
+
+    Slider_Int(const Range &range,
+               const Point2f &end_point_a_, const Point2f &end_point_b_,
+               const float &slider_radius_,
+               const Color &line_color_,
+               const Color &slider_color_,
+               const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+
+    inline const Range & get_range() const;
+    inline void set_range(const Range &range_);
+
+    inline int get_value() const;
+    inline void set_value(const int &value);
+
+    virtual void on_accept();
+
+  private:
+    Range m_range;
   };
   
   class Text_Box : public Widget_Button {
