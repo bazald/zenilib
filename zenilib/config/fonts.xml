@@ -19,7 +19,7 @@ Only TrueType fonts are supported.
 -->
 <Fonts>
   <system>
-    <filepath>fonts/FORGOTTE.ttf</filepath>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>36</height>
     <bold>0</bold>
     <italics>0</italics>
