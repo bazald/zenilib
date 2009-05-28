@@ -233,7 +233,7 @@ inline int main2(const int &argc, const char * const argv[]) {
 int main(int argc, char *argv[]) {
 #ifdef _WINDOWS
 #ifdef X64
-  if(!SetDllDirectory("bin\x64")) {
+  if(!SetDllDirectory("bin\\x64")) {
 #else
   if(!SetDllDirectory("bin")) {
 #endif
