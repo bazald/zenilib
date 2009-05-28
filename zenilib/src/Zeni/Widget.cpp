@@ -51,11 +51,11 @@ namespace Zeni {
     return m_lower_right;
   }
 
-  void Widget_Rectangle_Color::render() const {
+  void Widget_Rectangle_Color::render_impl() const {
     get_Video().render(*m_quad);
   }
 
-  void Widget_Rectangle_Texture::render() const {
+  void Widget_Rectangle_Texture::render_impl() const {
     get_Video().render(*m_quad);
   }
 
@@ -78,10 +78,12 @@ namespace Zeni {
         m_clicked_inside = true;
         m_transient = false;
         on_click();
+
+        set_busy(true);
       }
       else
         m_clicked_outside = true;
-    else
+    else {
       if(inside)
         if(m_clicked_inside) {
           m_clicked_inside = false;
@@ -98,6 +100,9 @@ namespace Zeni {
         }
         else
           m_clicked_outside = false;
+
+      set_busy(false);
+    }
   }
   
   void Widget_Button::on_mouse_motion(const Point2i &pos) {
@@ -128,8 +133,8 @@ namespace Zeni {
       }
   }
 
-  void Text_Button::render() const {
-    m_bg.render();
+  void Text_Button::render_impl() const {
+    m_bg.render_impl();
     m_text.render(get_center());
   }
 
@@ -154,7 +159,7 @@ namespace Zeni {
     m_toggling = false;
   }
 
-  void Check_Box::render() const {
+  void Check_Box::render_impl() const {
     Video &vr = get_Video();
 
     Vertex2f_Color ul(get_upper_left(), m_border_color);
@@ -216,9 +221,9 @@ namespace Zeni {
       (*it)->on_mouse_motion(pos);
   }
 
-  void Radio_Button_Set::render() const {
+  void Radio_Button_Set::render_impl() const {
     for(std::set<Radio_Button *>::const_iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
-      (*it)->render();
+      (*it)->render_impl();
   }
 
   Slider::Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
@@ -252,12 +257,18 @@ namespace Zeni {
         m_slider_position = test.second;
         regenerate_slider_r();
         on_slide();
+
+        set_busy(true);
       }
       else
         m_down = false;
     }
-    else if(m_down)
-      on_accept();
+    else {
+      if(m_down)
+        on_accept();
+
+      set_busy(false);
+    }
   }
 
   void Slider::on_mouse_motion(const Zeni::Point2i &pos) {
@@ -285,7 +296,7 @@ namespace Zeni {
     m_down = false;
   }
 
-  void Slider::render() const {
+  void Slider::render_impl() const {
     Video &vr = get_Video();
 
     vr.render(m_line_segment_r);
@@ -325,6 +336,276 @@ namespace Zeni {
     m_cursor_index(-1, -1)
   {
     format();
+  }
+
+  Selector::Normal_Button::Normal_Button(Selector &selector, const Point2f &upper_left_, const Point2f &lower_right_)
+    : Text_Button(upper_left_, lower_right_, get_Colors()["yellow"], "font", "", get_Colors()["black"]),
+    m_selector(&selector)
+  {
+  }
+
+  void Selector::Normal_Button::on_accept() {
+    Text_Button::on_accept();
+    m_selector->decide_visible(m_selector->m_option);
+    m_selector->m_selected = true;
+
+    m_selector->set_busy(true);
+    m_selector->set_layer(-0.5f);
+  }
+
+  Selector::Selector_Button::Selector_Button(Selector &selector, const std::string &option,
+                                             const Point2f &upper_left_, const Point2f &lower_right_)
+    : Text_Button(upper_left_, lower_right_, get_Colors()["yellow"], "font", option, get_Colors()["black"]),
+    m_selector(&selector)
+  {
+  }
+
+  void Selector::Selector_Button::on_accept() {
+    Text_Button::on_accept();
+    m_selector->on_accept(get_text());
+    m_selector->m_selected = false;
+  }
+
+  Selector::Selector_Slider::Selector_Slider(Selector &selector,
+                                             const float &slider_radius_,
+                                             const Color &line_color_,
+                                             const Color &slider_color_,
+                                             const std::pair<float, float> &bg_coordinates_,
+                                             const Color &bg_color_)
+    : Slider_Int(Range(0u, 1u),
+                 Point2f(), Point2f(),
+                 slider_radius_,
+                 line_color_,
+                 slider_color_),
+    m_quad(Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
+           Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
+           Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_),
+           Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_)),
+    m_selector(&selector)
+  {
+  }
+
+  void Selector::Selector_Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
+    Slider_Int::set_end_points(end_point_a_, end_point_b_);
+    m_quad.a.position.y = end_point_a_.y;
+    m_quad.b.position.y = end_point_b_.y;
+    m_quad.c.position.y = end_point_b_.y;
+    m_quad.d.position.y = end_point_a_.y;
+  }
+
+  void Selector::Selector_Slider::on_slide() {
+    Slider_Int::on_slide();
+    m_selector->decide_visible(get_value());
+  }
+
+  void Selector::Selector_Slider::render_impl() const {
+    get_Video().render(m_quad);
+    Slider_Int::render_impl();
+  }
+
+  Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
+                     const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
+                     const Color &line_color_,
+                     const Color &slider_color_,
+                     const Color &bg_color_)
+    : m_expanded(expanded_upper_left_, expanded_lower_right_),
+    m_option(0u),
+    m_selected(false),
+    m_normal_button(*this, upper_left_, lower_right_),
+    m_selector_slider(*this,
+                      0.5f * (expanded_lower_right_.x - lower_right_.x),
+                      line_color_,
+                      slider_color_,
+                      make_pair(lower_right_.x, expanded_lower_right_.x),
+                      bg_color_)
+  {
+  }
+
+  Selector::~Selector() {
+    clear();
+  }
+
+  const Selector::Options & Selector::get_options() const {
+    return m_options;
+  }
+
+  void Selector::add_option(const std::string &option) {
+    if(m_options.empty())
+      m_option = 0u;
+    m_options.push_back(option);
+
+    add_selector_button(option);
+  }
+
+  void Selector::remove_option(const std::string &option) {
+    Options::iterator it = std::find(m_options.begin(), m_options.end(), option);
+    if(it != m_options.end())
+      m_options.erase(it);
+
+    build_selector_buttons();
+  }
+
+  void Selector::select_option(const std::string &option) {
+    Options::iterator it = std::find(m_options.begin(), m_options.end(), option);
+    if(it != m_options.end())
+      m_option = it - m_options.begin();
+
+    m_normal_button.set_text(m_options[m_option]);
+  }
+
+  void Selector::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(!m_selected)
+      m_normal_button.on_mouse_button(pos, down, button);
+    else {
+      const std::pair<Point2f, Point2f> v = visible_region();
+
+      if((pos.x < v.first.x || pos.x > v.second.x || pos.y < v.first.y || pos.y > v.second.y) &&
+         button == SDL_BUTTON_LEFT)
+      {
+        m_selected = false;
+
+        set_busy(false);
+        set_layer(0.0f);
+      }
+      else {
+        const Point2i offset_pos(pos.x, int(pos.y + vertical_offset()));
+        for(size_t i = view_start; i != view_end; ++i)
+          m_selector_buttons[i]->on_mouse_button(offset_pos, down, button);
+
+        if(view_hidden)
+          m_selector_slider.on_mouse_button(pos, down, button);
+      }
+    }
+  }
+
+  void Selector::on_mouse_motion(const Point2i &pos) {
+    if(!m_selected)
+      m_normal_button.on_mouse_motion(pos);
+    else {
+      const Point2i offset_pos(pos.x, int(pos.y + vertical_offset()));
+        for(size_t i = view_start; i != view_end; ++i)
+          m_selector_buttons[i]->on_mouse_motion(offset_pos);
+
+      if(view_hidden)
+        m_selector_slider.on_mouse_motion(pos);
+    }
+  }
+
+  void Selector::on_accept(const std::string &option) {
+    select_option(option);
+
+    set_busy(false);
+    set_layer(0.0f);
+  }
+
+  void Selector::render_impl() const {
+    if(!m_selected)
+      m_normal_button.render_impl();
+    else {
+      Video &vr = get_Video();
+      vr.push_world_stack();
+      vr.translate_scene(Vector3f(0.0f, -vertical_offset(), 0.0f));
+
+      for(size_t i = view_start; i != view_end; ++i)
+        m_selector_buttons[i]->render_impl();
+
+      vr.pop_world_stack();
+
+      if(view_hidden)
+        m_selector_slider.render_impl();
+    }
+  }
+
+  float Selector::button_height() const {
+    const Point2f &ul = m_normal_button.get_upper_left();
+    const Point2f &lr = m_normal_button.get_lower_right();
+    return lr.y - ul.y;
+  }
+
+  float Selector::vertical_offset() const {
+    return view_offset * button_height();
+  }
+
+  void Selector::decide_visible(const size_t &centered) {
+    const Point2f &nul = m_normal_button.get_upper_left();
+    const Point2f &nlr = m_normal_button.get_lower_right();
+    const Point2f &eul = m_expanded.get_upper_left();
+    const Point2f &elr = m_expanded.get_lower_right();
+
+    const size_t slots_above = int((nul.y - eul.y) / button_height());
+    const size_t slots_below = int((elr.y - nlr.y) / button_height());
+    size_t needed_above = centered;
+    size_t needed_below = m_options.size() - centered - 1u;
+
+    view_start = centered - min(slots_above, needed_above);
+    view_end = centered + min(slots_below, needed_below) + 1u;
+    view_offset = centered;
+
+    // Shift up as needed and possible
+    while(needed_above < slots_above && needed_below > slots_below) {
+      ++needed_above;
+      --needed_below;
+      ++view_end;
+      ++view_offset;
+    }
+
+    // Shift down as needed and possible
+    while(needed_below < slots_below && needed_above > slots_above) {
+      --needed_above;
+      ++needed_below;
+      --view_start;
+      --view_offset;
+    }
+
+    /// Setup slider as needed
+
+    view_hidden = 0u;
+    if(needed_above > slots_above)
+      view_hidden += needed_above - slots_above;
+    if(needed_below > slots_below)
+      view_hidden += needed_below - slots_below;
+
+    if(view_hidden) {
+      const std::pair<Point2f, Point2f> v = visible_region();
+      const float r = m_selector_slider.get_slider_radius();
+      const float hx = 0.5f * (m_normal_button.get_lower_right().x + m_expanded.get_lower_right().x);
+
+      m_selector_slider.set_end_points(Point2f(hx, v.first.y + r), Point2f(hx, v.second.y - r));
+      m_selector_slider.set_range(make_pair(view_offset - needed_above + slots_above,
+                                            view_offset + needed_below - slots_below));
+      m_selector_slider.set_value(view_offset);
+    }
+  }
+
+  std::pair<Point2f, Point2f> Selector::visible_region() const {
+    const Point2f &ul = m_normal_button.get_upper_left();
+    const Point2f &lr = m_normal_button.get_lower_right();
+    const float bh = button_height();
+    const float ex = view_hidden ? 2.0f * m_selector_slider.get_slider_radius() : 0.0f;
+    return make_pair(Point2f(ul.x, ul.y - bh * (view_offset - view_start)),
+                     Point2f(lr.x + ex, ul.y + bh * (view_end - view_offset)));
+  }
+
+  void Selector::add_selector_button(const std::string &option) {
+    const Point2f &ul = m_normal_button.get_upper_left();
+    const Point2f &lr = m_normal_button.get_lower_right();
+    const float vertical_offset = m_selector_buttons.size() * (lr.y - ul.y);
+    m_selector_buttons.push_back(new Selector_Button(*this, option,
+                                                     Point2f(ul.x, ul.y + vertical_offset),
+                                                     Point2f(lr.x, lr.y + vertical_offset)));
+  }
+
+  void Selector::build_selector_buttons() {
+    clear();
+
+    for(Options::const_iterator it = m_options.begin(); it != m_options.end(); ++it)
+      add_selector_button(*it);
+  }
+
+  void Selector::clear() {
+    for(vector<Selector_Button *>::const_iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
+      delete *it;
+    m_selector_buttons.clear();
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
@@ -496,10 +777,10 @@ namespace Zeni {
   void Text_Box::on_change() {
   }
 
-  void Text_Box::render() const {
+  void Text_Box::render_impl() const {
     Video &vr = get_Video();
 
-    m_bg.render();
+    m_bg.render_impl();
 
     const Font &f = get_font();
     const Color &c = m_text.get_color();
@@ -792,39 +1073,105 @@ namespace Zeni {
     m_delay_finished = false;
 
     m_widget->on_key(m_keysym, m_down);
+
+    set_busy(m_widget->busy());
   }
 
   void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     m_active = false;
 
     m_widget->on_mouse_button(pos, down, button);
+
+    set_busy(m_widget->busy());
   }
 
   void Widget_Input_Repeater::on_mouse_motion(const Point2i &pos) {
     m_widget->on_mouse_motion(pos);
+
+    set_busy(m_widget->busy());
   }
 
-  void Widget_Input_Repeater::render() const {
+  void Widget_Input_Repeater::render_impl() const {
     m_widget->render();
   }
 
+  static bool widget_layer_less(const Widget * const &lhs, const Widget * const &rhs) {
+    return lhs->layer() < rhs->layer();
+  }
+
   void Widgets::on_key(const SDL_keysym &keysym, const bool &down) {
-    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->on_key(keysym, down);
+    if(m_busy_one) {
+      m_busy_one->on_key(keysym, down);
+
+      if(!m_busy_one->busy()) {
+        m_busy_one = 0;
+        set_busy(false);
+      }
+    }
+    else {
+      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+      for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->on_key(keysym, down);
+
+        if((*it)->busy()) {
+          set_busy(true);
+          break;
+        }
+      }
+    }
   }
 
   void Widgets::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
-    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->on_mouse_button(pos, down, button);
+    if(m_busy_one) {
+      m_busy_one->on_mouse_button(pos, down, button);
+
+      if(!m_busy_one->busy()) {
+        m_busy_one = 0;
+        set_busy(false);
+      }
+    }
+    else {
+      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+      for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->on_mouse_button(pos, down, button);
+
+        if((*it)->busy()) {
+          set_busy(true);
+          break;
+        }
+      }
+    }
   }
     
   void Widgets::on_mouse_motion(const Point2i &pos) {
-    for(std::set<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
-      (*it)->on_mouse_motion(pos);
+    if(m_busy_one) {
+      m_busy_one->on_mouse_motion(pos);
+
+      if(!m_busy_one->busy()) {
+        m_busy_one = 0;
+        set_busy(false);
+      }
+    }
+    else {
+      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+      for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->on_mouse_motion(pos);
+
+        if((*it)->busy()) {
+          set_busy(true);
+          break;
+        }
+      }
+    }
   }
 
-  void Widgets::render() const {
-    for(std::set<Widget *>::const_iterator it = m_widgets.begin(); it != m_widgets.end(); ++it)
+  void Widgets::render_impl() const {
+    std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+    for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(); it != m_widgets.rend(); ++it)
       (*it)->render();
   }
 
