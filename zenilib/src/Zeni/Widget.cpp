@@ -135,8 +135,25 @@ namespace Zeni {
 
   void Check_Box::on_accept() {
     m_checked = !m_checked;
+    m_toggling = false;
   }
-  
+
+  void Check_Box::on_click() {
+    m_toggling = true;
+  }
+
+  void Check_Box::on_unstray() {
+    m_toggling = true;
+  }
+
+  void Check_Box::on_reject() {
+    m_toggling = false;
+  }
+
+  void Check_Box::on_stray() {
+    m_toggling = false;
+  }
+
   void Check_Box::render() const {
     Video &vr = get_Video();
 
@@ -157,11 +174,18 @@ namespace Zeni {
     line_seg.a = ul;
     vr.render(line_seg);
 
-    if(m_checked) {
-      ul.set_color(m_check_color);
-      ll.set_color(m_check_color);
-      lr.set_color(m_check_color);
-      ur.set_color(m_check_color);
+    if(m_checked || m_toggling) {
+      Color check_color = m_check_color;
+      if(m_toggling)
+        if(m_checked)
+          check_color.a /= 3.0f;
+        else
+          check_color.a *= 2.0f / 3.0f;
+
+      ul.set_color(check_color);
+      ll.set_color(check_color);
+      lr.set_color(check_color);
+      ur.set_color(check_color);
 
       line_seg.a = ul;
       line_seg.b = lr;

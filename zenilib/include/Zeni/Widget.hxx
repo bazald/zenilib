@@ -284,7 +284,8 @@ namespace Zeni {
     m_border_color(border_color_),
     m_check_color(check_color_),
     m_checked(checked_),
-    m_toggleable(toggleable_)
+    m_toggleable(toggleable_),
+    m_toggling(false)
   {
   }
 

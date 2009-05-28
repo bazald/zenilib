@@ -452,6 +452,12 @@ namespace Zeni {
 
     virtual void on_accept();
 
+    virtual void on_click();
+    virtual void on_unstray();
+
+    virtual void on_reject();
+    virtual void on_stray();
+
     virtual void render() const;
 
   protected:
@@ -459,6 +465,7 @@ namespace Zeni {
     Color m_check_color;
     bool m_checked;
     bool m_toggleable;
+    bool m_toggling;
   };
 
   class Radio_Button;
