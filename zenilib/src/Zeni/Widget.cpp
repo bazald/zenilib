@@ -37,9 +37,7 @@
 
 #include <list>
 
-using std::string;
-using std::vector;
-using std::list;
+using namespace std;
 
 namespace Zeni {
   
@@ -419,6 +417,10 @@ namespace Zeni {
                      const std::string &font_,
                      const Color &slider_color_,
                      const Color &bg_color_)
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4355 )
+#endif
     : m_expanded(expanded_upper_left_, expanded_lower_right_),
     m_option(0u),
     m_selected(false),
@@ -432,6 +434,9 @@ namespace Zeni {
     m_text_color(text_color_),
     m_font(font_),
     m_bg_color(bg_color_)
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
   {
   }
 
@@ -585,9 +590,9 @@ namespace Zeni {
       const float hx = 0.5f * (m_normal_button.get_lower_right().x + m_expanded.get_lower_right().x);
 
       m_selector_slider.set_end_points(Point2f(hx, v.first.y + r), Point2f(hx, v.second.y - r));
-      m_selector_slider.set_range(make_pair(view_offset - needed_above + slots_above,
-                                            view_offset + needed_below - slots_below));
-      m_selector_slider.set_value(view_offset);
+      m_selector_slider.set_range(make_pair(int(view_offset - needed_above + slots_above),
+                                            int(view_offset + needed_below - slots_below)));
+      m_selector_slider.set_value(int(view_offset));
     }
   }
 
