@@ -338,8 +338,13 @@ namespace Zeni {
     format();
   }
 
-  Selector::Normal_Button::Normal_Button(Selector &selector, const Point2f &upper_left_, const Point2f &lower_right_)
-    : Text_Button(upper_left_, lower_right_, get_Colors()["yellow"], "font", "", get_Colors()["black"]),
+  Selector::Normal_Button::Normal_Button(Selector &selector,
+                                         const Point2f &upper_left_,
+                                         const Point2f &lower_right_,
+                                         const Color &text_color_,
+                                         const std::string &font_,
+                                         const Color &bg_color_)
+    : Text_Button(upper_left_, lower_right_, bg_color_, font_, "", text_color_),
     m_selector(&selector)
   {
   }
@@ -353,9 +358,14 @@ namespace Zeni {
     m_selector->set_layer(-0.5f);
   }
 
-  Selector::Selector_Button::Selector_Button(Selector &selector, const std::string &option,
-                                             const Point2f &upper_left_, const Point2f &lower_right_)
-    : Text_Button(upper_left_, lower_right_, get_Colors()["yellow"], "font", option, get_Colors()["black"]),
+  Selector::Selector_Button::Selector_Button(Selector &selector,
+                                             const std::string &option,
+                                             const Point2f &upper_left_,
+                                             const Point2f &lower_right_,
+                                             const Color &text_color_,
+                                             const std::string &font_,
+                                             const Color &bg_color_)
+    : Text_Button(upper_left_, lower_right_, bg_color_, font_, option, text_color_),
     m_selector(&selector)
   {
   }
@@ -405,19 +415,23 @@ namespace Zeni {
 
   Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-                     const Color &line_color_,
+                     const Color &text_color_,
+                     const std::string &font_,
                      const Color &slider_color_,
                      const Color &bg_color_)
     : m_expanded(expanded_upper_left_, expanded_lower_right_),
     m_option(0u),
     m_selected(false),
-    m_normal_button(*this, upper_left_, lower_right_),
+    m_normal_button(*this, upper_left_, lower_right_, text_color_, font_, bg_color_),
     m_selector_slider(*this,
                       0.5f * (expanded_lower_right_.x - lower_right_.x),
-                      line_color_,
+                      slider_color_,
                       slider_color_,
                       make_pair(lower_right_.x, expanded_lower_right_.x),
-                      bg_color_)
+                      bg_color_),
+    m_text_color(text_color_),
+    m_font(font_),
+    m_bg_color(bg_color_)
   {
   }
 
@@ -592,7 +606,10 @@ namespace Zeni {
     const float vertical_offset = m_selector_buttons.size() * (lr.y - ul.y);
     m_selector_buttons.push_back(new Selector_Button(*this, option,
                                                      Point2f(ul.x, ul.y + vertical_offset),
-                                                     Point2f(lr.x, lr.y + vertical_offset)));
+                                                     Point2f(lr.x, lr.y + vertical_offset),
+                                                     m_text_color,
+                                                     m_font,
+                                                     m_bg_color));
   }
 
   void Selector::build_selector_buttons() {

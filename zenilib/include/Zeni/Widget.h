@@ -588,7 +588,12 @@ namespace Zeni {
   class Selector : public Widget {
     class Normal_Button : public Text_Button {
     public:
-      Normal_Button(Selector &selector, const Point2f &upper_left_, const Point2f &lower_right_);
+      Normal_Button(Selector &selector,
+                    const Point2f &upper_left_,
+                    const Point2f &lower_right_,
+                    const Color &text_color_,
+                    const std::string &font_,
+                    const Color &bg_color_);
 
       void on_accept();
 
@@ -598,8 +603,13 @@ namespace Zeni {
 
     class Selector_Button : public Text_Button {
     public:
-      Selector_Button(Selector &selector, const std::string &option,
-                      const Point2f &upper_left_, const Point2f &lower_right_);
+      Selector_Button(Selector &selector,
+                      const std::string &option,
+                      const Point2f &upper_left_,
+                      const Point2f &lower_right_,
+                      const Color &text_color_,
+                      const std::string &font_,
+                      const Color &bg_color_);
 
       void on_accept();
 
@@ -632,7 +642,8 @@ namespace Zeni {
 
     Selector(const Point2f &upper_left_, const Point2f &lower_right_,
              const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-             const Color &line_color_,
+             const Color &text_color_,
+             const std::string &font_,
              const Color &slider_color_,
              const Color &bg_color_);
     ~Selector();
@@ -675,6 +686,10 @@ namespace Zeni {
     Normal_Button m_normal_button;
     std::vector<Selector_Button *> m_selector_buttons;
     Selector_Slider m_selector_slider;
+
+    Color m_text_color;
+    std::string m_font;
+    Color m_bg_color;
 
     size_t view_start;
     size_t view_end;
