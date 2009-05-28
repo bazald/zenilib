@@ -13,6 +13,12 @@ not terribly useful.  You should choose a Color name for each
 element in your game to enable easy skinning.
 -->
 <Colors>
+  <system_font>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </system_font>
   <black>
     <alpha>1.0</alpha>
     <red>0.0</red>

@@ -69,8 +69,8 @@
 * Contact: bazald@zenipex.com
 */
 
-#ifndef ZENIAPP_H
-#define ZENIAPP_H
+#ifndef GAMESTATE_ONE_H
+#define GAMESTATE_ONE_H
 
 #include <Zeni/Game.h>
 #include <Zeni/Video.h>
