@@ -36,6 +36,7 @@
 #include <Zeni/Collision.h>
 #include <Zeni/Color.h>
 #include <Zeni/Colors.h>
+#include <Zeni/Configurator_Video.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 #include <Zeni/Database.h>

@@ -37,6 +37,7 @@
 #include "Zeni/Collision.cpp"
 #include "Zeni/Color.cpp"
 #include "Zeni/Colors.cpp"
+#include "Zeni/Configurator_Video.cpp"
 #include "Zeni/Coordinate.cpp"
 #include "Zeni/Core.cpp"
 #include "Zeni/EZ2D.cpp"
