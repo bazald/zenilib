@@ -34,6 +34,7 @@
 #include <Zeni/Material.h>
 #include <Zeni/Projector.h>
 #include <Zeni/Timer.h>
+#include <Zeni/Video.h>
 
 #include <Zeni/Widget.h>
 
@@ -42,8 +43,31 @@
 
 #undef min
 #include <cassert>
+#include <algorithm>
 
 namespace Zeni {
+
+  Widget::Widget()
+    : m_layer(0.0f),
+    m_busy(false)
+  {
+  }
+
+  const bool & Widget::busy() const {
+    return m_busy;
+  }
+
+  const float & Widget::layer() const {
+    return m_layer;
+  }
+
+  void Widget::set_busy(const bool &busy_) {
+    m_busy = busy_;
+  }
+
+  void Widget::set_layer(const float &layer_) {
+    m_layer = layer_;
+  }
 
   void Widget::on_event(const SDL_KeyboardEvent &event) {
     on_key(event.keysym, event.type == SDL_KEYDOWN);
@@ -69,6 +93,17 @@ namespace Zeni {
   void Widget::on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector) {
     const Point2f projected = projector.unproject(Point2f(event.x, event.y));
     on_mouse_motion(Point2i(int(projected.x), int(projected.y)));
+  }
+
+  void Widget::render() const {
+    Video &vr = get_Video();
+
+    vr.push_world_stack();
+    vr.translate_scene(Vector3f(0.0f, 0.0f, m_layer));
+
+    render_impl();
+
+    vr.pop_world_stack();
   }
 
   Point2f Widget_Positioned::get_lower_left() const {
@@ -523,7 +558,7 @@ namespace Zeni {
   const int & Widget_Input_Repeater::get_repeat_delay() const {return m_repeat_delay;}
   const int & Widget_Input_Repeater::get_repeat_interval() const  {return m_repeat_interval;}
 
-  void Widget_Input_Repeater::set_widget(Widget &widget_) {m_widget = &widget_;}
+  void Widget_Input_Repeater::set_widget(Widget &widget_) {m_widget = &widget_; set_busy(widget_.busy());}
   void Widget_Input_Repeater::set_repeat_delay(const int &repeat_delay_) {m_repeat_delay = repeat_delay_;}
   void Widget_Input_Repeater::set_repeat_interval(const int &repeat_interval_) {m_repeat_interval = repeat_interval_;}
 
@@ -542,12 +577,30 @@ namespace Zeni {
     }
   }
 
+  Widgets::Widgets()
+    : m_busy_one(0)
+  {
+  }
+
   void Widgets::lend_Widget(Widget &widget) {
-    m_widgets.insert(&widget);
+    m_widgets.push_back(&widget);
+
+    if(widget.busy()) {
+      assert(!m_busy_one);
+      m_busy_one = &widget;
+      set_busy(true);
+    }
   }
 
   void Widgets::unlend_Widget(Widget &widget) {
-    m_widgets.erase(&widget);
+    std::vector<Widget *>::iterator it = std::find(m_widgets.begin(), m_widgets.end(), &widget);
+    if(it != m_widgets.end())
+      m_widgets.erase(it);
+
+    if(m_busy_one == &widget) {
+      m_busy_one = 0;
+      set_busy(false);
+    }
   }
 
 }
@@ -556,5 +609,6 @@ namespace Zeni {
 #include <Zeni/Material.hxx>
 #include <Zeni/Projector.hxx>
 #include <Zeni/Timer.hxx>
+#include <Zeni/Video.hxx>
 
 #endif

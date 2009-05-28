@@ -272,8 +272,13 @@ namespace Zeni {
     Widget & operator=(const Widget &);
 
   public:
-    Widget() {}
+    inline Widget();
     virtual ~Widget() {}
+
+    inline const bool & busy() const;
+    inline const float & layer() const;
+    inline void set_busy(const bool &busy_);
+    inline void set_layer(const float &layer_ = 0.0f);
 
     inline void on_event(const SDL_KeyboardEvent &event);
     inline void on_event(const SDL_MouseButtonEvent &event);
@@ -285,7 +290,15 @@ namespace Zeni {
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button) = 0;
     virtual void on_mouse_motion(const Point2i &pos) = 0;
 
-    virtual void render() const = 0;
+    inline void render() const;
+
+  protected:
+
+  private:
+    virtual void render_impl() const = 0;
+
+    float m_layer;
+    bool m_busy;
   };
 
   class Widget_Positioned {
@@ -326,7 +339,7 @@ namespace Zeni {
     virtual const Point2f & get_upper_left() const;
     virtual const Point2f & get_lower_right() const;
 
-    virtual void render() const {}
+    virtual void render_impl() const {}
 
   private:
     Point2f m_upper_left;
@@ -345,7 +358,7 @@ namespace Zeni {
     inline const Color & get_color() const;
     inline void set_color(const Color &color_);
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     inline void generate_quadrilateral();
@@ -366,7 +379,7 @@ namespace Zeni {
     inline const std::string get_texture_name() const;
     inline void set_texture_name(const std::string &texture_name_);
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     inline void generate_quadrilateral();
@@ -429,7 +442,7 @@ namespace Zeni {
     inline void set_text_color(const Color &color_);
     inline void set_bg_color(const Color &color_);
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   protected:
     Widget_Rectangle_Color m_bg;
@@ -458,7 +471,7 @@ namespace Zeni {
     virtual void on_reject();
     virtual void on_stray();
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   protected:
     Color m_border_color;
@@ -479,7 +492,7 @@ namespace Zeni {
     inline void accept(Radio_Button &radio_button);
     inline void clear();
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     inline void lend_Radio_Button(Radio_Button &radio_button);
@@ -531,7 +544,7 @@ namespace Zeni {
     virtual void on_slide();
     virtual void on_accept();
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     inline void regenerate_slider_r();
@@ -571,7 +584,104 @@ namespace Zeni {
   private:
     Range m_range;
   };
-  
+
+  class Selector : public Widget {
+    class Normal_Button : public Text_Button {
+    public:
+      Normal_Button(Selector &selector, const Point2f &upper_left_, const Point2f &lower_right_);
+
+      void on_accept();
+
+    private:
+      Selector * m_selector;
+    };
+
+    class Selector_Button : public Text_Button {
+    public:
+      Selector_Button(Selector &selector, const std::string &option,
+                      const Point2f &upper_left_, const Point2f &lower_right_);
+
+      void on_accept();
+
+    private:
+      Selector * m_selector;
+    };
+
+    class Selector_Slider : public Slider_Int {
+    public:
+      Selector_Slider(Selector &selector,
+                      const float &slider_radius_,
+                      const Color &line_color_,
+                      const Color &slider_color_,
+                      const std::pair<float, float> &bg_coordinates_,
+                      const Color &bg_color_);
+
+      void set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_);
+
+      void on_slide();
+
+      void render_impl() const;
+
+    private:
+      Quadrilateral<Vertex2f_Color> m_quad;
+      Selector * m_selector;
+    };
+
+  public:
+    typedef std::vector<std::string> Options;
+
+    Selector(const Point2f &upper_left_, const Point2f &lower_right_,
+             const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
+             const Color &line_color_,
+             const Color &slider_color_,
+             const Color &bg_color_);
+    ~Selector();
+
+    const Options & get_options() const;
+
+    void add_option(const std::string &option);
+    void remove_option(const std::string &option);
+
+    void select_option(const std::string &option);
+
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
+    virtual void on_mouse_motion(const Point2i &pos);
+
+    virtual void on_accept(const std::string &option);
+
+    virtual void render_impl() const;
+
+  private:
+    float button_height() const;
+    float vertical_offset() const;
+
+    void decide_visible(const size_t &centered);
+
+    std::pair<Point2f, Point2f> visible_region() const;
+
+    void add_selector_button(const std::string &option);
+
+    void build_selector_buttons();
+
+    void clear();
+
+    Widget_Rectangle m_expanded;
+
+    Options m_options;
+    size_t m_option;
+
+    bool m_selected;
+
+    Normal_Button m_normal_button;
+    std::vector<Selector_Button *> m_selector_buttons;
+    Selector_Slider m_selector_slider;
+
+    size_t view_start;
+    size_t view_end;
+    size_t view_offset;
+    size_t view_hidden;
+  };
+
   class Text_Box : public Widget_Button {
   public:
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
@@ -617,7 +727,7 @@ namespace Zeni {
     void seek_cursor(const int &cursor_pos);
     void set_focus(const bool &value);
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     struct Word {
@@ -693,7 +803,7 @@ namespace Zeni {
     inline void perform_logic();
 
     // render is simply passed through
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
     Widget * m_widget;
@@ -710,6 +820,8 @@ namespace Zeni {
 
   class Widgets : public Widget {
   public:
+    inline Widgets();
+
     inline void lend_Widget(Widget &widget);
     inline void unlend_Widget(Widget &widget);
 
@@ -718,10 +830,11 @@ namespace Zeni {
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
-    virtual void render() const;
+    virtual void render_impl() const;
 
   private:
-    std::set<Widget *> m_widgets;
+    mutable std::vector<Widget *> m_widgets;
+    Widget * m_busy_one;
   };
 
 }
