@@ -67,21 +67,55 @@ namespace Zeni {
   }
 
   Video & get_Video() {
-    if(!Video::e_video)
-      switch(Video::g_video_mode) {
-      case Video_Base::ZENI_VIDEO_ANY:
+    Core &cr = get_Core();
+    const std::string appdata_path = cr.get_appdata_path();
+
+    if(!Video::e_video) {
+      try {
+        switch(Video::g_video_mode) {
+        case Video_Base::ZENI_VIDEO_ANY:
 #ifndef DISABLE_GL
-      case Video_Base::ZENI_VIDEO_GL:
-        Video::e_video = new Video_GL();
-        break;
+        case Video_Base::ZENI_VIDEO_GL:
+          Video::e_video = new Video_GL();
+          break;
 #endif
 #ifndef DISABLE_DX9
-      case Video_Base::ZENI_VIDEO_DX9:
-        Video::e_video = new Video_DX9();
-        break;
+        case Video_Base::ZENI_VIDEO_DX9:
+          Video::e_video = new Video_DX9();
+          break;
 #endif
-      default:
-        throw Video_Init_Failure();
+        default:
+          throw Video_Init_Failure();
+        }
+      }
+      catch(Video_Init_Failure &) {
+        if(cr.copy_file(appdata_path + "config/zenilib.xml.bak", appdata_path + "config/zenilib.xml") ||
+           cr.copy_file("config/zenilib.xml.bak", "config/zenilib.xml"))
+        {
+          // Restore backup of last "good" configuration
+          cerr << "zenilib.xml backup restored due to initialization failure.\n";
+        }
+        throw;
+      }
+
+      // Make backups of "good" configurations
+
+      if(cr.create_directory(appdata_path) &&
+         cr.create_directory(appdata_path + "config/"))
+      {
+        if(cr.copy_file(appdata_path + "config/zenilib.xml", appdata_path + "config/zenilib.xml.bak"))
+        {
+          cr.copy_file(appdata_path + "config/zenilib.xml", "config/zenilib.xml");
+          cr.copy_file(appdata_path + "config/zenilib.xml", "config/zenilib.xml.bak");
+        }
+        else
+        {
+          cr.copy_file("config/zenilib.xml", appdata_path + "config/zenilib.xml");
+          cr.copy_file("config/zenilib.xml", appdata_path + "config/zenilib.xml.bak");
+        }
+      }
+      else
+        cr.copy_file("config/zenilib.xml", "config/zenilib.xml.bak");
     }
 
     return *Video::e_video;

@@ -3,8 +3,8 @@
 
 For each entry in Sounds:
 
-  1. 'token' should match the name you want to use in C++
-  2. 'filepath' should be the path from within 'zenilib/'
+    1. 'token' should match the name you want to use in C++
+    2. 'filepath' should be the path from within 'zenilib/'
 
 Only ogg vorbis is supported.
 
@@ -22,9 +22,9 @@ HOWTO:  To convert between types, or to downmix to mono,
         (4) Go to File->Export As Ogg Vorbis
 -->
 <Sounds>
-  <!--
-  <token>
-    <filepath>sfx/sound.ogg</filepath>
-  </token>
-  -->
+    <!--
+    <token>
+      <filepath>sfx/sound.ogg</filepath>
+    </token>
+    -->
 </Sounds>

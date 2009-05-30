@@ -36,6 +36,9 @@
 
 #ifdef _WINDOWS
 #include <shlobj.h>
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
 
 using namespace std;
@@ -108,6 +111,10 @@ namespace Zeni {
     /** Initialize Joysticks **/
 
     init_joysticks();
+
+    /** No more preinit(...) calls **/
+
+    g_initialized = true;
   }
 
   Core::~Core() {
@@ -130,12 +137,55 @@ namespace Zeni {
     return m_username;
   }
 
-  std::string Core::get_appdata_path(const std::string &unique_app_identifier) {
+  std::string Core::get_appdata_path() {
 #ifdef _WINDOWS
-    return m_appdata_path + "\\" + unique_app_identifier + "\\";
+    return m_appdata_path + "\\" + g_unique_app_identifier + "\\";
 #else
-    return m_appdata_path + "/." + unique_app_identifier + "/";
+    return m_appdata_path + "/." + g_unique_app_identifier + "/";
 #endif
+  }
+
+  bool Core::create_directory(const std::string &directory_path) {
+#ifdef _WINDOWS
+    return CreateDirectory(directory_path.c_str(), NULL) != 0 ||
+           GetLastError() == ERROR_ALREADY_EXISTS;
+#else
+    const int status = mkdir(directory_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    return !status || status == EEXIST;
+#endif
+  }
+
+  bool Core::remove_directory(const std::string &directory_path) {
+#ifdef _WINDOWS
+    return RemoveDirectory(directory_path.c_str()) != 0;
+#else
+    return rmdir(directory_path.c_str()) == 0;
+#endif
+  }
+
+  bool Core::file_exists(const std::string &file_path) {
+    ifstream fin(file_path.c_str());
+    return fin.good();
+  }
+
+  bool Core::delete_file(const std::string &file_path) {
+#ifdef _WINDOWS
+    return system(("del " + file_path).c_str()) == 0;
+#else
+    return system(("rm " + file_path).c_str()) == 0;
+#endif
+  }
+
+  bool Core::copy_file(const std::string &from, const std::string &to) {
+    ifstream fin(from.c_str());
+    if(!fin)
+      return false;
+
+    ofstream fout(to.c_str());
+
+    for(char c; fin.get(c); fout.put(c));
+
+    return fout.good();
   }
 
   int Core::get_num_joysticks() const {
@@ -171,7 +221,14 @@ namespace Zeni {
     quit_joysticks();
     init_joysticks();
   }
-  
+
+  void Core::preinit(const std::string &unique_app_identifier) {
+    if(g_initialized)
+      throw Core_Initialized();
+
+    g_unique_app_identifier = unique_app_identifier;
+  }
+
   void Core::init_joysticks() {
     if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
       throw Joystick_Init_Failure();
@@ -201,5 +258,8 @@ namespace Zeni {
 
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
+
+  std::string Core::g_unique_app_identifier;
+  bool Core::g_initialized = false;
 
 }

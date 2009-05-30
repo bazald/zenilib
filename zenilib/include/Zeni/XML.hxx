@@ -234,14 +234,21 @@ namespace Zeni {
   }
 
   XML_Document::XML_Document()
-  : m_root(0)
+    : m_root(0)
   {
   }
 
   XML_Document::XML_Document(const std::string &filename)
-  : m_root(0)
+    : m_root(0)
   {
     load(filename);
+  }
+
+  XML_Document::XML_Document(const std::string &filename, const std::string &backup)
+    : m_root(0)
+  {
+    if(!try_load(filename))
+      load(backup);
   }
 
   XML_Document::~XML_Document() {
@@ -253,26 +260,15 @@ namespace Zeni {
   }
 
   void XML_Document::load(const std::string &filename) {
-    delete m_root;
-    m_root = 0;
-
-    if(!m_xml_file.LoadFile(filename.c_str())) {
+    if(!try_load(filename)) {
       std::cerr << "Failed to load XML_Document '" << filename << "'\n"
                 << m_xml_file.ErrorDesc() << std::endl;
       throw XML_Load_Failure();
     }
-
-    TiXmlHandle root = &m_xml_file;
-    m_root = new XML_Element(root);
   }
 
   void XML_Document::save() {
-    if(!good()) {
-      std::cerr << "Bad XML_Document attempted to save\n";
-      throw XML_Document_Ungood();
-    }
-
-    if(!m_xml_file.SaveFile()) {
+    if(!try_save()) {
       std::cerr << "Failed to save XML_Document" << std::endl
                 << m_xml_file.ErrorDesc() << std::endl;
       throw XML_Save_Failure();
@@ -280,16 +276,47 @@ namespace Zeni {
   }
 
   void XML_Document::save(const std::string &filename) {
+    if(!try_save(filename.c_str())) {
+      std::cerr << "Failed to save XML_Document '" << filename << "'\n"
+                << m_xml_file.ErrorDesc() << std::endl;
+      throw XML_Save_Failure();
+    }
+  }
+
+  bool XML_Document::try_load(const std::string &filename) {
+    TiXmlDocument next;
+
+    if(!next.LoadFile(filename.c_str()))
+      return false;
+    else {
+      delete m_root;
+      m_root = 0;
+
+      m_xml_file = next;
+
+      TiXmlHandle root = &m_xml_file;
+      m_root = new XML_Element(root);
+
+      return true;
+    }
+  }
+
+  bool XML_Document::try_save() {
+    if(!good()) {
+      std::cerr << "Bad XML_Document attempted to save\n";
+      throw XML_Document_Ungood();
+    }
+
+    return m_xml_file.SaveFile();
+  }
+
+  bool XML_Document::try_save(const std::string &filename) {
     if(!good()) {
       std::cerr << "Bad XML_Document attempted to save to '" << filename << "'\n";
       throw XML_Document_Ungood();
     }
 
-    if(!m_xml_file.SaveFile(filename.c_str())) {
-      std::cerr << "Failed to save XML_Document '" << filename << "'\n"
-                << m_xml_file.ErrorDesc() << std::endl;
-      throw XML_Save_Failure();
-    }
+    return m_xml_file.SaveFile(filename.c_str());
   }
 
   XML_Element_c XML_Document::operator[](const std::string &field) const {

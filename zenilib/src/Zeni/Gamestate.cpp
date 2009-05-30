@@ -95,13 +95,24 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
-    if(event.keysym.sym == SDLK_ESCAPE &&
-       event.state == SDL_PRESSED)
+    if(event.state == SDL_PRESSED &&
+      !(event.keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
     {
       Game &game = get_Game();
 
-      if(game.size() > 1u)
-        game.pop_state();
+      switch(event.keysym.sym) {
+        case SDLK_ESCAPE:
+          if(game.size() > 1u)
+            game.pop_state();
+          break;
+
+        case SDLK_F1:
+          game.push_state(new Configurator_Video());
+          break;
+
+        default:
+          break;
+      }
     }
   }
 

@@ -164,7 +164,19 @@ namespace Zeni {
 
   void Configurator_Video::Save_Button::on_accept() {
     Text_Button::on_accept();
-    m_file->save();
+
+    Core &cr = get_Core();
+    const std::string appdata_path = cr.get_appdata_path();
+
+    if(cr.create_directory(appdata_path) &&
+       cr.create_directory(appdata_path + "config/"))
+    {
+      m_file->try_save(appdata_path + "config/zenilib.xml");
+    }
+
+    m_file->try_save("config/zenilib.xml");
+
+    get_Game().pop_state();
   }
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
@@ -179,7 +191,7 @@ namespace Zeni {
   }
 
   Configurator_Video::Configurator_Video()
-    : m_file("config/zenilib.xml"),
+    : m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
     m_crop_window(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())),
     m_virtual_window(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f)),
