@@ -86,8 +86,16 @@ namespace Zeni {
     Core & operator=(const Core &);
 
   public:
-    const std::string & get_username();
-    std::string get_appdata_path(const std::string &unique_app_identifier);
+    static const std::string & get_uniqname(); ///< Get the unique app identifier for the game, set int zenilib.xml
+    const std::string & get_username(); ///< Get the logged-in user's username
+    std::string get_appdata_path(); ///< Get the path that should be used for user-modifiable storage
+
+    static bool create_directory(const std::string &directory_path); ///< Create a directory if it doesn't already exist; It is not considered an error if it already exists.
+    static bool remove_directory(const std::string &directory_path); ///< Remove a directory
+
+    static bool file_exists(const std::string &file_path); ///< Test for the existence of a file
+    static bool delete_file(const std::string &file_path); ///< Delete a file
+    static bool copy_file(const std::string &from, const std::string &to); ///< Copy a file from one filepath to another
 
     int get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 
@@ -99,9 +107,15 @@ namespace Zeni {
 
     void regenerate_joysticks(); ///< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
 
+    // Call before any other Core functions; May throw Core_Initialized
+    static void preinit(const std::string &unique_app_identifier);
+
   private:
     void init_joysticks();
     void quit_joysticks();
+
+    static std::string g_unique_app_identifier;
+    static bool g_initialized;
 
     std::string m_username;
     std::string m_appdata_path;
@@ -113,6 +127,10 @@ namespace Zeni {
 
   struct Core_Init_Failure : public Error {
     Core_Init_Failure() : Error("Zeni Core Failed to Initialize Correctly") {}
+  };
+
+  struct Core_Initialized : public Error {
+    Core_Initialized() : Error("Zeni Core Already Initialized") {}
   };
 
   struct Joystick_Init_Failure : public Error {

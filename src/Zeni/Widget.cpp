@@ -634,6 +634,7 @@ namespace Zeni {
     if(down && m_edit_pos != -1)
       switch(keysym.sym) {
         case SDLK_BACKSPACE:
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
           {
             const string &t = get_text();
 
@@ -650,6 +651,7 @@ namespace Zeni {
           }
           break;
         case SDLK_DELETE:
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
           {
             const string &t = get_text();
 
@@ -666,17 +668,21 @@ namespace Zeni {
           }
           break;
         case SDLK_HOME:
-          if(keysym.mod & KMOD_CTRL)
-            seek_cursor(0);
-          else if(m_cursor_index.x) {
-            int cursor_pos = get_cursor_pos() - m_cursor_index.x;
-            if(m_lines[m_cursor_index.y].endled)
-              ++cursor_pos;
-            
-            seek_cursor(cursor_pos);
+          if(!(keysym.mod & (KMOD_ALT | KMOD_META | KMOD_SHIFT)))
+          {
+            if(keysym.mod & KMOD_CTRL)
+              seek_cursor(0);
+            else if(m_cursor_index.x) {
+              int cursor_pos = get_cursor_pos() - m_cursor_index.x;
+              if(m_lines[m_cursor_index.y].endled)
+                ++cursor_pos;
+              
+              seek_cursor(cursor_pos);
+            }
           }
           break;
         case SDLK_END:
+          if(!(keysym.mod & (KMOD_ALT | KMOD_META | KMOD_SHIFT)))
           {
             int cursor_pos = keysym.mod & KMOD_CTRL ?
                              get_max_cursor_seek() :
@@ -686,32 +692,37 @@ namespace Zeni {
           }
           break;
         case SDLK_LEFT:
-          seek(m_edit_pos - 1);
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+            seek(m_edit_pos - 1);
           break;
         case SDLK_RIGHT:
-          seek(m_edit_pos + 1);
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+            seek(m_edit_pos + 1);
           break;
         case SDLK_UP:
-          if(m_cursor_index.y) {
-            int count = 0;
-            for(int i = 0, iend = m_cursor_index.y - 1; i != iend; ++i)
-              count += int(m_lines[i].unformatted.size());
-            count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y - 1].unformatted.size()));
-            
-            seek(count);
-          }
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+            if(m_cursor_index.y) {
+              int count = 0;
+              for(int i = 0, iend = m_cursor_index.y - 1; i != iend; ++i)
+                count += int(m_lines[i].unformatted.size());
+              count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y - 1].unformatted.size()));
+              
+              seek(count);
+            }
           break;
         case SDLK_DOWN:
-          if(m_cursor_index.y + 1 < int(m_lines.size())) {
-            int count = 0;
-            for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
-              count += int(m_lines[i].unformatted.size());
-            count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y + 1].unformatted.size()));
-            
-            seek(count);
-          }
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+            if(m_cursor_index.y + 1 < int(m_lines.size())) {
+              int count = 0;
+              for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
+                count += int(m_lines[i].unformatted.size());
+              count += std::min(m_cursor_index.x, int(m_lines[m_cursor_index.y + 1].unformatted.size()));
+              
+              seek(count);
+            }
           break;
         default:
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
           {
             const char c = Gamestate_Base::to_char(keysym);
             const string &t = get_text();
@@ -1131,7 +1142,7 @@ namespace Zeni {
       }
     }
     else {
-      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+      std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_key(keysym, down);
@@ -1154,7 +1165,7 @@ namespace Zeni {
       }
     }
     else {
-      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+      std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_button(pos, down, button);
@@ -1177,7 +1188,7 @@ namespace Zeni {
       }
     }
     else {
-      std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+      std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_motion(pos);
@@ -1191,7 +1202,7 @@ namespace Zeni {
   }
 
   void Widgets::render_impl() const {
-    std::stable_sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+    std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
     for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(); it != m_widgets.rend(); ++it)
       (*it)->render();

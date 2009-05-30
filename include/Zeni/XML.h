@@ -127,6 +127,7 @@ namespace Zeni {
   public:
     inline XML_Document();
     inline XML_Document(const std::string &filename);
+    inline XML_Document(const std::string &filename, const std::string &backup);
     inline ~XML_Document();
 
     /** Load and Save **/
@@ -135,6 +136,10 @@ namespace Zeni {
     inline void load(const std::string &filename);
     inline void save();
     inline void save(const std::string &filename);
+
+    inline bool try_load(const std::string &filename);
+    inline bool try_save();
+    inline bool try_save(const std::string &filename);
 
     /** Tree Traversal **/
 

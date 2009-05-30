@@ -46,6 +46,17 @@ using namespace Zeni;
 
 static void load_config() {
   XML_Document config_xml("config/zenilib.xml");
+
+  {
+    Core::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
+    get_Core(); // Primarily to set up IO redirection
+
+    if(config_xml.try_load(get_Core().get_appdata_path() + "config/zenilib.xml"))
+      cerr << "User-specific config file loaded." << endl;
+    else
+      cerr << "User-specific config file not found." << endl;
+  }
+
   XML_Element_c zenilib = config_xml["Zenilib"];
 
   struct {
@@ -189,9 +200,6 @@ inline int main2(const int &argc, const char * const argv[]) {
     args[i - 1] = argv[i];
 
   try {
-    // Primarily to set up IO redirection
-    get_Core();
-
     // Load config
     load_config();
     
