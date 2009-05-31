@@ -37,9 +37,15 @@
 
 #include <list>
 
+#include <Zeni/Global.h>
+
 using namespace std;
 
 namespace Zeni {
+
+  void Widget::set_editable(const bool &editable_) {
+    m_editable = editable_;
+  }
   
   const Point2f & Widget_Rectangle::get_upper_left() const {
     return m_upper_left;
@@ -66,7 +72,7 @@ namespace Zeni {
   }
   
   void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
-    if(button != SDL_BUTTON_LEFT)
+    if(!is_editable() || button != SDL_BUTTON_LEFT)
       return;
 
     const bool inside = is_inside(pos);
@@ -104,6 +110,9 @@ namespace Zeni {
   }
   
   void Widget_Button::on_mouse_motion(const Point2i &pos) {
+    if(!is_editable())
+      return;
+
     const bool inside = is_inside(pos);
 
     if(!m_clicked_outside)
@@ -210,11 +219,17 @@ namespace Zeni {
   }
 
   void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(!is_editable())
+      return;
+
     for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
       (*it)->on_mouse_button(pos, down, button);
   }
     
   void Radio_Button_Set::on_mouse_motion(const Point2i &pos) {
+    if(!is_editable())
+      return;
+
     for(std::set<Radio_Button *>::iterator it = m_radio_buttons.begin(); it != m_radio_buttons.end(); ++it)
       (*it)->on_mouse_motion(pos);
   }
@@ -242,7 +257,7 @@ namespace Zeni {
   }
 
   void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
-    if(button != SDL_BUTTON_LEFT)
+    if(!is_editable() || button != SDL_BUTTON_LEFT)
       return;
 
     if(down) {
@@ -326,13 +341,13 @@ namespace Zeni {
   : Widget_Button(upper_left_, lower_right_),
     m_bg(upper_left_, lower_right_, bg_color_),
     m_text(font_name_, clean_string(text_), text_color_),
-    m_editable(editable_),
     m_edit_pos(-1),
     m_last_seek(0),
     m_justify(justify_),
     m_tab_spaces(tab_spaces_),
     m_cursor_index(-1, -1)
   {
+    set_editable(editable_);
     format();
   }
 
@@ -473,6 +488,9 @@ namespace Zeni {
   }
 
   void Selector::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(!is_editable())
+      return;
+
     if(!m_selected)
       m_normal_button.on_mouse_button(pos, down, button);
     else {
@@ -498,6 +516,9 @@ namespace Zeni {
   }
 
   void Selector::on_mouse_motion(const Point2i &pos) {
+    if(!is_editable())
+      return;
+
     if(!m_selected)
       m_normal_button.on_mouse_motion(pos);
     else {
@@ -722,7 +743,7 @@ namespace Zeni {
             }
           break;
         default:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META)))
           {
             const char c = Gamestate_Base::to_char(keysym);
             const string &t = get_text();
@@ -765,20 +786,37 @@ namespace Zeni {
   }
 
   void Text_Box::on_accept() {
-    if(!m_editable)
-      return;
-
     int j = 0, jend = int(m_lines.size());
     for(; j != jend && m_cursor_pos.y > m_lines[j].glyph_top; ++j);
     --j;
 
+    /// BEGIN JUSTIFICATION FIX
+
+    const Font &f = get_font();
+
+    float x_pos;
+    if(m_justify == ZENI_LEFT)
+      x_pos = 0.0f;
+    else if(m_justify == ZENI_RIGHT)
+      x_pos = get_lower_right().x - get_upper_left().x;
+    else
+      x_pos = (get_lower_right().x - get_upper_left().x) / 2.0f;
+
+    if(m_justify == ZENI_RIGHT)
+      x_pos -= f.get_text_width(m_lines[j].formatted);
+    else if(m_justify == ZENI_CENTER)
+      x_pos -= f.get_text_width(m_lines[j].formatted) / 2.0f;
+
+    /// END JUSTIFICATION FIX
+
     int i = 0, iend = int(m_lines[j].unformatted_glyph_sides.size());
-    for(; i != iend && m_cursor_pos.x > m_lines[j].unformatted_glyph_sides[i]; ++i);
-    --i;
+    for(; i != iend && m_cursor_pos.x > x_pos + m_lines[j].unformatted_glyph_sides[i]; ++i);
+    if(i) // Can be negative if using ZENI_CENTER or ZENI_RIGHT justification
+      --i;
 
     /// HACK: Pleasentness Increase
-    if(i + 1 != iend && m_cursor_pos.x > (0.2f * m_lines[j].unformatted_glyph_sides[i] +
-                                          0.8f * m_lines[j].unformatted_glyph_sides[i + 1]))
+    if(i + 1 != iend && m_cursor_pos.x > x_pos + (0.2f * m_lines[j].unformatted_glyph_sides[i] +
+                                                  0.8f * m_lines[j].unformatted_glyph_sides[i + 1]))
       ++i;
 
     m_cursor_index.x = i;
@@ -824,7 +862,7 @@ namespace Zeni {
     else if(m_justify == ZENI_RIGHT)
       x_pos = get_lower_right().x;
     else
-      x_pos = (get_upper_left().x + get_lower_right().x) / 2;
+      x_pos = (get_upper_left().x + get_lower_right().x) / 2.0f;
 
     const float &y_offset = get_upper_left().y;
     for(int i = 0, iend = int(m_lines.size()); i != iend; ++i)
@@ -834,15 +872,22 @@ namespace Zeni {
       && !((get_Timer().get_time().get_ticks_since(m_last_seek) / SDL_DEFAULT_REPEAT_DELAY) & 1) // HACK: render every other second
        )
     {
-      const Point2f p0(get_upper_left().x + m_lines[m_cursor_index.y].unformatted_glyph_sides[m_cursor_index.x],
-                       get_upper_left().y + m_lines[m_cursor_index.y].glyph_top);
-      const Point2f p1(p0.x,
-                       p0.y + f.get_text_height());
+      Point2f p0(x_pos + m_lines[m_cursor_index.y].unformatted_glyph_sides[m_cursor_index.x],
+                 get_upper_left().y + m_lines[m_cursor_index.y].glyph_top);
+      if(m_justify == ZENI_RIGHT)
+        p0.x -= f.get_text_width(m_lines[m_cursor_index.y].formatted);
+      else if(m_justify == ZENI_CENTER)
+        p0.x -= f.get_text_width(m_lines[m_cursor_index.y].formatted) / 2.0f;
 
-      Vertex2f_Color v0(p0, c);
-      Vertex2f_Color v1(p1, c);
+      const Point2f p1(p0.x, p0.y + f.get_text_height());
+      const float epsilon = f.get_text_height() * ZENI_TEXT_CURSOR_WIDTH / 2.0f;
 
-      const Line_Segment<Vertex2f_Color> visible_cursor(v0, v1);
+      const Vertex2f_Color v0(Point2f(p0.x - epsilon, p0.y), c);
+      const Vertex2f_Color v1(Point2f(p1.x - epsilon, p1.y), c);
+      const Vertex2f_Color v2(Point2f(p1.x + epsilon, p1.y), c);
+      const Vertex2f_Color v3(Point2f(p0.x + epsilon, p0.y), c);
+
+      const Quadrilateral<Vertex2f_Color> visible_cursor(v0, v1, v2, v3);
       vr.render(visible_cursor);
     }
   }
@@ -957,6 +1002,12 @@ namespace Zeni {
     }
   }
 
+  void Text_Box::set_editable(const bool &editable_) {
+    Widget::set_editable(editable_);
+    format();
+    invalidate_edit_pos();
+  }
+
   const int & Text_Box::get_edit_pos() const {
     return m_edit_pos;
   }
@@ -980,7 +1031,7 @@ namespace Zeni {
   }
 
   void Text_Box::seek(const int &edit_pos) {
-    if(!m_editable)
+    if(!is_editable())
       return;
 
     const string t = get_text();
@@ -1010,7 +1061,7 @@ namespace Zeni {
   }
 
   void Text_Box::seek_cursor(const int &cursor_pos) {
-    if(!m_editable || cursor_pos < 0)
+    if(!is_editable() || cursor_pos < 0)
       return;
 
     int edit_count = 0, count = 0, j = 0, jend = int(m_lines.size()), i = -1, iend;
@@ -1038,6 +1089,9 @@ namespace Zeni {
   }
   
   void Text_Box::set_focus(const bool &value) {
+    if(!is_editable())
+      return;
+
     if(value) {
       const bool was_focused = m_edit_pos != -1;
       seek(get_max_seek());
@@ -1098,6 +1152,9 @@ namespace Zeni {
   }
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
+    if(!is_editable())
+      return;
+
     m_keysym = keysym;
     m_down = down;
 
@@ -1107,21 +1164,27 @@ namespace Zeni {
 
     m_widget->on_key(m_keysym, m_down);
 
-    set_busy(m_widget->busy());
+    set_busy(m_widget->is_busy());
   }
 
   void Widget_Input_Repeater::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(!is_editable())
+      return;
+
     m_active = false;
 
     m_widget->on_mouse_button(pos, down, button);
 
-    set_busy(m_widget->busy());
+    set_busy(m_widget->is_busy());
   }
 
   void Widget_Input_Repeater::on_mouse_motion(const Point2i &pos) {
+    if(!is_editable())
+      return;
+
     m_widget->on_mouse_motion(pos);
 
-    set_busy(m_widget->busy());
+    set_busy(m_widget->is_busy());
   }
 
   void Widget_Input_Repeater::render_impl() const {
@@ -1129,14 +1192,17 @@ namespace Zeni {
   }
 
   static bool widget_layer_less(const Widget * const &lhs, const Widget * const &rhs) {
-    return lhs->layer() < rhs->layer();
+    return lhs->get_layer() < rhs->get_layer();
   }
 
   void Widgets::on_key(const SDL_keysym &keysym, const bool &down) {
+    if(!is_editable())
+      return;
+
     if(m_busy_one) {
       m_busy_one->on_key(keysym, down);
 
-      if(!m_busy_one->busy()) {
+      if(!m_busy_one->is_busy()) {
         m_busy_one = 0;
         set_busy(false);
       }
@@ -1147,7 +1213,7 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_key(keysym, down);
 
-        if((*it)->busy()) {
+        if((*it)->is_busy()) {
           set_busy(true);
           break;
         }
@@ -1156,10 +1222,13 @@ namespace Zeni {
   }
 
   void Widgets::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
+    if(!is_editable())
+      return;
+
     if(m_busy_one) {
       m_busy_one->on_mouse_button(pos, down, button);
 
-      if(!m_busy_one->busy()) {
+      if(!m_busy_one->is_busy()) {
         m_busy_one = 0;
         set_busy(false);
       }
@@ -1170,7 +1239,7 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_button(pos, down, button);
 
-        if((*it)->busy()) {
+        if((*it)->is_busy()) {
           set_busy(true);
           break;
         }
@@ -1179,10 +1248,13 @@ namespace Zeni {
   }
     
   void Widgets::on_mouse_motion(const Point2i &pos) {
+    if(!is_editable())
+      return;
+
     if(m_busy_one) {
       m_busy_one->on_mouse_motion(pos);
 
-      if(!m_busy_one->busy()) {
+      if(!m_busy_one->is_busy()) {
         m_busy_one = 0;
         set_busy(false);
       }
@@ -1193,7 +1265,7 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_motion(pos);
 
-        if((*it)->busy()) {
+        if((*it)->is_busy()) {
           set_busy(true);
           break;
         }

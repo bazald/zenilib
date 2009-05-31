@@ -275,9 +275,11 @@ namespace Zeni {
     inline Widget();
     virtual ~Widget() {}
 
-    inline const bool & busy() const;
-    inline const float & layer() const;
+    inline const bool & is_busy() const;
+    inline const bool & is_editable() const;
+    inline const float & get_layer() const;
     inline void set_busy(const bool &busy_);
+    virtual void set_editable(const bool &editable_);
     inline void set_layer(const float &layer_ = 0.0f);
 
     inline void on_event(const SDL_KeyboardEvent &event);
@@ -299,6 +301,7 @@ namespace Zeni {
 
     float m_layer;
     bool m_busy;
+    bool m_editable;
   };
 
   class Widget_Positioned {
@@ -477,7 +480,6 @@ namespace Zeni {
     Color m_border_color;
     Color m_check_color;
     bool m_checked;
-    bool m_toggleable;
     bool m_toggling;
   };
 
@@ -720,16 +722,15 @@ namespace Zeni {
     inline const Font & get_font() const;
     inline const std::string & get_text() const;
     inline const Color & get_text_color() const;
-    inline const bool & is_editable() const;
     inline const JUSTIFY & get_justify() const;
     inline int get_num_lines() const;
     inline int get_max_lines() const;
 
     inline void set_bg_color(const Color &bg_color_);
+    virtual void set_editable(const bool &editable_);
     inline void set_font_name(const std::string &font_name_);
     inline void set_text(const std::string &text_);
     inline void set_text_color(const Color &text_color_);
-    inline void set_editable(const bool &editable_);
     inline void set_justify(const JUSTIFY &justify_);
     inline void erase_lines(const int &before_index, const int &after_and_including_index);
 
@@ -780,7 +781,6 @@ namespace Zeni {
 
     std::vector<Line> m_lines;
 
-    bool m_editable;
     int m_edit_pos;
     Time m_last_seek;
 

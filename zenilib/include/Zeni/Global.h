@@ -71,6 +71,9 @@
 #define ZENI_DEFAULT_JUSTIFY          (ZENI_LEFT)
 #define ZENI_DEFAULT_TEXTBOX_EDITABLE (false)
 
+// Widget.cpp
+#define ZENI_TEXT_CURSOR_WIDTH (0.05f)
+
 // Video.hxx
 #define ZENI_2D_NEAR (-1.0f)
 #define ZENI_2D_FAR  (1.0f)

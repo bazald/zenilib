@@ -49,15 +49,20 @@ namespace Zeni {
 
   Widget::Widget()
     : m_layer(0.0f),
-    m_busy(false)
+    m_busy(false),
+    m_editable(true)
   {
   }
 
-  const bool & Widget::busy() const {
+  const bool & Widget::is_busy() const {
     return m_busy;
   }
 
-  const float & Widget::layer() const {
+  const bool & Widget::is_editable() const {
+    return m_editable;
+  }
+
+  const float & Widget::get_layer() const {
     return m_layer;
   }
 
@@ -319,9 +324,9 @@ namespace Zeni {
     m_border_color(border_color_),
     m_check_color(check_color_),
     m_checked(checked_),
-    m_toggleable(toggleable_),
     m_toggling(false)
   {
+    set_editable(toggleable_);
   }
 
   const Color & Check_Box::get_border_color() const {return m_border_color;}
@@ -477,10 +482,6 @@ namespace Zeni {
     return m_text.get_color();
   }
 
-  const bool & Text_Box::is_editable() const {
-    return m_editable;
-  }
-
   const JUSTIFY & Text_Box::get_justify() const {
     return m_justify;
   }
@@ -511,12 +512,6 @@ namespace Zeni {
   
   void Text_Box::set_text_color(const Color &text_color_) {
     m_text.set_color(text_color_);
-  }
-
-  void Text_Box::set_editable(const bool &editable_) {
-    m_editable = editable_;
-    format();
-    invalidate_edit_pos();
   }
   
   void Text_Box::set_justify(const JUSTIFY &justify_) {
@@ -558,7 +553,7 @@ namespace Zeni {
   const int & Widget_Input_Repeater::get_repeat_delay() const {return m_repeat_delay;}
   const int & Widget_Input_Repeater::get_repeat_interval() const  {return m_repeat_interval;}
 
-  void Widget_Input_Repeater::set_widget(Widget &widget_) {m_widget = &widget_; set_busy(widget_.busy());}
+  void Widget_Input_Repeater::set_widget(Widget &widget_) {m_widget = &widget_; set_busy(widget_.is_busy());}
   void Widget_Input_Repeater::set_repeat_delay(const int &repeat_delay_) {m_repeat_delay = repeat_delay_;}
   void Widget_Input_Repeater::set_repeat_interval(const int &repeat_interval_) {m_repeat_interval = repeat_interval_;}
 
@@ -585,7 +580,7 @@ namespace Zeni {
   void Widgets::lend_Widget(Widget &widget) {
     m_widgets.push_back(&widget);
 
-    if(widget.busy()) {
+    if(widget.is_busy()) {
       assert(!m_busy_one);
       m_busy_one = &widget;
       set_busy(true);
