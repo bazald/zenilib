@@ -71,6 +71,9 @@
 #undef ZENI_DEFAULT_JUSTIFY
 #undef ZENI_DEFAULT_TEXTBOX_EDITABLE
 
+// Widget.cpp
+#undef ZENI_TEXT_CURSOR_WIDTH
+
 // Video.hxx
 #undef ZENI_2D_NEAR
 #undef ZENI_2D_FAR

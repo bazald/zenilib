@@ -109,7 +109,7 @@ namespace Zeni {
                element.to_string(),
                get_Colors()["black"],
                true,
-               ZENI_LEFT),
+               ZENI_CENTER),
     m_element(element)
   {
   }
@@ -234,9 +234,16 @@ namespace Zeni {
 
     /** Build m_widgets **/
 
+#ifdef _WINDOWS
     m_api.add_entry("Direct3D 9", "DX9");
+#endif
     m_api.add_entry("OpenGL", "OpenGL");
+#ifdef _WINDOWS
     m_api.select_option(m_zenilib["Video"]["API"].to_string());
+#else
+    m_api.select_option("OpenGL");
+    m_api.set_editable(false);
+#endif
 
     m_widgets.lend_Widget(m_anisotropy);
     m_widgets.lend_Widget(m_bilinear_filtering);
