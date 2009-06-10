@@ -73,7 +73,6 @@ int launch(const std::string &local_exe, const std::string &arguments) {
     return -3;
   sprintf_s(full_exe_with_args, BUFFER_SIZE, "%s %s", full_exe, arguments.c_str());
 
-
   STARTUPINFOA siStartupInfo;
   PROCESS_INFORMATION piProcessInfo;
   memset(&siStartupInfo, 0, sizeof(siStartupInfo));
@@ -96,8 +95,14 @@ int launch(const std::string &local_exe, const std::string &arguments) {
                           &siStartupInfo,
                           &piProcessInfo) != 0;
 
-  if(result)
+  if(!result)
     return 2;
 
-  return GetLastError();
+  if(WaitForSingleObject(piProcessInfo.hProcess, INFINITE) == WAIT_FAILED)
+    return GetLastError();
+
+  CloseHandle(piProcessInfo.hThread);
+  CloseHandle(piProcessInfo.hProcess);
+
+  return 0;
 }
