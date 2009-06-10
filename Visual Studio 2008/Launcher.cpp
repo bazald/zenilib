@@ -49,10 +49,19 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/,
 
 int launch(const std::string &local_exe, const std::string &arguments) {
   char dir[BUFFER_SIZE];
-  const DWORD required_length = GetCurrentDirectoryA(0, NULL);
-  if(required_length > BUFFER_SIZE)
+  const DWORD nSize = GetModuleFileNameA(NULL, dir, BUFFER_SIZE - 1);
+  if(!nSize || GetLastError() == ERROR_INSUFFICIENT_BUFFER)
     return -1;
-  GetCurrentDirectoryA(required_length, dir);
+  else
+    dir[nSize] = '\0';
+
+  for(int i = nSize - 1; i != -1; --i)
+    if(dir[i] == '\\') {
+      dir[i] = '\0';
+      break;
+    }
+    else
+      dir[i] = '\0';
 
   char full_exe[BUFFER_SIZE];
   if(strlen(dir) + strlen(local_exe.c_str()) + 1 > BUFFER_SIZE)
@@ -64,25 +73,31 @@ int launch(const std::string &local_exe, const std::string &arguments) {
     return -3;
   sprintf_s(full_exe_with_args, BUFFER_SIZE, "%s %s", full_exe, arguments.c_str());
 
+
   STARTUPINFOA siStartupInfo;
   PROCESS_INFORMATION piProcessInfo;
   memset(&siStartupInfo, 0, sizeof(siStartupInfo));
   memset(&piProcessInfo, 0, sizeof(piProcessInfo));
   siStartupInfo.cb = sizeof(siStartupInfo);
 
-  const bool result = CreateProcessA(full_exe,
-                                     full_exe_with_args,
-                                     NULL,
-                                     NULL,
-                                     FALSE,
-                                     0,
-                                     NULL,
-                                     NULL,
-                                     &siStartupInfo,
-                                     &piProcessInfo) != 0;
+  bool result = SetCurrentDirectoryA(dir) != 0;
 
-   if(result)
-     return 0;
+  if(!result)
+    return 1;
 
-   return GetLastError();
+  result = CreateProcessA(full_exe,
+                          full_exe_with_args,
+                          NULL,
+                          NULL,
+                          FALSE,
+                          0,
+                          NULL,
+                          NULL,
+                          &siStartupInfo,
+                          &piProcessInfo) != 0;
+
+  if(result)
+    return 2;
+
+  return GetLastError();
 }
