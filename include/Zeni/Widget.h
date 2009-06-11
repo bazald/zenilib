@@ -312,6 +312,9 @@ namespace Zeni {
     inline Point2f get_lower_left() const;
     virtual const Point2f & get_lower_right() const = 0;
     inline Point2f get_upper_right() const;
+
+    inline float get_height() const;
+    inline float get_width() const;
     inline Point2f get_center() const;
   };
 
@@ -732,7 +735,7 @@ namespace Zeni {
     inline void set_text(const std::string &text_);
     inline void set_text_color(const Color &text_color_);
     inline void set_justify(const JUSTIFY &justify_);
-    inline void erase_lines(const int &before_index, const int &after_and_including_index);
+    inline void erase_lines(const int &begin, const int &end);
 
     const int & get_edit_pos() const;
     int get_cursor_pos() const;

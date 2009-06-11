@@ -19,6 +19,24 @@ element in your game to enable easy skinning.
         <green>1.0</green>
         <blue>0.0</blue>
     </system_font>
+    <console_foreground>
+        <alpha>0.8</alpha>
+        <red>0.0</red>
+        <green>1.0</green>
+        <blue>0.0</blue>
+    </console_foreground>
+    <console_background>
+        <alpha>0.5</alpha>
+        <red>0.0</red>
+        <green>0.0</green>
+        <blue>0.0</blue>
+    </console_background>
+    <console_border>
+        <alpha>0.2</alpha>
+        <red>1.0</red>
+        <green>1.0</green>
+        <blue>1.0</blue>
+    </console_border>
     <black>
         <alpha>1.0</alpha>
         <red>0.0</red>

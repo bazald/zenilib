@@ -119,6 +119,14 @@ namespace Zeni {
     return Point2f(get_lower_right().x, get_upper_left().y);
   }
 
+  float Widget_Positioned::get_height() const {
+    return get_lower_right().y - get_upper_left().y;
+  }
+
+  float Widget_Positioned::get_width() const {
+    return get_lower_right().x - get_upper_left().x;
+  }
+
   Point2f Widget_Positioned::get_center() const {
     const Point2f &upper_left = get_upper_left();
     const Point2f &lower_right = get_lower_right();
@@ -491,7 +499,7 @@ namespace Zeni {
   }
 
   int Text_Box::get_max_lines() const {
-    return int(get_lower_right().y - get_upper_left().y / get_font().get_text_height());
+    return int(get_height() / get_font().get_text_height());
   }
 
   void Text_Box::set_bg_color(const Color &bg_color_) {
@@ -518,13 +526,24 @@ namespace Zeni {
     m_justify = justify_;
   }
 
-  void Text_Box::erase_lines(const int &before_index, const int &after_and_including_index) {
+  void Text_Box::erase_lines(const int &begin, const int &end) {
     std::string new_text;
-    for(int i = 0, iend = int(m_lines.size()); i != iend; ++i)
-      if(before_index <= i && i < after_and_including_index)
+
+    assert(-1 < begin);
+    assert(begin <= end);
+    assert(end <= get_num_lines());
+
+    for(int i = 0; i != begin; ++i)
+      new_text += m_lines[i].unformatted;
+    if(end != get_num_lines()) {
+      if(m_lines[end].endled)
+        new_text += m_lines[end].unformatted.substr(1);
+      else
+        new_text += m_lines[end].unformatted;
+
+      for(int i = end + 1; i != get_num_lines(); ++i)
         new_text += m_lines[i].unformatted;
-    if(!new_text.empty() && new_text[0] == '\n')
-      new_text = new_text.substr(1, new_text.size() - 1);
+    }
 
     m_text.set_text(new_text);
 

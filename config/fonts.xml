@@ -18,11 +18,11 @@ For each entry in Fonts:
 Only TrueType fonts are supported.
 -->
 <Fonts>
-    <system>
+    <system_36_600>
         <filepath>fonts/FORGOTTE.TTF</filepath>
         <height>36</height>
         <bold>0</bold>
         <italics>0</italics>
         <virtual_screen_height>600</virtual_screen_height>
-    </system>
+    </system_36_600>
 </Fonts>
