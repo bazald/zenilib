@@ -104,6 +104,7 @@ namespace Zeni {
     fps_next = 0;
   }
 
+#ifndef NDEBUG
   void Game::activate_console() {
     if(!m_states.empty())
       get_console().set_child(m_states.top());
@@ -114,6 +115,7 @@ namespace Zeni {
     m_console_active = false;
     get_console().clear_child();
   }
+#endif
 
 }
 
