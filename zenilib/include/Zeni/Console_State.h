@@ -26,60 +26,75 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+/**
+* \class Zeni::Console_State
+*
+* \ingroup Zenilib
+*
+* \brief Provide a text console to process commands
+*
+* \author bazald
+*
+* Contact: bazald@zenipex.com
+*/
 
-#define ZENI_INLINES
+#ifndef CONSOLE_STATE_H
+#define CONSOLE_STATE_H
 
-#include <Zeni/Camera.h>
-#include <Zeni/Chronometer.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Configurator_Video.h>
-#include <Zeni/Console_State.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/Database.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
 #include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Renderable.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sound_Source.h>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
 #include <Zeni/Widget.h>
-#include <Zeni/XML.h>
+
+namespace Zeni {
+
+  class Console_State;
+
+  struct Console_Function {
+    void operator()(Console_State &console,
+                    const std::string &name,
+                    const std::vector<std::string> &args);
+  };
+
+  class Console_State : public Gamestate_Base {
+    friend class Game;
+
+  private:
+    Console_State();
+    ~Console_State();
+
+    Gamestate & get_child();
+    void set_child(Gamestate child);
+    void clear_child();
+
+  public:
+    void write_to_log(const std::string &text);
+    void clear_log();
+
+    void give_function(const std::string &name, Console_Function * const &function);
+
+  private:
+    void fire_command(const std::string &text);
+
+    void on_event(const SDL_Event &event);
+
+    void on_key(const SDL_KeyboardEvent &event);
+    void on_mouse_button(const SDL_MouseButtonEvent &event);
+    void on_mouse_motion(const SDL_MouseMotionEvent &event);
+
+    void render();
+
+    std::pair<Point2f, Point2f> m_virtual_screen;
+    Projector2D m_projector;
+
+    Quadrilateral<Vertex2f_Color> m_bg;
+    Text_Box m_log;
+    Text_Box m_prompt;
+
+    std::map<std::string, Console_Function *> m_functions;
+
+    Gamestate * m_child;
+    bool m_handled_event;
+  };
+
+}
 
 #endif

@@ -160,7 +160,7 @@ namespace Zeni {
   class Gamestate {
   public:
     inline Gamestate();
-    inline Gamestate(Gamestate_Base *state);
+    inline Gamestate(Gamestate_Base * const &state);
     ~Gamestate();
 
     inline Gamestate(const Gamestate &state);

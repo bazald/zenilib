@@ -49,6 +49,7 @@
 #ifndef ZENI_GAME_H
 #define ZENI_GAME_H
 
+#include <Zeni/Console_State.h>
 #include <Zeni/Gamestate.h>
 #include <Zeni/Timer.h>
 
@@ -69,7 +70,11 @@ namespace Zeni {
     Game & operator=(const Game &);
 
   public:
-    inline Gamestate_Base & get_current_state(); ///< Get a reference to the current Gamestate.
+    inline Gamestate get_top(); ///< Get a reference to the current Gamestate.
+
+#ifndef NDEBUG
+    inline Console_State & get_console(); ///< Get a reference to the Console_State
+#endif
 
     inline size_t size() const; ///< Get the current size of the Gamestate stack.
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
@@ -90,6 +95,14 @@ namespace Zeni {
 
     Time time;
     int ticks_passed, fps, fps_next;
+
+#ifndef NDEBUG
+    void activate_console();
+    void deactivate_console();
+
+    Gamestate m_console;
+    bool m_console_active;
+#endif
   };
 
   Game & get_Game(const std::vector<std::string> * const &args); ///< Get access to the singleton.

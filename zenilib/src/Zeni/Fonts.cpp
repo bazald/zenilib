@@ -62,7 +62,15 @@ namespace Zeni {
     const float height = xml_element["height"].to_float();
     const bool bold = xml_element["bold"].to_bool();
     const bool italics = xml_element["italics"].to_bool();
-    const float virtual_screen_height = xml_element["virtual_screen_height"].to_float();
+
+    float virtual_screen_height = 0.0f;
+    {
+      XML_Element_c vsh = xml_element["virtual_screen_height"];
+      if(vsh.good())
+        virtual_screen_height = vsh.to_float();
+      else
+        virtual_screen_height = float(get_Video().get_screen_height());
+    }
 
     return get_Video().create_Font(filepath, bold, italics, height, virtual_screen_height);
   }

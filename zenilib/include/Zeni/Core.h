@@ -64,13 +64,14 @@
 
 #include <SDL/SDL.h>
 
+#include <cassert>
 #include <string>
 #include <vector>
 
 namespace Zeni {
 
   struct Error {
-    Error(const std::string &msg_) : msg(msg_) {}
+    Error(const std::string &msg_) : msg(msg_) {assert(!"Error");}
     std::string msg;
   };
 

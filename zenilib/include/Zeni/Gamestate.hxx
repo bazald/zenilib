@@ -47,9 +47,11 @@ namespace Zeni {
   {
   }
 
-  Gamestate::Gamestate(Gamestate_Base *state)
+  Gamestate::Gamestate(Gamestate_Base * const &state)
     : m_state(state)
   {
+    assert(m_state);
+
     if(m_state)
       m_state->increment();
   }

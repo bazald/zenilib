@@ -37,12 +37,18 @@
 
 namespace Zeni {
 
-  Gamestate_Base & Game::get_current_state() {
+  Gamestate Game::get_top() {
     if(m_states.empty())
       throw Zero_Gamestate();
-    
-    return m_states.top().get();
+
+    return m_states.top();
   }
+
+#ifndef NDEBUG
+  Console_State & Game::get_console() {
+    return static_cast<Console_State &>(m_console.get());
+  }
+#endif
 
   size_t Game::size() const {
     return m_states.size();
@@ -50,6 +56,11 @@ namespace Zeni {
 
   void Game::push_state(const Gamestate &state) {
     m_states.push(state);
+
+#ifndef NDEBUG
+    if(m_console_active)
+      get_console().set_child(m_states.top());
+#endif
   }
 
   Gamestate Game::pop_state() {
@@ -61,6 +72,17 @@ namespace Zeni {
 
       gs = m_states.top();
       m_states.pop();
+
+#ifndef NDEBUG
+      if(m_console_active) {
+        Console_State &csr = get_console();
+
+        if(!m_states.empty())
+          csr.set_child(m_states.top());
+        else
+          csr.clear_child();
+      }
+#endif
     }
 
     return gs;
@@ -68,12 +90,24 @@ namespace Zeni {
 
   void Game::on_event(const SDL_Event &event) {
     Gamestate gs;
+#ifndef NDEBUG
+    Gamestate console_child;
+#endif
     
     {
       if(m_states.empty())
         throw Zero_Gamestate();
 
-      gs = m_states.top();
+#ifndef NDEBUG
+      if(m_console_active) {
+        gs = m_console;
+        console_child = get_console().get_child();
+      }
+      else
+#endif
+      {
+        gs = m_states.top();
+      }
     }
     
     gs.on_event(event);
@@ -81,30 +115,52 @@ namespace Zeni {
 
   void Game::perform_logic() {
     Gamestate gs;
+#ifndef NDEBUG
+    Gamestate console_child;
+#endif
     
     {
       if(m_states.empty())
         throw Zero_Gamestate();
 
-      gs = m_states.top();
+#ifndef NDEBUG
+      if(m_console_active) {
+        gs = m_console;
+        console_child = get_console().get_child();
+      }
+      else
+#endif
+      {
+        gs = m_states.top();
+      }
     }
     
     gs.perform_logic();
   }
 
   void Game::render() {
+    Gamestate gs;
+#ifndef NDEBUG
+    Gamestate console_child;
+#endif
+    
     {
-      Gamestate gs;
-      
-      {
-        if(m_states.empty())
-          throw Zero_Gamestate();
+      if(m_states.empty())
+        throw Zero_Gamestate();
 
+#ifndef NDEBUG
+      if(m_console_active) {
+        gs = m_console;
+        console_child = get_console().get_child();
+      }
+      else
+#endif
+      {
         gs = m_states.top();
       }
-      
-      gs.render();
     }
+    
+    gs.render();
 
     calculate_fps();
   }

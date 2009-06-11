@@ -59,7 +59,7 @@ namespace Zeni {
   void Configurator_Video::Check_Box_Element::render_impl() const {
     Check_Box::render_impl();
 
-    Font &font = get_Fonts()["system"];
+    Font &font = get_Fonts()["system_36_600"];
 
     font.render_text(" " + m_element.value(),
                      Point2f(get_lower_right().x,
@@ -92,7 +92,7 @@ namespace Zeni {
   void Configurator_Video::Slider_Element::render_impl() const {
     Slider::render_impl();
 
-    Font &font = get_Fonts()["system"];
+    Font &font = get_Fonts()["system_36_600"];
 
     font.render_text(" " + m_element.value() + " (" + itoa(get_value()) + ")",
                      Point2f(m_text_coord.x, m_text_coord.y - 0.5f * font.get_text_height()),
@@ -103,9 +103,9 @@ namespace Zeni {
                const Point2f &upper_left,
                const Point2f &lower_right)
     : Text_Box(upper_left,
-               Point2f(lower_right.x - get_Fonts()["system"].get_text_width(" " + element.value()), lower_right.y),
+               Point2f(lower_right.x - get_Fonts()["system_36_600"].get_text_width(" " + element.value()), lower_right.y),
                get_Colors()["yellow"],
-               "system",
+               "system_36_600",
                element.to_string(),
                get_Colors()["black"],
                true,
@@ -122,7 +122,7 @@ namespace Zeni {
   void Configurator_Video::Text_Element::render_impl() const {
     Text_Box::render_impl();
 
-    Font &font = get_Fonts()["system"];
+    Font &font = get_Fonts()["system_36_600"];
 
     font.render_text(" " + m_element.value(),
                      Point2f(get_lower_right().x,
@@ -137,7 +137,7 @@ namespace Zeni {
                    const Point2f &expanded_lower_right)
     : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
                get_Colors()["black"],
-               "system",
+               "system_36_600",
                get_Colors()["black"],
                get_Colors()["yellow"]),
     m_element(element)
@@ -157,7 +157,7 @@ namespace Zeni {
   Configurator_Video::Save_Button::Save_Button(XML_Document &file,
               const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system", "Save", get_Colors()["black"]),
+    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system_36_600", "Save", get_Colors()["black"]),
     m_file(&file)
   {
   }
@@ -181,7 +181,7 @@ namespace Zeni {
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system", "Cancel", get_Colors()["black"])
+    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system_36_600", "Cancel", get_Colors()["black"])
   {
   }
 
@@ -279,7 +279,7 @@ namespace Zeni {
   void Configurator_Video::render() {
     get_Video().set_2d_view(m_virtual_window, m_crop_window);
 
-    Font &font = get_Fonts()["system"];
+    Font &font = get_Fonts()["system_36_600"];
     const Color color = get_Colors()["system_font"];
 
     font.render_text("Zenilib Renderer Configuration:", Point2f(10.0f, 10.0f), color);
