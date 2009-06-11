@@ -28,6 +28,7 @@
 
 #include <Zeni/Gamestate.hxx>
 
+#include <Zeni/Configurator_Video.h>
 #include <Zeni/Game.hxx>
 
 #include <algorithm>
