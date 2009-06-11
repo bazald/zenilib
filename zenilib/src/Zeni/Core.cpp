@@ -37,6 +37,7 @@
 #ifdef _WINDOWS
 #include <shlobj.h>
 #else
+#include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif
