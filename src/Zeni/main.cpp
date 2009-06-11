@@ -248,6 +248,21 @@ int main(int argc, char *argv[]) {
     cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
     return -1;
   }
+#else
+  {
+    char zeniapp_path[FILENAME_MAX];
+    int length = readlink("/proc/self/exe", zeniapp_path, FILENAME_MAX);
+    for(zeniapp_path[length] = '\0'; length; --length)
+      if(zeniapp_path[length] == '/') {
+        zeniapp_path[length + 1] = '\0';
+        break;
+      }
+    if(chdir(zeniapp_path)) {
+      cerr << "Setting working directory failed with error code: '" << errno << "'\n";
+      cerr << strerror(errno) << "\n";
+      return -1;
+    }
+  }
 #endif
 
   return main2(argc, argv);
