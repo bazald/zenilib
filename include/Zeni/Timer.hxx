@@ -63,6 +63,10 @@ namespace Zeni {
     m_ticks = get_Timer().get_ticks();
   }
 
+  bool Time::operator<(const Time &rhs) const {
+    return m_ticks < rhs.m_ticks;
+  }
+
   int Timer::get_ticks() {
     Mutex::Lock lock(ticks_mutex);
     update();
@@ -154,6 +158,10 @@ namespace Zeni {
 #else
     gettimeofday(&m_ticks, 0);
 #endif
+  }
+
+  bool Time_HQ::operator<(const Time_HQ &rhs) const {
+    return m_ticks < rhs.m_ticks;
   }
 
 }
