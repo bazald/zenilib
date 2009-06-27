@@ -124,6 +124,10 @@ namespace Zeni {
 
     // Modifiers
     inline void update(); ///< Update to current Time
+
+    // Comparisons
+    inline bool operator<(const Time &rhs) const;
+
   private:
     int m_ticks;
   };
@@ -186,6 +190,10 @@ namespace Zeni {
 
     // Modifiers
     inline void update(); ///< Update to current Time
+
+    // Comparisons
+    inline bool operator<(const Time_HQ &rhs) const;
+
   private:
     HQ_Tick_Type m_ticks;
     HQ_Tick_Type m_ticks_per_second;

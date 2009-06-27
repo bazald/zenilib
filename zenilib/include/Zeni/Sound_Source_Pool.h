@@ -66,7 +66,7 @@ namespace Zeni {
   public:
     class Replacement_Policy {
     public:
-      /// (Default) Priority Sort:  Playing/Not-Playing, Priority
+      /// (Default) Priority Sort:  Playing/Not-Playing, Priority, Gain, Recency
       virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
       bool operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const;
@@ -76,7 +76,7 @@ namespace Zeni {
     public:
       Positional_Replacement_Policy(const Point3f &listener_position_);
 
-      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Computed Gain
+      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Computed Gain, Recency
       virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
       Point3f listener_position;

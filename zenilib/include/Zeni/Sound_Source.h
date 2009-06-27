@@ -196,6 +196,7 @@ namespace Zeni {
     inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline int get_priority() const; ///< Get the Sound_Source's priority.
+    inline Time get_unstop_time() const; ///< Get the Time at which the Sound_Source was most recently played or unpaused.
     inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer's OpenAL id.
     inline float get_pitch() const; ///< Get the pitch.
     inline float get_gain() const; ///< Get the gain.
@@ -228,6 +229,7 @@ namespace Zeni {
 
     Sound_Source_HW * m_hw;
     int m_priority;
+    Time m_unstop_time;
 
     const Sound_Buffer * m_buffer;
     float m_pitch;

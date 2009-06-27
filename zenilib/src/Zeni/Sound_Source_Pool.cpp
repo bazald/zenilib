@@ -76,7 +76,17 @@ namespace Zeni {
     if(!lhs.is_playing())
       return true;
 
-    return lhs.get_priority() < rhs.get_priority();
+    if(rhs.get_priority() < lhs.get_priority())
+      return false;
+    if(lhs.get_priority() < rhs.get_priority())
+      return true;
+
+    if(rhs.get_gain() < lhs.get_gain())
+      return false;
+    if(lhs.get_gain() < rhs.get_gain())
+      return true;
+
+    return lhs.get_unstop_time() < rhs.get_unstop_time();
   }
 
   bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const {
@@ -99,7 +109,20 @@ namespace Zeni {
     if(lhs.get_priority() < rhs.get_priority())
       return true;
 
-    return rhs.calculate_gain(listener_position) > lhs.calculate_gain(listener_position);
+    if(rhs.get_priority() < lhs.get_priority())
+      return false;
+    if(lhs.get_priority() < rhs.get_priority())
+      return true;
+
+    const float lhs_gain = lhs.calculate_gain(listener_position);
+    const float rhs_gain = rhs.calculate_gain(listener_position);
+
+    if(rhs_gain < lhs_gain)
+      return false;
+    if(lhs_gain < rhs_gain)
+      return true;
+
+    return lhs.get_unstop_time() < rhs.get_unstop_time();
   }
 
   const Sound_Source_Pool::Replacement_Policy & Sound_Source_Pool::get_Replacement_Policy() const {

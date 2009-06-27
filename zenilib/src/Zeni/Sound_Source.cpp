@@ -78,6 +78,8 @@ namespace Zeni {
   }
 
   Sound_Source_HW::~Sound_Source_HW() {
+    stop(); ///< Bounds stall time on quit
+
 #ifndef DISABLE_AL
     if(m_source != AL_NONE && !Quit_Event::has_fired())
       alDeleteSources(1, &m_source);
@@ -185,7 +187,7 @@ namespace Zeni {
       else if(m_looping)
         return fmod(current_play_position, m_buffer->get_duration());
       else
-        return 0.0f;
+        return m_buffer->get_duration();
     }
     else
       return m_play_position;
@@ -204,18 +206,20 @@ namespace Zeni {
   void Sound_Source::assign(Sound_Source_HW &hw) {
     m_hw = &hw;
 
+    const float time = get_time();
+
     hw.set_buffer(*m_buffer);
     hw.set_pitch(m_pitch);
     hw.set_gain(m_gain);
     hw.set_position(m_position);
     hw.set_velocity(m_velocity);
     hw.set_looping(m_looping);
-    hw.set_time(get_time());
+    hw.set_time(time);
     hw.set_reference_distance(m_reference_distance);
     hw.set_max_distance(m_max_distance);
     hw.set_rolloff(m_rolloff);
 
-    if(m_playing)
+    if(m_playing && time < hw.get_buffer().get_duration())
       hw.play();
   }
 
