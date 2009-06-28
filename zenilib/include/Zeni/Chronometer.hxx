@@ -46,7 +46,7 @@ namespace Zeni {
   }
 
   template <class TIME>
-  const bool & Chronometer<TIME>::running() {
+  const bool & Chronometer<TIME>::running() const {
     return m_running;
   }
 
@@ -74,7 +74,7 @@ namespace Zeni {
   }
 
   template <class TIME>
-  typename TIME::Second_Type Chronometer<TIME>::seconds() {
+  typename TIME::Second_Type Chronometer<TIME>::seconds() const {
     return m_seconds_counted + (m_running ?
                                 m_start_time.get_seconds_passed() * m_scaling_factor :
                                 0.0f);
