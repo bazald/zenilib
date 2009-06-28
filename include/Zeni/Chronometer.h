@@ -57,13 +57,12 @@ namespace Zeni {
     Chronometer();
 
     // Starting and Stopping
-    const bool & running(); ///< Get whether the Chronometer is currently counting or stopped.
+    const bool & running() const; ///< Get whether the Chronometer is currently counting or stopped.
     const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
     const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
 
-
     // Time Accessor and Modifiers
-    typename TIME::Second_Type seconds(); ///< Get the number of seconds counted by the Chronometer.
+    typename TIME::Second_Type seconds() const; ///< Get the number of seconds counted by the Chronometer.
     void set(const typename TIME::Second_Type &time); ///< Set the number of seconds counted by the Chronometer.
     void reset(); ///< Reset the Chronometer.  This does NOT stop the Chronometer.
 
