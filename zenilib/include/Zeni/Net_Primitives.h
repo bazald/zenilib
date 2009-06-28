@@ -87,10 +87,19 @@ bool operator>=(const IPaddress &lhs, const IPaddress &rhs);
 namespace Zeni {
   /*** Simple Helper Functions ***/
 
+  std::string ustoa(const unsigned short &number);
+  std::string stoa(const short &number);
   std::string uitoa(const unsigned int &number);
   std::string itoa(const int &number);
   std::string ultoa(const unsigned long &number);
   std::string ltoa(const long &number);
+#ifdef _WINDOWS
+  std::string ulltoa(const unsigned long long &number);
+  std::string lltoa(const long long &number);
+#else
+  std::string ulltoa(const unsigned long &number);
+  std::string lltoa(const long &number);
+#endif
   std::string ftoa(const float &number);
   std::string ftoa(const float &number, const unsigned int &precision);
   std::string dtoa(const double &number);

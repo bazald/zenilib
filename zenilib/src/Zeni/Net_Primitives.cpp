@@ -76,6 +76,28 @@ bool operator>=(const IPaddress &lhs, const IPaddress &rhs) {
 namespace Zeni {
   /*** Simple Helper Functions ***/
 
+  string ustoa(const unsigned short &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%hu", number);
+    return buf;
+  }
+
+  string stoa(const short &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+  #ifdef _WINDOWS
+    sprintf_s
+  #else
+    sprintf
+  #endif
+      (buf, "%hd", number);
+    return buf;
+  }
+
   string uitoa(const unsigned int &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
@@ -119,6 +141,32 @@ namespace Zeni {
       (buf, "%ld", number);
     return buf;
   }
+
+#ifdef _WINDOWS
+  string ulltoa(const unsigned long long &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+    sprintf_s(buf, "%llu", number);
+    return buf;
+  }
+
+  string lltoa(const long long &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+    sprintf_s(buf, "%lld", number);
+    return buf;
+  }
+#else
+  string ulltoa(const unsigned long &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+    sprintf(buf, "%lu", number);
+    return buf;
+  }
+
+  string lltoa(const long &number) {
+    char buf[ZENI_SPRINTF_BUFFER_SIZE];
+    sprintf(buf, "%ld", number);
+    return buf;
+  }
+#endif
 
   string ftoa(const float &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
