@@ -109,8 +109,8 @@ namespace Zeni {
 
     // Initialization Functions
     void clear(); ///< Permanently clear all resources.
-    void load(const std::string &filename); ///< Load all resources from a given file, giving them highest priority
-    void unload(const std::string &filename); ///< Unload all resources from a given file, reloading lower priority resources
+    void load_file(const std::string &filename); ///< Load all resources from a given file, giving them highest priority
+    void unload_file(const std::string &filename); ///< Unload all resources from a given file, reloading lower priority resources
     void reload(); ///< lose_resources + init
 
     void lose_resources(); ///< Wipe losable resources and prepare to reload them when they are next needed
@@ -118,6 +118,7 @@ namespace Zeni {
   protected:
     void init();
     void uninit();
+    bool give_priority(const std::string &name, const bool &lent, const bool &keep, const std::string &filename = ""); ///< If 'lent', 'keep', and 'filename' match, give priority over other 'name' entries
 
   private:
     virtual void on_load() {}
@@ -129,8 +130,8 @@ namespace Zeni {
     std::string m_xml_identifier;
 
     Filenames m_filenames;
-    Lookups m_lookup;
-    Entries m_database;
+    Lookups m_lookups;
+    Entries m_entries;
   };
 
   struct Database_File_Not_Loaded : public Error {

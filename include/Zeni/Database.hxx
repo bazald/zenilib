@@ -100,7 +100,7 @@ namespace Zeni {
     if(!type)
       throw Null_Database_Entry_Set();
 
-    Lookup *&lr = m_lookup[name];
+    Lookup *&lr = m_lookups[name];
     if(!lr)
       lr = new Lookup();
 
@@ -117,7 +117,7 @@ namespace Zeni {
 
     lr->handles.push_front(Lookup::Handle(type, filename, false, keep));
 
-    m_database[lr->id] = type;
+    m_entries[lr->id] = type;
 
     return lr->id;
   }
@@ -127,7 +127,7 @@ namespace Zeni {
     if(!type)
       throw Null_Database_Entry_Set();
 
-    Lookup *&lr = m_lookup[name];
+    Lookup *&lr = m_lookups[name];
     if(!lr)
       lr = new Lookup();
 
@@ -144,39 +144,39 @@ namespace Zeni {
 
     lr->handles.push_front(Lookup::Handle(type, filename, true, keep));
 
-    m_database[lr->id] = type;
+    m_entries[lr->id] = type;
 
     return lr->id;
   }
 
   template <class TYPE>
   void Database<TYPE>::clear(const std::string &name, const std::string &filename) {
-    Lookups::iterator it = m_lookup.find(name);
+    Lookups::iterator it = m_lookups.find(name);
 
-    if(it == m_lookup.end())
+    if(it == m_lookups.end())
       throw Database_Entry_Not_Found("*::" + name);
 
     Lookup &lr = *it->second;
     Lookup::Handles::iterator jt = std::find(lr.handles.begin(), lr.handles.end(), Lookup::Handle(filename));
 
-    if(jr == lr.handles.end())
+    if(jt == lr.handles.end())
       throw Database_Entry_Not_Found(filename + "::" + name);
 
     lr.handles.erase(jt);
 
     if(lr.handles.empty()) {
-      m_database.erase(lr.id);
-      m_lookup.erase(it);
+      m_entries.erase(lr.id);
+      m_lookups.erase(it);
     }
     else
-      m_database[lr.id] = lr.handles.begin()->ptr;
+      m_entries[lr.id] = lr.handles.begin()->ptr;
   }
 
   template <class TYPE>
   unsigned long Database<TYPE>::get_id(const std::string &name) const {
-    typename Lookups::const_iterator it = m_lookup.find(name);
+    typename Lookups::const_iterator it = m_lookups.find(name);
 
-    if(it == m_lookup.end() || !it->second->id)
+    if(it == m_lookups.end() || !it->second->id)
       throw Database_Entry_Not_Found(name);
 
     return it->second->id;
@@ -184,9 +184,9 @@ namespace Zeni {
 
   template <class TYPE>
   TYPE & Database<TYPE>::operator[](const unsigned long &id) const {
-    typename Entries::const_iterator it = m_database.find(id);
+    typename Entries::const_iterator it = m_entries.find(id);
 
-    if(it == m_database.end() || !it->second) {
+    if(it == m_entries.end() || !it->second) {
       char buf[64];
 #ifdef _WINDOWS
       sprintf_s
@@ -211,7 +211,12 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::load(const std::string &filename) {
+  void Database<TYPE>::load_file(const std::string &filename) {
+    Filenames::iterator it = std::find(m_filenames.begin(), m_filenames.end(), filename);
+    if(it != m_filenames.end())
+      m_filenames.erase(it);
+    m_filenames.push_front(filename);
+
     XML_Document types_xml(filename.c_str());
     XML_Element_c types = types_xml[m_xml_identifier];
     std::string name;
@@ -220,11 +225,13 @@ namespace Zeni {
       for(XML_Element_c it = types.first(); it.good(); it = it.next()) {
         const std::string name = it.value();
 
-        TYPE * const type = load(it);
-        if(!type)
-          throw Database_Load_Entry_Failed(name);
+        if(!give_priority(name, false, false, filename)) {
+          TYPE * const type = load(it);
+          if(!type)
+            throw Database_Load_Entry_Failed(name);
 
-        give(name, type, false, filename);
+          give(name, type, false, filename);
+        }
       }
     }
     catch(Database_Load_Entry_Failed &)
@@ -237,13 +244,13 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::unload(const std::string &filename) {
+  void Database<TYPE>::unload_file(const std::string &filename) {
     Filenames::iterator it = std::find(m_filenames.begin(), m_filenames.end(), filename);
     if(it == m_filenames.end())
       throw Database_File_Not_Loaded(filename);
 
-    for(typename Lookups::iterator it = m_lookup.begin();
-        it != m_lookup.end();)
+    for(typename Lookups::iterator it = m_lookups.begin();
+        it != m_lookups.end();)
     {
       for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
           jt != it->second->handles.end();)
@@ -258,16 +265,16 @@ namespace Zeni {
       }
 
       if(!it->second->handles.empty()) {
-        m_database[it->second->id] = it->second->handles.begin()->ptr;
+        m_entries[it->second->id] = it->second->handles.begin()->ptr;
         ++it;
       }
       else {
-        m_database.erase(it->second->id);
-        it = m_lookup.erase(it);
+        m_entries.erase(it->second->id);
+        it = m_lookups.erase(it);
       }
     }
 
-    m_filenames.erase(filename);
+    m_filenames.erase(it);
 
     if(m_filenames.empty())
       on_clear();
@@ -281,11 +288,13 @@ namespace Zeni {
 
   template <class TYPE>
   void Database<TYPE>::init() {
-    for(Filenames::const_reverse_iterator it = m_filenames.rbegin();
-       it != m_filenames.rend();
+    const Filenames old = m_filenames;
+
+    for(Filenames::const_reverse_iterator it = old.rbegin();
+       it != old.rend();
        ++it)
     {
-      load(*it);
+      load_file(*it);
     }
   }
 
@@ -293,10 +302,10 @@ namespace Zeni {
   void Database<TYPE>::uninit() {
     on_clear();
 
-    m_database.clear();
+    m_entries.clear();
 
-    for(typename Lookups::iterator it = m_lookup.begin();
-        it != m_lookup.end();
+    for(typename Lookups::iterator it = m_lookups.begin();
+        it != m_lookups.end();
         ++it)
     {
       for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
@@ -308,17 +317,44 @@ namespace Zeni {
       }
     }
 
-    m_lookup.clear();
+    m_lookups.clear();
+  }
+
+  template <class TYPE>
+  bool Database<TYPE>::give_priority(const std::string &name,
+                                     const bool &lent,
+                                     const bool &keep,
+                                     const std::string &filename)
+  {
+    const Lookups::const_iterator it = m_lookups.find(name);
+    if(it == m_lookups.end())
+      return false;
+
+    Lookup::Handles &lhr = it->second->handles;
+    Lookup::Handles::iterator jt = std::find(lhr.begin(), lhr.end(), Lookup::Handle(filename));
+    if(jt == lhr.end())
+      return false;
+
+    if(jt->lent != lent || jt->keep != keep)
+      return false;
+
+    const Lookup::Handle handle = *jt;
+    lhr.erase(jt);
+    lhr.push_front(handle);
+
+    m_entries[it->second->id] = handle.ptr;
+
+    return true;
   }
 
   template <class TYPE>
   void Database<TYPE>::lose_resources() {
     on_lose();
 
-    m_database.clear();
+    m_entries.clear();
 
-    for(typename Lookups::iterator it = m_lookup.begin();
-        it != m_lookup.end();)
+    for(typename Lookups::iterator it = m_lookups.begin();
+        it != m_lookups.end();)
     {
       for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
           jt != it->second->handles.end();)
@@ -333,11 +369,11 @@ namespace Zeni {
       }
 
       if(!it->second->handles.empty()) {
-        m_database[it->second->id] = it->second->handles.begin()->ptr;
+        m_entries[it->second->id] = it->second->handles.begin()->ptr;
         ++it;
       }
       else
-        it = m_lookup.erase(it);
+        it = m_lookups.erase(it);
     }
   }
 
