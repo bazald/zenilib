@@ -108,15 +108,15 @@ namespace Zeni {
     }
   }
 
-  void Textures::post_init() {
+  void Textures::on_load() {
     m_loaded = true;
   }
 
-  void Textures::post_uninit() {
+  void Textures::on_clear() {
     m_loaded = false;
   }
 
-  void Textures::post_lose() {
+  void Textures::on_lose() {
     m_loaded = false;
   }
 
@@ -139,10 +139,6 @@ namespace Zeni {
 
       return s;
     }
-  }
-
-  bool Textures::keep(const Texture &type) {
-    return dynamic_cast<const Sprite *>(&type) != 0;
   }
 
   bool Textures::m_loaded = false;

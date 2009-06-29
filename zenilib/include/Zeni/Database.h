@@ -56,6 +56,39 @@ namespace Zeni {
 
   template <class TYPE>
   class Database {
+    struct Lookup {
+      struct Handle {
+        Handle();
+        Handle(const std::string &filename_);
+        Handle(TYPE * const &ptr_, const std::string &filename_, const bool &lent_, const bool &keep_);
+
+        bool operator==(const Handle &rhs) const;
+
+        TYPE * ptr;
+        std::string filename;
+        bool lent;
+        bool keep;
+      };
+
+      typedef std::list<Handle> Handles;
+
+    private:
+      // Undefined
+      Lookup(const Lookup &);
+      Lookup & operator=(const Lookup &);
+
+    public:
+      Lookup();
+      Lookup(const unsigned long &id_, const Handle &handle_);
+
+      unsigned long id;
+      Handles handles;
+    };
+
+    typedef std::list<std::string> Filenames;
+    typedef stdext::hash_map<std::string, Lookup *> Lookups; // (id, filename)
+    typedef stdext::hash_map<unsigned long, TYPE *> Entries; // (datum, lent)
+
     // Undefined
     Database(const Database &);
     Database & operator=(const Database &);
@@ -70,12 +103,14 @@ namespace Zeni {
     TYPE & operator[](const unsigned long &id) const; ///< Get a TYPE by id
 
     // Loaders
-    unsigned long give(const std::string &name, TYPE * const &type); ///< Add an entry (which it will later delete)
-    unsigned long lend(const std::string &name, TYPE * const &type); ///< Add an entry (which it will NEVER delete)
-    void clear(const std::string &name); ///< Clear an entry
+    unsigned long give(const std::string &name, TYPE * const &type, const bool &keep, const std::string &filename = ""); ///< Add an entry (which it will later delete)
+    unsigned long lend(const std::string &name, TYPE * const &type, const bool &keep); ///< Add an entry (which it will NEVER delete)
+    void clear(const std::string &name, const std::string &filename = ""); ///< Clear an entry
 
     // Initialization Functions
-    void reload(const std::string &filename); ///< lose_resources + init
+    void clear(); ///< Permanently clear all resources.
+    void load(const std::string &filename); ///< Load all resources from a given file, giving them highest priority
+    void unload(const std::string &filename); ///< Unload all resources from a given file, reloading lower priority resources
     void reload(); ///< lose_resources + init
 
     void lose_resources(); ///< Wipe losable resources and prepare to reload them when they are next needed
@@ -85,22 +120,21 @@ namespace Zeni {
     void uninit();
 
   private:
-    virtual void pre_init() {}
-    virtual void post_init() {}
-    virtual void pre_uninit() {}
-    virtual void post_uninit() {}
-    virtual void pre_lose() {}
-    virtual void post_lose() {}
+    virtual void on_load() {}
+    virtual void on_clear() {}
+    virtual void on_lose() {}
 
     virtual TYPE * load(XML_Element_c &xml_element) = 0;
-    virtual bool keep(const TYPE &type); ///< Default behavior is to keep none. lose_resources then behaves identically to uninit.
 
-    std::string m_filename;
     std::string m_xml_identifier;
 
-    stdext::hash_map<std::string, unsigned long> m_lookup;
-    stdext::hash_map<unsigned long, TYPE *> m_database;
-    std::set<TYPE *> m_lent;
+    Filenames m_filenames;
+    Lookups m_lookup;
+    Entries m_database;
+  };
+
+  struct Database_File_Not_Loaded : public Error {
+    Database_File_Not_Loaded(const std::string &identifier) : Error("Zeni File '" + identifier + "' Not Loaded") {}
   };
 
   struct Database_Entry_Not_Found : public Error {

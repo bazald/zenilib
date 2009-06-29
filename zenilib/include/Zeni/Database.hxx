@@ -35,15 +35,60 @@
 
 #include <Zeni/Database.h>
 
+#include <algorithm>
 #include <iostream>
 
 namespace Zeni {
+  template <class TYPE>
+  Database<TYPE>::Lookup::Handle::Handle()
+    : ptr(0),
+    lent(false)
+  {
+  }
+
+  template <class TYPE>
+  Database<TYPE>::Lookup::Handle::Handle(const std::string &filename_)
+    : ptr(0),
+    filename(filename_),
+    lent(false)
+  {
+  }
+
+  template <class TYPE>
+  Database<TYPE>::Lookup::Handle::Handle(TYPE * const &ptr_,
+                                         const std::string &filename_,
+                                         const bool &lent_,
+                                         const bool &keep_)
+    : ptr(ptr_),
+    filename(filename_),
+    lent(lent_),
+    keep(keep_)
+  {
+  }
+
+  template <class TYPE>
+  bool Database<TYPE>::Lookup::Handle::operator==(const Handle &rhs) const {
+    return filename == rhs.filename;
+  }
+
+  template <class TYPE>
+  Database<TYPE>::Lookup::Lookup()
+    : id(0)
+  {
+  }
+
+  template <class TYPE>
+  Database<TYPE>::Lookup::Lookup(const unsigned long &id_, const Handle &handle_)
+    : id(id_)
+  {
+    handles.push_front(handle_);
+  }
 
   template <class TYPE>
   Database<TYPE>::Database(const std::string &filename, const std::string &xml_identifier)
-    : m_filename(filename),
-    m_xml_identifier(xml_identifier)
+    : m_xml_identifier(xml_identifier)
   {
+    m_filenames.push_front(filename);
   }
 
   template <class TYPE>
@@ -51,66 +96,95 @@ namespace Zeni {
   }
   
   template <class TYPE>
-  unsigned long Database<TYPE>::give(const std::string &name, TYPE * const &type) {
-    try {
-      clear(name);
-    }
-    catch(Database_Entry_Not_Found &)
-    {
-    }
-
+  unsigned long Database<TYPE>::give(const std::string &name, TYPE * const &type, const bool &keep, const std::string &filename) {
     if(!type)
       throw Null_Database_Entry_Set();
 
-    unsigned long id = get_Resource().assign();
-    m_lookup[name] = id;
-    m_database[id] = type;
+    Lookup *&lr = m_lookup[name];
+    if(!lr)
+      lr = new Lookup();
 
-    return id;
+    if(!lr->id)
+      lr->id = get_Resource().assign();
+
+    Lookup::Handles::iterator it = std::find(lr->handles.begin(), lr->handles.end(), Lookup::Handle(filename));
+
+    if(it != lr->handles.end()) {
+      if(!it->lent)
+        delete it->ptr;
+      lr->handles.erase(it);
+    }
+
+    lr->handles.push_front(Lookup::Handle(type, filename, false, keep));
+
+    m_database[lr->id] = type;
+
+    return lr->id;
   }
   
   template <class TYPE>
-  unsigned long Database<TYPE>::lend(const std::string &name, TYPE * const &type) {
-    const unsigned long retval = give_type(name, type);
-    m_lent.insert(type);
-    return retval;
+  unsigned long Database<TYPE>::lend(const std::string &name, TYPE * const &type, const bool &keep) {
+    if(!type)
+      throw Null_Database_Entry_Set();
+
+    Lookup *&lr = m_lookup[name];
+    if(!lr)
+      lr = new Lookup();
+
+    if(!lr->id)
+      lr->id = get_Resource().assign();
+
+    Lookup::Handles::iterator it = std::find(lr->handles.begin(), lr->handles.end(), Lookup::Handle(filename));
+
+    if(it != lr->handles.end()) {
+      if(!it->lent)
+        delete it->ptr;
+      lr->handles.erase(it);
+    }
+
+    lr->handles.push_front(Lookup::Handle(type, filename, true, keep));
+
+    m_database[lr->id] = type;
+
+    return lr->id;
   }
 
   template <class TYPE>
-  void Database<TYPE>::clear(const std::string &name) {
-    stdext::hash_map<std::string, unsigned long>::iterator it = m_lookup.find(name);
+  void Database<TYPE>::clear(const std::string &name, const std::string &filename) {
+    Lookups::iterator it = m_lookup.find(name);
 
     if(it == m_lookup.end())
-      throw Database_Entry_Not_Found(name);
+      throw Database_Entry_Not_Found("*::" + name);
 
-    typename stdext::hash_map<unsigned long, TYPE *>::iterator jt = m_database.find(it->second);
+    Lookup &lr = *it->second;
+    Lookup::Handles::iterator jt = std::find(lr.handles.begin(), lr.handles.end(), Lookup::Handle(filename));
 
-    assert(jt != m_database.end());
+    if(jr == lr.handles.end())
+      throw Database_Entry_Not_Found(filename + "::" + name);
 
-    typename std::set<TYPE *>::iterator kt = m_lent.find(jt->second);
+    lr.handles.erase(jt);
 
-    if(kt == m_lent.end())
-      delete jt->second;
+    if(lr.handles.empty()) {
+      m_database.erase(lr.id);
+      m_lookup.erase(it);
+    }
     else
-      m_lent.erase(kt);
-
-    m_database.erase(it->second);
-    m_lookup.erase(it);
+      m_database[lr.id] = lr.handles.begin()->ptr;
   }
 
   template <class TYPE>
   unsigned long Database<TYPE>::get_id(const std::string &name) const {
-    stdext::hash_map<std::string, unsigned long>::const_iterator it = m_lookup.find(name);
+    typename Lookups::const_iterator it = m_lookup.find(name);
 
-    if(it == m_lookup.end() || !it->second)
+    if(it == m_lookup.end() || !it->second->id)
       throw Database_Entry_Not_Found(name);
 
-    return it->second;
+    return it->second->id;
   }
 
   template <class TYPE>
   TYPE & Database<TYPE>::operator[](const unsigned long &id) const {
-    typename stdext::hash_map<unsigned long, TYPE *>::const_iterator it = m_database.find(id);
+    typename Entries::const_iterator it = m_database.find(id);
 
     if(it == m_database.end() || !it->second) {
       char buf[64];
@@ -132,24 +206,13 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::reload(const std::string &filename) {
-    reload();
+  void Database<TYPE>::clear() {
+    uninit();
   }
 
   template <class TYPE>
-  void Database<TYPE>::reload() {
-    lose_resources();
-    init();
-  }
-
-  template <class TYPE>
-  void Database<TYPE>::init() {
-    pre_init();
-
-    m_lookup.clear();
-    m_database.clear();
-
-    XML_Document types_xml(m_filename.c_str());
+  void Database<TYPE>::load(const std::string &filename) {
+    XML_Document types_xml(filename.c_str());
     XML_Element_c types = types_xml[m_xml_identifier];
     std::string name;
 
@@ -161,9 +224,7 @@ namespace Zeni {
         if(!type)
           throw Database_Load_Entry_Failed(name);
 
-        const unsigned long id = get_Resource().assign();
-        m_lookup[name] = id;
-        m_database[id] = type;
+        give(name, type, false, filename);
       }
     }
     catch(Database_Load_Entry_Failed &)
@@ -172,62 +233,112 @@ namespace Zeni {
       throw;
     }
 
-    post_init();
+    on_load();
+  }
+
+  template <class TYPE>
+  void Database<TYPE>::unload(const std::string &filename) {
+    Filenames::iterator it = std::find(m_filenames.begin(), m_filenames.end(), filename);
+    if(it == m_filenames.end())
+      throw Database_File_Not_Loaded(filename);
+
+    for(typename Lookups::iterator it = m_lookup.begin();
+        it != m_lookup.end();)
+    {
+      for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
+          jt != it->second->handles.end();)
+      {
+        if(jt->filename != filename)
+          ++jt;
+        else {
+          if(!jt->lent)
+            delete jt->ptr;
+          jt = it->second->handles.erase(jt);
+        }
+      }
+
+      if(!it->second->handles.empty()) {
+        m_database[it->second->id] = it->second->handles.begin()->ptr;
+        ++it;
+      }
+      else {
+        m_database.erase(it->second->id);
+        it = m_lookup.erase(it);
+      }
+    }
+
+    m_filenames.erase(filename);
+
+    if(m_filenames.empty())
+      on_clear();
+  }
+
+  template <class TYPE>
+  void Database<TYPE>::reload() {
+    lose_resources();
+    init();
+  }
+
+  template <class TYPE>
+  void Database<TYPE>::init() {
+    for(Filenames::const_reverse_iterator it = m_filenames.rbegin();
+       it != m_filenames.rend();
+       ++it)
+    {
+      load(*it);
+    }
   }
 
   template <class TYPE>
   void Database<TYPE>::uninit() {
-    pre_uninit();
+    on_clear();
 
-    for(typename stdext::hash_map<unsigned long, TYPE *>::iterator it = m_database.begin();
-        it != m_database.end();
+    m_database.clear();
+
+    for(typename Lookups::iterator it = m_lookup.begin();
+        it != m_lookup.end();
         ++it)
     {
-      typename std::set<TYPE *>::iterator jt = m_lent.find(it->second);
-
-      if(jt == m_lent.end())
-        delete it->second;
-      else
-        m_lent.erase(jt);
+      for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
+          jt != it->second->handles.end();
+          ++jt)
+      {
+        if(!jt->lent)
+          delete jt->ptr;
+      }
     }
 
-    assert(m_lent.empty());
-    m_database.clear();
     m_lookup.clear();
-
-    post_uninit();
   }
 
   template <class TYPE>
   void Database<TYPE>::lose_resources() {
-    pre_lose();
+    on_lose();
 
-    typename stdext::hash_map<std::string, unsigned long> type_lookup;
-    typename stdext::hash_map<unsigned long, TYPE *> types;
+    m_database.clear();
 
-    type_lookup.swap(m_lookup);
-    types.swap(m_database);
+    for(typename Lookups::iterator it = m_lookup.begin();
+        it != m_lookup.end();)
+    {
+      for(typename Lookup::Handles::iterator jt = it->second->handles.begin();
+          jt != it->second->handles.end();)
+      {
+        if(jt->keep)
+          ++jt;
+        else {
+          if(!jt->lent)
+            delete jt->ptr;
+          jt = it->second->handles.erase(jt);
+        }
+      }
 
-    for(typename stdext::hash_map<std::string, unsigned long>::iterator it = type_lookup.begin();
-        it != type_lookup.end();
-        ++it) {
-      typename stdext::hash_map<unsigned long, TYPE *>::iterator jt = types.find(it->second);
-      typename std::set<TYPE *>::iterator kt = m_lent.find(jt->second);
-
-      if(keep(*jt->second))
-        give(it->first, jt->second);
-      else if(kt == m_lent.end())
-        delete jt->second;
+      if(!it->second->handles.empty()) {
+        m_database[it->second->id] = it->second->handles.begin()->ptr;
+        ++it;
+      }
       else
-        m_lent.erase(kt);
+        it = m_lookup.erase(it);
     }
-
-    post_lose();
-  }
-
-  template <class TYPE>
-  bool Database<TYPE>::keep(const TYPE &) {
-    return false;
   }
 
 }
