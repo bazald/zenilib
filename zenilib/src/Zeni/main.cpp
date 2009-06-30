@@ -39,6 +39,8 @@
 
 #ifdef _WINDOWS
 #include <direct.h>
+#else
+#include <errno.h>
 #endif
 
 using namespace std;

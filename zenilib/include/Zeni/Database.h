@@ -50,6 +50,7 @@
 #include <Zeni/Core.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/XML.h>
+#include <list>
 #include <set>
 
 namespace Zeni {
