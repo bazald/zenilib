@@ -793,74 +793,141 @@ default: return "SDLK_UNKNOWN";
   }
 
   Gamestate_II::Gamestate_II()
-    : m_min_confidence(ZENI_DEFAULT_II_MIN_CONFIDENCE),
-    m_max_confidence(ZENI_DEFAULT_II_MAX_CONFIDENCE)
+    : m_joyball_min(ZENI_DEFAULT_II_JOYBALL_MIN),
+    m_joyball_max(ZENI_DEFAULT_II_JOYBALL_MAX),
+    m_joystick_min(ZENI_DEFAULT_II_JOYSTICK_MIN),
+    m_joystick_max(ZENI_DEFAULT_II_JOYSTICK_MAX),
+    m_mouse_min(ZENI_DEFAULT_II_MOUSE_MIN),
+    m_mouse_max(ZENI_DEFAULT_II_MOUSE_MAX)
   {
   }
 
   void Gamestate_II::on_event(const SDL_Event &event) {
-    Zeni_Input_ID event_ID;
-    float confidence = 0.0f;
-
     switch(event.type) {
     case SDL_JOYAXISMOTION:
-      event_ID.type = SDL_JOYAXISMOTION;
-      event_ID.subid = event.jaxis.axis;
-      event_ID.which = event.jaxis.which;
-
-      confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
-
       {
+        float confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
         const float ac = fabs(confidence);
-        const float nm = confidence / ac;
-        confidence = nm * std::min(std::max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
-      }
+        const float nm = confidence < 0.0f ? -1.0f : 1.0f;
+        confidence = nm * std::min(std::max(ac - m_joystick_min, 0.0f) / (m_joystick_max - m_joystick_min), 1.0f);
 
+        fire_event(Zeni_Input_ID(SDL_JOYAXISMOTION, event.jaxis.axis, event.jaxis.which), confidence);
+      }
+      break;
+    case SDL_JOYBALLMOTION:
+      {
+        const int ac = abs(event.jball.xrel);
+        const int nm = event.jball.xrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 0, event.jball.which), confidence);
+      }
+      {
+        const int ac = abs(event.jball.yrel);
+        const int nm = event.jball.yrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 1, event.jball.which), confidence);
+      }
       break;
     case SDL_JOYBUTTONDOWN:
     case SDL_JOYBUTTONUP:
-      event_ID.type = SDL_JOYBUTTONDOWN;
-      event_ID.subid = event.jbutton.button;
-      event_ID.which = event.jbutton.which;
+      {
+        const float confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_JOYBUTTONDOWN, event.jbutton.button, event.jbutton.which), confidence);
+      }
+      break;
+    case SDL_JOYHATMOTION:
+      {
+        float confidence;
+
+        switch(event.jhat.value) {
+          case SDL_HAT_LEFT:
+          case SDL_HAT_LEFTDOWN:
+          case SDL_HAT_LEFTUP:
+            confidence = -1.0f;
+            break;
+
+          case SDL_HAT_RIGHT:
+          case SDL_HAT_RIGHTDOWN:
+          case SDL_HAT_RIGHTUP:
+            confidence = 1.0f;
+            break;
+
+          case SDL_HAT_CENTERED:
+          case SDL_HAT_DOWN:
+          case SDL_HAT_UP:
+          default:
+            confidence = 0.0f;
+            break;
+        }
+
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 0, event.jhat.which), confidence);
+      }
+      {
+        float confidence;
+
+        switch(event.jhat.value) {
+          case SDL_HAT_DOWN:
+          case SDL_HAT_LEFTDOWN:
+          case SDL_HAT_RIGHTDOWN:
+            confidence = -1.0f;
+            break;
+
+          case SDL_HAT_UP:
+          case SDL_HAT_LEFTUP:
+          case SDL_HAT_RIGHTUP:
+            confidence = 1.0f;
+            break;
+
+          case SDL_HAT_CENTERED:
+          case SDL_HAT_LEFT:
+          case SDL_HAT_RIGHT:
+          default:
+            confidence = 0.0f;
+            break;
+        }
+
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 1, event.jhat.which), confidence);
+      }
       break;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
       {
-        const SDL_KeyboardEvent &e = event.key;
-        const SDL_keysym &s = e.keysym;
-        if(e.state == SDL_PRESSED && s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
-          throw Quit_Event();
-      }
-      
-      event_ID.type = SDL_KEYDOWN;
-      event_ID.subid = event.key.keysym.sym;
+        const float confidence = event.key.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.key.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_KEYDOWN, event.key.keysym.sym, 0 /*event.key.which*/), confidence);
+      }
+      break;
+    case SDL_MOUSEMOTION:
+      {
+        const int ac = abs(event.motion.xrel);
+        const int nm = event.motion.xrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_mouse_min), 0.0f) / (m_mouse_max - m_mouse_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_MOUSEMOTION, 0, 0 /*event.motion.which*/), confidence);
+      }
+      {
+        const int ac = abs(event.motion.yrel);
+        const int nm = event.motion.yrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_mouse_min), 0.0f) / (m_mouse_max - m_mouse_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_MOUSEMOTION, 1, 0 /*event.motion.which*/), confidence);
+      }
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
-      event_ID.type = SDL_MOUSEBUTTONDOWN;
-      event_ID.subid = event.button.button;
+      {
+        const float confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_MOUSEBUTTONDOWN, event.button.button, 0 /*event.button.which*/), confidence);
+      }
       break;
     default:
       Gamestate_Base::on_event(event);
-      return;
+      break;
     }
-
-    std::map<Zeni_Input_ID, int>::iterator it = m_ii.find(event_ID);
-    if(it != m_ii.end()) {
-      float &pc = it->first.previous_confidence;
-      if(pc != confidence) {
-        pc = confidence;
-        on_event(event_ID, confidence, it->second);
-      }
-    }
-    else
-      on_event(event_ID, confidence, 0);
   }
 
   void Gamestate_II::on_event(const Zeni_Input_ID &, const float &, const int &) {
@@ -883,6 +950,19 @@ default: return "SDLK_UNKNOWN";
   void Gamestate_II::set_action(const Zeni_Input_ID &event, const int &action) {
     m_ii[event] = action;
     m_rii[action] = event;
+  }
+
+  void Gamestate_II::fire_event(const Zeni_Input_ID &id, const float &confidence) {
+    std::map<Zeni_Input_ID, int>::iterator it = m_ii.find(id);
+    if(it != m_ii.end()) {
+      float &pc = it->first.previous_confidence;
+      if(pc != confidence) {
+        pc = confidence;
+        on_event(id, confidence, it->second);
+      }
+    }
+    else
+      on_event(id, confidence, 0);
   }
 
   bool Quit_Event::fired = false;
