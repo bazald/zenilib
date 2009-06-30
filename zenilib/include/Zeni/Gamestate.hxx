@@ -91,24 +91,70 @@ namespace Zeni {
     return *m_state;
   }
   
-  const float & Gamestate_II::get_min_confidence() const {
-    return m_min_confidence;
+  const int & Gamestate_II::get_joyball_min() const {
+    return m_joyball_min;
   }
 
-  const float & Gamestate_II::get_max_confidence() const {
-    return m_max_confidence;
+  const int & Gamestate_II::get_joyball_max() const {
+    return m_joyball_max;
+  }
+  
+  const float & Gamestate_II::get_joystick_min() const {
+    return m_joystick_min;
   }
 
-  void Gamestate_II::set_min_confidence(const float &min) {
-    m_min_confidence = min;
-    if(m_min_confidence < 0.0f || m_min_confidence >= m_max_confidence)
-      m_min_confidence = 0.0f;
+  const float & Gamestate_II::get_joystick_max() const {
+    return m_joystick_max;
+  }
+  
+  const int & Gamestate_II::get_mouse_min() const {
+    return m_mouse_min;
   }
 
-  void Gamestate_II::set_max_confidence(const float &max) {
-    m_max_confidence = max;
-    if(m_max_confidence > 1.0f || m_max_confidence <= m_min_confidence)
-      m_max_confidence = 1.0f;
+  const int & Gamestate_II::get_mouse_max() const {
+    return m_mouse_max;
+  }
+
+  void Gamestate_II::set_joyball_min(const int &min) {
+    if(min < 0)
+      m_joyball_min = 0;
+    else
+      m_joyball_min = min;
+  }
+
+  void Gamestate_II::set_joyball_max(const int &max) {
+    if(max < 1)
+      m_joyball_max = 1;
+    else
+      m_joyball_max = max;
+  }
+
+  void Gamestate_II::set_joystick_min(const float &min) {
+    if(min < 0.0f)
+      m_joystick_min = 0.0f;
+    else
+      m_joystick_min = min;
+  }
+
+  void Gamestate_II::set_joystick_max(const float &max) {
+    if(max < 0.0f)
+      m_joystick_max = 0.0f;
+    else
+      m_joystick_max = max;
+  }
+
+  void Gamestate_II::set_mouse_min(const int &min) {
+    if(min < 0)
+      m_mouse_min = 0;
+    else
+      m_mouse_min = min;
+  }
+
+  void Gamestate_II::set_mouse_max(const int &max) {
+    if(max < 1)
+      m_mouse_max = 1;
+    else
+      m_mouse_max = max;
   }
 
 }

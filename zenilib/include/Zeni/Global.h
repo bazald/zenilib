@@ -89,8 +89,12 @@
 #define MAXIMUM_VIRTUAL_SCREEN_HEIGHT (9600.0f)
 
 // Gamestate.cpp
-#define ZENI_DEFAULT_II_MIN_CONFIDENCE (0.1f)
-#define ZENI_DEFAULT_II_MAX_CONFIDENCE (1.0f)
+#define ZENI_DEFAULT_II_JOYBALL_MIN (1)
+#define ZENI_DEFAULT_II_JOYBALL_MAX (100)
+#define ZENI_DEFAULT_II_JOYSTICK_MIN (0.1f)
+#define ZENI_DEFAULT_II_JOYSTICK_MAX (1.0f)
+#define ZENI_DEFAULT_II_MOUSE_MIN (1)
+#define ZENI_DEFAULT_II_MOUSE_MAX (100)
 
 // Material.cpp
 #define ZENI_DIFFUSE_TO_SPECULAR(d) (Color(d.a, 0.5f * d.r + 0.5f, 0.5f * d.g + 0.5f, 0.5f * d.b + 0.5f))

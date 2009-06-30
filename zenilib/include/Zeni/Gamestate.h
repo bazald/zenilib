@@ -180,7 +180,7 @@ namespace Zeni {
     Zeni_Input_ID(const Uint8 &type_ = SDL_KEYDOWN, const int &subid_ = 0, const int &which_ = 0);
 
     Uint8 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
-    int subid; ///< event.keysym.sym, event.button, event.axis; ignored for mouse motion (should be 0)
+    int subid; ///< event.keysym.sym, event.button, event.axis, mouse axis (x==0, y==1)
     int which; ///< Joystick Identifier; ignored for other events (should be 0)
     mutable float previous_confidence;
 
@@ -197,19 +197,33 @@ namespace Zeni {
     virtual void on_event(const SDL_Event &event);
     virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
 
-    inline const float & get_min_confidence() const;
-    inline const float & get_max_confidence() const;
+    inline const int & get_joyball_min() const;
+    inline const int & get_joyball_max() const;
+    inline const float & get_joystick_min() const;
+    inline const float & get_joystick_max() const;
+    inline const int & get_mouse_min() const;
+    inline const int & get_mouse_max() const;
 
-    inline void set_min_confidence(const float &min);
-    inline void set_max_confidence(const float &max);
+    inline void set_joyball_min(const int &min); ///< Should be (0, inf) and less than max
+    inline void set_joyball_max(const int &max); ///< Should be (1, inf) and greater than min
+    inline void set_joystick_min(const float &min); ///< Should be [0.0, 1.0) and less than max
+    inline void set_joystick_max(const float &max); ///< Should be (0.0, 1.0] and greater than min
+    inline void set_mouse_min(const int &min); ///< Should be (0, inf) and less than max
+    inline void set_mouse_max(const int &max); ///< Should be (1, inf) and greater than min
 
     virtual int get_action(const Zeni_Input_ID &event);
     virtual Zeni_Input_ID get_event(const int &action);
     virtual void set_action(const Zeni_Input_ID &event, const int &action);
 
   private:
-    float m_min_confidence;
-    float m_max_confidence;
+    void fire_event(const Zeni_Input_ID &id, const float &confidence);
+
+    int m_joyball_min;
+    int m_joyball_max;
+    float m_joystick_min;
+    float m_joystick_max;
+    int m_mouse_min;
+    int m_mouse_max;
 
     std::map<Zeni_Input_ID, int> m_ii;
     std::map<int, Zeni_Input_ID> m_rii;
