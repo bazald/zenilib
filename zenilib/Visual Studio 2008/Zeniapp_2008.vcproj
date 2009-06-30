@@ -963,7 +963,7 @@
 		</Filter>
 		<Filter
 			Name="Configuration Files"
-			Filter="ini;txt"
+			Filter="xml;ini;txt"
 			>
 			<File
 				RelativePath="..\config\colors.xml"
