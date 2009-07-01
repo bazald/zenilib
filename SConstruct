@@ -47,7 +47,7 @@ else:
 disable_al = ' -DDISABLE_AL '
 disable_dx9 = ' -DDISABLE_DX9 '
 disable_gl = ' -DDISABLE_GL '
-disable_wgl = ' -DDISABLEWGL '
+disable_wgl = ' -DDISABLE_WGL '
 
 if is_windows:
   if is_win64:
