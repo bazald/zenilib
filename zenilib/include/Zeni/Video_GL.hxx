@@ -72,7 +72,7 @@ namespace Zeni {
       glDisable(GL_CULL_FACE);
   }
 
-#ifdef DISABLEWGL
+#ifdef DISABLE_WGL
   void Video_GL::set_vertical_sync_impl(const bool &on) {
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #else

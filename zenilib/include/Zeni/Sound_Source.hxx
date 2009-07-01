@@ -37,6 +37,10 @@
 #include <cassert>
 #include <cmath>
 
+#ifndef DISABLE_AL
+#include <AL/alut.h>
+#endif
+
 #include <Zeni/Global.h>
 
 namespace Zeni {
@@ -78,7 +82,7 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
+    alSourcefv(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
 #endif
   }
 
@@ -88,7 +92,7 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
+    alSourcefv(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
 #endif
   }
 
@@ -166,7 +170,7 @@ namespace Zeni {
   Point3f Sound_Source_HW::get_position() const {
     Point3f position;
 #ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<float *>(&position));
+    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<ALfloat *>(&position));
 #endif
     return position;
   }
@@ -174,7 +178,7 @@ namespace Zeni {
   Vector3f Sound_Source_HW::get_velocity() const {
     Vector3f velocity;
 #ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<float *>(&velocity));
+    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<ALfloat *>(&velocity));
 #endif
     return velocity;
   }
