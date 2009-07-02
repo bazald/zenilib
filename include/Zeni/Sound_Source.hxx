@@ -38,7 +38,9 @@
 #include <cmath>
 
 #ifndef DISABLE_AL
-#include <AL/alut.h>
+#ifndef AL_SEC_OFFSET
+#define AL_SEC_OFFSET 0x1024
+#endif
 #endif
 
 #include <Zeni/Global.h>
@@ -249,7 +251,7 @@ namespace Zeni {
       state == AL_PAUSED ? PAUSED :
       STOPPED;
 #else
-    return false;
+    return Sound_Source_HW::STATE();
 #endif
   }
 

@@ -198,7 +198,7 @@ namespace Zeni {
       cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) to OpenGL.\n";
 
     if(strstr((char*)glGetString(GL_EXTENSIONS), "GL_EXT_texture_filter_anisotropic"))
-      glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_maximum_anisotropy);
+      glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, reinterpret_cast<GLint *>(&m_maximum_anisotropy));
     else
       m_maximum_anisotropy = 0;
   }

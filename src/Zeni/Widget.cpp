@@ -1276,7 +1276,7 @@ namespace Zeni {
   void Widgets::render_impl() const {
     std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
-    for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(); it != m_widgets.rend(); ++it)
+    for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(), iend = m_widgets.rend(); it != iend; ++it)
       (*it)->render();
   }
 
