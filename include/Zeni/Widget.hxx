@@ -33,6 +33,7 @@
 #include <Zeni/Font.h>
 #include <Zeni/Material.h>
 #include <Zeni/Projector.h>
+#include <Zeni/Quadrilateral.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Video.h>
 
@@ -622,6 +623,7 @@ namespace Zeni {
 #include <Zeni/Font.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Projector.hxx>
+#include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
 

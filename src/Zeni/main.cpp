@@ -251,6 +251,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 #else
+#ifndef _MACOSX
   {
     char zeniapp_path[FILENAME_MAX];
     int length = readlink("/proc/self/exe", zeniapp_path, FILENAME_MAX);
@@ -265,6 +266,7 @@ int main(int argc, char *argv[]) {
       return -1;
     }
   }
+#endif
 #endif
 
   return main2(argc, argv);
