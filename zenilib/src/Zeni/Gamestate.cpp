@@ -26,10 +26,12 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Gamestate.hxx>
+#include <zenilib.h> // Otherwise, XCode is unhappy about constructors in Zeni/Global.h
 
-#include <Zeni/Configurator_Video.h>
-#include <Zeni/Game.hxx>
+//#include <Zeni/Gamestate.hxx>
+
+//#include <Zeni/Configurator_Video.h>
+//#include <Zeni/Game.hxx>
 
 #include <algorithm>
 #include <cmath>

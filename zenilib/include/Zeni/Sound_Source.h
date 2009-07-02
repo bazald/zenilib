@@ -77,21 +77,6 @@
 
 #include <string>
 
-#ifndef DISABLE_AL
-#include <AL/alut.h>
-#else
-
-#define ALint int
-#define ALuint unsigned int
-#define ALfloat float
-#define ALenum int
-
-#define AL_NONE 0
-#define AL_TRUE true
-#define AL_FALSE false
-
-#endif
-
 #include <Zeni/Global.h>
 
 namespace Zeni {
