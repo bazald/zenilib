@@ -119,8 +119,8 @@ namespace Zeni {
     alSourcei(m_source, AL_BUFFER, buffer.get_id());
     alSourcef(m_source, AL_PITCH, pitch);
     alSourcef(m_source, AL_GAIN, gain);
-    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
-    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
+    alSourcefv(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
+    alSourcefv(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
     alSourcei(m_source, AL_LOOPING, looping);
 #endif
 

@@ -223,7 +223,7 @@ namespace Zeni {
       throw Sound_Init_Failure();
 
     // Check for Vorbis extension functionality; seems to always fail :(
-    alIsExtensionPresent("AL_EXT_vorbis");
+    alIsExtensionPresent(const_cast<ALubyte *>(reinterpret_cast<const ALubyte *>("AL_EXT_vorbis")));
     cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
