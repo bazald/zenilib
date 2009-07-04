@@ -43,6 +43,10 @@
 #include <errno.h>
 #endif
 
+#ifdef _MACOSX
+#include <mach-o/dyld.h>
+#endif
+
 using namespace std;
 using namespace Zeni;
 
@@ -240,6 +244,15 @@ inline int main2(const int &argc, const char * const argv[]) {
   return 0;
 }
 
+// Go up one directory (or strip a file off the end of a directory)
+static void up_one_dir(char path[], int &length) {
+  for(path[length] = '\0'; length; --length)
+    if(path[length] == '/') {
+      path[length + 1] = '\0';
+      break;
+    }
+}
+
 int main(int argc, char *argv[]) {
 #ifdef _WINDOWS
 #ifdef X64
@@ -251,22 +264,28 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 #else
-#ifndef _MACOSX
   {
     char zeniapp_path[FILENAME_MAX];
+#ifndef _MACOSX
     int length = readlink("/proc/self/exe", zeniapp_path, FILENAME_MAX);
-    for(zeniapp_path[length] = '\0'; length; --length)
-      if(zeniapp_path[length] == '/') {
-        zeniapp_path[length + 1] = '\0';
-        break;
-      }
+#else
+    uint32_t size = sizeof(zeniapp_path);
+    if(_NSGetExecutablePath(zeniapp_path, &size)) {
+      cerr << "Loading working directory failed.\n";
+      return -1;
+    }
+    int length = strlen(zeniapp_path);
+    
+    for(int i = 0; i != 4; ++i)
+#endif
+      up_one_dir(zeniapp_path, length);
     if(chdir(zeniapp_path)) {
+      cerr << "chdir: " << zeniapp_path << '\n';
       cerr << "Setting working directory failed with error code: '" << errno << "'\n";
-      cerr << strerror(errno) << "\n";
+      cerr << strerror(errno) << '\n';
       return -1;
     }
   }
-#endif
 #endif
 
   return main2(argc, argv);
