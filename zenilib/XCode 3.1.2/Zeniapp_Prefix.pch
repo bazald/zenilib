@@ -1,8 +1,8 @@
 //
-// Prefix header for all source files of the 'ÇPROJECTNAMEÈ' target in the 'ÇPROJECTNAMEÈ' project
+// Prefix header for all source files of the 'Â«PROJECTNAMEÂ»' target in the 'Â«PROJECTNAMEÂ»' project
 //
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
