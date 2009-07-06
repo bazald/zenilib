@@ -97,8 +97,11 @@ namespace Zeni {
     virtual float get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
     inline float get_virtual_screen_height() const; ///< Get the intended virtual screen height for the rendering of this Font
 
-    /// Render text at screen position (x, y), with justification JUSTIFY.  Remember not to clip the screen if you want this to look good in OpenGL.
+    /// Render text at screen position (x, y), with justification JUSTIFY.
     virtual void render_text(const std::string &text, const Point2f &position,
+      const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const = 0;
+    /// Render text with greater control over position and orientation, with justification JUSTIFY.
+    virtual void render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
       const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const = 0;
 
   private:
@@ -122,6 +125,7 @@ namespace Zeni {
       inline float get_glyph_width() const;
 
       void render(const Point2f &position, const float &vratio) const;
+      void render(const Point3f &position, const Vector3f &right, const Vector3f &down) const;
 
     private:
       float m_glyph_width;
@@ -141,6 +145,8 @@ namespace Zeni {
 
     virtual void render_text(const std::string &text, const Point2f &position,
       const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
+    virtual void render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
+      const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const;
 
   private:
     Glyph *m_glyph[num_glyphs];
