@@ -12,6 +12,7 @@
 		002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
 		8D11072B0486CEB800E47090 /* Zeniapp.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zeniapp.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */; };
 		D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D34A63CD0FFD722E00146950 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
 		D34A63CE0FFD722E00146950 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
@@ -143,7 +144,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		002F39F909D0881F00EBEB88 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ./Home/Library/Frameworks/SDL.framework; sourceTree = SOURCE_ROOT; };
+		002F39F909D0881F00EBEB88 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../Frameworks/SDL.framework; sourceTree = SOURCE_ROOT; };
 		002F3A2B09D0888800EBEB88 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = SOURCE_ROOT; };
 		002F3A2C09D0888800EBEB88 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = SOURCE_ROOT; };
 		002F3C0009D093BD00EBEB88 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -154,14 +155,17 @@
 		32CA4F630368D1EE00C91783 /* Zeniapp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zeniapp_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Zeniapp.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zeniapp.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Zeniapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zeniapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D34A63C40FFD722E00146950 /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = ./Home/Library/Frameworks/Cg.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C50FFD722E00146950 /* GLEW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLEW.framework; path = ./Home/Library/Frameworks/GLEW.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C60FFD722E00146950 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = ./Home/Library/Frameworks/Ogg.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C70FFD722E00146950 /* SDL_gfx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_gfx.framework; path = ./Home/Library/Frameworks/SDL_gfx.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C80FFD722E00146950 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = ./Home/Library/Frameworks/SDL_image.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C90FFD722E00146950 /* SDL_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_net.framework; path = ./Home/Library/Frameworks/SDL_net.framework; sourceTree = SOURCE_ROOT; };
-		D34A63CA0FFD722E00146950 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = ./Home/Library/Frameworks/SDL_ttf.framework; sourceTree = SOURCE_ROOT; };
-		D34A63CB0FFD722E00146950 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ./Home/Library/Frameworks/Vorbis.framework; sourceTree = SOURCE_ROOT; };
+		D345B0711002818300A1B90A /* Title_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Title_State.h; path = ../include/Zeni/Title_State.h; sourceTree = SOURCE_ROOT; };
+		D345B0721002818300A1B90A /* Widget_Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget_Gamestate.h; path = ../include/Zeni/Widget_Gamestate.h; sourceTree = SOURCE_ROOT; };
+		D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget_Gamestate.cpp; path = ../src/Zeni/Widget_Gamestate.cpp; sourceTree = SOURCE_ROOT; };
+		D34A63C40FFD722E00146950 /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = ../Frameworks/Cg.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C50FFD722E00146950 /* GLEW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLEW.framework; path = ../Frameworks/GLEW.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C60FFD722E00146950 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = ../Frameworks/Ogg.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C70FFD722E00146950 /* SDL_gfx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_gfx.framework; path = ../Frameworks/SDL_gfx.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C80FFD722E00146950 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = ../Frameworks/SDL_image.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C90FFD722E00146950 /* SDL_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_net.framework; path = ../Frameworks/SDL_net.framework; sourceTree = SOURCE_ROOT; };
+		D34A63CA0FFD722E00146950 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = ../Frameworks/SDL_ttf.framework; sourceTree = SOURCE_ROOT; };
+		D34A63CB0FFD722E00146950 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../Frameworks/Vorbis.framework; sourceTree = SOURCE_ROOT; };
 		D34A65C80FFE836500146950 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../include/Zeni/Camera.h; sourceTree = SOURCE_ROOT; };
 		D34A65C90FFE836500146950 /* Camera.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Camera.hxx; path = ../include/Zeni/Camera.hxx; sourceTree = SOURCE_ROOT; };
 		D34A65CA0FFE836500146950 /* Chronometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chronometer.h; path = ../include/Zeni/Chronometer.h; sourceTree = SOURCE_ROOT; };
@@ -312,9 +316,9 @@
 		D34A66F60FFE865E00146950 /* sounds.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = sounds.xml; path = ../config/sounds.xml; sourceTree = SOURCE_ROOT; };
 		D34A66F70FFE865E00146950 /* textures.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = textures.xml; path = ../config/textures.xml; sourceTree = SOURCE_ROOT; };
 		D34A66F80FFE865E00146950 /* zenilib.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zenilib.xml; path = ../config/zenilib.xml; sourceTree = SOURCE_ROOT; };
-		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "./Home/Library/Frameworks/lib3ds-2.0.framework"; sourceTree = SOURCE_ROOT; };
-		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ./Home/Library/Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
-		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ./Home/Library/Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
+		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "/tmp/bazald/zenilib/Frameworks/lib3ds-2.0.framework"; sourceTree = "<absolute>"; };
+		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
+		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ../Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
 		D3E494830FFF0B5600B647E1 /* Zeniapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zeniapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E494910FFF0BC900B647E1 /* zeniapp.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeniapp.cxx; path = ../src/zeniapp.cxx; sourceTree = SOURCE_ROOT; };
 		D3E494920FFF0BC900B647E1 /* zenilib.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zenilib.cxx; path = ../src/zenilib.cxx; sourceTree = SOURCE_ROOT; };
@@ -554,6 +558,7 @@
 				D34A66760FFE839B00146950 /* Video_DX9.cpp */,
 				D34A66770FFE839B00146950 /* Video_GL.cpp */,
 				D34A66780FFE839B00146950 /* Video.cpp */,
+				D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */,
 				D34A66790FFE839B00146950 /* Widget.cpp */,
 			);
 			name = Zeni;
@@ -725,6 +730,7 @@
 				D34A660B0FFE836500146950 /* Textures.h */,
 				D34A660D0FFE836500146950 /* Thread.h */,
 				D34A660E0FFE836500146950 /* Timer.h */,
+				D345B0711002818300A1B90A /* Title_State.h */,
 				D34A66100FFE836500146950 /* Triangle.h */,
 				D34A66120FFE836500146950 /* Vector3f.h */,
 				D34A66140FFE836500146950 /* Vertex_Buffer.h */,
@@ -733,6 +739,7 @@
 				D34A661A0FFE836500146950 /* Video_DX9.h */,
 				D34A661C0FFE836500146950 /* Video_GL.h */,
 				D34A661E0FFE836500146950 /* Video.h */,
+				D345B0721002818300A1B90A /* Widget_Gamestate.h */,
 				D34A66200FFE836500146950 /* Widget.h */,
 				D34A66220FFE836500146950 /* XML.h */,
 			);
@@ -915,6 +922,7 @@
 				D34A66AB0FFE83A600146950 /* tinyxmlerror.cpp in Sources */,
 				D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */,
 				D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */,
+				D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -999,6 +1007,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = .;
 				FRAMEWORK_SEARCH_PATHS = (
+					../Frameworks,
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
 					/System/Library/Frameworks,
@@ -1026,6 +1035,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = .;
 				FRAMEWORK_SEARCH_PATHS = (
+					../Frameworks,
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
 					/System/Library/Frameworks,
@@ -1056,7 +1066,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					./Home/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -1080,7 +1092,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					./Home/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Zeniapp.plist;
