@@ -71,7 +71,11 @@
 namespace Zeni {
 
   struct Error {
-    Error(const std::string &msg_) : msg(msg_) {assert(!"Error");}
+    Error(const std::string &msg_) : msg(msg_) {
+#ifdef _WINDOWS
+      assert(!"Error");
+#endif
+    }
     std::string msg;
   };
 

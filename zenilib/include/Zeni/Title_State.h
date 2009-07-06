@@ -97,7 +97,7 @@ namespace Zeni {
 
   public:
     Title_State(const std::string &title_)
-      : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(800.0f, 600.0f))),
+      : Widget_Gamestate(std::make_pair(Point2f(0.0f, 0.0f), Point2f(800.0f, 600.0f))),
       m_title(title_)
     {
       m_widgets.lend_Widget(m_title);
