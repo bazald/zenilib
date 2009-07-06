@@ -108,6 +108,26 @@ namespace Zeni {
     vr.render(rect);
   }
 
+  void Font_FT::Glyph::render(const Point3f &position, const Vector3f &right, const Vector3f &down) const {
+    static Video &vr = get_Video();
+
+    const Vector3f scaled_right = (m_lower_right_point.x - m_upper_left_point.x) * right;
+    const Vector3f scaled_down = (m_lower_right_point.y - m_upper_left_point.y) * down;
+
+    const Point3f &ul = position + m_upper_left_point.x * right + m_upper_left_point.y * down;
+    const Point3f ll = ul + scaled_down;
+    const Point3f lr = ll + scaled_right;
+    const Point3f ur = ul + scaled_right;
+
+    Quadrilateral<Vertex3f_Texture> rect
+      (Vertex3f_Texture(ul, m_upper_left_texel),
+      Vertex3f_Texture(ll, Point2f(m_upper_left_texel.x, m_lower_right_texel.y)),
+      Vertex3f_Texture(lr, m_lower_right_texel),
+      Vertex3f_Texture(ur, Point2f(m_lower_right_texel.x, m_upper_left_texel.y)));
+
+    vr.render(rect);
+  }
+
   Font_FT::Font_FT()
     : m_font_height(0.0f),
     m_vratio(0.0f)
@@ -231,7 +251,7 @@ namespace Zeni {
 NEXT_LINE:
 
     cx = x;
-    x_diff = 0;
+    x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
       for(unsigned int j = i; j < text.size(); ++j) {
@@ -260,6 +280,58 @@ NEXT_LINE:
       else if(m_glyph[int(text[i])]) {
         m_glyph[int(text[i])]->render(Point2f(cx, cy), m_vratio);
         cx += m_glyph[int(text[i])]->get_glyph_width();
+      }
+    }
+
+    vr.unapply_texture();
+
+    vr.set_color(previous_color);
+  }
+
+  void Font_FT::render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down, const Color &color, const JUSTIFY &justify) const {
+    Video &vr = get_Video();
+
+    const Color previous_color = vr.get_color();
+
+    vr.set_color(color);
+    vr.apply_texture(*m_texture);
+
+    Point3f pos, vertical_pos = position;
+    float x_diff;
+    int i = 0;
+
+NEXT_LINE_2:
+
+    pos = vertical_pos;
+    x_diff = 0.0f;
+
+    if(justify != ZENI_LEFT) {
+      for(unsigned int j = i; j < text.size(); ++j) {
+        if(text[j] == '\r' || text[j] == '\n' ||
+          !m_glyph[int(text[j])])
+          break;
+
+        x_diff -= m_glyph[int(text[j])]->get_glyph_width();
+      }
+
+      if(justify == ZENI_CENTER)
+        pos += x_diff / 2.0f * right;
+      else if(justify == ZENI_RIGHT)
+        pos += x_diff * right;
+    }
+
+    for(; i < int(text.size()); ++i) {
+      if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
+        ++i;
+
+      if(text[i] == '\r' || text[i] == '\n') {
+        ++i;
+        vertical_pos += m_font_height * down;
+        goto NEXT_LINE_2;
+      }
+      else if(m_glyph[int(text[i])]) {
+        m_glyph[int(text[i])]->render(pos, right, down);
+        pos += m_glyph[int(text[i])]->get_glyph_width() * right;
       }
     }
 
