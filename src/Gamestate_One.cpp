@@ -14,9 +14,7 @@ static vector<string> g_args;
 /// Play_State is a placeholder.  You should completely replace it.
 class Play_State : public Gamestate_Base {
   void perform_logic() {
-    Game &gr = get_Game();
-    gr.pop_state();
-    gr.push_state(new Gamestate_One);
+    get_Game().pop_state();
   }
 };
 
