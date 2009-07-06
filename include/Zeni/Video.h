@@ -199,6 +199,8 @@ namespace Zeni {
     inline void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
 
     // Window Decorations
+    inline const std::string & get_title() const; ///< Get the window title
+    inline const std::string & get_taskmsg() const; ///< Get the taskbar message
     void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message
     void set_title(const std::string &title); ///< Set the window title
     void set_taskmsg(const std::string &taskmsg); ///< Set the taskbar message

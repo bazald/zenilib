@@ -145,6 +145,48 @@ namespace Zeni {
     m_text.render(get_center());
   }
 
+  void Text_Button_3C::on_unhover() {
+    m_bg.set_color(m_bg_normal);
+    m_text.set_color(m_text_normal);
+    m_state = NORMAL;
+  }
+
+  void Text_Button_3C::on_click() {
+    m_bg.set_color(m_bg_clicked);
+    m_text.set_color(m_text_clicked);
+    m_state = CLICKED;
+  }
+
+  void Text_Button_3C::on_unstray() {
+    m_bg.set_color(m_bg_clicked);
+    m_text.set_color(m_text_clicked);
+    m_state = CLICKED;
+  }
+
+  void Text_Button_3C::on_hover() {
+    m_bg.set_color(m_bg_hovered_strayed);
+    m_text.set_color(m_text_hovered_strayed);
+    m_state = HOVERED_STRAYED;
+  }
+
+  void Text_Button_3C::on_stray() {
+    m_bg.set_color(m_bg_hovered_strayed);
+    m_text.set_color(m_text_hovered_strayed);
+    m_state = HOVERED_STRAYED;
+  }
+
+  void Text_Button_3C::on_accept() {
+    m_bg.set_color(m_bg_hovered_strayed);
+    m_text.set_color(m_text_hovered_strayed);
+    m_state = HOVERED_STRAYED;
+  }
+
+  void Text_Button_3C::on_reject() {
+    m_bg.set_color(m_bg_hovered_strayed);
+    m_text.set_color(m_text_hovered_strayed);
+    m_state = HOVERED_STRAYED;
+  }
+
   void Check_Box::on_accept() {
     m_checked = !m_checked;
     m_toggling = false;
@@ -354,10 +396,10 @@ namespace Zeni {
   Selector::Normal_Button::Normal_Button(Selector &selector,
                                          const Point2f &upper_left_,
                                          const Point2f &lower_right_,
-                                         const Color &text_color_,
+                                         const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                                          const std::string &font_,
-                                         const Color &bg_color_)
-    : Text_Button(upper_left_, lower_right_, bg_color_, font_, "", text_color_),
+                                         const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
+    : Text_Button_3C(upper_left_, lower_right_, bg_normal_, bg_clicked_, bg_hovered_strayed_, font_, "", text_normal_, text_clicked_, text_hovered_strayed_),
     m_selector(&selector)
   {
   }
@@ -375,10 +417,10 @@ namespace Zeni {
                                              const std::string &option,
                                              const Point2f &upper_left_,
                                              const Point2f &lower_right_,
-                                             const Color &text_color_,
+                                             const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                                              const std::string &font_,
-                                             const Color &bg_color_)
-    : Text_Button(upper_left_, lower_right_, bg_color_, font_, option, text_color_),
+                                             const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
+    : Text_Button_3C(upper_left_, lower_right_, bg_normal_, bg_clicked_, bg_hovered_strayed_, font_, option, text_normal_, text_clicked_, text_hovered_strayed_),
     m_selector(&selector)
   {
   }
@@ -428,10 +470,10 @@ namespace Zeni {
 
   Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-                     const Color &text_color_,
+                     const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                      const std::string &font_,
-                     const Color &slider_color_,
-                     const Color &bg_color_)
+                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
+                     const Color &slider_color_)
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
@@ -439,16 +481,20 @@ namespace Zeni {
     : m_expanded(expanded_upper_left_, expanded_lower_right_),
     m_option(0u),
     m_selected(false),
-    m_normal_button(*this, upper_left_, lower_right_, text_color_, font_, bg_color_),
+    m_normal_button(*this, upper_left_, lower_right_, bg_normal_, bg_clicked_, bg_hovered_strayed_, font_, text_normal_, text_clicked_, text_hovered_strayed_),
     m_selector_slider(*this,
                       0.5f * (expanded_lower_right_.x - lower_right_.x),
                       slider_color_,
                       slider_color_,
                       make_pair(lower_right_.x, expanded_lower_right_.x),
-                      bg_color_),
-    m_text_color(text_color_),
+                      bg_normal_),
+    m_bg_normal(bg_normal_),
+    m_bg_clicked(bg_clicked_),
+    m_bg_hovered_strayed(bg_hovered_strayed_),
     m_font(font_),
-    m_bg_color(bg_color_)
+    m_text_normal(text_normal_),
+    m_text_clicked(text_clicked_),
+    m_text_hovered_strayed(text_hovered_strayed_)
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
@@ -633,9 +679,9 @@ namespace Zeni {
     m_selector_buttons.push_back(new Selector_Button(*this, option,
                                                      Point2f(ul.x, ul.y + vertical_offset),
                                                      Point2f(lr.x, lr.y + vertical_offset),
-                                                     m_text_color,
+                                                     m_bg_normal, m_bg_clicked, m_bg_hovered_strayed,
                                                      m_font,
-                                                     m_bg_color));
+                                                     m_text_normal, m_text_clicked, m_text_hovered_strayed));
   }
 
   void Selector::build_selector_buttons() {

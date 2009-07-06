@@ -76,3 +76,4 @@
 #include "Zeni/Video_DX9.cpp"
 #include "Zeni/Video_GL.cpp"
 #include "Zeni/Widget.cpp"
+#include "Zeni/Widget_Gamestate.cpp"

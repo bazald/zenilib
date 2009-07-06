@@ -167,6 +167,14 @@ namespace Zeni {
     return m_viewport;
   }
 
+  const std::string & Video::get_title() const {
+    return m_title;
+  }
+
+  const std::string & Video::get_taskmsg() const {
+    return m_taskmsg;
+  }
+
   /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
    * It is not hard to code around, but they are convenient.
    */

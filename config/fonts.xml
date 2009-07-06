@@ -25,4 +25,11 @@ Only TrueType fonts are supported.
         <italics>0</italics>
         <virtual_screen_height>600</virtual_screen_height>
     </system_36_600>
+    <title>
+        <filepath>fonts/FORGOTTE.TTF</filepath>
+        <height>92</height>
+        <bold>0</bold>
+        <italics>0</italics>
+        <virtual_screen_height>600</virtual_screen_height>
+    </title>
 </Fonts>

@@ -41,13 +41,12 @@
 #ifndef CONFIGURATOR_VIDEO_H
 #define CONFIGURATOR_VIDEO_H
 
-#include <Zeni/Gamestate.h>
-#include <Zeni/Widget.h>
+#include <Zeni/Widget_Gamestate.h>
 #include <Zeni/XML.h>
 
 namespace Zeni {
 
-  class Configurator_Video : public Gamestate_Base {
+  class Configurator_Video : public Widget_Gamestate {
     class Check_Box_Element : public Check_Box {
     public:
       Check_Box_Element(const XML_Element &element,
@@ -109,7 +108,7 @@ namespace Zeni {
       std::map<std::string, std::string> m_save_as;
     };
 
-    class Save_Button : public Text_Button {
+    class Save_Button : public Text_Button_3C {
     public:
       Save_Button(XML_Document &file,
                   const Point2f &upper_left,
@@ -121,7 +120,7 @@ namespace Zeni {
       XML_Document * m_file;
     };
 
-    class Cancel_Button : public Text_Button {
+    class Cancel_Button : public Text_Button_3C {
     public:
       Cancel_Button(const Point2f &upper_left,
                   const Point2f &lower_right);
@@ -131,21 +130,13 @@ namespace Zeni {
 
   public:
     Configurator_Video();
+    ~Configurator_Video();
 
   private:
-    void on_key(const SDL_KeyboardEvent &event);
-    void on_mouse_button(const SDL_MouseButtonEvent &event);
-    void on_mouse_motion(const SDL_MouseMotionEvent &event);
-
     void render();
 
     XML_Document m_file;
     XML_Element m_zenilib;
-
-    std::pair<Point2i, Point2i> m_crop_window;
-    std::pair<Point2f, Point2f> m_virtual_window;
-    Widgets m_widgets;
-    Projector2D m_projector;
 
     Slider_Element m_anisotropy;
     Check_Box_Element m_bilinear_filtering;
@@ -160,6 +151,8 @@ namespace Zeni {
 
     Save_Button m_save;
     Cancel_Button m_cancel;
+
+    std::string m_prev_title;
   };
 
 }

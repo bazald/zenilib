@@ -44,8 +44,8 @@ namespace Zeni {
                     const float &height)
     : Check_Box(upper_left,
                 Point2f(upper_left.x + height, upper_left.y + height),
-                get_Colors()["yellow"],
-                get_Colors()["yellow"]),
+                get_Colors()["default_button_bg_normal"],
+                get_Colors()["default_button_bg_normal"]),
     m_element(element)
   {
     set_checked(m_element.to_bool());
@@ -64,7 +64,7 @@ namespace Zeni {
     font.render_text(" " + m_element.value(),
                      Point2f(get_lower_right().x,
                              0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
-                     get_Colors()["yellow"]);
+                     get_Colors()["default_button_bg_normal"]);
   }
 
   Configurator_Video::Slider_Element::Slider_Element(const XML_Element &element,
@@ -75,8 +75,8 @@ namespace Zeni {
                  Point2f(0.9f * upper_left.x + 0.1f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
                  Point2f(0.1f * upper_left.x + 0.9f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
                  0.2f * (lower_right.x - upper_left.x),
-                 get_Colors()["yellow"],
-                 get_Colors()["yellow"]),
+                 get_Colors()["default_button_bg_normal"],
+                 get_Colors()["default_button_bg_normal"]),
     m_element(element),
     m_text_coord(lower_right.x,
                  0.5f * (lower_right.y + upper_left.y))
@@ -96,7 +96,7 @@ namespace Zeni {
 
     font.render_text(" " + m_element.value() + " (" + itoa(get_value()) + ")",
                      Point2f(m_text_coord.x, m_text_coord.y - 0.5f * font.get_text_height()),
-                     get_Colors()["yellow"]);
+                     get_Colors()["default_button_bg_normal"]);
   }
 
   Configurator_Video::Text_Element::Text_Element(const XML_Element &element,
@@ -104,10 +104,10 @@ namespace Zeni {
                const Point2f &lower_right)
     : Text_Box(upper_left,
                Point2f(lower_right.x - get_Fonts()["system_36_600"].get_text_width(" " + element.value()), lower_right.y),
-               get_Colors()["yellow"],
+               get_Colors()["default_button_bg_normal"],
                "system_36_600",
                element.to_string(),
-               get_Colors()["black"],
+               get_Colors()["default_button_text_normal"],
                true,
                ZENI_CENTER),
     m_element(element)
@@ -127,19 +127,19 @@ namespace Zeni {
     font.render_text(" " + m_element.value(),
                      Point2f(get_lower_right().x,
                              0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
-                     get_Colors()["yellow"]);
+                     get_Colors()["default_button_bg_normal"]);
   }
 
   Configurator_Video::Selector_Element::Selector_Element(const XML_Element &element,
-                   const Point2f &upper_left,
-                   const Point2f &lower_right,
-                   const Point2f &expanded_upper_left,
-                   const Point2f &expanded_lower_right)
+                                                         const Point2f &upper_left,
+                                                         const Point2f &lower_right,
+                                                         const Point2f &expanded_upper_left,
+                                                         const Point2f &expanded_lower_right)
     : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
-               get_Colors()["black"],
+               get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
                "system_36_600",
-               get_Colors()["black"],
-               get_Colors()["yellow"]),
+               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"],
+               get_Colors()["default_button_bg_normal"]),
     m_element(element)
   {
   }
@@ -157,7 +157,7 @@ namespace Zeni {
   Configurator_Video::Save_Button::Save_Button(XML_Document &file,
               const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system_36_600", "Save", get_Colors()["black"]),
+    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Save"),
     m_file(&file)
   {
   }
@@ -181,7 +181,7 @@ namespace Zeni {
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, get_Colors()["yellow"], "system_36_600", "Cancel", get_Colors()["black"])
+    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Cancel")
   {
   }
 
@@ -191,10 +191,9 @@ namespace Zeni {
   }
 
   Configurator_Video::Configurator_Video()
-    : m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
+    : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f))),
+    m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
-    m_crop_window(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())),
-    m_virtual_window(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f)),
 
     m_anisotropy(m_zenilib["Textures"]["Anisotropy"], make_pair(0, 16), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
     m_bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
@@ -208,30 +207,9 @@ namespace Zeni {
     m_vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
 
     m_save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
-    m_cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f))
+    m_cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
+    m_prev_title(get_Video().get_title())
   {
-    /** Build virtual window**/
-
-    const float desired_ratio = m_virtual_window.second.x / m_virtual_window.second.y;
-    const float given_ratio = float(m_crop_window.second.x) / m_crop_window.second.y;
-
-    if(given_ratio > desired_ratio) {
-      const int new_width = int(m_crop_window.second.x * desired_ratio / given_ratio);
-      const int cut_side = (m_crop_window.second.x - new_width) / 2;
-
-      m_crop_window.first.x += cut_side;
-      m_crop_window.second.x -= cut_side;
-    }
-    else if(desired_ratio > given_ratio) {
-      const int new_height = int(m_crop_window.second.y * given_ratio / desired_ratio);
-      const int cut_side = (m_crop_window.second.y - new_height) / 2;
-
-      m_crop_window.first.y += cut_side;
-      m_crop_window.second.y -= cut_side;
-    }
-
-    m_projector = Projector2D(m_virtual_window, m_crop_window);
-
     /** Build m_widgets **/
 
 #ifdef _WINDOWS
@@ -264,20 +242,12 @@ namespace Zeni {
     get_Video().set_title("Zenilib Configurator");
   }
 
-  void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {
-    m_widgets.on_event(event);
-  }
-
-  void Configurator_Video::on_mouse_button(const SDL_MouseButtonEvent &event) {
-    m_widgets.on_event(event, m_projector);
-  }
-
-  void Configurator_Video::on_mouse_motion(const SDL_MouseMotionEvent &event) {
-    m_widgets.on_event(event, m_projector);
+  Configurator_Video::~Configurator_Video() {
+    get_Video().set_title(m_prev_title);
   }
 
   void Configurator_Video::render() {
-    get_Video().set_2d_view(m_virtual_window, m_crop_window);
+    get_Video().set_2d_view(get_virtual_window(), get_crop_window());
 
     Font &font = get_Fonts()["system_36_600"];
     const Color color = get_Colors()["system_font"];

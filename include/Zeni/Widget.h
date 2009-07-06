@@ -455,6 +455,38 @@ namespace Zeni {
     Widget_Text m_text;
   };
 
+  class Text_Button_3C : public Text_Button {
+  public:
+    enum State {NORMAL, CLICKED, HOVERED_STRAYED};
+
+    inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
+                          const std::string &font_name_, const std::string &text_);
+    inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
+                          const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
+                          const std::string &font_name_, const std::string &text_,
+                          const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
+
+    virtual void on_unhover(); ///< Switch to normal colors
+
+    virtual void on_click(); ///< Switch to clicked colors
+    virtual void on_unstray(); ///< Switch to clicked colors
+
+    virtual void on_hover(); ///< Switch to hovered/strayed colors
+    virtual void on_stray(); ///< Switch to hovered/strayed colors
+    virtual void on_accept(); ///< Switch to hovered/strayed colors
+    virtual void on_reject(); ///< Switch to hovered/strayed colors
+
+  private:
+    Color m_bg_normal;
+    Color m_bg_clicked;
+    Color m_bg_hovered_strayed;
+    Color m_text_normal;
+    Color m_text_clicked;
+    Color m_text_hovered_strayed;
+
+    State m_state;
+  };
+
   class Check_Box : public Widget_Button {
   public:
     inline Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
@@ -591,14 +623,14 @@ namespace Zeni {
   };
 
   class Selector : public Widget {
-    class Normal_Button : public Text_Button {
+    class Normal_Button : public Text_Button_3C {
     public:
       Normal_Button(Selector &selector,
                     const Point2f &upper_left_,
                     const Point2f &lower_right_,
-                    const Color &text_color_,
+                    const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                     const std::string &font_,
-                    const Color &bg_color_);
+                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
 
       void on_accept();
 
@@ -606,15 +638,15 @@ namespace Zeni {
       Selector * m_selector;
     };
 
-    class Selector_Button : public Text_Button {
+    class Selector_Button : public Text_Button_3C {
     public:
       Selector_Button(Selector &selector,
                       const std::string &option,
                       const Point2f &upper_left_,
                       const Point2f &lower_right_,
-                      const Color &text_color_,
+                      const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                       const std::string &font_,
-                      const Color &bg_color_);
+                      const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
 
       void on_accept();
 
@@ -647,10 +679,10 @@ namespace Zeni {
 
     Selector(const Point2f &upper_left_, const Point2f &lower_right_,
              const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-             const Color &text_color_,
+             const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
              const std::string &font_,
-             const Color &slider_color_,
-             const Color &bg_color_);
+             const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
+             const Color &slider_color_);
     ~Selector();
 
     const Options & get_options() const;
@@ -692,9 +724,9 @@ namespace Zeni {
     std::vector<Selector_Button *> m_selector_buttons;
     Selector_Slider m_selector_slider;
 
-    Color m_text_color;
+    Color m_bg_normal, m_bg_clicked, m_bg_hovered_strayed;
     std::string m_font;
-    Color m_bg_color;
+    Color m_text_normal, m_text_clicked, m_text_hovered_strayed;
 
     size_t view_start;
     size_t view_end;
