@@ -40,6 +40,7 @@
 #include <Zeni/Widget.h>
 
 // Not HXXed
+#include <Zeni/Colors.h>
 #include <Zeni/Fonts.h>
 
 #undef min
@@ -291,6 +292,34 @@ namespace Zeni {
     : Widget_Button(upper_left_, lower_right_),
     m_bg(upper_left_, lower_right_, bg_color_),
     m_text(font_name_, text_, text_color_)
+  {
+  }
+
+  Text_Button_3C::Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
+                                 const std::string &font_name_, const std::string &text_)
+    : Text_Button(upper_left_, lower_right_, get_Colors()["default_button_bg_normal"], font_name_, text_, get_Colors()["default_button_text_normal"]),
+    m_bg_normal(get_Colors()["default_button_bg_normal"]),
+    m_bg_clicked(get_Colors()["default_button_bg_clicked"]),
+    m_bg_hovered_strayed(get_Colors()["default_button_bg_hovered_strayed"]),
+    m_text_normal(get_Colors()["default_button_text_normal"]),
+    m_text_clicked(get_Colors()["default_button_text_clicked"]),
+    m_text_hovered_strayed(get_Colors()["default_button_text_hovered_strayed"]),
+    m_state(NORMAL)
+  {
+  }
+
+  Text_Button_3C::Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
+                                 const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
+                                 const std::string &font_name_, const std::string &text_,
+                                 const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
+    : Text_Button(upper_left_, lower_right_, bg_normal_, font_name_, text_, text_normal_),
+    m_bg_normal(bg_normal_),
+    m_bg_clicked(bg_clicked_),
+    m_bg_hovered_strayed(bg_hovered_strayed_),
+    m_text_normal(text_normal_),
+    m_text_clicked(text_clicked_),
+    m_text_hovered_strayed(text_hovered_strayed_),
+    m_state(NORMAL)
   {
   }
 

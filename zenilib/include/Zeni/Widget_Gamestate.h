@@ -26,62 +26,50 @@
 * the GNU General Public License.
 */
 
-#ifndef ZENILIB_H
-#define ZENILIB_H
+/**
+* \class Zeni::Widget_Gamestate
+*
+* \ingroup Zenilib
+*
+* \brief Gamestate with some helpers for dealing with Widgets
+*
+* \author bazald
+*
+* Contact: bazald@zenipex.com
+*/
 
-#define ZENI_INLINES
+#ifndef WIDGET_GAMESTATE_H
+#define WIDGET_GAMESTATE_H
 
-#include <Zeni/Camera.h>
-#include <Zeni/Chronometer.h>
-#include <Zeni/Collision.h>
-#include <Zeni/Color.h>
-#include <Zeni/Colors.h>
-#include <Zeni/Configurator_Video.h>
-#include <Zeni/Console_State.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
-#include <Zeni/Database.h>
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
 #include <Zeni/Gamestate.h>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Hash_Map.h>
-#include <Zeni/Image.h>
-#include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
-#include <Zeni/Material.h>
-#include <Zeni/Matrix4f.h>
-#include <Zeni/Model.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Net.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
-#include <Zeni/Quaternion.h>
-#include <Zeni/Renderable.h>
-#include <Zeni/Resource.h>
-#include <Zeni/Shader.h>
-#include <Zeni/Sound.h>
-#include <Zeni/Sound_Source.h>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Sounds.h>
-#include <Zeni/Texture.h>
-#include <Zeni/Textures.h>
-#include <Zeni/Thread.h>
-#include <Zeni/Timer.h>
-#include <Zeni/Title_State.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
-#include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL.h>
 #include <Zeni/Widget.h>
-#include <Zeni/Widget_Gamestate.h>
-#include <Zeni/XML.h>
+
+namespace Zeni {
+
+  class Widget_Gamestate : public Gamestate_Base {
+    Widget_Gamestate(const Widget_Gamestate &);
+    Widget_Gamestate & operator=(const Widget_Gamestate &);
+
+  public:
+    Widget_Gamestate(const std::pair<Zeni::Point2f, Zeni::Point2f> &virtual_window_);
+
+    const std::pair<Point2i, Point2i> & get_crop_window() const;
+    const std::pair<Point2f, Point2f> & get_virtual_window() const;
+
+    void on_key(const SDL_KeyboardEvent &event);
+    void on_mouse_button(const SDL_MouseButtonEvent &event);
+    void on_mouse_motion(const SDL_MouseMotionEvent &event);
+    void render();
+
+  protected:
+    Widgets m_widgets;
+
+  private:
+    std::pair<Point2i, Point2i> m_crop_window;
+    std::pair<Point2f, Point2f> m_virtual_window;
+    Zeni::Projector2D m_projector;
+  };
+
+}
 
 #endif
