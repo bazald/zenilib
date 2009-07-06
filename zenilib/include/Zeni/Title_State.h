@@ -65,9 +65,7 @@ namespace Zeni {
       }
 
       void on_accept() {
-        Game &gr = get_Game();
-        gr.pop_state();
-        gr.push_state(new GAMESTATE());
+        get_Game().push_state(new GAMESTATE());
       }
     } m_play_button;
 
