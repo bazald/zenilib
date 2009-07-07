@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="Application"
 	ProjectGUID="{DFC46808-04A8-43EE-AADB-0E6277BA50C9}"
-	RootNamespace="Zeniapp"
+	RootNamespace="Application"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>

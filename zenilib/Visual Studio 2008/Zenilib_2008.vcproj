@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="Zenilib"
 	ProjectGUID="{2A690D67-1B22-41F1-A729-C46016EC83DC}"
-	RootNamespace="Zeniapp"
+	RootNamespace="Zenilib"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
