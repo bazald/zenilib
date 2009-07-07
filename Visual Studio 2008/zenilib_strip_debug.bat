@@ -1,9 +1,5 @@
-RMDIR /S /Q "Win32\launcher_d"
-RMDIR /S /Q "Win32\zeniapp_d"
-RMDIR /S /Q "Win32\zenilib_d"
-RMDIR /S /Q "x64\launcher_d"
-RMDIR /S /Q "x64\zeniapp_d"
-RMDIR /S /Q "x64\zenilib_d"
+FOR /F "tokens=*" %%G IN ('DIR /B /AD /S Win32\*_d') DO RMDIR /S /Q "%%G"
+FOR /F "tokens=*" %%G IN ('DIR /B /AD /S x64\*_d') DO RMDIR /S /Q "%%G"
 
 DEL /Q "..\bin\*_d.exe"
 DEL /Q "..\bin\x64\*_x64d.exe"

@@ -4,7 +4,7 @@
 
 Unfortunately, this must be done on a per-host and per-user basis:
 
-  1. Right-click on project Zeniapp in the Solution Explorer.
+  1. Right-click on project 'Application' in the Solution Explorer.
   2. Left-click on Properties in the menu that pops up.
   3. Navigate to 'Configuration Properties'/'Debugging'
   4. For 'All Configurations' in 'Win32' and in 'x64'
@@ -56,7 +56,7 @@ zenilib_strip_x64.bat
 
 To prevent code from using (A),
 
-  1. Right-click on project Zeniapp in the Solution Explorer.
+  1. Right-click on project 'Application' in the Solution Explorer.
   2. Left-click on Properties in the menu that pops up.
   3. Navigate to 'Configuration Properties'/'C/C++'/'Preprocessor'
   4. Append a semicolon followed by (B) to the Preprocessor Definitions

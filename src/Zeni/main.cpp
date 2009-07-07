@@ -275,22 +275,22 @@ int main(int argc, char *argv[]) {
   }
 #else
   {
-    char zeniapp_path[FILENAME_MAX];
+    char application_path[FILENAME_MAX];
 #ifndef _MACOSX
-    int length = readlink("/proc/self/exe", zeniapp_path, FILENAME_MAX);
+    int length = readlink("/proc/self/exe", application_path, FILENAME_MAX);
 #else
-    uint32_t size = sizeof(zeniapp_path);
-    if(_NSGetExecutablePath(zeniapp_path, &size)) {
+    uint32_t size = sizeof(application_path);
+    if(_NSGetExecutablePath(application_path, &size)) {
       cerr << "Loading working directory failed.\n";
       return -1;
     }
-    int length = strlen(zeniapp_path);
+    int length = strlen(application_path);
     
     for(int i = 0; i != 4; ++i)
 #endif
-      up_one_dir(zeniapp_path, length);
-    if(chdir(zeniapp_path)) {
-      cerr << "chdir: " << zeniapp_path << '\n';
+      up_one_dir(application_path, length);
+    if(chdir(application_path)) {
+      cerr << "chdir: " << application_path << '\n';
       cerr << "Setting working directory failed with error code: '" << errno << "'\n";
       cerr << strerror(errno) << '\n';
       return -1;
