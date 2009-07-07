@@ -1,3 +1,6 @@
+RMDIR /S "..\Frameworks"
+RMDIR /S "..\Xcode 3.1.2"
+
 RMDIR /S "..\include"
 RMDIR /S "..\include_win"
 RMDIR /S "..\lib_win"
