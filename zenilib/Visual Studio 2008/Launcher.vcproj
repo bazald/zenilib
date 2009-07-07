@@ -92,7 +92,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launcher_d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\$(ProjectName)_d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launcher_x64d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\$(ProjectName)_x64d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -248,7 +248,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launcher.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -328,7 +328,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\Launcher_x64.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\$(ProjectName)_x64.exe&quot;"
 			/>
 		</Configuration>
 	</Configurations>
