@@ -63,7 +63,12 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 
+#ifdef _MACOSX
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_ttf.h>
+#endif
+
 #include <string>
 
 #ifndef DISABLE_DX9

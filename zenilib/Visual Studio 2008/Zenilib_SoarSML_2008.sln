@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zeniapp", "Zeniapp_SoarSML_2008.vcproj", "{DFC46808-04A8-43EE-AADB-0E6277BA50C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application_SoarSML_2008.vcproj", "{DFC46808-04A8-43EE-AADB-0E6277BA50C9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3EDBED11-A1B3-4E00-8B6E-652523D482F0} = {3EDBED11-A1B3-4E00-8B6E-652523D482F0}
 		{2A690D67-1B22-41F1-A729-C46016EC83DC} = {2A690D67-1B22-41F1-A729-C46016EC83DC}
@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zenilib", "Zenilib_2008.vcproj", "{2A690D67-1B22-41F1-A729-C46016EC83DC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "Launcher.vcproj", "{FEC98728-E180-4349-98AB-161F4ADCF43C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DFC46808-04A8-43EE-AADB-0E6277BA50C9} = {DFC46808-04A8-43EE-AADB-0E6277BA50C9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientSML", "..\..\SoarSuite\Core\ClientSML\ClientSML9.vcproj", "{3EDBED11-A1B3-4E00-8B6E-652523D482F0}"
 EndProject

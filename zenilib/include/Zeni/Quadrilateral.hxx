@@ -36,7 +36,12 @@
 #include <Zeni/Quadrilateral.h>
 
 // Not HXXed
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
+
 #include <cassert>
 
 namespace Zeni {

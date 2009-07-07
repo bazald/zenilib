@@ -29,7 +29,11 @@
 #include <Zeni/Texture.hxx>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <SDL_gfx/SDL_rotozoom.h>
+#else
 #include <SDL/SDL_rotozoom.h>
+#endif
 #endif
 
 #include <Zeni/Global.h>

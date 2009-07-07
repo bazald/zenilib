@@ -23,7 +23,7 @@ elif is_linux or is_max:
 
 ### Decide single compilation unit
 
-program_scu = 'src/zeniapp.cxx'
+program_scu = 'src/application.cxx'
 library_scu = 'src/zenilib.cxx'
 
 launcher = ['Visual Studio 2008/Launcher.cpp']
@@ -109,11 +109,11 @@ if int(pedantic):
 
 ### Decide optimization
 
-launcher_name = 'Launch_Zeniapp'
+launcher_name = 'Launcher'
 if is_windows:
-  program_name = 'Zeniapp'
+  program_name = 'Application'
 else:
-  program_name = 'zeniapp'
+  program_name = 'application'
 library_name = 'zenilib'
 tinyxml_name = 'tinyxml'
 
