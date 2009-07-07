@@ -99,7 +99,11 @@
 #endif
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #include <Cg/cgGL.h>
 #endif
 

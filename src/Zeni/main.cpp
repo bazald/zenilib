@@ -154,12 +154,22 @@ static void load_config() {
 
 /*** main ***/
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#include <SDL_net/SDL_net.h>
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_net.h>
 #include <SDL/SDL_ttf.h>
+#endif
 
 #ifndef DISABLE_AL
+#ifdef _MACOSX
+#include <ALUT/alut.h>
+#else
 #include <AL/alut.h>
+#endif
 static std::string alErrorString(const ALenum &err) {
   switch(err) {
     case AL_NO_ERROR:          return "AL_NO_ERROR";          break;

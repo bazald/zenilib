@@ -35,7 +35,12 @@
 #include <Zeni/Video_GL.h>
 #include <Zeni/Video_DX9.h>
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#else
 #include <SDL/SDL_image.h>
+#endif
+
 #include <iostream>
 
 using namespace std;

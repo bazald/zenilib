@@ -38,7 +38,11 @@
 
 // Not HXXed
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 
 namespace Zeni {

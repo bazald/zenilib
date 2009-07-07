@@ -40,7 +40,12 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
+
 #include <iostream>
 
 namespace SDL {

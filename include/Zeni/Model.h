@@ -83,7 +83,12 @@
 #include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 
+#ifdef _MACOSX
+#include <lib3ds-2.0/lib3ds.h>
+#else
 #include <lib3ds.h>
+#endif
+
 #include <memory>
 
 namespace Zeni {

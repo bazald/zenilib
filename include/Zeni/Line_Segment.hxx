@@ -36,7 +36,12 @@
 
 // Not HXXed
 #include <Zeni/Vector3f.h>
+
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 
 namespace Zeni {
 

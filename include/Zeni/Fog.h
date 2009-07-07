@@ -46,8 +46,13 @@
 #include <Zeni/Color.h>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
 #endif
+#endif
+
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif

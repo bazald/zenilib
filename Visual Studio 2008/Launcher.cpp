@@ -21,6 +21,8 @@
 #include <string>
 #include <windows.h>
 
+#include "Application_Name.h"
+
 using namespace std;
 
 // See http://msdn.microsoft.com/en-us/library/ms682425.aspx
@@ -34,15 +36,15 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/,
 {
 #ifdef X64
 #ifdef NDEBUG
-  return launch("bin\\x64\\Zeniapp_x64.exe", lpCmdLine);
+  return launch("bin\\x64\\" APPLICATION_NAME "_x64.exe", lpCmdLine);
 #else
-  return launch("bin\\x64\\Zeniapp_x64d.exe", lpCmdLine);
+  return launch("bin\\x64\\" APPLICATION_NAME "_x64d.exe", lpCmdLine);
 #endif
 #else
 #ifdef NDEBUG
-  return launch("bin\\Zeniapp.exe", lpCmdLine);
+  return launch("bin\\" APPLICATION_NAME ".exe", lpCmdLine);
 #else
-  return launch("bin\\Zeniapp_d.exe", lpCmdLine);
+  return launch("bin\\" APPLICATION_NAME "_d.exe", lpCmdLine);
 #endif
 #endif
 }

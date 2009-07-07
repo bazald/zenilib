@@ -52,13 +52,23 @@
 #include <Zeni/Core.h>
 #include <Zeni/IV.h>
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#else
 #include <SDL/SDL_image.h>
+#endif
+
 #include <string>
 #include <vector>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
 #endif
+#endif
+
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif

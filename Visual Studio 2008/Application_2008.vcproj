@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Zeniapp"
+	Name="Application"
 	ProjectGUID="{DFC46808-04A8-43EE-AADB-0E6277BA50C9}"
 	RootNamespace="Zeniapp"
 	Keyword="Win32Proj"
@@ -21,19 +21,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(PlatformName)\zeniapp_d"
-			IntermediateDirectory="$(PlatformName)\zeniapp_d"
+			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
 			ConfigurationType="1"
 			CharacterSet="0"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -47,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -57,8 +58,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -81,7 +82,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -94,7 +95,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -111,24 +112,25 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\Zeniapp_d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName)_d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\zeniapp_d"
-			IntermediateDirectory="$(PlatformName)\zeniapp_d"
+			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
 			ConfigurationType="1"
 			CharacterSet="0"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -143,7 +145,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -153,8 +155,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -177,7 +179,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="true"
 				MapExports="true"
 				SubSystem="2"
@@ -190,7 +192,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -207,25 +209,26 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\Zeniapp_x64d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)\zeniapp"
-			IntermediateDirectory="$(PlatformName)\zeniapp"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -244,15 +247,15 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -274,7 +277,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -291,7 +294,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -308,25 +311,26 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\Zeniapp.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\zeniapp"
-			IntermediateDirectory="$(PlatformName)\zeniapp"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -346,15 +350,15 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;X64"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -376,7 +380,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -391,7 +395,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -408,24 +412,25 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\Zeniapp_x64.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|Win32"
-			OutputDirectory="$(PlatformName)\zeniapp_d"
-			IntermediateDirectory="$(PlatformName)\zeniapp_d"
+			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
 			ConfigurationType="1"
 			CharacterSet="0"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -439,7 +444,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -449,8 +454,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
@@ -473,7 +478,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -486,7 +491,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -503,24 +508,25 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\Zeniapp_d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName)_d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|x64"
-			OutputDirectory="$(PlatformName)\zeniapp_d"
-			IntermediateDirectory="$(PlatformName)\zeniapp_d"
+			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
 			ConfigurationType="1"
 			CharacterSet="0"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -535,7 +541,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -545,8 +551,8 @@
 				FloatingPointModel="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -569,7 +575,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="true"
 				MapExports="true"
 				SubSystem="2"
@@ -582,7 +588,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -599,25 +605,26 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\Zeniapp_x64d.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release SCU|Win32"
-			OutputDirectory="$(PlatformName)\zeniapp"
-			IntermediateDirectory="$(PlatformName)\zeniapp"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -636,15 +643,15 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -666,7 +673,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				GenerateMapFile="false"
 				MapExports="false"
 				SubSystem="2"
@@ -683,7 +690,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -700,25 +707,26 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\Zeniapp.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release SCU|x64"
-			OutputDirectory="$(PlatformName)\zeniapp"
-			IntermediateDirectory="$(PlatformName)\zeniapp"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zeniapp_BuildLog.html"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Copying SoarSML DLLs from SoarSuite"
-				CommandLine="del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				Outputs="Application_Name.h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -738,15 +746,15 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;X64"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zeniapp.pch"
-				ProgramDataBaseFileName="$(IntDir)\zeniapp.pdb"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -768,7 +776,7 @@
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)zeniapp.pdb"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -783,7 +791,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\zeniapp.dep"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -800,7 +808,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\Zeniapp_x64.exe&quot;"
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -905,7 +913,7 @@
 			Filter="cxx"
 			>
 			<File
-				RelativePath="..\src\zeniapp.cxx"
+				RelativePath="..\src\application.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

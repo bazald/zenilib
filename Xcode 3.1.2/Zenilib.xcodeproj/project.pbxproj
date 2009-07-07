@@ -10,7 +10,7 @@
 		002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
-		8D11072B0486CEB800E47090 /* Zeniapp.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zeniapp.strings */; };
+		8D11072B0486CEB800E47090 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */; };
 		D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
@@ -70,11 +70,11 @@
 		D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A80FFE83A600146950 /* tinyxmlparser.cpp */; };
 		D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D34A67B00FFE88A500146950 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
-		D3DB81E80FFF1AB000788B73 /* zeniapp.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494910FFF0BC900B647E1 /* zeniapp.cxx */; };
+		D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494910FFF0BC900B647E1 /* application.cxx */; };
 		D3DB81E90FFF1AD700788B73 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D3E4934A0FFF038300B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
 		D3E493560FFF039600B647E1 /* ALUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
-		D3E4943D0FFF0B5600B647E1 /* Zeniapp.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zeniapp.strings */; };
+		D3E4943D0FFF0B5600B647E1 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
 		D3E4943F0FFF0B5600B647E1 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		D3E494710FFF0B5600B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D3E494720FFF0B5600B647E1 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
@@ -91,7 +91,7 @@
 		D3E4947D0FFF0B5600B647E1 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
 		D3E4947E0FFF0B5600B647E1 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
 		D3E494940FFF0BC900B647E1 /* zenilib.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494920FFF0BC900B647E1 /* zenilib.cxx */; };
-		D3E4949E0FFF0C9200B647E1 /* Zeniapp.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zeniapp.strings */; };
+		D3E4949E0FFF0C9200B647E1 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
 		D3E494A00FFF0C9200B647E1 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		D3E494A20FFF0C9200B647E1 /* zenilib.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494920FFF0BC900B647E1 /* zenilib.cxx */; };
 		D3E494A40FFF0C9200B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -148,13 +148,13 @@
 		002F3A2B09D0888800EBEB88 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = SOURCE_ROOT; };
 		002F3A2C09D0888800EBEB88 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = SOURCE_ROOT; };
 		002F3C0009D093BD00EBEB88 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Zeniapp.strings; sourceTree = "<group>"; };
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Zenilib.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		32CA4F630368D1EE00C91783 /* Zeniapp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zeniapp_Prefix.pch; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Zeniapp.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zeniapp.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Zeniapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zeniapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zenilib_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Zenilib.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zenilib.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D345B0711002818300A1B90A /* Title_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Title_State.h; path = ../include/Zeni/Title_State.h; sourceTree = SOURCE_ROOT; };
 		D345B0721002818300A1B90A /* Widget_Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget_Gamestate.h; path = ../include/Zeni/Widget_Gamestate.h; sourceTree = SOURCE_ROOT; };
 		D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget_Gamestate.cpp; path = ../src/Zeni/Widget_Gamestate.cpp; sourceTree = SOURCE_ROOT; };
@@ -319,10 +319,10 @@
 		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "/tmp/bazald/zenilib/Frameworks/lib3ds-2.0.framework"; sourceTree = "<absolute>"; };
 		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
 		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ../Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
-		D3E494830FFF0B5600B647E1 /* Zeniapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zeniapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D3E494910FFF0BC900B647E1 /* zeniapp.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeniapp.cxx; path = ../src/zeniapp.cxx; sourceTree = SOURCE_ROOT; };
+		D3E494830FFF0B5600B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494910FFF0BC900B647E1 /* application.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application.cxx; path = ../src/application.cxx; sourceTree = SOURCE_ROOT; };
 		D3E494920FFF0BC900B647E1 /* zenilib.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zenilib.cxx; path = ../src/zenilib.cxx; sourceTree = SOURCE_ROOT; };
-		D3E494B60FFF0C9200B647E1 /* Zeniapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zeniapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494B60FFF0C9200B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,9 +434,9 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Zeniapp.app */,
-				D3E494830FFF0B5600B647E1 /* Zeniapp.app */,
-				D3E494B60FFF0C9200B647E1 /* Zeniapp.app */,
+				8D1107320486CEB800E47090 /* Application_d.app */,
+				D3E494830FFF0B5600B647E1 /* Application_d.app */,
+				D3E494B60FFF0C9200B647E1 /* Application_d.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -444,7 +444,7 @@
 		29B97314FDCFA39411CA2CEA /* «PROJECTNAMEASXML» */ = {
 			isa = PBXGroup;
 			children = (
-				D34A66DC0FFE856E00146950 /* Zeniapp */,
+				D34A66DC0FFE856E00146950 /* Application */,
 				D34A63E00FFD729A00146950 /* Zenilib */,
 				080E96DDFE201D6D7F000001 /* SDLmain */,
 				29B97315FDCFA39411CA2CEA /* Precompiled Headers */,
@@ -458,7 +458,7 @@
 		29B97315FDCFA39411CA2CEA /* Precompiled Headers */ = {
 			isa = PBXGroup;
 			children = (
-				32CA4F630368D1EE00C91783 /* Zeniapp_Prefix.pch */,
+				32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */,
 			);
 			name = "Precompiled Headers";
 			sourceTree = "<group>";
@@ -466,8 +466,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				089C165CFE840E0CC02AAC07 /* Zeniapp.strings */,
-				8D1107310486CEB800E47090 /* Zeniapp.plist */,
+				089C165CFE840E0CC02AAC07 /* Zenilib.strings */,
+				8D1107310486CEB800E47090 /* Zenilib.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -610,7 +610,7 @@
 			name = "Include Files";
 			sourceTree = "<group>";
 		};
-		D34A66DC0FFE856E00146950 /* Zeniapp */ = {
+		D34A66DC0FFE856E00146950 /* Application */ = {
 			isa = PBXGroup;
 			children = (
 				D34A66E00FFE859100146950 /* Configuration Files */,
@@ -619,7 +619,7 @@
 				D34A66DD0FFE858200146950 /* Source Files */,
 				D3E494960FFF0BF800B647E1 /* SCU Files */,
 			);
-			name = Zeniapp;
+			name = Application;
 			sourceTree = "<group>";
 		};
 		D34A66DD0FFE858200146950 /* Source Files */ = {
@@ -757,7 +757,7 @@
 		D3E494960FFF0BF800B647E1 /* SCU Files */ = {
 			isa = PBXGroup;
 			children = (
-				D3E494910FFF0BC900B647E1 /* zeniapp.cxx */,
+				D3E494910FFF0BC900B647E1 /* application.cxx */,
 			);
 			name = "SCU Files";
 			sourceTree = "<group>";
@@ -765,9 +765,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* Zeniapp */ = {
+		8D1107260486CEB800E47090 /* Normal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Zeniapp" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Normal" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -778,15 +778,15 @@
 			);
 			dependencies = (
 			);
-			name = Zeniapp;
+			name = Normal;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = 8D1107320486CEB800E47090 /* Zeniapp.app */;
+			productReference = 8D1107320486CEB800E47090 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D3E4943B0FFF0B5600B647E1 /* Zeniapp SCU */ = {
+		D3E4943B0FFF0B5600B647E1 /* SCU */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "Zeniapp SCU" */;
+			buildConfigurationList = D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "SCU" */;
 			buildPhases = (
 				D3E4943C0FFF0B5600B647E1 /* Resources */,
 				D3E4943E0FFF0B5600B647E1 /* Sources */,
@@ -797,15 +797,15 @@
 			);
 			dependencies = (
 			);
-			name = "Zeniapp SCU";
+			name = SCU;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494830FFF0B5600B647E1 /* Zeniapp.app */;
+			productReference = D3E494830FFF0B5600B647E1 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D3E4949C0FFF0C9200B647E1 /* Zeniapp ZeniSCU */ = {
+		D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "Zeniapp ZeniSCU" */;
+			buildConfigurationList = D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "SCU (Zenilib Only)" */;
 			buildPhases = (
 				D3E4949D0FFF0C9200B647E1 /* Resources */,
 				D3E4949F0FFF0C9200B647E1 /* Sources */,
@@ -816,10 +816,10 @@
 			);
 			dependencies = (
 			);
-			name = "Zeniapp ZeniSCU";
+			name = "SCU (Zenilib Only)";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494B60FFF0C9200B647E1 /* Zeniapp.app */;
+			productReference = D3E494B60FFF0C9200B647E1 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -827,16 +827,16 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zeniapp" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zenilib" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* «PROJECTNAMEASXML» */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* Zeniapp */,
-				D3E4943B0FFF0B5600B647E1 /* Zeniapp SCU */,
-				D3E4949C0FFF0C9200B647E1 /* Zeniapp ZeniSCU */,
+				8D1107260486CEB800E47090 /* Normal */,
+				D3E4943B0FFF0B5600B647E1 /* SCU */,
+				D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */,
 			);
 		};
 /* End PBXProject section */
@@ -846,7 +846,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072B0486CEB800E47090 /* Zeniapp.strings in Resources */,
+				8D11072B0486CEB800E47090 /* Zenilib.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,7 +854,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3E4943D0FFF0B5600B647E1 /* Zeniapp.strings in Resources */,
+				D3E4943D0FFF0B5600B647E1 /* Zenilib.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,7 +862,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3E4949E0FFF0C9200B647E1 /* Zeniapp.strings in Resources */,
+				D3E4949E0FFF0C9200B647E1 /* Zenilib.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,7 +932,7 @@
 			files = (
 				D3E4943F0FFF0B5600B647E1 /* SDLMain.m in Sources */,
 				D3E494940FFF0BC900B647E1 /* zenilib.cxx in Sources */,
-				D3DB81E80FFF1AB000788B73 /* zeniapp.cxx in Sources */,
+				D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -949,12 +949,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		089C165CFE840E0CC02AAC07 /* Zeniapp.strings */ = {
+		089C165CFE840E0CC02AAC07 /* Zenilib.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
-			name = Zeniapp.strings;
+			name = Zenilib.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -973,9 +973,9 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp_d;
+				PRODUCT_NAME = Application_d;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -995,9 +995,9 @@
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp;
+				PRODUCT_NAME = Application;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1022,7 +1022,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../include_mac,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
@@ -1050,7 +1049,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../include_mac,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
@@ -1073,9 +1071,9 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp_d;
+				PRODUCT_NAME = Application_d;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -1097,9 +1095,9 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp;
+				PRODUCT_NAME = Application;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1117,9 +1115,9 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp_d;
+				PRODUCT_NAME = Application_d;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -1139,9 +1137,9 @@
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = Zeniapp.plist;
+				INFOPLIST_FILE = Zenilib.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = Zeniapp;
+				PRODUCT_NAME = Application;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1149,7 +1147,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Zeniapp" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Normal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -1158,7 +1156,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zeniapp" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zenilib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
@@ -1167,7 +1165,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "Zeniapp SCU" */ = {
+		D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "SCU" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3E494810FFF0B5600B647E1 /* Debug */,
@@ -1176,7 +1174,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "Zeniapp ZeniSCU" */ = {
+		D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "SCU (Zenilib Only)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3E494B40FFF0C9200B647E1 /* Debug */,

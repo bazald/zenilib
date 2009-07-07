@@ -70,7 +70,11 @@
 #include "Vector3f.hxx"
 #include "Quaternion.hxx"
 
+#ifdef _MACOSX
+#include <SDL_net/SDL_net.h>
+#else
 #include <SDL/SDL_net.h>
+#endif
 
 #include <string>
 #include <sstream>

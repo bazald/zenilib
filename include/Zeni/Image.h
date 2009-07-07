@@ -51,7 +51,12 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#else
 #include <SDL/SDL_image.h>
+#endif
+
 #include <string>
 
 namespace Zeni {
