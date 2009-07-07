@@ -32,7 +32,7 @@ SetCompressor /solid lzma
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME_X86}"
-!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchZeniappX86"
+!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchApplicationX86"
 !define MUI_FINISHPAGE_SHOWREADME_CHECKED
 !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
 !insertmacro MUI_PAGE_FINISH
@@ -46,11 +46,11 @@ SetCompressor /solid lzma
 ; Reserve files
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
-Function LaunchZeniappX86
+Function LaunchApplicationX86
   ExecShell "" "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk"
 FunctionEnd
 
-;Function LaunchZeniappX64
+;Function LaunchApplicationX64
 ;  ExecShell "" "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk"
 ;FunctionEnd
 
