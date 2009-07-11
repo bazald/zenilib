@@ -240,6 +240,10 @@ namespace Zeni {
     m_handled_event = m_prompt.get_edit_pos() != -1;
   }
 
+  void Console_State::perform_logic() {
+    m_child->perform_logic();
+  }
+
   void Console_State::render() {
     assert(m_child);
 
