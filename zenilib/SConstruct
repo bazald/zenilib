@@ -198,7 +198,7 @@ else:
     libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
 libs += [library_name]
-if not is_windows:
+if scu is 0 and not is_windows:
   libs += [tinyxml_name]
 
 env = Environment(
@@ -225,7 +225,7 @@ if is_windows:
   env.Program(
     launcher_name,
     launcher)
-else:
+elif scu is 0:
   env.StaticLibrary(
     tinyxml_name,
     tinyxml)

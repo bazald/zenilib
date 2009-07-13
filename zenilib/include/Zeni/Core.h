@@ -96,7 +96,7 @@ namespace Zeni {
     std::string get_appdata_path(); ///< Get the path that should be used for user-modifiable storage
 
     static bool create_directory(const std::string &directory_path); ///< Create a directory if it doesn't already exist; It is not considered an error if it already exists.
-    static bool remove_directory(const std::string &directory_path); ///< Remove a directory
+    static bool remove_directory(const std::string &directory_path); ///< Remove a directory if it exists; It is not considered an error if it does not exist.
 
     static bool file_exists(const std::string &file_path); ///< Test for the existence of a file
     static bool delete_file(const std::string &file_path); ///< Delete a file

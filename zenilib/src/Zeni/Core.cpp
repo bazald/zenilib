@@ -152,15 +152,16 @@ namespace Zeni {
            GetLastError() == ERROR_ALREADY_EXISTS;
 #else
     const int status = mkdir(directory_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    return !status || status == EEXIST;
+    return !status || errno == EEXIST;
 #endif
   }
 
   bool Core::remove_directory(const std::string &directory_path) {
 #ifdef _WINDOWS
-    return RemoveDirectory(directory_path.c_str()) != 0;
+    return RemoveDirectory(directory_path.c_str()) != 0 ||
+           GetLastError() == ERROR_PATH_NOT_FOUND;
 #else
-    return rmdir(directory_path.c_str()) == 0;
+    return !rmdir(directory_path.c_str()) || errno == ENOENT;
 #endif
   }
 
