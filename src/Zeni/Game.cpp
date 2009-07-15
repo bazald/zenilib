@@ -63,7 +63,7 @@ namespace Zeni {
           if(s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
             throw Quit_Event();
 #ifndef NDEBUG
-          else if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_SHIFT) && !(s.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META))) {
+          else if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_ALT)) {
             if(m_console_active)
               deactivate_console();
             else
@@ -76,7 +76,7 @@ namespace Zeni {
         else {
           const SDL_keysym &s = event.key.keysym;
           if(event.type == SDL_KEYUP) {
-            if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_SHIFT) && !(s.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META))) {
+            if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_ALT)) {
               continue;
             }
           }
