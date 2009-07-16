@@ -198,18 +198,6 @@ namespace Zeni {
           }
           break;
 
-        case SDLK_BACKQUOTE:
-          if((event.keysym.mod & KMOD_SHIFT) /*&& m_prompt.get_edit_pos() == -1*/) {
-            assert(m_child);
-
-            Game &gr = get_Game();
-            gr.pop_state();
-            gr.push_state(*m_child);
-            clear_child();
-
-            m_handled_event = true;
-          }
-
         default:
           if(m_prompt.get_edit_pos() != -1) {
             const std::string backup_text = m_prompt.get_text();
