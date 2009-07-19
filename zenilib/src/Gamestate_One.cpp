@@ -34,7 +34,7 @@ namespace Zeni {
     get_Textures();
     get_Fonts();
     get_Sounds();
-    get_Video().set_title("Zenipex Library Application");
+    get_Video().set_title("Zenilib Application");
   }
 
   Gamestate_One::~Gamestate_One() {
