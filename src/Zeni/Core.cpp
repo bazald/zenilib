@@ -172,7 +172,8 @@ namespace Zeni {
 
   bool Core::delete_file(const std::string &file_path) {
 #ifdef _WINDOWS
-    return system(("del " + file_path).c_str()) == 0;
+    return DeleteFile(file_path.c_str()) != 0 ||
+           GetLastError() == ERROR_PATH_NOT_FOUND;
 #else
     return system(("rm " + file_path).c_str()) == 0;
 #endif

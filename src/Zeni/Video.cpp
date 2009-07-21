@@ -75,6 +75,11 @@ namespace Zeni {
     Core &cr = get_Core();
     const std::string appdata_path = cr.get_appdata_path();
 
+    const string user_normal = appdata_path + "config/zenilib.xml";
+    const string user_backup = user_normal + ".bak";
+    const string local_normal = "config/zenilib.xml";
+    const string local_backup = local_normal + ".bak";
+
     if(!Video::e_video) {
       try {
         switch(Video::g_video_mode) {
@@ -94,11 +99,43 @@ namespace Zeni {
         }
       }
       catch(Video_Init_Failure &) {
-        if(cr.copy_file(appdata_path + "config/zenilib.xml.bak", appdata_path + "config/zenilib.xml") ||
-           cr.copy_file("config/zenilib.xml.bak", "config/zenilib.xml"))
-        {
-          // Restore backup of last "good" configuration
-          cerr << "zenilib.xml backup restored due to initialization failure.\n";
+        if(cr.copy_file(local_backup, local_normal) && cr.delete_file(local_backup))
+          cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
+        if(cr.copy_file(user_backup, user_normal) && cr.delete_file(user_backup))
+          cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
+        else {
+          XML_Document config_xml(local_normal);
+
+          XML_Element zenilib = config_xml["Zenilib"];
+          {
+            XML_Element textures = zenilib["Textures"];
+            textures["Anisotropy"].set_int(0);
+            textures["Bilinear_Filtering"].set_bool(true);
+            textures["Mipmapping"].set_bool(true);
+          }
+          {
+            XML_Element video = zenilib["Video"];
+#ifndef DISABLE_GL
+            video["API"].set_string("OpenGL");
+#else
+#ifndef DISABLE_DX9
+            video["API"].set_string("DX9");
+#endif
+#endif
+            video["Full_Screen"].set_bool(false);
+            video["Multisampling"].set_int(0);
+            {
+              XML_Element screen_resolution = video["Resolution"];
+              screen_resolution["Width"].set_int(800);
+              screen_resolution["Height"].set_int(600);
+            }
+            video["Vertical_Sync"].set_bool(false);
+          }
+
+          if(config_xml.try_save(user_normal))
+            cerr << '\'' << user_normal << "' reset due to initialization failure.\n";
+          if(config_xml.try_save(local_normal))
+            cerr << '\'' << local_normal << "' reset due to initialization failure.\n";
         }
         throw;
       }
@@ -108,19 +145,19 @@ namespace Zeni {
       if(cr.create_directory(appdata_path) &&
          cr.create_directory(appdata_path + "config/"))
       {
-        if(cr.copy_file(appdata_path + "config/zenilib.xml", appdata_path + "config/zenilib.xml.bak"))
+        if(cr.copy_file(user_normal, user_backup))
         {
-          cr.copy_file(appdata_path + "config/zenilib.xml", "config/zenilib.xml");
-          cr.copy_file(appdata_path + "config/zenilib.xml", "config/zenilib.xml.bak");
+          cr.copy_file(user_normal, local_normal);
+          cr.copy_file(user_normal, local_backup);
         }
         else
         {
-          cr.copy_file("config/zenilib.xml", appdata_path + "config/zenilib.xml");
-          cr.copy_file("config/zenilib.xml", appdata_path + "config/zenilib.xml.bak");
+          cr.copy_file(local_normal, user_normal);
+          cr.copy_file(local_normal, user_backup);
         }
       }
       else
-        cr.copy_file("config/zenilib.xml", "config/zenilib.xml.bak");
+        cr.copy_file(local_normal, local_backup);
     }
 
     return *Video::e_video;
