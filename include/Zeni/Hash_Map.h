@@ -32,6 +32,13 @@
 #include <string>
 
 #ifdef __GNUC__
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#include <unordered_map>
+#define hash_map unordered_map
+namespace stdext {
+  using std::unordered_map;
+}
+#else
 #include <ext/hash_map>
 #define stdext __gnu_cxx
 namespace __gnu_cxx {
@@ -42,6 +49,7 @@ namespace __gnu_cxx {
     }
   };
 }
+#endif
 #else
 #include <hash_map>
 #endif

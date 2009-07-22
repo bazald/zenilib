@@ -5,6 +5,12 @@ is_win64   = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or 
 is_linux   = sys.platform == 'linux2'
 is_mac     = sys.platform == 'darwin'
 
+### Decide C++ standard
+
+standard = ''
+if int(ARGUMENTS.get('cpp0x', 0)):
+  standard = ' -std=c++0x '
+
 ### Decide architecture
 
 if is_win64:
@@ -17,7 +23,7 @@ if is_win64:
     lib = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\lib.exe" '
     link = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\link.exe" '
     is_win64 = 0
-elif is_linux or is_max:
+elif is_linux or is_mac:
   cc = ' g++ '
   link = ' ld '
 
@@ -185,7 +191,7 @@ if is_windows:
     libpath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\libs\\Win32']
     libpath += ['lib_win']
 else:
-  ccflags = defines + warnings + optimization + arch + profiling
+  ccflags = standard + defines + warnings + optimization + arch + profiling
   linkflags = arch + profiling
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
@@ -233,6 +239,8 @@ elif scu is 0:
 ### Provide help
 
 opts = Options('custom.py')
+if not is_windows:
+  opts.Add('cpp0x', 'Set to 1 to enable the c++0x standard', 0)
 opts.Add('debug', 'Set to 1 to build with debug information', 0)
 opts.Add('noal', 'Set to 1 to disable the use of OpenAL', 0)
 if is_windows:
