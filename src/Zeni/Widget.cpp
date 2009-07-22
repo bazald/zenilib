@@ -115,7 +115,7 @@ namespace Zeni {
 
     const bool inside = is_inside(pos);
 
-    if(!m_clicked_outside)
+    if(!m_clicked_outside) {
       if(inside) {
         if(m_clicked_inside) {
           if(m_transient) {
@@ -138,6 +138,7 @@ namespace Zeni {
         m_transient = false;
         on_unhover();
       }
+    }
   }
 
   void Text_Button::render_impl() const {
@@ -230,11 +231,12 @@ namespace Zeni {
 
     if(m_checked || m_toggling) {
       Color check_color = m_check_color;
-      if(m_toggling)
+      if(m_toggling) {
         if(m_checked)
           check_color.a /= 3.0f;
         else
           check_color.a *= 2.0f / 3.0f;
+      }
 
       ul.set_color(check_color);
       ll.set_color(check_color);

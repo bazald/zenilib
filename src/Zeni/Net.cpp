@@ -294,11 +294,12 @@ namespace Zeni {
                                                                                    Chunk &chunk) {
     // Attempt to complete an existing partial packet
     for(list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it) {
-      if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk))
+      if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk)) {
         if((*it)->complete())
           return *it;
         else
           return 0;
+      }
     }
     
     if(int(chunk_sets.size()) == m_size) // LRU Eviction

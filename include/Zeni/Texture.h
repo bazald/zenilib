@@ -90,7 +90,7 @@ namespace Zeni {
 #endif
       VTYPE_SPRITE = 3};
 
-    typedef IV<Texture_Base, VTYPE> IV;
+    typedef ::IV<Texture_Base, VTYPE> IV;
   };
 
   class Texture : public Texture_Base::IV {
