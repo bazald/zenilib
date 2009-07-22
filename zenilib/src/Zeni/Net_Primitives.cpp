@@ -322,7 +322,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Sint32 &value) {
     char buf[sizeof(Sint32)];
     
-    SDLNet_Write32(value, buf);
+    SDLNet_Write32(value, reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Sint32));
   }
@@ -330,7 +330,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Uint32 &value) {
     char buf[sizeof(Uint32)];
     
-    SDLNet_Write32(reinterpret_cast<const Sint32 &>(value), buf);
+    SDLNet_Write32(reinterpret_cast<const Sint32 &>(value), reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Uint32));
   }
@@ -338,7 +338,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Sint16 &value) {
     char buf[sizeof(Sint16)];
     
-    SDLNet_Write16(value, buf);
+    SDLNet_Write16(value, reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Sint16));
   }
@@ -346,7 +346,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Uint16 &value) {
     char buf[sizeof(Uint16)];
     
-    SDLNet_Write16(reinterpret_cast<const Sint16 &>(value), buf);
+    SDLNet_Write16(reinterpret_cast<const Sint16 &>(value), reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Uint16));
   }
@@ -410,7 +410,7 @@ namespace Zeni {
     char buf[sizeof(Sint32)];
     
     if(is.read(buf, sizeof(Sint32)))
-      value = SDLNet_Read32(buf);
+      value = SDLNet_Read32(reinterpret_cast<void *>(buf));
     
     return is;
   }
@@ -419,7 +419,7 @@ namespace Zeni {
     char buf[sizeof(Uint32)];
     
     if(is.read(buf, sizeof(Uint32))) {
-      const Sint32 s_value = SDLNet_Read32(buf);
+      const Sint32 s_value = SDLNet_Read32(reinterpret_cast<void *>(buf));
       value = reinterpret_cast<const Uint32 &>(s_value);
     }
     
@@ -430,7 +430,7 @@ namespace Zeni {
     char buf[sizeof(Sint16)];
     
     if(is.read(buf, sizeof(Sint16)))
-      value = SDLNet_Read16(buf);
+      value = SDLNet_Read16(reinterpret_cast<void *>(buf));
     
     return is;
   }
@@ -439,7 +439,7 @@ namespace Zeni {
     char buf[sizeof(Uint16)];
     
     if(is.read(buf, sizeof(Uint16))) {
-      const Sint16 s_value = SDLNet_Read16(buf);
+      const Sint16 s_value = SDLNet_Read16(reinterpret_cast<void *>(buf));
       value = reinterpret_cast<const Uint16 &>(s_value);
     }
     
