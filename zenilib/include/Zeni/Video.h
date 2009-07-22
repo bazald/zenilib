@@ -87,7 +87,7 @@ namespace Zeni {
 #endif
     };
 
-    typedef IV<Video_Base, VIDEO_MODE> IV;
+    typedef ::IV<Video_Base, VIDEO_MODE> IV;
   };
 
   class Video : public Video_Base::IV {

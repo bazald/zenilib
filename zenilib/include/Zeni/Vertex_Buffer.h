@@ -53,6 +53,7 @@
 #include <Zeni/Vertex3f.h>
 
 #include <vector>
+#include <memory>
 
 #ifndef DISABLE_DX9
 #include <d3dx9.h>

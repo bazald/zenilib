@@ -790,8 +790,8 @@ default: return "SDLK_UNKNOWN";
 
   bool Zeni_Input_ID::operator<(const Zeni_Input_ID &rhs) const {
     return type < rhs.type ||
-           type == rhs.type && (subid < rhs.subid ||
-           subid == rhs.subid && which < rhs.which);
+           (type == rhs.type && (subid < rhs.subid ||
+           (subid == rhs.subid && which < rhs.which)));
   }
 
   Gamestate_II::Gamestate_II()

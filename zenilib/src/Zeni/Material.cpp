@@ -155,12 +155,12 @@ namespace Zeni {
 #endif
 
   bool Material::operator<(const Material &rhs) const {
-    return m_texture < rhs.m_texture || m_texture == rhs.m_texture &&
-      (diffuse < rhs.diffuse || diffuse == rhs.diffuse &&
-      (ambient < rhs.ambient || ambient == rhs.ambient &&
-      (specular < rhs.specular || specular == rhs.specular &&
-      (emissive < rhs.emissive || emissive == rhs.emissive &&
-      m_power < rhs.m_power))));
+    return m_texture < rhs.m_texture || (m_texture == rhs.m_texture &&
+      (diffuse < rhs.diffuse || (diffuse == rhs.diffuse &&
+      (ambient < rhs.ambient || (ambient == rhs.ambient &&
+      (specular < rhs.specular || (specular == rhs.specular &&
+      (emissive < rhs.emissive || (emissive == rhs.emissive &&
+      m_power < rhs.m_power)))))))));
   }
 
   bool Material::operator==(const Material &rhs) const {

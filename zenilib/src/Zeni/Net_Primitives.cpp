@@ -52,25 +52,25 @@ bool operator!=(const IPaddress &lhs, const IPaddress &rhs) {
 bool operator<(const IPaddress &lhs, const IPaddress &rhs) {
   const IPaddress lhs_l = {SDLNet_Read32(&lhs.host), SDLNet_Read16(&lhs.port)};
   const IPaddress rhs_l = {SDLNet_Read32(&rhs.host), SDLNet_Read16(&rhs.port)};
-  return lhs_l.host < rhs_l.host || lhs_l.host == rhs_l.host && lhs_l.port <  rhs_l.port;
+  return lhs_l.host < rhs_l.host || (lhs_l.host == rhs_l.host && lhs_l.port <  rhs_l.port);
 }
 
 bool operator<=(const IPaddress &lhs, const IPaddress &rhs) {
   const IPaddress lhs_l = {SDLNet_Read32(&lhs.host), SDLNet_Read16(&lhs.port)};
   const IPaddress rhs_l = {SDLNet_Read32(&rhs.host), SDLNet_Read16(&rhs.port)};
-  return lhs_l.host < rhs_l.host || lhs_l.host == rhs_l.host && lhs_l.port <= rhs_l.port;
+  return lhs_l.host < rhs_l.host || (lhs_l.host == rhs_l.host && lhs_l.port <= rhs_l.port);
 }
 
 bool operator>(const IPaddress &lhs, const IPaddress &rhs) {
   const IPaddress lhs_l = {SDLNet_Read32(&lhs.host), SDLNet_Read16(&lhs.port)};
   const IPaddress rhs_l = {SDLNet_Read32(&rhs.host), SDLNet_Read16(&rhs.port)};
-  return lhs_l.host > rhs_l.host || lhs_l.host == rhs_l.host && lhs_l.port >  rhs_l.port;
+  return lhs_l.host > rhs_l.host || (lhs_l.host == rhs_l.host && lhs_l.port >  rhs_l.port);
 }
 
 bool operator>=(const IPaddress &lhs, const IPaddress &rhs) {
   const IPaddress lhs_l = {SDLNet_Read32(&lhs.host), SDLNet_Read16(&lhs.port)};
   const IPaddress rhs_l = {SDLNet_Read32(&rhs.host), SDLNet_Read16(&rhs.port)};
-  return lhs_l.host > rhs_l.host || lhs_l.host == rhs_l.host && lhs_l.port >= rhs_l.port;
+  return lhs_l.host > rhs_l.host || (lhs_l.host == rhs_l.host && lhs_l.port >= rhs_l.port);
 }
 
 namespace Zeni {
@@ -280,11 +280,12 @@ namespace Zeni {
       if(++m_uid[index])
         break;
     
-    if(index == m_size)
+    if(index == m_size) {
       if(++m_size)
         m_uid += char(1);
       else
         m_uid.clear();
+    }
 
     return *this;
   }

@@ -613,8 +613,9 @@ namespace Zeni {
     const Time current_time = get_Timer().get_time();
     const int ticks = current_time.get_ticks_since(m_last_repeated);
 
-    if(m_delay_finished && ticks > m_repeat_interval ||
-      !m_delay_finished && ticks > m_repeat_delay) {
+    if((m_delay_finished && ticks > m_repeat_interval) ||
+       (!m_delay_finished && ticks > m_repeat_delay))
+    {
       m_delay_finished = true;
       m_last_repeated = current_time;
       m_widget->on_key(m_keysym, m_down);
