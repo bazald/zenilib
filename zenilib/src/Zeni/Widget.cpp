@@ -1259,12 +1259,16 @@ namespace Zeni {
       std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        const bool was_busy = (*it)->is_busy();
+
         (*it)->on_key(keysym, down);
 
         if((*it)->is_busy()) {
           set_busy(true);
           break;
         }
+        else if(was_busy)
+          set_busy(false);
       }
     }
   }
@@ -1285,12 +1289,16 @@ namespace Zeni {
       std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        const bool was_busy = (*it)->is_busy();
+
         (*it)->on_mouse_button(pos, down, button);
 
         if((*it)->is_busy()) {
           set_busy(true);
           break;
         }
+        else if(was_busy)
+          set_busy(false);
       }
     }
   }
@@ -1311,12 +1319,16 @@ namespace Zeni {
       std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
 
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        const bool was_busy = (*it)->is_busy();
+
         (*it)->on_mouse_motion(pos);
 
         if((*it)->is_busy()) {
           set_busy(true);
           break;
         }
+        else if(was_busy)
+          set_busy(false);
       }
     }
   }

@@ -73,6 +73,8 @@ namespace Zeni {
 
   void Widget_Gamestate::on_key(const SDL_KeyboardEvent &event) {
     m_widgets.on_event(event);
+    if(!m_widgets.is_busy())
+      Gamestate_Base::on_key(event);
   }
 
   void Widget_Gamestate::on_mouse_button(const SDL_MouseButtonEvent &event) {
