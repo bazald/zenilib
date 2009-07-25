@@ -66,6 +66,9 @@ namespace Zeni {
   {
     if(!g_enabled)
       throw Video_Init_Failure();
+
+    if(SDL_InitSubSystem(SDL_INIT_VIDEO) == -1)
+      throw Video_Init_Failure();
   }
 
   Video::~Video() {
@@ -207,7 +210,7 @@ namespace Zeni {
     get_Core();
     g_initialized = true;
 
-    // Initialize SDL + Variablse
+    // Initialize SDL + Variables
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
 
     set_tt();
