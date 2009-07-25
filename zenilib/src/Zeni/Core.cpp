@@ -106,7 +106,7 @@ namespace Zeni {
 
     /** Initialize SDL itself **/
 
-    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
+    if(SDL_Init(SDL_INIT_TIMER) == -1)
       throw Core_Init_Failure();
 
     /** Initialize Joysticks **/
