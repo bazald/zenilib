@@ -120,7 +120,7 @@ namespace Zeni {
     m_loaded = false;
   }
 
-  Texture * Textures::load(XML_Element_c &xml_element) {
+  Texture * Textures::load(XML_Element_c &xml_element, const std::string &name, const std::string &filename) {
     const XML_Element_c is_sprite_e = xml_element["is_sprite"];
     const bool is_sprite = is_sprite_e.good() && is_sprite_e.to_bool();
 
@@ -133,9 +133,31 @@ namespace Zeni {
     else {
       Sprite * s = new Sprite();
 
-      for(XML_Element_c texture = xml_element.first(); texture.good(); texture = texture.next())
-        if(texture.value() != "is_sprite")
-          s->append_frame(texture.to_string());
+      size_t frame_number = 0;
+      for(XML_Element_c texture = xml_element.first(); texture.good(); texture = texture.next(), ++frame_number)
+        try {
+          if(texture.value() == "token")
+            s->append_frame(texture.to_string());
+          else if(texture.value() == "file") {
+            const string filepath = texture["filepath"].to_string();
+            const bool tile = texture["tile"].to_bool();
+            const string frame_name = name + '/' + uitoa(frame_number);
+
+            Texture * texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
+
+            give(frame_name, texture, false, filename);
+
+            s->append_frame(frame_name);
+          }
+          else if(texture.value() == "is_sprite")
+            --frame_number;
+          else
+            throw Database_Load_Entry_Failed(name);
+        }
+        catch(...) {
+          delete s;
+          throw;
+        }
 
       return s;
     }

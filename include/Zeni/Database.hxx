@@ -226,7 +226,7 @@ namespace Zeni {
         const std::string name = it.value();
 
         if(!give_priority(name, false, false, filename)) {
-          TYPE * const type = load(it);
+          TYPE * const type = load(it, name, filename);
           if(!type)
             throw Database_Load_Entry_Failed(name);
 
