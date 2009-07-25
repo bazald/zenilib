@@ -92,6 +92,8 @@ namespace Zeni {
     Text_Box m_prompt;
 
     std::map<std::string, Console_Function *> m_functions;
+    std::string m_text;
+    bool m_log_dirty;
 
     Gamestate * m_child;
     bool m_handled_event;

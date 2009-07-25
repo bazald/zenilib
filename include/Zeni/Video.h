@@ -141,8 +141,10 @@ namespace Zeni {
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
     inline void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
     inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
-    inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
-    inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
+    inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set a 2D view for a viewport
+    inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set a 3D view for a viewport
     inline void set_backface_culling(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
@@ -196,7 +198,8 @@ namespace Zeni {
     inline const std::pair<Point2i, Point2i> & get_viewport() const; ///< Get the viewport
     inline void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
-    inline void set_viewport(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
+    inline void set_viewport(const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set the viewport
 
     // Window Decorations
     inline const std::string & get_title() const; ///< Get the window title
