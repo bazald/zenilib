@@ -195,7 +195,7 @@ namespace Zeni {
     m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
 
-    m_anisotropy(m_zenilib["Textures"]["Anisotropy"], make_pair(0, 16), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
+    m_anisotropy(m_zenilib["Textures"]["Anisotropy"], make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
     m_bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
     m_mipmapping(m_zenilib["Textures"]["Mipmapping"], Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
 

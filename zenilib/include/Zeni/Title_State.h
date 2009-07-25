@@ -113,6 +113,10 @@ namespace Zeni {
     ~Title_State() {
       get_Video().set_clear_color(Color(1.0f, 0.0f, 0.0f, 0.0f));
     }
+
+    void perform_logic() {
+      get_Video().set_clear_color(get_Colors()["title_bg"]);
+    }
   };
 
 }

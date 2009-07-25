@@ -174,10 +174,6 @@ namespace Zeni {
   };
 #endif
 
-  struct Invalid_Anisotropy_Setting : public Error {
-    Invalid_Anisotropy_Setting() : Error("Invalid Anisotropy Setting") {}
-  };
-
   struct Texture_Init_Failure : public Error {
     Texture_Init_Failure() : Error("Zeni Texture Failed to Initialize Correctly") {}
   };
