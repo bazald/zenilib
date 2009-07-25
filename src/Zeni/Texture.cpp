@@ -247,7 +247,7 @@ namespace Zeni {
 
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > get_Video().get_maximum_anisotropy())
-        throw Invalid_Anisotropy_Setting();
+        Textures::set_texturing_mode(get_Video().get_maximum_anisotropy(), Textures::get_bilinear_filtering(), Textures::get_mipmapping());
 
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
     }
@@ -314,7 +314,7 @@ namespace Zeni {
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
-        throw Invalid_Anisotropy_Setting();
+        Textures::set_texturing_mode(vr.get_maximum_anisotropy(), Textures::get_bilinear_filtering(), Textures::get_mipmapping());
 
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);

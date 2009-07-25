@@ -47,7 +47,7 @@ namespace Zeni {
       throw XML_Element_Ungood();
     }
 
-    TiXmlNode * node = child(field);
+    TiXmlNode * node = child_element(field);
     return XML_Element_c(node ? node->ToElement() : 0);
   }
 
@@ -57,7 +57,7 @@ namespace Zeni {
       throw XML_Element_Ungood();
     }
 
-    TiXmlNode * node = first_child();
+    TiXmlNode * node = first_child_element();
     return XML_Element_c(node ? node->ToElement() : 0);
   }
 
@@ -129,10 +129,20 @@ namespace Zeni {
 
   TiXmlNode * XML_Element_c::child(const std::string &field) const {
     TiXmlNode * node = m_handle.ToNode();
-    return node ? node->FirstChildElement(field.c_str()) : 0;
+    return node ? node->FirstChild(field.c_str()) : 0;
   }
 
   TiXmlNode * XML_Element_c::first_child() const {
+    TiXmlNode * node = m_handle.ToNode();
+    return node ? node->FirstChild() : 0;
+  }
+
+  TiXmlNode * XML_Element_c::child_element(const std::string &field) const {
+    TiXmlNode * node = m_handle.ToNode();
+    return node ? node->FirstChildElement(field.c_str()) : 0;
+  }
+
+  TiXmlNode * XML_Element_c::first_child_element() const {
     TiXmlNode * node = m_handle.ToNode();
     return node ? node->FirstChildElement() : 0;
   }
@@ -148,7 +158,7 @@ namespace Zeni {
       throw XML_Element_Ungood();
     }
 
-    TiXmlNode * node = child(field);
+    TiXmlNode * node = child_element(field);
     return XML_Element(node ? node->ToElement() : 0);
   }
 
@@ -158,7 +168,7 @@ namespace Zeni {
       throw XML_Element_Ungood();
     }
 
-    TiXmlNode * node = first_child();
+    TiXmlNode * node = first_child_element();
     return XML_Element(node ? node->ToElement() : 0);
   }
 

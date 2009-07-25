@@ -91,6 +91,8 @@ namespace Zeni {
   protected:
     inline TiXmlNode * child(const std::string &field) const;
     inline TiXmlNode * first_child() const;
+    inline TiXmlNode * child_element(const std::string &field) const;
+    inline TiXmlNode * first_child_element() const;
 
     TiXmlHandle m_handle;
   };
