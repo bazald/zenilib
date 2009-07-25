@@ -57,7 +57,7 @@ namespace Zeni {
     return e_fonts;
   }
 
-  Font * Fonts::load(XML_Element_c &xml_element) {
+  Font * Fonts::load(XML_Element_c &xml_element, const std::string &/*name*/, const std::string &/*filename*/) {
     const string filepath = xml_element["filepath"].to_string();
     const float height = xml_element["height"].to_float();
     const bool bold = xml_element["bold"].to_bool();

@@ -63,7 +63,7 @@ namespace Zeni {
     Fonts(const Fonts &);
     Fonts & operator=(const Fonts &);
 
-    virtual Font * load(XML_Element_c &xml_element);
+    virtual Font * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename);
   };
 
   Fonts & get_Fonts(); ///< Get access to the singleton.

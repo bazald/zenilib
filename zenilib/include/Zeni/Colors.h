@@ -62,7 +62,7 @@ namespace Zeni {
     Colors(const Colors &);
     Colors & operator=(const Colors &);
 
-    virtual Color * load(XML_Element_c &xml_element);
+    virtual Color * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename);
   };
 
   Colors & get_Colors(); ///< Get access to the singleton.

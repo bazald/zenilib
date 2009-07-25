@@ -94,7 +94,7 @@ namespace Zeni {
     virtual void on_clear();
     virtual void on_lose();
 
-    virtual Texture * load(XML_Element_c &xml_element);
+    virtual Texture * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename);
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;

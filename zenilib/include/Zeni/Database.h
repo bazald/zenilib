@@ -126,7 +126,7 @@ namespace Zeni {
     virtual void on_clear() {}
     virtual void on_lose() {}
 
-    virtual TYPE * load(XML_Element_c &xml_element) = 0;
+    virtual TYPE * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename) = 0;
 
     std::string m_xml_identifier;
 
