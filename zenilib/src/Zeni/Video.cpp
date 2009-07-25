@@ -132,7 +132,9 @@ namespace Zeni {
             video["Vertical_Sync"].set_bool(false);
           }
 
-          if(config_xml.try_save(user_normal))
+          if(cr.create_directory(appdata_path) &&
+             cr.create_directory(appdata_path + "config/") &&
+             config_xml.try_save(user_normal))
             cerr << '\'' << user_normal << "' reset due to initialization failure.\n";
           if(config_xml.try_save(local_normal))
             cerr << '\'' << local_normal << "' reset due to initialization failure.\n";

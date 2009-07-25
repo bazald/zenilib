@@ -80,8 +80,10 @@ namespace Zeni {
     inline bool has_vertex_buffers_impl() const; ///< Determine whether Vertex_Buffers are supported
 
     // Modifiers
-    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {} ///< Set a 2D view for a viewport
-    inline void set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/) {} ///< Set a 3D view for a viewport
+    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))) {} ///< Set a 2D view for a viewport
+    inline void set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))) {} ///< Set a 3D view for a viewport
     inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
@@ -128,7 +130,8 @@ namespace Zeni {
     inline Point2f get_pixel_offset_impl() const; ///< Get the pixel offset in the 2d view
     inline void set_view_matrix_impl(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix_impl(const Matrix4f &projection); ///< Set the projection Matrix4f
-    inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
+    inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set the viewport
 
     // Creation Functions
     inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures

@@ -61,6 +61,7 @@ namespace Zeni {
              "",
              get_Colors()["console_foreground"],
              true),
+    m_log_dirty(false),
     m_child(0)
   {
     m_functions["args"] = new Console_Function;
@@ -88,18 +89,23 @@ namespace Zeni {
   }
 
   void Console_State::write_to_log(const std::string &text) {
-    if(m_log.get_text().empty())
-      m_log.set_text(text);
-    else
-      m_log.set_text(m_log.get_text() + "\n" + text);
+    if(!m_text.empty())
+      m_text += '\n';
+    m_text += text;
 
     const int max_lines = m_log.get_max_lines();
-    if(m_log.get_num_lines() > max_lines)
-      m_log.erase_lines(0, m_log.get_num_lines() - max_lines);
+    for(int endl_count = 0, pos = m_text.size() - 1u; pos != -1; --pos)
+      if(m_text[pos] == '\n' && ++endl_count == max_lines) {
+        m_text = m_text.substr(pos + 1);
+        break;
+      }
+
+    m_log_dirty = true;
   }
 
   void Console_State::clear_log() {
-    m_log.set_text("");
+    m_text.clear();
+    m_log_dirty = true;
   }
 
   void Console_State::give_function(const std::string &name, Console_Function * const &function) {
@@ -236,6 +242,17 @@ namespace Zeni {
     assert(m_child);
 
     m_child->render();
+
+    if(m_log_dirty) {
+      m_log.set_text(m_text);
+
+      const int max_lines = m_log.get_max_lines();
+      if(m_log.get_num_lines() > max_lines)
+        m_log.erase_lines(0, m_log.get_num_lines() - max_lines);
+
+      m_text = m_log.get_text();
+      m_log_dirty = false;
+    }
 
     get_Video().set_2d(m_virtual_screen);
 

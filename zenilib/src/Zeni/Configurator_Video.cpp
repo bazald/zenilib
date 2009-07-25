@@ -246,6 +246,11 @@ namespace Zeni {
     get_Video().set_title(m_prev_title);
   }
 
+  void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {
+    Widget_Gamestate::on_key(event);
+    Gamestate_Base::on_key(event);
+  }
+
   void Configurator_Video::render() {
     get_Video().set_2d_view(get_virtual_window(), get_crop_window());
 

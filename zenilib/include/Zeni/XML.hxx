@@ -129,12 +129,12 @@ namespace Zeni {
 
   TiXmlNode * XML_Element_c::child(const std::string &field) const {
     TiXmlNode * node = m_handle.ToNode();
-    return node ? node->FirstChild(field.c_str()) : 0;
+    return node ? node->FirstChildElement(field.c_str()) : 0;
   }
 
   TiXmlNode * XML_Element_c::first_child() const {
     TiXmlNode * node = m_handle.ToNode();
-    return node ? node->FirstChild() : 0;
+    return node ? node->FirstChildElement() : 0;
   }
 
   XML_Element::XML_Element(const TiXmlHandle &handle_)

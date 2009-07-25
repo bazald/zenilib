@@ -67,9 +67,10 @@
 namespace Zeni {
 
   class Vertex3f {
-  public:
+  protected:
     Vertex3f();
     Vertex3f(const Point3f &position, const Vector3f &normal = Vector3f());
+  public:
     virtual ~Vertex3f();
 
     virtual Point3f get_position() const;
