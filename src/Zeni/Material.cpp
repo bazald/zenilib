@@ -136,7 +136,7 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   void Material::set(Video_DX9 &vdx) const {
     if(vdx.get_lighting()) {
-      if(!(m_optimization & ((1 << 5) - 1) == 0x1F))
+      if((m_optimization & ((1 << 5) - 1)) != 0x1F)
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
