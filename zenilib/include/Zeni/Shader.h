@@ -177,7 +177,7 @@ namespace Zeni {
 #endif
 
   private:
-    typedef stdext::hash_map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
+    typedef Unordered_Map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
     Parameters m_parameters;
 
     void initialize_parameter(const std::string &parameter_name);

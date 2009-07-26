@@ -73,7 +73,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Color> * const &triangle) {
-    std::auto_ptr<Renderable> to_delete(triangle);
+    safe_ptr<Renderable> to_delete(triangle);
     fax_triangle(triangle);
   }
 
@@ -94,7 +94,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Texture> * const &triangle) {
-    std::auto_ptr<Renderable> to_delete(triangle);
+    safe_ptr<Renderable> to_delete(triangle);
     fax_triangle(triangle);
   }
 
@@ -115,7 +115,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Color> * const &quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+    safe_ptr<Renderable> to_delete(quad);
     fax_quadrilateral(quad);
   }
   
@@ -128,7 +128,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+    safe_ptr<Renderable> to_delete(quad);
     fax_quadrilateral(quad);
   }
   
@@ -181,7 +181,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Color> * const &quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+    safe_ptr<Renderable> to_delete(quad);
     fax_quadrilateral(quad);
   }
   
@@ -194,7 +194,7 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quad) {
-    std::auto_ptr<Renderable> to_delete(quad);
+    safe_ptr<Renderable> to_delete(quad);
     fax_quadrilateral(quad);
   }
   

@@ -66,11 +66,28 @@
 #endif
 #endif
 
-#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
-#define auto_ptr unique_ptr
-#endif
-
 namespace Zeni {
+
+  template <typename TYPE>
+  class safe_ptr : public
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+    std::unique_ptr<TYPE>
+#else
+    std::auto_ptr<TYPE>
+#endif
+  {
+  public:
+    safe_ptr() {}
+    safe_ptr(TYPE * const &ptr) :
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+      std::unique_ptr<TYPE>
+#else
+      std::auto_ptr<TYPE>
+#endif
+        (ptr)
+    {
+    }
+  };
 
   class Render_Wrapper;
 
@@ -82,7 +99,7 @@ namespace Zeni {
     struct Vertex_Buffer_Range {
       Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne);
 
-      std::auto_ptr<Material> material;
+      safe_ptr<Material> material;
       int start;
       int num_elements;
     };

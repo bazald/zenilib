@@ -87,8 +87,8 @@ namespace Zeni {
     };
 
     typedef std::list<std::string> Filenames;
-    typedef stdext::hash_map<std::string, Lookup *> Lookups; // (id, filename)
-    typedef stdext::hash_map<unsigned long, TYPE *> Entries; // (datum, lent)
+    typedef Unordered_Map<std::string, Lookup *> Lookups; // (id, filename)
+    typedef Unordered_Map<unsigned long, TYPE *> Entries; // (datum, lent)
 
     // Undefined
     Database(const Database &);

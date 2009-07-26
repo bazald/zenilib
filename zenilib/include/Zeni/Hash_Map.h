@@ -31,16 +31,23 @@
 
 #include <string>
 
-#ifdef __GNUC__
 #if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+
 #include <unordered_map>
-#define hash_map unordered_map
-namespace stdext {
-  using std::unordered_map;
-}
+
+namespace Zeni {
+
+  template <typename Key, typename Ty>
+  class Unordered_Map : public std::unordered_map<Key, Ty> {
+  };
+
+};
+
 #else
+#ifdef __GNUC__
+
 #include <ext/hash_map>
-#define stdext __gnu_cxx
+
 namespace __gnu_cxx {
   template<> struct hash<std::string> {
     size_t operator()(const std::string& s) const {
@@ -49,9 +56,27 @@ namespace __gnu_cxx {
     }
   };
 }
-#endif
-#else
-#include <hash_map>
-#endif
 
+namespace Zeni {
+
+  template <typename Key, typename Ty>
+  class Unordered_Map : public __gnu_cxx::hash_map<Key, Ty> {
+  };
+
+};
+
+#else
+
+#include <hash_map>
+
+namespace Zeni {
+
+  template <typename Key, typename Ty>
+  class Unordered_Map : public stdext::hash_map<Key, Ty> {
+  };
+
+};
+
+#endif
+#endif
 #endif
