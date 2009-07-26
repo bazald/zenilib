@@ -712,7 +712,8 @@ namespace Zeni {
     Video_DX9 &vdx) {
 
       for(unsigned int i = 0; i < descriptors.size(); ++i) {
-        vdx.set_material(*descriptors[i]->material);
+        if(descriptors[i]->material.get())
+          vdx.set_material(*descriptors[i]->material);
 
         if(vbo_dx9.is_vbo)
           vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST,
@@ -724,7 +725,8 @@ namespace Zeni {
                                                 vbo_dx9.data.alt + 3 * descriptors[i]->start,
                                                 stride);
 
-        vdx.unset_material(*descriptors[i]->material);
+        if(descriptors[i]->material.get())
+          vdx.unset_material(*descriptors[i]->material);
       }
   }
 
