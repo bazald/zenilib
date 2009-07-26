@@ -75,15 +75,16 @@ namespace Zeni {
   }
 
   Video & get_Video() {
-    Core &cr = get_Core();
-    const std::string appdata_path = cr.get_appdata_path();
-
-    const string user_normal = appdata_path + "config/zenilib.xml";
-    const string user_backup = user_normal + ".bak";
-    const string local_normal = "config/zenilib.xml";
-    const string local_backup = local_normal + ".bak";
-
     if(!Video::e_video) {
+      Core &cr = get_Core();
+
+      const std::string appdata_path = cr.get_appdata_path();
+
+      const string user_normal = appdata_path + "config/zenilib.xml";
+      const string user_backup = user_normal + ".bak";
+      const string local_normal = "config/zenilib.xml";
+      const string local_backup = local_normal + ".bak";
+
       try {
         switch(Video::g_video_mode) {
         case Video_Base::ZENI_VIDEO_ANY:
