@@ -275,7 +275,7 @@ namespace Zeni {
 
     if(m_textured)
       fvf |= D3DFVF_TEX1;
-    else if(!get_lighting())
+    else
       fvf |= D3DFVF_DIFFUSE;
 
     m_d3d_device->SetFVF(fvf);

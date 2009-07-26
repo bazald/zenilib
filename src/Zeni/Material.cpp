@@ -136,7 +136,7 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   void Material::set(Video_DX9 &vdx) const {
     if(vdx.get_lighting()) {
-      if(!(m_optimization & ((1 << 5) - 1)))
+      if(!(m_optimization & ((1 << 5) - 1) == 0x1F))
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
@@ -173,6 +173,8 @@ namespace Zeni {
   }
 
   void Material::optimize_to_follow(const Material &rhs) {
+    m_optimization &= 0xFFFFFFC0;
+
     if(ambient == rhs.ambient)
       m_optimization |= (1 << 0);
     if(diffuse == rhs.diffuse)
@@ -188,6 +190,8 @@ namespace Zeni {
   }
 
   void Material::optimize_to_precede(const Material &rhs) {
+    m_optimization &= 0xFFFFF03F;
+
     if(ambient == rhs.ambient)
       m_optimization |= (1 << 6);
     if(diffuse == rhs.diffuse)
