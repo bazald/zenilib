@@ -136,18 +136,20 @@ namespace Zeni {
       size_t frame_number = 0;
       for(XML_Element_c texture = xml_element.first(); texture.good(); texture = texture.next(), ++frame_number)
         try {
-          if(texture.value() == "token")
-            s->append_frame(texture.to_string());
+          if(texture.value() == "token") {
+            const std::string identifier = texture.to_string();
+            s->append_frame(identifier, get_id(identifier));
+          }
           else if(texture.value() == "file") {
             const string filepath = texture["filepath"].to_string();
             const bool tile = texture["tile"].to_bool();
             const string frame_name = name + '/' + uitoa(frame_number);
 
-            Texture * texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
+            Texture * const texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
 
-            give(frame_name, texture, false, filename);
+            const unsigned int id = give(frame_name, texture, false, filename);
 
-            s->append_frame(frame_name);
+            s->append_frame(frame_name, id);
           }
           else if(texture.value() == "is_sprite")
             --frame_number;

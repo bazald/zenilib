@@ -139,7 +139,11 @@ namespace Zeni {
   }
 
   void Sprite::append_frame(const std::string &name) {
-    m_frames.push_back(make_pair(name, get_Textures().get_id(name)));
+    append_frame(name, get_Textures().get_id(name));
+  }
+
+  void Sprite::append_frame(const std::string &name, const unsigned long &id) {
+    m_frames.push_back(make_pair(name, id));
   }
 
   int Sprite::find_frame(const std::string &name, const int &starting_point) const {
@@ -153,7 +157,11 @@ namespace Zeni {
   }
 
   void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_id(name));
+    insert_frame(name, get_Textures().get_id(name), at_this_index);
+  }
+
+  void Sprite::insert_frame(const std::string &name, const unsigned long &id, const int &at_this_index) {
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, id);
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();
