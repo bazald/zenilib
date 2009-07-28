@@ -116,8 +116,10 @@ namespace Zeni {
     Sprite & operator=(const Sprite &rhs);
 
     void append_frame(const std::string &name); ///< Add a frame to the Sprite
+    void append_frame(const std::string &name, const unsigned long &id); ///< Add a frame to the Sprite
     int find_frame(const std::string &name, const int &starting_point = 0) const; ///< Search for a frame
     void insert_frame(const std::string &name, const int &at_this_index); ///< Insert a frame
+    void insert_frame(const std::string &name, const unsigned long &id, const int &at_this_index); ///< Insert a frame
     void remove_frame(const int &frame_number); ///< Remove a frame
 
     int get_num_frames() const; ///< Get the number of frames
