@@ -55,6 +55,9 @@
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
+#ifdef _LINUX
+#include <GL/glxew.h>
+#endif
 #endif
 
 namespace Zeni {
@@ -162,6 +165,9 @@ namespace Zeni {
     inline void uninit_impl() {}
 
   private:
+#ifdef _LINUX
+    PFNGLXSWAPINTERVALSGIPROC m_pglSwapIntervalEXT;
+#endif
     PFNGLBINDBUFFERARBPROC m_pglBindBufferARB;
     PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
     PFNGLGENBUFFERSARBPROC m_pglGenBuffersARB;

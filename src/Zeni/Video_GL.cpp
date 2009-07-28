@@ -60,6 +60,9 @@ namespace Zeni {
 
   Video_GL::Video_GL()
     : Video(Video_Base::ZENI_VIDEO_GL),
+#ifdef _LINUX
+      m_pglSwapIntervalEXT(0),
+#endif
       m_pglBindBufferARB(0),
       m_pglDeleteBuffersARB(0),
       m_pglGenBuffersARB(0),
@@ -184,6 +187,22 @@ namespace Zeni {
       PFNGLBINDBUFFERARBPROC proc;
       void *ptr;
     } uni;
+
+#ifdef _LINUX
+    uni.ptr = SDL_GL_GetProcAddress("glXSwapInterval");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalEXT");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalSGI");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapInterval");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalEXT");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalSGI");
+    if(uni.ptr)
+      m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALSGIPROC)uni.proc;
+#endif
 
     m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
     if(m_vertex_buffers) {

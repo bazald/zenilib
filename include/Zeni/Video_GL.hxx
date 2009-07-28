@@ -74,7 +74,12 @@ namespace Zeni {
 
 #ifdef DISABLE_WGL
   void Video_GL::set_vertical_sync_impl(const bool &on) {
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
+#ifdef _LINUX
+    if(m_pglSwapIntervalEXT)
+      m_pglSwapIntervalEXT(on);
+    else
+#endif
+      SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #else
   void Video_GL::set_vertical_sync_impl(const bool &on) {
     typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
