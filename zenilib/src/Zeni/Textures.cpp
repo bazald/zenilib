@@ -143,7 +143,7 @@ namespace Zeni {
           else if(texture.value() == "file") {
             const string filepath = texture["filepath"].to_string();
             const bool tile = texture["tile"].to_bool();
-            const string frame_name = name + '/' + uitoa(frame_number);
+            const string frame_name = name + '/' + ulltoa(frame_number);
 
             Texture * const texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
 
