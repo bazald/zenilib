@@ -62,6 +62,10 @@ if is_windows:
     defines = ' /D "WIN32" /D "_WINDOWS" '
 else:
   defines = ' -D_CRT_SECURE_NO_DEPRECATE ' + disable_dx9 + disable_wgl
+  if is_mac:
+    defines += ' -D_MACOSX '
+  elif is_linux:
+    defines += ' -D_LINUX '
 
 libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_gfx', 'SDL_ttf', 'SDL_net', 'Cg']
 if is_windows:
