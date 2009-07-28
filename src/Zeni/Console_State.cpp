@@ -93,8 +93,8 @@ namespace Zeni {
       m_text += '\n';
     m_text += text;
 
-    const int max_lines = m_log.get_max_lines();
-    for(int endl_count = 0, pos = m_text.size() - 1u; pos != -1; --pos)
+    const size_t max_lines = m_log.get_max_lines();
+    for(size_t endl_count = 0, pos = m_text.size() - 1u; pos != -1; --pos)
       if(m_text[pos] == '\n' && ++endl_count == max_lines) {
         m_text = m_text.substr(pos + 1);
         break;
