@@ -24,6 +24,7 @@ FOR /f %%a IN ('dir /b *.user') DO (
 RMDIR /S /Q "..\bin\x64"
 RMDIR /S /Q "..\lib_win\x64"
 
-DEL /Q "..\bin\*.exe"
-DEL /Q "..\bin\x64\*.exe"
-DEL /Q "..\*.exe"
+DEL /Q "..\bin\*_d.exe"
+DEL /Q "..\*_d.exe"
+DEL /Q "..\*_x64.exe"
+DEL /Q "..\*_x64d.exe"
