@@ -112,18 +112,19 @@ namespace Zeni {
   }
 
   void Video::set_2d() {
-    set_2d_view(std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_screen_width()), float(get_screen_height()))),
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+    const Point2i &size = get_render_target_size();
+    set_2d_view(std::make_pair(Point2f(), Point2f(float(size.x), float(size.y))),
+                std::make_pair(Point2i(), size));
   }
 
   void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d) {
     set_2d_view(camera2d,
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+                std::make_pair(Point2i(), get_render_target_size()));
   }
 
   void Video::set_3d(const Camera &camera) {
     set_3d_view(camera,
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+                std::make_pair(Point2i(), get_render_target_size()));
   }
 
   const Color & Video::get_color() const {
