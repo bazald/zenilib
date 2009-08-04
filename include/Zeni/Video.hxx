@@ -51,12 +51,16 @@ namespace Zeni {
     return g_enabled;
   }
 
+  const Point2i & Video::get_screen_size() {
+    return g_screen_size;
+  }
+
   const int & Video::get_screen_width() {
-    return g_screen_width;
+    return g_screen_size.x;
   }
 
   const int & Video::get_screen_height() {
-    return g_screen_height;
+    return g_screen_size.y;
   }
 
   const bool & Video::is_fullscreen() {
@@ -259,9 +263,6 @@ namespace Zeni {
   }
 
   void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
-    set_zwrite(false);
-    set_ztest(false);
-
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
@@ -280,9 +281,6 @@ namespace Zeni {
   }
 
   void Video::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
-    set_zwrite(true);
-    set_ztest(true);
-
     const Matrix4f view = camera.get_view_matrix();
     set_view_matrix(view);
 
@@ -404,6 +402,22 @@ namespace Zeni {
   }
 #endif
 
+  void Video::set_render_target(Texture &texture) {
+    VIDEO_IV_FCN_CALL(set_render_target_impl, texture);
+  }
+
+  void Video::unset_render_target() {
+    VIDEO_IV_FCN_CALL(unset_render_target_impl, );
+  }
+
+  void Video::clear_render_target(const Color &color) {
+    VIDEO_IV_FCN_CALL(clear_render_target_impl, color);
+  }
+
+  const Point2i & Video::get_render_target_size() const {
+    VIDEO_IV_FCN_CALL_CONST(get_render_target_size_impl, );
+  }
+
   void Video::select_world_matrix() {
     VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
   }
@@ -460,6 +474,10 @@ namespace Zeni {
 
   Texture * Video::create_Texture(SDL_Surface * const &surface, const bool &repeat) {
     VIDEO_IV_FCN_CALL(create_Texture_impl, surface, repeat);
+  }
+
+  Texture * Video::create_Texture(const Point2i &size, const bool &repeat) {
+    VIDEO_IV_FCN_CALL(create_Texture_impl, size, repeat);
   }
 
   Font * Video::create_Font(const std::string &filename, const bool &bold, const bool &italic, 

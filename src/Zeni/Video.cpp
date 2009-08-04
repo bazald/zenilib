@@ -174,8 +174,8 @@ namespace Zeni {
       throw Video_Initialized();
 
     g_video_mode = vm;
-    g_screen_width = w;
-    g_screen_height = h;
+    g_screen_size.x = w;
+    g_screen_size.y = h;
     g_screen_full = full;
     g_multisampling = multisampling;
     g_screen_show_frame = show_frame_;
@@ -217,13 +217,13 @@ namespace Zeni {
     set_tt();
     set_icon();
 
-    if(g_screen_width == -1)
-      g_screen_width = 0;
-    if(g_screen_height == -1)
-      g_screen_height = 0;
+    if(g_screen_size.x == -1)
+      g_screen_size.x = 0;
+    if(g_screen_size.y == -1)
+      g_screen_size.y = 0;
 
     // Initialize Window
-    m_display_surface = SDL_SetVideoMode(g_screen_width, g_screen_height, 32,
+    m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       (get_opengl_flag() ? SDL_OPENGL : 0) | 
       (g_screen_full ? SDL_FULLSCREEN : 
       (VideoInfo->wm_available && g_screen_show_frame ? 0 : SDL_NOFRAME)));
@@ -233,8 +233,8 @@ namespace Zeni {
       throw Video_Init_Failure();
     }
 
-    g_screen_width = m_display_surface->w;
-    g_screen_height = m_display_surface->h;
+    g_screen_size.x = m_display_surface->w;
+    g_screen_size.y = m_display_surface->h;
   }
 
   void Video::set_tt() {
@@ -262,8 +262,7 @@ namespace Zeni {
   Video *Video::e_video = 0;
   Video_Base::VIDEO_MODE Video::g_video_mode = Video_Base::ZENI_VIDEO_ANY;
   bool Video::g_enabled = true;
-  int Video::g_screen_width = 0;
-  int Video::g_screen_height = 0;
+  Point2i Video::g_screen_size;
   bool Video::g_screen_full = false;
   bool Video::g_screen_show_frame = true;
   bool Video::g_initialized = false;

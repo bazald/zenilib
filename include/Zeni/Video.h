@@ -120,6 +120,7 @@ namespace Zeni {
     // Accessors
     inline static const Video_Base::VIDEO_MODE & get_video_mode(); ///< Get the current VIDEO_MODE
     inline static const bool & is_enabled(); ///< Determine whether the use of rendering is desired
+    inline static const Point2i & get_screen_size(); /// Get the size of the screen
     inline static const int & get_screen_width(); ///< Get the width of the screen
     inline static const int & get_screen_height(); ///< Get the height of the screen
     inline static const bool & is_fullscreen(); ///< Determine whether the screen is windowed or full screen
@@ -142,9 +143,9 @@ namespace Zeni {
     inline void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
     inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
     inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set a 2D view for a viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 2D view for a viewport
     inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set a 3D view for a viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 3D view for a viewport
     inline void set_backface_culling(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
@@ -181,6 +182,12 @@ namespace Zeni {
     inline void unset_fragment_shader(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
 #endif
 
+    // Render-to-texture
+    inline void set_render_target(Texture &texture); ///< Set a render target
+    inline void unset_render_target(); ///< Unset a render target
+    inline void clear_render_target(const Color &color = Color(0.0f, 0.0f, 0.0f, 0.0f)); ///< Clear the viewport
+    inline const Point2i & get_render_target_size() const; ///< Get the dimensions of the render target
+
     // Model/World Transformation Stack Functions
     inline void select_world_matrix(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     inline void push_world_stack(); ///< Push a model view matrix onto the stack
@@ -199,7 +206,7 @@ namespace Zeni {
     inline void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
     inline void set_viewport(const std::pair<Point2i, Point2i> &viewport =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set the viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set the viewport
 
     // Window Decorations
     inline const std::string & get_title() const; ///< Get the window title
@@ -212,6 +219,7 @@ namespace Zeni {
     // Creation Functions
     inline Texture * load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
+    inline Texture * create_Texture(const Point2i &size, const bool &repeat); ///< Function for creating a Texture for render-to-texture
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
@@ -251,8 +259,7 @@ namespace Zeni {
     static Video_Base::VIDEO_MODE g_video_mode;
     static bool g_enabled;
 
-    static int g_screen_width;
-    static int g_screen_height;
+    static Point2i g_screen_size;
     static bool g_screen_full;
     static bool g_screen_show_frame;
     static bool g_initialized;
@@ -295,6 +302,10 @@ namespace Zeni {
 
   struct Light_Out_of_Range : public Error {
     Light_Out_of_Range() : Error("Light Set Out of Range [0,7]") {}
+  };
+
+  struct Video_Render_To_Texture_Error : public Error {
+    Video_Render_To_Texture_Error() : Error("Zeni Video Render To Texture Encountered An Error") {}
   };
 
 }

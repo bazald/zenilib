@@ -49,6 +49,7 @@
 #ifndef ZENI_TEXTURE_H
 #define ZENI_TEXTURE_H
 
+#include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 #include <Zeni/IV.h>
 
@@ -137,19 +138,27 @@ namespace Zeni {
   class Texture_GL : public Texture {
     Texture_GL(const Texture_GL &);
     Texture_GL & operator=(const Texture_GL &);
+
+    friend class Video_GL;
     
   public:
     Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */,
                const bool &lazy_loading = false);
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
+    Texture_GL(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_GL();
 
     inline void apply_texture_impl() const;
 
+    inline const Point2i & get_size() const;
+
   private:
     static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat);
 
+    Point2i m_size;
     mutable GLuint m_texture_id;
+    GLuint m_frame_buffer_object;
+    GLuint m_render_buffer;
     
     void load(const std::string &filename, const bool &repeat) const;
     
@@ -159,17 +168,26 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   class Texture_DX9 : public Texture {
+    Texture_DX9(const Texture_DX9 &);
+    Texture_DX9 & operator=(const Texture_DX9 &);
+
+    friend class Video_DX9;
+
   public:
     Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */);
     Texture_DX9(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
+    Texture_DX9(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_DX9();
 
     inline void apply_texture_impl() const;
+
+    inline const Point2i & get_size() const;
 
   private:
     static void set_sampler_states();
     static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface);
 
+    Point2i m_size;
     mutable IDirect3DTexture9 *m_texture;
     
     void load(const std::string &filename) const;

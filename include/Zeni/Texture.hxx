@@ -149,6 +149,10 @@ namespace Zeni {
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
+
+  const Point2i & Texture_GL::get_size() const {
+    return m_size;
+  }
 #endif
 
 #ifndef DISABLE_DX9
@@ -171,6 +175,10 @@ namespace Zeni {
 
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+  }
+
+  const Point2i & Texture_DX9::get_size() const {
+    return m_size;
   }
 #endif
 
