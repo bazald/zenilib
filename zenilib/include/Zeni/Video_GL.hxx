@@ -53,13 +53,20 @@ namespace Zeni {
   void Video_GL::render_impl(const Renderable &renderable) {
     renderable.render_to(*this);
   }
-
   int Video_GL::get_maximum_anisotropy_impl() const {
     return m_maximum_anisotropy;
   }
 
   bool Video_GL::has_vertex_buffers_impl() const {
     return m_vertex_buffers;
+  }
+
+  void Video_GL::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
+    if(m_render_target) {
+      select_world_matrix();
+      translate_scene(Vector3f(0.0f, float(m_render_target->get_size().y), 0.0f));
+      scale_scene(Vector3f(1.0f, -1.0f, 1.0f));
+    }
   }
 
   void Video_GL::set_backface_culling_impl(const bool &on) {
@@ -141,7 +148,7 @@ namespace Zeni {
   }
 
   void Video_GL::set_clear_color_impl(const Color &color) {
-    glClearColor(color.r, color.g, color.b, 0.0f);
+    glClearColor(color.r, color.g, color.b, color.a);
   }
 
   void Video_GL::apply_texture_impl(const unsigned long &id) {
@@ -238,6 +245,60 @@ namespace Zeni {
   }
 #endif
 
+  void Video_GL::set_render_target_impl(Texture &texture) {
+    if(m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    Texture_GL &tgl = dynamic_cast<Texture_GL &>(texture);
+
+    if(!tgl.m_frame_buffer_object) {
+      // Generate Depth Buffer
+      glGenRenderbuffersEXT(1, &tgl.m_render_buffer);
+      glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, tgl.m_render_buffer);
+      glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT16, tgl.get_size().x, tgl.get_size().y);
+      glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+      // Generate Framebuffer Object
+      glGenFramebuffersEXT(1, &tgl.m_frame_buffer_object);
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tgl.m_frame_buffer_object);
+
+      // Bind Both to the Texture
+      glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, tgl.m_render_buffer);
+      glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, tgl.m_texture_id, 0);
+    }
+    else
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tgl.m_frame_buffer_object);
+
+    m_render_target = &tgl;
+  }
+
+  void Video_GL::unset_render_target_impl() {
+    if(!m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    // Unbind all
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+    // Generate Mipmap
+    glBindTexture(GL_TEXTURE_2D, m_render_target->m_texture_id);
+    glGenerateMipmapEXT(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    m_render_target = 0;
+  }
+
+  void Video_GL::clear_render_target_impl(const Color &color) {
+    set_clear_color_impl(color);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+
+  inline const Point2i & Video_GL::get_render_target_size_impl() const {
+    if(m_render_target)
+      return m_render_target->get_size();
+    else
+      return get_screen_size();
+  }
+
   void Video_GL::select_world_matrix_impl() {
     glMatrixMode(GL_MODELVIEW);
   }
@@ -283,7 +344,10 @@ namespace Zeni {
   }
 
   void Video_GL::set_viewport_impl(const std::pair<Point2i, Point2i> &viewport) {
-    glViewport(viewport.first.x, get_screen_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
+    if(m_render_target)
+      glViewport(viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
+    else
+      glViewport(viewport.first.x, get_screen_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
   }
 
   Texture * Video_GL::load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading) {
@@ -292,6 +356,10 @@ namespace Zeni {
 
   Texture * Video_GL::create_Texture_impl(SDL_Surface * const &surface, const bool &repeat) {
     return new Texture_GL(surface, repeat);
+  }
+
+  Texture * Video_GL::create_Texture_impl(const Point2i &size, const bool &repeat) {
+    return new Texture_GL(size, repeat);
   }
 
   Font * Video_GL::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {

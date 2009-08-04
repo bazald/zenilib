@@ -69,7 +69,8 @@ namespace Zeni {
       m_pglBufferDataARB(0),
       m_maximum_anisotropy(-1),
       m_vertex_buffers(false),
-      m_zwrite(false)
+      m_zwrite(false),
+      m_render_target(0)
 #ifdef MANUAL_GL_VSYNC_DELAY
       ,
       m_buffer_swap_end_time(0u),
@@ -85,15 +86,22 @@ namespace Zeni {
   }
 
   void Video_GL::render_all() {
+    assert(!m_render_target);
+
 #ifdef _WINDOWS
     glFlush();
 #else
     glFinish();
 #endif
 
-    glDepthMask(GL_TRUE);
     glViewport(0, 0, get_screen_width(), get_screen_height());
+
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_TRUE);
+    set_clear_color_impl(get_clear_color());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_FALSE);
 
     get_Game().render();
     
@@ -181,6 +189,8 @@ namespace Zeni {
     set_lighting(get_lighting());
     set_ambient_lighting(Color());
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
+    set_zwrite(true);
+    set_ztest(true);
 
     // Manage extensions
     union {

@@ -230,6 +230,52 @@ namespace Zeni {
   }
 #endif
 
+  void Video_DX9::set_render_target_impl(Texture &texture) {
+    if(m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    Texture_DX9 &tdx = dynamic_cast<Texture_DX9 &>(texture);
+
+    LPDIRECT3DSURFACE9 render_surface = 0;
+
+    if(FAILED(tdx.m_texture->GetSurfaceLevel(0, &render_surface)))
+      throw Video_Render_To_Texture_Error();
+
+    if(FAILED(m_d3d_device->GetRenderTarget(0, &m_back_buffer)))
+      throw Video_Render_To_Texture_Error();
+    if(FAILED(m_d3d_device->SetRenderTarget(0, render_surface)))
+      throw Video_Render_To_Texture_Error();
+
+    m_render_target = &tdx;
+
+    m_d3d_device->BeginScene();
+  }
+
+  void Video_DX9::unset_render_target_impl() {
+    if(!m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    m_d3d_device->EndScene();
+
+    if(FAILED(m_d3d_device->SetRenderTarget(0, m_back_buffer)))
+      throw Video_Render_To_Texture_Error();
+    m_back_buffer = 0;
+
+    m_render_target = 0;
+  }
+  void Video_DX9::clear_render_target_impl(const Color &color) {
+    const Point2i &render_target_size = get_render_target_size();
+    set_viewport(std::make_pair(Point2i(0, 0), Point2i(render_target_size.x, render_target_size.y)));
+    m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(color.a_ub(), color.r_ub(), color.g_ub(), color.b_ub()), 1.0f, 0);
+  }
+
+  inline const Point2i & Video_DX9::get_render_target_size_impl() const {
+    if(m_render_target)
+      return m_render_target->get_size();
+    else
+      return get_screen_size();
+  }
+
   void Video_DX9::push_world_stack_impl() {
     get_matrix_stack()->Push();
   }
@@ -282,6 +328,10 @@ namespace Zeni {
 
   Texture * Video_DX9::create_Texture_impl(SDL_Surface * const &surface, const bool &repeat) {
     return new Texture_DX9(surface, repeat);
+  }
+
+  Texture * Video_DX9::create_Texture_impl(const Point2i &size, const bool &repeat) {
+    return new Texture_DX9(size, repeat);
   }
 
   Font * Video_DX9::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {

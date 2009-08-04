@@ -54,7 +54,9 @@ namespace Zeni {
     m_matrix_stack(0),
     m_ambient_color(1.0f, 1.0f, 1.0f, 1.0f),
     m_textured(false),
-    m_3d(false)
+    m_3d(false),
+    m_render_target(0),
+    m_back_buffer(0)
   {
     init();
   }
@@ -64,6 +66,8 @@ namespace Zeni {
   }
 
   void Video_DX9::render_all() {
+    assert(!m_render_target);
+
     static bool reset = false;
 
     if(reset) {
@@ -249,6 +253,8 @@ namespace Zeni {
     set_lighting(get_lighting());
     set_ambient_lighting(m_ambient_color);
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
+    set_zwrite(true);
+    set_ztest(true);
   }
 
   void Video_DX9::destroy_device() {

@@ -62,6 +62,8 @@
 
 namespace Zeni {
 
+  class Texture_GL;
+
   class Video_GL : public Video {
     friend class Video;
     friend Video & get_Video();
@@ -84,9 +86,9 @@ namespace Zeni {
 
     // Modifiers
     inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))) {} ///< Set a 2D view for a viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 2D view for a viewport
     inline void set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))) {} ///< Set a 3D view for a viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())) {} ///< Set a 3D view for a viewport
     inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
@@ -120,6 +122,12 @@ namespace Zeni {
     inline void unset_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
 #endif
 
+    // Render-to-texture
+    inline void set_render_target_impl(Texture &texture); ///< Set a render target
+    inline void unset_render_target_impl(); ///< Unset a render target
+    inline void clear_render_target_impl(const Color &color = Color(0.0f, 0.0f, 0.0f, 0.0f)); ///< Clear the viewport
+    inline const Point2i & get_render_target_size_impl() const; ///< Get the dimensions of the render target
+
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl(); ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     inline void push_world_stack_impl(); ///< Push a model view matrix onto the stack
@@ -134,11 +142,12 @@ namespace Zeni {
     inline void set_view_matrix_impl(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix_impl(const Matrix4f &projection); ///< Set the projection Matrix4f
     inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport =
-      std::make_pair(Point2i(), Point2i(get_screen_width(), get_screen_height()))); ///< Set the viewport
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set the viewport
 
     // Creation Functions
     inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture_impl(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
+    inline Texture * create_Texture_impl(const Point2i &size, const bool &repeat); ///< Function for creating a Texture for render-to-texture
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     inline Vertex_Buffer * create_Vertex_Buffer_impl(); ///< Function for creating a Vertex_Buffer
@@ -175,6 +184,8 @@ namespace Zeni {
 
     int m_maximum_anisotropy;
     bool m_vertex_buffers, m_zwrite;
+
+    Texture_GL * m_render_target;
 
 #ifdef MANUAL_GL_VSYNC_DELAY
     Time m_buffer_swap_end_time;
