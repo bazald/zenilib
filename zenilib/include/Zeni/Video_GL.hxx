@@ -61,11 +61,12 @@ namespace Zeni {
     return m_vertex_buffers;
   }
 
-  void Video_GL::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
+  void Video_GL::set_2d_view_impl(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> & /*viewport*/) {
     if(m_render_target) {
       select_world_matrix();
-      translate_scene(Vector3f(0.0f, float(m_render_target->get_size().y), 0.0f));
+      translate_scene(Vector3f(0.0f, camera2d.second.y, 0.0f));
       scale_scene(Vector3f(1.0f, -1.0f, 1.0f));
+      translate_scene(Vector3f(0.0f, -camera2d.first.y, 0.0f));
     }
   }
 
