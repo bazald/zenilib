@@ -12,6 +12,15 @@ using namespace Zeni;
 static vector<string> g_args;
 
 class Play_State : public Gamestate_Base {
+  void on_push () {
+    SDL_WM_GrabInput(SDL_GRAB_ON);
+    SDL_ShowCursor(false);
+  }
+
+  void on_pop() {
+    SDL_WM_GrabInput(SDL_GRAB_OFF);
+    SDL_ShowCursor(true);
+  }
 };
 
 class Instructions_State : public Gamestate_Base {
@@ -24,13 +33,6 @@ class Instructions_State : public Gamestate_Base {
 namespace Zeni {
 
   Gamestate_One::Gamestate_One(const vector<string> * const args) {
-#ifdef GRAB_MOUSE
-    SDL_WM_GrabInput(SDL_GRAB_ON);
-#endif
-#ifdef HIDE_MOUSE
-    SDL_ShowCursor(0);
-#endif
-
     if(args)
       g_args = *args;
 

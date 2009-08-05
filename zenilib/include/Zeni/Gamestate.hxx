@@ -86,11 +86,19 @@ namespace Zeni {
   void Gamestate::render() {
     m_state->render();
   }
-  
+
+  void Gamestate::on_push() {
+    m_state->on_push();
+  }
+
+  void Gamestate::on_pop() {
+    m_state->on_pop();
+  }
+
   Gamestate_Base & Gamestate::get() {
     return *m_state;
   }
-  
+
   const int & Gamestate_II::get_joyball_min() const {
     return m_joyball_min;
   }
@@ -98,7 +106,7 @@ namespace Zeni {
   const int & Gamestate_II::get_joyball_max() const {
     return m_joyball_max;
   }
-  
+
   const float & Gamestate_II::get_joystick_min() const {
     return m_joystick_min;
   }
@@ -106,7 +114,7 @@ namespace Zeni {
   const float & Gamestate_II::get_joystick_max() const {
     return m_joystick_max;
   }
-  
+
   const int & Gamestate_II::get_mouse_min() const {
     return m_mouse_min;
   }

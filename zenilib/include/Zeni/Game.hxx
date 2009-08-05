@@ -61,11 +61,13 @@ namespace Zeni {
     if(m_console_active)
       get_console().set_child(m_states.top());
 #endif
+
+    m_states.top().on_push();
   }
 
   Gamestate Game::pop_state() {
     Gamestate gs;
-    
+
     {
       if(m_states.empty())
         throw Zero_Gamestate();
@@ -84,6 +86,8 @@ namespace Zeni {
       }
 #endif
     }
+
+    gs.on_pop();
 
     return gs;
   }
@@ -114,7 +118,7 @@ namespace Zeni {
 #ifndef NDEBUG
     Gamestate console_child;
 #endif
-    
+
     {
       if(m_states.empty())
         throw Zero_Gamestate();
@@ -139,7 +143,7 @@ namespace Zeni {
 #ifndef NDEBUG
     Gamestate console_child;
 #endif
-    
+
     {
       if(m_states.empty())
         throw Zero_Gamestate();
@@ -155,7 +159,7 @@ namespace Zeni {
         gs = m_states.top();
       }
     }
-    
+
     gs.perform_logic();
   }
 
@@ -164,7 +168,7 @@ namespace Zeni {
 #ifndef NDEBUG
     Gamestate console_child;
 #endif
-    
+
     {
       if(m_states.empty())
         throw Zero_Gamestate();
@@ -180,7 +184,7 @@ namespace Zeni {
         gs = m_states.top();
       }
     }
-    
+
     gs.render();
 
     calculate_fps();
