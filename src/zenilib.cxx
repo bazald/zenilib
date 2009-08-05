@@ -49,6 +49,7 @@
 #include "Zeni/Gamestate.cpp"
 #include "Zeni/Image.cpp"
 #include "Zeni/Light.cpp"
+#include "Zeni/Logo.cpp"
 #include "Zeni/main.cpp"
 #include "Zeni/Material.cpp"
 #include "Zeni/Matrix4f.cpp"

@@ -60,10 +60,15 @@ namespace Zeni {
       for(SDL_Event event; SDL_PollEvent(&event);) {
         if(event.type == SDL_KEYDOWN) {
           const SDL_keysym &s = event.key.keysym;
-          if(s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
+          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
+                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
+          if(s.sym == SDLK_F4 && alt_only)
             throw Quit_Event();
 #ifndef NDEBUG
-          else if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_ALT)) {
+          else if(s.sym == SDLK_BACKQUOTE && alt_only) {
             if(m_console_active)
               deactivate_console();
             else
@@ -73,13 +78,15 @@ namespace Zeni {
 #endif
         }
 #ifndef NDEBUG
-        else {
+        else if(event.type == SDL_KEYUP) {
           const SDL_keysym &s = event.key.keysym;
-          if(event.type == SDL_KEYUP) {
-            if(s.sym == SDLK_BACKQUOTE && (s.mod & KMOD_ALT)) {
-              continue;
-            }
-          }
+          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
+                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
+          if(s.sym == SDLK_BACKQUOTE && alt_only)
+            continue;
         }
 #endif
 

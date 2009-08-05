@@ -79,16 +79,22 @@ namespace Zeni {
 
     if(down)
       if(inside) {
-        m_clicked_inside = true;
         m_transient = false;
+        m_clicked_inside = true;
         on_click();
 
         set_busy(true);
       }
-      else
+      else {
+        m_transient = true;
         m_clicked_outside = true;
+
+        set_busy(false);
+      }
     else {
-      if(inside)
+      if(inside) {
+        m_transient = true;
+
         if(m_clicked_inside) {
           m_clicked_inside = false;
           on_accept();
@@ -96,14 +102,17 @@ namespace Zeni {
         }
         else
           m_clicked_outside = false;
-      else
+      }
+      else {
+        m_transient = false;
+
         if(m_clicked_inside) {
           m_clicked_inside = false;
-          m_transient = false;
           on_reject();
         }
         else
           m_clicked_outside = false;
+      }
 
       set_busy(false);
     }
@@ -114,30 +123,35 @@ namespace Zeni {
       return;
 
     const bool inside = is_inside(pos);
+    m_clicked_outside &= get_Game().get_mouse_button_state(SDL_BUTTON_LEFT);
 
     if(!m_clicked_outside) {
-      if(inside) {
+      if(inside)
         if(m_clicked_inside) {
           if(m_transient) {
             m_transient = false;
             on_unstray();
           }
         }
-        else if(!m_transient) {
-          m_transient = true;
-          on_hover();
+        else {
+          if(!m_transient) {
+            m_transient = true;
+            on_hover();
+          }
         }
-      }
-      else if(m_clicked_inside) {
-        if(!m_transient) {
-          m_transient = true;
-          on_stray();
+      else
+        if(m_clicked_inside) {
+          if(!m_transient) {
+            m_transient = true;
+            on_stray();
+          }
         }
-      }
-      else if(m_transient) {
-        m_transient = false;
-        on_unhover();
-      }
+        else {
+          if(m_transient) {
+            m_transient = false;
+            on_unhover();
+          }
+        }
     }
   }
 
@@ -183,9 +197,9 @@ namespace Zeni {
   }
 
   void Text_Button_3C::on_reject() {
-    m_bg.set_color(m_bg_hovered_strayed);
-    m_text.set_color(m_text_hovered_strayed);
-    m_state = HOVERED_STRAYED;
+    m_bg.set_color(m_bg_normal);
+    m_text.set_color(m_text_normal);
+    m_state = NORMAL;
   }
 
   void Check_Box::on_accept() {
@@ -700,10 +714,20 @@ namespace Zeni {
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
-    if(down && m_edit_pos != -1)
+    if(down && m_edit_pos != -1) {
+      Game &gr = get_Game();
+      const bool mod_alt = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT);
+      const bool mod_ctrl = gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL);
+      const bool mod_meta = gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA);
+      const bool mod_shift = gr.get_key_state(SDLK_LSHIFT) || gr.get_key_state(SDLK_RSHIFT);
+      const bool mod_super = gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
+      const bool mod_none = !mod_alt && !mod_ctrl && !mod_meta && !mod_shift && !mod_super;
+      const bool mod_ctrl_only = !mod_alt && mod_ctrl && !mod_meta && !mod_shift && !mod_super;
+      const bool mod_shift_only = !mod_alt && !mod_ctrl && !mod_meta && mod_shift && !mod_super;
+
       switch(keysym.sym) {
         case SDLK_BACKSPACE:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
           {
             const string &t = get_text();
 
@@ -720,7 +744,7 @@ namespace Zeni {
           }
           break;
         case SDLK_DELETE:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
           {
             const string &t = get_text();
 
@@ -737,9 +761,9 @@ namespace Zeni {
           }
           break;
         case SDLK_HOME:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_META | KMOD_SHIFT)))
+          if(mod_none || mod_ctrl_only)
           {
-            if(keysym.mod & KMOD_CTRL)
+            if(mod_ctrl)
               seek_cursor(0);
             else if(m_cursor_index.x) {
               int cursor_pos = get_cursor_pos() - m_cursor_index.x;
@@ -751,9 +775,9 @@ namespace Zeni {
           }
           break;
         case SDLK_END:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_META | KMOD_SHIFT)))
+          if(mod_none || mod_ctrl_only)
           {
-            int cursor_pos = keysym.mod & KMOD_CTRL ?
+            int cursor_pos = mod_ctrl ?
                              get_max_cursor_seek() :
                              get_cursor_pos() - m_cursor_index.x + int(m_lines[m_cursor_index.y].unformatted.size());
             
@@ -761,15 +785,15 @@ namespace Zeni {
           }
           break;
         case SDLK_LEFT:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
             seek(m_edit_pos - 1);
           break;
         case SDLK_RIGHT:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
             seek(m_edit_pos + 1);
           break;
         case SDLK_UP:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
             if(m_cursor_index.y) {
               int count = 0;
               for(int i = 0, iend = m_cursor_index.y - 1; i != iend; ++i)
@@ -780,7 +804,7 @@ namespace Zeni {
             }
           break;
         case SDLK_DOWN:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META | KMOD_SHIFT)))
+          if(mod_none)
             if(m_cursor_index.y + 1 < int(m_lines.size())) {
               int count = 0;
               for(int i = 0, iend = m_cursor_index.y + 1; i != iend; ++i)
@@ -791,7 +815,7 @@ namespace Zeni {
             }
           break;
         default:
-          if(!(keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META)))
+          if(mod_none || mod_shift_only)
           {
             const char c = Gamestate_Base::to_char(keysym);
             const string &t = get_text();
@@ -808,6 +832,7 @@ namespace Zeni {
             }
           }
           break;
+        }
       }
   }
 

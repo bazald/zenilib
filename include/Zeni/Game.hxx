@@ -89,6 +89,27 @@ namespace Zeni {
   }
 
   void Game::on_event(const SDL_Event &event) {
+    switch(event.type) {
+      case SDL_KEYDOWN:
+        m_keys[event.key.keysym.sym] = true;
+        break;
+
+      case SDL_KEYUP:
+        m_keys[event.key.keysym.sym] = false;
+        break;
+
+      case SDL_MOUSEBUTTONDOWN:
+        m_mouse_buttons[event.button.button] = true;
+        break;
+
+      case SDL_MOUSEBUTTONUP:
+        m_mouse_buttons[event.button.button] = false;
+        break;
+
+      default:
+        break;
+    }
+
     Gamestate gs;
 #ifndef NDEBUG
     Gamestate console_child;
@@ -109,7 +130,7 @@ namespace Zeni {
         gs = m_states.top();
       }
     }
-    
+
     gs.on_event(event);
   }
 
@@ -167,6 +188,20 @@ namespace Zeni {
 
   int Game::get_fps() const {
     return fps;
+  }
+
+  bool Game::get_key_state(const int &button) const {
+    const Unordered_Map<int, bool>::const_iterator it = m_keys.find(button);
+    if(it != m_keys.end())
+      return it->second;
+    return false;
+  }
+
+  bool Game::get_mouse_button_state(const int &button) const {
+    const Unordered_Map<int, bool>::const_iterator it = m_mouse_buttons.find(button);
+    if(it != m_mouse_buttons.end())
+      return it->second;
+    return false;
   }
 
 }

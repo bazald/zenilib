@@ -193,8 +193,14 @@ namespace Zeni {
   }
 
   void Console_State::on_key(const SDL_KeyboardEvent &event) {
+    Game &gr = get_Game();
+    const bool mod_nonshift = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT) &&
+                              gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL) &&
+                              gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA) &&
+                              gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
+
     if(event.type == SDL_KEYDOWN &&
-       !(event.keysym.mod & (KMOD_ALT | KMOD_CTRL | KMOD_META)))
+       !mod_nonshift)
     {
       switch(event.keysym.sym) {
         case SDLK_RETURN:

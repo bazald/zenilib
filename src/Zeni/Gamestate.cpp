@@ -32,6 +32,7 @@
 
 //#include <Zeni/Configurator_Video.h>
 //#include <Zeni/Game.hxx>
+//#include <Zeni/Logo.h>
 
 #include <algorithm>
 #include <cmath>
@@ -153,7 +154,10 @@ namespace Zeni {
   }
 
   char Gamestate_Base::to_char(const SDL_keysym &ks) {
-    if((ks.mod & KMOD_CAPS) ^ (ks.mod & KMOD_SHIFT))
+    const bool mod_caps = (ks.mod & KMOD_CAPS) != 0;
+    const bool mod_shift = (ks.mod & KMOD_SHIFT) != 0;
+
+    if(mod_caps ^ mod_shift)
       switch(ks.sym) {
       case SDLK_a: return 'A';
       case SDLK_b: return 'B';
@@ -760,6 +764,20 @@ SC(SDLK_EURO)
 SC(SDLK_UNDO)
 default: return "SDLK_UNKNOWN";
     }
+  }
+
+  void Gamestate_Base::render() {
+    static float height = 0.9f * std::min(get_Video().get_screen_width() / 3.0f, float(get_Video().get_screen_height()));
+    static Logo logo(Point2f(0.5f * (get_Video().get_screen_width() - height),
+                             0.5f * (get_Video().get_screen_height() - height)),
+                     height,
+                     Color(1.0f, 0.875, 0.875, 0.875),
+                     Color(1.0f, 0.125, 0.125, 0.175));
+
+
+    get_Video().set_2d();
+
+    logo.render();
   }
 
   Gamestate::~Gamestate() {
