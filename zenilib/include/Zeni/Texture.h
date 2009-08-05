@@ -157,8 +157,8 @@ namespace Zeni {
 
     Point2i m_size;
     mutable GLuint m_texture_id;
-    GLuint m_frame_buffer_object;
     GLuint m_render_buffer;
+    GLuint m_frame_buffer_object;
     
     void load(const std::string &filename, const bool &repeat) const;
     
