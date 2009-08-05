@@ -1,15 +1,9 @@
-import math, sys, os.path, glob, string, re, os
+import math, sys, os.path, glob, string, re, os, subprocess
 
 is_windows = sys.platform == 'win32'
 is_win64   = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or (os.environ.has_key('PROCESSOR_ARCHITEW6432') and os.environ['PROCESSOR_ARCHITEW6432'] == 'AMD64'))
 is_linux   = sys.platform == 'linux2'
 is_mac     = sys.platform == 'darwin'
-
-### Decide C++ standard
-
-standard = ''
-if int(ARGUMENTS.get('cpp0x', 0)):
-  standard = ' -std=c++0x '
 
 ### Decide architecture
 
@@ -24,12 +18,27 @@ if is_win64:
     link = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\link.exe" '
     is_win64 = 0
 elif is_linux or is_mac:
-  cc = ARGUMENTS.get('cc', 0)
-  if cc is 0 or len(cc) is 0:
-    cc = ' g++ '
-  link = ARGUMENTS.get('link', 0)
-  if link is 0 or len(link) is 0:
-    link = ' ld '
+  cc = ARGUMENTS.get('cc', 'g++')
+  link = ARGUMENTS.get('link', 'ld')
+
+### Get g++ Version (if applicable)
+
+def gcc_version():
+  proc = subprocess.Popen(cc + ' --version ', shell=True, stdout=subprocess.PIPE)
+  proc.wait()
+  version = proc.stdout.readline().rsplit('\n', 1)[0].split(' ')[2].rsplit('.')
+  return [int(version[0]), int(version[1]), int(version[2])]
+
+if is_linux:
+  gcc = gcc_version()
+else:
+  gcc = [0, 0, 0]
+
+### Decide C++ standard
+
+standard = ''
+if gcc[0] > 3 and gcc[1] > 2 and int(ARGUMENTS.get('cpp0x', 1)):
+  standard = ' -std=c++0x '
 
 ### Decide single compilation unit
 
@@ -41,7 +50,7 @@ program = [Glob('src/*.cpp')]
 library = [Glob('src/Zeni/*.cpp')]
 tinyxml = [Glob('src/TinyXML/*.cpp')]
 
-scu = ARGUMENTS.get('scu', 0)
+scu = ARGUMENTS.get('scu', 'zeni')
 if scu == 'zeni' or scu == 'Zeni' or scu == 'ZENI':
   scu = 1
   library = library_scu
@@ -117,7 +126,8 @@ use_soar = int(ARGUMENTS.get('soar', 0))
 ### Decide pedantism
 
 warnings = ' -Wall '
-warnings += ' -Wno-variadic-macros '
+if gcc[0] > 3:
+  warnings += ' -Wno-variadic-macros '
 pedantic_warnings = ' -pedantic '
 
 pedantic = ARGUMENTS.get('pedantic', 0)
@@ -253,11 +263,11 @@ elif scu is 0:
 
 opts = Options('custom.py')
 if not is_windows:
-  opts.Add('cc', 'Replace \'g++\' as the C++ compiler', 0)
-  opts.Add('cpp0x', 'Set to 1 to enable the c++0x standard', 0)
+  opts.Add('cc', 'Replace \'g++\' as the C++ compiler', 'g++')
+  opts.Add('cpp0x', 'Set to 1 to enable the c++0x standard', 1)
 opts.Add('debug', 'Set to 1 to build with debug information', 0)
 if not is_windows:
-  opts.Add('link', 'Replace \'ld\' as the C++ linker', 0)
+  opts.Add('link', 'Replace \'ld\' as the C++ linker', 'ld')
 opts.Add('noal', 'Set to 1 to disable the use of OpenAL', 0)
 if is_windows:
   opts.Add('nodx9', 'Set to 1 to disable the use of DirectX 9', 0)
@@ -267,7 +277,7 @@ if is_windows:
 if not is_windows:
   opts.Add('pedantic', 'Set to 1 to add warnings for violations of ANSI standards', 0)
   opts.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', 0)
-opts.Add('scu', 'Set to \'scu\' to use SCU for everything or set to \'zeni\' to use SCU on zenilib only', 0)
+opts.Add('scu', 'Set to \'scu\' to use SCU for everything, \'zeni\' to use SCU on zenilib only, \'no\' to disable', 'zeni')
 if not is_windows:
   opts.Add('soar', 'Set to 1 to use Soar', 0)
   opts.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', 0)
