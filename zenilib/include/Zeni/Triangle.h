@@ -54,7 +54,7 @@ namespace Zeni {
   public:
     Triangle();
     inline Triangle(const VERTEX &vertex0,
-                    const VERTEX &vertex1, 
+                    const VERTEX &vertex1,
                     const VERTEX &vertex2);
 
     Triangle(const Triangle<VERTEX> &rhs);

@@ -58,7 +58,7 @@ namespace Zeni {
   public:
     Quadrilateral();
     Quadrilateral(const VERTEX &vertex0,
-                  const VERTEX &vertex1, 
+                  const VERTEX &vertex1,
                   const VERTEX &vertex2,
                   const VERTEX &vertex3);
 

@@ -107,6 +107,8 @@ namespace Zeni {
 
 #endif
 
+#define EMPTY()
+
   void Sprite::apply_texture_impl() const {
     static bool no_recurse = true;
 
@@ -183,11 +185,12 @@ namespace Zeni {
 #endif
 
   void Texture::apply_texture() const {
-    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl, );
+    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl, EMPTY());
   }
 
 #undef TEXTURE_IV_FCN_CALL
 #undef TEXTURE_IV_FCN_CALL_CONST
+#undef EMPTY
 
 }
 

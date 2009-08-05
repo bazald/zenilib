@@ -41,7 +41,7 @@ namespace Zeni {
   class Unordered_Map : public std::unordered_map<Key, Ty> {
   };
 
-};
+}
 
 #else
 #ifdef __GNUC__
@@ -63,7 +63,7 @@ namespace Zeni {
   class Unordered_Map : public __gnu_cxx::hash_map<Key, Ty> {
   };
 
-};
+}
 
 #else
 
@@ -75,7 +75,7 @@ namespace Zeni {
   class Unordered_Map : public stdext::hash_map<Key, Ty> {
   };
 
-};
+}
 
 #endif
 #endif

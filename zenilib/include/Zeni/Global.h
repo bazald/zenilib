@@ -31,7 +31,7 @@
 
 // Camera.h
 #define ZENI_DEFAULT_CAMERA_POSITION      (Point3f(0.0f, 0.0f, 0.0f))
-#define ZENI_DEFAULT_CAMERA_ORIENTATION   (Quaternion())
+#define ZENI_DEFAULT_CAMERA_ORIENTATION   Quaternion()
 #define ZENI_DEFAULT_CAMERA_NEAR_CLIP     (10.0f)
 #define ZENI_DEFAULT_CAMERA_FAR_CLIP      (1000.0f)
 #define ZENI_DEFAULT_CAMERA_FOV           (pi / 2)

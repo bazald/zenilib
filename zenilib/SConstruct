@@ -24,8 +24,12 @@ if is_win64:
     link = ' "' + os.environ['VSINSTALLDIR'] + '\\VC\\BIN\\link.exe" '
     is_win64 = 0
 elif is_linux or is_mac:
-  cc = ' g++ '
-  link = ' ld '
+  cc = ARGUMENTS.get('cc', 0)
+  if cc is 0 or len(cc) is 0:
+    cc = ' g++ '
+  link = ARGUMENTS.get('link', 0)
+  if link is 0 or len(link) is 0:
+    link = ' ld '
 
 ### Decide single compilation unit
 
@@ -106,11 +110,14 @@ if is_windows:
   if int(nowgl):
     defines += disable_wgl
 
+### Decide soar
+
 use_soar = int(ARGUMENTS.get('soar', 0))
 
 ### Decide pedantism
 
-warnings = ' -Wall -Wno-variadic-macros '
+warnings = ' -Wall '
+warnings += ' -Wno-variadic-macros '
 pedantic_warnings = ' -pedantic '
 
 pedantic = ARGUMENTS.get('pedantic', 0)
@@ -212,6 +219,7 @@ if scu is 0 and not is_windows:
   libs += [tinyxml_name]
 
 env = Environment(
+  CXX = cc,
   CCFLAGS = ccflags,
   CPPPATH = cpppath,
   LINKFLAGS = linkflags,
@@ -220,6 +228,7 @@ env = Environment(
 
 if is_windows:
   env['CC'] = cc
+  env['CXX'] = cc
   env['LINK'] = link
   env['AR'] = lib
 
@@ -244,8 +253,11 @@ elif scu is 0:
 
 opts = Options('custom.py')
 if not is_windows:
+  opts.Add('cc', 'Replace \'g++\' as the C++ compiler', 0)
   opts.Add('cpp0x', 'Set to 1 to enable the c++0x standard', 0)
 opts.Add('debug', 'Set to 1 to build with debug information', 0)
+if not is_windows:
+  opts.Add('link', 'Replace \'ld\' as the C++ linker', 0)
 opts.Add('noal', 'Set to 1 to disable the use of OpenAL', 0)
 if is_windows:
   opts.Add('nodx9', 'Set to 1 to disable the use of DirectX 9', 0)
