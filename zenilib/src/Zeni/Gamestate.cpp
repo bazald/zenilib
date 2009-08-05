@@ -154,8 +154,9 @@ namespace Zeni {
   }
 
   char Gamestate_Base::to_char(const SDL_keysym &ks) {
+    Game &gr = get_Game();
     const bool mod_caps = (ks.mod & KMOD_CAPS) != 0;
-    const bool mod_shift = (ks.mod & KMOD_SHIFT) != 0;
+    const bool mod_shift = gr.get_key_state(SDLK_LSHIFT) || gr.get_key_state(SDLK_RSHIFT);
 
     if(mod_caps ^ mod_shift)
       switch(ks.sym) {
@@ -251,38 +252,38 @@ namespace Zeni {
     case SDLK_HASH:         return '#';
     case SDLK_DOLLAR:       return '$';
     case SDLK_AMPERSAND:    return '&';
-    case SDLK_QUOTE:        return (ks.mod & KMOD_SHIFT) ? '"' : '\'';
+    case SDLK_QUOTE:        return mod_shift ? '"' : '\'';
     case SDLK_LEFTPAREN:    return '(';
     case SDLK_RIGHTPAREN:   return ')';
     case SDLK_ASTERISK:     return '*';
     case SDLK_PLUS:         return '+';
-    case SDLK_COMMA:        return (ks.mod & KMOD_SHIFT) ? '<' : ',';
-    case SDLK_MINUS:        return (ks.mod & KMOD_SHIFT) ? '_' : '-';
-    case SDLK_PERIOD:       return (ks.mod & KMOD_SHIFT) ? '>' : '.';
-    case SDLK_SLASH:        return (ks.mod & KMOD_SHIFT) ? '?' : '/';
-    case SDLK_0:            return (ks.mod & KMOD_SHIFT) ? ')' : '0';
-    case SDLK_1:            return (ks.mod & KMOD_SHIFT) ? '!' : '1';
-    case SDLK_2:            return (ks.mod & KMOD_SHIFT) ? '@' : '2';
-    case SDLK_3:            return (ks.mod & KMOD_SHIFT) ? '#' : '3';
-    case SDLK_4:            return (ks.mod & KMOD_SHIFT) ? '$' : '4';
-    case SDLK_5:            return (ks.mod & KMOD_SHIFT) ? '%' : '5';
-    case SDLK_6:            return (ks.mod & KMOD_SHIFT) ? '^' : '6';
-    case SDLK_7:            return (ks.mod & KMOD_SHIFT) ? '&' : '7';
-    case SDLK_8:            return (ks.mod & KMOD_SHIFT) ? '*' : '8';
-    case SDLK_9:            return (ks.mod & KMOD_SHIFT) ? '(' : '9';
+    case SDLK_COMMA:        return mod_shift ? '<' : ',';
+    case SDLK_MINUS:        return mod_shift ? '_' : '-';
+    case SDLK_PERIOD:       return mod_shift ? '>' : '.';
+    case SDLK_SLASH:        return mod_shift ? '?' : '/';
+    case SDLK_0:            return mod_shift ? ')' : '0';
+    case SDLK_1:            return mod_shift ? '!' : '1';
+    case SDLK_2:            return mod_shift ? '@' : '2';
+    case SDLK_3:            return mod_shift ? '#' : '3';
+    case SDLK_4:            return mod_shift ? '$' : '4';
+    case SDLK_5:            return mod_shift ? '%' : '5';
+    case SDLK_6:            return mod_shift ? '^' : '6';
+    case SDLK_7:            return mod_shift ? '&' : '7';
+    case SDLK_8:            return mod_shift ? '*' : '8';
+    case SDLK_9:            return mod_shift ? '(' : '9';
     case SDLK_COLON:        return ':';
-    case SDLK_SEMICOLON:    return (ks.mod & KMOD_SHIFT) ? ':' : ';';
+    case SDLK_SEMICOLON:    return mod_shift ? ':' : ';';
     case SDLK_LESS:         return '<';
-    case SDLK_EQUALS:       return (ks.mod & KMOD_SHIFT) ? '+' : '=';
+    case SDLK_EQUALS:       return mod_shift ? '+' : '=';
     case SDLK_GREATER:      return '>';
     case SDLK_QUESTION:     return '?';
     case SDLK_AT:           return '@';
-    case SDLK_LEFTBRACKET:  return (ks.mod & KMOD_SHIFT) ? '{' : '[';
-    case SDLK_BACKSLASH:    return (ks.mod & KMOD_SHIFT) ? '|' : '\\';
-    case SDLK_RIGHTBRACKET: return (ks.mod & KMOD_SHIFT) ? '}' : ']';
+    case SDLK_LEFTBRACKET:  return mod_shift ? '{' : '[';
+    case SDLK_BACKSLASH:    return mod_shift ? '|' : '\\';
+    case SDLK_RIGHTBRACKET: return mod_shift ? '}' : ']';
     case SDLK_CARET:        return '^';
     case SDLK_UNDERSCORE:   return '_';
-    case SDLK_BACKQUOTE:    return (ks.mod & KMOD_SHIFT) ? '~' : '`';
+    case SDLK_BACKQUOTE:    return mod_shift ? '~' : '`';
     //case SDLK_DELETE:       return 0x7F;
     default: break;
     }
