@@ -122,6 +122,11 @@ namespace Zeni {
     /// Then render.  Called by Game as part of the main gameloop.
     virtual void render();
 
+    /// Called when the Gamestate is pushed onto the stack in Game
+    virtual void on_push();
+    /// Called when the Gamestate is popped off the stack in Game
+    virtual void on_pop();
+
     // Converters
 
     static char to_char(const SDL_keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
@@ -169,6 +174,9 @@ namespace Zeni {
     inline void on_event(const SDL_Event &event);
     inline void perform_logic();
     inline void render();
+
+    inline void on_push();
+    inline void on_pop();
 
     inline Gamestate_Base & get();
 

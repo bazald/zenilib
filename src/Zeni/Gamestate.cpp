@@ -781,6 +781,12 @@ default: return "SDLK_UNKNOWN";
     logo.render();
   }
 
+  void Gamestate_Base::on_push() {
+  }
+
+  void Gamestate_Base::on_pop() {
+  }
+
   Gamestate::~Gamestate() {
     if(m_state)
       m_state->decrement();
