@@ -75,6 +75,7 @@ namespace Zeni {
   class Texture;
   class Vertex_Buffer;
   class Vertex_Shader;
+  class Video;
 
   class Video_Base {
   public:
@@ -89,6 +90,8 @@ namespace Zeni {
 
     typedef ::IV<Video_Base, VIDEO_MODE> IV;
   };
+
+  Video & get_Video(); ///< Get access to the singleton.
 
   class Video : public Video_Base::IV {
     // Get reference to only instance;
@@ -289,8 +292,6 @@ namespace Zeni {
     TEST m_alpha_function;
     float m_alpha_value;
   };
-
-  Video & get_Video(); ///< Get access to the singleton.
 
   struct Video_Init_Failure : public Error {
     Video_Init_Failure() : Error("Zeni Video Failed to Initialize Correctly") {}

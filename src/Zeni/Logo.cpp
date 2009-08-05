@@ -28,7 +28,9 @@
 
 #include <Zeni/Logo.h>
 
+#include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.h>
+#include <Zeni/Triangle.hxx>
 #include <Zeni/Vertex_Buffer.h>
 #include <Zeni/Video.h>
 

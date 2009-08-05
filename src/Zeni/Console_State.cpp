@@ -94,7 +94,7 @@ namespace Zeni {
     m_text += text;
 
     const size_t max_lines = m_log.get_max_lines();
-    for(size_t endl_count = 0, pos = m_text.size() - 1u; pos != -1; --pos)
+    for(size_t endl_count = 0u, pos = m_text.size() - 1u; pos != size_t(-1); --pos)
       if(m_text[pos] == '\n' && ++endl_count == max_lines) {
         m_text = m_text.substr(pos + 1);
         break;
@@ -194,9 +194,9 @@ namespace Zeni {
 
   void Console_State::on_key(const SDL_KeyboardEvent &event) {
     Game &gr = get_Game();
-    const bool mod_nonshift = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT) &&
-                              gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL) &&
-                              gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA) &&
+    const bool mod_nonshift = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT) ||
+                              gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL) ||
+                              gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA) ||
                               gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
 
     if(event.type == SDL_KEYDOWN &&
