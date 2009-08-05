@@ -45,7 +45,7 @@
 
 namespace Zeni {
 
-  template <typename GAMESTATE>
+  template <typename PLAY_STATE, typename INSTRUCTIONS_STATE>
   class Title_State : public Widget_Gamestate {
     class Title : public Text_Box {
     public:
@@ -59,25 +59,41 @@ namespace Zeni {
     class Play_Button : public Text_Button_3C {
     public:
       Play_Button()
-        : Text_Button_3C(Point2f(200.0f, 250.0f), Point2f(600.0f, 320.0f),
+        : Text_Button_3C(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
                          "system_36_600", "Play")
       {
       }
 
       void on_accept() {
-        get_Game().push_state(new GAMESTATE());
+        Text_Button_3C::on_accept();
+        get_Game().push_state(new PLAY_STATE());
       }
     } m_play_button;
+
+    class Instructions_Button : public Text_Button_3C {
+    public:
+      Instructions_Button()
+        : Text_Button_3C(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
+                         "system_36_600", "Instructions")
+      {
+      }
+
+      void on_accept() {
+        Text_Button_3C::on_accept();
+        get_Game().push_state(new INSTRUCTIONS_STATE());
+      }
+    } m_instructions_button;
 
     class Configure_Video_Button : public Text_Button_3C {
     public:
       Configure_Video_Button()
-        : Text_Button_3C(Point2f(200.0f, 350.0f), Point2f(600.0f, 420.0f),
+        : Text_Button_3C(Point2f(200.0f, 410.0f), Point2f(600.0f, 470.0f),
                          "system_36_600", "Configure Video")
       {
       }
 
       void on_accept() {
+        Text_Button_3C::on_accept();
         get_Game().push_state(new Configurator_Video());
       }
     } m_configure_video_button;
@@ -85,12 +101,13 @@ namespace Zeni {
     class Quit_Button : public Text_Button_3C {
     public:
       Quit_Button()
-        : Text_Button_3C(Point2f(200.0f, 450.0f), Point2f(600.0f, 520.0f),
+        : Text_Button_3C(Point2f(200.0f, 490.0f), Point2f(600.0f, 550.0f),
                          "system_36_600", "Quit")
       {
       }
 
       void on_accept() {
+        Text_Button_3C::on_accept();
         throw Quit_Event();
       }
     } m_quit_button;
@@ -102,6 +119,7 @@ namespace Zeni {
     {
       m_widgets.lend_Widget(m_title);
       m_widgets.lend_Widget(m_play_button);
+      m_widgets.lend_Widget(m_instructions_button);
       m_widgets.lend_Widget(m_configure_video_button);
       m_widgets.lend_Widget(m_quit_button);
 

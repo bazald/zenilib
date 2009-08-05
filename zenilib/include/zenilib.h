@@ -52,6 +52,7 @@
 #include <Zeni/Image.h>
 #include <Zeni/Light.h>
 #include <Zeni/Line_Segment.h>
+#include <Zeni/Logo.h>
 #include <Zeni/Material.h>
 #include <Zeni/Matrix4f.h>
 #include <Zeni/Model.h>

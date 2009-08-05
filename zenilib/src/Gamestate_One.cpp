@@ -11,10 +11,13 @@ using namespace Zeni;
 
 static vector<string> g_args;
 
-/// Play_State is a placeholder.  You should completely replace it.
 class Play_State : public Gamestate_Base {
-  void perform_logic() {
-    get_Game().pop_state();
+};
+
+class Instructions_State : public Gamestate_Base {
+  void render() {
+    get_Video().set_2d();
+    get_Fonts()["system_36_600"].render_text("ALT-F4 to Quit", Point2f(), get_Colors()["title_text"]);
   }
 };
 
@@ -45,7 +48,7 @@ namespace Zeni {
  
     Game &gr = get_Game();
     gr.pop_state();
-    gr.push_state(new Title_State<Play_State>("Long Title:\nSubtitle"));
+    gr.push_state(new Title_State<Play_State, Instructions_State>("Long Title:\nSubtitle"));
   }
 
 }

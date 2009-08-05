@@ -120,7 +120,7 @@ namespace Zeni {
     /// Then perform logic.  Called by Game as part of the main gameloop.
     virtual void perform_logic() {}
     /// Then render.  Called by Game as part of the main gameloop.
-    virtual void render() {}
+    virtual void render();
 
     // Converters
 
