@@ -99,11 +99,11 @@ namespace Zeni {
     const float x = int(position.x * vratio + 0.5f) / vratio;
     const float y = int(position.y * vratio + 0.5f) / vratio;
 
-    Quadrilateral<Vertex2f_Texture> rect
-      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel),
-      Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_lower_right_point.y + y), Point2f(m_upper_left_texel.x, m_lower_right_texel.y)),
-      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_lower_right_point.y + y), m_lower_right_texel),
-      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_upper_left_point.y + y), Point2f(m_lower_right_texel.x, m_upper_left_texel.y)));
+    Quadrilateral<Vertex2f_Texture> rect(
+      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel)) ,
+      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_lower_right_point.y + y), Point2f(m_upper_left_texel.x, m_lower_right_texel.y))) ,
+      (Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_lower_right_point.y + y), m_lower_right_texel)) ,
+      (Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_upper_left_point.y + y), Point2f(m_lower_right_texel.x, m_upper_left_texel.y))) );
 
     vr.render(rect);
   }
@@ -119,11 +119,11 @@ namespace Zeni {
     const Point3f lr = ll + scaled_right;
     const Point3f ur = ul + scaled_right;
 
-    Quadrilateral<Vertex3f_Texture> rect
-      (Vertex3f_Texture(ul, m_upper_left_texel),
-      Vertex3f_Texture(ll, Point2f(m_upper_left_texel.x, m_lower_right_texel.y)),
-      Vertex3f_Texture(lr, m_lower_right_texel),
-      Vertex3f_Texture(ur, Point2f(m_lower_right_texel.x, m_upper_left_texel.y)));
+    Quadrilateral<Vertex3f_Texture> rect(
+      (Vertex3f_Texture(ul, m_upper_left_texel)) ,
+      (Vertex3f_Texture(ll, Point2f(m_upper_left_texel.x, m_lower_right_texel.y))) ,
+      (Vertex3f_Texture(lr, m_lower_right_texel)) ,
+      (Vertex3f_Texture(ur, Point2f(m_lower_right_texel.x, m_upper_left_texel.y))) );
 
     vr.render(rect);
   }

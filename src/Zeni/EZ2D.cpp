@@ -54,11 +54,10 @@ namespace Zeni {
 
       Material material(image_name, color_filter);
 
-      Quadrilateral<Vertex2f_Texture> q(
-        Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f)),
-        Vertex2f_Texture(Point2f(upper_left.x, lower_right.y), Point2f(tx0, 1.0f)),
-        Vertex2f_Texture(Point2f(lower_right.x, lower_right.y), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f)));
+      Quadrilateral<Vertex2f_Texture> q( (Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f))) ,
+                                         (Vertex2f_Texture(Point2f(upper_left.x, lower_right.y), Point2f(tx0, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(lower_right.x, lower_right.y), Point2f(tx1, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f))) );
       q.lend_Material(&material);
 
       get_Video().render(q);
@@ -94,11 +93,11 @@ namespace Zeni {
 
       Material material(image_name, color_filter);
 
-      Quadrilateral<Vertex2f_Texture> q(
-        Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f)),
-        Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f)),
-        Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f)));
+      Vertex2f_Texture vt;
+      Quadrilateral<Vertex2f_Texture> q( (Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f))) );
       q.lend_Material(&material);
 
       get_Video().render(q);

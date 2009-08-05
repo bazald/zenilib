@@ -96,7 +96,7 @@ namespace Zeni {
 
   public:
     Database(const std::string &filename, const std::string &xml_identifier);
-    ~Database();
+    virtual ~Database();
 
     unsigned long get_id(const std::string &name) const; ///< Get an id by name.
     

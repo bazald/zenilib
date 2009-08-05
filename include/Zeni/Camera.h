@@ -66,7 +66,7 @@ namespace Zeni {
     /// The Camera constructor is an alternative to using the numerous setter functions.
     Camera(const Point3f &position = ZENI_DEFAULT_CAMERA_POSITION,
            const Quaternion &orientation = ZENI_DEFAULT_CAMERA_ORIENTATION,
-           const float &near_clip = ZENI_DEFAULT_CAMERA_NEAR_CLIP, 
+           const float &near_clip = ZENI_DEFAULT_CAMERA_NEAR_CLIP,
            const float &far_clip = ZENI_DEFAULT_CAMERA_FAR_CLIP,
            const float &fov_rad_ = ZENI_DEFAULT_CAMERA_FOV,
            const float &tunnel_vision_factor = ZENI_DEFAULT_CAMERA_TUNNEL_VISION);

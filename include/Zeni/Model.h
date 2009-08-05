@@ -129,7 +129,7 @@ namespace Zeni {
 
     // Accessors
     inline Lib3dsFile * const & get_file() const; ///< Get the full 3ds file info
-    virtual Point3f get_position() const; ///< Get the position of the Model
+    Point3f get_position() const; ///< Get the position of the Model
     inline const Model_Extents & get_extents() const; ///< Get the extents of the Model
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
     inline const Vector3f & get_scale(); ///< Get the Model scale

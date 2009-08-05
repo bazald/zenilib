@@ -244,10 +244,10 @@ namespace Zeni {
 
   void Logo::create_thick_line(const Point2f &p0, const Point2f &p1, const float &thickness, const Color &color) {
     const Vector3f n = (vector_k % (Vector3f(p1.x, p1.y, 0.0f) - Vector3f(p0.x, p0.y, 0.0f))).normalized() * thickness;
-    Quadrilateral<Vertex2f_Color> q(Vertex2f_Color(Point2f(p0.x - n.x, p0.y - n.y), color),
-                                    Vertex2f_Color(Point2f(p0.x + n.x, p0.y + n.y), color),
-                                    Vertex2f_Color(Point2f(p1.x + n.x, p1.y + n.y), color),
-                                    Vertex2f_Color(Point2f(p1.x - n.x, p1.y - n.y), color));
+    Quadrilateral<Vertex2f_Color> q( (Vertex2f_Color(Point2f(p0.x - n.x, p0.y - n.y), color)) ,
+                                     (Vertex2f_Color(Point2f(p0.x + n.x, p0.y + n.y), color)) ,
+                                     (Vertex2f_Color(Point2f(p1.x + n.x, p1.y + n.y), color)) ,
+                                     (Vertex2f_Color(Point2f(p1.x - n.x, p1.y - n.y), color)) );
     Material m("", color);
     q.fax_Material(&m);
     m_vbo->fax_quadrilateral(&q);

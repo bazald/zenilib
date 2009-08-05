@@ -234,6 +234,8 @@ namespace Zeni {
 
 #endif
 
+#define EMPTY()
+
   void Video::render(const Renderable &renderable) {
     class PrePostRenderActor {
       PrePostRenderActor & operator=(const PrePostRenderActor &) {return *this;}
@@ -256,11 +258,11 @@ namespace Zeni {
   }
 
   int Video::get_maximum_anisotropy() const {
-    VIDEO_IV_FCN_CALL_CONST(get_maximum_anisotropy_impl, );
+    VIDEO_IV_FCN_CALL_CONST(get_maximum_anisotropy_impl, EMPTY());
   }
 
   bool Video::has_vertex_buffers() const {
-    VIDEO_IV_FCN_CALL_CONST(has_vertex_buffers_impl, );
+    VIDEO_IV_FCN_CALL_CONST(has_vertex_buffers_impl, EMPTY());
   }
 
   void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
@@ -348,7 +350,7 @@ namespace Zeni {
   }
 
   void Video::unapply_texture() {
-    VIDEO_IV_FCN_CALL(unapply_texture_impl, );
+    VIDEO_IV_FCN_CALL(unapply_texture_impl, EMPTY());
   }
 
   void Video::set_lighting(const bool &on) {
@@ -382,7 +384,7 @@ namespace Zeni {
   }
 
   void Video::unset_fog() {
-    VIDEO_IV_FCN_CALL(unset_fog_impl, );
+    VIDEO_IV_FCN_CALL(unset_fog_impl, EMPTY());
   }
 
 #ifndef DISABLE_CG
@@ -408,7 +410,7 @@ namespace Zeni {
   }
 
   void Video::unset_render_target() {
-    VIDEO_IV_FCN_CALL(unset_render_target_impl, );
+    VIDEO_IV_FCN_CALL(unset_render_target_impl, EMPTY());
   }
 
   void Video::clear_render_target(const Color &color) {
@@ -416,19 +418,19 @@ namespace Zeni {
   }
 
   const Point2i & Video::get_render_target_size() const {
-    VIDEO_IV_FCN_CALL_CONST(get_render_target_size_impl, );
+    VIDEO_IV_FCN_CALL_CONST(get_render_target_size_impl, EMPTY());
   }
 
   void Video::select_world_matrix() {
-    VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
+    VIDEO_IV_FCN_CALL(select_world_matrix_impl, EMPTY());
   }
 
   void Video::push_world_stack() {
-    VIDEO_IV_FCN_CALL(push_world_stack_impl, );
+    VIDEO_IV_FCN_CALL(push_world_stack_impl, EMPTY());
   }
 
   void Video::pop_world_stack() {
-    VIDEO_IV_FCN_CALL(pop_world_stack_impl, );
+    VIDEO_IV_FCN_CALL(pop_world_stack_impl, EMPTY());
   }
 
   void Video::translate_scene(const Vector3f &direction) {
@@ -448,7 +450,7 @@ namespace Zeni {
   }
 
   Point2f Video::get_pixel_offset() const {
-    VIDEO_IV_FCN_CALL_CONST(get_pixel_offset_impl, );
+    VIDEO_IV_FCN_CALL_CONST(get_pixel_offset_impl, EMPTY());
   }
 
   void Video::set_view_matrix(const Matrix4f &view) {
@@ -487,7 +489,7 @@ namespace Zeni {
   }
 
   Vertex_Buffer * Video::create_Vertex_Buffer() {
-    VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, );
+    VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, EMPTY());
   }
 
 #ifndef DISABLE_CG
@@ -509,11 +511,12 @@ namespace Zeni {
     m_display_surface = 0;
     g_initialized = false;
 
-    VIDEO_IV_FCN_CALL(uninit_impl, );
+    VIDEO_IV_FCN_CALL(uninit_impl, EMPTY());
   }
 
 #undef VIDEO_IV_FCN_CALL
 #undef VIDEO_IV_FCN_CALL_CONST
+#undef EMPTY
 }
 
 #include <Zeni/Global_Undef.h>
