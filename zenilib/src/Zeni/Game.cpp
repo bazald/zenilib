@@ -28,9 +28,11 @@
 
 #include <Zeni/Game.hxx>
 
+#include <Zeni/Chronometer.hxx>
 #include <Zeni/Console_State.h>
 #include <Zeni/Gamestate.hxx>
 #include <Zeni/Gamestate_One.h>
+#include <Zeni/Random.h>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
