@@ -70,6 +70,7 @@
 		D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A80FFE83A600146950 /* tinyxmlparser.cpp */; };
 		D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D34A67B00FFE88A500146950 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36C2DAA102B949F00E71223 /* Logo.cpp */; };
 		D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494910FFF0BC900B647E1 /* application.cxx */; };
 		D3DB81E90FFF1AD700788B73 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D3E4934A0FFF038300B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
@@ -317,6 +318,9 @@
 		D34A66F70FFE865E00146950 /* textures.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = textures.xml; path = ../config/textures.xml; sourceTree = SOURCE_ROOT; };
 		D34A66F80FFE865E00146950 /* zenilib.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zenilib.xml; path = ../config/zenilib.xml; sourceTree = SOURCE_ROOT; };
 		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "/tmp/bazald/zenilib/Frameworks/lib3ds-2.0.framework"; sourceTree = "<absolute>"; };
+		D36C2DA8102B948900E71223 /* Logo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logo.h; path = ../include/Zeni/Logo.h; sourceTree = SOURCE_ROOT; };
+		D36C2DA9102B948900E71223 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../include/Zeni/Random.h; sourceTree = SOURCE_ROOT; };
+		D36C2DAA102B949F00E71223 /* Logo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logo.cpp; path = ../src/Zeni/Logo.cpp; sourceTree = SOURCE_ROOT; };
 		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
 		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ../Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
 		D3E494830FFF0B5600B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -532,6 +536,7 @@
 				D34A665C0FFE839B00146950 /* Gamestate.cpp */,
 				D34A665D0FFE839B00146950 /* Image.cpp */,
 				D34A665E0FFE839B00146950 /* Light.cpp */,
+				D36C2DAA102B949F00E71223 /* Logo.cpp */,
 				D34A665F0FFE839B00146950 /* main.cpp */,
 				D34A66600FFE839B00146950 /* Material.cpp */,
 				D34A66610FFE839B00146950 /* Matrix4f.cpp */,
@@ -710,6 +715,7 @@
 				D34A65E70FFE836500146950 /* IV.h */,
 				D34A65E80FFE836500146950 /* Light.h */,
 				D34A65EA0FFE836500146950 /* Line_Segment.h */,
+				D36C2DA8102B948900E71223 /* Logo.h */,
 				D34A65EC0FFE836500146950 /* Material.h */,
 				D34A65EE0FFE836500146950 /* Matrix4f.h */,
 				D34A65F00FFE836500146950 /* Model.h */,
@@ -719,6 +725,7 @@
 				D34A65F70FFE836500146950 /* Projector.h */,
 				D34A65F90FFE836500146950 /* Quadrilateral.h */,
 				D34A65FB0FFE836500146950 /* Quaternion.h */,
+				D36C2DA9102B948900E71223 /* Random.h */,
 				D34A65FD0FFE836500146950 /* Renderable.h */,
 				D34A65FF0FFE836500146950 /* Resource.h */,
 				D34A66010FFE836500146950 /* Shader.h */,
@@ -923,6 +930,7 @@
 				D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */,
 				D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */,
 				D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */,
+				D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,6 +1025,7 @@
 					_MACOSX,
 					DISABLE_DX9,
 					DISABLE_WGL,
+					TEST_NASTY_CONDITIONS,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1044,6 +1053,7 @@
 					_MACOSX,
 					DISABLE_DX9,
 					DISABLE_WGL,
+					NDEBUG,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
