@@ -34,11 +34,10 @@ private:
   void render() {
     Widget_Gamestate::render();
 
-    Font &fr = get_Fonts()["title"];
+    Zeni::Font &fr = get_Fonts()["title"];
 
     fr.render_text("ALT-F4 to Quit",
-                   Point2f(0.5f * get_Video().get_screen_width(),
-                           0.5f * (get_Video().get_screen_height() - fr.get_text_height())),
+                   Point2f(400.0f, 300.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],
                    ZENI_CENTER);
   }
