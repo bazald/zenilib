@@ -23,10 +23,24 @@ class Play_State : public Gamestate_Base {
   }
 };
 
-class Instructions_State : public Gamestate_Base {
+class Instructions_State : public Widget_Gamestate {
+public:
+  Instructions_State()
+    : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(800.0f, 600.0f)))
+  {
+  }
+
+private:
   void render() {
-    get_Video().set_2d();
-    get_Fonts()["system_36_600"].render_text("ALT-F4 to Quit", Point2f(), get_Colors()["title_text"]);
+    Widget_Gamestate::render();
+
+    Font &fr = get_Fonts()["title"];
+
+    fr.render_text("ALT-F4 to Quit",
+                   Point2f(0.5f * get_Video().get_screen_width(),
+                           0.5f * (get_Video().get_screen_height() - fr.get_text_height())),
+                   get_Colors()["title_text"],
+                   ZENI_CENTER);
   }
 };
 
@@ -50,7 +64,7 @@ namespace Zeni {
  
     Game &gr = get_Game();
     gr.pop_state();
-    gr.push_state(new Title_State<Play_State, Instructions_State>("Long Title:\nSubtitle"));
+    gr.push_state(new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication"));
   }
 
 }

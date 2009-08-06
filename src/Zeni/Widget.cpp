@@ -421,7 +421,7 @@ namespace Zeni {
   }
 
   void Selector::Normal_Button::on_accept() {
-    Text_Button::on_accept();
+    Text_Button_3C::on_accept();
     m_selector->decide_visible(m_selector->m_option);
     m_selector->m_selected = true;
 
@@ -442,7 +442,7 @@ namespace Zeni {
   }
 
   void Selector::Selector_Button::on_accept() {
-    Text_Button::on_accept();
+    Text_Button_3C::on_accept();
     m_selector->on_accept(get_text());
     m_selector->m_selected = false;
   }
@@ -1286,10 +1286,9 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_key(keysym, down);
 
-        if((*it)->is_busy()) {
+        if(!m_busy_one && (*it)->is_busy()) {
           m_busy_one = *it;
           set_busy(true);
-          break;
         }
       }
     }
@@ -1313,10 +1312,9 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_button(pos, down, button);
 
-        if((*it)->is_busy()) {
+        if(!m_busy_one && (*it)->is_busy()) {
           m_busy_one = *it;
           set_busy(true);
-          break;
         }
       }
     }
@@ -1340,10 +1338,9 @@ namespace Zeni {
       for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
         (*it)->on_mouse_motion(pos);
 
-        if((*it)->is_busy()) {
+        if(!m_busy_one && (*it)->is_busy()) {
           m_busy_one = *it;
           set_busy(true);
-          break;
         }
       }
     }

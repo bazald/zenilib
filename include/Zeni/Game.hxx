@@ -50,6 +50,14 @@ namespace Zeni {
   }
 #endif
 
+#ifndef NDEBUG
+  void Game::write_to_console(const std::string &text) {
+    get_console().write_to_log(text);
+#else
+  void Game::write_to_console(const std::string & /*text*/) {
+#endif
+  }
+
   size_t Game::size() const {
     return m_states.size();
   }

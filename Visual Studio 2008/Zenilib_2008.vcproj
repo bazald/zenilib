@@ -2519,6 +2519,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Random.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Renderable.h"
 				>
 			</File>
