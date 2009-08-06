@@ -61,6 +61,7 @@
 #include <Zeni/Projector.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Quaternion.h>
+#include <Zeni/Random.h>
 #include <Zeni/Renderable.h>
 #include <Zeni/Resource.h>
 #include <Zeni/Shader.h>

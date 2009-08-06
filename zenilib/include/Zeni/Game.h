@@ -76,6 +76,7 @@ namespace Zeni {
 #ifndef NDEBUG
     inline Console_State & get_console(); ///< Get a reference to the Console_State
 #endif
+    inline void write_to_console(const std::string &text); ///< Write text to the console when in Debug mode
 
     inline size_t size() const; ///< Get the current size of the Gamestate stack.
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
