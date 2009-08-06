@@ -134,6 +134,14 @@ pedantic = ARGUMENTS.get('pedantic', 0)
 if int(pedantic):
   warnings += pedantic_warnings
 
+### Decide stress
+
+stress = ARGUMENTS.get('stress', 0)
+if int(stress):
+  stress_test = ' -DTEST_NASTY_CONDITIONS '
+else:
+  stress_test = ''
+
 ### Decide optimization
 
 launcher_name = 'Launcher'
@@ -212,7 +220,7 @@ if is_windows:
     libpath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\libs\\Win32']
     libpath += ['lib_win']
 else:
-  ccflags = standard + defines + warnings + optimization + arch + profiling
+  ccflags = standard + defines + stress_test + warnings + optimization + arch + profiling
   linkflags = arch + profiling
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
@@ -280,6 +288,8 @@ if not is_windows:
 opts.Add('scu', 'Set to \'scu\' to use SCU for everything, \'zeni\' to use SCU on zenilib only, \'no\' to disable', 'zeni')
 if not is_windows:
   opts.Add('soar', 'Set to 1 to use Soar', 0)
+opts.Add('stress', 'Set to 1 to stress test your code', 0)
+if not is_windows:
   opts.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', 0)
 if is_windows:
   opts.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', 0)
