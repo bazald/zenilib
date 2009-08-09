@@ -144,7 +144,7 @@ namespace Zeni {
 
     int bytes = 0;
     int buffer_size = int(pcm_size);
-    vector<char> buffer(buffer_size);
+    vector<char> buffer( static_cast<size_t>(buffer_size) );
     for(char *begin = &buffer[0], *end = begin + pcm_size;
         begin != end;
         begin += bytes, buffer_size -= bytes) {

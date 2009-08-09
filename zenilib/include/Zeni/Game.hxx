@@ -46,7 +46,7 @@ namespace Zeni {
 
 #ifndef NDEBUG
   Console_State & Game::get_console() {
-    return static_cast<Console_State &>(m_console.get());
+    return static_cast<Console_State &>(get_console_instance().get());
   }
 #endif
 
@@ -133,7 +133,7 @@ namespace Zeni {
 
 #ifndef NDEBUG
       if(m_console_active) {
-        gs = m_console;
+        gs = get_console_instance();
         console_child = get_console().get_child();
       }
       else
@@ -158,7 +158,7 @@ namespace Zeni {
 
 #ifndef NDEBUG
       if(m_console_active) {
-        gs = m_console;
+        gs = get_console_instance();
         console_child = get_console().get_child();
       }
       else
@@ -183,7 +183,7 @@ namespace Zeni {
 
 #ifndef NDEBUG
       if(m_console_active) {
-        gs = m_console;
+        gs = get_console_instance();
         console_child = get_console().get_child();
       }
       else
@@ -198,7 +198,7 @@ namespace Zeni {
     calculate_fps();
   }
 
-  int Game::get_fps() const {
+  size_t Game::get_fps() const {
     return fps;
   }
 

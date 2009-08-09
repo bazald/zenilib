@@ -86,7 +86,7 @@ namespace Zeni {
     inline void set_spot_phi(const float &spot_phi); ///< Set the angle, in radians, describing the size of the outer cone (automatically decreases theta if necessary)
 
 #ifndef DISABLE_GL
-    void set(const GLint &number, Video_GL &screen) const;
+    void set(const GLenum &number, Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

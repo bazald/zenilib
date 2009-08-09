@@ -105,7 +105,7 @@ namespace Zeni {
   }
 
   void Video_GL::set_zwrite_impl(const bool &enabled) {
-    glDepthMask(enabled);
+    glDepthMask(GLboolean(enabled));
   }
 
   void Video_GL::set_ztest_impl(const bool &enabled) {
@@ -176,7 +176,7 @@ namespace Zeni {
   }
 
   void Video_GL::set_light_impl(const int &number, const Light &light) {
-    GLint ln;
+    GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
     case 1: ln = GL_LIGHT1; break;
@@ -194,7 +194,7 @@ namespace Zeni {
   }
 
   void Video_GL::unset_light_impl(const int &number) {
-    GLint ln;
+    GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
     case 1: ln = GL_LIGHT1; break;

@@ -137,7 +137,7 @@ namespace Zeni {
       if(!sprite)
         throw Sprite_Function_Misapplied();
 
-      const unsigned int
+      const int
         frameno = sprite->get_current_frame(),
         framecap = sprite->get_num_frames();
 
@@ -158,7 +158,7 @@ namespace Zeni {
       if(!sprite)
         throw Sprite_Function_Misapplied();
 
-      const unsigned int
+      const int
         frameno = sprite->get_current_frame(),
         framecap = sprite->get_num_frames();
 

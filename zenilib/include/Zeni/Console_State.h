@@ -55,6 +55,9 @@ namespace Zeni {
   };
 
   class Console_State : public Gamestate_Base {
+    Console_State(const Console_State &);
+    Console_State & operator=(const Console_State &);
+
     friend class Game;
 
   private:

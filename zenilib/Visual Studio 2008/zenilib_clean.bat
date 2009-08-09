@@ -7,3 +7,42 @@ DEL /Q "..\stderr.txt"
 DEL /Q "..\stdout.txt"
 
 DEL /Q "*.ncb"
+
+
+RMDIR /S /Q "..\Xcode 3.1.2\build"
+
+
+DEL /Q "..\*.dblite"
+
+DEL /Q "..\src\TinyXML\*.o"
+DEL /Q "..\src\Zeni\*.o"
+DEL /Q "..\src\*.o"
+
+DEL /Q "..\*.a"
+
+DEL /Q "..\bin\x64\*.exp"
+DEL /Q "..\bin\x64\*.ilk"
+DEL /Q "..\bin\x64\*.lib"
+DEL /Q "..\bin\x64\*.manifest"
+DEL /Q "..\bin\x64\*.map"
+DEL /Q "..\bin\x64\*.pdb"
+
+DEL /Q "..\bin\*.exp"
+DEL /Q "..\bin\*.ilk"
+DEL /Q "..\bin\*.lib"
+DEL /Q "..\bin\*.manifest"
+DEL /Q "..\bin\*.map"
+DEL /Q "..\bin\*.pdb"
+
+DEL /Q "..\src\TinyXML\*.obj"
+DEL /Q "..\src\Zeni\*.obj"
+DEL /Q "..\src\*.obj"
+
+DEL /Q "..\*.idb"
+DEL /Q "..\*.ilk"
+DEL /Q "..\*.lib"
+DEL /Q "..\*.manifest"
+DEL /Q "..\*.map"
+DEL /Q "..\*.pdb"
+
+DEL /Q "*.obj"

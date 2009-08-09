@@ -190,8 +190,8 @@ namespace Zeni {
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Video_Base::ZENI_VIDEO_GL: return reinterpret_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
-      case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_GL: return static_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_DX9: return static_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
     exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
@@ -200,8 +200,8 @@ namespace Zeni {
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Video_Base::ZENI_VIDEO_GL: return reinterpret_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
-      case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_GL: return static_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_DX9: return static_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
     exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
@@ -211,12 +211,12 @@ namespace Zeni {
 
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
-    return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
   }
 
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
-    return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
   }
 
 #endif
@@ -224,12 +224,12 @@ namespace Zeni {
 
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
-    return reinterpret_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
   }
 
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
-    return reinterpret_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
   }
 
 #endif

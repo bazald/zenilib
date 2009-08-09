@@ -97,11 +97,11 @@ namespace Zeni {
 
   public:
     struct Vertex_Buffer_Range {
-      Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne);
+      Vertex_Buffer_Range(Material * const &m, const size_t &s, const size_t &ne);
 
       safe_ptr<Material> material;
-      int start;
-      int num_elements;
+      size_t start;
+      size_t num_elements;
     };
 
     Vertex_Buffer();
@@ -137,8 +137,8 @@ namespace Zeni {
   protected:
     virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
-    inline int num_vertices_cm() const;
-    inline int num_vertices_t() const;
+    inline size_t num_vertices_cm() const;
+    inline size_t num_vertices_t() const;
 
     // Sort buffers by Material
     void sort_triangles();
@@ -173,10 +173,10 @@ namespace Zeni {
   private:
     virtual void prerender();
     
-    inline int vertex_size() const;
-    inline int normal_size() const;
-    inline int color_size() const;
-    inline int texel_size() const;
+    inline size_t vertex_size() const;
+    inline size_t normal_size() const;
+    inline size_t color_size() const;
+    inline size_t texel_size() const;
 
     union VBO_GL {
       GLuint vbo;
@@ -202,8 +202,8 @@ namespace Zeni {
   private:
     virtual void prerender();
     
-    inline int vertex_c_size() const;
-    inline int vertex_t_size() const;
+    inline size_t vertex_c_size() const;
+    inline size_t vertex_t_size() const;
 
   public:
     struct VBO_DX9 {

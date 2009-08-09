@@ -116,7 +116,7 @@ namespace Zeni {
       throw Sound_Source_HW_Init_Failure();
     }
 
-    alSourcei(m_source, AL_BUFFER, buffer.get_id());
+    alSourcei(m_source, AL_BUFFER, ALint(buffer.get_id()));
     alSourcef(m_source, AL_PITCH, pitch);
     alSourcef(m_source, AL_GAIN, gain);
     alSourcefv(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));

@@ -96,7 +96,7 @@ namespace Zeni {
 #ifndef DISABLE_GL
   void Material::set(Video_GL &vgl) const {
     if(vgl.get_lighting()) {
-      GLenum face = vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
+      GLenum face = GLenum(vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK);
 
       if(!(m_optimization & (1 << 0)))
         glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));

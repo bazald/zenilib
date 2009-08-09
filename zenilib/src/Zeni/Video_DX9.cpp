@@ -94,7 +94,7 @@ namespace Zeni {
     HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
     
     if(result == S_OK) {
-      D3DVIEWPORT9 vp = {0, 0, get_screen_width(), get_screen_height(), 0, 1};
+      D3DVIEWPORT9 vp = {0, 0, DWORD(get_screen_width()), DWORD(get_screen_height()), 0, 1};
       m_d3d_device->SetViewport(&vp);
       m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);
       m_d3d_device->BeginScene();
@@ -140,8 +140,8 @@ namespace Zeni {
     m_d3d_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
     m_d3d_parameters.BackBufferCount = 1;
-    m_d3d_parameters.BackBufferWidth = get_screen_width();
-    m_d3d_parameters.BackBufferHeight = get_screen_height();
+    m_d3d_parameters.BackBufferWidth = UINT(get_screen_width());
+    m_d3d_parameters.BackBufferHeight = UINT(get_screen_height());
     m_d3d_parameters.BackBufferFormat = m_d3d_parameters.Windowed ? D3DFMT_UNKNOWN : D3DFMT_A8R8G8B8;
     m_d3d_parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     m_d3d_parameters.PresentationInterval = get_vertical_sync() ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -243,7 +243,7 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
 
     // Multisampling
-    m_d3d_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, get_multisampling() > 1);
+    m_d3d_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, DWORD(get_multisampling() > 1));
 
     // More basic stuff
     set_2d();

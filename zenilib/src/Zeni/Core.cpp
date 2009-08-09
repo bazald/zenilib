@@ -191,32 +191,32 @@ namespace Zeni {
     return fout.good();
   }
 
-  int Core::get_num_joysticks() const {
-    return int(m_joystick.size());
+  size_t Core::get_num_joysticks() const {
+    return m_joystick.size();
   }
 
-  const std::string & Core::get_joystick_name(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  const std::string & Core::get_joystick_name(const size_t &index) const {
+    assert(index < m_joystick.size());
     return m_joystick[index].second;
   }
   
-  int Core::get_joystick_num_axes(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_axes(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_balls(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_balls(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumBalls(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_hats(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_hats(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_buttons(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_buttons(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
@@ -240,7 +240,7 @@ namespace Zeni {
       m_joystick.push_back(make_pair(SDL_JoystickOpen(i),
                                     SDL_JoystickName(i)));
 
-      if(!m_joystick[i].first) {
+      if(!m_joystick[size_t(i)].first) {
         m_joystick.pop_back();
         quit_joysticks();
 
@@ -255,7 +255,7 @@ namespace Zeni {
     SDL_JoystickEventState(SDL_DISABLE);
 
     for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      SDL_JoystickClose(m_joystick[i].first);
+      SDL_JoystickClose(m_joystick[size_t(i)].first);
 
     m_joystick.clear();
 

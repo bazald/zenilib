@@ -53,18 +53,18 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
@@ -73,16 +73,16 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
@@ -92,16 +92,16 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
@@ -121,12 +121,12 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     try {
-      get_Textures().apply_texture(m_frames[m_frame].second);
+      get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
     }
     catch(Database_Entry_Not_Found &) {
       try {
-        m_frames[m_frame].second = get_Textures().get_id(m_frames[m_frame].first);
-        get_Textures().apply_texture(m_frames[m_frame].second);
+        m_frames[size_t(m_frame)].second = get_Textures().get_id(m_frames[size_t(m_frame)].first);
+        get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
       }
       catch(...) {
         no_recurse = true;
@@ -159,7 +159,7 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   void Texture_DX9::apply_texture_impl() const {
-    Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(get_Video());
+    Video_DX9 &vdx = static_cast<Video_DX9 &>(get_Video());
     
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);

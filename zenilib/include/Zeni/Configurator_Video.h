@@ -47,7 +47,13 @@
 namespace Zeni {
 
   class Configurator_Video : public Widget_Gamestate {
+    Configurator_Video(const Configurator_Video &);
+    Configurator_Video & operator=(const Configurator_Video &);
+
     class Check_Box_Element : public Check_Box {
+      Check_Box_Element(const Check_Box_Element &);
+      Check_Box_Element & operator=(const Check_Box_Element &);
+
     public:
       Check_Box_Element(const XML_Element &element,
                         const Point2f &upper_left,
@@ -62,6 +68,9 @@ namespace Zeni {
     };
 
     class Slider_Element : public Slider_Int {
+      Slider_Element(const Slider_Element &);
+      Slider_Element & operator=(const Slider_Element &);
+
     public:
       Slider_Element(const XML_Element &element,
                      const std::pair<int, int> &range,
@@ -78,6 +87,9 @@ namespace Zeni {
     };
 
     class Text_Element : public Text_Box {
+      Text_Element(const Text_Element &);
+      Text_Element & operator=(const Text_Element &);
+
     public:
       Text_Element(const XML_Element &element,
                    const Point2f &upper_left,
@@ -92,6 +104,9 @@ namespace Zeni {
     };
 
     class Selector_Element : public Selector {
+      Selector_Element(const Selector_Element &);
+      Selector_Element & operator=(const Selector_Element &);
+
     public:
       Selector_Element(const XML_Element &element,
                        const Point2f &upper_left,
@@ -109,6 +124,9 @@ namespace Zeni {
     };
 
     class Save_Button : public Text_Button_3C {
+      Save_Button(const Save_Button &);
+      Save_Button & operator=(const Save_Button &);
+
     public:
       Save_Button(XML_Document &file,
                   const Point2f &upper_left,
@@ -121,6 +139,9 @@ namespace Zeni {
     };
 
     class Cancel_Button : public Text_Button_3C {
+      Cancel_Button(const Cancel_Button &);
+      Cancel_Button & operator=(const Cancel_Button &);
+
     public:
       Cancel_Button(const Point2f &upper_left,
                   const Point2f &lower_right);

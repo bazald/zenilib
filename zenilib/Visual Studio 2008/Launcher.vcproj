@@ -43,6 +43,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
@@ -50,7 +51,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -120,6 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191"
 				Optimization="0"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64"
 				MinimalRebuild="true"
@@ -127,7 +129,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\launcher.pdb"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -197,6 +199,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
@@ -204,7 +207,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -277,6 +280,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;X64"
@@ -284,7 +288,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool

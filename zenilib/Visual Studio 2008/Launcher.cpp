@@ -57,7 +57,7 @@ int launch(const std::string &local_exe, const std::string &arguments) {
   else
     dir[nSize] = '\0';
 
-  for(int i = nSize - 1; i != -1; --i)
+  for(int i = int(nSize) - 1; i != -1; --i)
     if(dir[i] == '\\') {
       dir[i] = '\0';
       break;
@@ -101,7 +101,7 @@ int launch(const std::string &local_exe, const std::string &arguments) {
     return 2;
 
   if(WaitForSingleObject(piProcessInfo.hProcess, INFINITE) == WAIT_FAILED)
-    return GetLastError();
+    return int(GetLastError());
 
   CloseHandle(piProcessInfo.hThread);
   CloseHandle(piProcessInfo.hProcess);

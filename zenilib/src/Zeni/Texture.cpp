@@ -151,7 +151,7 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     for(int i = starting_point, end = int(m_frames.size()); i < end; ++i)
-      if(m_frames[i].first == name)
+      if(m_frames[size_t(i)].first == name)
         return i;
     return -1;
   }
@@ -173,7 +173,7 @@ namespace Zeni {
       &m_frames + at_this_index,
       (m_frames.size() - at_this_index - 1) * sizeof(std::pair<std::string, unsigned long>));
 
-    m_frames[at_this_index] = new_frame;
+    m_frames[size_t(at_this_index)] = new_frame;
   }
 
   void Sprite::remove_frame(const int &frame_number) {
@@ -247,11 +247,11 @@ namespace Zeni {
     const int mode = Texture::build_from_surface(surface);
 
     const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
-    const GLint mode2 =
+    const GLenum mode2 = GLenum(
       mode == -'R' ? GL_RGB :
       mode == -'B' ? GL_BGR :
       mode == 'R' ? GL_RGBA :
-      /*mode == 'A' ?*/ GL_BGRA;
+      /*mode == 'A' ?*/ GL_BGRA);
 
     // Allocate a unique id for the texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -335,10 +335,10 @@ namespace Zeni {
     m_size(size),
     m_texture(0)
   {
-    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
+    Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
 
     if(FAILED(D3DXCreateTexture(vr.get_d3d_device(),
-                                size.x, size.y,
+                                UINT(size.x), UINT(size.y),
                                 D3DX_DEFAULT,
                                 D3DUSAGE_RENDERTARGET | D3DUSAGE_AUTOGENMIPMAP,
                                 D3DFMT_A8R8G8B8,
@@ -355,7 +355,7 @@ namespace Zeni {
   }
 
   void Texture_DX9::set_sampler_states() {
-    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
+    Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
@@ -363,7 +363,7 @@ namespace Zeni {
 
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
-      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, int(Textures::get_anisotropic_filtering()));
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, DWORD(Textures::get_anisotropic_filtering()));
     }
     else if(Textures::get_bilinear_filtering()) {
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
@@ -388,7 +388,7 @@ namespace Zeni {
     set_sampler_states();
 
     if(FAILED(D3DXCreateTexture(vdx.get_d3d_device(),
-                                surface->w, surface->h,
+                                UINT(surface->w), UINT(surface->h),
                                 D3DX_DEFAULT,
                                 0,
                                 mode > 0 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8,

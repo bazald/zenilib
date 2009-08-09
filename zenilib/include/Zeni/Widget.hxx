@@ -175,13 +175,6 @@ namespace Zeni {
     generate_quadrilateral();
   }
 
-  Widget_Rectangle_Color::Widget_Rectangle_Color(const Widget_Rectangle_Color &rhs)
-    : Widget_Rectangle(rhs),
-    m_color(rhs.m_color),
-    m_quad(rhs.m_quad->get_duplicate())
-  {
-  }
-
   Widget_Rectangle_Color::~Widget_Rectangle_Color() {
     delete m_quad;
   }
@@ -191,19 +184,6 @@ namespace Zeni {
   void Widget_Rectangle_Color::set_color(const Color &color_) {
     m_color = color_;
     generate_quadrilateral();
-  }
-
-  Widget_Rectangle_Color & Widget_Rectangle_Color::operator=(const Widget_Rectangle_Color &rhs) {
-    if(this != &rhs) {
-      delete m_quad;
-      m_quad = 0;
-
-      reinterpret_cast<Widget_Rectangle &>(*this) = rhs;
-      m_color = rhs.m_color;
-      m_quad = rhs.m_quad->get_duplicate();
-    }
-
-    return *this;
   }
 
   void Widget_Rectangle_Color::generate_quadrilateral() {
@@ -227,13 +207,6 @@ namespace Zeni {
     generate_quadrilateral();
   }
 
-  Widget_Rectangle_Texture::Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs)
-    : Widget_Rectangle(rhs),
-    m_texture_name(rhs.m_texture_name),
-    m_quad(rhs.m_quad->get_duplicate())
-  {
-  }
-
   Widget_Rectangle_Texture::~Widget_Rectangle_Texture() {
     delete m_quad;
   }
@@ -242,19 +215,6 @@ namespace Zeni {
   void Widget_Rectangle_Texture::set_texture_name(const std::string &texture_name_) {
     m_texture_name = texture_name_;
     generate_quadrilateral();
-  }
-
-  Widget_Rectangle_Texture & Widget_Rectangle_Texture::operator=(const Widget_Rectangle_Texture &rhs) {
-    if(this != &rhs) {
-      delete m_quad;
-      m_quad = 0;
-
-      reinterpret_cast<Widget_Rectangle_Texture &>(*this) = rhs;
-      m_texture_name = rhs.m_texture_name;
-      m_quad = rhs.m_quad->get_duplicate();
-    }
-
-    return *this;
   }
 
   void Widget_Rectangle_Texture::generate_quadrilateral() {
@@ -564,15 +524,15 @@ namespace Zeni {
     assert(end <= get_num_lines());
 
     for(int i = 0; i != begin; ++i)
-      new_text += m_lines[i].unformatted;
+      new_text += m_lines[size_t(i)].unformatted;
     if(end != get_num_lines()) {
-      if(m_lines[end].endled)
-        new_text += m_lines[end].unformatted.substr(1);
+      if(m_lines[size_t(end)].endled)
+        new_text += m_lines[size_t(end)].unformatted.substr(1u);
       else
-        new_text += m_lines[end].unformatted;
+        new_text += m_lines[size_t(end)].unformatted;
 
       for(int i = end + 1; i != get_num_lines(); ++i)
-        new_text += m_lines[i].unformatted;
+        new_text += m_lines[size_t(i)].unformatted;
     }
 
     m_text.set_text(new_text);
@@ -611,7 +571,7 @@ namespace Zeni {
       return;
 
     const Time current_time = get_Timer().get_time();
-    const int ticks = current_time.get_ticks_since(m_last_repeated);
+    const int ticks = int(current_time.get_ticks_since(m_last_repeated));
 
     if((m_delay_finished && ticks > m_repeat_interval) ||
        (!m_delay_finished && ticks > m_repeat_delay))

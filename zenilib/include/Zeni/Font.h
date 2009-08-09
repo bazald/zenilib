@@ -121,7 +121,7 @@ namespace Zeni {
 
     struct Glyph {
       Glyph();
-      Glyph(TTF_Font *font_, const char &c,
+      Glyph(TTF_Font *font_, const unsigned char &c,
             SDL_Surface *source,
             SDL_Surface *render_target, const SDL_Rect &dstrect,
             const int &total_width, const int &total_height,
