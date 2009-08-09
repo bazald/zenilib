@@ -47,7 +47,13 @@ namespace Zeni {
 
   template <typename PLAY_STATE, typename INSTRUCTIONS_STATE>
   class Title_State : public Widget_Gamestate {
+    Title_State(const Title_State<PLAY_STATE, INSTRUCTIONS_STATE> &);
+    Title_State<PLAY_STATE, INSTRUCTIONS_STATE> & operator=(const Title_State<PLAY_STATE, INSTRUCTIONS_STATE> &);
+
     class Title : public Text_Box {
+      Title(const Title &);
+      Title & operator=(const Title &);
+
     public:
       Title(const std::string &title_)
         : Text_Box(Point2f(000.0f, 50.0f), Point2f(800.0f, 250.0f),
@@ -57,6 +63,9 @@ namespace Zeni {
     } m_title;
 
     class Play_Button : public Text_Button_3C {
+      Play_Button(const Play_Button &);
+      Play_Button & operator=(const Play_Button &);
+
     public:
       Play_Button()
         : Text_Button_3C(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
@@ -71,6 +80,9 @@ namespace Zeni {
     } m_play_button;
 
     class Instructions_Button : public Text_Button_3C {
+      Instructions_Button(const Instructions_Button &);
+      Instructions_Button & operator=(const Instructions_Button &);
+
     public:
       Instructions_Button()
         : Text_Button_3C(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
@@ -85,6 +97,9 @@ namespace Zeni {
     } m_instructions_button;
 
     class Configure_Video_Button : public Text_Button_3C {
+      Configure_Video_Button(const Configure_Video_Button &);
+      Configure_Video_Button & operator=(const Configure_Video_Button &);
+
     public:
       Configure_Video_Button()
         : Text_Button_3C(Point2f(200.0f, 410.0f), Point2f(600.0f, 470.0f),
@@ -99,6 +114,9 @@ namespace Zeni {
     } m_configure_video_button;
 
     class Quit_Button : public Text_Button_3C {
+      Quit_Button(const Quit_Button &);
+      Quit_Button & operator=(const Quit_Button &);
+
     public:
       Quit_Button()
         : Text_Button_3C(Point2f(200.0f, 490.0f), Point2f(600.0f, 550.0f),

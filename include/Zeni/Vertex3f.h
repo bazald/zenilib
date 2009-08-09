@@ -76,7 +76,7 @@ namespace Zeni {
     virtual Point3f get_position() const;
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && defined(X64)
     inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #else
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
@@ -91,7 +91,7 @@ namespace Zeni {
     /// Initialize the Vertex3f_Color
     Vertex3f_Color();
     Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Color &color);
-    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb);
+    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Uint32 &argb);
     Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const Uint32 &argb);
 

@@ -86,7 +86,7 @@ namespace Zeni {
     inline void perform_logic(); ///< Called in main, calls the function by the same name in the current Gamestate.
     inline void render(); ///< Called in main, calls the function by the same name in the current Gamestate.
 
-    inline int get_fps() const; ///< Get the current approximation of the frames displayed per second.
+    inline size_t get_fps() const; ///< Get the current approximation of the frames displayed per second.
     inline bool get_key_state(const int &key) const; ///< Get the state of a key.
     inline bool get_mouse_button_state(const int &button) const; ///< Get the state of a mouse button.
 
@@ -100,13 +100,13 @@ namespace Zeni {
     Unordered_Map<int, bool> m_mouse_buttons;
 
     Time time;
-    int ticks_passed, fps, fps_next;
+    Time::Tick_Type ticks_passed, fps, fps_next;
 
 #ifndef NDEBUG
     void activate_console();
     void deactivate_console();
+    Gamestate & get_console_instance();
 
-    Gamestate m_console;
     bool m_console_active;
 #endif
   };

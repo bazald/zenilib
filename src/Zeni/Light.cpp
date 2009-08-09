@@ -60,7 +60,7 @@ namespace Zeni {
   }
 
 #ifndef DISABLE_GL
-  void Light::set(const GLint &number, Video_GL &) const {
+  void Light::set(const GLenum &number, Video_GL &) const {
     GLfloat pos[] = {position.x, position.y, position.z, 1.0f};
 
     if(light_type == LIGHT_DIRECTIONAL) {

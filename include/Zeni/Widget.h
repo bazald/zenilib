@@ -305,7 +305,11 @@ namespace Zeni {
   };
 
   class Widget_Positioned {
+    Widget_Positioned(const Widget_Positioned &);
+    Widget_Positioned & operator=(const Widget_Positioned &);
+
   public:
+    Widget_Positioned() {}
     virtual ~Widget_Positioned() {}
 
     virtual const Point2f & get_upper_left() const = 0;
@@ -319,6 +323,9 @@ namespace Zeni {
   };
 
   class Widget_Text {
+    Widget_Text(const Widget_Text &);
+    Widget_Text & operator=(const Widget_Text &);
+
   public:
     inline Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
 
@@ -339,6 +346,9 @@ namespace Zeni {
   };
 
   class Widget_Rectangle : public Widget_Positioned {
+    Widget_Rectangle(const Widget_Rectangle &);
+    Widget_Rectangle & operator=(const Widget_Rectangle &);
+
   public:
     inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
  
@@ -353,13 +363,13 @@ namespace Zeni {
   };
 
   class Widget_Rectangle_Color : public Widget_Rectangle {
+    Widget_Rectangle_Color(const Widget_Rectangle_Color &);
+    Widget_Rectangle_Color & operator=(const Widget_Rectangle_Color &);
+
   public:
     inline Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
                                   const Color &color_);
     inline ~Widget_Rectangle_Color();
-
-    inline Widget_Rectangle_Color(const Widget_Rectangle_Color &rhs);
-    inline Widget_Rectangle_Color & operator=(const Widget_Rectangle_Color &rhs);
 
     inline const Color & get_color() const;
     inline void set_color(const Color &color_);
@@ -374,13 +384,13 @@ namespace Zeni {
   };
 
   class Widget_Rectangle_Texture : public Widget_Rectangle {
+    Widget_Rectangle_Texture(const Widget_Rectangle_Texture &);
+    Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &);
+
   public:
     inline Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
                                     const std::string &texture_name_);
     inline ~Widget_Rectangle_Texture();
-
-    inline Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs);
-    inline Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &rhs);
 
     inline const std::string get_texture_name() const;
     inline void set_texture_name(const std::string &texture_name_);
@@ -395,6 +405,9 @@ namespace Zeni {
   };
 
   class Widget_Button : public Widget, public Widget_Positioned {
+    Widget_Button(const Widget_Button &);
+    Widget_Button & operator=(const Widget_Button &);
+
   public:
     inline Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_);
 
@@ -433,6 +446,9 @@ namespace Zeni {
   };
 
   class Text_Button : public Widget_Button {
+    Text_Button(const Text_Button &);
+    Text_Button & operator=(const Text_Button &);
+
   public:
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
                        const Color &bg_color_,
@@ -456,6 +472,9 @@ namespace Zeni {
   };
 
   class Text_Button_3C : public Text_Button {
+    Text_Button_3C(const Text_Button_3C &);
+    Text_Button_3C & operator=(const Text_Button_3C &);
+
   public:
     enum State {NORMAL, CLICKED, HOVERED_STRAYED};
 
@@ -488,6 +507,9 @@ namespace Zeni {
   };
 
   class Check_Box : public Widget_Button {
+    Check_Box(const Check_Box &);
+    Check_Box & operator=(const Check_Box &);
+
   public:
     inline Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Color &border_color_, const Color &check_color_,
@@ -520,6 +542,9 @@ namespace Zeni {
 
   class Radio_Button;
   class Radio_Button_Set : public Widget {
+    Radio_Button_Set(const Radio_Button_Set &);
+    Radio_Button_Set & operator=(const Radio_Button_Set &);
+
     friend class Radio_Button;
 
   public:
@@ -539,6 +564,9 @@ namespace Zeni {
   };
 
   class Radio_Button : public Check_Box {
+    Radio_Button(const Radio_Button &);
+    Radio_Button & operator=(const Radio_Button &);
+
     friend class Radio_Button_Set;
 
   public:
@@ -555,6 +583,9 @@ namespace Zeni {
   };
 
   class Slider : public Widget {
+    Slider(const Slider &);
+    Slider & operator=(const Slider &);
+
   public:
     Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
            const float &slider_radius_,
@@ -600,6 +631,9 @@ namespace Zeni {
   };
 
   class Slider_Int : public Slider {
+    Slider_Int(const Slider_Int &);
+    Slider_Int & operator=(const Slider_Int &);
+
   public:
     typedef std::pair<int, int> Range;
 
@@ -623,7 +657,13 @@ namespace Zeni {
   };
 
   class Selector : public Widget {
+    Selector(const Selector &);
+    Selector & operator=(const Selector &);
+
     class Normal_Button : public Text_Button_3C {
+      Normal_Button(const Normal_Button &);
+      Normal_Button & operator=(const Normal_Button &);
+
     public:
       Normal_Button(Selector &selector,
                     const Point2f &upper_left_,
@@ -639,6 +679,9 @@ namespace Zeni {
     };
 
     class Selector_Button : public Text_Button_3C {
+      Selector_Button(const Selector_Button &);
+      Selector_Button & operator=(const Selector_Button &);
+
     public:
       Selector_Button(Selector &selector,
                       const std::string &option,
@@ -655,6 +698,9 @@ namespace Zeni {
     };
 
     class Selector_Slider : public Slider_Int {
+      Selector_Slider(const Selector_Slider &);
+      Selector_Slider & operator=(const Selector_Slider &);
+
     public:
       Selector_Slider(Selector &selector,
                       const float &slider_radius_,
@@ -735,6 +781,9 @@ namespace Zeni {
   };
 
   class Text_Box : public Widget_Button {
+    Text_Box(const Text_Box &);
+    Text_Box & operator=(const Text_Box &);
+
   public:
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
              const Color &bg_color_,
@@ -827,6 +876,9 @@ namespace Zeni {
   };
 
   class Widget_Input_Repeater : public Widget {
+    Widget_Input_Repeater(const Widget_Input_Repeater &);
+    Widget_Input_Repeater & operator=(const Widget_Input_Repeater &);
+
   public:
     /// Pass in the Widget to have input "repeated" to
     inline Widget_Input_Repeater(Widget &widget_,
@@ -869,6 +921,9 @@ namespace Zeni {
   };
 
   class Widgets : public Widget {
+    Widgets(const Widgets &);
+    Widgets & operator=(const Widgets &);
+
   public:
     inline Widgets();
 

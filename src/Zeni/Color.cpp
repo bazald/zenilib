@@ -46,7 +46,7 @@ namespace Zeni {
   {
   }
 
-  Color::Color(const unsigned long &argb)
+  Color::Color(const Uint32 &argb)
     : r(((argb >> 16) & 0xFF) / 256.0f),
       g(((argb >> 8) & 0xFF) / 256.0f),
       b((argb & 0xFF) / 256.0f),

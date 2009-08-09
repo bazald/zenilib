@@ -78,7 +78,7 @@ namespace Zeni {
   {
   }
 
-  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb)
+  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Uint32 &argb)
     : Vertex3f(position, normal),
     m_argb(argb)
   {

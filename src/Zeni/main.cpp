@@ -208,12 +208,12 @@ static void print_errors() {
 #endif
 }
 
-inline int main2(const int &argc, const char * const argv[]) {
+inline int main2(const size_t &argc, const char * const argv[]) {
   srand(static_cast<unsigned int>(time(0)));
 
-  vector<string> args(argc - 1);
-  for(int i = 1; i < argc; ++i)
-    args[i - 1] = argv[i];
+  vector<string> args(argc - 1u);
+  for(size_t i = 1u; i < argc; ++i)
+    args[i - 1u] = argv[i];
 
   try {
     // Load config
@@ -298,5 +298,5 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  return main2(argc, argv);
+  return main2(size_t(argc), argv);
 }

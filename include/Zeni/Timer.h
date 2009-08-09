@@ -107,19 +107,19 @@ namespace Zeni {
 
   class Time {
   public:
-    typedef int Tick_Type;
+    typedef size_t Tick_Type;
     typedef float Second_Type;
 
     Time(); ///< Initialize to the current time
-    Time(const int &ticks);
-    inline Time & operator=(const int &ticks);
+    Time(const Tick_Type &ticks);
+    inline Time & operator=(const Tick_Type &ticks);
 
     // Accessors
     // Time passed since last updated
-    inline int get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
+    inline Tick_Type get_ticks_passed() const; ///< Get the number of clock ticks passed since this Time
     inline float get_seconds_passed() const; ///< Get the number of seconds passed since this Time
     // From a specific time
-    inline int get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
+    inline Tick_Type get_ticks_since(const Time &time) const; ///< Get the number of clock ticks passed between 'time' and this Time
     inline float get_seconds_since(const Time &time) const; ///< Get the number of seconds passed between 'time' and this Time
 
     // Modifiers
@@ -129,7 +129,7 @@ namespace Zeni {
     inline bool operator<(const Time &rhs) const;
 
   private:
-    int m_ticks;
+    Tick_Type m_ticks;
   };
 
   class Timer {
@@ -144,8 +144,8 @@ namespace Zeni {
 
   public:
     // Accessors
-    inline int get_ticks(); ///< Get the number of ticks passed since instantiation
-    inline int get_ticks_per_second(); ///< Get the number of ticks per second
+    inline Time::Tick_Type get_ticks(); ///< Get the number of ticks passed since instantiation
+    inline Time::Tick_Type get_ticks_per_second(); ///< Get the number of ticks per second
     inline float get_seconds(); ///< Get the number of seconds passed since instantiation
     inline Time get_time(); ///< Get the current Time
 
@@ -153,7 +153,7 @@ namespace Zeni {
     inline void update();
 
     Mutex ticks_mutex;
-    int m_ticks; // Wraps at around 49 days
+    Time::Tick_Type m_ticks; // Wraps at around 49 days
   };
 
   Timer & get_Timer(); ///< Get access to the singleton.

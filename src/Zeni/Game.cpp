@@ -44,7 +44,7 @@ namespace Zeni {
   Game::Game(const std::vector<std::string> * const args)
     : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
 #ifndef NDEBUG
-    , m_console(Gamestate(new Console_State())), m_console_active(false)
+    , m_console_active(false)
 #endif
   {
     m_states.push(Gamestate(new Gamestate_One(args)));
@@ -138,6 +138,11 @@ namespace Zeni {
   void Game::deactivate_console() {
     m_console_active = false;
     get_console().clear_child();
+  }
+
+  Gamestate & Game::get_console_instance() {
+    static Gamestate console_state(Gamestate(new Console_State()));
+    return console_state;
   }
 #endif
 

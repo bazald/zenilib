@@ -81,6 +81,9 @@
 namespace Zeni {
 
   class Gamestate_One : public Gamestate_Base {
+    Gamestate_One(const Gamestate_One &);
+    Gamestate_One & operator=(const Gamestate_One &);
+
   public:
     Gamestate_One(const std::vector<std::string> * const args = 0); ///< Your first constructor
     virtual ~Gamestate_One(); ///< Your last destructor, excluding statics, globals, ...

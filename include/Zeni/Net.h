@@ -200,11 +200,11 @@ namespace Zeni {
     IPaddress peer_address() const; ///< Apparently only works if the port was explicitly specified
 
     /// Send data to an IPaddress
-    virtual void send(const IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
     virtual void send(const IPaddress &ip, const std::string &data);
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
-    virtual int receive(IPaddress &ip, const void * const &data, const int &num_bytes);
+    virtual int receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
     virtual int receive(IPaddress &ip, std::string &data); ///<
     
   private:
@@ -312,6 +312,10 @@ namespace Zeni {
 
   struct UDP_Socket_Init_Failure : public Error {
     UDP_Socket_Init_Failure() : Error("Zeni UDP Socket Failed to Initialize Correctly") {}
+  };
+
+  struct UDP_Packet_Overflow : public Error {
+    UDP_Packet_Overflow() : Error("Zeni UDP Packet Too Large") {}
   };
 
   struct Socket_Closed : public Error {

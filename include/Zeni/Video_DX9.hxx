@@ -60,7 +60,7 @@ namespace Zeni {
   }
 
   int Video_DX9::get_maximum_anisotropy_impl() const {
-    return m_d3d_capabilities.MaxAnisotropy;
+    return int(m_d3d_capabilities.MaxAnisotropy);
   }
 
   bool Video_DX9::has_vertex_buffers_impl() const {
@@ -97,7 +97,7 @@ namespace Zeni {
   }
 
   void Video_DX9::set_zwrite_impl(const bool &enabled) {
-    m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, enabled);
+    m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, DWORD(enabled));
   }
 
   void Video_DX9::set_ztest_impl(const bool &enabled) {
@@ -134,8 +134,8 @@ namespace Zeni {
     else if(ref > 0xFF)
       ref = 0xFF;
 
-    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, enabled);
-    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, ref);
+    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, DWORD(enabled));
+    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, DWORD(ref));
     m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, func);
   }
 
@@ -171,8 +171,8 @@ namespace Zeni {
   }
 
   void Video_DX9::set_lighting_impl(const bool &on) {
-    m_d3d_device->SetRenderState(D3DRS_LIGHTING, on);
-    m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, on);
+    m_d3d_device->SetRenderState(D3DRS_LIGHTING, DWORD(on));
+    m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, DWORD(on));
   }
 
   void Video_DX9::set_ambient_lighting_impl(const Color &color) {
@@ -184,14 +184,14 @@ namespace Zeni {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
-    light.set(number, *this);
+    light.set(DWORD(number), *this);
   }
 
   void Video_DX9::unset_light_impl(const int &number) {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
-    m_d3d_device->LightEnable(number, FALSE);
+    m_d3d_device->LightEnable(DWORD(number), FALSE);
   }
 
   void Video_DX9::set_material_impl(const Material &material) {
@@ -318,7 +318,7 @@ namespace Zeni {
   }
 
   void Video_DX9::set_viewport_impl(const std::pair<Point2i, Point2i> &viewport) {
-    D3DVIEWPORT9 vp = {viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y, 0, 1};
+    D3DVIEWPORT9 vp = {DWORD(viewport.first.x), DWORD(viewport.first.y), DWORD(viewport.second.x - viewport.first.x), DWORD(viewport.second.y - viewport.first.y), 0u, 1u};
     m_d3d_device->SetViewport(&vp);
   }
 

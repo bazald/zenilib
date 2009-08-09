@@ -181,7 +181,7 @@ namespace Zeni {
 
   string ftoa(const float &number, const unsigned int &precision) {
     ostringstream oss;
-    oss << std::setprecision(precision) << number;
+    oss << std::setprecision(std::streamsize(precision)) << number;
     return oss.str();
   }
 
@@ -198,7 +198,7 @@ namespace Zeni {
 
   string dtoa(const double &number, const unsigned int &precision) {
     ostringstream oss;
-    oss << std::setprecision(precision) << number;
+    oss << std::setprecision(std::streamsize(precision)) << number;
     return oss.str();
   }
 
@@ -223,10 +223,10 @@ namespace Zeni {
            uitoa(host & 0xFF) + ':' + uitoa(port);
   }
 
-  int grab_bytes(std::istream &is, char * const &store, const int &num_bytes) {
+  size_t grab_bytes(std::istream &is, char * const &store, const size_t &num_bytes) {
     char c;
-    int i = 0;
-    for(char * store_ptr = store; i < num_bytes; ++i, ++store_ptr)
+    size_t i = 0u;
+    for(char * store_ptr = store; i != num_bytes; ++i, ++store_ptr)
       if(is.get(c))
         *store_ptr = c;
       else
@@ -234,9 +234,9 @@ namespace Zeni {
     return i;
   }
 
-  int grab_bytes(std::istream &is, std::string &store, const int &num_bytes) {
+  size_t grab_bytes(std::istream &is, std::string &store, const size_t &num_bytes) {
     store.resize(num_bytes);
-    const int rv = grab_bytes(is, const_cast<char * const>(store.c_str()), num_bytes);
+    const size_t rv = grab_bytes(is, const_cast<char * const>(store.c_str()), num_bytes);
     store.resize(rv);
     return rv;
   }
@@ -262,8 +262,8 @@ namespace Zeni {
     
     Sint32 index = m_size - 1;
     for(; index > -1; --index) {
-      const char &c = m_uid[index];
-      const char &rhs_c = rhs.m_uid[index];
+      const char &c = m_uid[size_t(index)];
+      const char &rhs_c = rhs.m_uid[size_t(index)];
       
       if(c > rhs_c)
         return 1;
@@ -322,7 +322,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Sint32 &value) {
     char buf[sizeof(Sint32)];
     
-    SDLNet_Write32(value, reinterpret_cast<void *>(buf));
+    SDLNet_Write32(reinterpret_cast<const Uint32 &>(value), reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Sint32));
   }
@@ -330,7 +330,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Uint32 &value) {
     char buf[sizeof(Uint32)];
     
-    SDLNet_Write32(reinterpret_cast<const Sint32 &>(value), reinterpret_cast<void *>(buf));
+    SDLNet_Write32(value, reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Uint32));
   }
@@ -338,7 +338,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Sint16 &value) {
     char buf[sizeof(Sint16)];
     
-    SDLNet_Write16(value, reinterpret_cast<void *>(buf));
+    SDLNet_Write16(reinterpret_cast<const Uint16 &>(value), reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Sint16));
   }
@@ -346,7 +346,7 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Uint16 &value) {
     char buf[sizeof(Uint16)];
     
-    SDLNet_Write16(reinterpret_cast<const Sint16 &>(value), reinterpret_cast<void *>(buf));
+    SDLNet_Write16(value, reinterpret_cast<void *>(buf));
     
     return os.write(buf, sizeof(Uint16));
   }
@@ -409,8 +409,10 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, Sint32 &value) {
     char buf[sizeof(Sint32)];
     
-    if(is.read(buf, sizeof(Sint32)))
-      value = SDLNet_Read32(reinterpret_cast<void *>(buf));
+    if(is.read(buf, sizeof(Sint32))) {
+      const Uint32 s_value = SDLNet_Read32(reinterpret_cast<void *>(buf));
+      value = reinterpret_cast<const Sint32 &>(s_value);
+    }
     
     return is;
   }
@@ -418,10 +420,8 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, Uint32 &value) {
     char buf[sizeof(Uint32)];
     
-    if(is.read(buf, sizeof(Uint32))) {
-      const Sint32 s_value = SDLNet_Read32(reinterpret_cast<void *>(buf));
-      value = reinterpret_cast<const Uint32 &>(s_value);
-    }
+    if(is.read(buf, sizeof(Uint32)))
+      value = SDLNet_Read32(reinterpret_cast<void *>(buf));
     
     return is;
   }
@@ -429,8 +429,10 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, Sint16 &value) {
     char buf[sizeof(Sint16)];
     
-    if(is.read(buf, sizeof(Sint16)))
-      value = SDLNet_Read16(reinterpret_cast<void *>(buf));
+    if(is.read(buf, sizeof(Sint16))) {
+      const Uint16 s_value = SDLNet_Read16(reinterpret_cast<void *>(buf));
+      value = reinterpret_cast<const Sint16 &>(s_value);
+    }
     
     return is;
   }
@@ -438,10 +440,8 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, Uint16 &value) {
     char buf[sizeof(Uint16)];
     
-    if(is.read(buf, sizeof(Uint16))) {
-      const Sint16 s_value = SDLNet_Read16(reinterpret_cast<void *>(buf));
-      value = reinterpret_cast<const Uint16 &>(s_value);
-    }
+    if(is.read(buf, sizeof(Uint16)))
+      value = SDLNet_Read16(reinterpret_cast<void *>(buf));
     
     return is;
   }

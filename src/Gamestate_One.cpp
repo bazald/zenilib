@@ -12,6 +12,15 @@ using namespace Zeni;
 static vector<string> g_args;
 
 class Play_State : public Gamestate_Base {
+  Play_State(const Play_State &);
+  Play_State operator=(const Play_State &);
+
+public:
+  Play_State()
+  {
+  }
+
+private:
   void on_push () {
     SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(false);
@@ -24,6 +33,9 @@ class Play_State : public Gamestate_Base {
 };
 
 class Instructions_State : public Widget_Gamestate {
+  Instructions_State(const Instructions_State &);
+  Instructions_State operator=(const Instructions_State &);
+
 public:
   Instructions_State()
     : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(800.0f, 600.0f)))

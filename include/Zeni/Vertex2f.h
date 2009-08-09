@@ -75,7 +75,7 @@ namespace Zeni {
     virtual Point3f get_position() const;
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && defined(X64)
     inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #else
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers

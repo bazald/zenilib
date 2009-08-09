@@ -67,7 +67,7 @@ namespace Zeni {
   {
   }
 
-  Font_FT::Glyph::Glyph(TTF_Font *font_, const char &c,
+  Font_FT::Glyph::Glyph(TTF_Font *font_, const unsigned char &c,
                         SDL_Surface *source,
                         SDL_Surface *render_target, const SDL_Rect &dstrect,
                         const int &total_width, const int &total_height,
@@ -246,7 +246,7 @@ namespace Zeni {
     vr.apply_texture(*m_texture);
 
     float cx, x_diff, cy = y;
-    int i = 0;
+    size_t i = 0u;
 
 NEXT_LINE:
 
@@ -254,7 +254,7 @@ NEXT_LINE:
     x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
-      for(unsigned int j = i; j < text.size(); ++j) {
+      for(size_t j = i; j < text.size(); ++j) {
         if(text[j] == '\r' || text[j] == '\n' ||
           !m_glyph[int(text[j])])
           break;
@@ -263,13 +263,13 @@ NEXT_LINE:
       }
 
       if(justify == ZENI_CENTER)
-        cx += x_diff / 2;
+        cx += x_diff / 2u;
       else if(justify == ZENI_RIGHT)
         cx += x_diff;
     }
 
-    for(; i < int(text.size()); ++i) {
-      if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
+    for(; i < text.size(); ++i) {
+      if(text[i] == '\r' && i+1 < text.size() && text[i+1] == '\n')
         ++i;
 
       if(text[i] == '\r' || text[i] == '\n') {
@@ -298,7 +298,7 @@ NEXT_LINE:
 
     Point3f pos, vertical_pos = position;
     float x_diff;
-    int i = 0;
+    size_t i = 0u;
 
 NEXT_LINE_2:
 
@@ -306,7 +306,7 @@ NEXT_LINE_2:
     x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
-      for(unsigned int j = i; j < text.size(); ++j) {
+      for(size_t j = i; j < text.size(); ++j) {
         if(text[j] == '\r' || text[j] == '\n' ||
           !m_glyph[int(text[j])])
           break;
@@ -320,8 +320,8 @@ NEXT_LINE_2:
         pos += x_diff * right;
     }
 
-    for(; i < int(text.size()); ++i) {
-      if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
+    for(; i < text.size(); ++i) {
+      if(text[i] == '\r' && i+1 < text.size() && text[i+1] == '\n')
         ++i;
 
       if(text[i] == '\r' || text[i] == '\n') {

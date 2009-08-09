@@ -196,6 +196,9 @@ namespace Zeni {
   };
 
   class Gamestate_II : public Gamestate_Base {
+    Gamestate_II(const Gamestate_II &rhs);
+    Gamestate_II & operator=(const Gamestate_II &rhs);
+
   public:
     Gamestate_II();
 

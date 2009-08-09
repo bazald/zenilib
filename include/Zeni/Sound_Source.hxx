@@ -54,7 +54,7 @@ namespace Zeni {
     ) {
 #ifndef DISABLE_AL
     m_buffer = &buffer;
-    alSourcei(m_source, AL_BUFFER, buffer.get_id());
+    alSourcei(m_source, AL_BUFFER, ALint(buffer.get_id()));
 #endif
   }
 
