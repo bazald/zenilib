@@ -1,4 +1,4 @@
-Copyleft (C) 2006 Mitchell Keith Bloch a.k.a. bazald
+Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
 
 Runtime GPL:
 
