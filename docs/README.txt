@@ -44,7 +44,7 @@ generally improved as well.
 
 The Zenipex Library is an open source  project.  For 
 details please refer to the first comment in any given file 
-and refer to the ./COPYING and ./GPL files.
+and refer to COPYING.txt and GPL.txt.
 
 The Runtime GPL allows the use of macros, templates, and
 static linkage without the requirement that your code be
@@ -87,12 +87,12 @@ This software is known to operate on:
 
 It should be possible to build it on any platform supported by:
 
-DirectX    9.0c 2008         (Proprietary)           http://msdn.microsoft.com/directx/sdk/
+DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/directx/sdk/
 OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
 OpenGL                       (Proprietary)
 
 ALUT       1.1.0             (GNU LGPL)              http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
-Cg Toolkit 2.1 November 2008 (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
+Cg Toolkit 2.2 April 2009    (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
 FreeType2  2.3.7             (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
 GLEW       1.5.1             (BSD License)           http://glew.sourceforge.net/
 lib3ds     2.0 RC 1          (GNU LGPL)              http://lib3ds.sourceforge.net/
