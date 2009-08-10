@@ -26,55 +26,63 @@
 using namespace std;
 
 bool g_x64 = false;
+bool g_win2k_winxpb4sp2 = false;
 
 /** String Manipulation Functions **/
 
-string cut_all_directories(const string &file_name) {
+static string cut_all_directories(const string &file_name) {
   const int cut = file_name.rfind('\\') + 1;
   if(cut > 0)
     return file_name.substr(cut, file_name.size() - cut);
   return file_name;
 }
 
-string cut_root_directory(const string &file_name) {
+static string cut_root_directory(const string &file_name) {
   const int cut = file_name.find('\\') + 1;
   if(cut > 0)
     return file_name.substr(cut, file_name.size() - cut);
   return file_name;
 }
 
-string get_directory(const string &file_name) {
+static string get_directory(const string &file_name) {
   const int cut = file_name.rfind('\\');
   if(cut > -1)
     return file_name.substr(0, cut);
   return "";
 }
 
-string get_extension(const string &file_name) {
+static string get_extension(const string &file_name) {
   const int cut = file_name.rfind('.') + 1;
   if(cut > 0)
     return file_name.substr(cut, file_name.size() - cut);
   return "";
 }
 
-string to_lower(string str) {
+static string to_lower(string str) {
   for(string::iterator it = str.begin(); it != str.end(); ++it)
-    *it = tolower(*it);
+    *it = char(tolower(*it));
   return str;
 }
 
-string to_upper(string str) {
+static string to_upper(string str) {
   for(string::iterator it = str.begin(); it != str.end(); ++it)
-    *it = toupper(*it);
+    *it = char(toupper(*it));
   return str;
+}
+
+static bool ignore_path(const std::string &str) {
+  const string sl = to_lower(str);
+  return !g_x64 && sl.find("x64") != -1 ||
+         !g_win2k_winxpb4sp2 && (sl.find("dxdllreg_x86.cab") != -1 ||
+                                 sl.find("dxnt.cab") != -1);
 }
 
 /** Stream Dumper **/
 
-void dump(ostream &os, istream &is) {
+static void dump(ostream &os, istream &is) {
   string s;
   while(getline(is, s))
-    if(g_x64 || s.find("x64") == -1 && s.find("X64") == -1)
+    if(!ignore_path(s))
       os << s << endl;
 }
 
@@ -84,9 +92,9 @@ class NSIS_Helper {
 public:
   virtual ~NSIS_Helper() {}
 
-  virtual void on_enter_dir(ostream &os, const string &directory_name) {}
-  virtual void on_file(ostream &os, const string &file_name) {}
-  virtual void on_exit_dir(ostream &os, const string &directory_name) {}
+  virtual void on_enter_dir(ostream &/*os*/, const string &/*directory_name*/) {}
+  virtual void on_file(ostream &/*os*/, const string &/*file_name*/) {}
+  virtual void on_exit_dir(ostream &/*os*/, const string &/*directory_name*/) {}
 };
 
 class Install_Files : public NSIS_Helper {
@@ -109,31 +117,12 @@ class Install_Files : public NSIS_Helper {
     os << "    File \""
        << file_name
        << "\"\n";
-
-    if(to_upper(get_extension(file_name)) == "TTF")
-      fonts.push_back(file_name);
   }
 
 public:
   Install_Files() : dir_set(false) {}
 
-  void install_fonts(ostream &os) const {
-    for(vector<string>::const_iterator it = fonts.begin(); it != fonts.end(); ++it) {
-      string cmd = "copy /Y ";
-      const string dest = to_upper(cut_all_directories(*it));
-      cmd += *it + " " + dest;
-
-      system(cmd.c_str());
-
-      os << "  !insertmacro InstallTTFFont '"
-         << dest
-         << "'\n";
-    }
-  }
-
 private:
-  vector<string> fonts;
-
   bool dir_set;
   string last_dir;
 };
@@ -159,7 +148,10 @@ class Uninstall_Files : public NSIS_Helper {
 
 /** WinAPI Functions **/
 
-void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &helper) {
+static void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &helper) {
+  if(ignore_path(directory_name))
+    return;
+
   helper.on_enter_dir(os, directory_name);
 
   WIN32_FIND_DATAA FindFileData;
@@ -176,7 +168,7 @@ void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &h
 
     if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
       recurse_directory(os, directory_name + FindFileData.cFileName + "\\", helper);
-    else
+    else if(!ignore_path(directory_name + FindFileData.cFileName))
       helper.on_file(os, directory_name + FindFileData.cFileName);
   } while(FindNextFileA(hFind, &FindFileData));
 
@@ -190,22 +182,27 @@ void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &h
 
 /** Main **/
 
-int main(int argc, char * argv[]) {
+static bool yes_or_no(const bool &default_value) {
+  std::string s;
   char c;
-  cout << "Include Support for x64 [Y/N]? ";
-  for(;;) {
-    if(!cin.get(c))
-      abort();
 
-    if(c == 'y' || c == 'Y')
-      g_x64 = true;
-    else if(c == 'n' || c == 'N')
-      g_x64 = false;
-    else
-      continue;
+  while(cin.get(c) && c != '\n')
+    s += char(tolower(c));
 
-    break;
-  }
+  if(s == "y" || s == "yes")
+    return true;
+  if(s == "n" || s == "no")
+    return false;
+
+  return default_value;
+}
+
+int main(int /*argc*/, char ** /*argv*/) {
+  cout << "Include 64-bit binaries [y/N]? ";
+  g_x64 = yes_or_no(false);
+
+  cout << "Install additional files for Windows 2000, XP, and XP SP1 [y/N]? ";
+  g_win2k_winxpb4sp2 = yes_or_no(false);
 
   ofstream nsi("Zenilib.nsi");
   ifstream nsi_0("Zeni NSIgen\\NSI_0_Preuser.txt");
