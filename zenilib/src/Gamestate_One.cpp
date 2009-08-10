@@ -21,13 +21,13 @@ public:
   }
 
 private:
-  void on_push () {
-    SDL_WM_GrabInput(SDL_GRAB_ON);
+  void on_push() {
+    //SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(false);
   }
 
   void on_pop() {
-    SDL_WM_GrabInput(SDL_GRAB_OFF);
+    //SDL_WM_GrabInput(SDL_GRAB_OFF);
     SDL_ShowCursor(true);
   }
 };
