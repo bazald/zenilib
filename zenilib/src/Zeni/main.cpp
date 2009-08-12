@@ -58,7 +58,9 @@ static void load_config() {
     get_Core(); // Primarily to set up IO redirection
 
     if(config_xml.try_load(get_Core().get_appdata_path() + "config/zenilib.xml"))
-      cerr << "User-specific config file loaded." << endl;
+      cerr << "User-specific config file loaded from '"
+           << get_Core().get_appdata_path() + "config/zenilib.xml"
+           << "'." << endl;
     else
       cerr << "User-specific config file not found." << endl;
   }
