@@ -42,7 +42,9 @@
 #include <vector>
 
 #ifndef DISABLE_AL
+#define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/vorbisfile.h>
+#undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
 #include <Zeni/Global.h>
