@@ -102,6 +102,10 @@
 // Net_Primitives.cpp
 #undef ZENI_SPRINTF_BUFFER_SIZE
 
+// Texture.cpp
+#undef ZENI_MAX_TEXTURE_WIDTH
+#undef ZENI_MAX_TEXTURE_HEIGHT
+
 // Thread.cpp
 #undef NO_ERROR_STATUS
 #undef ZENI_ERROR_STATUS
