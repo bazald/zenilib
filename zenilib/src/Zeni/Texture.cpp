@@ -36,6 +36,8 @@
 #endif
 #endif
 
+#include <iostream>
+
 #include <Zeni/Global.h>
 
 namespace Zeni {
@@ -209,6 +211,8 @@ namespace Zeni {
   Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, const bool &lazy_loading)
     : Texture(Texture_Base::VTYPE_GL, repeat),
     m_texture_id(0),
+    m_render_buffer(0),
+    m_frame_buffer_object(0),
     m_filename(filename)
   {
     if(!lazy_loading)
@@ -218,7 +222,9 @@ namespace Zeni {
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_GL, repeat),
     m_size(surface->w, surface->h),
-    m_texture_id(build_from_surface(surface, repeat))
+    m_texture_id(build_from_surface(surface, repeat)),
+    m_render_buffer(0),
+    m_frame_buffer_object(0)
   {
   }
 
@@ -261,6 +267,14 @@ namespace Zeni {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 
+    if(glGetError() == GL_INVALID_ENUM) {
+      static bool printed = false;
+      if(!printed) {
+        std::cerr << "Quality Warning:  Your graphics card does not support GL_CLAMP_TO_EDGE in OpenGL.\n";
+        printed = true;
+      }
+    }
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -272,7 +286,8 @@ namespace Zeni {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > get_Video().get_maximum_anisotropy())
         Textures::set_texturing_mode(get_Video().get_maximum_anisotropy(), Textures::get_bilinear_filtering(), Textures::get_mipmapping());
 
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
+	  if(Textures::get_anisotropic_filtering())
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
     }
 
     /*
@@ -286,7 +301,10 @@ namespace Zeni {
     if(Textures::get_mipmapping())
       glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
+    if(glGetError() == GL_INVALID_ENUM)
+      gluBuild2DMipmaps(GL_TEXTURE_2D, mode1, surface->w, surface->h, mode2, GL_UNSIGNED_BYTE, surface->pixels);
+    else
+      glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
 
     SDL_FreeSurface(surface);
     

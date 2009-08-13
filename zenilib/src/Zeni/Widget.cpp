@@ -383,7 +383,7 @@ namespace Zeni {
   : Slider(end_point_a_, end_point_b_, slider_radius_, line_color_, slider_color_, slider_position_),
   m_range(range)
   {
-    assert(range.first < range.second);
+    assert(range.first <= range.second);
     set_value(get_value());
   }
 
