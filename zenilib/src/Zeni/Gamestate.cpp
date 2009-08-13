@@ -768,17 +768,24 @@ default: return "SDLK_UNKNOWN";
   }
 
   void Gamestate_Base::render() {
-    static float height = 0.9f * std::min(get_Video().get_screen_width() / 3.0f, float(get_Video().get_screen_height()));
-    static Logo logo(Point2f(0.5f * (get_Video().get_screen_width() - height),
-                             0.5f * (get_Video().get_screen_height() - height)),
-                     height,
-                     Color(1.0f, 0.875, 0.875, 0.875),
-                     Color(1.0f, 0.125, 0.125, 0.175));
+    static Logo * logo = 0;
+    static Point2i prev_resolution;
+    Point2i resolution(get_Video().get_screen_width(), get_Video().get_screen_height());
 
+    if(prev_resolution.x != resolution.x || prev_resolution.y != resolution.y) {
+      float height = 0.9f * std::min(resolution.x / 3.0f, float(resolution.y));
+      logo = new Logo(Point2f(0.5f * (resolution.x - height),
+                              0.5f * (resolution.y - height)),
+                      height,
+                      Color(1.0f, 0.875, 0.875, 0.875),
+                      Color(1.0f, 0.125, 0.125, 0.175));
+
+      prev_resolution = resolution;
+    }
 
     get_Video().set_2d();
 
-    logo.render();
+    logo->render();
   }
 
   void Gamestate_Base::on_push() {

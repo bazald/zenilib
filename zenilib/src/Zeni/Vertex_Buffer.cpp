@@ -58,6 +58,7 @@ namespace Zeni {
   Vertex_Buffer::Vertex_Buffer()
     : m_align_normals(false)
   {
+    g_vbos.insert(this);
   }
 
   template <typename VERTEX>
@@ -70,6 +71,8 @@ namespace Zeni {
   Vertex_Buffer::~Vertex_Buffer() {
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
+
+    g_vbos.erase(this);
   }
 
   void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Color> * const &triangle) {
@@ -378,6 +381,17 @@ namespace Zeni {
     DESCRIBER<Vertex3f_Texture>()(m_triangles_t, m_descriptors_t, 0u);
   }
 
+  void Vertex_Buffer::lose_all() {
+    for(std::set<Vertex_Buffer *>::iterator it = g_vbos.begin();
+        it != g_vbos.end();
+        ++it)
+    {
+      (*it)->lose();
+    }
+  }
+
+  std::set<Vertex_Buffer *> Vertex_Buffer::g_vbos;
+
 #ifndef DISABLE_GL
 
   Vertex_Buffer_GL::Vertex_Buffer_GL() {
@@ -385,15 +399,7 @@ namespace Zeni {
   }
 
   Vertex_Buffer_GL::~Vertex_Buffer_GL() {
-    if(m_pglDeleteBuffersARB) {
-      for(int i = 0; i < 6; ++i)
-        if(m_vbuf[i].vbo)
-          m_pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
-    }
-    else {
-      for(int i = 0; i < 6; ++i)
-        delete [] m_vbuf[i].alt;
-    }
+    lose();
   }
 
   void Vertex_Buffer_GL::prerender() {
@@ -509,8 +515,8 @@ namespace Zeni {
       }
     }
 
-    clear_triangles(m_triangles_cm);
-    clear_triangles(m_triangles_t);
+    //clear_triangles(m_triangles_cm);
+    //clear_triangles(m_triangles_t);
   }
 
   static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
@@ -578,6 +584,22 @@ namespace Zeni {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
   }
+
+  void Vertex_Buffer_GL::lose() {
+    if(m_pglDeleteBuffersARB) {
+      for(int i = 0; i < 6; ++i)
+        if(m_vbuf[i].vbo) {
+          m_pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
+          m_vbuf[i].vbo = 0;
+        }
+    }
+    else {
+      for(int i = 0; i < 6; ++i) {
+        delete [] m_vbuf[i].alt;
+        m_vbuf[i].alt = 0;
+      }
+    }
+  }
   
   PFNGLDELETEBUFFERSARBPROC Vertex_Buffer_GL::m_pglDeleteBuffersARB = 0;
 
@@ -590,19 +612,7 @@ namespace Zeni {
   }
 
   Vertex_Buffer_DX9::~Vertex_Buffer_DX9() {
-    if(m_buf_c.is_vbo) {
-      if(m_buf_c.data.vbo)
-        m_buf_c.data.vbo->Release();
-    }
-    else
-      delete [] m_buf_c.data.alt;
-
-    if(m_buf_t.is_vbo) {
-      if(m_buf_t.data.vbo)
-        m_buf_t.data.vbo->Release();
-    }
-    else
-      delete [] m_buf_t.data.alt;
+    lose();
   }
 
   void Vertex_Buffer_DX9::prerender() {
@@ -702,8 +712,8 @@ namespace Zeni {
         m_buf_t.data.vbo->Unlock();
     }
 
-    clear_triangles(m_triangles_cm);
-    clear_triangles(m_triangles_t);
+    //clear_triangles(m_triangles_cm);
+    //clear_triangles(m_triangles_t);
   }
 
   static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
@@ -748,6 +758,30 @@ namespace Zeni {
       if(m_buf_t.is_vbo)
         vdx.get_d3d_device()->SetStreamSource(0, m_buf_t.data.vbo, 0, UINT(vertex_t_size()));
       Zeni::render(m_descriptors_t, m_buf_t, UINT(vertex_t_size()), vdx);
+    }
+  }
+
+  void Vertex_Buffer_DX9::lose() {
+    if(m_buf_c.is_vbo) {
+      if(m_buf_c.data.vbo) {
+        m_buf_c.data.vbo->Release();
+        m_buf_c.data.vbo = 0;
+      }
+    }
+    else {
+      delete [] m_buf_c.data.alt;
+      m_buf_c.data.alt = 0;
+    }
+
+    if(m_buf_t.is_vbo) {
+      if(m_buf_t.data.vbo) {
+        m_buf_t.data.vbo->Release();
+        m_buf_t.data.vbo = 0;
+      }
+    }
+    else {
+      delete [] m_buf_t.data.alt;
+      m_buf_t.data.alt = 0;
     }
   }
 

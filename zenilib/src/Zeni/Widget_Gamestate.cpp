@@ -36,31 +36,8 @@ using namespace std;
 namespace Zeni {
 
   Widget_Gamestate::Widget_Gamestate(const std::pair<Zeni::Point2f, Zeni::Point2f> &virtual_window_)
-    : m_crop_window(Point2i(0, 0), Point2i(get_Video().get_screen_width(), get_Video().get_screen_height())),
-    m_virtual_window(virtual_window_),
-    m_projector(m_virtual_window)
+    : m_virtual_window(virtual_window_)
   {
-    /** Build virtual window**/
-
-    const float desired_ratio = m_virtual_window.second.x / m_virtual_window.second.y;
-    const float given_ratio = float(m_crop_window.second.x) / m_crop_window.second.y;
-
-    if(given_ratio > desired_ratio) {
-      const int new_width = int(m_crop_window.second.x * desired_ratio / given_ratio);
-      const int cut_side = (m_crop_window.second.x - new_width) / 2;
-
-      m_crop_window.first.x += cut_side;
-      m_crop_window.second.x -= cut_side;
-    }
-    else if(desired_ratio > given_ratio) {
-      const int new_height = int(m_crop_window.second.y * given_ratio / desired_ratio);
-      const int cut_side = (m_crop_window.second.y - new_height) / 2;
-
-      m_crop_window.first.y += cut_side;
-      m_crop_window.second.y -= cut_side;
-    }
-
-    m_projector = Projector2D(m_virtual_window, m_crop_window);
   }
 
   const std::pair<Point2i, Point2i> & Widget_Gamestate::get_crop_window() const {
@@ -86,9 +63,46 @@ namespace Zeni {
   }
 
   void Widget_Gamestate::render() {
+    resize();
+
     get_Video().set_2d_view(m_virtual_window, m_crop_window);
 
     m_widgets.render();
+  }
+
+  void Widget_Gamestate::resize() {
+    const Point2i resolution(get_Video().get_screen_width(), get_Video().get_screen_height());
+
+    if(resolution.x == m_prev_resolution.x && resolution.y == m_prev_resolution.y)
+      return;
+    else
+      m_prev_resolution = resolution;
+
+    m_crop_window = make_pair(Point2i(), resolution);
+
+    /** Build virtual window**/
+
+    const float desired_ratio = m_virtual_window.second.x / m_virtual_window.second.y;
+    const float given_ratio = float(m_crop_window.second.x) / m_crop_window.second.y;
+
+    if(given_ratio > desired_ratio) {
+      const int new_width = int(m_crop_window.second.x * desired_ratio / given_ratio);
+      const int cut_side = (m_crop_window.second.x - new_width) / 2;
+
+      m_crop_window.first.x += cut_side;
+      m_crop_window.second.x -= cut_side;
+    }
+    else if(desired_ratio > given_ratio) {
+      const int new_height = int(m_crop_window.second.y * given_ratio / desired_ratio);
+      const int cut_side = (m_crop_window.second.y - new_height) / 2;
+
+      m_crop_window.first.y += cut_side;
+      m_crop_window.second.y -= cut_side;
+    }
+
+    /** Build projector **/
+
+    m_projector = Projector2D(m_virtual_window, m_crop_window);
   }
 
 }

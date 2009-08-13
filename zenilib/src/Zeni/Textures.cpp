@@ -99,7 +99,8 @@ namespace Zeni {
       m_bilinear_filtering = bilinear_filtering_;
       m_mipmapping = mipmapping_;
 
-      tr.reload();
+      if(!tr.lost_resources())
+        tr.reload();
     }
     else {
       m_anisotropic_filtering = af;

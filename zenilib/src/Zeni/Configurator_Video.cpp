@@ -177,6 +177,22 @@ namespace Zeni {
     m_file->try_save("config/zenilib.xml");
 
     get_Game().pop_state();
+
+    XML_Element_c zenilib = (*m_file)["Zenilib"];
+    XML_Element_c textures = zenilib["Textures"];
+    XML_Element_c video = zenilib["Video"];
+
+    Video::preinit_screen_resolution(Point2i(video["Resolution"]["Width"].to_int(),
+                                             video["Resolution"]["Height"].to_int()));
+    Video::preinit_full_screen(video["Full_Screen"].to_bool());
+    Video::preinit_multisampling(video["Multisampling"].to_int());
+    Video::preinit_vertical_sync(video["Vertical_Sync"].to_bool());
+
+    get_Video().reinit();
+
+    Textures::set_texturing_mode(textures["Anisotropy"].to_int(),
+                                 textures["Bilinear_Filtering"].to_bool(),
+                                 textures["Mipmapping"].to_bool());
   }
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
@@ -247,6 +263,8 @@ namespace Zeni {
   }
 
   void Configurator_Video::render() {
+    resize();
+
     get_Video().set_2d_view(get_virtual_window(), get_crop_window());
 
     Font &font = get_Fonts()["system_36_600"];

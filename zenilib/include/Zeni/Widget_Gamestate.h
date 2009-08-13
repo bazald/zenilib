@@ -62,12 +62,16 @@ namespace Zeni {
     void render();
 
   protected:
+    void resize();
+
     Widgets m_widgets;
 
   private:
     std::pair<Point2i, Point2i> m_crop_window;
     std::pair<Point2f, Point2f> m_virtual_window;
     Zeni::Projector2D m_projector;
+
+    Point2i m_prev_resolution;
   };
 
 }

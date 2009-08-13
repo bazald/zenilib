@@ -86,7 +86,8 @@ namespace Zeni {
 
   template <class TYPE>
   Database<TYPE>::Database(const std::string &filename, const std::string &xml_identifier)
-    : m_xml_identifier(xml_identifier)
+    : m_xml_identifier(xml_identifier),
+    m_lost(true)
   {
     m_filenames.push_front(filename);
   }
@@ -298,6 +299,8 @@ namespace Zeni {
     {
       load_file(*it);
     }
+
+    m_lost = false;
   }
 
   template <class TYPE>
@@ -352,6 +355,11 @@ namespace Zeni {
   }
 
   template <class TYPE>
+  const bool & Database<TYPE>::lost_resources() {
+    return m_lost;
+  }
+
+  template <class TYPE>
   void Database<TYPE>::lose_resources() {
     on_lose();
 
@@ -376,6 +384,14 @@ namespace Zeni {
       else
         m_entries.erase(it->second->id);
     }
+
+    m_lost = true;
+  }
+
+  template <class TYPE>
+  void Database<TYPE>::unlose_resources() {
+    if(m_lost)
+      reload();
   }
 
 }

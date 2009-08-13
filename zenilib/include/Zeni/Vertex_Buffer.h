@@ -133,6 +133,9 @@ namespace Zeni {
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
     virtual void render() = 0; ///< Render the Vertex_Buffer
+    virtual void lose() = 0; ///< Lose the Vertex_Buffer
+
+    static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
 
   protected:
     virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
@@ -156,6 +159,9 @@ namespace Zeni {
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
 
     bool m_align_normals;
+
+  private:
+    static std::set<Vertex_Buffer *> g_vbos;
   };
 
 #ifndef DISABLE_GL
@@ -169,6 +175,7 @@ namespace Zeni {
     virtual ~Vertex_Buffer_GL();
 
     virtual void render();
+    virtual void lose();
 
   private:
     virtual void prerender();
@@ -198,6 +205,7 @@ namespace Zeni {
     virtual ~Vertex_Buffer_DX9();
 
     virtual void render();
+    virtual void lose();
 
   private:
     virtual void prerender();

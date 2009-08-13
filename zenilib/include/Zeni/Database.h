@@ -114,7 +114,9 @@ namespace Zeni {
     void unload_file(const std::string &filename); ///< Unload all resources from a given file, reloading lower priority resources
     void reload(); ///< lose_resources + init
 
+    const bool & lost_resources(); ///< Check to see if resources have been lost
     void lose_resources(); ///< Wipe losable resources and prepare to reload them when they are next needed
+    void unlose_resources(); ///< If resources have been lost, then reload them
 
   protected:
     void init();
@@ -133,6 +135,7 @@ namespace Zeni {
     Filenames m_filenames;
     Lookups m_lookups;
     Entries m_entries;
+    bool m_lost;
   };
 
   struct Database_File_Not_Loaded : public Error {
