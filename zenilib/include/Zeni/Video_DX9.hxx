@@ -358,10 +358,6 @@ namespace Zeni {
 
   void Video_DX9::uninit_impl() {
     destroy_device();
-
-    if(m_d3d)
-      m_d3d->Release();
-    m_d3d = 0;
   }
 
   const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {

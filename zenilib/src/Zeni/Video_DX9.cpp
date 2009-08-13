@@ -58,11 +58,18 @@ namespace Zeni {
     m_render_target(0),
     m_back_buffer(0)
   {
+    m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
+    if(!m_d3d)
+      throw Video_Init_Failure();
+
     init();
   }
 
   Video_DX9::~Video_DX9() {
     uninit();
+
+    if(m_d3d)
+      m_d3d->Release();
   }
 
   void Video_DX9::render_all() {
@@ -122,12 +129,6 @@ namespace Zeni {
 
     cout << "Initializing DirectX 9" << endl;
 
-    m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
-    if(!m_d3d) {
-      uninit();
-      throw Video_Init_Failure();
-    }
-
     m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
 
     m_dpi = GetDeviceCaps(GetDC(wmInfo.window), LOGPIXELSY);
@@ -136,7 +137,7 @@ namespace Zeni {
 
     m_d3d_parameters.hDeviceWindow = wmInfo.window;
     
-    m_d3d_parameters.Windowed = !is_fullscreen();
+    m_d3d_parameters.Windowed = true;
     m_d3d_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
     m_d3d_parameters.BackBufferCount = 1;
@@ -186,12 +187,8 @@ namespace Zeni {
   bool Video_DX9::init_device() {
     DWORD num_quality_levels;
     while(FAILED(m_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, m_d3d_parameters.Windowed, m_d3d_parameters.MultiSampleType, &num_quality_levels))) {
-      if(m_d3d_parameters.MultiSampleType <= D3DMULTISAMPLE_2_SAMPLES) {
-        m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-        break;
-      }
-
       switch(m_d3d_parameters.MultiSampleType) {
+      case D3DMULTISAMPLE_2_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE; break;
       case D3DMULTISAMPLE_3_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; break;
       case D3DMULTISAMPLE_4_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; break;
       case D3DMULTISAMPLE_5_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; break;
@@ -206,7 +203,10 @@ namespace Zeni {
       case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; break;
       case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; break;
       case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; break;
-      default: return false;
+
+      case D3DMULTISAMPLE_NONE:
+      default:
+        return false;
       }
     }
 
