@@ -170,9 +170,6 @@ namespace Zeni {
   }
 
   void Video::preinit_video_mode(const Video_Base::VIDEO_MODE &vm) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_video_mode = vm;
   }
 
@@ -203,6 +200,16 @@ namespace Zeni {
 
     uninit();
     init();
+  }
+
+  void Video::destroy() {
+    Vertex_Buffer::lose_all();
+    get_Textures().lose_resources();
+    get_Fonts().lose_resources();
+
+    delete e_video;
+    e_video = 0;
+    g_initialized = false;
   }
 
   void Video::set_enabled(const bool &enabled) {

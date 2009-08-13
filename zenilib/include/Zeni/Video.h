@@ -245,8 +245,9 @@ namespace Zeni {
     // Disable use of the Rendering Device (until Video is instantiated for the first time)
     static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open
 
-    // Reinitialize the Rendering Device
-    void reinit();
+    // Re/uninitialize the Rendering Device
+    void reinit(); ///< Reinitialize the rendering device
+    static void destroy(); ///< Completely uninitialize the rendering device, if it is initialized
 
   protected:
     inline SDL_Surface * get_display_surface();
@@ -303,10 +304,6 @@ namespace Zeni {
 
   struct Video_Init_Failure : public Error {
     Video_Init_Failure() : Error("Zeni Video Failed to Initialize Correctly") {}
-  };
-
-  struct Video_Initialized : public Error {
-    Video_Initialized() : Error("Zeni Video Already Initialized") {}
   };
 
   struct Light_Out_of_Range : public Error {

@@ -94,8 +94,7 @@ namespace Zeni {
     SDL_FreeSurface(source);
   }
 
-  void Font_FT::Glyph::render(const Point2f &position, const float &vratio) const {
-    static Video &vr = get_Video();
+  void Font_FT::Glyph::render(Video &vr, const Point2f &position, const float &vratio) const {
     const float x = int(position.x * vratio + 0.5f) / vratio;
     const float y = int(position.y * vratio + 0.5f) / vratio;
 
@@ -108,9 +107,7 @@ namespace Zeni {
     vr.render(rect);
   }
 
-  void Font_FT::Glyph::render(const Point3f &position, const Vector3f &right, const Vector3f &down) const {
-    static Video &vr = get_Video();
-
+  void Font_FT::Glyph::render(Video &vr, const Point3f &position, const Vector3f &right, const Vector3f &down) const {
     const Vector3f scaled_right = (m_lower_right_point.x - m_upper_left_point.x) * right;
     const Vector3f scaled_down = (m_lower_right_point.y - m_upper_left_point.y) * down;
 
@@ -278,7 +275,7 @@ NEXT_LINE:
         goto NEXT_LINE;
       }
       else if(m_glyph[int(text[i])]) {
-        m_glyph[int(text[i])]->render(Point2f(cx, cy), m_vratio);
+        m_glyph[int(text[i])]->render(vr, Point2f(cx, cy), m_vratio);
         cx += m_glyph[int(text[i])]->get_glyph_width();
       }
     }
@@ -330,7 +327,7 @@ NEXT_LINE_2:
         goto NEXT_LINE_2;
       }
       else if(m_glyph[int(text[i])]) {
-        m_glyph[int(text[i])]->render(pos, right, down);
+        m_glyph[int(text[i])]->render(vr, pos, right, down);
         pos += m_glyph[int(text[i])]->get_glyph_width() * right;
       }
     }

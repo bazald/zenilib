@@ -181,14 +181,23 @@ namespace Zeni {
     XML_Element_c zenilib = (*m_file)["Zenilib"];
     XML_Element_c textures = zenilib["Textures"];
     XML_Element_c video = zenilib["Video"];
+    const std::string api = video["API"].to_string();
 
+    Video::preinit_video_mode(
+#ifndef DISABLE_DX9
+                              api == "DX9" ? Video_Base::ZENI_VIDEO_DX9 :
+#endif
+#ifndef DISABLE_GL
+                              api == "OpenGL" ? Video_Base::ZENI_VIDEO_GL :
+#endif
+                              Video_Base::ZENI_VIDEO_ANY);
     Video::preinit_screen_resolution(Point2i(video["Resolution"]["Width"].to_int(),
                                              video["Resolution"]["Height"].to_int()));
     Video::preinit_full_screen(video["Full_Screen"].to_bool());
     Video::preinit_multisampling(video["Multisampling"].to_int());
     Video::preinit_vertical_sync(video["Vertical_Sync"].to_bool());
 
-    get_Video().reinit();
+    Video::destroy();
 
     Textures::set_texturing_mode(textures["Anisotropy"].to_int(),
                                  textures["Bilinear_Filtering"].to_bool(),
