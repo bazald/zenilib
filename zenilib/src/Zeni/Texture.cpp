@@ -42,31 +42,39 @@
 
 namespace Zeni {
 
-  int Texture::build_from_surface(SDL_Surface * &surface) {
+  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution) {
+    bool scale = false;
+
     int next_w = 1;
-    bool width_pow2 = false;
     for(; next_w; next_w <<= 1)
-      if(next_w > surface->w)
-        break;
-      else if(surface->w == next_w) {
-        width_pow2 = true;
+      if(next_w > surface->w) {
+        scale = true;
         break;
       }
+      else if(surface->w == next_w)
+        break;
+    if(max_resolution.x && next_w > max_resolution.x) {
+      next_w = max_resolution.x;
+      scale = true;
+    }
 
     int next_h = 1;
-    bool height_pow2 = false;
     for(; next_h; next_h <<= 1)
-      if(next_h > surface->h)
-        break;
-      else if(surface->h == next_h) {
-        height_pow2 = true;
+      if(next_h > surface->h) {
+        scale = true;
         break;
       }
+      else if(surface->h == next_h)
+        break;
+    if(max_resolution.y && next_h > max_resolution.y) {
+      next_h = max_resolution.y;
+      scale = true;
+    }
 
     double scale_w = next_w;
     double scale_h = next_h;
 
-    if(!width_pow2 || !height_pow2) {
+    if(scale) {
       int actual_w, actual_h;
       for(int i = 0; i < END_OF_TIME; ++i) {
         zoomSurfaceSize(surface->w, surface->h,
@@ -250,7 +258,7 @@ namespace Zeni {
   GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
     GLuint texture_id = 0;
 
-    const int mode = Texture::build_from_surface(surface);
+    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT));
 
     const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
     const GLenum mode2 = GLenum(
@@ -400,7 +408,9 @@ namespace Zeni {
 
     IDirect3DTexture9 * ppTexture;
 
-    const int mode = Texture::build_from_surface(surface);
+    const int mode = Texture::build_from_surface(surface,
+      Point2i(min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
+              min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))));
     const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states();
@@ -415,7 +425,7 @@ namespace Zeni {
       throw Texture_Init_Failure();
 
     D3DLOCKED_RECT rect;
-    if(FAILED(ppTexture->LockRect(0, &rect, 0, 0))) {
+    if(FAILED(ppTexture->LockRect(0, &rect, 0, D3DLOCK_DISCARD))) {
       ppTexture->Release();
       throw Texture_Init_Failure();
     }
