@@ -201,7 +201,7 @@ else:
   else:
     ccflags += ' -O2 -fexpensive-optimizations -ffast-math -funroll-loops '
 if pedantic:
-  ccflags += define + ' -pedantic '
+  ccflags += ' -pedantic '
 if stress:
   ccflags += define + 'TEST_NASTY_CONDITIONS'
 if noal:
