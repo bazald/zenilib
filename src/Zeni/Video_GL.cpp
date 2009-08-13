@@ -94,6 +94,9 @@ namespace Zeni {
     glFinish();
 #endif
 
+    get_Textures().unlose_resources();
+    get_Fonts().unlose_resources();
+
     glViewport(0, 0, get_screen_width(), get_screen_height());
 
     if(!is_zwrite_enabled())

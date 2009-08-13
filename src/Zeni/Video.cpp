@@ -177,38 +177,32 @@ namespace Zeni {
   }
 
   void Video::preinit_screen_resolution(const Point2i &resolution) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_screen_size = resolution;
   }
 
   void Video::preinit_full_screen(const bool &full_screen) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_screen_full = full_screen;
   }
 
   void Video::preinit_multisampling(const int &multisampling) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_multisampling = multisampling;
   }
 
   void Video::preinit_vertical_sync(const bool &vertical_sync) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_vertical_sync = vertical_sync;
   }
 
   void Video::preinit_show_frame(const bool &show_frame_) {
-    if(g_initialized)
-      throw Video_Initialized();
-
     g_screen_show_frame = show_frame_;
+  }
+
+  void Video::reinit() {
+    Vertex_Buffer::lose_all();
+    get_Textures().lose_resources();
+    get_Fonts().lose_resources();
+
+    uninit();
+    init();
   }
 
   void Video::set_enabled(const bool &enabled) {

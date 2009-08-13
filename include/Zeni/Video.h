@@ -242,7 +242,11 @@ namespace Zeni {
     static void preinit_vertical_sync(const bool &vertical_sync = false); ///< Set vertical_sync to true
     static void preinit_show_frame(const bool &show_frame_ = true); ///< Show a frame around the rendering window when in windowed mode
 
+    // Disable use of the Rendering Device (until Video is instantiated for the first time)
     static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open
+
+    // Reinitialize the Rendering Device
+    void reinit();
 
   protected:
     inline SDL_Surface * get_display_surface();

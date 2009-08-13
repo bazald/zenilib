@@ -85,11 +85,11 @@ namespace Zeni {
         reset = false;
 
         init_context();
-        
-        get_Textures().reload();
-        get_Fonts().reload();
       }
     }
+
+    get_Textures().unlose_resources();
+    get_Fonts().unlose_resources();
     
     HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
     
