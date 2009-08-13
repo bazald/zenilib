@@ -76,6 +76,7 @@ namespace Zeni {
   class Vertex_Buffer;
   class Vertex_Shader;
   class Video;
+  class XML_Document;
 
   class Video_Base {
   public:
