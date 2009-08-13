@@ -104,7 +104,7 @@ namespace Zeni {
       glDepthMask(GL_FALSE);
 
     get_Game().render();
-    
+
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
    Timer &tr = get_Timer();
@@ -130,7 +130,7 @@ namespace Zeni {
   }
 
   void Video_GL::init() {
-    std::cout << "Initializing OpenGL" << endl;
+    std::cout << "Initializing OpenGL" << std::endl;
 
     //double buffer, no stencil, no accumulation buffer
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -156,7 +156,7 @@ namespace Zeni {
     {
       const GLenum err = glewInit();
       if(GLEW_OK != err) {
-        cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
+        std::cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
         throw Video_Init_Failure();
       }
     }
@@ -172,8 +172,10 @@ namespace Zeni {
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
     // Set lighting variables
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    if(glGetError() == GL_INVALID_ENUM)
+      cerr << "Quality Warning:  Your graphics card does not support separate specular lighting in OpenGL.\n";
 
     // Initialize Assorted Variables
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -229,7 +231,7 @@ namespace Zeni {
       m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)uni.proc;
     }
     else
-      cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) to OpenGL.\n";
+      std::cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) in OpenGL.\n";
 
     if(strstr((char*)glGetString(GL_EXTENSIONS), "GL_EXT_texture_filter_anisotropic"))
       glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, reinterpret_cast<GLint *>(&m_maximum_anisotropy));

@@ -61,10 +61,10 @@ namespace Zeni {
     if(args)
       g_args = *args;
 
+    get_Video().set_title("Zenilib Application");
     get_Textures();
     get_Fonts();
     get_Sounds();
-    get_Video().set_title("Zenilib Application");
   }
 
   Gamestate_One::~Gamestate_One() {

@@ -78,12 +78,7 @@ static void load_config() {
       Video_Base::VIDEO_MODE api;
       bool full_screen;
       int multisampling;
-
-      struct {
-        int width;
-        int height;
-      } resolution;
-
+      Point2i screen_resolution;
       bool vertical_sync;
     } video;
   } config;
@@ -130,24 +125,20 @@ static void load_config() {
     {
       XML_Element_c screen_resolution = video["Resolution"];
 
-      config.video.resolution.width = screen_resolution["Width"].to_int();
-
-      config.video.resolution.height = screen_resolution["Height"].to_int();
+      config.video.screen_resolution.x = screen_resolution["Width"].to_int();
+      config.video.screen_resolution.y = screen_resolution["Height"].to_int();
     }
 
     config.video.vertical_sync = video["Vertical_Sync"].to_bool();
   }
 
   // Start engines
-  Video::preinit(config.video.api,
-                 config.video.resolution.width,
-                 config.video.resolution.height,
-                 config.video.full_screen,
-                 config.video.multisampling,
-                 true);
-  if(Video::is_enabled())
-    if(get_Video().get_vertical_sync() != config.video.vertical_sync)
-      get_Video().set_vertical_sync(config.video.vertical_sync);
+  Video::preinit_video_mode(config.video.api);
+  Video::preinit_screen_resolution(config.video.screen_resolution);
+  Video::preinit_full_screen(config.video.full_screen);
+  Video::preinit_multisampling(config.video.multisampling);
+  Video::preinit_vertical_sync(config.video.vertical_sync);
+  Video::preinit_show_frame(true);
 
   Textures::set_texturing_mode(config.textures.anisotropy,
                                config.textures.bilinear_filtering,

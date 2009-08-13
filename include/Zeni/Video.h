@@ -235,9 +235,13 @@ namespace Zeni {
     // Initialization Checks and Changes
     inline static const bool & is_initialized(); ///< Determine whether Video is already initialized
     // Call before any other Video functions; May throw Video_Initialized
-    static void preinit(const Video_Base::VIDEO_MODE &vm = Video_Base::ZENI_VIDEO_ANY, const int &w = 800, 
-      const int &h = 600, const bool &full = false, const int &multisampling = 1, 
-      const bool &show_frame_ = true); ///< Sets values for Video initialization
+    static void preinit_video_mode(const Video_Base::VIDEO_MODE &vm = Video_Base::ZENI_VIDEO_ANY); ///< Set which rendering engine to use
+    static void preinit_screen_resolution(const Point2i &resolution = Point2i(800, 600)); ///< Set the rendering window to have a given resolution
+    static void preinit_full_screen(const bool &full_screen = false); ///< Set the rendering window to be full screen at launch
+    static void preinit_multisampling(const int &multisampling = 0); ///< Set a multisampling value
+    static void preinit_vertical_sync(const bool &vertical_sync = false); ///< Set vertical_sync to true
+    static void preinit_show_frame(const bool &show_frame_ = true); ///< Show a frame around the rendering window when in windowed mode
+
     static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open
 
   protected:

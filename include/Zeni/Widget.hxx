@@ -447,7 +447,7 @@ namespace Zeni {
   }
 
   void Slider_Int::set_range(const Range &range_) {
-    assert(range_.first < range_.second);
+    assert(range_.first <= range_.second);
     m_range = range_;
   }
 

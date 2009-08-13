@@ -228,7 +228,7 @@ namespace Zeni {
 #else
     alIsExtensionPresent("AL_EXT_vorbis");
 #endif
-    cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
+    //cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
     ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
