@@ -80,6 +80,7 @@
 namespace Zeni {
 
   struct Color;
+  class Video;
   class Video_GL;
   class Video_DX9;
   class Texture;
@@ -129,8 +130,8 @@ namespace Zeni {
 
       inline float get_glyph_width() const;
 
-      void render(const Point2f &position, const float &vratio) const;
-      void render(const Point3f &position, const Vector3f &right, const Vector3f &down) const;
+      inline void render(Video &vr, const Point2f &position, const float &vratio) const;
+      inline void render(Video &vr, const Point3f &position, const Vector3f &right, const Vector3f &down) const;
 
     private:
       float m_glyph_width;

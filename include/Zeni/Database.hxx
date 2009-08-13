@@ -391,7 +391,7 @@ namespace Zeni {
   template <class TYPE>
   void Database<TYPE>::unlose_resources() {
     if(m_lost)
-      reload();
+      init();
   }
 
 }
