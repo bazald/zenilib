@@ -241,6 +241,8 @@ namespace Zeni {
     static void preinit_multisampling(const int &multisampling = 0); ///< Set a multisampling value
     static void preinit_vertical_sync(const bool &vertical_sync = false); ///< Set vertical_sync to true
     static void preinit_show_frame(const bool &show_frame_ = true); ///< Show a frame around the rendering window when in windowed mode
+    static void preinit_from_file(const std::string &filename); ///< Set rendering options from a file
+    static void preinit_from_file(const XML_Document &file); ///< Set rendering options from a file
 
     // Disable use of the Rendering Device (until Video is instantiated for the first time)
     static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open

@@ -34,6 +34,7 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Video_DX9.h>
+#include <Zeni/XML.hxx>
 
 #ifdef _MACOSX
 #include <SDL_image/SDL_image.h>
@@ -85,6 +86,8 @@ namespace Zeni {
       const string local_normal = "config/zenilib.xml";
       const string local_backup = local_normal + ".bak";
 
+      static bool last_resort_taken = false;
+
       try {
         switch(Video::g_video_mode) {
         case Video_Base::ZENI_VIDEO_ANY:
@@ -103,11 +106,17 @@ namespace Zeni {
         }
       }
       catch(Video_Init_Failure &) {
-        if(cr.copy_file(local_backup, local_normal) && cr.delete_file(local_backup))
-          cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
-        if(cr.copy_file(user_backup, user_normal) && cr.delete_file(user_backup))
+        if(cr.copy_file(user_backup, user_normal) && cr.delete_file(user_backup)) {
           cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
-        else {
+          Video::preinit_from_file(user_normal);
+          get_Video();
+        }
+        else if(cr.copy_file(local_backup, local_normal) && cr.delete_file(local_backup)) {
+          cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
+          Video::preinit_from_file(local_normal);
+          get_Video();
+        }
+        else if(!last_resort_taken) {
           XML_Document config_xml(local_normal);
 
           XML_Element zenilib = config_xml["Zenilib"];
@@ -139,11 +148,21 @@ namespace Zeni {
           if(cr.create_directory(appdata_path) &&
              cr.create_directory(appdata_path + "config/") &&
              config_xml.try_save(user_normal))
+          {
             cerr << '\'' << user_normal << "' reset due to initialization failure.\n";
-          if(config_xml.try_save(local_normal))
+          }
+          if(config_xml.try_save(local_normal)) {
             cerr << '\'' << local_normal << "' reset due to initialization failure.\n";
+          }
+
+          Video::preinit_from_file(config_xml);
+
+          last_resort_taken = true;
+
+          get_Video();
         }
-        throw;
+        else
+          throw;
       }
 
       // Make backups of "good" configurations
@@ -164,6 +183,8 @@ namespace Zeni {
       }
       else
         cr.copy_file(local_normal, local_backup);
+
+      last_resort_taken = false;
     }
 
     return *Video::e_video;
@@ -191,6 +212,32 @@ namespace Zeni {
 
   void Video::preinit_show_frame(const bool &show_frame_) {
     g_screen_show_frame = show_frame_;
+  }
+
+  void Video::preinit_from_file(const std::string &filename) {
+    XML_Document file(filename);
+    preinit_from_file(file);
+  }
+
+  void Video::preinit_from_file(const XML_Document &file) {
+    XML_Element_c zenilib = file["Zenilib"];
+    XML_Element_c textures = zenilib["Textures"];
+    XML_Element_c video = zenilib["Video"];
+    const std::string api = video["API"].to_string();
+
+    preinit_video_mode(
+#ifndef DISABLE_DX9
+                              api == "DX9" ? Video_Base::ZENI_VIDEO_DX9 :
+#endif
+#ifndef DISABLE_GL
+                              api == "OpenGL" ? Video_Base::ZENI_VIDEO_GL :
+#endif
+                              Video_Base::ZENI_VIDEO_ANY);
+    preinit_screen_resolution(Point2i(video["Resolution"]["Width"].to_int(),
+                                             video["Resolution"]["Height"].to_int()));
+    preinit_full_screen(video["Full_Screen"].to_bool());
+    preinit_multisampling(video["Multisampling"].to_int());
+    preinit_vertical_sync(video["Vertical_Sync"].to_bool());
   }
 
   void Video::reinit() {
@@ -301,6 +348,6 @@ namespace Zeni {
   bool Video::g_lighting = false;
   bool Video::g_normal_interp = false;
   bool Video::g_vertical_sync = false;
-  int Video::g_multisampling = 1;
+  int Video::g_multisampling = 0;
 
 }
