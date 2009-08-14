@@ -77,7 +77,7 @@ def arg_eval(arg):
     return True
   if sarg == 'false' or sarg == 'f':
     return False
-  return bool(arg)
+  return int(arg)
 
 if not is_windows:
   cc = ARGUMENTS.get('cc', cc)
@@ -186,6 +186,7 @@ else:
 if cpp0x:
   ccflags += ' -std=c++0x '
 if debug:
+  ccflags += define + '_DEBUG'
   if is_windows:
     ccflags += ' /Od              /Gy     /RTC1 /MDd '
     if x64:
@@ -202,7 +203,7 @@ else:
     ccflags += ' -O2 -fexpensive-optimizations -ffast-math -funroll-loops '
 if pedantic:
   ccflags += ' -pedantic '
-if stress:
+if debug and stress:
   ccflags += define + 'TEST_NASTY_CONDITIONS'
 if noal:
   ccflags += define + 'DISABLE_AL'
