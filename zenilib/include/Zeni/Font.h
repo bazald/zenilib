@@ -155,6 +155,8 @@ namespace Zeni {
       const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const;
 
   private:
+    void init(const std::string &filepath);
+
     Glyph *m_glyph[num_glyphs];
     Texture *m_texture;
     float m_font_height;

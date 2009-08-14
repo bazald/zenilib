@@ -61,6 +61,7 @@
 #include <SDL/SDL.h>
 #include <string>
 #include <cmath>
+#include <vector>
 
 namespace Zeni {
 
@@ -141,6 +142,7 @@ namespace Zeni {
     inline const bool & is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
     inline const TEST & get_alpha_test_function() const; ///< Determine which alpha test is in use
     inline const float & get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
+    inline const std::vector<Point2i> & get_resolutions() const; ///< Get available full screen resolutions
 
     // Modifiers
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
@@ -249,7 +251,6 @@ namespace Zeni {
     static void set_enabled(const bool &enabled); ///< Enable/Disable the use of rendering; This will not close the rendering window once it is open
 
     // Re/uninitialize the Rendering Device
-    void reinit(); ///< Reinitialize the rendering device
     static void destroy(); ///< Completely uninitialize the rendering device, if it is initialized
 
   protected:
@@ -303,6 +304,8 @@ namespace Zeni {
     bool m_alpha_test;
     TEST m_alpha_function;
     float m_alpha_value;
+
+    std::vector<Point2i> m_modes;
   };
 
   struct Video_Init_Failure : public Error {

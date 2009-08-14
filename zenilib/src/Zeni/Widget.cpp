@@ -387,6 +387,25 @@ namespace Zeni {
     set_value(get_value());
   }
 
+  void Slider_Int::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
+    Slider::on_mouse_button(pos, down, button);
+
+    if(!is_editable() || is_busy() || down || (button != SDL_BUTTON_WHEELDOWN && button != SDL_BUTTON_WHEELUP))
+      return;
+
+    const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
+
+    const std::pair<float, float> test = get_line_segment().nearest_point(mouse_pos);
+    if(test.first < get_slider_radius()) {
+      if(button == SDL_BUTTON_WHEELDOWN)
+        set_value(min(get_range().second, get_value() + 1));
+      else
+        set_value(max(get_range().first, get_value() - 1));
+
+      on_slide();
+    }
+  }
+
   void Slider_Int::on_slide() {
     Slider::on_slide();
     set_value(get_value());
@@ -468,10 +487,10 @@ namespace Zeni {
 
   void Selector::Selector_Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
     Slider_Int::set_end_points(end_point_a_, end_point_b_);
-    m_quad.a.position.y = end_point_a_.y;
-    m_quad.b.position.y = end_point_b_.y;
-    m_quad.c.position.y = end_point_b_.y;
-    m_quad.d.position.y = end_point_a_.y;
+    m_quad.a.position.y = end_point_a_.y - get_slider_radius();
+    m_quad.b.position.y = end_point_b_.y + get_slider_radius();
+    m_quad.c.position.y = end_point_b_.y + get_slider_radius();
+    m_quad.d.position.y = end_point_a_.y - get_slider_radius();
   }
 
   void Selector::Selector_Slider::on_slide() {
@@ -541,6 +560,12 @@ namespace Zeni {
     build_selector_buttons();
   }
 
+  std::string Selector::get_selected() const {
+    if(!m_options.empty())
+      return m_options[m_option];
+    return "";
+  }
+
   void Selector::select_option(const std::string &option) {
     Options::iterator it = std::find(m_options.begin(), m_options.end(), option);
     if(it != m_options.end())
@@ -558,21 +583,27 @@ namespace Zeni {
     else {
       const std::pair<Point2f, Point2f> v = visible_region();
 
-      if((pos.x < v.first.x || pos.x > v.second.x || pos.y < v.first.y || pos.y > v.second.y) &&
-         button == SDL_BUTTON_LEFT)
-      {
-        m_selected = false;
+      if(pos.x < v.first.x || pos.x > v.second.x || pos.y < v.first.y || pos.y > v.second.y) {
+        if(button == SDL_BUTTON_LEFT) {
+          m_selected = false;
 
-        set_busy(false);
-        set_layer(0.0f);
+          set_busy(false);
+          set_layer(0.0f);
+        }
       }
       else {
         const Point2i offset_pos(pos.x, int(pos.y + vertical_offset()));
         for(size_t i = view_start; i != view_end; ++i)
           m_selector_buttons[i]->on_mouse_button(offset_pos, down, button);
 
-        if(view_hidden)
-          m_selector_slider.on_mouse_button(pos, down, button);
+        if(view_hidden) {
+          if(button == SDL_BUTTON_WHEELDOWN || button == SDL_BUTTON_WHEELUP) {
+            const Point2f &a = m_selector_slider.get_end_point_a();
+            m_selector_slider.on_mouse_button(Point2i(int(a.x), int(a.y)), down, button);
+          }
+          else
+            m_selector_slider.on_mouse_button(pos, down, button);
+        }
       }
     }
   }

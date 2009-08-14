@@ -116,6 +116,10 @@
 #define ALIKENESS_THRESHOLD         (0.95f)
 #define CLOSENESS_THRESHOLD         (0.001f)
 
+// Video.cpp
+#define MINIMUM_SCREEN_WIDTH  (320)
+#define MINIMUM_SCREEN_HEIGHT (200)
+
 // Nasty Conditions
 #define NASTY_SOUND_SOURCE_CAP (16lu)
 

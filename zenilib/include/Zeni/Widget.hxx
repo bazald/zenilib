@@ -428,7 +428,11 @@ namespace Zeni {
 
     regenerate_slider_r();
   }
-  
+
+  const Zeni_Collision::Line_Segment & Slider::get_line_segment() const {
+    return m_line_segment;
+  }
+
   void Slider::regenerate_slider_r() {
     const Point3f &p0 = m_line_segment.get_end_point_a();
     const Point3f &p1 = m_line_segment.get_end_point_b();

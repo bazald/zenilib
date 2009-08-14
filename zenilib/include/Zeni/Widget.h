@@ -614,6 +614,9 @@ namespace Zeni {
 
     virtual void render_impl() const;
 
+  protected:
+    inline const Zeni_Collision::Line_Segment & get_line_segment() const;
+
   private:
     inline void regenerate_slider_r();
 
@@ -650,6 +653,7 @@ namespace Zeni {
     inline int get_value() const;
     inline void set_value(const int &value);
 
+    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
     virtual void on_slide();
 
   private:
@@ -736,6 +740,7 @@ namespace Zeni {
     void add_option(const std::string &option);
     void remove_option(const std::string &option);
 
+    std::string get_selected() const;
     void select_option(const std::string &option);
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
