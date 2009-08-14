@@ -181,7 +181,7 @@ namespace Zeni {
   void Configurator_Video::Resolution_Element::on_accept(const std::string &option) {
     Selector::on_accept(option);
 
-    const int x = option.find('x');
+    const size_t x = option.find('x');
 
     m_element["Width"].set_string(option.substr(0, x));
     m_element["Height"].set_string(option.substr(x + 1));
@@ -348,7 +348,7 @@ namespace Zeni {
     m_widgets.lend_Widget(m_custom_resolution);
     {
       const std::string selected = m_resolution.get_selected();
-      const int x = selected.find('x');
+      const size_t x = selected.find('x');
       if(selected.substr(0, x) == m_custom_width.get_text() &&
          selected.substr(x + 1) == m_custom_height.get_text())
       {
