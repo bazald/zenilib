@@ -111,6 +111,10 @@ namespace Zeni {
     return m_alpha_value;
   }
 
+  const std::vector<Point2i> & Video::get_resolutions() const {
+    return m_modes;
+  }
+
   void Video::set_2d() {
     const Point2i &size = get_render_target_size();
     set_2d_view(std::make_pair(Point2f(), Point2f(float(size.x), float(size.y))),

@@ -123,6 +123,42 @@ namespace Zeni {
       std::map<std::string, std::string> m_save_as;
     };
 
+    class Resolution_Element : public Selector {
+      Resolution_Element(const Resolution_Element &);
+      Resolution_Element & operator=(const Resolution_Element &);
+
+    public:
+      Resolution_Element(const XML_Element &element,
+                         const Point2f &upper_left,
+                         const Point2f &lower_right,
+                         const Point2f &expanded_upper_left,
+                         const Point2f &expanded_lower_right);
+
+      void on_accept(const std::string &option);
+
+    private:
+      XML_Element m_element;
+    };
+
+    class Custom_Resolution_Box : public Check_Box {
+      Custom_Resolution_Box(const Custom_Resolution_Box &);
+      Custom_Resolution_Box & operator=(const Custom_Resolution_Box &);
+
+    public:
+      Custom_Resolution_Box(Configurator_Video &configurator,
+                            const Point2f &upper_left,
+                            const float &height);
+
+      void apply();
+
+      void on_accept();
+
+      void render_impl() const;
+
+    private:
+      Configurator_Video &m_configurator;
+    };
+
     class Save_Button : public Text_Button_3C {
       Save_Button(const Save_Button &);
       Save_Button & operator=(const Save_Button &);
@@ -166,8 +202,12 @@ namespace Zeni {
     Selector_Element m_api;
     Check_Box_Element m_full_screen;
     Slider_Element m_multisampling;
-    Text_Element m_resolution_width;
-    Text_Element m_resolution_height;
+
+    Resolution_Element m_resolution;
+    Custom_Resolution_Box m_custom_resolution;
+    Text_Element m_custom_width;
+    Text_Element m_custom_height;
+
     Check_Box_Element m_vertical_sync;
 
     Save_Button m_save;

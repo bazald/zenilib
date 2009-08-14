@@ -42,11 +42,18 @@
 #include <SDL/SDL_image.h>
 #endif
 
+#include <algorithm>
 #include <iostream>
+
+#include <Zeni/Global.h>
 
 using namespace std;
 
 namespace Zeni {
+
+  static bool video_mode_lt(const Point2i &lhs, const Point2i &rhs) {
+    return lhs.x < rhs.x || (lhs.x == rhs.x && lhs.y < rhs.y);
+  }
 
   Video::Video(const Video_Base::VIDEO_MODE &vtype_)
     : Video_Base::IV(vtype_),
@@ -70,6 +77,15 @@ namespace Zeni {
 
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) == -1)
       throw Video_Init_Failure();
+
+    // Initialize Video Mode Listing
+    for(SDL_Rect ** mode = SDL_ListModes(0, SDL_FULLSCREEN); *mode; ++mode)
+      m_modes.push_back(Point2i((*mode)->w, (*mode)->h));
+
+    if(m_modes.empty())
+      throw Video_Init_Failure();
+
+    std::sort(m_modes.begin(), m_modes.end(), &video_mode_lt);
   }
 
   Video::~Video() {
@@ -139,8 +155,8 @@ namespace Zeni {
             video["Multisampling"].set_int(0);
             {
               XML_Element screen_resolution = video["Resolution"];
-              screen_resolution["Width"].set_int(800);
-              screen_resolution["Height"].set_int(600);
+              screen_resolution["Width"].set_int(640);
+              screen_resolution["Height"].set_int(480);
             }
             video["Vertical_Sync"].set_bool(false);
           }
@@ -240,15 +256,6 @@ namespace Zeni {
     preinit_vertical_sync(video["Vertical_Sync"].to_bool());
   }
 
-  void Video::reinit() {
-    Vertex_Buffer::lose_all();
-    get_Textures().lose_resources();
-    get_Fonts().lose_resources();
-
-    uninit();
-    init();
-  }
-
   void Video::destroy() {
     Vertex_Buffer::lose_all();
     get_Textures().lose_resources();
@@ -295,10 +302,16 @@ namespace Zeni {
     set_tt();
     set_icon();
 
-    if(g_screen_size.x == -1)
-      g_screen_size.x = 0;
-    if(g_screen_size.y == -1)
-      g_screen_size.y = 0;
+    const Point2i &max_res = *m_modes.rbegin();
+
+    if(g_screen_size.x < MINIMUM_SCREEN_WIDTH)
+      g_screen_size.x = MINIMUM_SCREEN_WIDTH;
+    else if(g_screen_size.x > max_res.x)
+      g_screen_size.x = max_res.x;
+    if(g_screen_size.y < MINIMUM_SCREEN_HEIGHT)
+      g_screen_size.y = MINIMUM_SCREEN_HEIGHT;
+    else if(g_screen_size.y > max_res.y)
+      g_screen_size.y = max_res.y;
 
     // Initialize Window
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,

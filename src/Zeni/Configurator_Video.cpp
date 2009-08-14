@@ -103,7 +103,7 @@ namespace Zeni {
                const Point2f &upper_left,
                const Point2f &lower_right)
     : Text_Box(upper_left,
-               Point2f(lower_right.x - get_Fonts()["system_36_600"].get_text_width(" " + element.value()), lower_right.y),
+               Point2f(lower_right.x /*- get_Fonts()["system_36_600"].get_text_width(" " + element.value())*/, lower_right.y),
                get_Colors()["default_button_bg_normal"],
                "system_36_600",
                element.to_string(),
@@ -122,12 +122,12 @@ namespace Zeni {
   void Configurator_Video::Text_Element::render_impl() const {
     Text_Box::render_impl();
 
-    Font &font = get_Fonts()["system_36_600"];
+    //Font &font = get_Fonts()["system_36_600"];
 
-    font.render_text(" " + m_element.value(),
-                     Point2f(get_lower_right().x,
-                             0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
-                     get_Colors()["default_button_bg_normal"]);
+    //font.render_text(" " + m_element.value(),
+    //                 Point2f(get_lower_right().x,
+    //                         0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
+    //                 get_Colors()["default_button_bg_normal"]);
   }
 
   Configurator_Video::Selector_Element::Selector_Element(const XML_Element &element,
@@ -139,7 +139,7 @@ namespace Zeni {
                get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
                "system_36_600",
                get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"],
-               get_Colors()["default_button_bg_normal"]),
+               get_Colors()["default_button_text_normal"]),
     m_element(element)
   {
   }
@@ -152,6 +152,84 @@ namespace Zeni {
   void Configurator_Video::Selector_Element::on_accept(const std::string &option) {
     Selector::on_accept(option);
     m_element.set_string(m_save_as[option]);
+  }
+
+  Configurator_Video::Resolution_Element::Resolution_Element(const XML_Element &element,
+                                                             const Point2f &upper_left,
+                                                             const Point2f &lower_right,
+                                                             const Point2f &expanded_upper_left,
+                                                             const Point2f &expanded_lower_right)
+    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
+               get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
+               "system_36_600",
+               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"],
+               get_Colors()["default_button_text_normal"]),
+    m_element(element)
+  {
+    const std::vector<Point2i> &resolutions = get_Video().get_resolutions();
+
+    for(std::vector<Point2i>::const_iterator it = resolutions.begin(); it != resolutions.end(); ++it)
+      add_option(itoa(it->x) + "x" + itoa(it->y));
+
+    // Assuming this is present, it will be the fall back if the next option does not exist
+    select_option("640x480");
+
+    // Try the set the current resolution as the selection option
+    select_option(itoa(get_Video().get_screen_width()) + 'x' + itoa(get_Video().get_screen_height()));
+  }
+
+  void Configurator_Video::Resolution_Element::on_accept(const std::string &option) {
+    Selector::on_accept(option);
+
+    const int x = option.find('x');
+
+    m_element["Width"].set_string(option.substr(0, x));
+    m_element["Height"].set_string(option.substr(x + 1));
+  }
+
+  Configurator_Video::Custom_Resolution_Box::Custom_Resolution_Box(Configurator_Video &configurator,
+                                                                   const Point2f &upper_left,
+                                                                   const float &height)
+    : Check_Box(upper_left,
+                Point2f(upper_left.x + height, upper_left.y + height),
+                get_Colors()["default_button_bg_normal"],
+                get_Colors()["default_button_bg_normal"]),
+    m_configurator(configurator)
+  {
+  }
+
+  void Configurator_Video::Custom_Resolution_Box::apply() {
+    if(is_checked()) {
+      m_configurator.m_widgets.unlend_Widget(m_configurator.m_resolution);
+      m_configurator.m_widgets.lend_Widget(m_configurator.m_custom_width);
+      m_configurator.m_widgets.lend_Widget(m_configurator.m_custom_height);
+
+      m_configurator.m_custom_width.on_change();
+      m_configurator.m_custom_height.on_change();
+    }
+    else {
+      m_configurator.m_widgets.unlend_Widget(m_configurator.m_custom_width);
+      m_configurator.m_widgets.unlend_Widget(m_configurator.m_custom_height);
+      m_configurator.m_widgets.lend_Widget(m_configurator.m_resolution);
+
+      m_configurator.m_resolution.on_accept(m_configurator.m_resolution.get_selected());
+    }
+  }
+
+  void Configurator_Video::Custom_Resolution_Box::on_accept() {
+    Check_Box::on_accept();
+    apply();
+  }
+
+  void Configurator_Video::Custom_Resolution_Box::render_impl() const {
+    Check_Box::render_impl();
+
+    Font &font = get_Fonts()["system_36_600"];
+
+    font.render_text(" Custom",
+                     Point2f(get_lower_right().x,
+                             0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
+                     get_Colors()["default_button_bg_normal"]);
   }
 
   Configurator_Video::Save_Button::Save_Button(XML_Document &file,
@@ -216,6 +294,10 @@ namespace Zeni {
   }
 
   Configurator_Video::Configurator_Video()
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4355 )
+#endif
     : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f))),
     m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
@@ -227,13 +309,20 @@ namespace Zeni {
     m_api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
     m_full_screen(m_zenilib["Video"]["Full_Screen"], Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
     m_multisampling(m_zenilib["Video"]["Multisampling"], make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
-    m_resolution_width(m_zenilib["Video"]["Resolution"]["Width"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
-    m_resolution_height(m_zenilib["Video"]["Resolution"]["Height"], Point2f(294.0f, 10.0f + 9 * 42.0f), Point2f(294.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
+
+    m_resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
+    m_custom_resolution(*this, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
+    m_custom_width(m_zenilib["Video"]["Resolution"]["Width"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    m_custom_height(m_zenilib["Video"]["Resolution"]["Height"], Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
+
     m_vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
 
     m_save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
     m_cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
     m_prev_title(get_Video().get_title())
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
   {
     /** Build m_widgets **/
 
@@ -255,8 +344,23 @@ namespace Zeni {
     m_widgets.lend_Widget(m_api);
     m_widgets.lend_Widget(m_full_screen);
     m_widgets.lend_Widget(m_multisampling);
-    m_widgets.lend_Widget(m_resolution_width);
-    m_widgets.lend_Widget(m_resolution_height);
+
+    m_widgets.lend_Widget(m_custom_resolution);
+    {
+      const std::string selected = m_resolution.get_selected();
+      const int x = selected.find('x');
+      if(selected.substr(0, x) == m_custom_width.get_text() &&
+         selected.substr(x + 1) == m_custom_height.get_text())
+      {
+        m_custom_resolution.set_checked(false);
+        m_custom_resolution.apply();
+      }
+      else {
+        m_custom_resolution.set_checked(true);
+        m_custom_resolution.apply();
+      }
+    }
+
     m_widgets.lend_Widget(m_vertical_sync);
 
     m_widgets.lend_Widget(m_save);
@@ -282,6 +386,7 @@ namespace Zeni {
     font.render_text("Zenilib Renderer Configuration:", Point2f(10.0f, 10.0f), color);
     font.render_text("Textures:", Point2f(10.0f, 10.0f + 1 * 42.0f), color);
     font.render_text("Video:", Point2f(10.0f, 10.0f + 5 * 42.0f), color);
+    font.render_text("x", Point2f(52.0f + 100.0f, 10.0f + 9 * 42.0f), color, ZENI_CENTER);
 
     m_widgets.render();
   }

@@ -116,6 +116,10 @@
 #undef ALIKENESS_THRESHOLD
 #undef CLOSENESS_THRESHOLD
 
+// Video.cpp
+#undef MINIMUM_SCREEN_WIDTH
+#undef MINIMUM_SCREEN_HEIGHT
+
 // Nasty Conditions
 #undef NASTY_SOUND_SOURCE_CAP
 
