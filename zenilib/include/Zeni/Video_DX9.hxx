@@ -338,8 +338,8 @@ namespace Zeni {
     return new Font_FT(filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
-  Vertex_Buffer * Video_DX9::create_Vertex_Buffer_impl() {
-    return new Vertex_Buffer_DX9();
+  Vertex_Buffer_Renderer * Video_DX9::create_Vertex_Buffer_Renderer_impl(Vertex_Buffer &vertex_buffer) {
+    return new Vertex_Buffer_Renderer_DX9(vertex_buffer);
   }
 
 #ifndef DISABLE_CG

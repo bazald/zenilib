@@ -91,10 +91,28 @@ namespace Zeni {
   };
 
   class Render_Wrapper;
+  class Vertex_Buffer;
+
+  class Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer(const Vertex_Buffer_Renderer &);
+    Vertex_Buffer_Renderer & operator=(const Vertex_Buffer_Renderer &);
+
+  public:
+    Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer() {}
+
+    virtual void render() = 0;
+
+  protected:
+    Vertex_Buffer &m_vbo;
+  };
 
   class Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
     Vertex_Buffer & operator=(const Vertex_Buffer &);
+
+    friend class Vertex_Buffer_Renderer_GL;
+    friend class Vertex_Buffer_Renderer_DX9;
 
   public:
     struct Vertex_Buffer_Range {
@@ -106,7 +124,7 @@ namespace Zeni {
     };
 
     Vertex_Buffer();
-    virtual ~Vertex_Buffer();
+    ~Vertex_Buffer();
 
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Vertex_Buffer should try to fix broken normals in the prerender phase;
     inline bool will_do_normal_alignment() const; // Find out whether Vertex_Buffer is set to try to fix broken normals in the prerender phase;
@@ -133,16 +151,16 @@ namespace Zeni {
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
-    virtual void render() = 0; ///< Render the Vertex_Buffer
-    virtual void lose() = 0; ///< Lose the Vertex_Buffer
+    void render(); ///< Render the Vertex_Buffer
+    void lose(); ///< Lose the Vertex_Buffer
 
-    static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
-
-  protected:
-    virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
+  private:
+    void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
     inline size_t num_vertices_cm() const;
     inline size_t num_vertices_t() const;
+
+    inline void unprerender(); ///< Allow prerender() to be called again
 
     // Sort buffers by Material
     void sort_triangles();
@@ -161,26 +179,29 @@ namespace Zeni {
 
     bool m_align_normals;
 
+    Vertex_Buffer_Renderer * m_renderer;
+    bool m_prerendered;
+
+  public:
+    static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
+
   private:
     static std::set<Vertex_Buffer *> g_vbos;
   };
 
 #ifndef DISABLE_GL
 
-  class Vertex_Buffer_GL : public Vertex_Buffer {
-    Vertex_Buffer_GL(const Vertex_Buffer_GL &);
-    Vertex_Buffer_GL operator=(const Vertex_Buffer_GL &);
+  class Vertex_Buffer_Renderer_GL : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_GL(const Vertex_Buffer_Renderer_GL &);
+    Vertex_Buffer_Renderer_GL operator=(const Vertex_Buffer_Renderer_GL &);
 
   public:
-    Vertex_Buffer_GL();
-    virtual ~Vertex_Buffer_GL();
+    Vertex_Buffer_Renderer_GL(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_GL();
 
     virtual void render();
-    virtual void lose();
 
   private:
-    virtual void prerender();
-    
     inline size_t vertex_size() const;
     inline size_t normal_size() const;
     inline size_t color_size() const;
@@ -197,20 +218,17 @@ namespace Zeni {
 #endif
 #ifndef DISABLE_DX9
 
-  class Vertex_Buffer_DX9 : public Vertex_Buffer {
-    Vertex_Buffer_DX9(const Vertex_Buffer_DX9 &);
-    Vertex_Buffer_DX9 operator=(const Vertex_Buffer_DX9 &);
+  class Vertex_Buffer_Renderer_DX9 : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_DX9(const Vertex_Buffer_Renderer_DX9 &);
+    Vertex_Buffer_Renderer_DX9 operator=(const Vertex_Buffer_Renderer_DX9 &);
 
   public:
-    Vertex_Buffer_DX9();
-    virtual ~Vertex_Buffer_DX9();
+    Vertex_Buffer_Renderer_DX9(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_DX9();
 
     virtual void render();
-    virtual void lose();
 
   private:
-    virtual void prerender();
-    
     inline size_t vertex_c_size() const;
     inline size_t vertex_t_size() const;
 
