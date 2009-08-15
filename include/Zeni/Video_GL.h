@@ -150,7 +150,7 @@ namespace Zeni {
     inline Texture * create_Texture_impl(const Point2i &size, const bool &repeat); ///< Function for creating a Texture for render-to-texture
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
-    inline Vertex_Buffer * create_Vertex_Buffer_impl(); ///< Function for creating a Vertex_Buffer
+    inline Vertex_Buffer_Renderer * create_Vertex_Buffer_Renderer_impl(Vertex_Buffer &vertex_buffer); ///< Function for creating a Vertex_Buffer_Renderer
 
     // Initialization Functions
     inline void initialize_impl(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor

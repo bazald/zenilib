@@ -52,33 +52,40 @@ namespace Zeni {
     return 3u * m_triangles_t.size();
   }
 
+  void Vertex_Buffer::unprerender() {
+    lose();
+    m_descriptors_cm.clear();
+    m_descriptors_t.clear();
+    m_prerendered = false;
+  }
+
 #ifndef DISABLE_GL
 
-  size_t Vertex_Buffer_GL::vertex_size() const {
+  size_t Vertex_Buffer_Renderer_GL::vertex_size() const {
     return 3u * sizeof(float);
   }
 
-  size_t Vertex_Buffer_GL::normal_size() const {
+  size_t Vertex_Buffer_Renderer_GL::normal_size() const {
     return 3u * sizeof(float);
   }
 
-  size_t Vertex_Buffer_GL::color_size() const {
+  size_t Vertex_Buffer_Renderer_GL::color_size() const {
     return 4u * sizeof(unsigned char);
   }
 
-  size_t Vertex_Buffer_GL::texel_size() const {
+  size_t Vertex_Buffer_Renderer_GL::texel_size() const {
     return 2u * sizeof(float);
   }
 
 #endif
 #ifndef DISABLE_DX9
 
-  size_t Vertex_Buffer_DX9::vertex_c_size() const {
+  size_t Vertex_Buffer_Renderer_DX9::vertex_c_size() const {
     static Vertex3f_Color vert;
     return sizeof(Vertex3f_Color) - vert.get_offset();
   }
 
-  size_t Vertex_Buffer_DX9::vertex_t_size() const {
+  size_t Vertex_Buffer_Renderer_DX9::vertex_t_size() const {
     static Vertex3f_Texture vert;
     return sizeof(Vertex3f_Texture) - vert.get_offset();
   }

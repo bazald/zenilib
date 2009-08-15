@@ -75,6 +75,7 @@ namespace Zeni {
   class Shader_System;
   class Texture;
   class Vertex_Buffer;
+  class Vertex_Buffer_Renderer;
   class Vertex_Shader;
   class Video;
   class XML_Document;
@@ -228,7 +229,7 @@ namespace Zeni {
     inline Texture * create_Texture(const Point2i &size, const bool &repeat); ///< Function for creating a Texture for render-to-texture
     inline Font * create_Font(const std::string &filename, const bool &bold, const bool &italic, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
-    inline Vertex_Buffer * create_Vertex_Buffer(); ///< Function for creating a Vertex_Buffer
+    inline Vertex_Buffer_Renderer * create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer); ///< Function for creating a Vertex_Buffer_Renderer
 
     // Initialization Functions
     inline void initialize(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor

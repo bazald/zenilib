@@ -43,7 +43,7 @@ namespace Zeni {
     m_height(height),
     m_logo_color(logo_color),
     m_text_color(text_color),
-    m_vbo(get_Video().create_Vertex_Buffer())
+    m_vbo(new Vertex_Buffer())
   {
     create_all();
   }
@@ -57,7 +57,7 @@ namespace Zeni {
     m_height(rhs.m_height),
     m_logo_color(rhs.m_logo_color),
     m_text_color(rhs.m_text_color),
-    m_vbo(get_Video().create_Vertex_Buffer())
+    m_vbo(new Vertex_Buffer())
   {
     create_all();
   }
