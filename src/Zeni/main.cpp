@@ -26,6 +26,7 @@
 * the GNU General Public License.
 */
 
+#include <Zeni/Configurator_Video.h>
 #include <Zeni/Game.hxx>
 #include <Zeni/Gamestate.hxx>
 #include <Zeni/Textures.hxx>
@@ -50,8 +51,9 @@
 using namespace std;
 using namespace Zeni;
 
-static void load_config() {
+static bool load_config() {
   XML_Document config_xml("config/zenilib.xml");
+  bool user_config = true;
 
   {
     Core::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
@@ -61,8 +63,10 @@ static void load_config() {
       cerr << "User-specific config file loaded from '"
            << get_Core().get_appdata_path() + "config/zenilib.xml"
            << "'." << endl;
-    else
+    else {
       cerr << "User-specific config file not found." << endl;
+      user_config = false;
+    }
   }
 
   XML_Element_c zenilib = config_xml["Zenilib"];
@@ -143,6 +147,8 @@ static void load_config() {
   Textures::set_texturing_mode(config.textures.anisotropy,
                                config.textures.bilinear_filtering,
                                config.textures.mipmapping);
+
+  return user_config;
 }
 
 /*** main ***/
@@ -210,10 +216,17 @@ inline int main2(const size_t &argc, const char * const argv[]) {
 
   try {
     // Load config
-    load_config();
-    
+    const bool user_config = load_config();
+
+    // Initialize Game
+    get_Game(&args);
+
+    // Check Rendering Options on Firstrun
+    if(!user_config)
+      get_Game().push_state(new Zeni::Configurator_Video::Check_State(true));
+
     // Run Game
-    get_Game(&args).run();
+    get_Game().run();
   }
   catch(Quit_Event &) {
     cerr << "Exiting normally." << endl;

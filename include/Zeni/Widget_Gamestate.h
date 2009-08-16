@@ -56,6 +56,9 @@ namespace Zeni {
     const std::pair<Point2i, Point2i> & get_crop_window() const;
     const std::pair<Point2f, Point2f> & get_virtual_window() const;
 
+    void on_push();
+    void on_pop();
+
     void on_key(const SDL_KeyboardEvent &event);
     void on_mouse_button(const SDL_MouseButtonEvent &event);
     void on_mouse_motion(const SDL_MouseMotionEvent &event);
@@ -72,6 +75,7 @@ namespace Zeni {
     Zeni::Projector2D m_projector;
 
     Point2i m_prev_resolution;
+    bool m_hide_cursor;
   };
 
 }

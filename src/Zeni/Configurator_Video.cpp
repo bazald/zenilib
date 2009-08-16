@@ -35,20 +35,114 @@
 #include <Zeni/Video.hxx>
 #include <Zeni/Widget.hxx>
 
+#include <Zeni/Global.h>
+
 using namespace std;
 
 namespace Zeni {
 
+  Configurator_Video::Check_State::Accept_Button::Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen)
+    : Text_Button_3C(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
+                     Point2f(virtual_screen.second),
+                     "system_36_600",
+                     "Accept"),
+    m_check_video(check_video)
+  {
+  }
+
+  void Configurator_Video::Check_State::Accept_Button::on_accept() {
+    m_check_video.m_accept = true;
+    get_Game().pop_state();
+  }
+
+  Configurator_Video::Check_State::Check_State(const bool &failsafe)
+    : m_virtual_screen(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f)),
+    m_projector(m_virtual_screen),
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4355 )
+#endif
+    m_accept_button(*this, m_virtual_screen),
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    m_text(Point2f(), m_virtual_screen.second, get_Colors()["default_button_text_normal"], "system_36_600",
+           "Click 'Accept' to save current rendering options.\n"
+           "Hit 'Escape' to reject current rendering options.\n"
+           "Current rendering options will be rejected in 10 seconds.",
+           get_Colors()["default_button_bg_normal"], false),
+    m_hide_cursor(false),
+    m_accept(false),
+    m_failsafe(failsafe)
+  {
+    m_widgets.lend_Widget(m_accept_button);
+    m_widgets.lend_Widget(m_text);
+
+    m_chrono.start();
+  }
+
+  void Configurator_Video::Check_State::on_push() {
+    m_hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
+    if(m_hide_cursor)
+      SDL_ShowCursor(true);
+  }
+
+  void Configurator_Video::Check_State::on_pop() {
+    if(m_hide_cursor)
+      SDL_ShowCursor(false);
+
+    if(m_accept)
+      Video::save();
+    else if(m_failsafe) {
+      Video::destroy();
+
+      Video::set_failsafe_defaults();
+
+      get_Video();
+      get_Textures().unlose_resources();
+      get_Fonts().unlose_resources();
+    }
+    else
+      Video::reinit();
+  }
+
+  void Configurator_Video::Check_State::on_mouse_button(const SDL_MouseButtonEvent &event) {
+    m_widgets.on_event(event, m_projector);
+  }
+
+  void Configurator_Video::Check_State::on_mouse_motion(const SDL_MouseMotionEvent &event) {
+    m_widgets.on_event(event, m_projector);
+  }
+
+  void Configurator_Video::Check_State::perform_logic() {
+    m_text.set_text(
+      "Click 'Accept' to save current rendering options\n"
+      "Hit 'Escape' to reject current rendering options\n"
+      "Current rendering options will be rejected in " + itoa(int(ZENI_REVERT_TIMEOUT - m_chrono.seconds() + 0.999f)) + " seconds.");
+
+    if(m_chrono.seconds() > ZENI_REVERT_TIMEOUT) {
+      get_Game().pop_state();
+    }
+  }
+
+  void Configurator_Video::Check_State::render() {
+    get_Video().set_2d(m_virtual_screen);
+
+    m_widgets.render();
+  }
+
   Configurator_Video::Check_Box_Element::Check_Box_Element(const XML_Element &element,
-                    const Point2f &upper_left,
-                    const float &height)
+                                                           const bool &checked,
+                                                           const Point2f &upper_left,
+                                                           const float &height)
     : Check_Box(upper_left,
                 Point2f(upper_left.x + height, upper_left.y + height),
                 get_Colors()["default_button_bg_normal"],
-                get_Colors()["default_button_bg_normal"]),
+                get_Colors()["default_button_bg_normal"],
+                checked),
     m_element(element)
   {
-    set_checked(m_element.to_bool());
+    m_element.set_bool(checked);
   }
 
   void Configurator_Video::Check_Box_Element::on_accept() {
@@ -68,9 +162,10 @@ namespace Zeni {
   }
 
   Configurator_Video::Slider_Element::Slider_Element(const XML_Element &element,
-                 const std::pair<int, int> &range,
-                 const Point2f &upper_left,
-                 const Point2f &lower_right)
+                                                     const int &value,
+                                                     const std::pair<int, int> &range,
+                                                     const Point2f &upper_left,
+                                                     const Point2f &lower_right)
     : Slider_Int(range,
                  Point2f(0.9f * upper_left.x + 0.1f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
                  Point2f(0.1f * upper_left.x + 0.9f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
@@ -81,7 +176,8 @@ namespace Zeni {
     m_text_coord(lower_right.x,
                  0.5f * (lower_right.y + upper_left.y))
   {
-    set_value(m_element.to_int());
+    set_value(value);
+    m_element.set_int(value);
   }
 
   void Configurator_Video::Slider_Element::on_accept() {
@@ -100,18 +196,20 @@ namespace Zeni {
   }
 
   Configurator_Video::Text_Element::Text_Element(const XML_Element &element,
-               const Point2f &upper_left,
-               const Point2f &lower_right)
+                                                 const std::string &text,
+                                                 const Point2f &upper_left,
+                                                 const Point2f &lower_right)
     : Text_Box(upper_left,
                Point2f(lower_right.x /*- get_Fonts()["system_36_600"].get_text_width(" " + element.value())*/, lower_right.y),
                get_Colors()["default_button_bg_normal"],
                "system_36_600",
-               element.to_string(),
+               text,
                get_Colors()["default_button_text_normal"],
                true,
                ZENI_CENTER),
     m_element(element)
   {
+    m_element.set_string(text);
   }
 
   void Configurator_Video::Text_Element::on_change() {
@@ -171,8 +269,11 @@ namespace Zeni {
     for(std::vector<Point2i>::const_iterator it = resolutions.begin(); it != resolutions.end(); ++it)
       add_option(itoa(it->x) + "x" + itoa(it->y));
 
-    // Assuming this is present, it will be the fall back if the next option does not exist
-    select_option("640x480");
+    // This will be the fall back if the other options do not exist
+    select_option(itoa(resolutions.begin()->x) + 'x' + itoa(resolutions.begin()->y));
+
+    // Prefer 800x600
+    select_option("800x600");
 
     // Try the set the current resolution as the selection option
     select_option(itoa(get_Video().get_screen_width()) + 'x' + itoa(get_Video().get_screen_height()));
@@ -188,12 +289,14 @@ namespace Zeni {
   }
 
   Configurator_Video::Custom_Resolution_Box::Custom_Resolution_Box(Configurator_Video &configurator,
+                                                                   const bool &checked,
                                                                    const Point2f &upper_left,
                                                                    const float &height)
     : Check_Box(upper_left,
                 Point2f(upper_left.x + height, upper_left.y + height),
                 get_Colors()["default_button_bg_normal"],
-                get_Colors()["default_button_bg_normal"]),
+                get_Colors()["default_button_bg_normal"],
+                checked),
     m_configurator(configurator)
   {
   }
@@ -232,29 +335,27 @@ namespace Zeni {
                      get_Colors()["default_button_bg_normal"]);
   }
 
-  Configurator_Video::Save_Button::Save_Button(XML_Document &file,
-              const Point2f &upper_left,
-              const Point2f &lower_right)
-    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Save"),
+  Configurator_Video::Apply_Button::Apply_Button(XML_Document &file,
+                                                 const Point2f &upper_left,
+                                                 const Point2f &lower_right)
+    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Apply"),
     m_file(&file)
   {
   }
 
-  void Configurator_Video::Save_Button::on_accept() {
+  void Configurator_Video::Apply_Button::on_accept() {
     Text_Button::on_accept();
 
-    Core &cr = get_Core();
-    const std::string appdata_path = cr.get_appdata_path();
+    //Core &cr = get_Core();
+    //const std::string appdata_path = cr.get_appdata_path();
 
-    if(cr.create_directory(appdata_path) &&
-       cr.create_directory(appdata_path + "config/"))
-    {
-      m_file->try_save(appdata_path + "config/zenilib.xml");
-    }
+    //if(cr.create_directory(appdata_path) &&
+    //   cr.create_directory(appdata_path + "config/"))
+    //{
+    //  m_file->try_save(appdata_path + "config/zenilib.xml");
+    //}
 
-    m_file->try_save("config/zenilib.xml");
-
-    get_Game().pop_state();
+    //m_file->try_save("config/zenilib.xml");
 
     XML_Element_c zenilib = (*m_file)["Zenilib"];
     XML_Element_c textures = zenilib["Textures"];
@@ -280,6 +381,12 @@ namespace Zeni {
     Textures::set_texturing_mode(textures["Anisotropy"].to_int(),
                                  textures["Bilinear_Filtering"].to_bool(),
                                  textures["Mipmapping"].to_bool());
+
+    get_Textures().unlose_resources();
+    get_Fonts().unlose_resources();
+
+    get_Game().pop_state();
+    get_Game().push_state(new Check_State(false));
   }
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
@@ -302,20 +409,20 @@ namespace Zeni {
     m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
 
-    m_anisotropy(m_zenilib["Textures"]["Anisotropy"], make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
-    m_bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
-    m_mipmapping(m_zenilib["Textures"]["Mipmapping"], Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
+    m_anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
+    m_bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Textures::get_bilinear_filtering(), Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
+    m_mipmapping(m_zenilib["Textures"]["Mipmapping"], Textures::get_mipmapping(), Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
 
     m_api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
-    m_full_screen(m_zenilib["Video"]["Full_Screen"], Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
-    m_multisampling(m_zenilib["Video"]["Multisampling"], make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
+    m_full_screen(m_zenilib["Video"]["Full_Screen"], Video::is_fullscreen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
+    m_multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
 
     m_resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
-    m_custom_resolution(*this, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
-    m_custom_width(m_zenilib["Video"]["Resolution"]["Width"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
-    m_custom_height(m_zenilib["Video"]["Resolution"]["Height"], Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    m_custom_resolution(*this, true, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
+    m_custom_width(m_zenilib["Video"]["Resolution"]["Width"], itoa(Video::get_screen_width()), Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    m_custom_height(m_zenilib["Video"]["Resolution"]["Height"], itoa(Video::get_screen_height()), Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
 
-    m_vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
+    m_vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Video::get_vertical_sync(), Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
 
     m_save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
     m_cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
@@ -326,14 +433,19 @@ namespace Zeni {
   {
     /** Build m_widgets **/
 
-#ifdef _WINDOWS
+#if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
     m_api.add_entry("Direct3D 9", "DX9");
-#endif
     m_api.add_entry("OpenGL", "OpenGL");
-#ifdef _WINDOWS
-    m_api.select_option(m_zenilib["Video"]["API"].to_string());
-#else
+    m_api.select_option(Video::get_video_mode() == Video_Base::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
+#elif !defined(DISABLE_DX9)
+    m_api.add_entry("Direct3D 9", "DX9");
+    m_api.select_option("DX9");
+    m_api.set_editable(false);
+#elif !defined(DISABLE_GL)
+    m_api.add_entry("OpenGL", "OpenGL");
     m_api.select_option("OpenGL");
+    m_api.set_editable(false);
+#else
     m_api.set_editable(false);
 #endif
 
@@ -353,12 +465,11 @@ namespace Zeni {
          selected.substr(x + 1) == m_custom_height.get_text())
       {
         m_custom_resolution.set_checked(false);
-        m_custom_resolution.apply();
       }
       else {
         m_custom_resolution.set_checked(true);
-        m_custom_resolution.apply();
       }
+      m_custom_resolution.apply();
     }
 
     m_widgets.lend_Widget(m_vertical_sync);

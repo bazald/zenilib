@@ -79,7 +79,10 @@ namespace Zeni {
       throw Video_Init_Failure();
 
     // Initialize Video Mode Listing
-    for(SDL_Rect ** mode = SDL_ListModes(0, SDL_FULLSCREEN); *mode; ++mode)
+    SDL_PixelFormat fmt;
+    memset(&fmt, 0, sizeof(SDL_PixelFormat));
+    fmt.BitsPerPixel = 32;
+    for(SDL_Rect ** mode = SDL_ListModes(&fmt, SDL_FULLSCREEN | SDL_OPENGL); *mode; ++mode)
       m_modes.push_back(Point2i((*mode)->w, (*mode)->h));
 
     if(m_modes.empty())
@@ -133,45 +136,7 @@ namespace Zeni {
           get_Video();
         }
         else if(!last_resort_taken) {
-          XML_Document config_xml(local_normal);
-
-          XML_Element zenilib = config_xml["Zenilib"];
-          {
-            XML_Element textures = zenilib["Textures"];
-            textures["Anisotropy"].set_int(0);
-            textures["Bilinear_Filtering"].set_bool(true);
-            textures["Mipmapping"].set_bool(true);
-          }
-          {
-            XML_Element video = zenilib["Video"];
-#ifndef DISABLE_GL
-            video["API"].set_string("OpenGL");
-#else
-#ifndef DISABLE_DX9
-            video["API"].set_string("DX9");
-#endif
-#endif
-            video["Full_Screen"].set_bool(false);
-            video["Multisampling"].set_int(0);
-            {
-              XML_Element screen_resolution = video["Resolution"];
-              screen_resolution["Width"].set_int(640);
-              screen_resolution["Height"].set_int(480);
-            }
-            video["Vertical_Sync"].set_bool(false);
-          }
-
-          if(cr.create_directory(appdata_path) &&
-             cr.create_directory(appdata_path + "config/") &&
-             config_xml.try_save(user_normal))
-          {
-            cerr << '\'' << user_normal << "' reset due to initialization failure.\n";
-          }
-          if(config_xml.try_save(local_normal)) {
-            cerr << '\'' << local_normal << "' reset due to initialization failure.\n";
-          }
-
-          Video::preinit_from_file(config_xml);
+          Video::set_failsafe_defaults();
 
           last_resort_taken = true;
 
@@ -181,24 +146,24 @@ namespace Zeni {
           throw;
       }
 
-      // Make backups of "good" configurations
+      //// Make backups of "good" configurations
 
-      if(cr.create_directory(appdata_path) &&
-         cr.create_directory(appdata_path + "config/"))
-      {
-        if(cr.copy_file(user_normal, user_backup))
-        {
-          cr.copy_file(user_normal, local_normal);
-          cr.copy_file(user_normal, local_backup);
-        }
-        else
-        {
-          cr.copy_file(local_normal, user_normal);
-          cr.copy_file(local_normal, user_backup);
-        }
-      }
-      else
-        cr.copy_file(local_normal, local_backup);
+      //if(cr.create_directory(appdata_path) &&
+      //   cr.create_directory(appdata_path + "config/"))
+      //{
+      //  if(cr.copy_file(user_normal, user_backup))
+      //  {
+      //    cr.copy_file(user_normal, local_normal);
+      //    cr.copy_file(user_normal, local_backup);
+      //  }
+      //  else
+      //  {
+      //    cr.copy_file(local_normal, user_normal);
+      //    cr.copy_file(local_normal, user_backup);
+      //  }
+      //}
+      //else
+      //  cr.copy_file(local_normal, local_backup);
 
       last_resort_taken = false;
     }
@@ -258,12 +223,99 @@ namespace Zeni {
 
   void Video::destroy() {
     Vertex_Buffer::lose_all();
-    get_Textures().lose_resources();
     get_Fonts().lose_resources();
+    get_Textures().lose_resources();
 
     delete e_video;
     e_video = 0;
     g_initialized = false;
+  }
+
+  void Video::reinit() {
+    destroy();
+
+    try {
+      preinit_from_file(get_Core().get_appdata_path() + "config/zenilib.xml");
+    }
+    catch(XML_Load_Failure &) {
+      preinit_from_file("config/zenilib.xml");
+    }
+
+    get_Video();
+    get_Textures().unlose_resources();
+    get_Fonts().unlose_resources();
+  }
+
+  void Video::save() {
+    Core &cr = get_Core();
+
+    // Initialize paths
+
+    const std::string appdata_path = cr.get_appdata_path();
+
+    const string user_normal = appdata_path + "config/zenilib.xml";
+    const string user_backup = user_normal + ".bak";
+    const string local_normal = "config/zenilib.xml";
+    const string local_backup = local_normal + ".bak";
+
+    // Create file
+
+    XML_Document file(local_normal);
+    XML_Element zenilib = file["Zenilib"];
+    XML_Element textures = zenilib["Textures"];
+    XML_Element video = zenilib["Video"];
+
+    textures["Anisotropy"].set_int(Textures::get_anisotropic_filtering());
+    textures["Bilinear_Filtering"].set_bool(Textures::get_bilinear_filtering());
+    textures["Mipmapping"].set_bool(Textures::get_mipmapping());
+
+    video["API"].set_string(
+#if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
+                            g_video_mode == Video_Base::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
+#elif !defined(DISABLE_DX9)
+                            "DX9");
+#elif !defined(DISABLE_GL)
+                            "OpenGL");
+#else
+                            "Disabled");
+#endif                            
+
+    video["Full_Screen"].set_bool(g_screen_full);
+    video["Multisampling"].set_int(g_multisampling);
+    video["Resolution"]["Width"].set_int(g_screen_size.x);
+    video["Resolution"]["Height"].set_int(g_screen_size.y);
+    video["Vertical_Sync"].set_bool(g_vertical_sync);
+
+    // Local backup and save
+
+    cr.copy_file(local_normal, local_backup);
+    file.try_save();
+
+    // User-specific backup and save
+
+    if(cr.create_directory(appdata_path) &&
+       cr.create_directory(appdata_path + "config/"))
+    {
+      cr.copy_file(user_normal, user_backup);
+      file.try_save(user_normal);
+    }
+  }
+
+  void Video::set_failsafe_defaults() {
+    Textures::set_texturing_mode(0, false, false);
+
+#if !defined(DISABLE_GL)
+    g_video_mode = Video_Base::ZENI_VIDEO_GL;
+#elif !defined(DISABLE_DX9)
+    g_video_mode = Video_Base::ZENI_VIDEO_DX9;
+#else
+    g_video_mode = Video_Base::ZENI_VIDEO_ANY;
+#endif
+
+    g_screen_full = false;
+    g_screen_size.x = MINIMUM_SCREEN_WIDTH;
+    g_screen_size.y = MINIMUM_SCREEN_HEIGHT;
+    g_vertical_sync = false;
   }
 
   void Video::set_enabled(const bool &enabled) {
@@ -304,11 +356,20 @@ namespace Zeni {
 
     const Point2i &max_res = *m_modes.rbegin();
 
-    if(g_screen_size.x < MINIMUM_SCREEN_WIDTH)
+    if(g_screen_size.x < 0)
+      g_screen_size.x = max_res.x;
+    else if(g_screen_size.x == 0)
+      g_screen_size.x = VideoInfo->current_w;
+    else if(g_screen_size.x < MINIMUM_SCREEN_WIDTH)
       g_screen_size.x = MINIMUM_SCREEN_WIDTH;
     else if(g_screen_size.x > max_res.x)
       g_screen_size.x = max_res.x;
-    if(g_screen_size.y < MINIMUM_SCREEN_HEIGHT)
+
+    if(g_screen_size.y < 0)
+      g_screen_size.y = max_res.y;
+    else if(g_screen_size.y == 0)
+      g_screen_size.y = VideoInfo->current_h;
+    else if(g_screen_size.y < MINIMUM_SCREEN_HEIGHT)
       g_screen_size.y = MINIMUM_SCREEN_HEIGHT;
     else if(g_screen_size.y > max_res.y)
       g_screen_size.y = max_res.y;

@@ -84,6 +84,9 @@
 // Collision.cpp
 #undef ZENI_COLLISION_EPSILON
 
+// Configurator_Video.cpp
+#undef ZENI_REVERT_TIMEOUT
+
 // Font.cpp
 #undef MINIMUM_VIRTUAL_SCREEN_HEIGHT
 #undef MAXIMUM_VIRTUAL_SCREEN_HEIGHT

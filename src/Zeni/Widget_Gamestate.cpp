@@ -48,6 +48,17 @@ namespace Zeni {
     return m_virtual_window;
   }
 
+  void Widget_Gamestate::on_push() {
+    m_hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
+    if(m_hide_cursor)
+      SDL_ShowCursor(true);
+  }
+
+  void Widget_Gamestate::on_pop() {
+    if(m_hide_cursor)
+      SDL_ShowCursor(false);
+  }
+
   void Widget_Gamestate::on_key(const SDL_KeyboardEvent &event) {
     m_widgets.on_event(event);
     if(!m_widgets.is_busy())
