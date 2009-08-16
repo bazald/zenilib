@@ -28,6 +28,8 @@ using namespace std;
 bool g_x64 = false;
 bool g_win2k_winxpb4sp2 = false;
 
+vector<string> g_excluded;
+
 /** String Manipulation Functions **/
 
 static string cut_all_directories(const string &file_name) {
@@ -70,11 +72,14 @@ static string to_upper(string str) {
   return str;
 }
 
-static bool ignore_path(const std::string &str) {
+static bool exclude_path(const std::string &str, const bool &report) {
   const string sl = to_lower(str);
-  return !g_x64 && sl.find("x64") != -1 ||
-         !g_win2k_winxpb4sp2 && (sl.find("dxdllreg_x86.cab") != -1 ||
-                                 sl.find("dxnt.cab") != -1);
+  const bool exclude = !g_x64 && sl.find("x64") != -1 ||
+                       !g_win2k_winxpb4sp2 && (sl.find("dxdllreg_x86.cab") != -1 ||
+                                               sl.find("dxnt.cab") != -1);
+  if(exclude && report)
+    g_excluded.push_back(str.substr(str.find('\\') + 1));
+  return exclude;
 }
 
 /** Stream Dumper **/
@@ -82,7 +87,7 @@ static bool ignore_path(const std::string &str) {
 static void dump(ostream &os, istream &is) {
   string s;
   while(getline(is, s))
-    if(!ignore_path(s))
+    if(!exclude_path(s, false))
       os << s << endl;
 }
 
@@ -95,6 +100,8 @@ public:
   virtual void on_enter_dir(ostream &/*os*/, const string &/*directory_name*/) {}
   virtual void on_file(ostream &/*os*/, const string &/*file_name*/) {}
   virtual void on_exit_dir(ostream &/*os*/, const string &/*directory_name*/) {}
+
+  virtual bool report() const {return false;}
 };
 
 class Install_Files : public NSIS_Helper {
@@ -118,6 +125,8 @@ class Install_Files : public NSIS_Helper {
        << file_name
        << "\"\n";
   }
+
+  bool report() const {return true;}
 
 public:
   Install_Files() : dir_set(false) {}
@@ -144,12 +153,14 @@ class Uninstall_Files : public NSIS_Helper {
       os << "\\" << dir;
     os << "\"\n\n";
   }
+
+  bool report() const {return false;}
 };
 
 /** WinAPI Functions **/
 
 static void recurse_directory(ostream &os, const string &directory_name, NSIS_Helper &helper) {
-  if(ignore_path(directory_name))
+  if(exclude_path(directory_name, helper.report()))
     return;
 
   helper.on_enter_dir(os, directory_name);
@@ -168,7 +179,7 @@ static void recurse_directory(ostream &os, const string &directory_name, NSIS_He
 
     if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
       recurse_directory(os, directory_name + FindFileData.cFileName + "\\", helper);
-    else if(!ignore_path(directory_name + FindFileData.cFileName))
+    else if(!exclude_path(directory_name + FindFileData.cFileName, helper.report()))
       helper.on_file(os, directory_name + FindFileData.cFileName);
   } while(FindNextFileA(hFind, &FindFileData));
 
@@ -229,6 +240,16 @@ int main(int /*argc*/, char ** /*argv*/) {
   dump(nsi, nsi_2);
   recurse_directory(nsi, "zenilib\\", uninstaller);
   dump(nsi, nsi_3);
+
+  cout << "\nThe following paths were excluded from the installer:\n\n";
+  for(vector<string>::const_iterator it = g_excluded.begin(); it != g_excluded.end(); ++it)
+    cout << "  " << *it << endl;
+
+  {
+    cout << "\nHit Enter to exit.\n";
+    string s;
+    getline(cin, s);
+  }
 
   return 0;
 }
