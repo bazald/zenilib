@@ -41,6 +41,7 @@
 #ifndef CONFIGURATOR_VIDEO_H
 #define CONFIGURATOR_VIDEO_H
 
+#include <Zeni/Chronometer.h>
 #include <Zeni/Widget_Gamestate.h>
 #include <Zeni/XML.h>
 
@@ -50,12 +51,59 @@ namespace Zeni {
     Configurator_Video(const Configurator_Video &);
     Configurator_Video & operator=(const Configurator_Video &);
 
+  public:
+    class Check_State : public Zeni::Gamestate_Base {
+      Check_State(const Check_State &);
+      Check_State operator=(const Check_State &);
+
+      class Accept_Button : public Zeni::Text_Button_3C {
+        Accept_Button(const Accept_Button &);
+        Accept_Button operator=(const Accept_Button &);
+
+      public:
+        Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen);
+
+        void on_accept();
+
+      private:
+        Check_State &m_check_video;
+      };
+
+    public:
+      Check_State(const bool &failsafe);
+
+    private:
+      void on_push();
+      void on_pop();
+
+      void on_mouse_button(const SDL_MouseButtonEvent &event);
+      void on_mouse_motion(const SDL_MouseMotionEvent &event);
+
+      void perform_logic();
+      void render();
+
+      std::pair<Point2f, Point2f> m_virtual_screen;
+      Projector2D m_projector;
+
+      Accept_Button m_accept_button;
+      Text_Box m_text;
+      Widgets m_widgets;
+
+      Chronometer<Time> m_chrono;
+
+      bool m_hide_cursor;
+      bool m_accept;
+      bool m_failsafe;
+    };
+
+  private:
     class Check_Box_Element : public Check_Box {
       Check_Box_Element(const Check_Box_Element &);
       Check_Box_Element & operator=(const Check_Box_Element &);
 
     public:
       Check_Box_Element(const XML_Element &element,
+                        const bool &checked,
                         const Point2f &upper_left,
                         const float &height);
 
@@ -73,6 +121,7 @@ namespace Zeni {
 
     public:
       Slider_Element(const XML_Element &element,
+                     const int &value,
                      const std::pair<int, int> &range,
                      const Point2f &upper_left,
                      const Point2f &lower_right);
@@ -92,6 +141,7 @@ namespace Zeni {
 
     public:
       Text_Element(const XML_Element &element,
+                   const std::string &text,
                    const Point2f &upper_left,
                    const Point2f &lower_right);
 
@@ -146,6 +196,7 @@ namespace Zeni {
 
     public:
       Custom_Resolution_Box(Configurator_Video &configurator,
+                            const bool &checked,
                             const Point2f &upper_left,
                             const float &height);
 
@@ -159,12 +210,12 @@ namespace Zeni {
       Configurator_Video &m_configurator;
     };
 
-    class Save_Button : public Text_Button_3C {
-      Save_Button(const Save_Button &);
-      Save_Button & operator=(const Save_Button &);
+    class Apply_Button : public Text_Button_3C {
+      Apply_Button(const Apply_Button &);
+      Apply_Button & operator=(const Apply_Button &);
 
     public:
-      Save_Button(XML_Document &file,
+      Apply_Button(XML_Document &file,
                   const Point2f &upper_left,
                   const Point2f &lower_right);
 
@@ -210,7 +261,7 @@ namespace Zeni {
 
     Check_Box_Element m_vertical_sync;
 
-    Save_Button m_save;
+    Apply_Button m_save;
     Cancel_Button m_cancel;
 
     std::string m_prev_title;

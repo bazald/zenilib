@@ -43,8 +43,7 @@ namespace Zeni {
 
 }
 
-#else
-#ifdef __GNUC__
+#elif defined(__GNUC__)
 
 #include <ext/hash_map>
 
@@ -77,6 +76,5 @@ namespace Zeni {
 
 }
 
-#endif
 #endif
 #endif

@@ -253,6 +253,9 @@ namespace Zeni {
 
     // Re/uninitialize the Rendering Device
     static void destroy(); ///< Completely uninitialize the rendering device, if it is initialized
+    static void reinit(); ///< Destroy, reload options, and reinitialize
+    static void save(); ///< Save options
+    static void set_failsafe_defaults(); ///< Set failsafe default options
 
   protected:
     inline SDL_Surface * get_display_surface();
