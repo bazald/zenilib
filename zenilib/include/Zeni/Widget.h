@@ -656,8 +656,12 @@ namespace Zeni {
     virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
     virtual void on_slide();
 
+    inline const bool & is_mouse_wheel_inverted() const;
+    inline void invert_mouse_wheel(const bool &invert);
+
   private:
     Range m_range;
+    bool m_mouse_wheel_inverted;
   };
 
   class Selector : public Widget {

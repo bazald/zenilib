@@ -464,6 +464,14 @@ namespace Zeni {
     set_slider_position(float(clamped - m_range.first) / (m_range.second - m_range.first));
   }
 
+  const bool & Slider_Int::is_mouse_wheel_inverted() const {
+    return m_mouse_wheel_inverted;
+  }
+
+  void Slider_Int::invert_mouse_wheel(const bool &invert) {
+    m_mouse_wheel_inverted = invert;
+  }
+
   const Color & Text_Box::get_bg_color() const {
     return m_bg.get_color();
   }

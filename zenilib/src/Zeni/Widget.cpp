@@ -381,7 +381,8 @@ namespace Zeni {
                          const Color &slider_color_,
                          const float &slider_position_)
   : Slider(end_point_a_, end_point_b_, slider_radius_, line_color_, slider_color_, slider_position_),
-  m_range(range)
+  m_range(range),
+  m_mouse_wheel_inverted(false)
   {
     assert(range.first <= range.second);
     set_value(get_value());
@@ -397,7 +398,7 @@ namespace Zeni {
 
     const std::pair<float, float> test = get_line_segment().nearest_point(mouse_pos);
     if(test.first < get_slider_radius()) {
-      if(button == SDL_BUTTON_WHEELDOWN)
+      if(button == (m_mouse_wheel_inverted ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP))
         set_value(min(get_range().second, get_value() + 1));
       else
         set_value(max(get_range().first, get_value() - 1));
@@ -534,6 +535,7 @@ namespace Zeni {
 #pragma warning( pop )
 #endif
   {
+    m_selector_slider.invert_mouse_wheel(true);
   }
 
   Selector::~Selector() {
