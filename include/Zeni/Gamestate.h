@@ -110,7 +110,7 @@ namespace Zeni {
     Gamestate_Base & operator=(const Gamestate_Base &rhs);
 
   public:
-    Gamestate_Base() : m_count(0) {}
+    Gamestate_Base() : m_count(0), m_pausable(false) {}
     virtual ~Gamestate_Base() {}
 
     // The control loop
@@ -126,6 +126,9 @@ namespace Zeni {
     virtual void on_push();
     /// Called when the Gamestate is popped off the stack in Game
     virtual void on_pop();
+
+    inline const bool & is_pausable() const;
+    inline void set_pausable(const bool &pausable_);
 
     // Converters
 
@@ -160,6 +163,8 @@ namespace Zeni {
     inline void increment();
     inline void decrement();
     int m_count;
+
+    bool m_pausable;
   };
 
   class Gamestate {

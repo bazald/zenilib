@@ -57,10 +57,10 @@ namespace Zeni {
 
   void Game::run() {
 #ifdef TEST_NASTY_CONDITIONS
-    Chronometer<Time> chrono;
+    Random random;
+    const float time_scale = NASTY_MIN_RATE + (NASTY_MAX_RATE - NASTY_MIN_RATE) * random.frand_lte();
     Time::Second_Type time_used = Time::Second_Type();
-    chrono.scale(0.5f + 1.5f * Random().frand_lte());
-    chrono.start();
+    Time start_time;
 #endif
 
     Sound_Source_Pool &sspr = get_Sound_Source_Pool();
@@ -103,11 +103,17 @@ namespace Zeni {
       }
 
 #ifdef TEST_NASTY_CONDITIONS
-      const Time::Second_Type time_passed = chrono.seconds();
+      const Time current_time;
+      const Time::Second_Type time_passed = time_scale * current_time.get_seconds_since(start_time);
+      size_t step_count = 0u;
       while(time_used + (1 / 60.0f) < time_passed) {
         time_used += (1 / 60.0f);
         perform_logic();
+        if(++step_count == NASTY_RATE_CUTOFF)
+          time_used = time_passed;
       }
+      if(!random.rand_lt(NASTY_ZERO_STEP_FREQUENCY))
+        perform_logic();
 #else
       perform_logic();
 #endif

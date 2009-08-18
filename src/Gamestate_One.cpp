@@ -16,8 +16,8 @@ class Play_State : public Gamestate_Base {
   Play_State operator=(const Play_State &);
 
 public:
-  Play_State()
-  {
+  Play_State() {
+    set_pausable(true);
   }
 
 private:
@@ -43,6 +43,11 @@ public:
   }
 
 private:
+  void on_key(const SDL_KeyboardEvent &event) {
+    if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
+      get_Game().pop_state();
+  }
+
   void render() {
     Widget_Gamestate::render();
 
@@ -56,6 +61,19 @@ private:
 };
 
 namespace Zeni {
+
+  /** Do NOT add any other code to the Zeni namespace unless you intend to modify zenilib.
+   *  Modifying the functions below should be the extent of your modifications to zenilib.
+   *
+   *  If you merely intend to use zenilib, your code should be in a namespace unique
+   *  to your game, or in the global namespace.
+   *
+   *  Access classes and functions in zenilib by prefixing them with Zeni:: in your
+   *  header files.  It is acceptable to use 'using' directives in source files only.
+   *
+   *  All your source files should #include <zenilib.h> as the first line, or certain
+   *  build targets will give you errors involving precompiled headers.
+   */
 
   Gamestate_One::Gamestate_One(const vector<string> * const args) {
     if(args)
