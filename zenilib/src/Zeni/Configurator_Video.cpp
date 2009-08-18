@@ -502,8 +502,12 @@ namespace Zeni {
   }
 
   void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {
-    if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
-      get_Game().pop_state();
+    if(event.keysym.sym == SDLK_ESCAPE) {
+      if(event.state == SDL_PRESSED)
+        get_Game().pop_state();
+    }
+    else
+      Widget_Gamestate::on_key(event);
   }
 
   void Configurator_Video::render() {
