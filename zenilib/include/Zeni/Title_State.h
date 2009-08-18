@@ -200,11 +200,12 @@ namespace Zeni {
 
       void render_impl() const {
         const Point2f &ul = get_upper_left();
-        const Color color = get_Colors()["title_bg"];
+        Color color = get_Colors()["title_bg"];
+        color.a = 0.5f;
         const Quadrilateral<Vertex2f_Color> bg(Vertex2f_Color(ul, color),
                                                Vertex2f_Color(Point2f(ul.x, ul.y + 60.0f), color),
-                                               Vertex2f_Color(Point2f(ul.x + 200.0f, ul.y + 60.0f), color),
-                                               Vertex2f_Color(Point2f(ul.x + 200.0f, ul.y), color));
+                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y + 60.0f), color),
+                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y), color));
         get_Video().render(bg);
 
         Check_Box::render_impl();

@@ -42,6 +42,10 @@
 #include <SDL/SDL_image.h>
 #endif
 
+#ifdef _WINDOWS
+#include <WinUser.h>
+#endif
+
 #include <algorithm>
 #include <iostream>
 
@@ -89,9 +93,16 @@ namespace Zeni {
       throw Video_Init_Failure();
 
     std::sort(m_modes.begin(), m_modes.end(), &video_mode_lt);
+
+#ifdef _WINDOWS
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, TRUE);
+#endif
   }
 
   Video::~Video() {
+#ifdef _WINDOWS
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, TRUE, NULL, TRUE);
+#endif
   }
 
   Video & get_Video() {
