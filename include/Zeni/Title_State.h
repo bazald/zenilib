@@ -54,7 +54,6 @@ namespace Zeni {
     Popup_State(const Gamestate &gamestate, const bool &pause_game)
       : Widget_Gamestate(std::make_pair(Point2f(), Point2f(800.0f, 600.0f))),
       m_gamestate(gamestate),
-      m_viewport(get_Video().get_viewport()),
       m_pause_game(pause_game)
     {
     }
@@ -94,12 +93,12 @@ namespace Zeni {
       Video &vr = get_Video();
       const bool ztest = vr.is_ztest_enabled();
 
-      resize(m_viewport);
+      resize(vr.get_viewport());
 
       if(ztest)
         vr.set_ztest(false);
 
-      vr.set_2d(get_virtual_window());
+      vr.set_2d_view(get_virtual_window(), vr.get_viewport());
 
       Color color = get_Colors()["title_bg"];
       color.a = 0.5f;
@@ -121,7 +120,6 @@ namespace Zeni {
     Gamestate m_gamestate;
 
   private:
-    std::pair<Point2i, Point2i> m_viewport;
     bool m_pause_game;
   };
 
