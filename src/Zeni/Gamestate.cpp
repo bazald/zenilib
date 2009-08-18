@@ -941,7 +941,9 @@ default: return "SDLK_UNKNOWN";
     }
   }
 
-  void Gamestate_II::on_event(const Zeni_Input_ID &, const float &, const int &) {
+  void Gamestate_II::on_event(const Zeni_Input_ID &id, const float &confidence, const int &) {
+    if(id.type == SDL_KEYDOWN && id.subid == SDLK_ESCAPE && confidence == 1.0f)
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state(), is_pausable()));
   }
 
   int Gamestate_II::get_action(const Zeni_Input_ID &event) {
