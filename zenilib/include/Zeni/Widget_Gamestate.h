@@ -51,7 +51,7 @@ namespace Zeni {
     Widget_Gamestate & operator=(const Widget_Gamestate &);
 
   public:
-    Widget_Gamestate(const std::pair<Zeni::Point2f, Zeni::Point2f> &virtual_window_);
+    Widget_Gamestate(const std::pair<Point2f, Point2f> &virtual_window_);
 
     const std::pair<Point2i, Point2i> & get_crop_window() const;
     const std::pair<Point2f, Point2f> & get_virtual_window() const;
@@ -65,7 +65,7 @@ namespace Zeni {
     void render();
 
   protected:
-    void resize();
+    void resize(const std::pair<Point2i, Point2i> &crop_window_ = std::make_pair(Point2i(), get_Video().get_render_target_size()));
 
     Widgets m_widgets;
 
@@ -74,8 +74,8 @@ namespace Zeni {
     std::pair<Point2f, Point2f> m_virtual_window;
     Zeni::Projector2D m_projector;
 
-    Point2i m_prev_resolution;
     bool m_hide_cursor;
+    bool m_grab_input;
   };
 
 }

@@ -85,11 +85,17 @@
 #define ZENI_COLLISION_EPSILON (0.0001f)
 
 // Configurator_Video.cpp
-#define ZENI_REVERT_TIMEOUT (15.0f)
+#define ZENI_REVERT_TIMEOUT 15
 
 // Font.cpp
 #define MINIMUM_VIRTUAL_SCREEN_HEIGHT (240.0f)
 #define MAXIMUM_VIRTUAL_SCREEN_HEIGHT (9600.0f)
+
+// Game.cpp
+#define NASTY_MIN_RATE (0.5f)
+#define NASTY_MAX_RATE (2.0f)
+#define NASTY_RATE_CUTOFF (10)
+#define NASTY_ZERO_STEP_FREQUENCY (10)
 
 // Gamestate.cpp
 #define ZENI_DEFAULT_II_JOYBALL_MIN (1)

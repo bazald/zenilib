@@ -94,10 +94,15 @@ namespace Zeni {
 
     void play_and_destroy(Sound_Source * const &sound_source); ///< Play a Sound_Source and destroy it; Used by play_sound(...)
 
+    bool is_muted() const; ///< Check to see if Sound_Sources are muted
+    void mute(const bool &mute_); ///< Mute or unmute all Sound_Sources.
+
   private:
     void set_Replacement_Policy(Replacement_Policy * const &replacement_policy); ///< Set the Replacement_Policy directly
     void insert_Sound_Source(Sound_Source &sound_source); // on Sound_Source construction
     void remove_Sound_Source(Sound_Source &sound_source); // on Sound_Source destruction
+
+    void destroy_all_hw(); ///< Purge all Sound_Source_HW, but leave playing_and_destroying intact
 
     std::vector<Sound_Source *> m_handles;
 
@@ -105,6 +110,8 @@ namespace Zeni {
     bool delete_m_replacement_policy;
 
     std::vector<Sound_Source *> m_playing_and_destroying;
+
+    bool m_muted;
   };
 
   Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.

@@ -99,12 +99,8 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
-    if(event.state == SDL_PRESSED && event.keysym.sym == SDLK_ESCAPE) {
-      Game &game = get_Game();
-
-      if(game.size() > 1u)
-        game.pop_state();
-    }
+    if(event.state == SDL_PRESSED && event.keysym.sym == SDLK_ESCAPE)
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state(), m_pausable));
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {
@@ -132,15 +128,9 @@ namespace Zeni {
   void Gamestate_Base::on_system_wm_event(const SDL_SysWMEvent &) {
   }
 
-  void Gamestate_Base::on_active(const SDL_ActiveEvent &/*event*/) {
-    //if(event.gain) {
-    //  SDL_WM_GrabInput(SDL_GRAB_ON);
-    //  SDL_ShowCursor(false);
-    //}
-    //else {
-    //  SDL_WM_GrabInput(SDL_GRAB_OFF);
-    //  SDL_ShowCursor(true);
-    //}
+  void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
+    if(m_pausable && !event.gain && (event.state & SDL_APPINPUTFOCUS))
+      get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
   }
 
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &) {

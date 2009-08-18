@@ -76,6 +76,7 @@ namespace Zeni {
       void on_push();
       void on_pop();
 
+      void on_key(const SDL_KeyboardEvent &event);
       void on_mouse_button(const SDL_MouseButtonEvent &event);
       void on_mouse_motion(const SDL_MouseMotionEvent &event);
 
@@ -89,7 +90,7 @@ namespace Zeni {
       Text_Box m_text;
       Widgets m_widgets;
 
-      Chronometer<Time> m_chrono;
+      Time m_start_time;
 
       bool m_hide_cursor;
       bool m_accept;
@@ -241,6 +242,8 @@ namespace Zeni {
     ~Configurator_Video();
 
   private:
+    void on_key(const SDL_KeyboardEvent &event);
+
     void render();
 
     XML_Document m_file;

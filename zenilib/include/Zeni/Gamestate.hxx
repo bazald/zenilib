@@ -33,6 +33,14 @@
 
 namespace Zeni {
 
+  const bool & Gamestate_Base::is_pausable() const {
+    return m_pausable;
+  }
+
+  void Gamestate_Base::set_pausable(const bool &pausable_) {
+    m_pausable = pausable_;
+  }
+
   void Gamestate_Base::increment() {
     ++m_count;
   }

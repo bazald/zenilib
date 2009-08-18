@@ -49,12 +49,15 @@
 
 #include <Zeni/Timer.h>
 
+#include <set>
+
 namespace Zeni {
 
   template <class TIME>
   class Chronometer {
   public:
     Chronometer();
+    ~Chronometer();
 
     // Starting and Stopping
     const bool & running() const; ///< Get whether the Chronometer is currently counting or stopped.
@@ -78,6 +81,16 @@ namespace Zeni {
     bool m_running;
 
     typename TIME::Second_Type m_scaling_factor;
+
+  public:
+    static bool are_paused(); ///< Check to see if all Chronometer<TIME> objects are paused
+    static void pause_all(); ///< Pause all Chronometer<TIME> objects
+    static void unpause_all(); ///< Unpause all Chronometer<TIME> objects
+
+  private:
+    static std::set<Chronometer<TIME> *> g_chronometers;
+    static std::set<Chronometer<TIME> *> g_paused;
+    static bool g_are_paused;
   };
 
 }

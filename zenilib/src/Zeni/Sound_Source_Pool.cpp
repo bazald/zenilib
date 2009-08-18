@@ -45,7 +45,8 @@ namespace Zeni {
 
   Sound_Source_Pool::Sound_Source_Pool()
     : m_replacement_policy(new Replacement_Policy()),
-    delete_m_replacement_policy(true)
+    delete_m_replacement_policy(true),
+    m_muted(false)
   {
     // Ensure Sound is initialized
     get_Sound();
@@ -168,16 +169,7 @@ namespace Zeni {
     }
     m_playing_and_destroying.clear();
 
-    for(vector<Sound_Source *>::iterator it = m_handles.begin();
-        it != m_handles.end();
-        ++it)
-    {
-      if((*it)->is_assigned()) {
-        Sound_Source_HW * hw = (*it)->unassign();
-        hw->stop();
-        delete hw;
-      }
-    }
+    destroy_all_hw();
   }
 
   void Sound_Source_Pool::update() {
@@ -195,6 +187,11 @@ namespace Zeni {
         delete *it;
     }
     m_playing_and_destroying.swap(keepers);
+
+    /*** If muted, skip the rest of the update ***/
+
+    if(m_muted)
+      return;
 
     /*** Do the regular update ***/
 
@@ -262,6 +259,20 @@ namespace Zeni {
     sound_source->play();
   }
 
+  bool Sound_Source_Pool::is_muted() const {
+    return m_muted;
+  }
+
+  void Sound_Source_Pool::mute(const bool &mute_) {
+    if(mute_ == m_muted)
+      return;
+
+    if(mute_)
+      destroy_all_hw();
+
+    m_muted = mute_;
+  }
+
   void Sound_Source_Pool::set_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
     assert(replacement_policy);
 
@@ -284,6 +295,19 @@ namespace Zeni {
     }
 
     m_handles.erase(std::find(m_handles.begin(), m_handles.end(), &sound_source));
+  }
+
+  void Sound_Source_Pool::destroy_all_hw() {
+    for(vector<Sound_Source *>::iterator it = m_handles.begin();
+        it != m_handles.end();
+        ++it)
+    {
+      if((*it)->is_assigned()) {
+        Sound_Source_HW * hw = (*it)->unassign();
+        hw->stop();
+        delete hw;
+      }
+    }
   }
 
 }

@@ -69,7 +69,13 @@ namespace Zeni {
     m_text(Point2f(), m_virtual_screen.second, get_Colors()["default_button_text_normal"], "system_36_600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
-           "Current rendering options will be rejected in 10 seconds.",
+           "Current rendering options will be rejected in "
+#define xstr(s) str(s)
+#define str(s) #s
+           xstr(ZENI_REVERT_TIMEOUT)
+#undef str
+#undef xstr
+           " seconds.",
            get_Colors()["default_button_bg_normal"], false),
     m_hide_cursor(false),
     m_accept(false),
@@ -77,8 +83,6 @@ namespace Zeni {
   {
     m_widgets.lend_Widget(m_accept_button);
     m_widgets.lend_Widget(m_text);
-
-    m_chrono.start();
   }
 
   void Configurator_Video::Check_State::on_push() {
@@ -106,6 +110,11 @@ namespace Zeni {
       Video::reinit();
   }
 
+  void Configurator_Video::Check_State::on_key(const SDL_KeyboardEvent &event) {
+    if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
+      get_Game().pop_state();
+  }
+
   void Configurator_Video::Check_State::on_mouse_button(const SDL_MouseButtonEvent &event) {
     m_widgets.on_event(event, m_projector);
   }
@@ -115,14 +124,20 @@ namespace Zeni {
   }
 
   void Configurator_Video::Check_State::perform_logic() {
+    const Time current_time;
+    const float seconds_remaining = ZENI_REVERT_TIMEOUT - current_time.get_seconds_since(m_start_time);
+
+    if(seconds_remaining < 0.0f) {
+      get_Game().pop_state();
+      return;
+    }
+
     m_text.set_text(
       "Click 'Accept' to save current rendering options\n"
       "Hit 'Escape' to reject current rendering options\n"
-      "Current rendering options will be rejected in " + itoa(int(ZENI_REVERT_TIMEOUT - m_chrono.seconds() + 0.999f)) + " seconds.");
-
-    if(m_chrono.seconds() > ZENI_REVERT_TIMEOUT) {
-      get_Game().pop_state();
-    }
+      "Current rendering options will be rejected in " +
+      itoa(int(seconds_remaining + 0.999f)) +
+      " seconds.");
   }
 
   void Configurator_Video::Check_State::render() {
@@ -484,6 +499,11 @@ namespace Zeni {
 
   Configurator_Video::~Configurator_Video() {
     get_Video().set_title(m_prev_title);
+  }
+
+  void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {
+    if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
+      get_Game().pop_state();
   }
 
   void Configurator_Video::render() {

@@ -88,6 +88,10 @@ namespace Zeni {
     Gamestate_One(const std::vector<std::string> * const args = 0); ///< Your first constructor
     virtual ~Gamestate_One(); ///< Your last destructor, excluding statics, globals, ...
 
+    virtual void on_key(const SDL_KeyboardEvent &/*event*/) {
+      // Popup_Menu disabled
+    }
+
     virtual void perform_logic(); ///< Your game logic, on a frame by frame basis; Should probably be used to instantiate other game states, using some sort of static/global counter
   };
 
