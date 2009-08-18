@@ -134,7 +134,7 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::pause_all() {
-    for(std::set<Chronometer<TIME> *>::iterator it = g_chronometers.begin();
+    for(typename std::set<Chronometer<TIME> *>::iterator it = g_chronometers.begin();
         it != g_chronometers.end();
         ++it)
     {
@@ -147,7 +147,7 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::unpause_all() {
-    for(std::set<Chronometer<TIME> *>::iterator it = g_paused.begin();
+    for(typename std::set<Chronometer<TIME> *>::iterator it = g_paused.begin();
         it != g_paused.end();
         ++it)
     {
