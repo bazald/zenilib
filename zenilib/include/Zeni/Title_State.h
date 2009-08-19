@@ -83,6 +83,8 @@ namespace Zeni {
     }
 
     void perform_logic() {
+      Widget_Gamestate::perform_logic();
+
       if(!m_pause_game)
         m_gamestate.perform_logic();
     }
@@ -93,12 +95,10 @@ namespace Zeni {
       Video &vr = get_Video();
       const bool ztest = vr.is_ztest_enabled();
 
-      resize(vr.get_viewport());
-
       if(ztest)
         vr.set_ztest(false);
 
-      vr.set_2d_view(get_virtual_window(), vr.get_viewport());
+      vr.set_2d(std::make_pair(Point2f(), Point2f(800.0f, 600.0f)));
 
       Color color = get_Colors()["title_bg"];
       color.a = 0.5f;
@@ -109,7 +109,7 @@ namespace Zeni {
 
       vr.render(quad);
 
-      vr.set_2d_view(get_virtual_window(), get_crop_window());
+      vr.set_2d(get_virtual_window(), fix_aspect_ratio());
 
       m_widgets.render();
 
@@ -367,6 +367,7 @@ namespace Zeni {
     }
 
     void perform_logic() {
+      Widget_Gamestate::perform_logic();
       get_Video().set_clear_color(get_Colors()["title_bg"]);
     }
 

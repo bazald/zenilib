@@ -51,10 +51,10 @@ namespace Zeni {
     Widget_Gamestate & operator=(const Widget_Gamestate &);
 
   public:
-    Widget_Gamestate(const std::pair<Point2f, Point2f> &virtual_window_);
+    Widget_Gamestate(const std::pair<Point2f, Point2f> &virtual_window_, const bool &fix_aspect_ratio_ = true);
 
-    const std::pair<Point2i, Point2i> & get_crop_window() const;
     const std::pair<Point2f, Point2f> & get_virtual_window() const;
+    const bool & fix_aspect_ratio() const;
 
     void on_push();
     void on_pop();
@@ -62,16 +62,16 @@ namespace Zeni {
     void on_key(const SDL_KeyboardEvent &event);
     void on_mouse_button(const SDL_MouseButtonEvent &event);
     void on_mouse_motion(const SDL_MouseMotionEvent &event);
+    void perform_logic();
     void render();
 
   protected:
-    void resize(const std::pair<Point2i, Point2i> &crop_window_ = std::make_pair(Point2i(), get_Video().get_render_target_size()));
-
     Widgets m_widgets;
 
   private:
-    std::pair<Point2i, Point2i> m_crop_window;
     std::pair<Point2f, Point2f> m_virtual_window;
+    bool m_fix_aspect_ratio;
+
     Zeni::Projector2D m_projector;
 
     bool m_hide_cursor;

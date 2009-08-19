@@ -85,10 +85,11 @@ namespace Zeni {
     inline bool has_vertex_buffers_impl() const; ///< Determine whether Vertex_Buffers are supported
 
     // Modifiers
-    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
-      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 2D view for a viewport
-    inline void set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/ =
-      std::make_pair(Point2i(), get_Video().get_render_target_size())) {} ///< Set a 3D view for a viewport
+    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/,
+      const std::pair<Point2i, Point2i> & /*viewport*/ = std::make_pair(Point2i(), get_Video().get_render_target_size()),
+      const bool &fix_aspect_ratio = false); ///< Set a 2D view for a viewport
+    inline void set_3d_view_impl(const Camera & /*camera*/,
+      const std::pair<Point2i, Point2i> & /*viewport*/ = std::make_pair(Point2i(), get_Video().get_render_target_size())) {} ///< Set a 3D view for a viewport
     inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer

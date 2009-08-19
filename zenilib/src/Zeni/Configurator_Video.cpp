@@ -511,9 +511,7 @@ namespace Zeni {
   }
 
   void Configurator_Video::render() {
-    resize();
-
-    get_Video().set_2d_view(get_virtual_window(), get_crop_window());
+    get_Video().set_2d(get_virtual_window(), fix_aspect_ratio());
 
     Font &font = get_Fonts()["system_36_600"];
     const Color color = get_Colors()["system_font"];
