@@ -131,6 +131,7 @@ namespace Zeni {
     inline static const int & get_screen_height(); ///< Get the height of the screen
     inline static const bool & is_fullscreen(); ///< Determine whether the screen is windowed or full screen
     inline static const bool & is_frame_visible(); ///< Determine whether the frame is visible (windowed only)
+    inline static const bool & is_resizable(); ///< Determine whether the frame is resizable (windowed only)
     inline static const bool & get_backface_culling(); ///< Determine whether backface culling is enabled
     inline static const bool & get_lighting(); ///< Determine whether dynamic lighting is enabled
     inline static const bool & get_normal_interpolation(); ///< Determine whether normal interpolation is enabled
@@ -245,6 +246,7 @@ namespace Zeni {
     static void preinit_multisampling(const int &multisampling = 0); ///< Set a multisampling value
     static void preinit_vertical_sync(const bool &vertical_sync = false); ///< Set vertical_sync to true
     static void preinit_show_frame(const bool &show_frame_ = true); ///< Show a frame around the rendering window when in windowed mode
+    static void preinit_resizable(const bool &resizable_ = true); ///< Allow the frame to be dynamically resized when in windows mode
     static void preinit_from_file(const std::string &filename); ///< Set rendering options from a file
     static void preinit_from_file(const XML_Document &file); ///< Set rendering options from a file
 
@@ -282,6 +284,7 @@ namespace Zeni {
     static Point2i g_screen_size;
     static bool g_screen_full;
     static bool g_screen_show_frame;
+    static bool g_screen_resizable;
     static bool g_initialized;
     static bool g_backface_culling;
     static bool g_lighting;
