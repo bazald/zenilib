@@ -287,7 +287,10 @@ namespace Zeni {
                                                        ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
 
-    set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
+    if(fix_aspect_ratio)
+      set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
+    else
+      set_viewport(viewport);
 
     VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport, fix_aspect_ratio);
   }
