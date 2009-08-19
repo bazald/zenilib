@@ -71,6 +71,10 @@ namespace Zeni {
     return g_screen_show_frame;
   }
 
+  const bool & Video::is_resizable() {
+    return g_screen_resizable;
+  }
+
   const bool & Video::get_backface_culling() {
     return g_backface_culling;
   }

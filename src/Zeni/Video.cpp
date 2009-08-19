@@ -206,6 +206,10 @@ namespace Zeni {
     g_screen_show_frame = show_frame_;
   }
 
+  void Video::preinit_resizable(const bool &resizable_) {
+    g_screen_resizable = resizable_;
+  }
+
   void Video::preinit_from_file(const std::string &filename) {
     XML_Document file(filename);
     preinit_from_file(file);
@@ -391,8 +395,10 @@ namespace Zeni {
     // Initialize Window
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       (get_opengl_flag() ? SDL_OPENGL : 0) | 
-      (g_screen_full ? SDL_FULLSCREEN : 
-      ((VideoInfo->wm_available && g_screen_show_frame ? 0 : SDL_NOFRAME) | SDL_RESIZABLE)));
+      (g_screen_full ? SDL_FULLSCREEN
+                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? 0 : SDL_NOFRAME) |
+                                                   (g_screen_resizable ? SDL_RESIZABLE : 0))
+                                                : 0)));
 
     if(!m_display_surface) {
       g_initialized = false;
@@ -431,6 +437,7 @@ namespace Zeni {
   Point2i Video::g_screen_size;
   bool Video::g_screen_full = false;
   bool Video::g_screen_show_frame = true;
+  bool Video::g_screen_resizable = true;
   bool Video::g_initialized = false;
   bool Video::g_backface_culling = false;
   bool Video::g_lighting = false;
