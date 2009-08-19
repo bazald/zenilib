@@ -67,7 +67,7 @@ namespace Zeni {
     return true;
   }
 
-  void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
+  void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/, const bool & /*fix_aspect_ratio*/) {
     Matrix4f world = Matrix4f::Scale(Vector3f(1.0f, 1.0f, 0.5f)) *
                      Matrix4f::Translate(Vector3f(0.0f, 0.0f, 1.0f));
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);

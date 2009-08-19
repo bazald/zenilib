@@ -148,10 +148,12 @@ namespace Zeni {
 
     // Modifiers
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
-    inline void set_2d(const std::pair<Point2f, Point2f> &camera2d); ///< Set a 2D view for the entire viewing area
+    inline void set_2d(const std::pair<Point2f, Point2f> &camera2d,
+                       const bool &fix_aspect_ratio = false); ///< Set a 2D view for the entire viewing area
     inline void set_3d(const Camera &camera); ///< Set a 3D view filling the entire display area
-    inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport =
-      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 2D view for a viewport
+    inline void set_2d_view(const std::pair<Point2f, Point2f> &camera2d,
+      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(), get_Video().get_render_target_size()),
+      const bool &fix_aspect_ratio = false); ///< Set a 2D view for a viewport
     inline void set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport =
       std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 3D view for a viewport
     inline void set_backface_culling(const bool &on); ///< Set backface culling on/off
@@ -214,6 +216,9 @@ namespace Zeni {
     inline void set_view_matrix(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix(const Matrix4f &projection); ///< Set the projection Matrix4f
     inline void set_viewport(const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set the viewport
+    inline void set_viewport(const float &aspect_ratio,
+      const std::pair<Point2i, Point2i> &viewport =
       std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set the viewport
 
     // Window Decorations

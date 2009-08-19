@@ -125,9 +125,10 @@ namespace Zeni {
                 std::make_pair(Point2i(), size));
   }
 
-  void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d) {
+  void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d, const bool &fix_aspect_ratio) {
     set_2d_view(camera2d,
-                std::make_pair(Point2i(), get_render_target_size()));
+                std::make_pair(Point2i(), get_render_target_size()),
+                fix_aspect_ratio);
   }
 
   void Video::set_3d(const Camera &camera) {
@@ -273,7 +274,7 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL_CONST(has_vertex_buffers_impl, EMPTY());
   }
 
-  void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
+  void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
@@ -286,9 +287,9 @@ namespace Zeni {
                                                        ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
 
-    set_viewport(viewport);
+    set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
 
-    VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport);
+    VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport, fix_aspect_ratio);
   }
 
   void Video::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
@@ -477,6 +478,31 @@ namespace Zeni {
     m_viewport = viewport;
 
     VIDEO_IV_FCN_CALL(set_viewport_impl, viewport);
+  }
+
+  void Video::set_viewport(const float &aspect_ratio, const std::pair<Point2i, Point2i> &viewport) {
+    m_viewport = viewport;
+
+    int width = m_viewport.second.x - m_viewport.first.x;
+    int height = m_viewport.second.y - m_viewport.first.y;
+    const float given_ratio = float(width) / height;
+
+    if(given_ratio > aspect_ratio) {
+      const int new_width = int(width * aspect_ratio / given_ratio);
+      const int cut_side = (width - new_width) / 2;
+
+      m_viewport.first.x += cut_side;
+      m_viewport.second.x -= cut_side;
+    }
+    else if(aspect_ratio > given_ratio) {
+      const int new_height = int(height * given_ratio / aspect_ratio);
+      const int cut_side = (height - new_height) / 2;
+
+      m_viewport.first.y += cut_side;
+      m_viewport.second.y -= cut_side;
+    }
+
+    VIDEO_IV_FCN_CALL(set_viewport_impl, m_viewport);
   }
 
   Texture * Video::load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading) {
