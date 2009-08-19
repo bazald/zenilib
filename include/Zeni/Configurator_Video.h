@@ -52,7 +52,7 @@ namespace Zeni {
     Configurator_Video & operator=(const Configurator_Video &);
 
   public:
-    class Check_State : public Zeni::Gamestate_Base {
+    class Check_State : public Zeni::Widget_Gamestate {
       Check_State(const Check_State &);
       Check_State operator=(const Check_State &);
 
@@ -73,26 +73,18 @@ namespace Zeni {
       Check_State(const bool &failsafe);
 
     private:
-      void on_push();
       void on_pop();
 
       void on_key(const SDL_KeyboardEvent &event);
-      void on_mouse_button(const SDL_MouseButtonEvent &event);
-      void on_mouse_motion(const SDL_MouseMotionEvent &event);
+      void on_video_resize(const SDL_ResizeEvent &event);
 
       void perform_logic();
-      void render();
-
-      std::pair<Point2f, Point2f> m_virtual_screen;
-      Projector2D m_projector;
 
       Accept_Button m_accept_button;
       Text_Box m_text;
-      Widgets m_widgets;
 
       Time m_start_time;
 
-      bool m_hide_cursor;
       bool m_accept;
       bool m_failsafe;
     };
