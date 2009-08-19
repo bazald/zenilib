@@ -242,7 +242,7 @@ namespace Zeni {
     g_initialized = false;
   }
 
-  void Video::reinit() {
+  void Video::reinit(const Point2i * const &resolution) {
     destroy();
 
     try {
@@ -251,6 +251,9 @@ namespace Zeni {
     catch(XML_Load_Failure &) {
       preinit_from_file("config/zenilib.xml");
     }
+
+    if(resolution)
+      preinit_screen_resolution(*resolution);
 
     get_Video();
     get_Textures().unlose_resources();
@@ -389,7 +392,7 @@ namespace Zeni {
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       (get_opengl_flag() ? SDL_OPENGL : 0) | 
       (g_screen_full ? SDL_FULLSCREEN : 
-      (VideoInfo->wm_available && g_screen_show_frame ? 0 : SDL_NOFRAME)));
+      ((VideoInfo->wm_available && g_screen_show_frame ? 0 : SDL_NOFRAME) | SDL_RESIZABLE)));
 
     if(!m_display_surface) {
       g_initialized = false;
