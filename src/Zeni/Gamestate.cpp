@@ -133,8 +133,9 @@ namespace Zeni {
       get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
   }
 
-  void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &) {
-    //get_Video().reinit(event.w, event.h, false, true);
+  void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &event) {
+    const Point2i resolution (event.w, event.h);
+    Video::reinit(&resolution);
   }
 
   void Gamestate_Base::on_video_expose(const SDL_ExposeEvent &) {
