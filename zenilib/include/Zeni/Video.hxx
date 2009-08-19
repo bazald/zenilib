@@ -275,10 +275,18 @@ namespace Zeni {
   }
 
   void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+    if(fix_aspect_ratio)
+      set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
+    else
+      set_viewport(viewport);
+
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
-    const Point2f offset = get_pixel_offset();
+    const std::pair<Point2i, Point2i> &vp = get_viewport();
+    Point2f offset = get_pixel_offset();
+    offset.x *= (camera2d.second.x - camera2d.first.x) / (vp.second.x - vp.first.x);
+    offset.y *= (camera2d.second.y - camera2d.first.y) / (vp.second.y - vp.first.y);
 
     const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x + offset.x,
                                                        camera2d.second.x + offset.x,
@@ -286,11 +294,6 @@ namespace Zeni {
                                                        camera2d.first.y + offset.y,
                                                        ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
-
-    if(fix_aspect_ratio)
-      set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
-    else
-      set_viewport(viewport);
 
     VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport, fix_aspect_ratio);
   }

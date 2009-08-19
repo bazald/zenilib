@@ -136,6 +136,7 @@ namespace Zeni {
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &event) {
     const Point2i resolution (event.w, event.h);
     Video::reinit(&resolution);
+    Video::save();
   }
 
   void Gamestate_Base::on_video_expose(const SDL_ExposeEvent &) {
@@ -759,24 +760,11 @@ default: return "SDLK_UNKNOWN";
   }
 
   void Gamestate_Base::render() {
-    static Logo * logo = 0;
-    static Point2i prev_resolution;
-    Point2i resolution(get_Video().get_screen_width(), get_Video().get_screen_height());
+    static Logo logo(Point2f(1.5f, 0.5f), 1.0f, Color(1.0f, 0.875, 0.875, 0.875), Color(1.0f, 0.125, 0.125, 0.175));
 
-    if(prev_resolution.x != resolution.x || prev_resolution.y != resolution.y) {
-      float height = 0.9f * std::min(resolution.x / 3.0f, float(resolution.y));
-      logo = new Logo(Point2f(0.5f * (resolution.x - height),
-                              0.5f * (resolution.y - height)),
-                      height,
-                      Color(1.0f, 0.875, 0.875, 0.875),
-                      Color(1.0f, 0.125, 0.125, 0.175));
+    get_Video().set_2d(make_pair(Point2f(), Point2f(4.0f, 2.0f)), true);
 
-      prev_resolution = resolution;
-    }
-
-    get_Video().set_2d();
-
-    logo->render();
+    logo.render();
   }
 
   void Gamestate_Base::on_push() {

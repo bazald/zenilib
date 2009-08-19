@@ -143,10 +143,10 @@ namespace Zeni {
     m_d3d_parameters.BackBufferCount = 1;
     m_d3d_parameters.BackBufferWidth = UINT(get_screen_width());
     m_d3d_parameters.BackBufferHeight = UINT(get_screen_height());
-    m_d3d_parameters.BackBufferFormat = m_d3d_parameters.Windowed ? D3DFMT_UNKNOWN : D3DFMT_A8R8G8B8;
+    m_d3d_parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
     m_d3d_parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     m_d3d_parameters.PresentationInterval = get_vertical_sync() ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
-    m_d3d_parameters.Flags = 0;//D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
+    m_d3d_parameters.Flags = 0; //D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 
     m_d3d_parameters.EnableAutoDepthStencil = true;
     m_d3d_parameters.AutoDepthStencilFormat = D3DFMT_D16;
@@ -170,7 +170,7 @@ namespace Zeni {
       case 16:
       default: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_16_SAMPLES; break;
       }
-    else if(get_multisampling() == -1)
+    else if(get_multisampling() < 0)
       m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_16_SAMPLES;
     else
       m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE;
@@ -188,21 +188,21 @@ namespace Zeni {
     DWORD num_quality_levels;
     while(FAILED(m_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, m_d3d_parameters.Windowed, m_d3d_parameters.MultiSampleType, &num_quality_levels))) {
       switch(m_d3d_parameters.MultiSampleType) {
-      case D3DMULTISAMPLE_2_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE; break;
-      case D3DMULTISAMPLE_3_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; break;
-      case D3DMULTISAMPLE_4_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; break;
-      case D3DMULTISAMPLE_5_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; break;
-      case D3DMULTISAMPLE_6_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; break;
-      case D3DMULTISAMPLE_7_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; break;
-      case D3DMULTISAMPLE_8_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; break;
-      case D3DMULTISAMPLE_9_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; break;
-      case D3DMULTISAMPLE_10_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; break;
-      case D3DMULTISAMPLE_11_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; break;
-      case D3DMULTISAMPLE_12_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; break;
-      case D3DMULTISAMPLE_13_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; break;
-      case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; break;
-      case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; break;
-      case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; break;
+      case D3DMULTISAMPLE_2_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE; preinit_multisampling(0); break;
+      case D3DMULTISAMPLE_3_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; preinit_multisampling(2); break;
+      case D3DMULTISAMPLE_4_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; preinit_multisampling(3); break;
+      case D3DMULTISAMPLE_5_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; preinit_multisampling(4); break;
+      case D3DMULTISAMPLE_6_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; preinit_multisampling(5); break;
+      case D3DMULTISAMPLE_7_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; preinit_multisampling(6); break;
+      case D3DMULTISAMPLE_8_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; preinit_multisampling(7); break;
+      case D3DMULTISAMPLE_9_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; preinit_multisampling(8); break;
+      case D3DMULTISAMPLE_10_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; preinit_multisampling(9); break;
+      case D3DMULTISAMPLE_11_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; preinit_multisampling(10); break;
+      case D3DMULTISAMPLE_12_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; preinit_multisampling(11); break;
+      case D3DMULTISAMPLE_13_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; preinit_multisampling(12); break;
+      case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; preinit_multisampling(13); break;
+      case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; preinit_multisampling(14); break;
+      case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; preinit_multisampling(15); break;
 
       case D3DMULTISAMPLE_NONE:
       default:
@@ -210,13 +210,14 @@ namespace Zeni {
       }
     }
 
-    if(FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device)) &&
-      FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_MIXED_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device)) &&
-      FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device))) {
+    const bool try_hardware = (m_d3d_capabilities.VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) != 0;
 
-        // HARDWARE, MIXED, and SOFTWARE all failed
-
-        return false;
+    if((!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device))) &&
+       (!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_MIXED_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device))) &&
+       FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device)))
+    {
+      // HARDWARE, MIXED, and SOFTWARE all failed
+      return false;
     }
 
     // Set Up Matrix Stack
