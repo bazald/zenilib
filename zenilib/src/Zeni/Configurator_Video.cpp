@@ -56,17 +56,16 @@ namespace Zeni {
   }
 
   Configurator_Video::Check_State::Check_State(const bool &failsafe)
-    : m_virtual_screen(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f)),
-    m_projector(m_virtual_screen),
+    : Widget_Gamestate(make_pair(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f))),
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
 #endif
-    m_accept_button(*this, m_virtual_screen),
+    m_accept_button(*this, get_virtual_window()),
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    m_text(Point2f(), m_virtual_screen.second, get_Colors()["default_button_text_normal"], "system_36_600",
+    m_text(Point2f(), get_virtual_window().second, get_Colors()["default_button_text_normal"], "system_36_600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
            "Current rendering options will be rejected in "
@@ -77,7 +76,6 @@ namespace Zeni {
 #undef xstr
            " seconds.",
            get_Colors()["default_button_bg_normal"], false),
-    m_hide_cursor(false),
     m_accept(false),
     m_failsafe(failsafe)
   {
@@ -85,15 +83,8 @@ namespace Zeni {
     m_widgets.lend_Widget(m_text);
   }
 
-  void Configurator_Video::Check_State::on_push() {
-    m_hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
-    if(m_hide_cursor)
-      SDL_ShowCursor(true);
-  }
-
   void Configurator_Video::Check_State::on_pop() {
-    if(m_hide_cursor)
-      SDL_ShowCursor(false);
+    Widget_Gamestate::on_pop();
 
     if(m_accept)
       Video::save();
@@ -111,19 +102,25 @@ namespace Zeni {
   }
 
   void Configurator_Video::Check_State::on_key(const SDL_KeyboardEvent &event) {
-    if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
-      get_Game().pop_state();
+    if(event.keysym.sym == SDLK_ESCAPE) {
+      if(event.state == SDL_PRESSED)
+        get_Game().pop_state();
+    }
+    else
+      Widget_Gamestate::on_key(event);
   }
 
-  void Configurator_Video::Check_State::on_mouse_button(const SDL_MouseButtonEvent &event) {
-    m_widgets.on_event(event, m_projector);
-  }
+  void Configurator_Video::Check_State::on_video_resize(const SDL_ResizeEvent &event) {
+    Gamestate_Base::on_video_resize(event);
 
-  void Configurator_Video::Check_State::on_mouse_motion(const SDL_MouseMotionEvent &event) {
-    m_widgets.on_event(event, m_projector);
+    m_accept = true;
+
+    get_Game().pop_state();
   }
 
   void Configurator_Video::Check_State::perform_logic() {
+    Widget_Gamestate::perform_logic();
+
     const Time current_time;
     const float seconds_remaining = ZENI_REVERT_TIMEOUT - current_time.get_seconds_since(m_start_time);
 
@@ -138,12 +135,6 @@ namespace Zeni {
       "Current rendering options will be rejected in " +
       itoa(int(seconds_remaining + 0.999f)) +
       " seconds.");
-  }
-
-  void Configurator_Video::Check_State::render() {
-    get_Video().set_2d(m_virtual_screen);
-
-    m_widgets.render();
   }
 
   Configurator_Video::Check_Box_Element::Check_Box_Element(const XML_Element &element,
