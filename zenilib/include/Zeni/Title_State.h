@@ -134,10 +134,9 @@ namespace Zeni {
     public:
       Continue_Button(const Gamestate &gamestate)
         : Text_Button(Point2f(200.0f, 150.0f), Point2f(600.0f, 210.0f),
-                      "system_36_600", "Continue Game", Color()),
+                      "system_36_600", "Continue Game"),
         m_gamestate(gamestate)
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -156,9 +155,8 @@ namespace Zeni {
     public:
       Menu_Button()
         : Text_Button(Point2f(200.0f, 230.0f), Point2f(600.0f, 290.0f),
-                      "system_36_600", "Back to Menu", Color())
+                      "system_36_600", "Back to Menu")
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -173,9 +171,8 @@ namespace Zeni {
 
     public:
       Configure_Video_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button(upper_left, lower_right, "system_36_600", "Configure Video", Color())
+        : Text_Button(upper_left, lower_right, "system_36_600", "Configure Video")
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -190,7 +187,6 @@ namespace Zeni {
     public:
       Sound_Check_Box(const Point2f &upper_left, const Point2f &lower_right)
         : Check_Box(upper_left, lower_right,
-                    get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_normal"],
                     !get_Sound_Source_Pool().is_muted())
       {
       }
@@ -226,9 +222,8 @@ namespace Zeni {
 
     public:
       Quit_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button(upper_left, lower_right, "system_36_600", "Quit", Color())
+        : Text_Button(upper_left, lower_right, "system_36_600", "Quit")
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -310,9 +305,8 @@ namespace Zeni {
     public:
       Play_Button()
         : Text_Button(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
-                      "system_36_600", "Play", Color())
+                      "system_36_600", "Play")
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -327,9 +321,8 @@ namespace Zeni {
     public:
       Instructions_Button()
         : Text_Button(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
-                      "system_36_600", "Instructions", Color())
+                      "system_36_600", "Instructions")
       {
-        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {

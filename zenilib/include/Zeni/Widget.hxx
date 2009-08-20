@@ -52,7 +52,9 @@ namespace Zeni {
   Widget::Widget()
     : m_layer(0.0f),
     m_busy(false),
-    m_editable(true)
+    m_editable(true),
+    m_renderer(0),
+    delete_m_renderer(false)
   {
   }
 
@@ -111,6 +113,31 @@ namespace Zeni {
     render_impl();
 
     vr.pop_world_stack();
+  }
+
+  const Widget_Render_Function * const & Widget::get_Renderer() const {
+    return m_renderer;
+  }
+
+  void Widget::give_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = renderer;
+    delete_m_renderer = true;
+  }
+
+  void Widget::lend_Renderer(const Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = const_cast<Widget_Render_Function * const &>(renderer);
+    delete_m_renderer = false;
+  }
+
+  void Widget::fax_Renderer(const Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = renderer->get_duplicate();
+    delete_m_renderer = true;
   }
   
   Widget_Rectangle::Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_)
@@ -192,7 +219,7 @@ namespace Zeni {
   }
 
   template <typename T1, typename T2>
-  void Widget_Renderer_Pair<T1, T2>::render_to(const Widget_Rectangle &rect) {
+  void Widget_Renderer_Pair<T1, T2>::render_to(const Widget &rect) {
     if(m_first)
       m_first->render_to(rect);
     if(m_second)
@@ -238,51 +265,6 @@ namespace Zeni {
   {
   }
 
-  Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
-    : Widget_Rectangle(upper_left_, lower_right_),
-    m_state(NORMAL),
-    m_renderer(0),
-    delete_m_renderer(false)
-  {
-  }
-
-  const Widget_Button::State & Widget_Button::get_State() const {
-    return m_state;
-  }
-
-  const Widget_Render_Function * const & Widget_Button::get_Renderer() const {
-    return m_renderer;
-  }
-
-  void Widget_Button::give_Renderer(Widget_Render_Function * const &renderer) {
-    if(delete_m_renderer)
-      delete m_renderer;
-    m_renderer = renderer;
-    delete_m_renderer = true;
-  }
-
-  void Widget_Button::lend_Renderer(const Widget_Render_Function * const &renderer) {
-    if(delete_m_renderer)
-      delete m_renderer;
-    m_renderer = const_cast<Widget_Render_Function * const &>(renderer);
-    delete_m_renderer = false;
-  }
-
-  void Widget_Button::fax_Renderer(const Widget_Render_Function * const &renderer) {
-    if(delete_m_renderer)
-      delete m_renderer;
-    m_renderer = renderer->get_duplicate();
-    delete_m_renderer = true;
-  }
-
-  Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                           const std::string &font_name_, const std::string &text_, const Color &text_color_)
-    : Widget_Button(upper_left_, lower_right_),
-    text(font_name_, text_, text_color_)
-  {
-    lend_Renderer(&text);
-  }
-
   Widget_Renderer_Tricolor::Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text)
     : Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>(new Widget_Renderer_Color(Color()), true,
                                                                         text, delete_text),
@@ -309,31 +291,68 @@ namespace Zeni {
   {
   }
 
+  Widget_Renderer_Checkbox::Widget_Renderer_Checkbox()
+    : border_color(get_Colors()["default_button_bg_normal"]),
+    check_color(get_Colors()["default_button_bg_normal"])
+  {
+  }
+
+  Widget_Renderer_Checkbox::Widget_Renderer_Checkbox(const Color &border_color_, const Color &check_color_)
+    : border_color(border_color_),
+    check_color(check_color_)
+  {
+  }
+
+  Widget_Renderer_Slider::Widget_Renderer_Slider()
+    : line_color(get_Colors()["default_button_bg_normal"]),
+    slider_color(get_Colors()["default_button_bg_normal"])
+  {
+  }
+
+  Widget_Renderer_Slider::Widget_Renderer_Slider(const Color &line_color_, const Color &slider_color_)
+    : line_color(line_color_),
+    slider_color(slider_color_)
+  {
+  }
+
+  Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
+    : Widget_Rectangle(upper_left_, lower_right_),
+    m_state(NORMAL)
+  {
+  }
+
+  const Widget_Button::State & Widget_Button::get_State() const {
+    return m_state;
+  }
+
+  Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
+                           const std::string &font_name_, const std::string &text_)
+    : Widget_Button(upper_left_, lower_right_),
+    text(font_name_, text_, Color())
+  {
+    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
+  }
+
   Check_Box::Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-                       const Color &border_color_, const Color &check_color_,
                        const bool &checked_, const bool &toggleable_)
     : Widget_Button(upper_left_, lower_right_),
-    m_border_color(border_color_),
-    m_check_color(check_color_),
     m_checked(checked_),
     m_toggling(false)
   {
     set_editable(toggleable_);
+
+    give_Renderer(new Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Checkbox>(new Widget_Renderer_Color(get_Colors()["default_button_text_normal"]), true,
+                                                                                            new Widget_Renderer_Checkbox(), true));
   }
 
-  const Color & Check_Box::get_border_color() const {return m_border_color;}
-  const Color & Check_Box::get_check_color() const {return m_check_color;}
   const bool & Check_Box::is_checked() const {return m_checked;}
-
-  void Check_Box::set_border_color(const Color &border_color_) {m_border_color = border_color_;}
-  void Check_Box::set_check_color(const Color &check_color_) {m_check_color = check_color_;}
   const void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
+  const bool & Check_Box::is_toggling() const {return m_toggling;}
 
   Radio_Button::Radio_Button(Radio_Button_Set &radio_button_set_,
                              const Point2f &upper_left_, const Point2f &lower_right_,
-                             const Color &border_color_, const Color &check_color_,
                              const bool &checked_, const bool &toggleable_)
-    : Check_Box(upper_left_, lower_right_, border_color_, check_color_, checked_, toggleable_),
+    : Check_Box(upper_left_, lower_right_, checked_, toggleable_),
     m_radio_button_set(&radio_button_set_)
   {
     radio_button_set_.lend_Radio_Button(*this);
@@ -375,41 +394,16 @@ namespace Zeni {
     return m_slider_radius;
   }
 
-  const Color & Slider::get_line_color() const {
-    return m_line_color;
-  }
-
-  const Color & Slider::get_slider_color() const {
-    return m_slider_color;
-  }
-
   const float & Slider::get_slider_position() const {
     return m_slider_position;
   }
 
   void Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
     m_line_segment = Zeni_Collision::Line_Segment(Point3f(end_point_a_), Point3f(end_point_b_));
-    m_line_segment_r.a.position = Point3f(end_point_a_);
-    m_line_segment_r.b.position = Point3f(end_point_b_);
-    regenerate_slider_r();
   }
 
   void Slider::set_slider_radius(const float &radius_) {
     m_slider_radius = radius_;
-    regenerate_slider_r();
-  }
-
-  void Slider::set_line_color(const Color &line_color_) {
-    m_line_color = line_color_;
-
-    m_line_segment_r.a = Vertex2f_Color(get_end_point_a(), m_line_color);
-    m_line_segment_r.b = Vertex2f_Color(get_end_point_b(), m_line_color);
-  }
-
-  void Slider::set_slider_color(const Color &slider_color_) {
-    m_slider_color = slider_color_;
-
-    regenerate_slider_r();
   }
 
   void Slider::set_slider_position(const float &slider_position_) {
@@ -419,25 +413,10 @@ namespace Zeni {
       m_slider_position = 1.0f;
     else
       m_slider_position = slider_position_;
-
-    regenerate_slider_r();
   }
 
   const Zeni_Collision::Line_Segment & Slider::get_line_segment() const {
     return m_line_segment;
-  }
-
-  void Slider::regenerate_slider_r() {
-    const Point3f &p0 = m_line_segment.get_end_point_a();
-    const Point3f &p1 = m_line_segment.get_end_point_b();
-    const Vector3f v = p1 - p0;
-    const Vector3f n(-v.j, v.i, 0.0f); // or (v.j, -v.i, 0.0f)
-
-    const Point3f &midpt = p0 + m_slider_position * v;
-    const Vector3f &n2 = m_slider_radius * n.normalized();
-
-    m_slider_r.a = Vertex2f_Color(Point2f(midpt - n2), m_slider_color);
-    m_slider_r.b = Vertex2f_Color(Point2f(midpt + n2), m_slider_color);
   }
 
   const Slider_Int::Range & Slider_Int::get_range() const {

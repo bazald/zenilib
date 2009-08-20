@@ -43,8 +43,18 @@ using namespace std;
 
 namespace Zeni {
 
+  Widget::~Widget() {
+    if(delete_m_renderer)
+      delete m_renderer;
+  }
+
   void Widget::set_editable(const bool &editable_) {
     m_editable = editable_;
+  }
+
+  void Widget::render_impl() const {
+    if(m_renderer)
+      m_renderer->render_to(*this);
   }
 
   void Widget_Rectangle::set_upper_left(const Point2f &upper_left_) {
@@ -55,10 +65,15 @@ namespace Zeni {
     m_lower_right = lower_right_;
   }
 
-  void Widget_Renderer_Text::render_to(const Widget_Rectangle &rect) {
+  void Widget_Renderer_Text::render_to(const Widget &widget) {
+    const Widget_Rectangle * const wrr = dynamic_cast<const Widget_Rectangle *>(&widget);
+
+    if(!wrr)
+      throw Widget_Renderer_Wrong_Type();
+
     const Font &font = get_Fonts()[font_name];
 
-    const Point2f center = rect.get_center();
+    const Point2f center = wrr->get_center();
     const float x = center.x;
     const float y = center.y - 0.5f * font.get_text_height();
     font.render_text(text, Point2f(x, y), color, ZENI_CENTER);
@@ -68,11 +83,16 @@ namespace Zeni {
     return new Widget_Renderer_Text(*this);
   }
 
-  void Widget_Renderer_Color::render_to(const Widget_Rectangle &rect) {
-    const Quadrilateral<Vertex2f_Color> quad(Vertex2f_Color(rect.get_upper_left(), color),
-                                             Vertex2f_Color(rect.get_lower_left(), color),
-                                             Vertex2f_Color(rect.get_lower_right(), color),
-                                             Vertex2f_Color(rect.get_upper_right(), color));
+  void Widget_Renderer_Color::render_to(const Widget &widget) {
+    const Widget_Rectangle * const wrr = dynamic_cast<const Widget_Rectangle *>(&widget);
+
+    if(!wrr)
+      throw Widget_Renderer_Wrong_Type();
+
+    const Quadrilateral<Vertex2f_Color> quad(Vertex2f_Color(wrr->get_upper_left(), color),
+                                             Vertex2f_Color(wrr->get_lower_left(), color),
+                                             Vertex2f_Color(wrr->get_lower_right(), color),
+                                             Vertex2f_Color(wrr->get_upper_right(), color));
 
     get_Video().render(quad);
   }
@@ -81,11 +101,16 @@ namespace Zeni {
     return new Widget_Renderer_Color(*this);
   }
 
-  void Widget_Renderer_Texture::render_to(const Widget_Rectangle &rect) {
-    const Quadrilateral<Vertex2f_Texture> quad(Vertex2f_Texture(rect.get_upper_left(), tex_coord_ul),
-                                               Vertex2f_Texture(rect.get_lower_left(), tex_coord_ll),
-                                               Vertex2f_Texture(rect.get_lower_right(), tex_coord_lr),
-                                               Vertex2f_Texture(rect.get_upper_right(), tex_coord_ur));
+  void Widget_Renderer_Texture::render_to(const Widget &widget) {
+    const Widget_Rectangle * const wrr = dynamic_cast<const Widget_Rectangle *>(&widget);
+
+    if(!wrr)
+      throw Widget_Renderer_Wrong_Type();
+
+    const Quadrilateral<Vertex2f_Texture> quad(Vertex2f_Texture(wrr->get_upper_left(), tex_coord_ul),
+                                               Vertex2f_Texture(wrr->get_upper_left(), tex_coord_ll),
+                                               Vertex2f_Texture(wrr->get_upper_left(), tex_coord_lr),
+                                               Vertex2f_Texture(wrr->get_upper_left(), tex_coord_ur));
 
     get_Video().render(quad);
   }
@@ -94,9 +119,131 @@ namespace Zeni {
     return new Widget_Renderer_Texture(*this);
   }
 
-  Widget_Button::~Widget_Button() {
-    if(delete_m_renderer)
-      delete m_renderer;
+  void Widget_Renderer_Tricolor::render_to(const Widget &widget) {
+    const Widget_Button * const wbr = dynamic_cast<const Widget_Button *>(&widget);
+
+    if(!wbr)
+      throw Widget_Renderer_Wrong_Type();
+
+    switch(wbr->get_State()) {
+      case Widget_Button::NORMAL:
+      case Widget_Button::UNACTIONABLE:
+        if(first())
+          first()->color = bg_normal;
+        if(second())
+          second()->color = text_normal;
+        break;
+
+      case Widget_Button::CLICKED:
+        if(first())
+          first()->color = bg_clicked;
+        if(second())
+          second()->color = text_clicked;
+        break;
+
+      case Widget_Button::HOVERED:
+      case Widget_Button::STRAYED:
+        if(first())
+          first()->color = bg_hovered_strayed;
+        if(second())
+          second()->color = text_hovered_strayed;
+        break;
+
+      default:
+        break;
+    }
+
+    this->Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>::render_to(*wbr);
+  }
+
+  Widget_Renderer_Tricolor * Widget_Renderer_Tricolor::get_duplicate() const {
+    return new Widget_Renderer_Tricolor(*this);
+  }
+
+  void Widget_Renderer_Checkbox::render_to(const Widget &widget) {
+    const Check_Box * const cbr = dynamic_cast<const Check_Box *>(&widget);
+
+    if(!cbr)
+      throw Widget_Renderer_Wrong_Type();
+
+    Video &vr = get_Video();
+
+    Vertex2f_Color ul(cbr->get_upper_left(), border_color);
+    Vertex2f_Color ll(cbr->get_lower_left(), border_color);
+    Vertex2f_Color lr(cbr->get_lower_right(), border_color);
+    Vertex2f_Color ur(cbr->get_upper_right(), border_color);
+
+    Line_Segment<Vertex2f_Color> line_seg(ul, ll);
+    vr.render(line_seg);
+
+    line_seg.a = lr;
+    vr.render(line_seg);
+
+    line_seg.b = ur;
+    vr.render(line_seg);
+
+    line_seg.a = ul;
+    vr.render(line_seg);
+
+    if(cbr->is_checked() || cbr->is_toggling()) {
+      Color cc = check_color;
+      if(cbr->is_toggling()) {
+        if(cbr->is_checked())
+          cc.a /= 3.0f;
+        else
+          cc.a *= 2.0f / 3.0f;
+      }
+
+      ul.set_color(cc);
+      ll.set_color(cc);
+      lr.set_color(cc);
+      ur.set_color(cc);
+
+      line_seg.a = ul;
+      line_seg.b = lr;
+      vr.render(line_seg);
+
+      line_seg.a = ll;
+      line_seg.b = ur;
+      vr.render(line_seg);
+    }
+  }
+
+  Widget_Renderer_Checkbox * Widget_Renderer_Checkbox::get_duplicate() const {
+    return new Widget_Renderer_Checkbox(*this);
+  }
+
+  void Widget_Renderer_Slider::render_to(const Widget &widget) {
+    const Slider * const sr = dynamic_cast<const Slider *>(&widget);
+
+    if(!sr)
+      throw Widget_Renderer_Wrong_Type();
+
+    Video &vr = get_Video();
+
+    const Point3f p0(sr->get_end_point_a());
+    const Point3f p1(sr->get_end_point_b());
+    const Vector3f v = p1 - p0;
+    const Vector3f n(-v.j, v.i, 0.0f); // or (v.j, -v.i, 0.0f)
+
+    const Point3f &midpt = p0 + sr->get_slider_position() * v;
+    const Vector3f &n2 = sr->get_slider_radius() * n.normalized();
+
+    Line_Segment<Vertex2f_Color> line_seg(Vertex2f_Color(Point2f(midpt - n2), slider_color),
+                                          Vertex2f_Color(Point2f(midpt + n2), slider_color));
+
+    vr.render(line_seg);
+
+    line_seg.a.position = Point3f(p0);
+    line_seg.a.set_color(line_color);
+    line_seg.b.position = Point3f(p1);
+    line_seg.b.set_color(line_color);
+
+    vr.render(line_seg);
+  }
+
+  Widget_Renderer_Slider * Widget_Renderer_Slider::get_duplicate() const {
+    return new Widget_Renderer_Slider(*this);
   }
 
   void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
@@ -173,49 +320,6 @@ namespace Zeni {
     }
   }
 
-  void Widget_Button::render_impl() const {
-    m_renderer->render_to(*this);
-  }
-
-  void Widget_Renderer_Tricolor::render_to(const Widget_Rectangle &rect) {
-    const Widget_Button * const wbr = dynamic_cast<const Widget_Button *>(&rect);
-
-    if(wbr)
-      switch(wbr->get_State()) {
-        case Widget_Button::NORMAL:
-        case Widget_Button::UNACTIONABLE:
-          if(first())
-            first()->color = bg_normal;
-          if(second())
-            second()->color = text_normal;
-          break;
-
-        case Widget_Button::CLICKED:
-          if(first())
-            first()->color = bg_clicked;
-          if(second())
-            second()->color = text_clicked;
-          break;
-
-        case Widget_Button::HOVERED:
-        case Widget_Button::STRAYED:
-          if(first())
-            first()->color = bg_hovered_strayed;
-          if(second())
-            second()->color = text_hovered_strayed;
-          break;
-
-        default:
-          break;
-      }
-
-    this->Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>::render_to(rect);
-  }
-
-  Widget_Renderer_Tricolor * Widget_Renderer_Tricolor::get_duplicate() const {
-    return new Widget_Renderer_Tricolor(*this);
-  }
-
   void Check_Box::on_accept() {
     m_checked = !m_checked;
     m_toggling = false;
@@ -235,50 +339,6 @@ namespace Zeni {
 
   void Check_Box::on_stray() {
     m_toggling = false;
-  }
-
-  void Check_Box::render_impl() const {
-    Video &vr = get_Video();
-
-    Vertex2f_Color ul(get_upper_left(), m_border_color);
-    Vertex2f_Color ll(get_lower_left(), m_border_color);
-    Vertex2f_Color lr(get_lower_right(), m_border_color);
-    Vertex2f_Color ur(get_upper_right(), m_border_color);
-
-    Line_Segment<Vertex2f_Color> line_seg(ul, ll);
-    vr.render(line_seg);
-
-    line_seg.a = lr;
-    vr.render(line_seg);
-
-    line_seg.b = ur;
-    vr.render(line_seg);
-
-    line_seg.a = ul;
-    vr.render(line_seg);
-
-    if(m_checked || m_toggling) {
-      Color check_color = m_check_color;
-      if(m_toggling) {
-        if(m_checked)
-          check_color.a /= 3.0f;
-        else
-          check_color.a *= 2.0f / 3.0f;
-      }
-
-      ul.set_color(check_color);
-      ll.set_color(check_color);
-      lr.set_color(check_color);
-      ur.set_color(check_color);
-
-      line_seg.a = ul;
-      line_seg.b = lr;
-      vr.render(line_seg);
-
-      line_seg.a = ll;
-      line_seg.b = ur;
-      vr.render(line_seg);
-    }
   }
 
   void Radio_Button::on_accept() {
@@ -313,19 +373,13 @@ namespace Zeni {
 
   Slider::Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
                  const float &slider_radius_,
-                 const Color &line_color_,
-                 const Color &slider_color_,
                  const float &slider_position_)
   : m_line_segment(Point3f(end_point_a_), Point3f(end_point_b_)),
-    m_line_color(line_color_),
-    m_line_segment_r(Vertex2f_Color(Point2f(m_line_segment.get_end_point_a()), m_line_color),
-                     Vertex2f_Color(Point2f(m_line_segment.get_end_point_b()), m_line_color)),
     m_slider_radius(slider_radius_),
-    m_slider_color(slider_color_),
     m_slider_position(slider_position_),
     m_down(false)
   {
-    regenerate_slider_r();
+    give_Renderer(new Widget_Renderer_Slider(get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_normal"]));
   }
 
   void Slider::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
@@ -340,7 +394,6 @@ namespace Zeni {
         m_down = true;
         m_backup_position = m_slider_position;
         m_slider_position = test.second;
-        regenerate_slider_r();
         on_slide();
 
         set_busy(true);
@@ -363,12 +416,10 @@ namespace Zeni {
       const std::pair<float, float> test = m_line_segment.nearest_point(mouse_pos);
       if(test.first < m_slider_radius) {
         m_slider_position = test.second;
-        regenerate_slider_r();
         on_slide();
       }
       else {
         m_slider_position = m_backup_position;
-        regenerate_slider_r();
         on_slide();
       }
     }
@@ -381,20 +432,11 @@ namespace Zeni {
     m_down = false;
   }
 
-  void Slider::render_impl() const {
-    Video &vr = get_Video();
-
-    vr.render(m_line_segment_r);
-    vr.render(m_slider_r);
-  }
-
   Slider_Int::Slider_Int(const Range &range,
                          const Point2f &end_point_a_, const Point2f &end_point_b_,
                          const float &slider_radius_,
-                         const Color &line_color_,
-                         const Color &slider_color_,
                          const float &slider_position_)
-  : Slider(end_point_a_, end_point_b_, slider_radius_, line_color_, slider_color_, slider_position_),
+  : Slider(end_point_a_, end_point_b_, slider_radius_, slider_position_),
   m_range(range),
   m_mouse_wheel_inverted(false)
   {
@@ -446,12 +488,10 @@ namespace Zeni {
   Selector::Normal_Button::Normal_Button(Selector &selector,
                                          const Point2f &upper_left_,
                                          const Point2f &lower_right_,
-                                         const std::string &font_,
-                                         const Color &text_color_)
-    : Text_Button(upper_left_, lower_right_, font_, "", text_color_),
+                                         const std::string &font_)
+    : Text_Button(upper_left_, lower_right_, font_, ""),
     m_selector(&selector)
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Selector::Normal_Button::on_accept() {
@@ -466,12 +506,10 @@ namespace Zeni {
                                              const std::string &option,
                                              const Point2f &upper_left_,
                                              const Point2f &lower_right_,
-                                             const std::string &font_,
-                                             const Color &text_color_)
-    : Text_Button(upper_left_, lower_right_, font_, option, text_color_),
+                                             const std::string &font_)
+    : Text_Button(upper_left_, lower_right_, font_, option),
     m_selector(&selector)
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Selector::Selector_Button::on_accept() {
@@ -481,21 +519,18 @@ namespace Zeni {
 
   Selector::Selector_Slider::Selector_Slider(Selector &selector,
                                              const float &slider_radius_,
-                                             const Color &line_color_,
-                                             const Color &slider_color_,
                                              const std::pair<float, float> &bg_coordinates_,
                                              const Color &bg_color_)
     : Slider_Int(Range(0u, 1u),
                  Point2f(), Point2f(),
-                 slider_radius_,
-                 line_color_,
-                 slider_color_),
+                 slider_radius_),
     m_quad(Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
            Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
            Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_),
            Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_)),
     m_selector(&selector)
   {
+    give_Renderer(new Widget_Renderer_Slider(get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_normal"]));
   }
 
   void Selector::Selector_Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
@@ -513,15 +548,14 @@ namespace Zeni {
 
   void Selector::Selector_Slider::render_impl() const {
     get_Video().render(m_quad);
-    Slider_Int::render_impl();
+    Widget::render_impl();
   }
 
   Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
                      const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                      const std::string &font_,
-                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
-                     const Color &slider_color_)
+                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
@@ -529,11 +563,9 @@ namespace Zeni {
     : m_expanded(expanded_upper_left_, expanded_lower_right_),
     m_option(0u),
     m_selected(false),
-    m_normal_button(*this, upper_left_, lower_right_, font_, text_normal_),
+    m_normal_button(*this, upper_left_, lower_right_, font_),
     m_selector_slider(*this,
                       0.5f * (expanded_lower_right_.x - lower_right_.x),
-                      slider_color_,
-                      slider_color_,
                       make_pair(lower_right_.x, expanded_lower_right_.x),
                       bg_normal_),
     m_bg_normal(bg_normal_),
@@ -740,8 +772,7 @@ namespace Zeni {
     m_selector_buttons.push_back(new Selector_Button(*this, option,
                                                      Point2f(ul.x, ul.y + vertical_offset),
                                                      Point2f(lr.x, lr.y + vertical_offset),
-                                                     m_font,
-                                                     m_text_normal));
+                                                     m_font));
   }
 
   void Selector::build_selector_buttons() {

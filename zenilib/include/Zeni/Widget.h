@@ -253,13 +253,15 @@
 
 namespace Zeni {
 
+  class Widget_Render_Function;
+
   class Widget {
     Widget(const Widget &);
     Widget & operator=(const Widget &);
 
   public:
     inline Widget();
-    virtual ~Widget() {}
+    virtual ~Widget();
 
     inline const bool & is_busy() const;
     inline const bool & is_editable() const;
@@ -280,12 +282,148 @@ namespace Zeni {
 
     inline void render() const;
 
-  private:
-    virtual void render_impl() const = 0;
+    inline const Widget_Render_Function * const & get_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
 
+    virtual void render_impl() const;
+
+  private:
     float m_layer;
     bool m_busy;
     bool m_editable;
+
+    Widget_Render_Function * m_renderer;
+    bool delete_m_renderer;
+  };
+
+  class Widget_Render_Function {
+  public:
+    virtual ~Widget_Render_Function() {}
+
+    virtual void render_to(const Widget &widget) = 0;
+
+    virtual Widget_Render_Function * get_duplicate() const = 0;
+  };
+
+  template <typename T1, typename T2>
+  class Widget_Renderer_Pair : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
+                                const T2 * const &second_, const bool &delete_second_);
+    virtual ~Widget_Renderer_Pair();
+
+    inline const T1 * const & first() const;
+    inline const T2 * const & second() const;
+    inline T1 * const & first();
+    inline T2 * const & second();
+
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Pair<T1, T2> * get_duplicate() const;
+
+  private:
+    T1 * m_first;
+    bool delete_m_first;
+
+    T2 * m_second;
+    bool delete_m_second;
+  };
+
+  class Widget_Renderer_Text : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
+
+    /// rect must be of type Widget_Rectangle
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Text * get_duplicate() const;
+
+    std::string font_name;
+    std::string text;
+    Color color;
+  };
+
+  class Widget_Renderer_Color : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Color(const Color &color_);
+
+    /// rect must be of type Widget_Rectangle
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Color * get_duplicate() const;
+
+    Color color;
+  };
+
+  class Widget_Renderer_Texture : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Texture(const std::string &texture_);
+    inline Widget_Renderer_Texture(const std::string &texture_,
+                                   const Point2f &tex_coord_ul_,
+                                   const Point2f &tex_coord_ll_,
+                                   const Point2f &tex_coord_lr_,
+                                   const Point2f &tex_coord_ur_);
+
+    /// rect must be of type Widget_Rectangle
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Texture * get_duplicate() const;
+
+    std::string texture;
+    Point2f tex_coord_ul;
+    Point2f tex_coord_ll;
+    Point2f tex_coord_lr;
+    Point2f tex_coord_ur;
+  };
+
+  class Widget_Renderer_Tricolor : public Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text> {
+  public:
+    inline Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text);
+    inline Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
+                                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
+                                    Widget_Renderer_Text * const &text, const bool &delete_text);
+
+    /// rect must be of type Widget_Button
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Tricolor * get_duplicate() const;
+
+    Color bg_normal;
+    Color bg_clicked;
+    Color bg_hovered_strayed;
+    Color text_normal;
+    Color text_clicked;
+    Color text_hovered_strayed;
+  };
+
+  class Widget_Renderer_Checkbox : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Checkbox();
+    inline Widget_Renderer_Checkbox(const Color &border_color_, const Color &check_color_);
+
+    /// rect must be of type Check_Box
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Checkbox * get_duplicate() const;
+
+    Color border_color;
+    Color check_color;
+  };
+
+  class Widget_Renderer_Slider : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Slider();
+    inline Widget_Renderer_Slider(const Color &line_color_, const Color &slider_color_);
+
+    /// rect must be of type Slider
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Slider * get_duplicate() const;
+
+    Color line_color;
+    Color slider_color;
   };
 
   class Widget_Rectangle {
@@ -312,83 +450,6 @@ namespace Zeni {
     Point2f m_lower_right;
   };
 
-  class Widget_Render_Function {
-  public:
-    virtual ~Widget_Render_Function() {}
-
-    virtual void render_to(const Widget_Rectangle &rect) = 0;
-
-    virtual Widget_Render_Function * get_duplicate() const = 0;
-  };
-
-  template <typename T1, typename T2>
-  class Widget_Renderer_Pair : public Widget_Render_Function {
-  public:
-    inline Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
-                                const T2 * const &second_, const bool &delete_second_);
-    virtual ~Widget_Renderer_Pair();
-
-    inline const T1 * const & first() const;
-    inline const T2 * const & second() const;
-    inline T1 * const & first();
-    inline T2 * const & second();
-
-    virtual void render_to(const Widget_Rectangle &rect);
-
-    virtual Widget_Renderer_Pair<T1, T2> * get_duplicate() const;
-
-  private:
-    T1 * m_first;
-    bool delete_m_first;
-
-    T2 * m_second;
-    bool delete_m_second;
-  };
-
-  class Widget_Renderer_Text : public Widget_Render_Function {
-  public:
-    inline Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
-
-    virtual void render_to(const Widget_Rectangle &rect);
-
-    virtual Widget_Renderer_Text * get_duplicate() const;
-
-    std::string font_name;
-    std::string text;
-    Color color;
-  };
-
-  class Widget_Renderer_Color : public Widget_Render_Function {
-  public:
-    inline Widget_Renderer_Color(const Color &color_);
-
-    virtual void render_to(const Widget_Rectangle &rect);
-
-    virtual Widget_Renderer_Color * get_duplicate() const;
-
-    Color color;
-  };
-
-  class Widget_Renderer_Texture : public Widget_Render_Function {
-  public:
-    inline Widget_Renderer_Texture(const std::string &texture_);
-    inline Widget_Renderer_Texture(const std::string &texture_,
-                                   const Point2f &tex_coord_ul_,
-                                   const Point2f &tex_coord_ll_,
-                                   const Point2f &tex_coord_lr_,
-                                   const Point2f &tex_coord_ur_);
-
-    virtual void render_to(const Widget_Rectangle &rect);
-
-    virtual Widget_Renderer_Texture * get_duplicate() const;
-
-    std::string texture;
-    Point2f tex_coord_ul;
-    Point2f tex_coord_ll;
-    Point2f tex_coord_lr;
-    Point2f tex_coord_ur;
-  };
-
   class Widget_Button : public Widget, public Widget_Rectangle {
     Widget_Button(const Widget_Button &);
     Widget_Button & operator=(const Widget_Button &);
@@ -397,7 +458,6 @@ namespace Zeni {
     enum State {NORMAL, CLICKED, HOVERED, STRAYED, UNACTIONABLE};
 
     inline Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_);
-    ~Widget_Button();
 
     inline const State & get_State() const; ///< Get the State of the button
 
@@ -421,19 +481,8 @@ namespace Zeni {
     /// Called when the cursor is released outside the button
     virtual void on_reject() {}
 
-    inline const Widget_Render_Function * const & get_Renderer() const; ///< Get the current Widget_Render_Function
-    inline void give_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
-    inline void lend_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
-    inline void fax_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
-
-    /// Render m_renderer
-    virtual void render_impl() const;
-
   private:
     State m_state;
-
-    Widget_Render_Function * m_renderer;
-    bool delete_m_renderer;
   };
 
   class Text_Button : public Widget_Button {
@@ -442,29 +491,9 @@ namespace Zeni {
 
   public:
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                       const std::string &font_name_, const std::string &text_, const Color &text_color_);
+                       const std::string &font_name_, const std::string &text_);
 
     Widget_Renderer_Text text;
-  };
-
-  class Widget_Renderer_Tricolor : public Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text> {
-  public:
-    inline Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text);
-    inline Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
-                                    Widget_Renderer_Text * const &text, const bool &delete_text);
-
-    /// Assume rect is actually of type Widget_Button
-    virtual void render_to(const Widget_Rectangle &rect);
-
-    virtual Widget_Renderer_Tricolor * get_duplicate() const;
-
-    Color bg_normal;
-    Color bg_clicked;
-    Color bg_hovered_strayed;
-    Color text_normal;
-    Color text_clicked;
-    Color text_hovered_strayed;
   };
 
   class Check_Box : public Widget_Button {
@@ -473,16 +502,11 @@ namespace Zeni {
 
   public:
     inline Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-                     const Color &border_color_, const Color &check_color_,
                      const bool &checked_ = false, const bool &toggleable_ = true);
 
-    inline const Color & get_border_color() const;
-    inline const Color & get_check_color() const;
     inline const bool & is_checked() const;
-
-    inline void set_border_color(const Color &border_color_);
-    inline void set_check_color(const Color &check_color_);
     inline const void set_checked(const bool &checked_);
+    inline const bool & is_toggling() const;
 
     virtual void on_accept();
 
@@ -492,11 +516,7 @@ namespace Zeni {
     virtual void on_reject();
     virtual void on_stray();
 
-    virtual void render_impl() const;
-
-  protected:
-    Color m_border_color;
-    Color m_check_color;
+  private:
     bool m_checked;
     bool m_toggling;
   };
@@ -533,7 +553,6 @@ namespace Zeni {
   public:
     inline Radio_Button(Radio_Button_Set &radio_button_set_,
                         const Point2f &upper_left_, const Point2f &lower_right_,
-                        const Color &border_color_, const Color &check_color_,
                         const bool &checked_ = false, const bool &toggleable_ = true);
     inline ~Radio_Button();
 
@@ -550,21 +569,15 @@ namespace Zeni {
   public:
     Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
            const float &slider_radius_,
-           const Color &line_color_,
-           const Color &slider_color_,
            const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
     inline const float & get_slider_radius() const;
-    inline const Color & get_line_color() const;
-    inline const Color & get_slider_color() const;
     inline const float & get_slider_position() const;
 
     inline void set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_);
     inline void set_slider_radius(const float &radius_);
-    inline void set_line_color(const Color &line_color_);
-    inline void set_slider_color(const Color &slider_color_);
     inline void set_slider_position(const float &slider_position_);
 
     virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
@@ -573,21 +586,12 @@ namespace Zeni {
     virtual void on_slide();
     virtual void on_accept();
 
-    virtual void render_impl() const;
-
   protected:
     inline const Zeni_Collision::Line_Segment & get_line_segment() const;
 
   private:
-    inline void regenerate_slider_r();
-
     Zeni_Collision::Line_Segment m_line_segment;
-    Zeni::Color m_line_color;
-    Zeni::Line_Segment<Vertex2f_Color> m_line_segment_r;
-
     float m_slider_radius;
-    Zeni::Color m_slider_color;
-    Zeni::Line_Segment<Vertex2f_Color> m_slider_r;
 
     float m_slider_position;
     float m_backup_position;
@@ -604,8 +608,6 @@ namespace Zeni {
     Slider_Int(const Range &range,
                const Point2f &end_point_a_, const Point2f &end_point_b_,
                const float &slider_radius_,
-               const Color &line_color_,
-               const Color &slider_color_,
                const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline const Range & get_range() const;
@@ -637,8 +639,7 @@ namespace Zeni {
       Normal_Button(Selector &selector,
                     const Point2f &upper_left_,
                     const Point2f &lower_right_,
-                    const std::string &font_,
-                    const Color &text_color_);
+                    const std::string &font_);
 
       void on_accept();
 
@@ -655,8 +656,7 @@ namespace Zeni {
                       const std::string &option,
                       const Point2f &upper_left_,
                       const Point2f &lower_right_,
-                      const std::string &font_,
-                      const Color &text_color_);
+                      const std::string &font_);
 
       void on_accept();
 
@@ -671,8 +671,6 @@ namespace Zeni {
     public:
       Selector_Slider(Selector &selector,
                       const float &slider_radius_,
-                      const Color &line_color_,
-                      const Color &slider_color_,
                       const std::pair<float, float> &bg_coordinates_,
                       const Color &bg_color_);
 
@@ -694,8 +692,7 @@ namespace Zeni {
              const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
              const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
              const std::string &font_,
-             const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
-             const Color &slider_color_);
+             const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
     ~Selector();
 
     const Options & get_options() const;
@@ -908,6 +905,11 @@ namespace Zeni {
   private:
     mutable std::vector<Widget *> m_widgets;
     Widget * m_busy_one;
+  };
+
+  class Widget_Renderer_Wrong_Type : public Error {
+  public:
+    Widget_Renderer_Wrong_Type() : Error("Widget_Renderer_Function received an unexpected type") {}
   };
 
 }

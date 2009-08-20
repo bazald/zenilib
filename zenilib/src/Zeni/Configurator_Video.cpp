@@ -45,11 +45,9 @@ namespace Zeni {
     : Text_Button(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
                           Point2f(virtual_screen.second),
                           "system_36_600",
-                          "Accept",
-                          Color()),
+                          "Accept"),
     m_check_video(check_video)
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Check_State::Accept_Button::on_accept() {
@@ -145,8 +143,6 @@ namespace Zeni {
                                                            const float &height)
     : Check_Box(upper_left,
                 Point2f(upper_left.x + height, upper_left.y + height),
-                get_Colors()["default_button_bg_normal"],
-                get_Colors()["default_button_bg_normal"],
                 checked),
     m_element(element)
   {
@@ -177,9 +173,7 @@ namespace Zeni {
     : Slider_Int(range,
                  Point2f(0.9f * upper_left.x + 0.1f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
                  Point2f(0.1f * upper_left.x + 0.9f * lower_right.x, 0.5f * (upper_left.y + lower_right.y)),
-                 0.2f * (lower_right.x - upper_left.x),
-                 get_Colors()["default_button_bg_normal"],
-                 get_Colors()["default_button_bg_normal"]),
+                 0.2f * (lower_right.x - upper_left.x)),
     m_element(element),
     m_text_coord(lower_right.x,
                  0.5f * (lower_right.y + upper_left.y))
@@ -244,8 +238,7 @@ namespace Zeni {
     : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
                get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
                "system_36_600",
-               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"],
-               get_Colors()["default_button_text_normal"]),
+               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"]),
     m_element(element)
   {
   }
@@ -268,8 +261,7 @@ namespace Zeni {
     : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
                get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
                "system_36_600",
-               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"],
-               get_Colors()["default_button_text_normal"]),
+               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"]),
     m_element(element)
   {
     const std::vector<Point2i> &resolutions = get_Video().get_resolutions();
@@ -302,8 +294,6 @@ namespace Zeni {
                                                                    const float &height)
     : Check_Box(upper_left,
                 Point2f(upper_left.x + height, upper_left.y + height),
-                get_Colors()["default_button_bg_normal"],
-                get_Colors()["default_button_bg_normal"],
                 checked),
     m_configurator(configurator)
   {
@@ -346,10 +336,9 @@ namespace Zeni {
   Configurator_Video::Apply_Button::Apply_Button(XML_Document &file,
                                                  const Point2f &upper_left,
                                                  const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, "system_36_600", "Apply", Color()),
+    : Text_Button(upper_left, lower_right, "system_36_600", "Apply"),
     m_file(&file)
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Apply_Button::on_accept() {
@@ -398,9 +387,8 @@ namespace Zeni {
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, "system_36_600", "Cancel", Color())
+    : Text_Button(upper_left, lower_right, "system_36_600", "Cancel")
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Cancel_Button::on_accept() {
