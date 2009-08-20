@@ -47,16 +47,16 @@ namespace Zeni {
     m_material = material;
   }
 
-  void Renderable::lend_Material(Material * const &material) {
+  void Renderable::lend_Material(const Material * const &material) {
     if(delete_m_material) {
       delete m_material;
       delete_m_material = false;
     }
 
-    m_material = material;
+    m_material = const_cast<Material * const &>(material);
   }
 
-  void Renderable::fax_Material(Material * const &material) {
+  void Renderable::fax_Material(const Material * const &material) {
     give_Material(material ?
                   new Material(*material) :
                   0);

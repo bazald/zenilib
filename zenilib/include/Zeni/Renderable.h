@@ -82,10 +82,10 @@ namespace Zeni {
 
     /** Manage Render_Wrappers **/
 
-    inline Material * get_Material() const; ///< Set the Material
-    void give_Material(Material * const &material); ///< Set the Material
-    void lend_Material(Material * const &material); ///< Set the Material
-    void fax_Material(Material * const &material); ///< Set the Material
+    inline const Material * const & get_Material() const; ///< Get the Material
+    void give_Material(Material * const &material); ///< Set the Material, giving the Renderable ownership
+    void lend_Material(const Material * const &material); ///< Set the Material, giving the Renderable no ownership
+    void fax_Material(const Material * const &material); ///< Set the Material, giving the Renderable a copy
 
   private:
     Material * m_material;

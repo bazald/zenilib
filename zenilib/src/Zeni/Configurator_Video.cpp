@@ -42,12 +42,14 @@ using namespace std;
 namespace Zeni {
 
   Configurator_Video::Check_State::Accept_Button::Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen)
-    : Text_Button_3C(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
-                     Point2f(virtual_screen.second),
-                     "system_36_600",
-                     "Accept"),
+    : Text_Button(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
+                          Point2f(virtual_screen.second),
+                          "system_36_600",
+                          "Accept",
+                          Color()),
     m_check_video(check_video)
   {
+    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Check_State::Accept_Button::on_accept() {
@@ -344,14 +346,13 @@ namespace Zeni {
   Configurator_Video::Apply_Button::Apply_Button(XML_Document &file,
                                                  const Point2f &upper_left,
                                                  const Point2f &lower_right)
-    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Apply"),
+    : Text_Button(upper_left, lower_right, "system_36_600", "Apply", Color()),
     m_file(&file)
   {
+    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Apply_Button::on_accept() {
-    Text_Button::on_accept();
-
     //Core &cr = get_Core();
     //const std::string appdata_path = cr.get_appdata_path();
 
@@ -397,12 +398,12 @@ namespace Zeni {
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button_3C(upper_left, lower_right, "system_36_600", "Cancel")
+    : Text_Button(upper_left, lower_right, "system_36_600", "Cancel", Color())
   {
+    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
   }
 
   void Configurator_Video::Cancel_Button::on_accept() {
-    Text_Button::on_accept();
     get_Game().pop_state();
   }
 

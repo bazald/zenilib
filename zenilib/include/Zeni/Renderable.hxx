@@ -61,7 +61,7 @@ namespace Zeni {
     return *this;
   }
 
-  Material * Renderable::get_Material() const {
+  const Material * const & Renderable::get_Material() const {
     return m_material;
   }
 

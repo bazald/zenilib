@@ -56,7 +56,7 @@ namespace Zeni {
       Check_State(const Check_State &);
       Check_State operator=(const Check_State &);
 
-      class Accept_Button : public Zeni::Text_Button_3C {
+      class Accept_Button : public Zeni::Text_Button {
         Accept_Button(const Accept_Button &);
         Accept_Button operator=(const Accept_Button &);
 
@@ -203,7 +203,7 @@ namespace Zeni {
       Configurator_Video &m_configurator;
     };
 
-    class Apply_Button : public Text_Button_3C {
+    class Apply_Button : public Text_Button {
       Apply_Button(const Apply_Button &);
       Apply_Button & operator=(const Apply_Button &);
 
@@ -218,7 +218,7 @@ namespace Zeni {
       XML_Document * m_file;
     };
 
-    class Cancel_Button : public Text_Button_3C {
+    class Cancel_Button : public Text_Button {
       Cancel_Button(const Cancel_Button &);
       Cancel_Button & operator=(const Cancel_Button &);
 

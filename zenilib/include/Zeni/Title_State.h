@@ -127,16 +127,17 @@ namespace Zeni {
     Popup_Menu_State(const Popup_Menu_State &);
     Popup_Menu_State operator=(const Popup_Menu_State &);
 
-    class Continue_Button : public Text_Button_3C {
+    class Continue_Button : public Text_Button {
       Continue_Button(const Continue_Button &);
       Continue_Button operator=(const Continue_Button &);
 
     public:
       Continue_Button(const Gamestate &gamestate)
-        : Text_Button_3C(Point2f(200.0f, 150.0f), Point2f(600.0f, 210.0f),
-                         "system_36_600", "Continue Game"),
+        : Text_Button(Point2f(200.0f, 150.0f), Point2f(600.0f, 210.0f),
+                      "system_36_600", "Continue Game", Color()),
         m_gamestate(gamestate)
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
@@ -146,40 +147,41 @@ namespace Zeni {
 
     private:
       Gamestate m_gamestate;
-    } m_continue_button;
+    } continue_button;
 
-    class Menu_Button : public Text_Button_3C {
+    class Menu_Button : public Text_Button {
       Menu_Button(const Menu_Button &);
       Menu_Button operator=(const Menu_Button &);
 
     public:
       Menu_Button()
-        : Text_Button_3C(Point2f(200.0f, 230.0f), Point2f(600.0f, 290.0f),
-                         "system_36_600", "Back to Menu")
+        : Text_Button(Point2f(200.0f, 230.0f), Point2f(600.0f, 290.0f),
+                      "system_36_600", "Back to Menu", Color())
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
         get_Game().pop_state();
       }
-    } m_menu_button;
+    } menu_button;
 
   public:
-    class Configure_Video_Button : public Text_Button_3C {
+    class Configure_Video_Button : public Text_Button {
       Configure_Video_Button(const Configure_Video_Button &);
       Configure_Video_Button & operator=(const Configure_Video_Button &);
 
     public:
       Configure_Video_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button_3C(upper_left, lower_right, "system_36_600", "Configure Video")
+        : Text_Button(upper_left, lower_right, "system_36_600", "Configure Video", Color())
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
-        Text_Button_3C::on_accept();
         get_Game().push_state(new Configurator_Video());
       }
-    } m_configure_video_button;
+    } configure_video_button;
 
     class Sound_Check_Box : public Check_Box {
       Sound_Check_Box(const Sound_Check_Box &);
@@ -216,36 +218,36 @@ namespace Zeni {
                                  0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
                          get_Colors()["default_button_bg_normal"]);
       }
-    } m_sound_check_box;
+    } sound_check_box;
 
-    class Quit_Button : public Text_Button_3C {
+    class Quit_Button : public Text_Button {
       Quit_Button(const Quit_Button &);
       Quit_Button & operator=(const Quit_Button &);
 
     public:
       Quit_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button_3C(upper_left, lower_right, "system_36_600", "Quit")
+        : Text_Button(upper_left, lower_right, "system_36_600", "Quit", Color())
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
-        Text_Button_3C::on_accept();
         throw Quit_Event();
       }
-    } m_quit_button;
+    } quit_button;
 
     Popup_Menu_State(const Gamestate &gamestate, const bool &pause_game)
       : Popup_State(gamestate, pause_game),
-      m_continue_button(gamestate),
-      m_configure_video_button(Point2f(200.0f, 310.0f), Point2f(600.0f, 370.0f)),
-      m_sound_check_box(Point2f(200.0f, 390.0f), Point2f(260.0f, 450.0f)),
-      m_quit_button(Point2f(400.0f, 390.0f), Point2f(600.0f, 450.0f))
+      continue_button(gamestate),
+      configure_video_button(Point2f(200.0f, 310.0f), Point2f(600.0f, 370.0f)),
+      sound_check_box(Point2f(200.0f, 390.0f), Point2f(260.0f, 450.0f)),
+      quit_button(Point2f(400.0f, 390.0f), Point2f(600.0f, 450.0f))
     {
-      m_widgets.lend_Widget(m_continue_button);
-      m_widgets.lend_Widget(m_configure_video_button);
-      m_widgets.lend_Widget(m_sound_check_box);
-      m_widgets.lend_Widget(m_menu_button);
-      m_widgets.lend_Widget(m_quit_button);
+      m_widgets.lend_Widget(continue_button);
+      m_widgets.lend_Widget(configure_video_button);
+      m_widgets.lend_Widget(sound_check_box);
+      m_widgets.lend_Widget(menu_button);
+      m_widgets.lend_Widget(quit_button);
     }
   };
 
@@ -288,6 +290,7 @@ namespace Zeni {
     Title_State(const Title_State<PLAY_STATE, INSTRUCTIONS_STATE> &);
     Title_State<PLAY_STATE, INSTRUCTIONS_STATE> & operator=(const Title_State<PLAY_STATE, INSTRUCTIONS_STATE> &);
 
+  public:
     class Title : public Text_Box {
       Title(const Title &);
       Title & operator=(const Title &);
@@ -298,62 +301,61 @@ namespace Zeni {
                    get_Colors()["title_bg"], "title", title_, get_Colors()["title_text"])
       {
       }
-    } m_title;
+    } title;
 
-    class Play_Button : public Text_Button_3C {
+    class Play_Button : public Text_Button {
       Play_Button(const Play_Button &);
       Play_Button & operator=(const Play_Button &);
 
     public:
       Play_Button()
-        : Text_Button_3C(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
-                         "system_36_600", "Play")
+        : Text_Button(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
+                      "system_36_600", "Play", Color())
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
-        Text_Button_3C::on_accept();
         get_Game().push_state(new PLAY_STATE());
       }
-    } m_play_button;
+    } play_button;
 
-    class Instructions_Button : public Text_Button_3C {
+    class Instructions_Button : public Text_Button {
       Instructions_Button(const Instructions_Button &);
       Instructions_Button & operator=(const Instructions_Button &);
 
     public:
       Instructions_Button()
-        : Text_Button_3C(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
-                         "system_36_600", "Instructions")
+        : Text_Button(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
+                      "system_36_600", "Instructions", Color())
       {
+        give_Renderer(new Widget_Renderer_Tricolor(&text, false));
       }
 
       void on_accept() {
-        Text_Button_3C::on_accept();
         get_Game().push_state(new INSTRUCTIONS_STATE());
       }
-    } m_instructions_button;
+    } instructions_button;
 
-    Popup_Menu_State::Configure_Video_Button m_configure_video_button;
-    Popup_Menu_State::Sound_Check_Box m_sound_check_box;
-    Popup_Menu_State::Quit_Button m_quit_button;
+    Popup_Menu_State::Configure_Video_Button configure_video_button;
+    Popup_Menu_State::Sound_Check_Box sound_check_box;
+    Popup_Menu_State::Quit_Button quit_button;
 
-  public:
     Title_State(const std::string &title_)
       : Widget_Gamestate(std::make_pair(Point2f(0.0f, 0.0f), Point2f(800.0f, 600.0f))),
-      m_title(title_),
-      m_configure_video_button(Point2f(200.0f, 410.0f), Point2f(600.0f, 470.0f)),
-      m_sound_check_box(Point2f(200.0f, 490.0f), Point2f(260.0f, 550.0f)),
-      m_quit_button(Point2f(400.0f, 490.0f), Point2f(600.0f, 550.0f))
+      title(title_),
+      configure_video_button(Point2f(200.0f, 410.0f), Point2f(600.0f, 470.0f)),
+      sound_check_box(Point2f(200.0f, 490.0f), Point2f(260.0f, 550.0f)),
+      quit_button(Point2f(400.0f, 490.0f), Point2f(600.0f, 550.0f))
     {
-      m_widgets.lend_Widget(m_title);
-      m_widgets.lend_Widget(m_play_button);
-      m_widgets.lend_Widget(m_instructions_button);
-      m_widgets.lend_Widget(m_configure_video_button);
-      m_widgets.lend_Widget(m_sound_check_box);
-      m_widgets.lend_Widget(m_quit_button);
+      m_widgets.lend_Widget(title);
+      m_widgets.lend_Widget(play_button);
+      m_widgets.lend_Widget(instructions_button);
+      m_widgets.lend_Widget(configure_video_button);
+      m_widgets.lend_Widget(sound_check_box);
+      m_widgets.lend_Widget(quit_button);
 
-      m_title.set_justify(ZENI_CENTER);
+      title.set_justify(ZENI_CENTER);
 
       get_Video().set_clear_color(get_Colors()["title_bg"]);
     }
@@ -372,7 +374,7 @@ namespace Zeni {
     }
 
     void render() {
-      m_sound_check_box.set_checked(!get_Sound_Source_Pool().is_muted());
+      sound_check_box.set_checked(!get_Sound_Source_Pool().is_muted());
       Widget_Gamestate::render();
     }
 

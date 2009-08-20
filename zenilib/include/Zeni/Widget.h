@@ -41,20 +41,6 @@
  */
 
 /**
- * \class Zeni::Widget_Positioned
- *
- * \ingroup Zenilib
- *
- * \brief Widget with a clear Rectangular bound
- *
- * Usually Widget_Rectangle (inheriting from this) is a fine choice.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Widget_Text
  *
  * \ingroup Zenilib
@@ -294,8 +280,6 @@ namespace Zeni {
 
     inline void render() const;
 
-  protected:
-
   private:
     virtual void render_impl() const = 0;
 
@@ -304,95 +288,105 @@ namespace Zeni {
     bool m_editable;
   };
 
-  class Widget_Positioned {
+  class Widget_Rectangle {
   public:
-    Widget_Positioned() {}
-    virtual ~Widget_Positioned() {}
-
-    virtual const Point2f & get_upper_left() const = 0;
+    inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
+    virtual ~Widget_Rectangle() {}
+ 
+    inline const Point2f & get_upper_left() const;
     inline Point2f get_lower_left() const;
-    virtual const Point2f & get_lower_right() const = 0;
+    inline const Point2f & get_lower_right() const;
     inline Point2f get_upper_right() const;
+ 
+    virtual void set_upper_left(const Point2f &upper_left_);
+    virtual void set_lower_right(const Point2f &lower_right_);
 
     inline float get_height() const;
     inline float get_width() const;
     inline Point2f get_center() const;
 
     inline bool is_inside(const Point2i &pos) const;
-  };
-
-  class Widget_Text {
-  public:
-    inline Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
-
-    inline const std::string & get_font_name() const;
-    inline const std::string & get_text() const;
-    inline const Color & get_color() const;
-
-    inline void set_font_name(const std::string &font_name_);
-    inline void set_text(const std::string &text_);
-    inline void set_color(const Color &color_);
-
-    inline void render(const Widget_Positioned &positioned) const;
-
-  private:
-    std::string m_font_name;
-    std::string m_text;
-    Color m_color;
-  };
-
-  class Widget_Rectangle : public Widget_Positioned {
-  public:
-    inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
- 
-    virtual const Point2f & get_upper_left() const;
-    virtual const Point2f & get_lower_right() const;
- 
-    virtual void set_upper_left(const Point2f &upper_left_);
-    virtual void set_lower_right(const Point2f &lower_right_);
 
   private:
     Point2f m_upper_left;
     Point2f m_lower_right;
   };
 
-  class Widget_Rectangle_Color : public Widget_Rectangle {
+  class Widget_Render_Function {
   public:
-    inline Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
-                                  const Color &color_);
+    virtual ~Widget_Render_Function() {}
 
-    inline const Color & get_color() const;
-    inline void set_color(const Color &color_);
- 
-    virtual void set_upper_left(const Point2f &upper_left_);
-    virtual void set_lower_right(const Point2f &lower_right_);
+    virtual void render_to(const Widget_Rectangle &rect) = 0;
 
-    inline void render() const;
-
-  private:
-    Color m_color;
-    Quadrilateral<Vertex2f_Color> m_quad;
+    virtual Widget_Render_Function * get_duplicate() const = 0;
   };
 
-  class Widget_Rectangle_Texture : public Widget_Rectangle {
+  template <typename T1, typename T2>
+  class Widget_Renderer_Pair : public Widget_Render_Function {
   public:
-    inline Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
-                                    const std::string &texture_name_);
+    inline Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
+                                const T2 * const &second_, const bool &delete_second_);
+    virtual ~Widget_Renderer_Pair();
 
-    Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs);
-    Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &rhs);
+    inline const T1 * const & first() const;
+    inline const T2 * const & second() const;
+    inline T1 * const & first();
+    inline T2 * const & second();
 
-    inline const std::string & get_texture_name() const;
-    inline void set_texture_name(const std::string &texture_name_);
- 
-    virtual void set_upper_left(const Point2f &upper_left_);
-    virtual void set_lower_right(const Point2f &lower_right_);
+    virtual void render_to(const Widget_Rectangle &rect);
 
-    inline void render() const;
+    virtual Widget_Renderer_Pair<T1, T2> * get_duplicate() const;
 
   private:
-    Quadrilateral<Vertex2f_Texture> m_quad;
-    Material m_material;
+    T1 * m_first;
+    bool delete_m_first;
+
+    T2 * m_second;
+    bool delete_m_second;
+  };
+
+  class Widget_Renderer_Text : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
+
+    virtual void render_to(const Widget_Rectangle &rect);
+
+    virtual Widget_Renderer_Text * get_duplicate() const;
+
+    std::string font_name;
+    std::string text;
+    Color color;
+  };
+
+  class Widget_Renderer_Color : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Color(const Color &color_);
+
+    virtual void render_to(const Widget_Rectangle &rect);
+
+    virtual Widget_Renderer_Color * get_duplicate() const;
+
+    Color color;
+  };
+
+  class Widget_Renderer_Texture : public Widget_Render_Function {
+  public:
+    inline Widget_Renderer_Texture(const std::string &texture_);
+    inline Widget_Renderer_Texture(const std::string &texture_,
+                                   const Point2f &tex_coord_ul_,
+                                   const Point2f &tex_coord_ll_,
+                                   const Point2f &tex_coord_lr_,
+                                   const Point2f &tex_coord_ur_);
+
+    virtual void render_to(const Widget_Rectangle &rect);
+
+    virtual Widget_Renderer_Texture * get_duplicate() const;
+
+    std::string texture;
+    Point2f tex_coord_ul;
+    Point2f tex_coord_ll;
+    Point2f tex_coord_lr;
+    Point2f tex_coord_ur;
   };
 
   class Widget_Button : public Widget, public Widget_Rectangle {
@@ -403,6 +397,7 @@ namespace Zeni {
     enum State {NORMAL, CLICKED, HOVERED, STRAYED, UNACTIONABLE};
 
     inline Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_);
+    ~Widget_Button();
 
     inline const State & get_State() const; ///< Get the State of the button
 
@@ -426,8 +421,19 @@ namespace Zeni {
     /// Called when the cursor is released outside the button
     virtual void on_reject() {}
 
+    inline const Widget_Render_Function * const & get_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
+
+    /// Render m_renderer
+    virtual void render_impl() const;
+
   private:
     State m_state;
+
+    Widget_Render_Function * m_renderer;
+    bool delete_m_renderer;
   };
 
   class Text_Button : public Widget_Button {
@@ -436,55 +442,29 @@ namespace Zeni {
 
   public:
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                       const Color &bg_color_,
                        const std::string &font_name_, const std::string &text_, const Color &text_color_);
 
-    inline const std::string & get_font_name() const;
-    inline const std::string & get_text() const;
-    inline const Color & get_text_color() const;
-    inline const Color & get_bg_color() const;
-
-    inline void set_font_name(const std::string &font_name_);
-    inline void set_text(const std::string &text_);
-    inline void set_text_color(const Color &color_);
-    inline void set_bg_color(const Color &color_);
-
-    virtual void render_impl() const;
-
-  protected:
-    Widget_Rectangle_Color m_bg;
-    Widget_Text m_text;
+    Widget_Renderer_Text text;
   };
 
-  class Text_Button_3C : public Text_Button {
-    Text_Button_3C(const Text_Button_3C &);
-    Text_Button_3C & operator=(const Text_Button_3C &);
-
+  class Widget_Renderer_Tricolor : public Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text> {
   public:
-    inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
-                          const std::string &font_name_, const std::string &text_);
-    inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
-                          const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                          const std::string &font_name_, const std::string &text_,
-                          const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
+    inline Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text);
+    inline Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
+                                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
+                                    Widget_Renderer_Text * const &text, const bool &delete_text);
 
-    virtual void on_unhover(); ///< Switch to normal colors
+    /// Assume rect is actually of type Widget_Button
+    virtual void render_to(const Widget_Rectangle &rect);
 
-    virtual void on_click(); ///< Switch to clicked colors
-    virtual void on_unstray(); ///< Switch to clicked colors
+    virtual Widget_Renderer_Tricolor * get_duplicate() const;
 
-    virtual void on_hover(); ///< Switch to hovered/strayed colors
-    virtual void on_stray(); ///< Switch to hovered/strayed colors
-    virtual void on_accept(); ///< Switch to hovered/strayed colors
-    virtual void on_reject(); ///< Switch to hovered/strayed colors
-
-  private:
-    Color m_bg_normal;
-    Color m_bg_clicked;
-    Color m_bg_hovered_strayed;
-    Color m_text_normal;
-    Color m_text_clicked;
-    Color m_text_hovered_strayed;
+    Color bg_normal;
+    Color bg_clicked;
+    Color bg_hovered_strayed;
+    Color text_normal;
+    Color text_clicked;
+    Color text_hovered_strayed;
   };
 
   class Check_Box : public Widget_Button {
@@ -649,7 +629,7 @@ namespace Zeni {
     Selector(const Selector &);
     Selector & operator=(const Selector &);
 
-    class Normal_Button : public Text_Button_3C {
+    class Normal_Button : public Text_Button {
       Normal_Button(const Normal_Button &);
       Normal_Button & operator=(const Normal_Button &);
 
@@ -657,9 +637,8 @@ namespace Zeni {
       Normal_Button(Selector &selector,
                     const Point2f &upper_left_,
                     const Point2f &lower_right_,
-                    const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                     const std::string &font_,
-                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
+                    const Color &text_color_);
 
       void on_accept();
 
@@ -667,7 +646,7 @@ namespace Zeni {
       Selector * m_selector;
     };
 
-    class Selector_Button : public Text_Button_3C {
+    class Selector_Button : public Text_Button {
       Selector_Button(const Selector_Button &);
       Selector_Button & operator=(const Selector_Button &);
 
@@ -676,9 +655,8 @@ namespace Zeni {
                       const std::string &option,
                       const Point2f &upper_left_,
                       const Point2f &lower_right_,
-                      const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
                       const std::string &font_,
-                      const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
+                      const Color &text_color_);
 
       void on_accept();
 
@@ -842,9 +820,9 @@ namespace Zeni {
 
     void format();
     void append_word(const Word &word);
-    
-    Widget_Rectangle_Color m_bg;
-    Widget_Text m_text;
+
+    mutable Widget_Renderer_Color m_bg;
+    Widget_Renderer_Text m_text;
 
     std::string clean_string(const std::string &unclean_string) const;
     std::string untablinebreak(const std::string &tabbed_text) const;
