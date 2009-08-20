@@ -282,7 +282,7 @@ namespace Zeni {
 
     inline void render() const;
 
-    inline const Widget_Render_Function * const & get_Renderer() const; ///< Get the current Widget_Render_Function
+    inline const Widget_Render_Function * get_Renderer() const; ///< Get the current Widget_Render_Function
     inline void give_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
     inline void lend_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
     inline void fax_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy

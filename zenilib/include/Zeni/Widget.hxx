@@ -115,7 +115,7 @@ namespace Zeni {
     vr.pop_world_stack();
   }
 
-  const Widget_Render_Function * const & Widget::get_Renderer() const {
+  const Widget_Render_Function * Widget::get_Renderer() const {
     return m_renderer;
   }
 
