@@ -54,23 +54,69 @@ namespace Zeni {
   const Point2f & Widget_Rectangle::get_lower_right() const {
     return m_lower_right;
   }
-
-  void Widget_Rectangle_Color::render_impl() const {
-    get_Video().render(*m_quad);
+  
+  void Widget_Rectangle::set_upper_left(const Point2f &upper_left_) {
+    m_upper_left = upper_left_;
   }
 
-  void Widget_Rectangle_Texture::render_impl() const {
-    get_Video().render(*m_quad);
-  }
-
-  const Point2f & Widget_Button::get_upper_left() const {
-    return m_upper_left;
-  }
-
-  const Point2f & Widget_Button::get_lower_right() const {
-    return m_lower_right;
+  void Widget_Rectangle::set_lower_right(const Point2f &lower_right_) {
+    m_lower_right = lower_right_;
   }
   
+  void Widget_Rectangle_Color::set_upper_left(const Point2f &upper_left_) {
+    Widget_Rectangle::set_upper_left(upper_left_);
+
+    m_quad.a.position.x = upper_left_.x;
+    m_quad.a.position.y = upper_left_.y;
+    m_quad.b.position.x = upper_left_.x;
+    m_quad.d.position.y = upper_left_.y;
+  }
+
+  void Widget_Rectangle_Color::set_lower_right(const Point2f &lower_right_) {
+    Widget_Rectangle::set_lower_right(lower_right_);
+
+    m_quad.b.position.y = lower_right_.y;
+    m_quad.c.position.x = lower_right_.x;
+    m_quad.c.position.y = lower_right_.y;
+    m_quad.d.position.x = lower_right_.x;
+  }
+  
+  void Widget_Rectangle_Texture::set_upper_left(const Point2f &upper_left_) {
+    Widget_Rectangle::set_upper_left(upper_left_);
+
+    m_quad.a.position.x = upper_left_.x;
+    m_quad.a.position.y = upper_left_.y;
+    m_quad.b.position.x = upper_left_.x;
+    m_quad.d.position.y = upper_left_.y;
+  }
+
+  void Widget_Rectangle_Texture::set_lower_right(const Point2f &lower_right_) {
+    Widget_Rectangle::set_lower_right(lower_right_);
+
+    m_quad.b.position.y = lower_right_.y;
+    m_quad.c.position.x = lower_right_.x;
+    m_quad.c.position.y = lower_right_.y;
+    m_quad.d.position.x = lower_right_.x;
+  }
+
+  Widget_Rectangle_Texture::Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs)
+    : Widget_Rectangle(rhs),
+    m_quad(rhs.m_quad),
+    m_material(rhs.m_material)
+  {
+    m_quad.lend_Material(&m_material);
+  }
+
+  Widget_Rectangle_Texture & Widget_Rectangle_Texture::operator=(const Widget_Rectangle_Texture &rhs) {
+    static_cast<Widget_Rectangle &>(*this) = rhs;
+
+    m_quad = rhs.m_quad;
+    m_material = rhs.m_material;
+    m_quad.lend_Material(&m_material);
+
+    return *this;
+  }
+
   void Widget_Button::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
     if(!is_editable() || button != SDL_BUTTON_LEFT)
       return;
@@ -79,39 +125,33 @@ namespace Zeni {
 
     if(down)
       if(inside) {
-        m_transient = false;
-        m_clicked_inside = true;
+        m_state = CLICKED;
         on_click();
 
         set_busy(true);
       }
       else {
-        m_transient = true;
-        m_clicked_outside = true;
+        m_state = UNACTIONABLE;
 
         set_busy(false);
       }
     else {
       if(inside) {
-        m_transient = true;
-
-        if(m_clicked_inside) {
-          m_clicked_inside = false;
+        if(m_state == CLICKED) {
+          m_state = HOVERED;
           on_accept();
           on_mouse_motion(pos);
         }
         else
-          m_clicked_outside = false;
+          m_state = HOVERED;
       }
       else {
-        m_transient = false;
-
-        if(m_clicked_inside) {
-          m_clicked_inside = false;
+        if(m_state == CLICKED) {
+          m_state = NORMAL;
           on_reject();
         }
         else
-          m_clicked_outside = false;
+          m_state = NORMAL;
       }
 
       set_busy(false);
@@ -122,84 +162,73 @@ namespace Zeni {
     if(!is_editable())
       return;
 
-    const bool inside = is_inside(pos);
-    m_clicked_outside &= get_Game().get_mouse_button_state(SDL_BUTTON_LEFT);
+    if(m_state == UNACTIONABLE && !get_Game().get_mouse_button_state(SDL_BUTTON_LEFT))
+      m_state = NORMAL;
 
-    if(!m_clicked_outside) {
-      if(inside)
-        if(m_clicked_inside) {
-          if(m_transient) {
-            m_transient = false;
-            on_unstray();
-          }
+    const bool inside = is_inside(pos);
+
+    if(m_state != UNACTIONABLE) {
+      if(inside) {
+        if(m_state == STRAYED) {
+          m_state = CLICKED;
+          on_unstray();
         }
-        else {
-          if(!m_transient) {
-            m_transient = true;
-            on_hover();
-          }
+        else if(m_state == NORMAL) {
+          m_state = HOVERED;
+          on_hover();
         }
-      else
-        if(m_clicked_inside) {
-          if(!m_transient) {
-            m_transient = true;
-            on_stray();
-          }
+      }
+      else {
+        if(m_state == CLICKED) {
+          m_state = STRAYED;
+          on_stray();
         }
-        else {
-          if(m_transient) {
-            m_transient = false;
-            on_unhover();
-          }
+        else if(m_state == HOVERED) {
+          m_state = NORMAL;
+          on_unhover();
         }
+      }
     }
   }
 
   void Text_Button::render_impl() const {
-    m_bg.render_impl();
-    m_text.render(get_center());
+    m_bg.render();
+    m_text.render(*this);
   }
 
   void Text_Button_3C::on_unhover() {
     m_bg.set_color(m_bg_normal);
     m_text.set_color(m_text_normal);
-    m_state = NORMAL;
   }
 
   void Text_Button_3C::on_click() {
     m_bg.set_color(m_bg_clicked);
     m_text.set_color(m_text_clicked);
-    m_state = CLICKED;
   }
 
   void Text_Button_3C::on_unstray() {
     m_bg.set_color(m_bg_clicked);
     m_text.set_color(m_text_clicked);
-    m_state = CLICKED;
   }
 
   void Text_Button_3C::on_hover() {
     m_bg.set_color(m_bg_hovered_strayed);
     m_text.set_color(m_text_hovered_strayed);
-    m_state = HOVERED_STRAYED;
   }
 
   void Text_Button_3C::on_stray() {
     m_bg.set_color(m_bg_hovered_strayed);
     m_text.set_color(m_text_hovered_strayed);
-    m_state = HOVERED_STRAYED;
   }
 
   void Text_Button_3C::on_accept() {
     m_bg.set_color(m_bg_hovered_strayed);
     m_text.set_color(m_text_hovered_strayed);
-    m_state = HOVERED_STRAYED;
   }
 
   void Text_Button_3C::on_reject() {
     m_bg.set_color(m_bg_normal);
     m_text.set_color(m_text_normal);
-    m_state = NORMAL;
   }
 
   void Check_Box::on_accept() {
@@ -957,7 +986,7 @@ namespace Zeni {
   void Text_Box::render_impl() const {
     Video &vr = get_Video();
 
-    m_bg.render_impl();
+    m_bg.render();
 
     const Font &f = get_font();
     const Color &c = m_text.get_color();

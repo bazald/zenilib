@@ -305,9 +305,6 @@ namespace Zeni {
   };
 
   class Widget_Positioned {
-    Widget_Positioned(const Widget_Positioned &);
-    Widget_Positioned & operator=(const Widget_Positioned &);
-
   public:
     Widget_Positioned() {}
     virtual ~Widget_Positioned() {}
@@ -320,12 +317,11 @@ namespace Zeni {
     inline float get_height() const;
     inline float get_width() const;
     inline Point2f get_center() const;
+
+    inline bool is_inside(const Point2i &pos) const;
   };
 
   class Widget_Text {
-    Widget_Text(const Widget_Text &);
-    Widget_Text & operator=(const Widget_Text &);
-
   public:
     inline Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
 
@@ -337,7 +333,7 @@ namespace Zeni {
     inline void set_text(const std::string &text_);
     inline void set_color(const Color &color_);
 
-    inline void render(const Point2f &center) const;
+    inline void render(const Widget_Positioned &positioned) const;
 
   private:
     std::string m_font_name;
@@ -346,16 +342,14 @@ namespace Zeni {
   };
 
   class Widget_Rectangle : public Widget_Positioned {
-    Widget_Rectangle(const Widget_Rectangle &);
-    Widget_Rectangle & operator=(const Widget_Rectangle &);
-
   public:
     inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
  
     virtual const Point2f & get_upper_left() const;
     virtual const Point2f & get_lower_right() const;
-
-    virtual void render_impl() const {}
+ 
+    virtual void set_upper_left(const Point2f &upper_left_);
+    virtual void set_lower_right(const Point2f &lower_right_);
 
   private:
     Point2f m_upper_left;
@@ -363,86 +357,77 @@ namespace Zeni {
   };
 
   class Widget_Rectangle_Color : public Widget_Rectangle {
-    Widget_Rectangle_Color(const Widget_Rectangle_Color &);
-    Widget_Rectangle_Color & operator=(const Widget_Rectangle_Color &);
-
   public:
     inline Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
                                   const Color &color_);
-    inline ~Widget_Rectangle_Color();
 
     inline const Color & get_color() const;
     inline void set_color(const Color &color_);
+ 
+    virtual void set_upper_left(const Point2f &upper_left_);
+    virtual void set_lower_right(const Point2f &lower_right_);
 
-    virtual void render_impl() const;
+    inline void render() const;
 
   private:
-    inline void generate_quadrilateral();
-
     Color m_color;
-    Quadrilateral<Vertex2f_Color> * m_quad;
+    Quadrilateral<Vertex2f_Color> m_quad;
   };
 
   class Widget_Rectangle_Texture : public Widget_Rectangle {
-    Widget_Rectangle_Texture(const Widget_Rectangle_Texture &);
-    Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &);
-
   public:
     inline Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
                                     const std::string &texture_name_);
-    inline ~Widget_Rectangle_Texture();
 
-    inline const std::string get_texture_name() const;
+    Widget_Rectangle_Texture(const Widget_Rectangle_Texture &rhs);
+    Widget_Rectangle_Texture & operator=(const Widget_Rectangle_Texture &rhs);
+
+    inline const std::string & get_texture_name() const;
     inline void set_texture_name(const std::string &texture_name_);
+ 
+    virtual void set_upper_left(const Point2f &upper_left_);
+    virtual void set_lower_right(const Point2f &lower_right_);
 
-    virtual void render_impl() const;
+    inline void render() const;
 
   private:
-    inline void generate_quadrilateral();
-
-    std::string m_texture_name;
-    Quadrilateral<Vertex2f_Texture> * m_quad;
+    Quadrilateral<Vertex2f_Texture> m_quad;
+    Material m_material;
   };
 
-  class Widget_Button : public Widget, public Widget_Positioned {
+  class Widget_Button : public Widget, public Widget_Rectangle {
     Widget_Button(const Widget_Button &);
     Widget_Button & operator=(const Widget_Button &);
 
   public:
+    enum State {NORMAL, CLICKED, HOVERED, STRAYED, UNACTIONABLE};
+
     inline Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_);
 
-    virtual const Point2f & get_upper_left() const;
-    virtual const Point2f & get_lower_right() const;
+    inline const State & get_State() const; ///< Get the State of the button
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
-    // Called when the cursor passes over the button
+    /// Called when the cursor passes over the button
     virtual void on_hover() {}
-    // Called when the cursor leaves the button without clicking
+    /// Called when the cursor leaves the button without clicking
     virtual void on_unhover() {}
 
-    // Called when the cursor downclicks the button
+    /// Called when the cursor downclicks the button
     virtual void on_click() {}
-    // Called when the cursor is dragged off the button after being clicked
+    /// Called when the cursor is dragged off the button after being clicked
     virtual void on_stray() {}
-    // Called when the cursor is dragged back onto the button without releasing the clicker
+    /// Called when the cursor is dragged back onto the button without releasing the clicker
     virtual void on_unstray() {}
 
-    // Called when the cursor is released inside the button
+    /// Called when the cursor is released inside the button
     virtual void on_accept() {}
-    // Called when the cursor is released outside the button
+    /// Called when the cursor is released outside the button
     virtual void on_reject() {}
 
   private:
-    inline bool is_inside(const Point2i &pos) const;
-
-    Point2f m_upper_left;
-    Point2f m_lower_right;
-
-    bool m_clicked_inside;
-    bool m_clicked_outside;
-    bool m_transient;
+    State m_state;
   };
 
   class Text_Button : public Widget_Button {
@@ -476,8 +461,6 @@ namespace Zeni {
     Text_Button_3C & operator=(const Text_Button_3C &);
 
   public:
-    enum State {NORMAL, CLICKED, HOVERED_STRAYED};
-
     inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
                           const std::string &font_name_, const std::string &text_);
     inline Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
@@ -502,8 +485,6 @@ namespace Zeni {
     Color m_text_normal;
     Color m_text_clicked;
     Color m_text_hovered_strayed;
-
-    State m_state;
   };
 
   class Check_Box : public Widget_Button {

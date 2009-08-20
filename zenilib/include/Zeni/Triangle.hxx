@@ -121,8 +121,7 @@ namespace Zeni {
 
   template <typename VERTEX>
   Triangle<VERTEX> & Triangle<VERTEX>::operator=(const Triangle<VERTEX> &rhs) {
-    reinterpret_cast<Renderable &>(*this) =
-      reinterpret_cast<const Renderable &>(rhs);
+    static_cast<Renderable &>(*this) = rhs;
 
     a = rhs.a;
     b = rhs.b;
