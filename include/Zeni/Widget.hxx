@@ -112,59 +112,6 @@ namespace Zeni {
 
     vr.pop_world_stack();
   }
-
-  Point2f Widget_Positioned::get_lower_left() const {
-    return Point2f(get_upper_left().x, get_lower_right().y);
-  }
-
-  Point2f Widget_Positioned::get_upper_right() const {
-    return Point2f(get_lower_right().x, get_upper_left().y);
-  }
-
-  float Widget_Positioned::get_height() const {
-    return get_lower_right().y - get_upper_left().y;
-  }
-
-  float Widget_Positioned::get_width() const {
-    return get_lower_right().x - get_upper_left().x;
-  }
-
-  Point2f Widget_Positioned::get_center() const {
-    const Point2f &upper_left = get_upper_left();
-    const Point2f &lower_right = get_lower_right();
-
-    return Point2f(0.5f * (upper_left.x + lower_right.x),
-                   0.5f * (upper_left.y + lower_right.y));
-  }
-
-  bool Widget_Positioned::is_inside(const Point2i &pos) const {
-    return get_upper_left().x < pos.x && pos.x < get_lower_right().x &&
-           get_upper_left().y < pos.y && pos.y < get_lower_right().y;
-  }
-  
-  Widget_Text::Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_)
-    : m_font_name(font_name_),
-    m_text(text_),
-    m_color(color_)
-  {
-  }
-
-  const std::string & Widget_Text::get_font_name() const {return m_font_name;}
-  const std::string & Widget_Text::get_text() const {return m_text;}
-  const Color & Widget_Text::get_color() const {return m_color;}
-
-  void Widget_Text::set_font_name(const std::string &font_name_) {m_font_name = font_name_;}
-  void Widget_Text::set_text(const std::string &text_) {m_text = text_;}
-  void Widget_Text::set_color(const Color &color_) {m_color = color_;}
-
-  void Widget_Text::render(const Widget_Positioned &positioned) const {
-    const Font &font = get_Fonts()[m_font_name];
-
-    const Point2f center = positioned.get_center();
-    const float x = center.x;
-    const float y = center.y - 0.5f * font.get_text_height();
-    font.render_text(m_text, Point2f(x, y), m_color, ZENI_CENTER);
-  }
   
   Widget_Rectangle::Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_)
     : m_upper_left(upper_left_),
@@ -172,57 +119,130 @@ namespace Zeni {
   {
   }
 
-  Widget_Rectangle_Color::Widget_Rectangle_Color(const Point2f &upper_left_, const Point2f &lower_right_,
-                                                 const Color &color_)
-    : Widget_Rectangle(upper_left_, lower_right_),
-    m_color(color_),
-    m_quad(Vertex2f_Color(upper_left_, color_),
-           Vertex2f_Color(Point2f(upper_left_.x, lower_right_.y), color_),
-           Vertex2f_Color(lower_right_, color_),
-           Vertex2f_Color(Point2f(lower_right_.x, upper_left_.y), color_))
+  const Point2f & Widget_Rectangle::get_upper_left() const {
+    return m_upper_left;
+  }
+
+  Point2f Widget_Rectangle::get_lower_left() const {
+    return Point2f(m_upper_left.x, m_lower_right.y);
+  }
+
+  const Point2f & Widget_Rectangle::get_lower_right() const {
+    return m_lower_right;
+  }
+
+  Point2f Widget_Rectangle::get_upper_right() const {
+    return Point2f(m_lower_right.x, m_upper_left.y);
+  }
+
+  float Widget_Rectangle::get_height() const {
+    return m_lower_right.y - m_upper_left.y;
+  }
+
+  float Widget_Rectangle::get_width() const {
+    return m_lower_right.x - m_upper_left.x;
+  }
+
+  Point2f Widget_Rectangle::get_center() const {
+    return Point2f(0.5f * (m_upper_left.x + m_lower_right.x),
+                   0.5f * (m_upper_left.y + m_lower_right.y));
+  }
+
+  bool Widget_Rectangle::is_inside(const Point2i &pos) const {
+    return m_upper_left.x < pos.x && pos.x < m_lower_right.x &&
+           m_upper_left.y < pos.y && pos.y < m_lower_right.y;
+  }
+
+  template <typename T1, typename T2>
+  Widget_Renderer_Pair<T1, T2>::Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
+                                                     const T2 * const &second_, const bool &delete_second_)
+    : m_first(const_cast<T1 * const &>(first_)),
+    delete_m_first(delete_first_),
+    m_second(const_cast<T2 * const &>(second_)),
+    delete_m_second(delete_second_)
   {
   }
 
-  const Color & Widget_Rectangle_Color::get_color() const {
-    return m_color;
+  template <typename T1, typename T2>
+  Widget_Renderer_Pair<T1, T2>::~Widget_Renderer_Pair() {
+    if(delete_m_first)
+      delete m_first;
+    if(delete_m_second)
+      delete m_second;
   }
 
-  void Widget_Rectangle_Color::set_color(const Color &color_) {
-    for(int i = 0; i != 4; ++i)
-      m_quad[i].set_color(color_);
+  template <typename T1, typename T2>
+  const T1 * const & Widget_Renderer_Pair<T1, T2>::first() const {
+    return m_first;
   }
 
-  void Widget_Rectangle_Color::render() const {
-    get_Video().render(m_quad);
+  template <typename T1, typename T2>
+  const T2 * const & Widget_Renderer_Pair<T1, T2>::second() const {
+    return m_second;
   }
 
-  Widget_Rectangle_Texture::Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
-                                                     const std::string &texture_name_)
-    : Widget_Rectangle(upper_left_, lower_right_),
-    m_material(texture_name_),
-    m_quad(Vertex2f_Texture(upper_left_, Point2f()),
-           Vertex2f_Texture(Point2f(upper_left_.x, lower_right_.y), Point2f(0.0f, 1.0f)),
-           Vertex2f_Texture(lower_right_, Point2f(1.0f, 1.0f)),
-           Vertex2f_Texture(Point2f(lower_right_.x, upper_left_.y), Point2f(1.0f, 0.0f)))
+  template <typename T1, typename T2>
+  T1 * const & Widget_Renderer_Pair<T1, T2>::first() {
+    return m_first;
+  }
+
+  template <typename T1, typename T2>
+  T2 * const & Widget_Renderer_Pair<T1, T2>::second() {
+    return m_second;
+  }
+
+  template <typename T1, typename T2>
+  void Widget_Renderer_Pair<T1, T2>::render_to(const Widget_Rectangle &rect) {
+    if(m_first)
+      m_first->render_to(rect);
+    if(m_second)
+      m_second->render_to(rect);
+  }
+
+  template <typename T1, typename T2>
+  Widget_Renderer_Pair<T1, T2> * Widget_Renderer_Pair<T1, T2>::get_duplicate() const {
+    return new Widget_Renderer_Pair<T1, T2>(new T1(*m_first), true, new T2(*m_second), true);
+  }
+
+  Widget_Renderer_Text::Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_)
+    : font_name(font_name_),
+    text(text_),
+    color(color_)
   {
-    m_quad.lend_Material(&m_material);
   }
 
-  const std::string & Widget_Rectangle_Texture::get_texture_name() const {
-    return m_material.get_texture();
+  Widget_Renderer_Color::Widget_Renderer_Color(const Color &color_)
+    : color(color_)
+  {
   }
 
-  void Widget_Rectangle_Texture::set_texture_name(const std::string &texture_name_) {
-    m_material.set_texture(texture_name_);
+  Widget_Renderer_Texture::Widget_Renderer_Texture(const std::string &texture_)
+    : texture(texture_),
+    tex_coord_ul(0.0f, 0.0f),
+    tex_coord_ll(0.0f, 1.0f),
+    tex_coord_lr(1.0f, 1.0f),
+    tex_coord_ur(1.0f, 0.0f)
+  {
   }
 
-  void Widget_Rectangle_Texture::render() const {
-    get_Video().render(m_quad);
+  Widget_Renderer_Texture::Widget_Renderer_Texture(const std::string &texture_,
+                                                   const Point2f &tex_coord_ul_,
+                                                   const Point2f &tex_coord_ll_,
+                                                   const Point2f &tex_coord_lr_,
+                                                   const Point2f &tex_coord_ur_)
+    : texture(texture_),
+    tex_coord_ul(tex_coord_ul_),
+    tex_coord_ll(tex_coord_ll_),
+    tex_coord_lr(tex_coord_lr_),
+    tex_coord_ur(tex_coord_ur_)
+  {
   }
 
   Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
     : Widget_Rectangle(upper_left_, lower_right_),
-    m_state(NORMAL)
+    m_state(NORMAL),
+    m_renderer(0),
+    delete_m_renderer(false)
   {
   }
 
@@ -230,73 +250,65 @@ namespace Zeni {
     return m_state;
   }
 
+  const Widget_Render_Function * const & Widget_Button::get_Renderer() const {
+    return m_renderer;
+  }
+
+  void Widget_Button::give_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = renderer;
+    delete_m_renderer = true;
+  }
+
+  void Widget_Button::lend_Renderer(const Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = const_cast<Widget_Render_Function * const &>(renderer);
+    delete_m_renderer = false;
+  }
+
+  void Widget_Button::fax_Renderer(const Widget_Render_Function * const &renderer) {
+    if(delete_m_renderer)
+      delete m_renderer;
+    m_renderer = renderer->get_duplicate();
+    delete_m_renderer = true;
+  }
+
   Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                           const Color &bg_color_,
                            const std::string &font_name_, const std::string &text_, const Color &text_color_)
     : Widget_Button(upper_left_, lower_right_),
-    m_bg(upper_left_, lower_right_, bg_color_),
-    m_text(font_name_, text_, text_color_)
+    text(font_name_, text_, text_color_)
+  {
+    lend_Renderer(&text);
+  }
+
+  Widget_Renderer_Tricolor::Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text)
+    : Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>(new Widget_Renderer_Color(Color()), true,
+                                                                        text, delete_text),
+    bg_normal(get_Colors()["default_button_bg_normal"]),
+    bg_clicked(get_Colors()["default_button_bg_clicked"]),
+    bg_hovered_strayed(get_Colors()["default_button_bg_hovered_strayed"]),
+    text_normal(get_Colors()["default_button_text_normal"]),
+    text_clicked(get_Colors()["default_button_text_clicked"]),
+    text_hovered_strayed(get_Colors()["default_button_text_hovered_strayed"])
   {
   }
 
-  Text_Button_3C::Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
-                                 const std::string &font_name_, const std::string &text_)
-    : Text_Button(upper_left_, lower_right_, get_Colors()["default_button_bg_normal"], font_name_, text_, get_Colors()["default_button_text_normal"]),
-    m_bg_normal(get_Colors()["default_button_bg_normal"]),
-    m_bg_clicked(get_Colors()["default_button_bg_clicked"]),
-    m_bg_hovered_strayed(get_Colors()["default_button_bg_hovered_strayed"]),
-    m_text_normal(get_Colors()["default_button_text_normal"]),
-    m_text_clicked(get_Colors()["default_button_text_clicked"]),
-    m_text_hovered_strayed(get_Colors()["default_button_text_hovered_strayed"])
+  Widget_Renderer_Tricolor::Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
+                                                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
+                                                     Widget_Renderer_Text * const &text, const bool &delete_text)
+    : Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>(new Widget_Renderer_Color(Color()), true,
+                                                                        text, delete_text),
+    bg_normal(bg_normal_),
+    bg_clicked(bg_clicked_),
+    bg_hovered_strayed(bg_hovered_strayed_),
+    text_normal(text_normal_),
+    text_clicked(text_clicked_),
+    text_hovered_strayed(text_hovered_strayed_)
   {
   }
 
-  Text_Button_3C::Text_Button_3C(const Point2f &upper_left_, const Point2f &lower_right_,
-                                 const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                                 const std::string &font_name_, const std::string &text_,
-                                 const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
-    : Text_Button(upper_left_, lower_right_, bg_normal_, font_name_, text_, text_normal_),
-    m_bg_normal(bg_normal_),
-    m_bg_clicked(bg_clicked_),
-    m_bg_hovered_strayed(bg_hovered_strayed_),
-    m_text_normal(text_normal_),
-    m_text_clicked(text_clicked_),
-    m_text_hovered_strayed(text_hovered_strayed_)
-  {
-  }
-
-  const std::string & Text_Button::get_font_name() const {
-    return m_text.get_font_name();
-  }
-
-  const std::string & Text_Button::get_text() const {
-    return m_text.get_text();
-  }
-
-  const Color & Text_Button::get_text_color() const {
-    return m_text.get_color();
-  }
-
-  const Color & Text_Button::get_bg_color() const {
-    return m_bg.get_color();
-  }
-
-  void Text_Button::set_font_name(const std::string &font_name_) {
-    m_text.set_font_name(font_name_);
-  }
-
-  void Text_Button::set_text(const std::string &text_) {
-    m_text.set_text(text_);
-  }
-
-  void Text_Button::set_text_color(const Color &color_) {
-    m_text.set_color(color_);
-  }
-
-  void Text_Button::set_bg_color(const Color &color_) {
-    m_bg.set_color(color_);
-  }
-  
   Check_Box::Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
                        const Color &border_color_, const Color &check_color_,
                        const bool &checked_, const bool &toggleable_)
@@ -455,23 +467,23 @@ namespace Zeni {
   }
 
   const Color & Text_Box::get_bg_color() const {
-    return m_bg.get_color();
+    return m_bg.color;
   }
 
   const std::string & Text_Box::get_font_name() const {
-    return m_text.get_font_name();
+    return m_text.font_name;
   }
 
   const Font & Text_Box::get_font() const {
-    return get_Fonts()[m_text.get_font_name()];
+    return get_Fonts()[m_text.font_name];
   }
 
   const std::string & Text_Box::get_text() const {
-    return m_text.get_text();
+    return m_text.text;
   }
   
   const Color & Text_Box::get_text_color() const {
-    return m_text.get_color();
+    return m_text.color;
   }
 
   const JUSTIFY & Text_Box::get_justify() const {
@@ -487,23 +499,23 @@ namespace Zeni {
   }
 
   void Text_Box::set_bg_color(const Color &bg_color_) {
-    m_bg.set_color(bg_color_);
+    m_bg.color = bg_color_;
   }
 
   void Text_Box::set_font_name(const std::string &font_name_) {
-    m_text.set_font_name(font_name_);
+    m_text.font_name = font_name_;
     format();
     seek(m_edit_pos);
   }
 
   void Text_Box::set_text(const std::string &text_) {
-    m_text.set_text(text_);
+    m_text.text = text_;
     format();
     seek(std::min(m_edit_pos, this->get_max_seek()));
   }
   
   void Text_Box::set_text_color(const Color &text_color_) {
-    m_text.set_color(text_color_);
+    m_text.color = text_color_;
   }
   
   void Text_Box::set_justify(const JUSTIFY &justify_) {
@@ -529,7 +541,7 @@ namespace Zeni {
         new_text += m_lines[size_t(i)].unformatted;
     }
 
-    m_text.set_text(new_text);
+    m_text.text = new_text;
 
     format();
     invalidate_edit_pos();
