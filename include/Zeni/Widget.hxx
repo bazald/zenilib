@@ -136,6 +136,11 @@ namespace Zeni {
     return Point2f(0.5f * (upper_left.x + lower_right.x),
                    0.5f * (upper_left.y + lower_right.y));
   }
+
+  bool Widget_Positioned::is_inside(const Point2i &pos) const {
+    return get_upper_left().x < pos.x && pos.x < get_lower_right().x &&
+           get_upper_left().y < pos.y && pos.y < get_lower_right().y;
+  }
   
   Widget_Text::Widget_Text(const std::string &font_name_, const std::string &text_, const Color &color_)
     : m_font_name(font_name_),
@@ -152,9 +157,10 @@ namespace Zeni {
   void Widget_Text::set_text(const std::string &text_) {m_text = text_;}
   void Widget_Text::set_color(const Color &color_) {m_color = color_;}
 
-  void Widget_Text::render(const Point2f &center) const {
+  void Widget_Text::render(const Widget_Positioned &positioned) const {
     const Font &font = get_Fonts()[m_font_name];
 
+    const Point2f center = positioned.get_center();
     const float x = center.x;
     const float y = center.y - 0.5f * font.get_text_height();
     font.render_text(m_text, Point2f(x, y), m_color, ZENI_CENTER);
@@ -170,80 +176,58 @@ namespace Zeni {
                                                  const Color &color_)
     : Widget_Rectangle(upper_left_, lower_right_),
     m_color(color_),
-    m_quad(0)
+    m_quad(Vertex2f_Color(upper_left_, color_),
+           Vertex2f_Color(Point2f(upper_left_.x, lower_right_.y), color_),
+           Vertex2f_Color(lower_right_, color_),
+           Vertex2f_Color(Point2f(lower_right_.x, upper_left_.y), color_))
   {
-    generate_quadrilateral();
   }
 
-  Widget_Rectangle_Color::~Widget_Rectangle_Color() {
-    delete m_quad;
+  const Color & Widget_Rectangle_Color::get_color() const {
+    return m_color;
   }
-
-  const Color & Widget_Rectangle_Color::get_color() const {return m_color;}
 
   void Widget_Rectangle_Color::set_color(const Color &color_) {
-    m_color = color_;
-    generate_quadrilateral();
+    for(int i = 0; i != 4; ++i)
+      m_quad[i].set_color(color_);
   }
 
-  void Widget_Rectangle_Color::generate_quadrilateral() {
-    delete m_quad;
-    m_quad = 0;
-
-    Vertex2f_Color ul(get_upper_left(), m_color);
-    Vertex2f_Color ll(get_lower_left(), m_color);
-    Vertex2f_Color lr(get_lower_right(), m_color);
-    Vertex2f_Color ur(get_upper_right(), m_color);
-
-    m_quad = new Quadrilateral<Vertex2f_Color>(ul, ll, lr, ur);
+  void Widget_Rectangle_Color::render() const {
+    get_Video().render(m_quad);
   }
 
   Widget_Rectangle_Texture::Widget_Rectangle_Texture(const Point2f &upper_left_, const Point2f &lower_right_,
                                                      const std::string &texture_name_)
     : Widget_Rectangle(upper_left_, lower_right_),
-    m_texture_name(texture_name_),
-    m_quad(0)
+    m_material(texture_name_),
+    m_quad(Vertex2f_Texture(upper_left_, Point2f()),
+           Vertex2f_Texture(Point2f(upper_left_.x, lower_right_.y), Point2f(0.0f, 1.0f)),
+           Vertex2f_Texture(lower_right_, Point2f(1.0f, 1.0f)),
+           Vertex2f_Texture(Point2f(lower_right_.x, upper_left_.y), Point2f(1.0f, 0.0f)))
   {
-    generate_quadrilateral();
+    m_quad.lend_Material(&m_material);
   }
 
-  Widget_Rectangle_Texture::~Widget_Rectangle_Texture() {
-    delete m_quad;
+  const std::string & Widget_Rectangle_Texture::get_texture_name() const {
+    return m_material.get_texture();
   }
 
-  const std::string Widget_Rectangle_Texture::get_texture_name() const {return m_texture_name;}
   void Widget_Rectangle_Texture::set_texture_name(const std::string &texture_name_) {
-    m_texture_name = texture_name_;
-    generate_quadrilateral();
+    m_material.set_texture(texture_name_);
   }
 
-  void Widget_Rectangle_Texture::generate_quadrilateral() {
-    delete m_quad;
-    m_quad = 0;
-
-    const Vertex2f_Texture ul(get_upper_left(), Point2f(0.0f, 0.0f));
-    const Vertex2f_Texture ll(get_lower_left(), Point2f(0.0f, 1.0f));
-    const Vertex2f_Texture lr(get_lower_right(), Point2f(1.0f, 1.0f));
-    const Vertex2f_Texture ur(get_upper_right(), Point2f(1.0f, 0.0f));
-    Material material(m_texture_name);
-
-    m_quad = new Quadrilateral<Vertex2f_Texture>(ul, ll, lr, ur);
-    m_quad->fax_Material(&material);
+  void Widget_Rectangle_Texture::render() const {
+    get_Video().render(m_quad);
   }
 
   Widget_Button::Widget_Button(const Point2f &upper_left_, const Point2f &lower_right_)
-    : m_upper_left(upper_left_),
-    m_lower_right(lower_right_),
-    m_clicked_inside(false),
-    m_clicked_outside(false),
-    m_transient(false)
+    : Widget_Rectangle(upper_left_, lower_right_),
+    m_state(NORMAL)
   {
   }
 
-  bool Widget_Button::is_inside(const Point2i &pos) const {
-    return
-      m_upper_left.x < pos.x && pos.x < m_lower_right.x &&
-      m_upper_left.y < pos.y && pos.y < m_lower_right.y;
+  const Widget_Button::State & Widget_Button::get_State() const {
+    return m_state;
   }
 
   Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
@@ -263,8 +247,7 @@ namespace Zeni {
     m_bg_hovered_strayed(get_Colors()["default_button_bg_hovered_strayed"]),
     m_text_normal(get_Colors()["default_button_text_normal"]),
     m_text_clicked(get_Colors()["default_button_text_clicked"]),
-    m_text_hovered_strayed(get_Colors()["default_button_text_hovered_strayed"]),
-    m_state(NORMAL)
+    m_text_hovered_strayed(get_Colors()["default_button_text_hovered_strayed"])
   {
   }
 
@@ -278,8 +261,7 @@ namespace Zeni {
     m_bg_hovered_strayed(bg_hovered_strayed_),
     m_text_normal(text_normal_),
     m_text_clicked(text_clicked_),
-    m_text_hovered_strayed(text_hovered_strayed_),
-    m_state(NORMAL)
+    m_text_hovered_strayed(text_hovered_strayed_)
   {
   }
 
