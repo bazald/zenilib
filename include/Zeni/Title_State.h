@@ -244,6 +244,16 @@ namespace Zeni {
       m_widgets.lend_Widget(menu_button);
       m_widgets.lend_Widget(quit_button);
     }
+
+    void on_push() {
+      if(get_Game().size() == 1u)
+        m_widgets.unlend_Widget(menu_button);
+    }
+
+    void on_pop() {
+      if(get_Game().size() == 0u)
+        m_widgets.lend_Widget(menu_button);
+    }
   };
 
   class Popup_Pause_State : public Popup_State {
