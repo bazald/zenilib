@@ -241,24 +241,26 @@ namespace Zeni {
     XML_Document m_file;
     XML_Element m_zenilib;
 
-    Slider_Element m_anisotropy;
-    Check_Box_Element m_bilinear_filtering;
-    Check_Box_Element m_mipmapping;
+  public:
+    Slider_Element anisotropy;
+    Check_Box_Element bilinear_filtering;
+    Check_Box_Element mipmapping;
 
-    Selector_Element m_api;
-    Check_Box_Element m_full_screen;
-    Slider_Element m_multisampling;
+    Selector_Element api;
+    Check_Box_Element full_screen;
+    Slider_Element multisampling;
 
-    Resolution_Element m_resolution;
-    Custom_Resolution_Box m_custom_resolution;
-    Text_Element m_custom_width;
-    Text_Element m_custom_height;
+    Resolution_Element resolution;
+    Custom_Resolution_Box custom_resolution;
+    Text_Element custom_width;
+    Text_Element custom_height;
 
-    Check_Box_Element m_vertical_sync;
+    Check_Box_Element vertical_sync;
 
-    Apply_Button m_save;
-    Cancel_Button m_cancel;
+    Apply_Button save;
+    Cancel_Button cancel;
 
+  private:
     std::string m_prev_title;
   };
 

@@ -121,39 +121,35 @@ namespace Zeni {
 
   void Widget_Renderer_Tricolor::render_to(const Widget &widget) {
     const Widget_Button * const wbr = dynamic_cast<const Widget_Button *>(&widget);
+    Widget_Renderer_Text * const wrtr = dynamic_cast<Widget_Renderer_Text *>(const_cast<Widget *>(&widget));
 
-    if(!wbr)
+    if(!wbr || !wrtr)
       throw Widget_Renderer_Wrong_Type();
 
     switch(wbr->get_State()) {
       case Widget_Button::NORMAL:
       case Widget_Button::UNACTIONABLE:
-        if(first())
-          first()->color = bg_normal;
-        if(second())
-          second()->color = text_normal;
+        color = bg_normal;
+        wrtr->color = text_normal;
         break;
 
       case Widget_Button::CLICKED:
-        if(first())
-          first()->color = bg_clicked;
-        if(second())
-          second()->color = text_clicked;
+        color = bg_clicked;
+        wrtr->color = text_clicked;
         break;
 
       case Widget_Button::HOVERED:
       case Widget_Button::STRAYED:
-        if(first())
-          first()->color = bg_hovered_strayed;
-        if(second())
-          second()->color = text_hovered_strayed;
+        color = bg_hovered_strayed;
+        wrtr->color = text_hovered_strayed;
         break;
 
       default:
         break;
     }
 
-    this->Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>::render_to(*wbr);
+    Widget_Renderer_Color::render_to(widget);
+    wrtr->render_to(widget);
   }
 
   Widget_Renderer_Tricolor * Widget_Renderer_Tricolor::get_duplicate() const {
@@ -468,30 +464,13 @@ namespace Zeni {
     set_value(get_value());
   }
 
-  Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-                     const Color &bg_color_,
-                     const std::string &font_name_, const std::string &text_, const Color &text_color_,
-                     const bool &editable_, const JUSTIFY &justify_, const int &tab_spaces_)
-  : Widget_Button(upper_left_, lower_right_),
-    m_bg(bg_color_),
-    m_text(font_name_, clean_string(text_), text_color_),
-    m_edit_pos(-1),
-    m_last_seek(0),
-    m_justify(justify_),
-    m_tab_spaces(tab_spaces_),
-    m_cursor_index(-1, -1)
-  {
-    set_editable(editable_);
-    format();
-  }
-
   Selector::Normal_Button::Normal_Button(Selector &selector,
                                          const Point2f &upper_left_,
-                                         const Point2f &lower_right_,
-                                         const std::string &font_)
-    : Text_Button(upper_left_, lower_right_, font_, ""),
+                                         const Point2f &lower_right_)
+    : Text_Button(upper_left_, lower_right_, selector.m_font, ""),
     m_selector(&selector)
   {
+    lend_Renderer(selector.m_button_renderer);
   }
 
   void Selector::Normal_Button::on_accept() {
@@ -505,40 +484,36 @@ namespace Zeni {
   Selector::Selector_Button::Selector_Button(Selector &selector,
                                              const std::string &option,
                                              const Point2f &upper_left_,
-                                             const Point2f &lower_right_,
-                                             const std::string &font_)
-    : Text_Button(upper_left_, lower_right_, font_, option),
+                                             const Point2f &lower_right_)
+    : Text_Button(upper_left_, lower_right_, selector.m_font, option),
     m_selector(&selector)
   {
+    lend_Renderer(selector.m_button_renderer);
   }
 
   void Selector::Selector_Button::on_accept() {
-    m_selector->on_accept(text.text);
+    m_selector->on_accept(text);
     m_selector->m_selected = false;
   }
 
   Selector::Selector_Slider::Selector_Slider(Selector &selector,
                                              const float &slider_radius_,
-                                             const std::pair<float, float> &bg_coordinates_,
-                                             const Color &bg_color_)
-    : Slider_Int(Range(0u, 1u),
-                 Point2f(), Point2f(),
-                 slider_radius_),
-    m_quad(Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
-           Vertex2f_Color(Point2f(bg_coordinates_.first, 0.0f), bg_color_),
-           Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_),
-           Vertex2f_Color(Point2f(bg_coordinates_.second, 0.0f), bg_color_)),
+                                             const std::pair<float, float> &bg_coordinates_)
+    : Widget_Rectangle(Point2f(bg_coordinates_.first, 0.0f),
+                       Point2f(bg_coordinates_.second, 0.0f)),
+    Slider_Int(Range(0u, 1u),
+               Point2f(), Point2f(),
+               slider_radius_),
     m_selector(&selector)
   {
-    give_Renderer(new Widget_Renderer_Slider(get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_normal"]));
+    lend_Renderer(selector.m_slider_renderer);
   }
 
   void Selector::Selector_Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
+    set_upper_left(Point2f(get_upper_left().x, end_point_a_.y - get_slider_radius()));
+    set_lower_right(Point2f(get_lower_right().x, end_point_b_.y + get_slider_radius()));
+
     Slider_Int::set_end_points(end_point_a_, end_point_b_);
-    m_quad.a.position.y = end_point_a_.y - get_slider_radius();
-    m_quad.b.position.y = end_point_b_.y + get_slider_radius();
-    m_quad.c.position.y = end_point_b_.y + get_slider_radius();
-    m_quad.d.position.y = end_point_a_.y - get_slider_radius();
   }
 
   void Selector::Selector_Slider::on_slide() {
@@ -547,43 +522,50 @@ namespace Zeni {
   }
 
   void Selector::Selector_Slider::render_impl() const {
-    get_Video().render(m_quad);
+    m_selector->m_slider_bg_renderer->render_to(*this);
     Widget::render_impl();
   }
 
   Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-                     const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                     const std::string &font_,
-                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
+                     const std::string &font_)
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
 #endif
-    : m_expanded(expanded_upper_left_, expanded_lower_right_),
+    : m_button_renderer(new Widget_Renderer_Tricolor),
+    delete_m_button_renderer(true),
+    m_slider_renderer(new Widget_Renderer_Slider(get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_normal"])),
+    delete_m_slider_renderer(true),
+    m_slider_bg_renderer(new Widget_Renderer_Color(get_Colors()["default_button_bg_normal"])),
+    delete_m_slider_bg_renderer(true),
+    m_font(font_),
+    m_expanded(expanded_upper_left_, expanded_lower_right_),
     m_option(0u),
     m_selected(false),
-    m_normal_button(*this, upper_left_, lower_right_, font_),
+    m_normal_button(*this, upper_left_, lower_right_),
     m_selector_slider(*this,
                       0.5f * (expanded_lower_right_.x - lower_right_.x),
-                      make_pair(lower_right_.x, expanded_lower_right_.x),
-                      bg_normal_),
-    m_bg_normal(bg_normal_),
-    m_bg_clicked(bg_clicked_),
-    m_bg_hovered_strayed(bg_hovered_strayed_),
-    m_font(font_),
-    m_text_normal(text_normal_),
-    m_text_clicked(text_clicked_),
-    m_text_hovered_strayed(text_hovered_strayed_)
+                      make_pair(lower_right_.x, expanded_lower_right_.x))
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
   {
     m_selector_slider.invert_mouse_wheel(true);
+
+    m_normal_button.lend_Renderer(m_button_renderer);
+    m_selector_slider.lend_Renderer(m_slider_renderer);
   }
 
   Selector::~Selector() {
     clear();
+
+    if(delete_m_button_renderer)
+      delete m_button_renderer;
+    if(delete_m_slider_renderer)
+      delete m_slider_renderer;
+    if(delete_m_slider_bg_renderer)
+      delete m_slider_bg_renderer;
   }
 
   const Selector::Options & Selector::get_options() const {
@@ -617,7 +599,7 @@ namespace Zeni {
     if(it != m_options.end())
       m_option = size_t(it - m_options.begin());
 
-    m_normal_button.text.text = m_options[m_option];
+    m_normal_button.text = m_options[m_option];
   }
 
   void Selector::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
@@ -771,8 +753,7 @@ namespace Zeni {
     const float vertical_offset = m_selector_buttons.size() * (lr.y - ul.y);
     m_selector_buttons.push_back(new Selector_Button(*this, option,
                                                      Point2f(ul.x, ul.y + vertical_offset),
-                                                     Point2f(lr.x, lr.y + vertical_offset),
-                                                     m_font));
+                                                     Point2f(lr.x, lr.y + vertical_offset)));
   }
 
   void Selector::build_selector_buttons() {
@@ -786,6 +767,22 @@ namespace Zeni {
     for(vector<Selector_Button *>::const_iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
       delete *it;
     m_selector_buttons.clear();
+  }
+
+  Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
+                     const std::string &font_name_, const std::string &text_, const Color &text_color_,
+                     const bool &editable_, const JUSTIFY &justify_, const int &tab_spaces_)
+  : Widget_Button(upper_left_, lower_right_),
+    m_bg_renderer(new Widget_Renderer_Color(get_Colors()["default_button_bg_normal"])),
+    m_text(font_name_, clean_string(text_), text_color_),
+    m_edit_pos(-1),
+    m_last_seek(0),
+    m_justify(justify_),
+    m_tab_spaces(tab_spaces_),
+    m_cursor_index(-1, -1)
+  {
+    set_editable(editable_);
+    format();
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
@@ -997,9 +994,9 @@ namespace Zeni {
   }
 
   void Text_Box::render_impl() const {
-    Video &vr = get_Video();
+    m_bg_renderer->render_to(*this);
 
-    m_bg.render_to(*this);
+    Video &vr = get_Video();
 
     const Font &f = get_font();
     const Color &c = m_text.color;
