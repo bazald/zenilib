@@ -127,17 +127,12 @@ namespace Zeni {
   }
 
   void Widget::lend_Renderer(const Widget_Render_Function * const &renderer) {
-    if(delete_m_renderer)
-      delete m_renderer;
-    m_renderer = const_cast<Widget_Render_Function * const &>(renderer);
+    give_Renderer(const_cast<Widget_Render_Function * const &>(renderer));
     delete_m_renderer = false;
   }
 
   void Widget::fax_Renderer(const Widget_Render_Function * const &renderer) {
-    if(delete_m_renderer)
-      delete m_renderer;
-    m_renderer = renderer->get_duplicate();
-    delete_m_renderer = true;
+    give_Renderer(renderer->get_duplicate());
   }
   
   Widget_Rectangle::Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_)
@@ -265,9 +260,8 @@ namespace Zeni {
   {
   }
 
-  Widget_Renderer_Tricolor::Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text)
-    : Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>(new Widget_Renderer_Color(Color()), true,
-                                                                        text, delete_text),
+  Widget_Renderer_Tricolor::Widget_Renderer_Tricolor()
+    : Widget_Renderer_Color(Color()),
     bg_normal(get_Colors()["default_button_bg_normal"]),
     bg_clicked(get_Colors()["default_button_bg_clicked"]),
     bg_hovered_strayed(get_Colors()["default_button_bg_hovered_strayed"]),
@@ -278,10 +272,8 @@ namespace Zeni {
   }
 
   Widget_Renderer_Tricolor::Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                                                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
-                                                     Widget_Renderer_Text * const &text, const bool &delete_text)
-    : Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text>(new Widget_Renderer_Color(Color()), true,
-                                                                        text, delete_text),
+                                                     const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_)
+    : Widget_Renderer_Color(Color()),
     bg_normal(bg_normal_),
     bg_clicked(bg_clicked_),
     bg_hovered_strayed(bg_hovered_strayed_),
@@ -328,9 +320,9 @@ namespace Zeni {
   Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
                            const std::string &font_name_, const std::string &text_)
     : Widget_Button(upper_left_, lower_right_),
-    text(font_name_, text_, Color())
+    Widget_Renderer_Text(font_name_, text_, Color())
   {
-    give_Renderer(new Widget_Renderer_Tricolor(&text, false));
+    give_Renderer(new Widget_Renderer_Tricolor);
   }
 
   Check_Box::Check_Box(const Point2f &upper_left_, const Point2f &lower_right_,
@@ -445,8 +437,82 @@ namespace Zeni {
     m_mouse_wheel_inverted = invert;
   }
 
-  const Color & Text_Box::get_bg_color() const {
-    return m_bg.color;
+  const Widget_Render_Function * Selector::get_Text_Button_Renderer() const {
+    return m_button_renderer;
+  }
+
+  void Selector::give_Text_Button_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_button_renderer)
+      delete m_button_renderer;
+    m_button_renderer = renderer;
+    delete_m_button_renderer = true;
+
+    m_normal_button.lend_Renderer(m_button_renderer);
+    for(std::vector<Selector_Button *>::iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
+      (*it)->lend_Renderer(m_button_renderer);
+  }
+
+  void Selector::lend_Text_Button_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Text_Button_Renderer(const_cast<Widget_Render_Function * const &>(renderer));
+    delete_m_button_renderer = false;
+  }
+
+  void Selector::fax_Text_Button_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Text_Button_Renderer(renderer->get_duplicate());
+  }
+
+  const Widget_Render_Function * Selector::get_Slider_Renderer() const {
+    return m_slider_renderer;
+  }
+
+  void Selector::give_Slider_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_slider_renderer)
+      delete m_slider_renderer;
+    m_slider_renderer = renderer;
+    delete_m_slider_renderer = true;
+
+    m_selector_slider.lend_Renderer(m_slider_renderer);
+  }
+
+  void Selector::lend_Slider_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Slider_Renderer(const_cast<Widget_Render_Function * const &>(renderer));
+    delete_m_button_renderer = false;
+  }
+
+  void Selector::fax_Slider_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Slider_Renderer(renderer->get_duplicate());
+  }
+
+  const Widget_Render_Function * Selector::get_Slider_BG_Renderer() const {
+    return m_slider_bg_renderer;
+  }
+
+  void Selector::give_Slider_BG_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_slider_bg_renderer)
+      delete m_slider_bg_renderer;
+    m_slider_bg_renderer = renderer;
+    delete_m_slider_bg_renderer = true;
+  }
+
+  void Selector::lend_Slider_BG_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Slider_BG_Renderer(const_cast<Widget_Render_Function * const &>(renderer));
+    delete_m_slider_bg_renderer = false;
+  }
+
+  void Selector::fax_Slider_BG_Renderer(const Widget_Render_Function * const &renderer) {
+    give_Slider_BG_Renderer(renderer->get_duplicate());
+  }
+
+  const std::string & Selector::get_font() const {
+    return m_font;
+  }
+
+  void Selector::set_font(const std::string &font_) {
+    m_font = font_;
+
+    m_normal_button.font_name = m_font;
+    for(std::vector<Selector_Button *>::iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
+      (*it)->font_name = m_font;
   }
 
   const std::string & Text_Box::get_font_name() const {
@@ -475,10 +541,6 @@ namespace Zeni {
 
   int Text_Box::get_max_lines() const {
     return int(get_height() / get_font().get_text_height());
-  }
-
-  void Text_Box::set_bg_color(const Color &bg_color_) {
-    m_bg.color = bg_color_;
   }
 
   void Text_Box::set_font_name(const std::string &font_name_) {
@@ -524,6 +586,26 @@ namespace Zeni {
 
     format();
     invalidate_edit_pos();
+  }
+
+  const Widget_Render_Function * Text_Box::get_BG_Renderer() const {
+    return m_bg_renderer;
+  }
+
+  void Text_Box::give_BG_Renderer(Widget_Render_Function * const &renderer) {
+    if(delete_m_bg_renderer)
+      delete m_bg_renderer;
+    m_bg_renderer = renderer;
+    delete_m_bg_renderer = true;
+  }
+
+  void Text_Box::lend_BG_Renderer(const Widget_Render_Function * const &renderer) {
+    give_BG_Renderer(const_cast<Widget_Render_Function * const &>(renderer));
+    delete_m_bg_renderer = false;
+  }
+
+  void Text_Box::fax_BG_Renderer(const Widget_Render_Function * const &renderer) {
+    give_BG_Renderer(renderer->get_duplicate());
   }
 
   void Text_Box::invalidate_edit_pos() {

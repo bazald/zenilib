@@ -378,14 +378,13 @@ namespace Zeni {
     Point2f tex_coord_ur;
   };
 
-  class Widget_Renderer_Tricolor : public Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Text> {
+  class Widget_Renderer_Tricolor : public Widget_Renderer_Color {
   public:
-    inline Widget_Renderer_Tricolor(Widget_Renderer_Text * const &text, const bool &delete_text);
+    inline Widget_Renderer_Tricolor();
     inline Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-                                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_,
-                                    Widget_Renderer_Text * const &text, const bool &delete_text);
+                                    const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
 
-    /// rect must be of type Widget_Button
+    /// rect must be of type Widget_Button and Widget_Renderer_Text
     virtual void render_to(const Widget &widget);
 
     virtual Widget_Renderer_Tricolor * get_duplicate() const;
@@ -485,15 +484,13 @@ namespace Zeni {
     State m_state;
   };
 
-  class Text_Button : public Widget_Button {
+  class Text_Button : public Widget_Button, public Widget_Renderer_Text {
     Text_Button(const Text_Button &);
     Text_Button & operator=(const Text_Button &);
 
   public:
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
                        const std::string &font_name_, const std::string &text_);
-
-    Widget_Renderer_Text text;
   };
 
   class Check_Box : public Widget_Button {
@@ -638,8 +635,7 @@ namespace Zeni {
     public:
       Normal_Button(Selector &selector,
                     const Point2f &upper_left_,
-                    const Point2f &lower_right_,
-                    const std::string &font_);
+                    const Point2f &lower_right_);
 
       void on_accept();
 
@@ -655,8 +651,7 @@ namespace Zeni {
       Selector_Button(Selector &selector,
                       const std::string &option,
                       const Point2f &upper_left_,
-                      const Point2f &lower_right_,
-                      const std::string &font_);
+                      const Point2f &lower_right_);
 
       void on_accept();
 
@@ -664,15 +659,14 @@ namespace Zeni {
       Selector * m_selector;
     };
 
-    class Selector_Slider : public Slider_Int {
+    class Selector_Slider : public Widget_Rectangle, public Slider_Int {
       Selector_Slider(const Selector_Slider &);
       Selector_Slider & operator=(const Selector_Slider &);
 
     public:
       Selector_Slider(Selector &selector,
                       const float &slider_radius_,
-                      const std::pair<float, float> &bg_coordinates_,
-                      const Color &bg_color_);
+                      const std::pair<float, float> &bg_coordinates_);
 
       void set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_);
 
@@ -681,7 +675,6 @@ namespace Zeni {
       void render_impl() const;
 
     private:
-      Quadrilateral<Vertex2f_Color> m_quad;
       Selector * m_selector;
     };
 
@@ -690,9 +683,7 @@ namespace Zeni {
 
     Selector(const Point2f &upper_left_, const Point2f &lower_right_,
              const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-             const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
-             const std::string &font_,
-             const Color &text_normal_, const Color &text_clicked_, const Color &text_hovered_strayed_);
+             const std::string &font_);
     ~Selector();
 
     const Options & get_options() const;
@@ -710,7 +701,30 @@ namespace Zeni {
 
     virtual void render_impl() const;
 
+    inline const Widget_Render_Function * get_Text_Button_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_Text_Button_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_Text_Button_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_Text_Button_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
+
+    inline const Widget_Render_Function * get_Slider_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_Slider_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_Slider_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_Slider_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
+
+    inline const Widget_Render_Function * get_Slider_BG_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_Slider_BG_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
+
+    inline const std::string & get_font() const; ///< Get the current font
+    inline void set_font(const std::string &font_); ///< Set the current font
+
   private:
+    const Widget_Render_Function * get_Renderer() const; ///< Disable
+    void give_Renderer(Widget_Render_Function * const &); ///< Disable
+    void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
+    void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
+
     float button_height() const;
     float vertical_offset() const;
 
@@ -724,6 +738,14 @@ namespace Zeni {
 
     void clear();
 
+    Widget_Render_Function * m_button_renderer;
+    bool delete_m_button_renderer;
+    Widget_Render_Function * m_slider_renderer;
+    bool delete_m_slider_renderer;
+    Widget_Render_Function * m_slider_bg_renderer;
+    bool delete_m_slider_bg_renderer;
+    std::string m_font;
+
     Widget_Rectangle m_expanded;
 
     Options m_options;
@@ -734,10 +756,6 @@ namespace Zeni {
     Normal_Button m_normal_button;
     std::vector<Selector_Button *> m_selector_buttons;
     Selector_Slider m_selector_slider;
-
-    Color m_bg_normal, m_bg_clicked, m_bg_hovered_strayed;
-    std::string m_font;
-    Color m_text_normal, m_text_clicked, m_text_hovered_strayed;
 
     size_t view_start;
     size_t view_end;
@@ -751,7 +769,6 @@ namespace Zeni {
 
   public:
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-             const Color &bg_color_,
              const std::string &font_name_, const std::string &text_, const Color &text_color_,
              const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
              const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
@@ -766,7 +783,6 @@ namespace Zeni {
     virtual void on_unfocus();
     virtual void on_change();
 
-    inline const Color & get_bg_color() const;
     inline const std::string & get_font_name() const;
     inline const Font & get_font() const;
     inline const std::string & get_text() const;
@@ -775,7 +791,6 @@ namespace Zeni {
     inline int get_num_lines() const;
     inline int get_max_lines() const;
 
-    inline void set_bg_color(const Color &bg_color_);
     virtual void set_editable(const bool &editable_);
     inline void set_font_name(const std::string &font_name_);
     inline void set_text(const std::string &text_);
@@ -794,7 +809,17 @@ namespace Zeni {
 
     virtual void render_impl() const;
 
+    inline const Widget_Render_Function * get_BG_Renderer() const; ///< Get the current Widget_Render_Function
+    inline void give_BG_Renderer(Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget ownership
+    inline void lend_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
+    inline void fax_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
+
   private:
+    const Widget_Render_Function * get_Renderer() const; ///< Disable
+    void give_Renderer(Widget_Render_Function * const &); ///< Disable
+    void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
+    void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
+
     struct Word {
       enum Type {NONSENSE = 0x0, WORD = 0x1, SPACE = 0x2};
 
@@ -818,7 +843,8 @@ namespace Zeni {
     void format();
     void append_word(const Word &word);
 
-    mutable Widget_Renderer_Color m_bg;
+    Widget_Render_Function * m_bg_renderer;
+    bool delete_m_bg_renderer;
     Widget_Renderer_Text m_text;
 
     std::string clean_string(const std::string &unclean_string) const;
@@ -873,6 +899,11 @@ namespace Zeni {
     virtual void render_impl() const;
 
   private:
+    const Widget_Render_Function * get_Renderer() const; ///< Disable
+    void give_Renderer(Widget_Render_Function * const &); ///< Disable
+    void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
+    void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
+
     Widget * m_widget;
     int m_repeat_delay;
     int m_repeat_interval;
@@ -903,6 +934,11 @@ namespace Zeni {
     virtual void render_impl() const;
 
   private:
+    const Widget_Render_Function * get_Renderer() const; ///< Disable
+    void give_Renderer(Widget_Render_Function * const &); ///< Disable
+    void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
+    void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
+
     mutable std::vector<Widget *> m_widgets;
     Widget * m_busy_one;
   };

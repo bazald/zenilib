@@ -293,8 +293,9 @@ namespace Zeni {
     public:
       Title(const std::string &title_)
         : Text_Box(Point2f(000.0f, 50.0f), Point2f(800.0f, 250.0f),
-                   get_Colors()["title_bg"], "title", title_, get_Colors()["title_text"])
+                   "title", title_, get_Colors()["title_text"])
       {
+        give_BG_Renderer(new Widget_Renderer_Color(get_Colors()["title_bg"]));
       }
     } title;
 

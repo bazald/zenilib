@@ -65,7 +65,7 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    m_text(Point2f(), get_virtual_window().second, get_Colors()["default_button_text_normal"], "system_36_600",
+    m_text(Point2f(), get_virtual_window().second, "system_36_600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
            "Current rendering options will be rejected in "
@@ -81,6 +81,8 @@ namespace Zeni {
   {
     m_widgets.lend_Widget(m_accept_button);
     m_widgets.lend_Widget(m_text);
+
+    m_text.give_BG_Renderer(new Widget_Renderer_Color(get_Colors()["default_button_text_normal"]));
   }
 
   void Configurator_Video::Check_State::on_pop() {
@@ -203,7 +205,6 @@ namespace Zeni {
                                                  const Point2f &lower_right)
     : Text_Box(upper_left,
                Point2f(lower_right.x /*- get_Fonts()["system_36_600"].get_text_width(" " + element.value())*/, lower_right.y),
-               get_Colors()["default_button_bg_normal"],
                "system_36_600",
                text,
                get_Colors()["default_button_text_normal"],
@@ -235,10 +236,7 @@ namespace Zeni {
                                                          const Point2f &lower_right,
                                                          const Point2f &expanded_upper_left,
                                                          const Point2f &expanded_lower_right)
-    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
-               get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
-               "system_36_600",
-               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"]),
+    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_600"),
     m_element(element)
   {
   }
@@ -258,10 +256,7 @@ namespace Zeni {
                                                              const Point2f &lower_right,
                                                              const Point2f &expanded_upper_left,
                                                              const Point2f &expanded_lower_right)
-    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right,
-               get_Colors()["default_button_bg_normal"], get_Colors()["default_button_bg_clicked"], get_Colors()["default_button_bg_hovered_strayed"],
-               "system_36_600",
-               get_Colors()["default_button_text_normal"], get_Colors()["default_button_text_clicked"], get_Colors()["default_button_text_hovered_strayed"]),
+    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_600"),
     m_element(element)
   {
     const std::vector<Point2i> &resolutions = get_Video().get_resolutions();
@@ -301,19 +296,19 @@ namespace Zeni {
 
   void Configurator_Video::Custom_Resolution_Box::apply() {
     if(is_checked()) {
-      m_configurator.m_widgets.unlend_Widget(m_configurator.m_resolution);
-      m_configurator.m_widgets.lend_Widget(m_configurator.m_custom_width);
-      m_configurator.m_widgets.lend_Widget(m_configurator.m_custom_height);
+      m_configurator.m_widgets.unlend_Widget(m_configurator.resolution);
+      m_configurator.m_widgets.lend_Widget(m_configurator.custom_width);
+      m_configurator.m_widgets.lend_Widget(m_configurator.custom_height);
 
-      m_configurator.m_custom_width.on_change();
-      m_configurator.m_custom_height.on_change();
+      m_configurator.custom_width.on_change();
+      m_configurator.custom_height.on_change();
     }
     else {
-      m_configurator.m_widgets.unlend_Widget(m_configurator.m_custom_width);
-      m_configurator.m_widgets.unlend_Widget(m_configurator.m_custom_height);
-      m_configurator.m_widgets.lend_Widget(m_configurator.m_resolution);
+      m_configurator.m_widgets.unlend_Widget(m_configurator.custom_width);
+      m_configurator.m_widgets.unlend_Widget(m_configurator.custom_height);
+      m_configurator.m_widgets.lend_Widget(m_configurator.resolution);
 
-      m_configurator.m_resolution.on_accept(m_configurator.m_resolution.get_selected());
+      m_configurator.resolution.on_accept(m_configurator.resolution.get_selected());
     }
   }
 
@@ -404,23 +399,23 @@ namespace Zeni {
     m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
 
-    m_anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
-    m_bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Textures::get_bilinear_filtering(), Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
-    m_mipmapping(m_zenilib["Textures"]["Mipmapping"], Textures::get_mipmapping(), Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
+    anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
+    bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Textures::get_bilinear_filtering(), Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
+    mipmapping(m_zenilib["Textures"]["Mipmapping"], Textures::get_mipmapping(), Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
 
-    m_api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
-    m_full_screen(m_zenilib["Video"]["Full_Screen"], Video::is_fullscreen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
-    m_multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
+    api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
+    full_screen(m_zenilib["Video"]["Full_Screen"], Video::is_fullscreen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
+    multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
 
-    m_resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
-    m_custom_resolution(*this, true, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
-    m_custom_width(m_zenilib["Video"]["Resolution"]["Width"], itoa(Video::get_screen_width()), Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
-    m_custom_height(m_zenilib["Video"]["Resolution"]["Height"], itoa(Video::get_screen_height()), Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
+    custom_resolution(*this, true, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
+    custom_width(m_zenilib["Video"]["Resolution"]["Width"], itoa(Video::get_screen_width()), Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    custom_height(m_zenilib["Video"]["Resolution"]["Height"], itoa(Video::get_screen_height()), Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
 
-    m_vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Video::get_vertical_sync(), Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
+    vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Video::get_vertical_sync(), Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
 
-    m_save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
-    m_cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
+    save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
+    cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
     m_prev_title(get_Video().get_title())
 #ifdef _WINDOWS
 #pragma warning( pop )
@@ -429,48 +424,48 @@ namespace Zeni {
     /** Build m_widgets **/
 
 #if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
-    m_api.add_entry("Direct3D 9", "DX9");
-    m_api.add_entry("OpenGL", "OpenGL");
-    m_api.select_option(Video::get_video_mode() == Video_Base::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
+    api.add_entry("Direct3D 9", "DX9");
+    api.add_entry("OpenGL", "OpenGL");
+    api.select_option(Video::get_video_mode() == Video_Base::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
 #elif !defined(DISABLE_DX9)
-    m_api.add_entry("Direct3D 9", "DX9");
-    m_api.select_option("DX9");
-    m_api.set_editable(false);
+    api.add_entry("Direct3D 9", "DX9");
+    api.select_option("DX9");
+    api.set_editable(false);
 #elif !defined(DISABLE_GL)
-    m_api.add_entry("OpenGL", "OpenGL");
-    m_api.select_option("OpenGL");
-    m_api.set_editable(false);
+    api.add_entry("OpenGL", "OpenGL");
+    api.select_option("OpenGL");
+    api.set_editable(false);
 #else
     m_api.set_editable(false);
 #endif
 
-    m_widgets.lend_Widget(m_anisotropy);
-    m_widgets.lend_Widget(m_bilinear_filtering);
-    m_widgets.lend_Widget(m_mipmapping);
+    m_widgets.lend_Widget(anisotropy);
+    m_widgets.lend_Widget(bilinear_filtering);
+    m_widgets.lend_Widget(mipmapping);
 
-    m_widgets.lend_Widget(m_api);
-    m_widgets.lend_Widget(m_full_screen);
-    m_widgets.lend_Widget(m_multisampling);
+    m_widgets.lend_Widget(api);
+    m_widgets.lend_Widget(full_screen);
+    m_widgets.lend_Widget(multisampling);
 
-    m_widgets.lend_Widget(m_custom_resolution);
+    m_widgets.lend_Widget(custom_resolution);
     {
-      const std::string selected = m_resolution.get_selected();
+      const std::string selected = resolution.get_selected();
       const size_t x = selected.find('x');
-      if(selected.substr(0, x) == m_custom_width.get_text() &&
-         selected.substr(x + 1) == m_custom_height.get_text())
+      if(selected.substr(0, x) == custom_width.get_text() &&
+         selected.substr(x + 1) == custom_height.get_text())
       {
-        m_custom_resolution.set_checked(false);
+        custom_resolution.set_checked(false);
       }
       else {
-        m_custom_resolution.set_checked(true);
+        custom_resolution.set_checked(true);
       }
-      m_custom_resolution.apply();
+      custom_resolution.apply();
     }
 
-    m_widgets.lend_Widget(m_vertical_sync);
+    m_widgets.lend_Widget(vertical_sync);
 
-    m_widgets.lend_Widget(m_save);
-    m_widgets.lend_Widget(m_cancel);
+    m_widgets.lend_Widget(save);
+    m_widgets.lend_Widget(cancel);
 
     /** Set Title **/
 

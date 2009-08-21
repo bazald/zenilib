@@ -48,7 +48,6 @@ namespace Zeni {
     m_log(Point2f(18.0f, 18.0f),
           Point2f(get_Video().get_screen_width() - 18.0f,
                   18.0f + 6.0f * get_Fonts()["system_36_600"].get_text_height()),
-          get_Colors()["console_background"],
           "system_36_600",
           "",
           get_Colors()["console_foreground"],
@@ -56,7 +55,6 @@ namespace Zeni {
     m_prompt(Point2f(18.0f, 36.0f + 6.0f * get_Fonts()["system_36_600"].get_text_height()),
              Point2f(get_Video().get_screen_width() - 18.0f,
                      36.0f + 7.0f * get_Fonts()["system_36_600"].get_text_height()),
-             get_Colors()["console_background"],
              "system_36_600",
              "",
              get_Colors()["console_foreground"],
@@ -65,6 +63,9 @@ namespace Zeni {
     m_child(0)
   {
     m_functions["args"] = new Console_Function;
+
+    m_log.give_BG_Renderer(new Widget_Renderer_Color(get_Colors()["console_background"]));
+    m_prompt.give_BG_Renderer(new Widget_Renderer_Color(get_Colors()["console_background"]));
   }
 
   Console_State::~Console_State() {
