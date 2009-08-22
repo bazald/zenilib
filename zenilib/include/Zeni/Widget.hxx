@@ -283,13 +283,13 @@ namespace Zeni {
   {
   }
 
-  Widget_Renderer_Checkbox::Widget_Renderer_Checkbox()
+  Widget_Renderer_Check_Box::Widget_Renderer_Check_Box()
     : border_color(get_Colors()["default_button_bg_normal"]),
     check_color(get_Colors()["default_button_bg_normal"])
   {
   }
 
-  Widget_Renderer_Checkbox::Widget_Renderer_Checkbox(const Color &border_color_, const Color &check_color_)
+  Widget_Renderer_Check_Box::Widget_Renderer_Check_Box(const Color &border_color_, const Color &check_color_)
     : border_color(border_color_),
     check_color(check_color_)
   {
@@ -333,8 +333,7 @@ namespace Zeni {
   {
     set_editable(toggleable_);
 
-    give_Renderer(new Widget_Renderer_Pair<Widget_Renderer_Color, Widget_Renderer_Checkbox>(new Widget_Renderer_Color(get_Colors()["default_button_text_normal"]), true,
-                                                                                            new Widget_Renderer_Checkbox(), true));
+    give_Renderer(new Widget_Renderer_Check_Box());
   }
 
   const bool & Check_Box::is_checked() const {return m_checked;}

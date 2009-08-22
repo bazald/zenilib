@@ -156,7 +156,7 @@ namespace Zeni {
     return new Widget_Renderer_Tricolor(*this);
   }
 
-  void Widget_Renderer_Checkbox::render_to(const Widget &widget) {
+  void Widget_Renderer_Check_Box::render_to(const Widget &widget) {
     const Check_Box * const cbr = dynamic_cast<const Check_Box *>(&widget);
 
     if(!cbr)
@@ -205,8 +205,8 @@ namespace Zeni {
     }
   }
 
-  Widget_Renderer_Checkbox * Widget_Renderer_Checkbox::get_duplicate() const {
-    return new Widget_Renderer_Checkbox(*this);
+  Widget_Renderer_Check_Box * Widget_Renderer_Check_Box::get_duplicate() const {
+    return new Widget_Renderer_Check_Box(*this);
   }
 
   void Widget_Renderer_Slider::render_to(const Widget &widget) {
