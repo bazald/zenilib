@@ -44,7 +44,7 @@ namespace Zeni {
   Configurator_Video::Check_State::Accept_Button::Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen)
     : Text_Button(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
                           Point2f(virtual_screen.second),
-                          "system_36_500x600",
+                          "system_36_x600",
                           "Accept"),
     m_check_video(check_video)
   {
@@ -65,7 +65,7 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    m_text(Point2f(), get_virtual_window().second, "system_36_500x600",
+    m_text(Point2f(), get_virtual_window().second, "system_36_x600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
            "Current rendering options will be rejected in "
