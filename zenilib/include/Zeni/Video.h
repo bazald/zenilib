@@ -99,6 +99,7 @@ namespace Zeni {
   class Video : public Video_Base::IV {
     // Get reference to only instance;
     friend Video & get_Video(); ///< Get access to the singleton.
+    friend class Video_Destroyer; ///< Destroy the Video object as needed
 
   protected:
     Video(const Video_Base::VIDEO_MODE &vtype_);
