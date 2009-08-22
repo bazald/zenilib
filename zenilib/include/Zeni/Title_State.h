@@ -91,9 +91,7 @@ namespace Zeni {
     void perform_logic() {
       Widget_Gamestate::perform_logic();
 
-      if(m_pause_game)
-        SDL_Delay(100);
-      else
+      if(!m_pause_game)
         m_gamestate.perform_logic();
     }
 
@@ -279,6 +277,10 @@ namespace Zeni {
         get_Game().pop_state();
         get_Game().push_state(m_gamestate);
       }
+    }
+
+    void perform_logic() {
+      SDL_Delay(100);
     }
 
     void render() {
