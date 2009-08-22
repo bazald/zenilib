@@ -36,6 +36,7 @@
 
 #ifdef _WINDOWS
 #include <shlobj.h>
+#include <WinUser.h>
 #else
 #include <sys/errno.h>
 #include <sys/types.h>
@@ -190,6 +191,18 @@ namespace Zeni {
 
     return fout.good();
   }
+
+#ifdef _WINDOWS
+  bool Core::is_screen_saver_enabled() {
+    BOOL is_active;
+    SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &is_active, 0);
+    return is_active != 0;
+  }
+
+  void Core::set_screen_saver(const bool &enabled) {
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, enabled, 0, SPIF_SENDCHANGE);
+  }
+#endif
 
   size_t Core::get_num_joysticks() const {
     return m_joystick.size();

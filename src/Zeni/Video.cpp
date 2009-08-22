@@ -95,13 +95,13 @@ namespace Zeni {
     std::sort(m_modes.begin(), m_modes.end(), &video_mode_lt);
 
 #ifdef _WINDOWS
-    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, TRUE);
+    Core::set_screen_saver(false);
 #endif
   }
 
   Video::~Video() {
 #ifdef _WINDOWS
-    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, TRUE, NULL, TRUE);
+    Core::set_screen_saver(true);
 #endif
   }
 
@@ -134,6 +134,14 @@ namespace Zeni {
         default:
           throw Video_Init_Failure();
         }
+
+        static class Video_Destroyer {
+        public:
+          ~Video_Destroyer() {
+            delete Video::e_video;
+            Video::e_video = 0;
+          }
+        } video_destroyer;
       }
       catch(Video_Init_Failure &) {
         if(cr.copy_file(user_backup, user_normal) && cr.delete_file(user_backup)) {

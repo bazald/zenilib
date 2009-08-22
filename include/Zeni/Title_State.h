@@ -64,6 +64,9 @@ namespace Zeni {
         Chronometer<Time_HQ>::pause_all();
         Chronometer<Time>::pause_all();
         get_Sound_Source_Pool().pause_all();
+#ifdef _WINDOWS
+        Core::set_screen_saver(true);
+#endif
       }
     }
 
@@ -72,6 +75,9 @@ namespace Zeni {
         Chronometer<Time_HQ>::unpause_all();
         Chronometer<Time>::unpause_all();
         get_Sound_Source_Pool().unpause_all();
+#ifdef _WINDOWS
+        Core::set_screen_saver(false);
+#endif
       }
     }
 
@@ -85,7 +91,9 @@ namespace Zeni {
     void perform_logic() {
       Widget_Gamestate::perform_logic();
 
-      if(!m_pause_game)
+      if(m_pause_game)
+        SDL_Delay(100);
+      else
         m_gamestate.perform_logic();
     }
 
