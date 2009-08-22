@@ -200,7 +200,7 @@ namespace Zeni {
   }
 
   void Core::set_screen_saver(const bool &enabled) {
-    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, enabled, 0, SPIF_SENDCHANGE);
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, UINT(enabled), 0, SPIF_SENDCHANGE);
   }
 #endif
 
