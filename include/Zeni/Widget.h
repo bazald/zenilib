@@ -397,15 +397,15 @@ namespace Zeni {
     Color text_hovered_strayed;
   };
 
-  class Widget_Renderer_Checkbox : public Widget_Render_Function {
+  class Widget_Renderer_Check_Box : public Widget_Render_Function {
   public:
-    inline Widget_Renderer_Checkbox();
-    inline Widget_Renderer_Checkbox(const Color &border_color_, const Color &check_color_);
+    inline Widget_Renderer_Check_Box();
+    inline Widget_Renderer_Check_Box(const Color &border_color_, const Color &check_color_);
 
     /// rect must be of type Check_Box
     virtual void render_to(const Widget &widget);
 
-    virtual Widget_Renderer_Checkbox * get_duplicate() const;
+    virtual Widget_Renderer_Check_Box * get_duplicate() const;
 
     Color border_color;
     Color check_color;
