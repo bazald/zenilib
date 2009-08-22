@@ -44,7 +44,7 @@ namespace Zeni {
   Configurator_Video::Check_State::Accept_Button::Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen)
     : Text_Button(Point2f(virtual_screen.second.x - 100.0f, virtual_screen.second.y - 42.0f),
                           Point2f(virtual_screen.second),
-                          "system_36_600",
+                          "system_36_500x600",
                           "Accept"),
     m_check_video(check_video)
   {
@@ -65,7 +65,7 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    m_text(Point2f(), get_virtual_window().second, "system_36_600",
+    m_text(Point2f(), get_virtual_window().second, "system_36_500x600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
            "Current rendering options will be rejected in "
@@ -98,6 +98,7 @@ namespace Zeni {
       get_Video();
       get_Textures().unlose_resources();
       get_Fonts().unlose_resources();
+      Text_Box::reformat_all();
     }
     else
       Video::reinit();
@@ -159,7 +160,7 @@ namespace Zeni {
   void Configurator_Video::Check_Box_Element::render_impl() const {
     Check_Box::render_impl();
 
-    Font &font = get_Fonts()["system_36_600"];
+    Font &font = get_Fonts()["system_36_500x600"];
 
     font.render_text(" " + m_element.value(),
                      Point2f(get_lower_right().x,
@@ -192,7 +193,7 @@ namespace Zeni {
   void Configurator_Video::Slider_Element::render_impl() const {
     Slider::render_impl();
 
-    Font &font = get_Fonts()["system_36_600"];
+    Font &font = get_Fonts()["system_36_500x600"];
 
     font.render_text(" " + m_element.value() + " (" + itoa(get_value()) + ")",
                      Point2f(m_text_coord.x, m_text_coord.y - 0.5f * font.get_text_height()),
@@ -204,8 +205,8 @@ namespace Zeni {
                                                  const Point2f &upper_left,
                                                  const Point2f &lower_right)
     : Text_Box(upper_left,
-               Point2f(lower_right.x /*- get_Fonts()["system_36_600"].get_text_width(" " + element.value())*/, lower_right.y),
-               "system_36_600",
+               Point2f(lower_right.x /*- get_Fonts()["system_36_500x600"].get_text_width(" " + element.value())*/, lower_right.y),
+               "system_36_500x600",
                text,
                get_Colors()["default_button_text_normal"],
                true,
@@ -223,7 +224,7 @@ namespace Zeni {
   void Configurator_Video::Text_Element::render_impl() const {
     Text_Box::render_impl();
 
-    //Font &font = get_Fonts()["system_36_600"];
+    //Font &font = get_Fonts()["system_36_500x600"];
 
     //font.render_text(" " + m_element.value(),
     //                 Point2f(get_lower_right().x,
@@ -236,7 +237,7 @@ namespace Zeni {
                                                          const Point2f &lower_right,
                                                          const Point2f &expanded_upper_left,
                                                          const Point2f &expanded_lower_right)
-    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_600"),
+    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_500x600"),
     m_element(element)
   {
   }
@@ -256,7 +257,7 @@ namespace Zeni {
                                                              const Point2f &lower_right,
                                                              const Point2f &expanded_upper_left,
                                                              const Point2f &expanded_lower_right)
-    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_600"),
+    : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_500x600"),
     m_element(element)
   {
     const std::vector<Point2i> &resolutions = get_Video().get_resolutions();
@@ -320,7 +321,7 @@ namespace Zeni {
   void Configurator_Video::Custom_Resolution_Box::render_impl() const {
     Check_Box::render_impl();
 
-    Font &font = get_Fonts()["system_36_600"];
+    Font &font = get_Fonts()["system_36_500x600"];
 
     font.render_text(" Custom",
                      Point2f(get_lower_right().x,
@@ -331,7 +332,7 @@ namespace Zeni {
   Configurator_Video::Apply_Button::Apply_Button(XML_Document &file,
                                                  const Point2f &upper_left,
                                                  const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, "system_36_600", "Apply"),
+    : Text_Button(upper_left, lower_right, "system_36_500x600", "Apply"),
     m_file(&file)
   {
   }
@@ -375,6 +376,7 @@ namespace Zeni {
 
     get_Textures().unlose_resources();
     get_Fonts().unlose_resources();
+    Text_Box::reformat_all();
 
     get_Game().pop_state();
     get_Game().push_state(new Check_State(false));
@@ -382,7 +384,7 @@ namespace Zeni {
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,
               const Point2f &lower_right)
-    : Text_Button(upper_left, lower_right, "system_36_600", "Cancel")
+    : Text_Button(upper_left, lower_right, "system_36_500x600", "Cancel")
   {
   }
 
@@ -488,7 +490,7 @@ namespace Zeni {
   void Configurator_Video::render() {
     get_Video().set_2d(get_virtual_window(), fix_aspect_ratio());
 
-    Font &font = get_Fonts()["system_36_600"];
+    Font &font = get_Fonts()["system_36_500x600"];
     const Color color = get_Colors()["system_font"];
 
     font.render_text("Zenilib Renderer Configuration:", Point2f(10.0f, 10.0f), color);

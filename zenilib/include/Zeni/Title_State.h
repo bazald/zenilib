@@ -140,7 +140,7 @@ namespace Zeni {
     public:
       Continue_Button(const Gamestate &gamestate)
         : Text_Button(Point2f(200.0f, 150.0f), Point2f(600.0f, 210.0f),
-                      "system_36_600", "Continue Game"),
+                      "system_36_800x600", "Continue Game"),
         m_gamestate(gamestate)
       {
       }
@@ -161,7 +161,7 @@ namespace Zeni {
     public:
       Menu_Button()
         : Text_Button(Point2f(200.0f, 230.0f), Point2f(600.0f, 290.0f),
-                      "system_36_600", "Back to Menu")
+                      "system_36_800x600", "Back to Menu")
       {
       }
 
@@ -177,7 +177,7 @@ namespace Zeni {
 
     public:
       Configure_Video_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button(upper_left, lower_right, "system_36_600", "Configure Video")
+        : Text_Button(upper_left, lower_right, "system_36_800x600", "Configure Video")
       {
       }
 
@@ -214,7 +214,7 @@ namespace Zeni {
 
         Check_Box::render_impl();
 
-        Font &font = get_Fonts()["system_36_600"];
+        Font &font = get_Fonts()["system_36_800x600"];
         font.render_text(" Sound",
                          Point2f(get_lower_right().x,
                                  0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
@@ -228,7 +228,7 @@ namespace Zeni {
 
     public:
       Quit_Button(const Point2f &upper_left, const Point2f &lower_right)
-        : Text_Button(upper_left, lower_right, "system_36_600", "Quit")
+        : Text_Button(upper_left, lower_right, "system_36_800x600", "Quit")
       {
       }
 
@@ -326,7 +326,7 @@ namespace Zeni {
     public:
       Play_Button()
         : Text_Button(Point2f(200.0f, 250.0f), Point2f(600.0f, 310.0f),
-                      "system_36_600", "Play")
+                      "system_36_800x600", "Play")
       {
       }
 
@@ -342,7 +342,7 @@ namespace Zeni {
     public:
       Instructions_Button()
         : Text_Button(Point2f(200.0f, 330.0f), Point2f(600.0f, 390.0f),
-                      "system_36_600", "Instructions")
+                      "system_36_800x600", "Instructions")
       {
       }
 

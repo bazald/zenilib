@@ -270,6 +270,7 @@ namespace Zeni {
     get_Video();
     get_Textures().unlose_resources();
     get_Fonts().unlose_resources();
+    Text_Box::reformat_all();
   }
 
   void Video::save() {
