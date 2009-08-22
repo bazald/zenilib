@@ -39,23 +39,23 @@ using namespace std;
 namespace Zeni {
 
   Console_State::Console_State()
-    : m_virtual_screen(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width()), 600.0f)),
+    : m_virtual_screen(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f)),
     m_projector(m_virtual_screen),
     m_bg(Vertex2f_Color(Point2f(0.0f, 0.0f), get_Colors()["console_border"]),
-         Vertex2f_Color(Point2f(0.0f, 54.0f + 7.0f * get_Fonts()["system_36_600"].get_text_height()), get_Colors()["console_border"]),
-         Vertex2f_Color(Point2f(float(get_Video().get_screen_width()), 54.0f + 7.0f * get_Fonts()["system_36_600"].get_text_height()), get_Colors()["console_border"]),
-         Vertex2f_Color(Point2f(float(get_Video().get_screen_width()), 0.0f), get_Colors()["console_border"])),
+         Vertex2f_Color(Point2f(0.0f, 54.0f + 7.0f * get_Fonts()["system_36_x600"].get_text_height()), get_Colors()["console_border"]),
+         Vertex2f_Color(Point2f(m_virtual_screen.second.x, 54.0f + 7.0f * get_Fonts()["system_36_x600"].get_text_height()), get_Colors()["console_border"]),
+         Vertex2f_Color(Point2f(m_virtual_screen.second.x, 0.0f), get_Colors()["console_border"])),
     m_log(Point2f(18.0f, 18.0f),
-          Point2f(get_Video().get_screen_width() - 18.0f,
-                  18.0f + 6.0f * get_Fonts()["system_36_600"].get_text_height()),
-          "system_36_600",
+          Point2f(m_virtual_screen.second.x - 18.0f,
+                  18.0f + 6.0f * get_Fonts()["system_36_x600"].get_text_height()),
+          "system_36_x600",
           "",
           get_Colors()["console_foreground"],
           false),
-    m_prompt(Point2f(18.0f, 36.0f + 6.0f * get_Fonts()["system_36_600"].get_text_height()),
-             Point2f(get_Video().get_screen_width() - 18.0f,
-                     36.0f + 7.0f * get_Fonts()["system_36_600"].get_text_height()),
-             "system_36_600",
+    m_prompt(Point2f(18.0f, 36.0f + 6.0f * get_Fonts()["system_36_x600"].get_text_height()),
+             Point2f(m_virtual_screen.second.x - 18.0f,
+                     36.0f + 7.0f * get_Fonts()["system_36_x600"].get_text_height()),
+             "system_36_x600",
              "",
              get_Colors()["console_foreground"],
              true),
@@ -233,15 +233,27 @@ namespace Zeni {
 
   void Console_State::on_mouse_button(const SDL_MouseButtonEvent &event) {
     m_prompt.on_event(event, m_virtual_screen);
-    m_handled_event = m_prompt.get_edit_pos() != -1;
+    m_handled_event = (float(event.y) / get_Video().get_screen_height()) < (m_bg.c.position.y / 600.0f);
   }
 
   void Console_State::on_mouse_motion(const SDL_MouseMotionEvent &event) {
     m_prompt.on_event(event, m_virtual_screen);
-    m_handled_event = m_prompt.get_edit_pos() != -1;
+    m_handled_event = (float(event.y) / get_Video().get_screen_height()) < (m_bg.c.position.y / 600.0f);
   }
 
   void Console_State::perform_logic() {
+    m_virtual_screen = make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f));
+    m_projector = Projector2D(m_virtual_screen);
+
+    if(m_bg.c.position.x != m_virtual_screen.second.x) {
+      m_bg.c.position.x = m_virtual_screen.second.x;
+      m_bg.d.position.x = m_virtual_screen.second.x;
+
+      const float right = m_virtual_screen.second.x - 18.0f;
+      m_log.set_lower_right(Point2f(right, m_log.get_lower_right().y));
+      m_prompt.set_lower_right(Point2f(right, m_prompt.get_lower_right().y));
+    }
+
     m_child->perform_logic();
   }
 
@@ -261,11 +273,20 @@ namespace Zeni {
       m_log_dirty = false;
     }
 
-    get_Video().set_2d(m_virtual_screen);
+    Video &vr = get_Video();
 
-    get_Video().render(m_bg);
+    const bool ztest = vr.is_ztest_enabled();
+    if(ztest)
+      vr.set_ztest(false);
+
+    vr.set_2d(m_virtual_screen);
+
+    vr.render(m_bg);
     m_log.render();
     m_prompt.render();
+
+    if(ztest)
+      vr.set_ztest(true);
   }
 
   void Console_Function::operator()(Console_State &console,

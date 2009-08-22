@@ -773,6 +773,7 @@ namespace Zeni {
              const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
              const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
              const int &tab_spaces_ = ZENI_DEFAULT_TAB_SPACES);
+    ~Text_Box();
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 
@@ -792,6 +793,8 @@ namespace Zeni {
     inline int get_max_lines() const;
 
     virtual void set_editable(const bool &editable_);
+    virtual void set_upper_left(const Point2f &upper_left_);
+    virtual void set_lower_right(const Point2f &lower_right_);
     inline void set_font_name(const std::string &font_name_);
     inline void set_text(const std::string &text_);
     inline void set_text_color(const Color &text_color_);
@@ -864,6 +867,12 @@ namespace Zeni {
 
     Point2i m_cursor_pos;
     Point2i m_cursor_index;
+
+  public:
+    static void reformat_all(); ///< Reformat all Text_Box instances
+
+  private:
+    static std::set<Text_Box *> g_text_boxes;
   };
 
   class Widget_Input_Repeater : public Widget {

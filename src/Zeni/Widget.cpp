@@ -783,6 +783,12 @@ namespace Zeni {
   {
     set_editable(editable_);
     format();
+
+    g_text_boxes.insert(this);
+  }
+
+  Text_Box::~Text_Box() {
+    g_text_boxes.erase(this);
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
@@ -1105,7 +1111,7 @@ namespace Zeni {
         for(; i != iend && get_text_width(f, l.unformatted + word.unformatted.substr(0u, i) + "-") < mll; ++i);
         if(!l.unformatted.empty())
           --i;
-        if(i != 0u) {
+        if(i != 0u && i != size_t(-1)) {
           {
             Word first_word(word.type);
             first_word.unformatted = word.unformatted.substr(0, i);
@@ -1151,6 +1157,18 @@ namespace Zeni {
     Widget::set_editable(editable_);
     format();
     invalidate_edit_pos();
+  }
+
+  void Text_Box::set_upper_left(const Point2f &upper_left_) {
+    Widget_Rectangle::set_upper_left(upper_left_);
+    format();
+    seek(get_edit_pos());
+  }
+
+  void Text_Box::set_lower_right(const Point2f &lower_right_) {
+    Widget_Rectangle::set_lower_right(lower_right_);
+    format();
+    seek(get_edit_pos());
   }
 
   const int & Text_Box::get_edit_pos() const {
@@ -1301,6 +1319,15 @@ namespace Zeni {
   float Text_Box::max_line_width() const {
     return get_lower_right().x - get_upper_left().x;
   }
+
+  void Text_Box::reformat_all() {
+    for(std::set<Text_Box *>::iterator it = g_text_boxes.begin(); it != g_text_boxes.end(); ++it) {
+      (*it)->format();
+      (*it)->seek((*it)->get_edit_pos());
+    }
+  }
+
+  std::set<Text_Box *> Text_Box::g_text_boxes;
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
     if(!is_editable())
