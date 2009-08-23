@@ -183,6 +183,8 @@ namespace Zeni {
     inline void on_push();
     inline void on_pop();
 
+    inline const bool & is_pausable() const;
+
     inline Gamestate_Base & get();
 
   private:

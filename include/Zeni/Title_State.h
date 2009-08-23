@@ -51,16 +51,15 @@ namespace Zeni {
     Popup_State operator=(const Popup_State &);
 
   public:
-    Popup_State(const Gamestate &gamestate, const bool &pause_game)
+    Popup_State(const Gamestate &gamestate)
       : Widget_Gamestate(std::make_pair(Point2f(), Point2f(800.0f, 600.0f))),
-      m_gamestate(gamestate),
-      m_pause_game(pause_game)
+      m_gamestate(gamestate)
     {
     }
 
   protected:
     void on_push() {
-      if(m_pause_game) {
+      if(m_gamestate.is_pausable()) {
         Chronometer<Time_HQ>::pause_all();
         Chronometer<Time>::pause_all();
         get_Sound_Source_Pool().pause_all();
@@ -68,10 +67,14 @@ namespace Zeni {
         Core::set_screen_saver(true);
 #endif
       }
+
+      Widget_Gamestate::on_push();
     }
 
     void on_pop() {
-      if(m_pause_game) {
+      Widget_Gamestate::on_pop();
+
+      if(m_gamestate.is_pausable()) {
         Chronometer<Time_HQ>::unpause_all();
         Chronometer<Time>::unpause_all();
         get_Sound_Source_Pool().unpause_all();
@@ -91,7 +94,7 @@ namespace Zeni {
     void perform_logic() {
       Widget_Gamestate::perform_logic();
 
-      if(!m_pause_game)
+      if(!m_gamestate.is_pausable())
         m_gamestate.perform_logic();
     }
 
@@ -124,9 +127,6 @@ namespace Zeni {
     }
 
     Gamestate m_gamestate;
-
-  private:
-    bool m_pause_game;
   };
 
   class Popup_Menu_State : public Popup_State {
@@ -237,8 +237,8 @@ namespace Zeni {
       }
     } quit_button;
 
-    Popup_Menu_State(const Gamestate &gamestate, const bool &pause_game)
-      : Popup_State(gamestate, pause_game),
+    Popup_Menu_State(const Gamestate &gamestate)
+      : Popup_State(gamestate),
       continue_button(gamestate),
       configure_video_button(Point2f(200.0f, 310.0f), Point2f(600.0f, 370.0f)),
       sound_check_box(Point2f(200.0f, 390.0f), Point2f(260.0f, 450.0f)),
@@ -252,6 +252,8 @@ namespace Zeni {
     }
 
     void on_push() {
+      Popup_State::on_push();
+
       if(get_Game().size() == 1u)
         m_widgets.unlend_Widget(menu_button);
     }
@@ -259,6 +261,8 @@ namespace Zeni {
     void on_pop() {
       if(get_Game().size() == 0u)
         m_widgets.lend_Widget(menu_button);
+
+      Popup_State::on_pop();
     }
   };
 
@@ -268,7 +272,7 @@ namespace Zeni {
 
   public:
     Popup_Pause_State(const Gamestate &gamestate)
-      : Popup_State(gamestate, true)
+      : Popup_State(gamestate)
     {
     }
 
@@ -280,23 +284,28 @@ namespace Zeni {
     }
 
     void perform_logic() {
-      SDL_Delay(100);
+      if(m_gamestate.is_pausable())
+        SDL_Delay(100);
     }
 
     void render() {
-      Popup_State::render();
+      if(m_gamestate.is_pausable()) {
+        Popup_State::render();
 
-      Video &vr = get_Video();
-      Font &font = get_Fonts()["title"];
-      const bool ztest = vr.is_ztest_enabled();
+        Video &vr = get_Video();
+        Font &font = get_Fonts()["title"];
+        const bool ztest = vr.is_ztest_enabled();
 
-      if(ztest)
-        vr.set_ztest(false);
+        if(ztest)
+          vr.set_ztest(false);
 
-      font.render_text("Paused", Point2f(400.0f, 300.0f - 0.5f * font.get_text_height()), get_Colors()["title_text"], ZENI_CENTER);
+        font.render_text("Paused", Point2f(400.0f, 300.0f - 0.5f * font.get_text_height()), get_Colors()["title_text"], ZENI_CENTER);
 
-      if(ztest)
-        vr.set_ztest(true);
+        if(ztest)
+          vr.set_ztest(true);
+      }
+      else
+        m_gamestate.render();
     }
   };
 
