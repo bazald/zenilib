@@ -100,7 +100,7 @@ namespace Zeni {
 
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
     if(event.state == SDL_PRESSED && event.keysym.sym == SDLK_ESCAPE)
-      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state(), m_pausable));
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state()));
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {
@@ -129,7 +129,7 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
-    if(m_pausable && !event.gain && (event.state & SDL_APPINPUTFOCUS))
+    if(!event.gain && (event.state & SDL_APPINPUTFOCUS))
       get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
   }
 
@@ -932,7 +932,7 @@ default: return "SDLK_UNKNOWN";
 
   void Gamestate_II::on_event(const Zeni_Input_ID &id, const float &confidence, const int &) {
     if(id.type == SDL_KEYDOWN && id.subid == SDLK_ESCAPE && confidence == 1.0f)
-      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state(), is_pausable()));
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state()));
   }
 
   int Gamestate_II::get_action(const Zeni_Input_ID &event) {

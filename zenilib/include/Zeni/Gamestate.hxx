@@ -103,6 +103,10 @@ namespace Zeni {
     m_state->on_pop();
   }
 
+  const bool & Gamestate::is_pausable() const {
+    return m_state->is_pausable();
+  }
+
   Gamestate_Base & Gamestate::get() {
     return *m_state;
   }
