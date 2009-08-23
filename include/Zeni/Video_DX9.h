@@ -185,8 +185,6 @@ namespace Zeni {
     LPD3DXMATRIXSTACK m_matrix_stack;
     int m_dpi;
 
-    Color m_ambient_color;
-
     bool m_textured, m_3d;
 
     Texture_DX9 * m_render_target;

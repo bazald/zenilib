@@ -449,6 +449,7 @@ namespace Zeni {
   bool Video::g_screen_resizable = true;
   bool Video::g_initialized = false;
   bool Video::g_backface_culling = false;
+  Color Video::g_ambient_lighting = Color(1.0f, 1.0f, 1.0f, 1.0f);
   bool Video::g_lighting = false;
   bool Video::g_normal_interp = false;
   bool Video::g_vertical_sync = false;

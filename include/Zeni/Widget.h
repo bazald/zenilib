@@ -331,6 +331,10 @@ namespace Zeni {
     bool delete_m_second;
   };
 
+  template <typename T1, typename T2>
+  Widget_Renderer_Pair<T1, T2> * make_Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
+                                                           const T2 * const &second_, const bool &delete_second_);
+
   class Widget_Renderer_Text : public Widget_Render_Function {
   public:
     inline Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_);

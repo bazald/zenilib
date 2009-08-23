@@ -83,6 +83,10 @@ namespace Zeni {
     return g_lighting;
   }
 
+  const Color & Video::get_ambient_lighting() {
+    return g_ambient_lighting;
+  }
+
   const bool & Video::get_normal_interpolation() {
     return g_normal_interp;
   }
@@ -375,6 +379,8 @@ namespace Zeni {
   }
 
   void Video::set_ambient_lighting(const Color &color) {
+    g_ambient_lighting = color;
+
     VIDEO_IV_FCN_CALL(set_ambient_lighting_impl, color);
   }
 

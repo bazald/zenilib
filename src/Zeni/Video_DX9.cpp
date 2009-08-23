@@ -52,7 +52,6 @@ namespace Zeni {
     m_d3d(0),
     m_d3d_device(0),
     m_matrix_stack(0),
-    m_ambient_color(1.0f, 1.0f, 1.0f, 1.0f),
     m_textured(false),
     m_3d(false),
     m_render_target(0),
@@ -252,7 +251,7 @@ namespace Zeni {
     set_clear_color(get_clear_color());
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
-    set_ambient_lighting(m_ambient_color);
+    set_ambient_lighting(get_ambient_lighting());
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
     set_zwrite(true);
     set_ztest(true);
