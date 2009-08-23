@@ -226,6 +226,13 @@ namespace Zeni {
     return new Widget_Renderer_Pair<T1, T2>(new T1(*m_first), true, new T2(*m_second), true);
   }
 
+  template <typename T1, typename T2>
+  Widget_Renderer_Pair<T1, T2> * make_Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
+                                                           const T2 * const &second_, const bool &delete_second_)
+  {
+    return new Widget_Renderer_Pair<T1, T2>(first_, delete_first_, second_, delete_second_);
+  }
+
   Widget_Renderer_Text::Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_)
     : font_name(font_name_),
     text(text_),

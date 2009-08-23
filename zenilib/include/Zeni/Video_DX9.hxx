@@ -176,7 +176,6 @@ namespace Zeni {
   }
 
   void Video_DX9::set_ambient_lighting_impl(const Color &color) {
-    m_ambient_color = color;
     m_d3d_device->SetRenderState(D3DRS_AMBIENT, color.get_argb());
   }
 

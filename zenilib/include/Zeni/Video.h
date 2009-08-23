@@ -135,6 +135,7 @@ namespace Zeni {
     inline static const bool & is_resizable(); ///< Determine whether the frame is resizable (windowed only)
     inline static const bool & get_backface_culling(); ///< Determine whether backface culling is enabled
     inline static const bool & get_lighting(); ///< Determine whether dynamic lighting is enabled
+    inline static const Color & get_ambient_lighting(); ///< Get the current ambient lighting Color
     inline static const bool & get_normal_interpolation(); ///< Determine whether normal interpolation is enabled
     inline static const bool & get_vertical_sync(); ///< Determine whether vertical sync is enabled
     inline static const int & get_multisampling(); ///< Get the current level of multisampling
@@ -294,6 +295,7 @@ namespace Zeni {
     static bool g_initialized;
     static bool g_backface_culling;
     static bool g_lighting;
+    static Color g_ambient_lighting;
     static bool g_normal_interp;
     static bool g_vertical_sync;
     static int g_multisampling;
