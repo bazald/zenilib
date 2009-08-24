@@ -784,11 +784,11 @@ namespace Zeni {
     set_editable(editable_);
     format();
 
-    g_text_boxes.insert(this);
+    get_text_boxes().insert(this);
   }
 
   Text_Box::~Text_Box() {
-    g_text_boxes.erase(this);
+    get_text_boxes().erase(this);
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
@@ -1321,13 +1321,18 @@ namespace Zeni {
   }
 
   void Text_Box::reformat_all() {
-    for(std::set<Text_Box *>::iterator it = g_text_boxes.begin(); it != g_text_boxes.end(); ++it) {
+    std::set<Text_Box *> &text_boxes = get_text_boxes();
+
+    for(std::set<Text_Box *>::iterator it = text_boxes.begin(); it != text_boxes.end(); ++it) {
       (*it)->format();
       (*it)->seek((*it)->get_edit_pos());
     }
   }
 
-  std::set<Text_Box *> Text_Box::g_text_boxes;
+  std::set<Text_Box *> & Text_Box::get_text_boxes() {
+    static std::set<Text_Box *> * text_boxes = new std::set<Text_Box *>;
+    return *text_boxes;
+  }
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
     if(!is_editable())

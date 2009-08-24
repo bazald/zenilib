@@ -186,7 +186,7 @@ namespace Zeni {
     static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
 
   private:
-    static std::set<Vertex_Buffer *> g_vbos;
+    static std::set<Vertex_Buffer *> & get_vbos();
   };
 
 #ifndef DISABLE_GL

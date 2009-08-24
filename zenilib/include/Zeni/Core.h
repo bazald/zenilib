@@ -117,15 +117,14 @@ namespace Zeni {
 
     void regenerate_joysticks(); ///< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
 
-    // Call before any other Core functions; May throw Core_Initialized
+    // Can be called once only, and only before Core is initialized; May throw Core_Initialized
     static void preinit(const std::string &unique_app_identifier);
 
   private:
     void init_joysticks();
     void quit_joysticks();
 
-    static std::string g_unique_app_identifier;
-    static bool g_initialized;
+    static std::string & get_unique_app_identifier();
 
     std::string m_username;
     std::string m_appdata_path;

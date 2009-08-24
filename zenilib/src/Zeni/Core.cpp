@@ -114,9 +114,11 @@ namespace Zeni {
 
     init_joysticks();
 
-    /** No more preinit(...) calls **/
+    /** Ensure g_unique_app_identifier is set **/
 
-    g_initialized = true;
+    std::string &unique_app_identifier = get_unique_app_identifier();
+    if(unique_app_identifier.empty())
+      unique_app_identifier = "zenilib";
   }
 
   Core::~Core() {
@@ -141,9 +143,9 @@ namespace Zeni {
 
   std::string Core::get_appdata_path() {
 #ifdef _WINDOWS
-    return m_appdata_path + "\\" + g_unique_app_identifier + "\\";
+    return m_appdata_path + "\\" + get_unique_app_identifier() + "\\";
 #else
-    return m_appdata_path + "/." + g_unique_app_identifier + "/";
+    return m_appdata_path + "/." + get_unique_app_identifier() + "/";
 #endif
   }
 
@@ -238,11 +240,13 @@ namespace Zeni {
     init_joysticks();
   }
 
-  void Core::preinit(const std::string &unique_app_identifier) {
-    if(g_initialized)
+  void Core::preinit(const std::string &unique_app_identifier_) {
+    std::string &unique_app_identifier = get_unique_app_identifier();
+
+    if(!unique_app_identifier.empty())
       throw Core_Initialized();
 
-    g_unique_app_identifier = unique_app_identifier;
+    unique_app_identifier = unique_app_identifier_;
   }
 
   void Core::init_joysticks() {
@@ -275,7 +279,9 @@ namespace Zeni {
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
 
-  std::string Core::g_unique_app_identifier;
-  bool Core::g_initialized = false;
+  std::string & Core::get_unique_app_identifier() {
+    static std::string * unique_app_identifier = new std::string;
+    return *unique_app_identifier;
+  }
 
 }
