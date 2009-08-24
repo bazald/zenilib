@@ -43,13 +43,13 @@ namespace Zeni {
     m_running(false),
     m_scaling_factor(typename TIME::Second_Type(1))
   {
-    g_chronometers.insert(this);
+    get_chronometers().insert(this);
   }
 
   template <class TIME>
   Chronometer<TIME>::~Chronometer() {
-    g_chronometers.erase(this);
-    g_paused.erase(this);
+    get_chronometers().erase(this);
+    get_paused().erase(this);
   }
 
   template <class TIME>
@@ -61,7 +61,7 @@ namespace Zeni {
   const TIME & Chronometer<TIME>::start() {
     if(!m_running) {
       if(g_are_paused) {
-        g_paused.insert(this);
+        get_paused().insert(this);
       }
       else {
         m_running = true;
@@ -77,7 +77,7 @@ namespace Zeni {
   const TIME & Chronometer<TIME>::stop() {
     if(m_running) {
       if(g_are_paused) {
-        g_paused.erase(this);
+        get_paused().erase(this);
       }
       else {
         m_end_time.update();
@@ -134,33 +134,50 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::pause_all() {
-    for(typename std::set<Chronometer<TIME> *>::iterator it = g_chronometers.begin();
-        it != g_chronometers.end();
+    std::set<Chronometer<TIME> *> &chronometers = get_chronometers();
+    std::set<Chronometer<TIME> *> &paused = get_paused();
+
+    for(typename std::set<Chronometer<TIME> *>::iterator it = chronometers.begin();
+        it != chronometers.end();
         ++it)
     {
       if((*it)->running()) {
         (*it)->stop();
-        g_paused.insert(*it);
+        paused.insert(*it);
       }
     }
+
+    g_are_paused = true;
   }
 
   template <class TIME>
   void Chronometer<TIME>::unpause_all() {
-    for(typename std::set<Chronometer<TIME> *>::iterator it = g_paused.begin();
-        it != g_paused.end();
+    std::set<Chronometer<TIME> *> &paused = get_paused();
+
+    for(typename std::set<Chronometer<TIME> *>::iterator it = paused.begin();
+        it != paused.end();
         ++it)
     {
       (*it)->start();
     }
 
-    g_paused.clear();
+    paused.clear();
+
+    g_are_paused = false;
   }
 
   template <class TIME>
-  std::set<Chronometer<TIME> *> Chronometer<TIME>::g_chronometers;
+  std::set<Chronometer<TIME> *> & Chronometer<TIME>::get_chronometers() {
+    static std::set<Chronometer<TIME> *> * chronometers = new std::set<Chronometer<TIME> *>;
+    return *chronometers;
+  }
+
   template <class TIME>
-  std::set<Chronometer<TIME> *> Chronometer<TIME>::g_paused;
+  std::set<Chronometer<TIME> *> & Chronometer<TIME>::get_paused() {
+    static std::set<Chronometer<TIME> *> * paused = new std::set<Chronometer<TIME> *>;
+    return *paused;
+  }
+
   template <class TIME>
   bool Chronometer<TIME>::g_are_paused = false;
 

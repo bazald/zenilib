@@ -876,7 +876,7 @@ namespace Zeni {
     static void reformat_all(); ///< Reformat all Text_Box instances
 
   private:
-    static std::set<Text_Box *> g_text_boxes;
+    static std::set<Text_Box *> & get_text_boxes();
   };
 
   class Widget_Input_Repeater : public Widget {

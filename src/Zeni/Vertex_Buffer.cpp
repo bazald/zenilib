@@ -65,7 +65,7 @@ namespace Zeni {
     m_renderer(0),
     m_prerendered(false)
   {
-    g_vbos.insert(this);
+    get_vbos().insert(this);
   }
 
   template <typename VERTEX>
@@ -79,7 +79,7 @@ namespace Zeni {
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
 
-    g_vbos.erase(this);
+    get_vbos().erase(this);
   }
 
   void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Color> * const &triangle) {
@@ -413,15 +413,20 @@ namespace Zeni {
   }
 
   void Vertex_Buffer::lose_all() {
-    for(std::set<Vertex_Buffer *>::iterator it = g_vbos.begin();
-        it != g_vbos.end();
+    std::set<Vertex_Buffer *> &vbos = get_vbos();
+
+    for(std::set<Vertex_Buffer *>::iterator it = vbos.begin();
+        it != vbos.end();
         ++it)
     {
       (*it)->lose();
     }
   }
 
-  std::set<Vertex_Buffer *> Vertex_Buffer::g_vbos;
+  std::set<Vertex_Buffer *> & Vertex_Buffer::get_vbos() {
+    static std::set<Vertex_Buffer *> * vbos = new std::set<Vertex_Buffer *>;
+    return *vbos;
+  }
 
 #ifndef DISABLE_GL
 
