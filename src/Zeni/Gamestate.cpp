@@ -129,8 +129,30 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
-    if(!event.gain && (event.state & SDL_APPINPUTFOCUS))
-      get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
+    if(event.state & SDL_APPINPUTFOCUS) {
+      static bool hide_cursor = false;
+      static bool grab_input = false;
+
+      if(event.gain) {
+        if(hide_cursor)
+          SDL_ShowCursor(false);
+
+        if(grab_input)
+          SDL_WM_GrabInput(SDL_GRAB_ON);
+      }
+      else {
+        hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
+        if(hide_cursor)
+          SDL_ShowCursor(true);
+
+        grab_input = SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+        if(grab_input)
+          SDL_WM_GrabInput(SDL_GRAB_OFF);
+
+        if(m_pausable)
+          get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
+      }
+    }
   }
 
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &event) {

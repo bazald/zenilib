@@ -281,6 +281,8 @@ namespace Zeni {
         get_Game().pop_state();
         get_Game().push_state(m_gamestate);
       }
+
+      Gamestate_Base::on_active(event);
     }
 
     void perform_logic() {
