@@ -5,8 +5,6 @@ DEL /P "bin\cgc.exe"
 DEL /P "bin\cgfxcat.exe"
 DEL /P "bin\cginfo.exe"
 
-RMDIR /S "Frameworks"
-RMDIR /S "Xcode 3.1.2"
 
 RMDIR /S "include"
 RMDIR /S "include_win"
@@ -18,5 +16,6 @@ DEL /P "Doxyfile"
 DEL /P "SConstruct"
 
 RMDIR /S "Visual Studio 2008"
+RMDIR /S "Xcode 3.1.2"
 
 RMDIR /S "clean"

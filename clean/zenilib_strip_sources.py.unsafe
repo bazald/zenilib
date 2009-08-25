@@ -11,9 +11,6 @@ def main():
   zenilib.destroy("bin/cgfxcat.exe")
   zenilib.destroy("bin/cginfo.exe")
   
-  zenilib.destroy("Frameworks")
-  zenilib.destroy("Xcode 3.1.2")
-  
   zenilib.destroy("include")
   zenilib.destroy("include_win")
   zenilib.destroy("lib_win")
@@ -24,6 +21,7 @@ def main():
   zenilib.destroy("SConstruct")
   
   zenilib.destroy("Visual Studio 2008")
+  zenilib.destroy("Xcode 3.1.2")
   
   zenilib.destroy("clean")
 
