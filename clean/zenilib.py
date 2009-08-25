@@ -36,7 +36,9 @@ def destroy_one(path):
 def destroy(path, excludes = []):
   list = glob.glob(path)
   for entry in list:
-    try:
-      excludes.index(entry)
-    except ValueError:
+    skip = False
+    for exclude in excludes:
+      if entry.find(exclude) is not -1:
+        skip = True
+    if not skip:
       destroy_one(entry)

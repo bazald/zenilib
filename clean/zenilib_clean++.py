@@ -8,7 +8,8 @@ def main():
   
   zenilib_clean.main()
   
-  zenilib.destroy("Visual Studio 2008/*.user", ["Visual Studio 2008/Application_2008.vcproj.user", "Visual Studio 2008/Application_SoarSML_2008.vcproj.user"])
+  zenilib.destroy("Visual Studio 2008/*.suo")
+  zenilib.destroy("Visual Studio 2008/*.user", ["Application_2008.vcproj.user", "Application_SoarSML_2008.vcproj.user"])
   
   zenilib.destroy("Visual Studio 2008/Win32/*_d")
   zenilib.destroy("Visual Studio 2008/x64/*_d")
