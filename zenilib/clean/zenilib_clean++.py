@@ -3,10 +3,10 @@
 import os, sys, zenilib, zenilib_clean
 
 def main():
+  zenilib_clean.main()
+  
   os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
   zenilib.auto_accept = True
-  
-  zenilib_clean.main()
   
   zenilib.destroy("Visual Studio 2008/*.suo")
   zenilib.destroy("Visual Studio 2008/*.user", ["Application_2008.vcproj.user", "Application_SoarSML_2008.vcproj.user"])
