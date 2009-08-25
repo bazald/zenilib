@@ -53,6 +53,27 @@ namespace Zeni {
   }
 
   template <class TIME>
+  Chronometer<TIME>::Chronometer(const Chronometer<TIME> &rhs)
+    : m_seconds_counted(rhs.m_seconds_counted),
+    m_start_time(rhs.m_start_time),
+    m_end_time(rhs.m_end_time),
+    m_running(rhs.running),
+    m_scaling_factor(rhs.m_scaling_factor)
+  {
+    get_chronometers().insert(this);
+  }
+
+  template <class TIME>
+  Chronometer<TIME> & Chronometer<TIME>::operator =(const Chronometer<TIME> &rhs) {
+    m_seconds_counted = rhs.m_seconds_counted;
+    m_start_time = rhs.m_start_time;
+    m_end_time = rhs.m_end_time;
+    m_running = rhs.running;
+    m_scaling_factor = rhs.m_scaling_factor;
+    return *this;
+  }
+
+  template <class TIME>
   const bool & Chronometer<TIME>::running() const {
     return m_running;
   }
@@ -152,6 +173,8 @@ namespace Zeni {
 
   template <class TIME>
   void Chronometer<TIME>::unpause_all() {
+    g_are_paused = false;
+
     std::set<Chronometer<TIME> *> &paused = get_paused();
 
     for(typename std::set<Chronometer<TIME> *>::iterator it = paused.begin();
@@ -162,8 +185,6 @@ namespace Zeni {
     }
 
     paused.clear();
-
-    g_are_paused = false;
   }
 
   template <class TIME>

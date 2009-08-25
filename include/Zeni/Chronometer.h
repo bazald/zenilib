@@ -59,6 +59,9 @@ namespace Zeni {
     Chronometer();
     ~Chronometer();
 
+    Chronometer(const Chronometer &rhs);
+    Chronometer & operator =(const Chronometer &rhs);
+
     // Starting and Stopping
     const bool & running() const; ///< Get whether the Chronometer is currently counting or stopped.
     const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
