@@ -18,3 +18,5 @@ DEL /P "Doxyfile"
 DEL /P "SConstruct"
 
 RMDIR /S "Visual Studio 2008"
+
+RMDIR /S "clean"

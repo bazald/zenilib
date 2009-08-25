@@ -1,14 +1,14 @@
-RMDIR /S /Q "SoarLibrary"
-RMDIR /S /Q "Win32"
-RMDIR /S /Q "x64"
+RMDIR /S /Q "..\Visual Studio 2008\SoarLibrary"
+RMDIR /S /Q "..\Visual Studio 2008\Win32"
+RMDIR /S /Q "..\Visual Studio 2008\x64"
 
-DEL /Q "Application_Name.h"
+DEL /Q "..\Visual Studio 2008\Application_Name.h"
 
 DEL /Q "..\smltrace.txt"
 DEL /Q "..\stderr.txt"
 DEL /Q "..\stdout.txt"
 
-DEL /Q "*.ncb"
+DEL /Q "..\Visual Studio 2008\*.ncb"
 
 
 RMDIR /S /Q "..\Xcode 3.1.2\build"
@@ -47,4 +47,4 @@ DEL /Q "..\*.manifest"
 DEL /Q "..\*.map"
 DEL /Q "..\*.pdb"
 
-DEL /Q "*.obj"
+DEL /Q "..\Visual Studio 2008\*.obj"
