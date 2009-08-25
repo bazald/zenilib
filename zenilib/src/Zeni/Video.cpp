@@ -65,8 +65,12 @@ namespace Zeni {
     m_icon_surface(0),
     m_opengl_flag(0), 
     m_title("Zenilib Application"), 
-    m_taskmsg("Zenilib Application"), 
+    m_taskmsg("Zenilib Application"),
+#ifdef _MACOSX
+    m_icon("icons/icon_mac.png"),
+#else
     m_icon("icons/icon.gif"),
+#endif
     m_color(1.0f, 1.0f, 1.0f, 1.0f),
     m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
     m_preview(Matrix4f::Translate(Vector3f(-0.5f, -0.5f, 0.0f)) *
