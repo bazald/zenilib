@@ -13,6 +13,8 @@ def main():
   
   zenilib.destroy("*_x64.exe")
   zenilib.destroy("*_x64d.exe")
+  zenilib.destroy("*_x64")
+  zenilib.destroy("*_x64d")
 
 if __name__ == '__main__':
   main(*sys.argv[1:])
