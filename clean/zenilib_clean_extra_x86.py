@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import os, sys, zenilib, zenilib_clean, zenilib_strip_x64
+import os, sys, zenilib, zenilib_clean_extra, zenilib_strip_x64
 
 def main():
-  zenilib_clean.main()
+  zenilib_clean_extra.main()
   zenilib_strip_x64.main()
   
   os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
