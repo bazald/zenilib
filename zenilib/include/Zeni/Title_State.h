@@ -59,6 +59,8 @@ namespace Zeni {
 
   protected:
     void on_push() {
+      m_gamestate.on_push();
+
       if(m_gamestate.is_pausable()) {
         Chronometer<Time_HQ>::pause_all();
         Chronometer<Time>::pause_all();
@@ -82,6 +84,8 @@ namespace Zeni {
         Core::set_screen_saver(false);
 #endif
       }
+
+      m_gamestate.on_pop();
     }
 
     void on_key(const SDL_KeyboardEvent &event) {
