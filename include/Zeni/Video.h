@@ -45,10 +45,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video.hxx>
-#endif
-
 #ifndef ZENI_VIDEO_H
 #define ZENI_VIDEO_H
 

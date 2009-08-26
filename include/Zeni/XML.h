@@ -52,10 +52,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/XML.hxx>
-#endif
-
 #ifndef ZENI_XML_H
 #define ZENI_XML_H
 

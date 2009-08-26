@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video_DX9.hxx>
-#endif
-
 #ifndef ZENI_VIDEO_DX9_H
 #define ZENI_VIDEO_DX9_H
 

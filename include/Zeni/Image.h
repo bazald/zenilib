@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Image.hxx>
-#endif
-
 #ifndef ZENI_IMAGE_H
 #define ZENI_IMAGE_H
 

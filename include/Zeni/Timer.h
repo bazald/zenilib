@@ -88,10 +88,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Timer.hxx>
-#endif
-
 #ifndef ZENI_TIMER_H
 #define ZENI_TIMER_H
 

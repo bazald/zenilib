@@ -82,10 +82,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Shader.hxx>
-#endif
-
 #ifndef ZENI_SHADER_H
 #define ZENI_SHADER_H
 

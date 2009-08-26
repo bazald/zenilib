@@ -41,10 +41,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Quaternion.hxx>
-#endif
-
 #ifndef ZENI_QUATERNION_H
 #define ZENI_QUATERNION_H
 

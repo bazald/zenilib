@@ -50,10 +50,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex3f.hxx>
-#endif
-
 #ifndef ZENI_VERTEX3F_H
 #define ZENI_VERTEX3F_H
 

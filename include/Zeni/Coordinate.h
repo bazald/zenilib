@@ -80,10 +80,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Coordinate.hxx>
-#endif
-
 #ifndef ZENI_COORDINATE_H
 #define ZENI_COORDINATE_H
 

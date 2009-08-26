@@ -72,10 +72,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Model.hxx>
-#endif
-
 #ifndef ZENI_MODEL_H
 #define ZENI_MODEL_H
 
