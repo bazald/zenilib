@@ -100,11 +100,11 @@ namespace Zeni {
   }
 
   const bool & Video::is_zwrite_enabled() const {
-    return m_zwrite;
+    return g_zwrite;
   }
 
   const bool & Video::is_ztest_enabled() const {
-    return m_ztest;
+    return g_ztest;
   }
 
   const bool & Video::is_alpha_test_enabled() const {
@@ -145,7 +145,7 @@ namespace Zeni {
   }
 
   const Color & Video::get_clear_color() const {
-    return m_clear_color;
+    return g_clear_color;
   }
 
   void Video::apply_texture(const std::string &name) {
@@ -186,11 +186,11 @@ namespace Zeni {
   }
 
   const std::string & Video::get_title() const {
-    return m_title;
+    return get_m_title();
   }
 
   const std::string & Video::get_taskmsg() const {
-    return m_taskmsg;
+    return get_m_taskmsg();
   }
 
   /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
@@ -327,13 +327,13 @@ namespace Zeni {
   }
 
   void Video::set_zwrite(const bool &enabled) {
-    m_zwrite = enabled;
+    g_zwrite = enabled;
 
     VIDEO_IV_FCN_CALL(set_zwrite_impl, enabled);
   }
 
   void Video::set_ztest(const bool &enabled) {
-    m_ztest = enabled;
+    g_ztest = enabled;
 
     VIDEO_IV_FCN_CALL(set_ztest_impl, enabled);
   }
@@ -355,7 +355,7 @@ namespace Zeni {
   }
 
   void Video::set_clear_color(const Color &color) {
-    m_clear_color = color;
+    g_clear_color = color;
 
     VIDEO_IV_FCN_CALL(set_clear_color_impl, color);
   }

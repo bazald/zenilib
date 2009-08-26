@@ -194,8 +194,8 @@ namespace Zeni {
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
-    set_zwrite(true);
-    set_ztest(true);
+    set_zwrite(is_zwrite_enabled());
+    set_ztest(is_ztest_enabled());
 
     // Manage extensions
     union {

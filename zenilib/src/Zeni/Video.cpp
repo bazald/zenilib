@@ -64,15 +64,7 @@ namespace Zeni {
     m_display_surface(0), 
     m_icon_surface(0),
     m_opengl_flag(0), 
-    m_title("Zenilib Application"), 
-    m_taskmsg("Zenilib Application"),
-#ifdef _MACOSX
-    m_icon("icons/icon_mac.png"),
-#else
-    m_icon("icons/icon.gif"),
-#endif
     m_color(1.0f, 1.0f, 1.0f, 1.0f),
-    m_clear_color(1.0f, 0.0f, 0.0f, 0.0f),
     m_preview(Matrix4f::Translate(Vector3f(-0.5f, -0.5f, 0.0f)) *
       Matrix4f::Scale(Vector3f(0.5f, -0.5f, -1.0f)) *
       Matrix4f::Translate(Vector3f(1.0f, -1.0f, 0.0f))),
@@ -354,23 +346,23 @@ namespace Zeni {
   }
 
   void Video::set_tt(const string &title, const string &taskmsg) {
-    m_title = title;
-    m_taskmsg = taskmsg;
+    get_m_title() = title;
+    get_m_taskmsg() = taskmsg;
     set_tt();
   }
 
   void Video::set_title(const string &title) {
-    m_title = title;
+    get_m_title() = title;
     set_tt();
   }
 
   void Video::set_taskmsg(const string &taskmsg) {
-    m_taskmsg = taskmsg;
+    get_m_taskmsg() = taskmsg;
     set_tt();
   }
 
   const bool Video::set_icon(const string &filename) {
-    m_icon = filename;
+    get_m_icon() = filename;
     return set_icon();
   }
 
@@ -425,7 +417,7 @@ namespace Zeni {
   void Video::set_tt() {
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
     if(VideoInfo->wm_available)
-      SDL_WM_SetCaption(m_title.c_str(), m_taskmsg.c_str());
+      SDL_WM_SetCaption(get_m_title().c_str(), get_m_taskmsg().c_str());
   }
 
   bool Video::set_icon() {
@@ -433,7 +425,7 @@ namespace Zeni {
     if(!VideoInfo->wm_available)
       return false;
 
-    m_icon_surface = IMG_Load(m_icon.c_str());
+    m_icon_surface = IMG_Load(get_m_icon().c_str());
 
     if(!m_icon_surface) {
       cerr << "Could not load display window icon\n";
@@ -442,6 +434,25 @@ namespace Zeni {
 
     SDL_WM_SetIcon(m_icon_surface, NULL);
     return true;
+  }
+
+  std::string & Video::get_m_title() {
+    static std::string title = "Zenilib Application";
+    return title;
+  }
+
+  std::string & Video::get_m_taskmsg() {
+    static std::string taskmsg = "Zenilib Application";
+    return taskmsg;
+  }
+
+  std::string & Video::get_m_icon() {
+#ifdef _MACOSX
+    static std::string icon = "icons/icon_mac.png";
+#else
+    static std::string icon = "icons/icon.gif";
+#endif
+    return icon;
   }
 
   Video *Video::e_video = 0;
@@ -454,9 +465,12 @@ namespace Zeni {
   bool Video::g_initialized = false;
   bool Video::g_backface_culling = false;
   Color Video::g_ambient_lighting = Color(1.0f, 1.0f, 1.0f, 1.0f);
+  Color Video::g_clear_color = Color(1.0f, 0.0f, 0.0f, 0.0f);
   bool Video::g_lighting = false;
   bool Video::g_normal_interp = false;
   bool Video::g_vertical_sync = false;
   int Video::g_multisampling = 0;
+  bool Video::g_zwrite = true;
+  bool Video::g_ztest = true;
 
 }
