@@ -296,25 +296,25 @@ namespace Zeni {
     static bool g_backface_culling;
     static bool g_lighting;
     static Color g_ambient_lighting;
+    static Color g_clear_color;
     static bool g_normal_interp;
     static bool g_vertical_sync;
     static int g_multisampling;
     bool m_opengl_flag;
 
-    std::string m_title;
-    std::string m_taskmsg;
-    std::string m_icon;
+    static std::string & get_m_title();
+    static std::string & get_m_taskmsg();
+    static std::string & get_m_icon();
 
     Color m_color;
-    Color m_clear_color;
 
     const Matrix4f m_preview;
     Matrix4f m_view;
     Matrix4f m_projection;
     std::pair<Point2i, Point2i> m_viewport;
 
-    bool m_zwrite;
-    bool m_ztest;
+    static bool g_zwrite;
+    static bool g_ztest;
 
     bool m_alpha_test;
     TEST m_alpha_function;
