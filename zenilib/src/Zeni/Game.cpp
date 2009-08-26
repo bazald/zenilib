@@ -138,6 +138,9 @@ namespace Zeni {
   void Game::activate_console() {
     if(!m_states.empty())
       get_console().set_child(m_states.top());
+
+    get_console().m_prompt.seek(get_console().m_prompt.get_max_seek());
+
     m_console_active = true;
   }
 
