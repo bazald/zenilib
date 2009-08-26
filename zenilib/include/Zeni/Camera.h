@@ -44,10 +44,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Camera.hxx>
-#endif
-
 #ifndef ZENI_CAMERA_H
 #define ZENI_CAMERA_H
 

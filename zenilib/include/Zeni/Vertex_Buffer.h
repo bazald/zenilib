@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex_Buffer.hxx>
-#endif
-
 #ifndef ZENI_VERTEX_BUFFER_H
 #define ZENI_VERTEX_BUFFER_H
 

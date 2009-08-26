@@ -41,10 +41,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Renderable.hxx>
-#endif
-
 #ifndef ZENI_RENDERABLE_H
 #define ZENI_RENDERABLE_H
 

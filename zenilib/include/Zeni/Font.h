@@ -52,10 +52,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Font.hxx>
-#endif
-
 #ifndef ZENI_FONT_H
 #define ZENI_FONT_H
 

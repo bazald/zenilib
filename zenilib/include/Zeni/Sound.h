@@ -60,10 +60,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Sound.hxx>
-#endif
-
 #ifndef ZENI_SOUND_H
 #define ZENI_SOUND_H
 

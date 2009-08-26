@@ -227,10 +227,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Widget.hxx>
-#endif
-
 #ifndef ZENI_WIDGET_H
 #define ZENI_WIDGET_H
 

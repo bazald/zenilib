@@ -68,10 +68,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Projector.hxx>
-#endif
-
 #ifndef ZENI_PROJECTOR_H
 #define ZENI_PROJECTOR_H
 

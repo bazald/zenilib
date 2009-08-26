@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Database.hxx>
-#endif
-
 #ifndef ZENI_DATABASE_H
 #define ZENI_DATABASE_H
 

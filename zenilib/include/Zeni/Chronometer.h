@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Chronometer.hxx>
-#endif
-
 #ifndef ZENI_CHRONOMETER_H
 #define ZENI_CHRONOMETER_H
 

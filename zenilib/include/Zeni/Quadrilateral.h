@@ -41,12 +41,8 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Quadrilateral.hxx>
-#endif
-
-#ifndef ZENI_Quadrilateral_H
-#define ZENI_Quadrilateral_H
+#ifndef ZENI_QUADRILATERAL_H
+#define ZENI_QUADRILATERAL_H
 
 #include <Zeni/Renderable.h>
 #include <Zeni/Triangle.h>
