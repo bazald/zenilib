@@ -341,7 +341,12 @@ namespace Zeni {
 
   void Video_GL::set_projection_matrix_impl(const Matrix4f &projection) {
     glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&projection)));
+    if(m_render_target && is_3d()) {
+      const Matrix4f flipped = Matrix4f::Scale(Vector3f(1.0f, -1.0f, 1.0f)) * projection;
+      glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&flipped)));
+    }
+    else
+      glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&projection)));
   }
 
   void Video_GL::set_viewport_impl(const std::pair<Point2i, Point2i> &viewport) {

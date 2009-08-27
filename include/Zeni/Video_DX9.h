@@ -159,8 +159,8 @@ namespace Zeni {
     inline float get_dpi_ratio(); ///< Get the ratio of the screen's DPI to the normal DPI
 
     // Custom D3D-Related Functions
-    bool get_3d() const;
-    void set_3d(const bool &on);
+    bool is_fvf_3d() const;
+    void set_fvf_3d(const bool &on);
     void set_fvf(const bool &is_3d);
 
   protected:
@@ -181,7 +181,7 @@ namespace Zeni {
     LPD3DXMATRIXSTACK m_matrix_stack;
     int m_dpi;
 
-    bool m_textured, m_3d;
+    bool m_textured, m_fvf_3d;
 
     Texture_DX9 * m_render_target;
     LPDIRECT3DSURFACE9 m_back_buffer;

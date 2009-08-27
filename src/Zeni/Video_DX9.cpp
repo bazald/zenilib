@@ -53,7 +53,7 @@ namespace Zeni {
     m_d3d_device(0),
     m_matrix_stack(0),
     m_textured(false),
-    m_3d(false),
+    m_fvf_3d(false),
     m_render_target(0),
     m_back_buffer(0)
   {
@@ -268,7 +268,7 @@ namespace Zeni {
   }
 
   void Video_DX9::set_fvf(const bool &is_3d) {
-    m_3d = is_3d;
+    m_fvf_3d = is_3d;
 
     set_fvf();
   }
@@ -276,7 +276,7 @@ namespace Zeni {
   void Video_DX9::set_fvf() {
     DWORD fvf = D3DFVF_XYZ;
 
-    if(m_3d)
+    if(m_fvf_3d)
       fvf |= D3DFVF_NORMAL;
 
     if(m_textured)
@@ -287,12 +287,12 @@ namespace Zeni {
     m_d3d_device->SetFVF(fvf);
   }
   
-  bool Video_DX9::get_3d() const {
-    return m_3d;
+  bool Video_DX9::is_fvf_3d() const {
+    return m_fvf_3d;
   }
 
-  void Video_DX9::set_3d(const bool &on) {
-    m_3d = on;
+  void Video_DX9::set_fvf_3d(const bool &on) {
+    m_fvf_3d = on;
 
     set_fvf();
   }
