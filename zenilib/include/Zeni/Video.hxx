@@ -119,6 +119,10 @@ namespace Zeni {
     return m_alpha_value;
   }
 
+  const bool & Video::is_3d() const {
+    return m_3d;
+  }
+
   const std::vector<Point2i> & Video::get_resolutions() const {
     return m_modes;
   }
@@ -279,6 +283,8 @@ namespace Zeni {
   }
 
   void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+    m_3d = false;
+
     if(fix_aspect_ratio)
       set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
     else
@@ -303,6 +309,8 @@ namespace Zeni {
   }
 
   void Video::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
+    m_3d = true;
+
     const Matrix4f view = camera.get_view_matrix();
     set_view_matrix(view);
 

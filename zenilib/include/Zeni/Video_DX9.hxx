@@ -262,6 +262,7 @@ namespace Zeni {
 
     m_render_target = 0;
   }
+
   void Video_DX9::clear_render_target_impl(const Color &color) {
     const Point2i &render_target_size = get_render_target_size();
     set_viewport(std::make_pair(Point2i(0, 0), Point2i(render_target_size.x, render_target_size.y)));

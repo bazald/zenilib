@@ -94,7 +94,9 @@ namespace Zeni {
     Database(const std::string &filename, const std::string &xml_identifier);
     virtual ~Database();
 
-    unsigned long get_id(const std::string &name) const; ///< Get an id by name.
+    unsigned long get_id(const std::string &name) const; ///< Get an id by name, possibly throwing an Error
+    unsigned long find(const std::string &name) const; ///< Get an id by name, without throwing an Error
+    bool find(const unsigned long &id) const; ///< Check to see that an id is valid
     
     TYPE & operator[](const std::string &name) const; ///< Get a TYPE by name
     TYPE & operator[](const unsigned long &id) const; ///< Get a TYPE by id

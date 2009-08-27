@@ -163,6 +163,9 @@ namespace Zeni {
     if(jt == lr.handles.end())
       throw Database_Entry_Not_Found(filename + "::" + name);
 
+    if(!jt->lent)
+      delete jt->ptr;
+
     lr.handles.erase(jt);
 
     if(lr.handles.empty()) {
@@ -181,6 +184,21 @@ namespace Zeni {
       throw Database_Entry_Not_Found(name);
 
     return it->second->id;
+  }
+
+  template <class TYPE>
+  unsigned long Database<TYPE>::find(const std::string &name) const {
+    typename Lookups::const_iterator it = m_lookups.find(name);
+
+    if(it != m_lookups.end() && it->second->id && find(it->second->id))
+      return it->second->id;
+
+    return 0;
+  }
+
+  template <class TYPE>
+  bool Database<TYPE>::find(const unsigned long &id) const {
+    return m_entries.find(id) != m_entries.end();
   }
 
   template <class TYPE>

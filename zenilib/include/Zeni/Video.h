@@ -142,6 +142,7 @@ namespace Zeni {
     inline const bool & is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
     inline const TEST & get_alpha_test_function() const; ///< Determine which alpha test is in use
     inline const float & get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
+    inline const bool & is_3d() const; ///< Determine whether currently rendering in 3D
     inline const std::vector<Point2i> & get_resolutions() const; ///< Get available full screen resolutions
 
     // Modifiers
@@ -315,6 +316,8 @@ namespace Zeni {
     bool m_alpha_test;
     TEST m_alpha_function;
     float m_alpha_value;
+
+    bool m_3d;
 
     std::vector<Point2i> m_modes;
   };
