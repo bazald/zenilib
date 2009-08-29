@@ -29,10 +29,10 @@
 #ifndef ZENI_COORDINATE_HXX
 #define ZENI_COORDINATE_HXX
 
+#include <Zeni/Coordinate.h>
+
 // HXXed below
 #include <Zeni/Vector3f.h>
-
-#include <Zeni/Coordinate.h>
 
 namespace Zeni {
 
@@ -82,22 +82,49 @@ namespace Zeni {
   }
 
   Point3f::Point3f()
+    : x(0.0f), y(0.0f), z(0.0f)
   {
   }
 
   Point3f::Point3f(const float &x_, const float &y_, const float &z_)
-    : Vector3f(x_, y_, z_)
+    : x(x_), y(y_), z(z_)
   {
   }
 
   Point3f::Point3f(const Point2f &rhs)
-    : Vector3f(rhs.x, rhs.y, 0.0f)
+    : x(rhs.x), y(rhs.y), z(0.0f)
   {
   }
 
   Point3f::Point3f(const Vector3f &rhs)
-    : Vector3f(rhs.x, rhs.y, rhs.z)
+    : x(rhs.i), y(rhs.j), z(rhs.k)
   {
+  }
+
+  Vector3f Point3f::operator-(const Point3f &rhs) const {
+    return Vector3f(x - rhs.x, y - rhs.y, z - rhs.z);
+  }
+
+  Point3f Point3f::operator+(const Vector3f &rhs) const {
+    return Point3f(x + rhs.i, y + rhs.j, z + rhs.k);
+  }
+
+  Point3f Point3f::operator-(const Vector3f &rhs) const {
+    return Point3f(x - rhs.i, y - rhs.j, z - rhs.k);
+  }
+
+  Point3f & Point3f::operator+=(const Vector3f &rhs) {
+    x += rhs.i;
+    y += rhs.j;
+    z += rhs.k;
+    return *this;
+  }
+
+  Point3f & Point3f::operator-=(const Vector3f &rhs) {
+    x -= rhs.i;
+    y -= rhs.j;
+    z -= rhs.k;
+    return *this;
   }
 
 }

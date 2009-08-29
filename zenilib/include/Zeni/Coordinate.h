@@ -126,13 +126,24 @@ namespace Zeni {
     Sint32 x, y, z;
   };
 
-  struct Point3f : public Vector3f {
+  struct Point3f {
     inline Point3f();
     inline Point3f(const float &x_, const float &y_, const float &z_);
     inline explicit Point3f(const Point2f &rhs); ///< z is set to 0.0f
     inline Point3f(const Vector3f &rhs);
 
-    Vector3f interpolate_to(const float &rhs_part, const Vector3f &rhs) const;
+    Point3f interpolate_to(const float &rhs_part, const Point3f &rhs) const;
+
+    // Subtraction
+    inline Vector3f operator-(const Point3f &rhs) const;
+
+    // Vector3f addition
+    inline Point3f operator+(const Vector3f &rhs) const;
+    inline Point3f operator-(const Vector3f &rhs) const;
+    inline Point3f & operator+=(const Vector3f &rhs);
+    inline Point3f & operator-=(const Vector3f &rhs);
+
+    float x, y, z;
   };
 
 }

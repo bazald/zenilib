@@ -222,7 +222,7 @@ inline int main2(const size_t &argc, const char * const argv[]) {
     get_Game(&args);
 
     // Check Rendering Options on Firstrun
-    if(!user_config)
+    if(!user_config && Video::is_enabled())
       get_Game().push_state(new Zeni::Configurator_Video::Check_State(true));
 
     // Run Game
