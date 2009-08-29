@@ -31,43 +31,54 @@
 
 #include <Zeni/Vector3f.h>
 
+// HXXed below
+#include <Zeni/Coordinate.h>
+
 // Not HXXed
 #include <cassert>
 #include <cmath>
 
 namespace Zeni {
 
-  Vector3f::Vector3f()
-    : i(0.0f), j(0.0f), k(0.0f)
+  Vector3f::Vector3f(const bool &degenerate_)
+    : i(0.0f), j(0.0f), k(0.0f), degenerate(degenerate_)
   {
   }
 
-  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_)
-    : i(i_), j(j_), k(k_)
+  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_, const bool &degenerate_)
+    : i(i_), j(j_), k(k_), degenerate(degenerate_)
   {
   }
 
-  Vector3f::Vector3f(const Vector3f &rhs)
-    : i(rhs.i), j(rhs.j), k(rhs.k)
+  Vector3f::Vector3f(const Vector3f &rhs, const bool &degenerate_)
+    : i(rhs.i), j(rhs.j), k(rhs.k), degenerate(rhs.degenerate || degenerate_)
+  {
+  }
+
+  Vector3f::Vector3f(const Point3f &rhs)
+    : i(rhs.x), j(rhs.y), k(rhs.z)
   {
   }
 
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {
     return Vector3f(i + rhs.i,
       j + rhs.j,
-      k + rhs.k);
+      k + rhs.k,
+      degenerate || rhs.degenerate);
   }
 
   Vector3f Vector3f::operator-(const Vector3f &rhs) const {
     return Vector3f(i - rhs.i,
       j - rhs.j,
-      k - rhs.k);
+      k - rhs.k,
+      degenerate || rhs.degenerate);
   }
 
   Vector3f & Vector3f::operator+=(const Vector3f &rhs) {
     i += rhs.i;
     j += rhs.j;
     k += rhs.k;
+    degenerate |= rhs.degenerate;
     return *this;
   }
 
@@ -75,6 +86,7 @@ namespace Zeni {
     i -= rhs.i;
     j -= rhs.j;
     k -= rhs.k;
+    degenerate |= rhs.degenerate;
     return *this;
   }
 
@@ -88,19 +100,21 @@ namespace Zeni {
   Vector3f Vector3f::operator%(const Vector3f &rhs) const {
     return Vector3f(j * rhs.k - rhs.j *k,
       rhs.i *k - i * rhs.k,
-      i * rhs.j - rhs.i *j);
+      i * rhs.j - rhs.i *j,
+      degenerate || rhs.degenerate);
   }
 
   Vector3f & Vector3f::operator%=(const Vector3f &rhs) {
+    degenerate |= rhs.degenerate;
     return *this = *this % rhs;
   }
 
   Vector3f Vector3f::operator*(const float &rhs) const {
-    return Vector3f(i * rhs, j * rhs, k * rhs);
+    return Vector3f(i * rhs, j * rhs, k * rhs, degenerate);
   }
 
   Vector3f Vector3f::operator/(const float &rhs) const {
-    return Vector3f(i / rhs, j / rhs, k / rhs);
+    return Vector3f(i / rhs, j / rhs, k / rhs, degenerate);
   }
 
   Vector3f & Vector3f::operator*=(const float &rhs) {
@@ -159,11 +173,11 @@ namespace Zeni {
   }
 
   Vector3f Vector3f::multiply_by(const Vector3f &rhs) const {
-    return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k);
+    return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k, degenerate || rhs.degenerate);
   }
 
   Vector3f Vector3f::divide_by(const Vector3f &rhs) const {
-    return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
+    return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k, degenerate || rhs.degenerate);
   }
 
   float Vector3f::angle_between(const Vector3f &rhs) const {
@@ -187,5 +201,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Coordinate.hxx>
 
 #endif
