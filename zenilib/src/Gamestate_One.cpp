@@ -71,7 +71,7 @@ namespace Zeni {
    *  Access classes and functions in zenilib by prefixing them with Zeni:: in your
    *  header files.  It is acceptable to use 'using' directives in source files only.
    *
-   *  All your source files should #include <zenilib.h> as the first line, or certain
+   *  All your source files should include <zenilib.h> in the first line, or certain
    *  build targets will give you errors involving precompiled headers.
    */
 

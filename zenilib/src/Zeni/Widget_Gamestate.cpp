@@ -35,7 +35,7 @@ using namespace std;
 
 namespace Zeni {
 
-  Widget_Gamestate::Widget_Gamestate(const std::pair<Zeni::Point2f, Zeni::Point2f> &virtual_window_, const bool &fix_aspect_ratio_)
+  Widget_Gamestate::Widget_Gamestate(const std::pair<Point2f, Point2f> &virtual_window_, const bool &fix_aspect_ratio_)
     : m_virtual_window(virtual_window_),
     m_fix_aspect_ratio(fix_aspect_ratio_)
   {

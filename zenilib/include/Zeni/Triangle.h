@@ -26,24 +26,22 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Triangle<VERTEX>
- *
- * \ingroup Zenilib
- *
- * \brief An Abstraction of a Triangle
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
 #ifndef ZENI_TRIANGLE_H
 #define ZENI_TRIANGLE_H
 
 #include <Zeni/Renderable.h>
 
 namespace Zeni {
+
+  /**
+   * \ingroup Zenilib
+   *
+   * \brief An Abstraction of a Triangle
+   *
+   * \author bazald
+   *
+   * Contact: bazald@zenipex.com
+   */
 
   template <typename VERTEX>
   class Triangle : public Renderable {

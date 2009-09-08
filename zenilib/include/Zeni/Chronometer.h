@@ -26,20 +26,6 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Chronometer<TIME>
- *
- * \ingroup Zenilib
- *
- * \brief A stoppable running timer.
- *
- * \note Takes 'Time' or 'Time_HQ' as its template argument.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
 #ifndef ZENI_CHRONOMETER_H
 #define ZENI_CHRONOMETER_H
 
@@ -48,6 +34,16 @@
 #include <set>
 
 namespace Zeni {
+
+  /**
+   * \ingroup Zenilib
+   *
+   * \brief A stoppable running timer.
+   *
+   * \author bazald
+   *
+   * Contact: bazald@zenipex.com
+   */
 
   template <class TIME>
   class Chronometer {

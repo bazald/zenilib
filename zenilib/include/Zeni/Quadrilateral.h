@@ -26,21 +26,6 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Quadrilateral<VERTEX>
- *
- * \ingroup Zenilib
- *
- * \brief An Abstraction of a Quadrilateral
- *
- * I call it a Quadrilateral, but there is nothing forcing you to use it as such.
- * Really it is a triangle fan consisting of four vertices.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
 #ifndef ZENI_QUADRILATERAL_H
 #define ZENI_QUADRILATERAL_H
 
@@ -48,6 +33,16 @@
 #include <Zeni/Triangle.h>
 
 namespace Zeni {
+
+  /**
+   * \ingroup Zenilib
+   *
+   * \brief An Abstraction of a Quadrilateral
+   *
+   * \author bazald
+   *
+   * Contact: bazald@zenipex.com
+   */
 
   template <typename VERTEX>
   class Quadrilateral : public Renderable {
