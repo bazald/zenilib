@@ -343,7 +343,7 @@ namespace Zeni {
     const VERTEX &v1 = t1[which];
 
     if((v0.position - v1.position).magnitude2() < closeness_threshold_squared &&
-       fabs(v0.normal * v1.normal) > alikeness_threshold)
+       fabs(Vector3f(v0.normal) * Vector3f(v1.normal)) > alikeness_threshold)
     {
       VERTEX next(v1);
       next.normal = v0.normal;
