@@ -26,44 +26,47 @@
 * the GNU General Public License.
 */
 
-/**
- * \class Zeni::Chronometer<TIME>
- *
- * \ingroup Zenilib
- *
- * \brief A stoppable running timer.
- *
- * \note Takes 'Time' or 'Time_HQ' as its template argument.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-#ifdef ZENI_INLINES
-#include <Zeni/Chronometer.hxx>
-#endif
-
 #ifndef ZENI_CHRONOMETER_H
 #define ZENI_CHRONOMETER_H
 
 #include <Zeni/Timer.h>
 
+#include <set>
+
 namespace Zeni {
+
+  /**
+   * \ingroup Zenilib
+   *
+   * \brief A stoppable running timer.
+   *
+   * \author bazald
+   *
+   * Contact: bazald@zenipex.com
+   */
 
   template <class TIME>
   class Chronometer {
   public:
     Chronometer();
+    ~Chronometer();
 
-    // Controls
+    Chronometer(const Chronometer &rhs);
+    Chronometer & operator =(const Chronometer &rhs);
+
+    // Starting and Stopping
+    const bool & running() const; ///< Get whether the Chronometer is currently counting or stopped.
     const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
     const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
+
+    // Time Accessor and Modifiers
+    typename TIME::Second_Type seconds() const; ///< Get the number of seconds counted by the Chronometer.
+    void set(const typename TIME::Second_Type &time); ///< Set the number of seconds counted by the Chronometer.
     void reset(); ///< Reset the Chronometer.  This does NOT stop the Chronometer.
 
-    // Accessors
-    typename TIME::Second_Type seconds(); ///< Get the number of seconds counted by the Chronometer.
-    const bool & running(); ///< Get whether the Chronometer is currently counting or stopped.
+    // Scaling
+    const typename TIME::Second_Type & scaling_factor() const; ///< Get the scaling factor.
+    void scale(const typename TIME::Second_Type &scaling_factor = typename TIME::Second_Type(1)); ///< Scale the amount of time that passes by some amount.
 
   private:
     typename TIME::Second_Type m_seconds_counted;
@@ -71,6 +74,18 @@ namespace Zeni {
     TIME m_start_time;
     TIME m_end_time;
     bool m_running;
+
+    typename TIME::Second_Type m_scaling_factor;
+
+  public:
+    static bool are_paused(); ///< Check to see if all Chronometer<TIME> objects are paused
+    static void pause_all(); ///< Pause all Chronometer<TIME> objects
+    static void unpause_all(); ///< Unpause all Chronometer<TIME> objects
+
+  private:
+    static std::set<Chronometer<TIME> *> & get_chronometers();
+    static std::set<Chronometer<TIME> *> & get_paused();
+    static bool g_are_paused;
   };
 
 }

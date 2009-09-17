@@ -29,38 +29,52 @@
 #include <Zeni/Texture.hxx>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <SDL_gfx/SDL_rotozoom.h>
+#else
 #include <SDL/SDL_rotozoom.h>
 #endif
+#endif
+
+#include <iostream>
 
 #include <Zeni/Global.h>
 
 namespace Zeni {
 
-  int Texture::build_from_surface(SDL_Surface * &surface) {
+  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution) {
+    bool scale = false;
+
     int next_w = 1;
-    bool width_pow2 = false;
     for(; next_w; next_w <<= 1)
-      if(next_w > surface->w)
-        break;
-      else if(surface->w == next_w) {
-        width_pow2 = true;
+      if(next_w > surface->w) {
+        scale = true;
         break;
       }
+      else if(surface->w == next_w)
+        break;
+    if(max_resolution.x && next_w > max_resolution.x) {
+      next_w = max_resolution.x;
+      scale = true;
+    }
 
     int next_h = 1;
-    bool height_pow2 = false;
     for(; next_h; next_h <<= 1)
-      if(next_h > surface->h)
-        break;
-      else if(surface->h == next_h) {
-        height_pow2 = true;
+      if(next_h > surface->h) {
+        scale = true;
         break;
       }
+      else if(surface->h == next_h)
+        break;
+    if(max_resolution.y && next_h > max_resolution.y) {
+      next_h = max_resolution.y;
+      scale = true;
+    }
 
     double scale_w = next_w;
     double scale_h = next_h;
 
-    if(!width_pow2 || !height_pow2) {
+    if(scale) {
       int actual_w, actual_h;
       for(int i = 0; i < END_OF_TIME; ++i) {
         zoomSurfaceSize(surface->w, surface->h,
@@ -135,7 +149,11 @@ namespace Zeni {
   }
 
   void Sprite::append_frame(const std::string &name) {
-    m_frames.push_back(make_pair(name, get_Textures().get_id(name)));
+    append_frame(name, get_Textures().get_id(name));
+  }
+
+  void Sprite::append_frame(const std::string &name, const unsigned long &id) {
+    m_frames.push_back(make_pair(name, id));
   }
 
   int Sprite::find_frame(const std::string &name, const int &starting_point) const {
@@ -143,13 +161,17 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     for(int i = starting_point, end = int(m_frames.size()); i < end; ++i)
-      if(m_frames[i].first == name)
+      if(m_frames[size_t(i)].first == name)
         return i;
     return -1;
   }
 
   void Sprite::insert_frame(const std::string &name, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, get_Textures().get_id(name));
+    insert_frame(name, get_Textures().get_id(name), at_this_index);
+  }
+
+  void Sprite::insert_frame(const std::string &name, const unsigned long &id, const int &at_this_index) {
+    std::pair<std::string, unsigned long> new_frame = make_pair(name, id);
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();
@@ -161,7 +183,7 @@ namespace Zeni {
       &m_frames + at_this_index,
       (m_frames.size() - at_this_index - 1) * sizeof(std::pair<std::string, unsigned long>));
 
-    m_frames[at_this_index] = new_frame;
+    m_frames[size_t(at_this_index)] = new_frame;
   }
 
   void Sprite::remove_frame(const int &frame_number) {
@@ -196,8 +218,10 @@ namespace Zeni {
 #ifndef DISABLE_GL
   Texture_GL::Texture_GL(const std::string &filename, const bool &repeat, const bool &lazy_loading)
     : Texture(Texture_Base::VTYPE_GL, repeat),
-      m_texture_id(0),
-      m_filename(filename)
+    m_texture_id(0),
+    m_render_buffer(0),
+    m_frame_buffer_object(0),
+    m_filename(filename)
   {
     if(!lazy_loading)
       load(m_filename, m_repeat);
@@ -205,11 +229,28 @@ namespace Zeni {
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_GL, repeat),
-      m_texture_id(build_from_surface(surface, repeat))
+    m_size(surface->w, surface->h),
+    m_texture_id(build_from_surface(surface, repeat)),
+    m_render_buffer(0),
+    m_frame_buffer_object(0)
+  {
+  }
+
+  Texture_GL::Texture_GL(const Point2i &size, const bool &repeat)
+    : Texture(Texture_Base::VTYPE_GL, repeat),
+    m_size(size),
+    m_texture_id(build_from_surface(SDL_CreateRGBSurface(SDL_SWSURFACE, size.x, size.y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000), repeat)),
+    m_render_buffer(0),
+    m_frame_buffer_object(0)
   {
   }
 
   Texture_GL::~Texture_GL() {
+    if(m_render_buffer)
+      glDeleteRenderbuffersEXT(1, &m_render_buffer);
+    if(m_frame_buffer_object)
+      glDeleteFramebuffersEXT(1, &m_frame_buffer_object);
+
     if(m_texture_id)
       glDeleteTextures(1, &m_texture_id);
   }
@@ -217,14 +258,14 @@ namespace Zeni {
   GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
     GLuint texture_id = 0;
 
-    const int mode = Texture::build_from_surface(surface);
+    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT));
 
     const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
-    const GLint mode2 =
+    const GLenum mode2 = GLenum(
       mode == -'R' ? GL_RGB :
       mode == -'B' ? GL_BGR :
       mode == 'R' ? GL_RGBA :
-      /*mode == 'A' ?*/ GL_BGRA;
+      /*mode == 'A' ?*/ GL_BGRA);
 
     // Allocate a unique id for the texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -233,6 +274,14 @@ namespace Zeni {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+
+    if(glGetError() == GL_INVALID_ENUM) {
+      static bool printed = false;
+      if(!printed) {
+        std::cerr << "Quality Warning:  Your graphics card does not support GL_CLAMP_TO_EDGE in OpenGL.\n";
+        printed = true;
+      }
+    }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST);
 
@@ -243,9 +292,10 @@ namespace Zeni {
 
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > get_Video().get_maximum_anisotropy())
-        throw Invalid_Anisotropy_Setting();
+        Textures::set_texturing_mode(get_Video().get_maximum_anisotropy(), Textures::get_bilinear_filtering(), Textures::get_mipmapping());
 
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
+	  if(Textures::get_anisotropic_filtering())
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Textures::get_anisotropic_filtering());
     }
 
     /*
@@ -257,6 +307,9 @@ namespace Zeni {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     if(Textures::get_mipmapping())
+      glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+
+    if(glGetError() == GL_INVALID_ENUM)
       gluBuild2DMipmaps(GL_TEXTURE_2D, mode1, surface->w, surface->h, mode2, GL_UNSIGNED_BYTE, surface->pixels);
     else
       glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
@@ -276,6 +329,8 @@ namespace Zeni {
     }
     
     try {
+      const_cast<int &>(m_size.x) = surface->w;
+      const_cast<int &>(m_size.y) = surface->h;
       m_texture_id = build_from_surface(surface, repeat);
     }
     catch(...) {
@@ -289,15 +344,35 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat) 
     : Texture(Texture_Base::VTYPE_DX9, repeat),
-      m_texture(0)
+    m_texture(0)
   {
     load(filename);
   }
 
   Texture_DX9::Texture_DX9(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_DX9, repeat),
-      m_texture(build_from_surface(surface))
+    m_size(surface->w, surface->h),
+    m_texture(build_from_surface(surface))
   {
+  }
+
+  Texture_DX9::Texture_DX9(const Point2i &size, const bool &repeat)
+    : Texture(Texture_Base::VTYPE_DX9, repeat),
+    m_size(size),
+    m_texture(0)
+  {
+    Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
+
+    if(FAILED(D3DXCreateTexture(vr.get_d3d_device(),
+                                UINT(size.x), UINT(size.y),
+                                D3DX_DEFAULT,
+                                D3DUSAGE_RENDERTARGET | D3DUSAGE_AUTOGENMIPMAP,
+                                D3DFMT_A8R8G8B8,
+                                D3DPOOL_DEFAULT,
+                                &m_texture)))
+    {
+      throw Texture_Init_Failure();
+    }
   }
 
   Texture_DX9::~Texture_DX9() {
@@ -306,15 +381,15 @@ namespace Zeni {
   }
 
   void Texture_DX9::set_sampler_states() {
-    Video_DX9 &vr = reinterpret_cast<Video_DX9 &>(get_Video());
+    Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
     
     if(Textures::get_anisotropic_filtering()) {
       if(Textures::get_anisotropic_filtering() < 0 || Textures::get_anisotropic_filtering() > vr.get_maximum_anisotropy())
-        throw Invalid_Anisotropy_Setting();
+        Textures::set_texturing_mode(vr.get_maximum_anisotropy(), Textures::get_bilinear_filtering(), Textures::get_mipmapping());
 
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
-      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, int(Textures::get_anisotropic_filtering()));
+      vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, DWORD(Textures::get_anisotropic_filtering()));
     }
     else if(Textures::get_bilinear_filtering()) {
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
@@ -333,13 +408,15 @@ namespace Zeni {
 
     IDirect3DTexture9 * ppTexture;
 
-    const int mode = Texture::build_from_surface(surface);
+    const int mode = Texture::build_from_surface(surface,
+      Point2i(min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
+              min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))));
     const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states();
 
     if(FAILED(D3DXCreateTexture(vdx.get_d3d_device(),
-                                surface->w, surface->h,
+                                UINT(surface->w), UINT(surface->h),
                                 D3DX_DEFAULT,
                                 0,
                                 mode > 0 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8,
@@ -348,7 +425,7 @@ namespace Zeni {
       throw Texture_Init_Failure();
 
     D3DLOCKED_RECT rect;
-    if(FAILED(ppTexture->LockRect(0, &rect, 0, 0))) {
+    if(FAILED(ppTexture->LockRect(0, &rect, 0, D3DLOCK_DISCARD))) {
       ppTexture->Release();
       throw Texture_Init_Failure();
     }
@@ -405,6 +482,8 @@ namespace Zeni {
     }
     
     try {
+      const_cast<int &>(m_size.x) = surface->w;
+      const_cast<int &>(m_size.y) = surface->h;
       m_texture = build_from_surface(surface);
     }
     catch(...) {

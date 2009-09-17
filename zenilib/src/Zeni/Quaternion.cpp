@@ -34,16 +34,21 @@
 
 namespace Zeni {
 
-  Quaternion::Quaternion(const float &t, const Vector3f &s)
+  Quaternion::Quaternion(const float &t, const Vector3f &s, const bool &degenerate_)
     : time(t),
-    space(s)
+    space(s),
+    degenerate(s.degenerate || degenerate_)
   {
   }
 
   Quaternion Quaternion::Axis_Angle(const Vector3f &v, const float &theta) {
     const float half_theta = 0.5f * theta;
 
-    return Quaternion(cos(half_theta), sin(half_theta) * v.normalized());
+    const float time = cos(half_theta);
+    const float space_coeff = sin(half_theta);
+    const Vector3f space_vec = v.normalized();
+
+    return Quaternion(time, space_coeff * space_vec, space_vec.degenerate).normalized();
   }
   
   Quaternion Quaternion::Forward_Up(const Vector3f &destination_forward,
@@ -54,18 +59,32 @@ namespace Zeni {
     const Vector3f axis0 = default_forward % destination_forward;
     const float angle0 = default_forward.angle_between(destination_forward);
 
-    const Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
+    Quaternion rotation0 = Quaternion::Axis_Angle(axis0, angle0);
+    if(rotation0.degenerate) {
+      if(INFINTESSIMAL(angle0))
+        rotation0 = Quaternion();
+      else
+        rotation0 = Quaternion::Axis_Angle(default_up, pi);
+    }
 
     const Vector3f intermediate_up = rotation0 * default_up;
     const Vector3f axis1 = intermediate_up % destination_up;
     const float angle1 = intermediate_up.angle_between(destination_up);
 
-    const Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
+    Quaternion rotation1 = Quaternion::Axis_Angle(axis1, angle1);
+    if(rotation1.degenerate) {
+      if(INFINTESSIMAL(angle1))
+        rotation1 = Quaternion();
+      else
+        rotation1 = Quaternion::Axis_Angle(destination_forward, pi);
+    }
 
-    return rotation1 * rotation0;
+    return (rotation1 * rotation0).normalized();
   }
 
-  Quaternion::Quaternion(const float &yaw, const float &pitch, const float &roll) {
+  Quaternion::Quaternion(const float &yaw, const float &pitch, const float &roll, const bool &degenerate_)
+    : degenerate(degenerate_)
+  {
     const float half_yaw = 0.5f * yaw;
     const float half_pitch = 0.5f * pitch;
     const float half_roll = 0.5f * roll;
@@ -83,16 +102,20 @@ namespace Zeni {
 	  space.k = chr * chp * shy - shr * shp * chy;
   }
 
-  Quaternion::Quaternion(const Quaternion &rhs)
+  Quaternion::Quaternion(const Quaternion &rhs, const bool &degenerate_)
+    : time(rhs.time),
+    space(rhs.space),
+    degenerate(rhs.degenerate || degenerate_)
   {
-    *this = rhs;
   }
 
   Quaternion & Quaternion::normalize() {
     float mplier = magnitude();
 
-    if(INFINTESSIMAL(mplier))
+    if(INFINTESSIMAL(mplier)) {
+      degenerate = true;
       return *this;
+    }
 
     mplier = 1.0f / mplier;
 
@@ -106,7 +129,7 @@ namespace Zeni {
     float mplier = magnitude();
 
     if(INFINTESSIMAL(mplier))
-      return *this;
+      return Quaternion(*this, true);
 
     mplier = 1.0f / mplier;
 

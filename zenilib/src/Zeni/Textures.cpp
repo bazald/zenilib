@@ -99,7 +99,8 @@ namespace Zeni {
       m_bilinear_filtering = bilinear_filtering_;
       m_mipmapping = mipmapping_;
 
-      tr.reload();
+      if(!tr.lost_resources())
+        tr.reload();
     }
     else {
       m_anisotropic_filtering = af;
@@ -108,27 +109,61 @@ namespace Zeni {
     }
   }
 
-  void Textures::post_init() {
+  void Textures::on_load() {
     m_loaded = true;
   }
 
-  void Textures::post_uninit() {
+  void Textures::on_clear() {
     m_loaded = false;
   }
 
-  void Textures::post_lose() {
+  void Textures::on_lose() {
     m_loaded = false;
   }
 
-  Texture * Textures::load(XML_Element &xml_element) {
-    const string filepath = xml_element["filepath"].to_string();
-    const bool tile = xml_element["tile"].to_bool();
+  Texture * Textures::load(XML_Element_c &xml_element, const std::string &name, const std::string &filename) {
+    const XML_Element_c is_sprite_e = xml_element["is_sprite"];
+    const bool is_sprite = is_sprite_e.good() && is_sprite_e.to_bool();
 
-    return get_Video().load_Texture(filepath, tile, m_lazy_loading);
-  }
+    if(!is_sprite) {
+      const string filepath = xml_element["filepath"].to_string();
+      const bool tile = xml_element["tile"].to_bool();
 
-  bool Textures::keep(const Texture &type) {
-    return dynamic_cast<const Sprite *>(&type) != 0;
+      return get_Video().load_Texture(filepath, tile, m_lazy_loading);
+    }
+    else {
+      Sprite * s = new Sprite();
+
+      size_t frame_number = 0;
+      for(XML_Element_c texture = xml_element.first(); texture.good(); texture = texture.next(), ++frame_number)
+        try {
+          if(texture.value() == "token") {
+            const std::string identifier = texture.to_string();
+            s->append_frame(identifier, get_id(identifier));
+          }
+          else if(texture.value() == "file") {
+            const string filepath = texture["filepath"].to_string();
+            const bool tile = texture["tile"].to_bool();
+            const string frame_name = name + '/' + ulltoa(frame_number);
+
+            Texture * const texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
+
+            const unsigned int id = give(frame_name, texture, false, filename);
+
+            s->append_frame(frame_name, id);
+          }
+          else if(texture.value() == "is_sprite")
+            --frame_number;
+          else
+            throw Database_Load_Entry_Failed(name);
+        }
+        catch(...) {
+          delete s;
+          throw;
+        }
+
+      return s;
+    }
   }
 
   bool Textures::m_loaded = false;

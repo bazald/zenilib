@@ -1,55 +1,45 @@
 ; Zenipex Automagic Ends
 
+  SetOutPath "$INSTDIR"
+  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  WriteIniStr "$INSTDIR\${PRODUCT_PUBLISHER}.url" "InternetShortcut" "URL" "${PUBLISHER_WEB_SITE}"
+  WriteIniStr "$INSTDIR\${ZENIPEX_LIBRARY}.url" "InternetShortcut" "URL" "${ZENIPEX_LIBRARY_WEB_SITE}"
 SectionEnd
 
 Section -Redist
   SetShellVarContext all
 
-  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
-  ExecWait '"$INSTDIR\redist\visualc\vcredist_x64_9.0.30411.00.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x86_9.0.30729.17.exe" /quiet /passive /C /T:$TEMP"'
+  ExecWait '"$INSTDIR\redist\visualc\vcredist_x64_9.0.30729.17.exe" /quiet /passive /C /T:$TEMP"'
   ExecWait '"$INSTDIR\redist\directx\DXSETUP.exe" /silent'
-  ExecWait '"$INSTDIR\redist\openal\oalinst_2.0.3.0.exe" /silent'
+  ExecWait '"$INSTDIR\redist\openal\oalinst_2.0.7.0.exe" /silent'
 SectionEnd
 
 Section -Icons
   SetShellVarContext all
+  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 
-;Link to Start Menu
+  CreateDirectory "$SMPROGRAMS\$ICONS_GROUP"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME_X86}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X86}"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME_X64}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X64}"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_PUBLISHER}.lnk" "$INSTDIR\${PRODUCT_PUBLISHER}.url"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${ZENIPEX_LIBRARY}.lnk" "$INSTDIR\${ZENIPEX_LIBRARY}.url"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk" "$INSTDIR\uninst.exe"
 
-  CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X86}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X64}"
+  !insertmacro MUI_STARTMENU_WRITE_END
+SectionEnd
 
-;Link to Desktop
-
+Section "Desktop Icons"
   CreateShortCut "$DESKTOP\${PRODUCT_NAME_X86}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X86}"
   CreateShortCut "$DESKTOP\${PRODUCT_NAME_X64}.lnk" "$INSTDIR\${EXECUTABLE_FILE_X64}"
-
-;Link to Website
-
-  SetOutPath $INSTDIR
-  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
-
-  SetOutPath $INSTDIR
-  WriteIniStr "$INSTDIR\${PRODUCT_PUBLISHER}.url" "InternetShortcut" "URL" "${PUBLISHER_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_PUBLISHER}.lnk" "$INSTDIR\${PRODUCT_PUBLISHER}.url"
-
-  SetOutPath $INSTDIR
-  WriteIniStr "$INSTDIR\${ZENIPEX_LIBRARY}.url" "InternetShortcut" "URL" "${ZENIPEX_LIBRARY_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${ZENIPEX_LIBRARY}.lnk" "$INSTDIR\${ZENIPEX_LIBRARY}.url"
-
-;Uninstaller
-
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninst.exe"
-
 SectionEnd
 
 Section -Post
   SetShellVarContext all
 
   WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${PRODUCT_NAME}"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${EXECUTABLE_FILE_X86}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${EXECUTABLE_FILE_X86}"
@@ -72,20 +62,22 @@ Section Uninstall
   SetShellVarContext all
 
 ;Temp Files
+  !insertmacro MUI_STARTMENU_GETFOLDER "Application" $ICONS_GROUP
+
+  Delete "$INSTDIR\config\zenilib.xml.bak"
   Delete "$INSTDIR\stderr.txt"
   Delete "$INSTDIR\stdout.txt"
 
 ;Links
   Delete "$DESKTOP\${PRODUCT_NAME_X64}.lnk"
   Delete "$DESKTOP\${PRODUCT_NAME_X86}.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\Uninstall.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X64}.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME_X86}.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${PRODUCT_PUBLISHER}.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}\${ZENIPEX_LIBRARY}.lnk"
-  RMDir "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
-  RMDir "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME_X64}.lnk"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME_X86}.lnk"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME} Website.lnk"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_PUBLISHER}.lnk"
+  Delete "$SMPROGRAMS\$ICONS_GROUP\${ZENIPEX_LIBRARY}.lnk"
+  RMDir "$SMPROGRAMS\$ICONS_GROUP"
 
 ;Additional Items
   Delete "$INSTDIR\${PRODUCT_NAME}.url"

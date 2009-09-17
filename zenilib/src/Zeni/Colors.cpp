@@ -52,7 +52,7 @@ namespace Zeni {
     return e_color;
   }
 
-  Color * Colors::load(XML_Element &xml_element) {
+  Color * Colors::load(XML_Element_c &xml_element, const std::string &/*name*/, const std::string &/*filename*/) {
     const float alpha = xml_element["alpha"].to_float();
     const float red = xml_element["red"].to_float();
     const float green = xml_element["green"].to_float();

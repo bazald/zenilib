@@ -47,12 +47,20 @@ namespace Zeni {
     return g_video_mode;
   }
 
+  const bool & Video::is_enabled() {
+    return g_enabled;
+  }
+
+  const Point2i & Video::get_screen_size() {
+    return g_screen_size;
+  }
+
   const int & Video::get_screen_width() {
-    return g_screen_width;
+    return g_screen_size.x;
   }
 
   const int & Video::get_screen_height() {
-    return g_screen_height;
+    return g_screen_size.y;
   }
 
   const bool & Video::is_fullscreen() {
@@ -63,12 +71,20 @@ namespace Zeni {
     return g_screen_show_frame;
   }
 
+  const bool & Video::is_resizable() {
+    return g_screen_resizable;
+  }
+
   const bool & Video::get_backface_culling() {
     return g_backface_culling;
   }
 
   const bool & Video::get_lighting() {
     return g_lighting;
+  }
+
+  const Color & Video::get_ambient_lighting() {
+    return g_ambient_lighting;
   }
 
   const bool & Video::get_normal_interpolation() {
@@ -84,11 +100,11 @@ namespace Zeni {
   }
 
   const bool & Video::is_zwrite_enabled() const {
-    return m_zwrite;
+    return g_zwrite;
   }
 
   const bool & Video::is_ztest_enabled() const {
-    return m_ztest;
+    return g_ztest;
   }
 
   const bool & Video::is_alpha_test_enabled() const {
@@ -103,19 +119,29 @@ namespace Zeni {
     return m_alpha_value;
   }
 
-  void Video::set_2d() {
-    set_2d_view(std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_screen_width()), float(get_screen_height()))),
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+  const bool & Video::is_3d() const {
+    return m_3d;
   }
 
-  void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d) {
+  const std::vector<Point2i> & Video::get_resolutions() const {
+    return m_modes;
+  }
+
+  void Video::set_2d() {
+    const Point2i &size = get_render_target_size();
+    set_2d_view(std::make_pair(Point2f(), Point2f(float(size.x), float(size.y))),
+                std::make_pair(Point2i(), size));
+  }
+
+  void Video::set_2d(const std::pair<Point2f, Point2f> &camera2d, const bool &fix_aspect_ratio) {
     set_2d_view(camera2d,
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+                std::make_pair(Point2i(), get_render_target_size()),
+                fix_aspect_ratio);
   }
 
   void Video::set_3d(const Camera &camera) {
     set_3d_view(camera,
-                std::make_pair(Point2i(0, 0), Point2i(get_screen_width(), get_screen_height())));
+                std::make_pair(Point2i(), get_render_target_size()));
   }
 
   const Color & Video::get_color() const {
@@ -123,7 +149,7 @@ namespace Zeni {
   }
 
   const Color & Video::get_clear_color() const {
-    return m_clear_color;
+    return g_clear_color;
   }
 
   void Video::apply_texture(const std::string &name) {
@@ -163,6 +189,14 @@ namespace Zeni {
     return m_viewport;
   }
 
+  const std::string & Video::get_title() const {
+    return get_m_title();
+  }
+
+  const std::string & Video::get_taskmsg() const {
+    return get_m_taskmsg();
+  }
+
   /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
    * It is not hard to code around, but they are convenient.
    */
@@ -173,8 +207,8 @@ namespace Zeni {
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Video_Base::ZENI_VIDEO_GL: return reinterpret_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
-      case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_GL: return static_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_DX9: return static_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
     exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
@@ -183,8 +217,8 @@ namespace Zeni {
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Video_Base::ZENI_VIDEO_GL: return reinterpret_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
-      case Video_Base::ZENI_VIDEO_DX9: return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_GL: return static_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
+      case Video_Base::ZENI_VIDEO_DX9: return static_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
       default: abort(); /* implies ZENI_VIDEO_ANY, which *should* be impossible */ \
     } \
     exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
@@ -194,12 +228,12 @@ namespace Zeni {
 
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
-    return reinterpret_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<Video_DX9 *>(this)->member_function(__VA_ARGS__); \
   }
 
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
-    return reinterpret_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<const Video_DX9 *>(this)->member_function(__VA_ARGS__); \
   }
 
 #endif
@@ -207,15 +241,17 @@ namespace Zeni {
 
 #define \
   VIDEO_IV_FCN_CALL(member_function, ...) { \
-    return reinterpret_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<Video_GL *>(this)->member_function(__VA_ARGS__); \
   }
 
 #define \
   VIDEO_IV_FCN_CALL_CONST(member_function, ...) { \
-    return reinterpret_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
+    return static_cast<const Video_GL *>(this)->member_function(__VA_ARGS__); \
   }
 
 #endif
+
+#define EMPTY()
 
   void Video::render(const Renderable &renderable) {
     class PrePostRenderActor {
@@ -239,21 +275,28 @@ namespace Zeni {
   }
 
   int Video::get_maximum_anisotropy() const {
-    VIDEO_IV_FCN_CALL_CONST(get_maximum_anisotropy_impl, );
+    VIDEO_IV_FCN_CALL_CONST(get_maximum_anisotropy_impl, EMPTY());
   }
 
   bool Video::has_vertex_buffers() const {
-    VIDEO_IV_FCN_CALL_CONST(has_vertex_buffers_impl, );
+    VIDEO_IV_FCN_CALL_CONST(has_vertex_buffers_impl, EMPTY());
   }
 
-  void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport) {
-    set_zwrite(false);
-    set_ztest(false);
+  void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+    m_3d = false;
+
+    if(fix_aspect_ratio)
+      set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
+    else
+      set_viewport(viewport);
 
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
 
-    const Point2f offset = get_pixel_offset();
+    const std::pair<Point2i, Point2i> &vp = get_viewport();
+    Point2f offset = get_pixel_offset();
+    offset.x *= (camera2d.second.x - camera2d.first.x) / (vp.second.x - vp.first.x);
+    offset.y *= (camera2d.second.y - camera2d.first.y) / (vp.second.y - vp.first.y);
 
     const Matrix4f projection = Matrix4f::Orthographic(camera2d.first.x + offset.x,
                                                        camera2d.second.x + offset.x,
@@ -262,14 +305,11 @@ namespace Zeni {
                                                        ZENI_2D_NEAR, ZENI_2D_FAR);
     set_projection_matrix(projection);
 
-    set_viewport(viewport);
-
-    VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport);
+    VIDEO_IV_FCN_CALL(set_2d_view_impl, camera2d, viewport, fix_aspect_ratio);
   }
 
   void Video::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
-    set_zwrite(true);
-    set_ztest(true);
+    m_3d = true;
 
     const Matrix4f view = camera.get_view_matrix();
     set_view_matrix(view);
@@ -295,13 +335,13 @@ namespace Zeni {
   }
 
   void Video::set_zwrite(const bool &enabled) {
-    m_zwrite = enabled;
+    g_zwrite = enabled;
 
     VIDEO_IV_FCN_CALL(set_zwrite_impl, enabled);
   }
 
   void Video::set_ztest(const bool &enabled) {
-    m_ztest = enabled;
+    g_ztest = enabled;
 
     VIDEO_IV_FCN_CALL(set_ztest_impl, enabled);
   }
@@ -323,7 +363,7 @@ namespace Zeni {
   }
 
   void Video::set_clear_color(const Color &color) {
-    m_clear_color = color;
+    g_clear_color = color;
 
     VIDEO_IV_FCN_CALL(set_clear_color_impl, color);
   }
@@ -337,7 +377,7 @@ namespace Zeni {
   }
 
   void Video::unapply_texture() {
-    VIDEO_IV_FCN_CALL(unapply_texture_impl, );
+    VIDEO_IV_FCN_CALL(unapply_texture_impl, EMPTY());
   }
 
   void Video::set_lighting(const bool &on) {
@@ -347,6 +387,8 @@ namespace Zeni {
   }
 
   void Video::set_ambient_lighting(const Color &color) {
+    g_ambient_lighting = color;
+
     VIDEO_IV_FCN_CALL(set_ambient_lighting_impl, color);
   }
 
@@ -371,7 +413,7 @@ namespace Zeni {
   }
 
   void Video::unset_fog() {
-    VIDEO_IV_FCN_CALL(unset_fog_impl, );
+    VIDEO_IV_FCN_CALL(unset_fog_impl, EMPTY());
   }
 
 #ifndef DISABLE_CG
@@ -392,16 +434,32 @@ namespace Zeni {
   }
 #endif
 
+  void Video::set_render_target(Texture &texture) {
+    VIDEO_IV_FCN_CALL(set_render_target_impl, texture);
+  }
+
+  void Video::unset_render_target() {
+    VIDEO_IV_FCN_CALL(unset_render_target_impl, EMPTY());
+  }
+
+  void Video::clear_render_target(const Color &color) {
+    VIDEO_IV_FCN_CALL(clear_render_target_impl, color);
+  }
+
+  const Point2i & Video::get_render_target_size() const {
+    VIDEO_IV_FCN_CALL_CONST(get_render_target_size_impl, EMPTY());
+  }
+
   void Video::select_world_matrix() {
-    VIDEO_IV_FCN_CALL(select_world_matrix_impl, );
+    VIDEO_IV_FCN_CALL(select_world_matrix_impl, EMPTY());
   }
 
   void Video::push_world_stack() {
-    VIDEO_IV_FCN_CALL(push_world_stack_impl, );
+    VIDEO_IV_FCN_CALL(push_world_stack_impl, EMPTY());
   }
 
   void Video::pop_world_stack() {
-    VIDEO_IV_FCN_CALL(pop_world_stack_impl, );
+    VIDEO_IV_FCN_CALL(pop_world_stack_impl, EMPTY());
   }
 
   void Video::translate_scene(const Vector3f &direction) {
@@ -421,7 +479,7 @@ namespace Zeni {
   }
 
   Point2f Video::get_pixel_offset() const {
-    VIDEO_IV_FCN_CALL_CONST(get_pixel_offset_impl, );
+    VIDEO_IV_FCN_CALL_CONST(get_pixel_offset_impl, EMPTY());
   }
 
   void Video::set_view_matrix(const Matrix4f &view) {
@@ -442,6 +500,31 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(set_viewport_impl, viewport);
   }
 
+  void Video::set_viewport(const float &aspect_ratio, const std::pair<Point2i, Point2i> &viewport) {
+    m_viewport = viewport;
+
+    int width = m_viewport.second.x - m_viewport.first.x;
+    int height = m_viewport.second.y - m_viewport.first.y;
+    const float given_ratio = float(width) / height;
+
+    if(given_ratio > aspect_ratio) {
+      const int new_width = int(width * aspect_ratio / given_ratio);
+      const int cut_side = (width - new_width) / 2;
+
+      m_viewport.first.x += cut_side;
+      m_viewport.second.x -= cut_side;
+    }
+    else if(aspect_ratio > given_ratio) {
+      const int new_height = int(height * given_ratio / aspect_ratio);
+      const int cut_side = (height - new_height) / 2;
+
+      m_viewport.first.y += cut_side;
+      m_viewport.second.y -= cut_side;
+    }
+
+    VIDEO_IV_FCN_CALL(set_viewport_impl, m_viewport);
+  }
+
   Texture * Video::load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading) {
     VIDEO_IV_FCN_CALL(load_Texture_impl, filename, repeat, lazy_loading);
   }
@@ -450,13 +533,17 @@ namespace Zeni {
     VIDEO_IV_FCN_CALL(create_Texture_impl, surface, repeat);
   }
 
+  Texture * Video::create_Texture(const Point2i &size, const bool &repeat) {
+    VIDEO_IV_FCN_CALL(create_Texture_impl, size, repeat);
+  }
+
   Font * Video::create_Font(const std::string &filename, const bool &bold, const bool &italic, 
     const float &glyph_height, const float &virtual_screen_height) {
     VIDEO_IV_FCN_CALL(create_Font_impl, filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
-  Vertex_Buffer * Video::create_Vertex_Buffer() {
-    VIDEO_IV_FCN_CALL(create_Vertex_Buffer_impl, );
+  Vertex_Buffer_Renderer * Video::create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer) {
+    VIDEO_IV_FCN_CALL(create_Vertex_Buffer_Renderer_impl, vertex_buffer);
   }
 
 #ifndef DISABLE_CG
@@ -478,11 +565,12 @@ namespace Zeni {
     m_display_surface = 0;
     g_initialized = false;
 
-    VIDEO_IV_FCN_CALL(uninit_impl, );
+    VIDEO_IV_FCN_CALL(uninit_impl, EMPTY());
   }
 
 #undef VIDEO_IV_FCN_CALL
 #undef VIDEO_IV_FCN_CALL_CONST
+#undef EMPTY
 }
 
 #include <Zeni/Global_Undef.h>

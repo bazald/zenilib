@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Image.hxx>
-#endif
-
 #ifndef ZENI_IMAGE_H
 #define ZENI_IMAGE_H
 
@@ -51,7 +47,12 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#else
 #include <SDL/SDL_image.h>
+#endif
+
 #include <string>
 
 namespace Zeni {

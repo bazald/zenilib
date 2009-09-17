@@ -530,9 +530,9 @@ namespace Zeni_Collision {
         R[j][i] = A[j] * B[i]; 
 
     // generate the fabs(rotation matrix)
-    const float abs_R[3][3] = {{fabs(R[0][0]), fabs(R[0][1]), fabs(R[0][2])},
-                               {fabs(R[1][0]), fabs(R[1][1]), fabs(R[1][2])},
-                               {fabs(R[2][0]), fabs(R[2][1]), fabs(R[2][2])}};
+    const float abs_R[3][3] = {{float(fabs(R[0][0])), float(fabs(R[0][1])), float(fabs(R[0][2]))},
+                               {float(fabs(R[1][0])), float(fabs(R[1][1])), float(fabs(R[1][2]))},
+                               {float(fabs(R[2][0])), float(fabs(R[2][1])), float(fabs(R[2][2]))}};
 
     /* ALGORITHM: Use the separating axis test for all 15 potential
      * separating axes. If a separating axis could not be found, the two

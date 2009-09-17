@@ -32,7 +32,7 @@
 
 namespace Zeni {
 
-  Time::Time(const int &ticks)
+  Time::Time(const Time::Tick_Type &ticks)
     : m_ticks(ticks)
   {
   }

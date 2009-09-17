@@ -42,10 +42,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Color.hxx>
-#endif
-
 #ifndef ZENI_COLOR_H
 #define ZENI_COLOR_H
 
@@ -57,7 +53,7 @@ namespace Zeni {
     /// Set the red, green, blue, and alpha channels using the stored type, float
     Color(); ///< Default value is full white (opaque)
     Color(const float &a, const float &r, const float &g, const float &b); ///< ARGB order is used for consistency despite interal RGBA ordering
-    Color(const unsigned long &argb);
+    Color(const Uint32 &argb);
 
     inline unsigned char a_ub() const; ///< Get the alpha channel [0x00, 0xFF]
     inline unsigned char r_ub() const; ///< Get the red channel [0x00, 0xFF]

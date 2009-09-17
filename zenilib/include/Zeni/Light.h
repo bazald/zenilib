@@ -42,10 +42,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Light.hxx>
-#endif
-
 #ifndef ZENI_LIGHT_H
 #define ZENI_LIGHT_H
 
@@ -54,8 +50,13 @@
 #include <Zeni/Vector3f.h>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
 #endif
+#endif
+
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif
@@ -81,7 +82,7 @@ namespace Zeni {
     inline void set_spot_phi(const float &spot_phi); ///< Set the angle, in radians, describing the size of the outer cone (automatically decreases theta if necessary)
 
 #ifndef DISABLE_GL
-    void set(const GLint &number, Video_GL &screen) const;
+    void set(const GLenum &number, Video_GL &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

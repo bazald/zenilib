@@ -21,6 +21,8 @@
 #include <string>
 #include <windows.h>
 
+#include "Application_Name.h"
+
 using namespace std;
 
 // See http://msdn.microsoft.com/en-us/library/ms682425.aspx
@@ -34,25 +36,34 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/,
 {
 #ifdef X64
 #ifdef NDEBUG
-  return launch("bin\\x64\\Zeniapp_x64.exe", lpCmdLine);
+  return launch("bin\\x64\\" APPLICATION_NAME "_x64.exe", lpCmdLine);
 #else
-  return launch("bin\\x64\\Zeniapp_x64d.exe", lpCmdLine);
+  return launch("bin\\x64\\" APPLICATION_NAME "_x64d.exe", lpCmdLine);
 #endif
 #else
 #ifdef NDEBUG
-  return launch("bin\\Zeniapp.exe", lpCmdLine);
+  return launch("bin\\" APPLICATION_NAME ".exe", lpCmdLine);
 #else
-  return launch("bin\\Zeniapp_d.exe", lpCmdLine);
+  return launch("bin\\" APPLICATION_NAME "_d.exe", lpCmdLine);
 #endif
 #endif
 }
 
 int launch(const std::string &local_exe, const std::string &arguments) {
   char dir[BUFFER_SIZE];
-  const DWORD required_length = GetCurrentDirectoryA(0, NULL);
-  if(required_length > BUFFER_SIZE)
+  const DWORD nSize = GetModuleFileNameA(NULL, dir, BUFFER_SIZE - 1);
+  if(!nSize || GetLastError() == ERROR_INSUFFICIENT_BUFFER)
     return -1;
-  GetCurrentDirectoryA(required_length, dir);
+  else
+    dir[nSize] = '\0';
+
+  for(int i = int(nSize) - 1; i != -1; --i)
+    if(dir[i] == '\\') {
+      dir[i] = '\0';
+      break;
+    }
+    else
+      dir[i] = '\0';
 
   char full_exe[BUFFER_SIZE];
   if(strlen(dir) + strlen(local_exe.c_str()) + 1 > BUFFER_SIZE)
@@ -70,19 +81,30 @@ int launch(const std::string &local_exe, const std::string &arguments) {
   memset(&piProcessInfo, 0, sizeof(piProcessInfo));
   siStartupInfo.cb = sizeof(siStartupInfo);
 
-  const bool result = CreateProcessA(full_exe,
-                                     full_exe_with_args,
-                                     NULL,
-                                     NULL,
-                                     FALSE,
-                                     0,
-                                     NULL,
-                                     NULL,
-                                     &siStartupInfo,
-                                     &piProcessInfo) != 0;
+  bool result = SetCurrentDirectoryA(dir) != 0;
 
-   if(result)
-     return 0;
+  if(!result)
+    return 1;
 
-   return GetLastError();
+  result = CreateProcessA(full_exe,
+                          full_exe_with_args,
+                          NULL,
+                          NULL,
+                          FALSE,
+                          0,
+                          NULL,
+                          NULL,
+                          &siStartupInfo,
+                          &piProcessInfo) != 0;
+
+  if(!result)
+    return 2;
+
+  if(WaitForSingleObject(piProcessInfo.hProcess, INFINITE) == WAIT_FAILED)
+    return int(GetLastError());
+
+  CloseHandle(piProcessInfo.hThread);
+  CloseHandle(piProcessInfo.hProcess);
+
+  return 0;
 }

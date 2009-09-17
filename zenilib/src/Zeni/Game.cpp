@@ -28,8 +28,11 @@
 
 #include <Zeni/Game.hxx>
 
+#include <Zeni/Chronometer.hxx>
+#include <Zeni/Console_State.h>
 #include <Zeni/Gamestate.hxx>
 #include <Zeni/Gamestate_One.h>
+#include <Zeni/Random.h>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
@@ -40,6 +43,9 @@ namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
     : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
+#ifndef NDEBUG
+    , m_console_active(false)
+#endif
   {
     m_states.push(Gamestate(new Gamestate_One(args)));
   }
@@ -50,18 +56,72 @@ namespace Zeni {
   }
 
   void Game::run() {
-    Video &vr = get_Video();
+#ifdef TEST_NASTY_CONDITIONS
+    Random random;
+    const float time_scale = NASTY_MIN_RATE + (NASTY_MAX_RATE - NASTY_MIN_RATE) * random.frand_lte();
+    Time::Second_Type time_used = Time::Second_Type();
+    Time start_time;
+#endif
+
     Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     
     for(;;) {
-      for(SDL_Event event; SDL_PollEvent(&event);)
+      for(SDL_Event event; SDL_PollEvent(&event);) {
+        if(event.type == SDL_KEYDOWN) {
+          const SDL_keysym &s = event.key.keysym;
+          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
+                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
+          if(s.sym == SDLK_F4 && alt_only)
+            throw Quit_Event();
+#ifndef NDEBUG
+          else if(s.sym == SDLK_BACKQUOTE && alt_only) {
+            if(m_console_active)
+              deactivate_console();
+            else
+              activate_console();
+            continue;
+          }
+#endif
+        }
+#ifndef NDEBUG
+        else if(event.type == SDL_KEYUP) {
+          const SDL_keysym &s = event.key.keysym;
+          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
+                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
+          if(s.sym == SDLK_BACKQUOTE && alt_only)
+            continue;
+        }
+#endif
+
         on_event(event);
-      
+      }
+
+#ifdef TEST_NASTY_CONDITIONS
+      const Time current_time;
+      const Time::Second_Type time_passed = time_scale * current_time.get_seconds_since(start_time);
+      size_t step_count = 0u;
+      while(time_used + (1 / 60.0f) < time_passed) {
+        time_used += (1 / 60.0f);
+        perform_logic();
+        if(++step_count == NASTY_RATE_CUTOFF)
+          time_used = time_passed;
+      }
+      if(!random.rand_lt(NASTY_ZERO_STEP_FREQUENCY))
+        perform_logic();
+#else
       perform_logic();
+#endif
 
       sspr.update();
-      
-      vr.render_all();
+
+      if(Video::is_enabled())
+        get_Video().render_all();
     }
   }
 
@@ -73,6 +133,27 @@ namespace Zeni {
     fps = fps_next;
     fps_next = 0;
   }
+
+#ifndef NDEBUG
+  void Game::activate_console() {
+    if(!m_states.empty())
+      get_console().set_child(m_states.top());
+
+    get_console().m_prompt.seek(get_console().m_prompt.get_max_seek());
+
+    m_console_active = true;
+  }
+
+  void Game::deactivate_console() {
+    m_console_active = false;
+    get_console().clear_child();
+  }
+
+  Gamestate & Game::get_console_instance() {
+    static Gamestate console_state(Gamestate(new Console_State()));
+    return console_state;
+  }
+#endif
 
 }
 

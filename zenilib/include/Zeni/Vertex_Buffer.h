@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex_Buffer.hxx>
-#endif
-
 #ifndef ZENI_VERTEX_BUFFER_H
 #define ZENI_VERTEX_BUFFER_H
 
@@ -53,33 +49,78 @@
 #include <Zeni/Vertex3f.h>
 
 #include <vector>
+#include <set>
+#include <memory>
 
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 
 namespace Zeni {
 
+  template <typename TYPE>
+  class safe_ptr : public
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+    std::unique_ptr<TYPE>
+#else
+    std::auto_ptr<TYPE>
+#endif
+  {
+  public:
+    safe_ptr() {}
+    safe_ptr(TYPE * const &ptr) :
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+      std::unique_ptr<TYPE>
+#else
+      std::auto_ptr<TYPE>
+#endif
+        (ptr)
+    {
+    }
+  };
+
   class Render_Wrapper;
+  class Vertex_Buffer;
+
+  class Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer(const Vertex_Buffer_Renderer &);
+    Vertex_Buffer_Renderer & operator=(const Vertex_Buffer_Renderer &);
+
+  public:
+    Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer() {}
+
+    virtual void render() = 0;
+
+  protected:
+    Vertex_Buffer &m_vbo;
+  };
 
   class Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
     Vertex_Buffer & operator=(const Vertex_Buffer &);
 
+    friend class Vertex_Buffer_Renderer_GL;
+    friend class Vertex_Buffer_Renderer_DX9;
+
   public:
     struct Vertex_Buffer_Range {
-      Vertex_Buffer_Range(Material * const &m, const int &s, const int &ne);
+      Vertex_Buffer_Range(Material * const &m, const size_t &s, const size_t &ne);
 
-      std::auto_ptr<Material> material;
-      int start;
-      int num_elements;
+      safe_ptr<Material> material;
+      size_t start;
+      size_t num_elements;
     };
 
     Vertex_Buffer();
-    virtual ~Vertex_Buffer();
+    ~Vertex_Buffer();
 
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Vertex_Buffer should try to fix broken normals in the prerender phase;
     inline bool will_do_normal_alignment() const; // Find out whether Vertex_Buffer is set to try to fix broken normals in the prerender phase;
@@ -106,13 +147,16 @@ namespace Zeni {
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
 
-    virtual void render() = 0; ///< Render the Vertex_Buffer
+    void render(); ///< Render the Vertex_Buffer
+    void lose(); ///< Lose the Vertex_Buffer
 
-  protected:
-    virtual void prerender(); ///< Create the vertex buffer in the GPU/VPU
+  private:
+    void prerender(); ///< Create the vertex buffer in the GPU/VPU
 
-    inline int num_vertices_cm() const;
-    inline int num_vertices_t() const;
+    inline size_t num_vertices_cm() const;
+    inline size_t num_vertices_t() const;
+
+    inline void unprerender(); ///< Allow prerender() to be called again
 
     // Sort buffers by Material
     void sort_triangles();
@@ -130,27 +174,34 @@ namespace Zeni {
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
 
     bool m_align_normals;
+
+    Vertex_Buffer_Renderer * m_renderer;
+    bool m_prerendered;
+
+  public:
+    static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
+
+  private:
+    static std::set<Vertex_Buffer *> & get_vbos();
   };
 
 #ifndef DISABLE_GL
 
-  class Vertex_Buffer_GL : public Vertex_Buffer {
-    Vertex_Buffer_GL(const Vertex_Buffer_GL &);
-    Vertex_Buffer_GL operator=(const Vertex_Buffer_GL &);
+  class Vertex_Buffer_Renderer_GL : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_GL(const Vertex_Buffer_Renderer_GL &);
+    Vertex_Buffer_Renderer_GL operator=(const Vertex_Buffer_Renderer_GL &);
 
   public:
-    Vertex_Buffer_GL();
-    virtual ~Vertex_Buffer_GL();
+    Vertex_Buffer_Renderer_GL(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_GL();
 
     virtual void render();
 
   private:
-    virtual void prerender();
-    
-    inline int vertex_size() const;
-    inline int normal_size() const;
-    inline int color_size() const;
-    inline int texel_size() const;
+    inline size_t vertex_size() const;
+    inline size_t normal_size() const;
+    inline size_t color_size() const;
+    inline size_t texel_size() const;
 
     union VBO_GL {
       GLuint vbo;
@@ -163,21 +214,19 @@ namespace Zeni {
 #endif
 #ifndef DISABLE_DX9
 
-  class Vertex_Buffer_DX9 : public Vertex_Buffer {
-    Vertex_Buffer_DX9(const Vertex_Buffer_DX9 &);
-    Vertex_Buffer_DX9 operator=(const Vertex_Buffer_DX9 &);
+  class Vertex_Buffer_Renderer_DX9 : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_DX9(const Vertex_Buffer_Renderer_DX9 &);
+    Vertex_Buffer_Renderer_DX9 operator=(const Vertex_Buffer_Renderer_DX9 &);
 
   public:
-    Vertex_Buffer_DX9();
-    virtual ~Vertex_Buffer_DX9();
+    Vertex_Buffer_Renderer_DX9(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_DX9();
 
     virtual void render();
 
   private:
-    virtual void prerender();
-    
-    inline int vertex_c_size() const;
-    inline int vertex_t_size() const;
+    inline size_t vertex_c_size() const;
+    inline size_t vertex_t_size() const;
 
   public:
     struct VBO_DX9 {

@@ -41,10 +41,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Quaternion.hxx>
-#endif
-
 #ifndef ZENI_QUATERNION_H
 #define ZENI_QUATERNION_H
 
@@ -56,10 +52,10 @@
 namespace Zeni {
 
   struct Quaternion {
-    inline Quaternion();
-    Quaternion(const float &time, const Vector3f &space); ///< For advanced use only
-    Quaternion(const float &yaw, const float &pitch, const float &roll);
-    Quaternion(const Quaternion &rhs);
+    inline Quaternion(const bool &degenerate_ = false);
+    Quaternion(const float &time, const Vector3f &space, const bool &degenerate_ = false); ///< For advanced use only
+    Quaternion(const float &yaw, const float &pitch, const float &roll, const bool &degenerate_ = false);
+    Quaternion(const Quaternion &rhs, const bool &degenerate_ = false);
 
     /// Create a Quaternion from an Axis/Angle pair
     static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
@@ -115,6 +111,8 @@ namespace Zeni {
 
     float time;
 	  Vector3f space;
+
+    bool degenerate;
   };
 
   inline Quaternion operator*(const float &lhs, const Quaternion &rhs) { ///< Get the scalar multiple

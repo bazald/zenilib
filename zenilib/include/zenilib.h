@@ -29,13 +29,13 @@
 #ifndef ZENILIB_H
 #define ZENILIB_H
 
-#define ZENI_INLINES
-
 #include <Zeni/Camera.h>
 #include <Zeni/Chronometer.h>
 #include <Zeni/Collision.h>
 #include <Zeni/Color.h>
 #include <Zeni/Colors.h>
+#include <Zeni/Configurator_Video.h>
+#include <Zeni/Console_State.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 #include <Zeni/Database.h>
@@ -50,6 +50,7 @@
 #include <Zeni/Image.h>
 #include <Zeni/Light.h>
 #include <Zeni/Line_Segment.h>
+#include <Zeni/Logo.h>
 #include <Zeni/Material.h>
 #include <Zeni/Matrix4f.h>
 #include <Zeni/Model.h>
@@ -58,6 +59,7 @@
 #include <Zeni/Projector.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Quaternion.h>
+#include <Zeni/Random.h>
 #include <Zeni/Renderable.h>
 #include <Zeni/Resource.h>
 #include <Zeni/Shader.h>
@@ -69,6 +71,7 @@
 #include <Zeni/Textures.h>
 #include <Zeni/Thread.h>
 #include <Zeni/Timer.h>
+#include <Zeni/Title_State.h>
 #include <Zeni/Triangle.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Vertex2f.h>
@@ -78,6 +81,46 @@
 #include <Zeni/Video_DX9.h>
 #include <Zeni/Video_GL.h>
 #include <Zeni/Widget.h>
+#include <Zeni/Widget_Gamestate.h>
 #include <Zeni/XML.h>
+
+#include <Zeni/Camera.hxx>
+#include <Zeni/Chronometer.hxx>
+#include <Zeni/Collision.hxx>
+#include <Zeni/Color.hxx>
+#include <Zeni/Coordinate.hxx>
+#include <Zeni/Database.hxx>
+#include <Zeni/Font.hxx>
+#include <Zeni/Game.hxx>
+#include <Zeni/Gamestate.hxx>
+#include <Zeni/Image.hxx>
+#include <Zeni/Light.hxx>
+#include <Zeni/Line_Segment.hxx>
+#include <Zeni/Material.hxx>
+#include <Zeni/Matrix4f.hxx>
+#include <Zeni/Model.hxx>
+#include <Zeni/Mutex.hxx>
+#include <Zeni/Net.hxx>
+#include <Zeni/Projector.hxx>
+#include <Zeni/Quadrilateral.hxx>
+#include <Zeni/Quaternion.hxx>
+#include <Zeni/Renderable.hxx>
+#include <Zeni/Resource.hxx>
+#include <Zeni/Shader.hxx>
+#include <Zeni/Sound.hxx>
+#include <Zeni/Sound_Source.hxx>
+#include <Zeni/Texture.hxx>
+#include <Zeni/Textures.hxx>
+#include <Zeni/Timer.hxx>
+#include <Zeni/Triangle.hxx>
+#include <Zeni/Vector3f.hxx>
+#include <Zeni/Vertex2f.hxx>
+#include <Zeni/Vertex3f.hxx>
+#include <Zeni/Vertex_Buffer.hxx>
+#include <Zeni/Video.hxx>
+#include <Zeni/Video_DX9.hxx>
+#include <Zeni/Video_GL.hxx>
+#include <Zeni/Widget.hxx>
+#include <Zeni/XML.hxx>
 
 #endif

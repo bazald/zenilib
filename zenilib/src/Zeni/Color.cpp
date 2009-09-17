@@ -46,7 +46,7 @@ namespace Zeni {
   {
   }
 
-  Color::Color(const unsigned long &argb)
+  Color::Color(const Uint32 &argb)
     : r(((argb >> 16) & 0xFF) / 256.0f),
       g(((argb >> 8) & 0xFF) / 256.0f),
       b((argb & 0xFF) / 256.0f),
@@ -63,17 +63,17 @@ namespace Zeni {
   }
 
   bool Color::operator<(const Color &rhs) const {
-    return a < rhs.a || a == rhs.a &&
-          (r < rhs.r || r == rhs.r &&
-          (g < rhs.g || g == rhs.g &&
-           b < rhs.b));
+    return a < rhs.a || (a == rhs.a &&
+          (r < rhs.r || (r == rhs.r &&
+          (g < rhs.g || (g == rhs.g &&
+           b < rhs.b)))));
   }
 
   bool Color::operator==(const Color &rhs) const {
     return a == rhs.a &&
-            r == rhs.r &&
-            g == rhs.g &&
-            b == rhs.b;
+           r == rhs.r &&
+           g == rhs.g &&
+           b == rhs.b;
   }
 
 }

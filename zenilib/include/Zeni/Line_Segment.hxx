@@ -36,7 +36,12 @@
 
 // Not HXXed
 #include <Zeni/Vector3f.h>
+
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 
 namespace Zeni {
 
@@ -64,8 +69,7 @@ namespace Zeni {
 
   template <typename VERTEX>
   Line_Segment<VERTEX> & Line_Segment<VERTEX>::operator=(const Line_Segment<VERTEX> &rhs) {
-    reinterpret_cast<Renderable &>(*this) =
-      reinterpret_cast<const Renderable &>(rhs);
+    static_cast<Renderable &>(*this) = rhs;
 
     a = rhs.a;
     b = rhs.b;

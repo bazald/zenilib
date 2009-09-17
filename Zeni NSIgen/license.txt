@@ -1,18 +1,18 @@
 As this software is provided to you at no cost, you may NOT continue the installation without giving up the right to hold the developers or distributors of this installer and the files contained within liable for anything that results from this installation.
 
-This software is closed source.  However, it was built upon many open source, free-as-in-libre, and free-as-in-beer libraries (as well as as a few closed source or proprietary ones).  For the complete rundown, starting with the Zenipex Library, the framework holding it all together, see below.  Otherwise, feel free to begin the installation.
+This software was built with many open source, free-as-in-libre, and free-as-in-beer libraries (as well as as a few closed source or proprietary ones).  For the complete rundown, starting with the Zenipex Library, the framework holding it all together, see below.  Otherwise, feel free to begin the installation.
 
 ~bazald@zenipex.com
 
 The Zenipex Library
-zenilib    0.3.0.0           (GNU Runtime GPL)       http://zenipex.com/zenilib/
+zenilib    0.3.2.1           (GNU Runtime GPL)       http://zenilib.com
 
-DirectX    9.0c 2008         (Proprietary)           http://msdn.microsoft.com/directx/sdk/
+DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/directx/sdk/
 OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
 OpenGL                       (Proprietary)
 
 ALUT       1.1.0             (GNU LGPL)              http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
-Cg Toolkit 2.1 November 2008 (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
+Cg Toolkit 2.2 April 2009    (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
 FreeType2  2.3.7             (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
 GLEW       1.5.1             (BSD License)           http://glew.sourceforge.net/
 lib3ds     2.0 RC 1          (GNU LGPL)              http://lib3ds.sourceforge.net/

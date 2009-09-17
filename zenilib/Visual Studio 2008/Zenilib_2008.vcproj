@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="Zenilib"
 	ProjectGUID="{2A690D67-1B22-41F1-A729-C46016EC83DC}"
-	RootNamespace="Zeniapp"
+	RootNamespace="Zenilib"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -44,6 +44,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
@@ -116,6 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
@@ -188,6 +190,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -263,6 +266,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -336,6 +340,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
@@ -408,6 +413,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
@@ -480,6 +486,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -555,6 +562,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -722,6 +730,78 @@
 			</File>
 			<File
 				RelativePath="..\src\Zeni\Colors.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Configurator_Video.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Console_State.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -1082,6 +1162,42 @@
 			</File>
 			<File
 				RelativePath="..\src\Zeni\Light.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Logo.cpp"
 				>
 				<FileConfiguration
 					Name="Debug SCU|Win32"
@@ -2232,6 +2348,42 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\src\Zeni\Widget_Gamestate.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -2256,6 +2408,14 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Colors.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Configurator_Video.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Console_State.h"
 				>
 			</File>
 			<File
@@ -2327,6 +2487,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Logo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Material.h"
 				>
 			</File>
@@ -2360,6 +2524,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Quaternion.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Random.h"
 				>
 			</File>
 			<File
@@ -2407,6 +2575,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Title_State.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Triangle.h"
 				>
 			</File>
@@ -2440,6 +2612,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Widget.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Widget_Gamestate.h"
 				>
 			</File>
 			<File

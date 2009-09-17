@@ -37,7 +37,7 @@ namespace Zeni {
     return const_cast<Point3f *>(&position);
   }
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && defined(X64)
   unsigned long long Vertex2f::get_offset() const {
     return reinterpret_cast<unsigned long long>(&position) - reinterpret_cast<unsigned long long>(this);
   }

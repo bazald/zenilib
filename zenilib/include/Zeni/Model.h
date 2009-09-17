@@ -72,10 +72,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Model.hxx>
-#endif
-
 #ifndef ZENI_MODEL_H
 #define ZENI_MODEL_H
 
@@ -83,7 +79,12 @@
 #include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 
+#ifdef _MACOSX
+#include <lib3ds-2.0/lib3ds.h>
+#else
 #include <lib3ds.h>
+#endif
+
 #include <memory>
 
 namespace Zeni {
@@ -124,7 +125,7 @@ namespace Zeni {
 
     // Accessors
     inline Lib3dsFile * const & get_file() const; ///< Get the full 3ds file info
-    virtual Point3f get_position() const; ///< Get the position of the Model
+    Point3f get_position() const; ///< Get the position of the Model
     inline const Model_Extents & get_extents() const; ///< Get the extents of the Model
     inline float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
     inline const Vector3f & get_scale(); ///< Get the Model scale

@@ -50,10 +50,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex3f.hxx>
-#endif
-
 #ifndef ZENI_VERTEX3F_H
 #define ZENI_VERTEX3F_H
 
@@ -67,30 +63,31 @@
 namespace Zeni {
 
   class Vertex3f {
-  public:
+  protected:
     Vertex3f();
-    Vertex3f(const Point3f &position, const Vector3f &normal = Vector3f());
+    Vertex3f(const Point3f &position, const Point3f &normal = Point3f());
+  public:
     virtual ~Vertex3f();
 
     virtual Point3f get_position() const;
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && defined(X64)
     inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #else
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #endif
 
     Point3f position;
-    Vector3f normal;
+    Point3f normal;
   };
 
   class Vertex3f_Color : public Renderable, public Vertex3f {
   public:
     /// Initialize the Vertex3f_Color
     Vertex3f_Color();
-    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Color &color);
-    Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb);
+    Vertex3f_Color(const Point3f &position, const Point3f &normal, const Color &color);
+    Vertex3f_Color(const Point3f &position, const Point3f &normal, const Uint32 &argb);
     Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const Uint32 &argb);
 
@@ -121,7 +118,7 @@ namespace Zeni {
   public:
     /// Initialize the Vertex3f_Texture
     Vertex3f_Texture();
-    Vertex3f_Texture(const Point3f &position, const Vector3f &normal, const Point2f &texture_coordinate);
+    Vertex3f_Texture(const Point3f &position, const Point3f &normal, const Point2f &texture_coordinate);
     Vertex3f_Texture(const Point3f &position, const Point2f &texture_coordinate);
 
     Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Texture &rhs) const; ///< Get a Vertex2f_Texture between two vertices; rhs must be a Vertex2f_Texture

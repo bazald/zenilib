@@ -31,6 +31,8 @@
 #include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Material.hxx>
+#include <Zeni/Sounds.h>
+#include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Textures.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Vertex2f.hxx>
@@ -52,11 +54,10 @@ namespace Zeni {
 
       Material material(image_name, color_filter);
 
-      Quadrilateral<Vertex2f_Texture> q(
-        Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f)),
-        Vertex2f_Texture(Point2f(upper_left.x, lower_right.y), Point2f(tx0, 1.0f)),
-        Vertex2f_Texture(Point2f(lower_right.x, lower_right.y), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f)));
+      Quadrilateral<Vertex2f_Texture> q( (Vertex2f_Texture(Point2f(upper_left.x, upper_left.y), Point2f(tx0, 0.0f))) ,
+                                         (Vertex2f_Texture(Point2f(upper_left.x, lower_right.y), Point2f(tx0, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(lower_right.x, lower_right.y), Point2f(tx1, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(lower_right.x, upper_left.y), Point2f(tx1, 0.0f))) );
       q.lend_Material(&material);
 
       get_Video().render(q);
@@ -92,11 +93,11 @@ namespace Zeni {
 
       Material material(image_name, color_filter);
 
-      Quadrilateral<Vertex2f_Texture> q(
-        Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f)),
-        Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f)),
-        Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f)),
-        Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f)));
+      Vertex2f_Texture vt;
+      Quadrilateral<Vertex2f_Texture> q( (Vertex2f_Texture(Point2f(about3 + ulv), Point2f(tx0, 0.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + llv), Point2f(tx0, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + lrv), Point2f(tx1, 1.0f))) ,
+                                         (Vertex2f_Texture(Point2f(about3 + urv), Point2f(tx1, 0.0f))) );
       q.lend_Material(&material);
 
       get_Video().render(q);
@@ -136,7 +137,7 @@ namespace Zeni {
       if(!sprite)
         throw Sprite_Function_Misapplied();
 
-      const unsigned int
+      const int
         frameno = sprite->get_current_frame(),
         framecap = sprite->get_num_frames();
 
@@ -157,7 +158,7 @@ namespace Zeni {
       if(!sprite)
         throw Sprite_Function_Misapplied();
 
-      const unsigned int
+      const int
         frameno = sprite->get_current_frame(),
         framecap = sprite->get_num_frames();
 
@@ -165,6 +166,13 @@ namespace Zeni {
         sprite->set_current_frame(frameno - 1);
       else
         sprite->set_current_frame(framecap - 1);
+  }
+
+  
+  void play_sound(
+    const std::string &sound_name) {
+
+      get_Sound_Source_Pool().play_and_destroy(new Sound_Source(get_Sounds()[sound_name]));
   }
 
 }

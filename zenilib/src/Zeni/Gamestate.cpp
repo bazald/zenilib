@@ -26,9 +26,13 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Gamestate.hxx>
+#include <zenilib.h> // Otherwise, XCode is unhappy about constructors in Zeni/Global.h
 
-#include <Zeni/Game.hxx>
+//#include <Zeni/Gamestate.hxx>
+
+//#include <Zeni/Configurator_Video.h>
+//#include <Zeni/Game.hxx>
+//#include <Zeni/Logo.h>
 
 #include <algorithm>
 #include <cmath>
@@ -49,12 +53,7 @@ namespace Zeni {
     case SDL_ACTIVEEVENT:
       on_active(event.active);
       break;
-    case SDL_KEYDOWN:  
-      {
-        const SDL_keysym &s = event.key.keysym;
-        if(s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
-          throw Quit_Event();
-      }
+    case SDL_KEYDOWN:
     case SDL_KEYUP:
       on_key(event.key);
       break;
@@ -100,9 +99,8 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
-    if(event.keysym.sym == SDLK_ESCAPE &&
-       event.state == SDL_PRESSED)
-        get_Game().pop_state();
+    if(event.state == SDL_PRESSED && event.keysym.sym == SDLK_ESCAPE)
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state()));
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {
@@ -130,19 +128,37 @@ namespace Zeni {
   void Gamestate_Base::on_system_wm_event(const SDL_SysWMEvent &) {
   }
 
-  void Gamestate_Base::on_active(const SDL_ActiveEvent &/*event*/) {
-    //if(event.gain) {
-    //  SDL_WM_GrabInput(SDL_GRAB_ON);
-    //  SDL_ShowCursor(false);
-    //}
-    //else {
-    //  SDL_WM_GrabInput(SDL_GRAB_OFF);
-    //  SDL_ShowCursor(true);
-    //}
+  void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
+    if(event.state & SDL_APPINPUTFOCUS) {
+      static bool hide_cursor = false;
+      static bool grab_input = false;
+
+      if(event.gain) {
+        if(hide_cursor)
+          SDL_ShowCursor(false);
+
+        if(grab_input)
+          SDL_WM_GrabInput(SDL_GRAB_ON);
+      }
+      else {
+        hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
+        if(hide_cursor)
+          SDL_ShowCursor(true);
+
+        grab_input = SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+        if(grab_input)
+          SDL_WM_GrabInput(SDL_GRAB_OFF);
+
+        if(m_pausable)
+          get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));
+      }
+    }
   }
 
-  void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &) {
-    //get_Video().reinit(event.w, event.h, false, true);
+  void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &event) {
+    const Point2i resolution (event.w, event.h);
+    Video::reinit(&resolution);
+    Video::save();
   }
 
   void Gamestate_Base::on_video_expose(const SDL_ExposeEvent &) {
@@ -152,7 +168,11 @@ namespace Zeni {
   }
 
   char Gamestate_Base::to_char(const SDL_keysym &ks) {
-    if((ks.mod & KMOD_CAPS) ^ (ks.mod & KMOD_SHIFT))
+    Game &gr = get_Game();
+    const bool mod_caps = (ks.mod & KMOD_CAPS) != 0;
+    const bool mod_shift = gr.get_key_state(SDLK_LSHIFT) || gr.get_key_state(SDLK_RSHIFT);
+
+    if(mod_caps ^ mod_shift)
       switch(ks.sym) {
       case SDLK_a: return 'A';
       case SDLK_b: return 'B';
@@ -246,38 +266,38 @@ namespace Zeni {
     case SDLK_HASH:         return '#';
     case SDLK_DOLLAR:       return '$';
     case SDLK_AMPERSAND:    return '&';
-    case SDLK_QUOTE:        return (ks.mod & KMOD_SHIFT) ? '"' : '\'';
+    case SDLK_QUOTE:        return mod_shift ? '"' : '\'';
     case SDLK_LEFTPAREN:    return '(';
     case SDLK_RIGHTPAREN:   return ')';
     case SDLK_ASTERISK:     return '*';
     case SDLK_PLUS:         return '+';
-    case SDLK_COMMA:        return (ks.mod & KMOD_SHIFT) ? '<' : ',';
-    case SDLK_MINUS:        return (ks.mod & KMOD_SHIFT) ? '_' : '-';
-    case SDLK_PERIOD:       return (ks.mod & KMOD_SHIFT) ? '>' : '.';
-    case SDLK_SLASH:        return (ks.mod & KMOD_SHIFT) ? '?' : '/';
-    case SDLK_0:            return (ks.mod & KMOD_SHIFT) ? ')' : '0';
-    case SDLK_1:            return (ks.mod & KMOD_SHIFT) ? '!' : '1';
-    case SDLK_2:            return (ks.mod & KMOD_SHIFT) ? '@' : '2';
-    case SDLK_3:            return (ks.mod & KMOD_SHIFT) ? '#' : '3';
-    case SDLK_4:            return (ks.mod & KMOD_SHIFT) ? '$' : '4';
-    case SDLK_5:            return (ks.mod & KMOD_SHIFT) ? '%' : '5';
-    case SDLK_6:            return (ks.mod & KMOD_SHIFT) ? '^' : '6';
-    case SDLK_7:            return (ks.mod & KMOD_SHIFT) ? '&' : '7';
-    case SDLK_8:            return (ks.mod & KMOD_SHIFT) ? '*' : '8';
-    case SDLK_9:            return (ks.mod & KMOD_SHIFT) ? '(' : '9';
+    case SDLK_COMMA:        return mod_shift ? '<' : ',';
+    case SDLK_MINUS:        return mod_shift ? '_' : '-';
+    case SDLK_PERIOD:       return mod_shift ? '>' : '.';
+    case SDLK_SLASH:        return mod_shift ? '?' : '/';
+    case SDLK_0:            return mod_shift ? ')' : '0';
+    case SDLK_1:            return mod_shift ? '!' : '1';
+    case SDLK_2:            return mod_shift ? '@' : '2';
+    case SDLK_3:            return mod_shift ? '#' : '3';
+    case SDLK_4:            return mod_shift ? '$' : '4';
+    case SDLK_5:            return mod_shift ? '%' : '5';
+    case SDLK_6:            return mod_shift ? '^' : '6';
+    case SDLK_7:            return mod_shift ? '&' : '7';
+    case SDLK_8:            return mod_shift ? '*' : '8';
+    case SDLK_9:            return mod_shift ? '(' : '9';
     case SDLK_COLON:        return ':';
-    case SDLK_SEMICOLON:    return (ks.mod & KMOD_SHIFT) ? ':' : ';';
+    case SDLK_SEMICOLON:    return mod_shift ? ':' : ';';
     case SDLK_LESS:         return '<';
-    case SDLK_EQUALS:       return (ks.mod & KMOD_SHIFT) ? '+' : '=';
+    case SDLK_EQUALS:       return mod_shift ? '+' : '=';
     case SDLK_GREATER:      return '>';
     case SDLK_QUESTION:     return '?';
     case SDLK_AT:           return '@';
-    case SDLK_LEFTBRACKET:  return (ks.mod & KMOD_SHIFT) ? '{' : '[';
-    case SDLK_BACKSLASH:    return (ks.mod & KMOD_SHIFT) ? '|' : '\\';
-    case SDLK_RIGHTBRACKET: return (ks.mod & KMOD_SHIFT) ? '}' : ']';
+    case SDLK_LEFTBRACKET:  return mod_shift ? '{' : '[';
+    case SDLK_BACKSLASH:    return mod_shift ? '|' : '\\';
+    case SDLK_RIGHTBRACKET: return mod_shift ? '}' : ']';
     case SDLK_CARET:        return '^';
     case SDLK_UNDERSCORE:   return '_';
-    case SDLK_BACKQUOTE:    return (ks.mod & KMOD_SHIFT) ? '~' : '`';
+    case SDLK_BACKQUOTE:    return mod_shift ? '~' : '`';
     //case SDLK_DELETE:       return 0x7F;
     default: break;
     }
@@ -761,6 +781,20 @@ default: return "SDLK_UNKNOWN";
     }
   }
 
+  void Gamestate_Base::render() {
+    static Logo logo(Point2f(1.5f, 0.5f), 1.0f, Color(1.0f, 0.875, 0.875, 0.875), Color(1.0f, 0.125, 0.125, 0.175));
+
+    get_Video().set_2d(std::make_pair(Point2f(), Point2f(4.0f, 2.0f)), true);
+
+    logo.render();
+  }
+
+  void Gamestate_Base::on_push() {
+  }
+
+  void Gamestate_Base::on_pop() {
+  }
+
   Gamestate::~Gamestate() {
     if(m_state)
       m_state->decrement();
@@ -776,82 +810,151 @@ default: return "SDLK_UNKNOWN";
 
   bool Zeni_Input_ID::operator<(const Zeni_Input_ID &rhs) const {
     return type < rhs.type ||
-           type == rhs.type && (subid < rhs.subid ||
-           subid == rhs.subid && which < rhs.which);
+           (type == rhs.type && (subid < rhs.subid ||
+           (subid == rhs.subid && which < rhs.which)));
   }
 
   Gamestate_II::Gamestate_II()
-    : m_min_confidence(ZENI_DEFAULT_II_MIN_CONFIDENCE),
-    m_max_confidence(ZENI_DEFAULT_II_MAX_CONFIDENCE)
+    : m_joyball_min(ZENI_DEFAULT_II_JOYBALL_MIN),
+    m_joyball_max(ZENI_DEFAULT_II_JOYBALL_MAX),
+    m_joystick_min(ZENI_DEFAULT_II_JOYSTICK_MIN),
+    m_joystick_max(ZENI_DEFAULT_II_JOYSTICK_MAX),
+    m_mouse_min(ZENI_DEFAULT_II_MOUSE_MIN),
+    m_mouse_max(ZENI_DEFAULT_II_MOUSE_MAX)
   {
   }
 
   void Gamestate_II::on_event(const SDL_Event &event) {
-    Zeni_Input_ID event_ID;
-    float confidence = 0.0f;
-
     switch(event.type) {
     case SDL_JOYAXISMOTION:
-      event_ID.type = SDL_JOYAXISMOTION;
-      event_ID.subid = event.jaxis.axis;
-      event_ID.which = event.jaxis.which;
-
-      confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
-
       {
+        float confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
         const float ac = fabs(confidence);
-        const float nm = confidence / ac;
-        confidence = nm * std::min(std::max(ac - m_min_confidence, 0.0f) / (m_max_confidence - m_min_confidence), 1.0f);
-      }
+        const float nm = confidence < 0.0f ? -1.0f : 1.0f;
+        confidence = nm * std::min(std::max(ac - m_joystick_min, 0.0f) / (m_joystick_max - m_joystick_min), 1.0f);
 
+        fire_event(Zeni_Input_ID(SDL_JOYAXISMOTION, event.jaxis.axis, event.jaxis.which), confidence);
+      }
+      break;
+    case SDL_JOYBALLMOTION:
+      {
+        const int ac = abs(event.jball.xrel);
+        const int nm = event.jball.xrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 0, event.jball.which), confidence);
+      }
+      {
+        const int ac = abs(event.jball.yrel);
+        const int nm = event.jball.yrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 1, event.jball.which), confidence);
+      }
       break;
     case SDL_JOYBUTTONDOWN:
     case SDL_JOYBUTTONUP:
-      event_ID.type = SDL_JOYBUTTONDOWN;
-      event_ID.subid = event.jbutton.button;
-      event_ID.which = event.jbutton.which;
+      {
+        const float confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_JOYBUTTONDOWN, event.jbutton.button, event.jbutton.which), confidence);
+      }
+      break;
+    case SDL_JOYHATMOTION:
+      {
+        float confidence;
+
+        switch(event.jhat.value) {
+          case SDL_HAT_LEFT:
+          case SDL_HAT_LEFTDOWN:
+          case SDL_HAT_LEFTUP:
+            confidence = -1.0f;
+            break;
+
+          case SDL_HAT_RIGHT:
+          case SDL_HAT_RIGHTDOWN:
+          case SDL_HAT_RIGHTUP:
+            confidence = 1.0f;
+            break;
+
+          case SDL_HAT_CENTERED:
+          case SDL_HAT_DOWN:
+          case SDL_HAT_UP:
+          default:
+            confidence = 0.0f;
+            break;
+        }
+
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 0, event.jhat.which), confidence);
+      }
+      {
+        float confidence;
+
+        switch(event.jhat.value) {
+          case SDL_HAT_DOWN:
+          case SDL_HAT_LEFTDOWN:
+          case SDL_HAT_RIGHTDOWN:
+            confidence = -1.0f;
+            break;
+
+          case SDL_HAT_UP:
+          case SDL_HAT_LEFTUP:
+          case SDL_HAT_RIGHTUP:
+            confidence = 1.0f;
+            break;
+
+          case SDL_HAT_CENTERED:
+          case SDL_HAT_LEFT:
+          case SDL_HAT_RIGHT:
+          default:
+            confidence = 0.0f;
+            break;
+        }
+
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 1, event.jhat.which), confidence);
+      }
       break;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
       {
-        const SDL_KeyboardEvent &e = event.key;
-        const SDL_keysym &s = e.keysym;
-        if(e.state == SDL_PRESSED && s.sym == SDLK_F4 && (s.mod & KMOD_ALT))
-          throw Quit_Event();
-      }
-      
-      event_ID.type = SDL_KEYDOWN;
-      event_ID.subid = event.key.keysym.sym;
+        const float confidence = event.key.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.key.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_KEYDOWN, event.key.keysym.sym, 0 /*event.key.which*/), confidence);
+      }
+      break;
+    case SDL_MOUSEMOTION:
+      {
+        const int ac = abs(event.motion.xrel);
+        const int nm = event.motion.xrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_mouse_min), 0.0f) / (m_mouse_max - m_mouse_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_MOUSEMOTION, 0, 0 /*event.motion.which*/), confidence);
+      }
+      {
+        const int ac = abs(event.motion.yrel);
+        const int nm = event.motion.yrel < 0.0f ? -1 : 1;
+        const float confidence = nm * std::min(std::max(float(ac - m_mouse_min), 0.0f) / (m_mouse_max - m_mouse_min), 1.0f);
+
+        fire_event(Zeni_Input_ID(SDL_MOUSEMOTION, 1, 0 /*event.motion.which*/), confidence);
+      }
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
-      event_ID.type = SDL_MOUSEBUTTONDOWN;
-      event_ID.subid = event.button.button;
+      {
+        const float confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-      confidence = event.button.state == SDL_PRESSED ? 1.0f : 0.0f;
+        fire_event(Zeni_Input_ID(SDL_MOUSEBUTTONDOWN, event.button.button, 0 /*event.button.which*/), confidence);
+      }
       break;
     default:
       Gamestate_Base::on_event(event);
-      return;
+      break;
     }
-
-    std::map<Zeni_Input_ID, int>::iterator it = m_ii.find(event_ID);
-    if(it != m_ii.end()) {
-      float &pc = it->first.previous_confidence;
-      if(pc != confidence) {
-        pc = confidence;
-        on_event(event_ID, confidence, it->second);
-      }
-    }
-    else
-      on_event(event_ID, confidence, 0);
   }
 
-  void Gamestate_II::on_event(const Zeni_Input_ID &, const float &, const int &) {
+  void Gamestate_II::on_event(const Zeni_Input_ID &id, const float &confidence, const int &) {
+    if(id.type == SDL_KEYDOWN && id.subid == SDLK_ESCAPE && confidence == 1.0f)
+      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state()));
   }
 
   int Gamestate_II::get_action(const Zeni_Input_ID &event) {
@@ -871,6 +974,19 @@ default: return "SDLK_UNKNOWN";
   void Gamestate_II::set_action(const Zeni_Input_ID &event, const int &action) {
     m_ii[event] = action;
     m_rii[action] = event;
+  }
+
+  void Gamestate_II::fire_event(const Zeni_Input_ID &id, const float &confidence) {
+    std::map<Zeni_Input_ID, int>::iterator it = m_ii.find(id);
+    if(it != m_ii.end()) {
+      float &pc = it->first.previous_confidence;
+      if(pc != confidence) {
+        pc = confidence;
+        on_event(id, confidence, it->second);
+      }
+    }
+    else
+      on_event(id, confidence, 0);
   }
 
   bool Quit_Event::fired = false;

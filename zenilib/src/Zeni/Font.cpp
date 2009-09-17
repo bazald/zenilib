@@ -67,7 +67,7 @@ namespace Zeni {
   {
   }
 
-  Font_FT::Glyph::Glyph(TTF_Font *font_, const char &c,
+  Font_FT::Glyph::Glyph(TTF_Font *font_, const unsigned char &c,
                         SDL_Surface *source,
                         SDL_Surface *render_target, const SDL_Rect &dstrect,
                         const int &total_width, const int &total_height,
@@ -94,16 +94,33 @@ namespace Zeni {
     SDL_FreeSurface(source);
   }
 
-  void Font_FT::Glyph::render(const Point2f &position, const float &vratio) const {
-    static Video &vr = get_Video();
+  void Font_FT::Glyph::render(Video &vr, const Point2f &position, const float &vratio) const {
     const float x = int(position.x * vratio + 0.5f) / vratio;
     const float y = int(position.y * vratio + 0.5f) / vratio;
 
-    Quadrilateral<Vertex2f_Texture> rect
-      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel),
-      Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_lower_right_point.y + y), Point2f(m_upper_left_texel.x, m_lower_right_texel.y)),
-      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_lower_right_point.y + y), m_lower_right_texel),
-      Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_upper_left_point.y + y), Point2f(m_lower_right_texel.x, m_upper_left_texel.y)));
+    Quadrilateral<Vertex2f_Texture> rect(
+      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_upper_left_point.y + y), m_upper_left_texel)) ,
+      (Vertex2f_Texture(Point2f(m_upper_left_point.x + x, m_lower_right_point.y + y), Point2f(m_upper_left_texel.x, m_lower_right_texel.y))) ,
+      (Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_lower_right_point.y + y), m_lower_right_texel)) ,
+      (Vertex2f_Texture(Point2f(m_lower_right_point.x + x, m_upper_left_point.y + y), Point2f(m_lower_right_texel.x, m_upper_left_texel.y))) );
+
+    vr.render(rect);
+  }
+
+  void Font_FT::Glyph::render(Video &vr, const Point3f &position, const Vector3f &right, const Vector3f &down) const {
+    const Vector3f scaled_right = (m_lower_right_point.x - m_upper_left_point.x) * right;
+    const Vector3f scaled_down = (m_lower_right_point.y - m_upper_left_point.y) * down;
+
+    const Point3f &ul = position + m_upper_left_point.x * right + m_upper_left_point.y * down;
+    const Point3f ll = ul + scaled_down;
+    const Point3f lr = ll + scaled_right;
+    const Point3f ur = ul + scaled_right;
+
+    Quadrilateral<Vertex3f_Texture> rect(
+      (Vertex3f_Texture(ul, m_upper_left_texel)) ,
+      (Vertex3f_Texture(ll, Point2f(m_upper_left_texel.x, m_lower_right_texel.y))) ,
+      (Vertex3f_Texture(lr, m_lower_right_texel)) ,
+      (Vertex3f_Texture(ur, Point2f(m_lower_right_texel.x, m_upper_left_texel.y))) );
 
     vr.render(rect);
   }
@@ -127,71 +144,7 @@ namespace Zeni {
     m_font_height(glyph_height),
     m_vratio(get_Video().get_screen_height() / get_virtual_screen_height())
   {
-    TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(glyph_height * m_vratio + 0.5f));
-    if(!font)
-      throw Font_Init_Failure();
-
-    /*** Set Style ***/
-
-    if(bold && italic)
-      TTF_SetFontStyle(font, TTF_STYLE_BOLD | TTF_STYLE_ITALIC);
-    else if(bold)
-      TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-    else if(italic)
-      TTF_SetFontStyle(font, TTF_STYLE_ITALIC);
-
-    /*** Determine Width & Height ***/
-
-    float font_width = 0;
-    float font_height = 0;
-    SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
-    SDL_Surface *source[256] = {0};
-    for(unsigned char c = 1; c; ++c) {
-      //char t[2] = {c, '\0'};
-      //source[c] = TTF_RenderText_Blended(font, t, color2);
-      source[c] = TTF_RenderGlyph_Blended(font, c, color2);
-      font_width = max(font_width, float(source[c] ? source[c]->w : 0));
-      font_height = max(font_height, float(source[c] ? source[c]->h : 0));
-    }
-
-    /*** Initialize Intermediate SDL Surface ***/
-
-    const int 
-      next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
-      next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
-  
-    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[END_OF_TIME]->format->Rmask, source[END_OF_TIME]->format->Gmask, source[END_OF_TIME]->format->Bmask, source[END_OF_TIME]->format->Amask);
-    if(!font_surface)
-      throw Font_Init_Failure();
-
-    SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, 0, 0, 0, SDL_ALPHA_TRANSPARENT));
-
-    /*** Initialize Glyphs ***/
-
-    SDL_Rect dstrect = {0, 0, Uint16(font_width), Uint16(font_height)};
-    m_glyph[0] = 0;
-    for(unsigned char c = 1; c; ++c) {
-      dstrect.x = Sint16((c % 16) * font_width);
-      dstrect.y = Sint16((c / 16) * font_height);
-      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h, m_vratio);
-    }
-
-    /*** Correct Transparency ***/
-
-    const Uint32 transparent_white = font_surface->format->Rmask | font_surface->format->Gmask | font_surface->format->Bmask;
-    for(int i = 0; i < font_surface->h; ++i)
-      for(Uint32 * src = reinterpret_cast<Uint32 *>(font_surface->pixels) + i * font_surface->pitch / 4,
-                 * src_end = src + font_surface->w;
-          src != src_end;
-          ++src)
-        if(*src & font_surface->format->Rmask)
-          *src = transparent_white | ((*src & font_surface->format->Rmask) >> font_surface->format->Rshift << font_surface->format->Ashift);
-
-    /*** Initialize Final Texture ***/
-    
-    m_texture = get_Video().create_Texture(font_surface, false);
-
-    TTF_CloseFont(font);
+    init(filepath);
   }
 
   Font_FT::~Font_FT() {
@@ -226,15 +179,15 @@ namespace Zeni {
     vr.apply_texture(*m_texture);
 
     float cx, x_diff, cy = y;
-    int i = 0;
+    size_t i = 0u;
 
 NEXT_LINE:
 
     cx = x;
-    x_diff = 0;
+    x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
-      for(unsigned int j = i; j < text.size(); ++j) {
+      for(size_t j = i; j < text.size(); ++j) {
         if(text[j] == '\r' || text[j] == '\n' ||
           !m_glyph[int(text[j])])
           break;
@@ -243,13 +196,13 @@ NEXT_LINE:
       }
 
       if(justify == ZENI_CENTER)
-        cx += x_diff / 2;
+        cx += x_diff / 2u;
       else if(justify == ZENI_RIGHT)
         cx += x_diff;
     }
 
-    for(; i < int(text.size()); ++i) {
-      if(text[i] == '\r' && i+1 < int(text.size()) && text[i+1] == '\n')
+    for(; i < text.size(); ++i) {
+      if(text[i] == '\r' && i+1 < text.size() && text[i+1] == '\n')
         ++i;
 
       if(text[i] == '\r' || text[i] == '\n') {
@@ -258,7 +211,7 @@ NEXT_LINE:
         goto NEXT_LINE;
       }
       else if(m_glyph[int(text[i])]) {
-        m_glyph[int(text[i])]->render(Point2f(cx, cy), m_vratio);
+        m_glyph[int(text[i])]->render(vr, Point2f(cx, cy), m_vratio);
         cx += m_glyph[int(text[i])]->get_glyph_width();
       }
     }
@@ -266,6 +219,137 @@ NEXT_LINE:
     vr.unapply_texture();
 
     vr.set_color(previous_color);
+  }
+
+  void Font_FT::render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down, const Color &color, const JUSTIFY &justify) const {
+    Video &vr = get_Video();
+
+    const Color previous_color = vr.get_color();
+
+    vr.set_color(color);
+    vr.apply_texture(*m_texture);
+
+    Point3f pos, vertical_pos = position;
+    float x_diff;
+    size_t i = 0u;
+
+NEXT_LINE_2:
+
+    pos = vertical_pos;
+    x_diff = 0.0f;
+
+    if(justify != ZENI_LEFT) {
+      for(size_t j = i; j < text.size(); ++j) {
+        if(text[j] == '\r' || text[j] == '\n' ||
+          !m_glyph[int(text[j])])
+          break;
+
+        x_diff -= m_glyph[int(text[j])]->get_glyph_width();
+      }
+
+      if(justify == ZENI_CENTER)
+        pos += x_diff / 2.0f * right;
+      else if(justify == ZENI_RIGHT)
+        pos += x_diff * right;
+    }
+
+    for(; i < text.size(); ++i) {
+      if(text[i] == '\r' && i+1 < text.size() && text[i+1] == '\n')
+        ++i;
+
+      if(text[i] == '\r' || text[i] == '\n') {
+        ++i;
+        vertical_pos += m_font_height * down;
+        goto NEXT_LINE_2;
+      }
+      else if(m_glyph[int(text[i])]) {
+        m_glyph[int(text[i])]->render(vr, pos, right, down);
+        pos += m_glyph[int(text[i])]->get_glyph_width() * right;
+      }
+    }
+
+    vr.unapply_texture();
+
+    vr.set_color(previous_color);
+  }
+
+  void Font_FT::init(const std::string &filepath) {
+    TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(get_text_height() * m_vratio + 0.5f));
+    if(!font)
+      throw Font_Init_Failure();
+
+    /*** Set Style ***/
+
+    if(is_bold() && is_italic())
+      TTF_SetFontStyle(font, TTF_STYLE_BOLD | TTF_STYLE_ITALIC);
+    else if(is_bold())
+      TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    else if(is_italic())
+      TTF_SetFontStyle(font, TTF_STYLE_ITALIC);
+
+    /*** Determine Width & Height ***/
+
+    float font_width = 0;
+    float font_height = 0;
+    SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
+    SDL_Surface *source[256] = {0};
+    for(unsigned char c = 1; c; ++c) {
+      //char t[2] = {c, '\0'};
+      //source[c] = TTF_RenderText_Blended(font, t, color2);
+      source[c] = TTF_RenderGlyph_Blended(font, c, color2);
+      font_width = max(font_width, float(source[c] ? source[c]->w : 0));
+      font_height = max(font_height, float(source[c] ? source[c]->h : 0));
+    }
+
+    /*** Initialize Intermediate SDL Surface ***/
+
+    const int 
+      next_w = int(pow(2.0f, ceil(log(float(16 * font_width))/log(2.0f)))), 
+      next_h = int(pow(2.0f, ceil(log(float(16 * font_height))/log(2.0f))));
+  
+    SDL_Surface *font_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, next_w, next_h, 32, source[END_OF_TIME]->format->Rmask, source[END_OF_TIME]->format->Gmask, source[END_OF_TIME]->format->Bmask, source[END_OF_TIME]->format->Amask);
+    if(!font_surface) {
+      for(unsigned char c = 1; c; ++c)
+        SDL_FreeSurface(source[c]);
+      TTF_CloseFont(font);
+
+      if(next_h > 1024) {
+        m_vratio /= 2.0f;
+        init(filepath);
+        return;
+      }
+      else
+        throw Font_Init_Failure();
+    }
+
+    SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, 0, 0, 0, SDL_ALPHA_TRANSPARENT));
+
+    /*** Initialize Glyphs ***/
+
+    SDL_Rect dstrect = {0, 0, Uint16(font_width), Uint16(font_height)};
+    m_glyph[0] = 0;
+    for(unsigned char c = 1; c; ++c) {
+      dstrect.x = Sint16((c % 16) * font_width);
+      dstrect.y = Sint16((c / 16) * font_height);
+      m_glyph[c] = new Glyph(font, c, source[c], font_surface, dstrect, next_w, next_h, m_vratio);
+    }
+
+    /*** Correct Transparency ***/
+
+    const Uint32 transparent_white = font_surface->format->Rmask | font_surface->format->Gmask | font_surface->format->Bmask;
+    for(int i = 0; i < font_surface->h; ++i)
+      for(Uint32 * src = reinterpret_cast<Uint32 *>(font_surface->pixels) + i * font_surface->pitch / 4,
+                 * src_end = src + font_surface->w;
+          src != src_end;
+          ++src)
+        if(*src & font_surface->format->Rmask)
+          *src = transparent_white | ((*src & font_surface->format->Rmask) >> font_surface->format->Rshift << font_surface->format->Ashift);
+
+    /*** Initialize Final Texture ***/
+    
+    m_texture = get_Video().create_Texture(font_surface, false);
+
+    TTF_CloseFont(font);
   }
 
 }

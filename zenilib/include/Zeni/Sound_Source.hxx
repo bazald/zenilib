@@ -37,6 +37,12 @@
 #include <cassert>
 #include <cmath>
 
+#ifndef DISABLE_AL
+#ifndef AL_SEC_OFFSET
+#define AL_SEC_OFFSET 0x1024
+#endif
+#endif
+
 #include <Zeni/Global.h>
 
 namespace Zeni {
@@ -48,7 +54,7 @@ namespace Zeni {
     ) {
 #ifndef DISABLE_AL
     m_buffer = &buffer;
-    alSourcei(m_source, AL_BUFFER, buffer.get_id());
+    alSourcei(m_source, AL_BUFFER, ALint(buffer.get_id()));
 #endif
   }
 
@@ -78,7 +84,7 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcefv(m_source, AL_POSITION, reinterpret_cast<const float *>(&position));
+    alSourcefv(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
 #endif
   }
 
@@ -88,7 +94,7 @@ namespace Zeni {
 #endif
     ) {
 #ifndef DISABLE_AL
-    alSourcefv(m_source, AL_VELOCITY, reinterpret_cast<const float *>(&velocity));
+    alSourcefv(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
 #endif
   }
 
@@ -166,7 +172,7 @@ namespace Zeni {
   Point3f Sound_Source_HW::get_position() const {
     Point3f position;
 #ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<float *>(&position));
+    alGetSourcefv(m_source, AL_POSITION, reinterpret_cast<ALfloat *>(&position));
 #endif
     return position;
   }
@@ -174,7 +180,7 @@ namespace Zeni {
   Vector3f Sound_Source_HW::get_velocity() const {
     Vector3f velocity;
 #ifndef DISABLE_AL
-    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<float *>(&velocity));
+    alGetSourcefv(m_source, AL_VELOCITY, reinterpret_cast<ALfloat *>(&velocity));
 #endif
     return velocity;
   }
@@ -245,7 +251,7 @@ namespace Zeni {
       state == AL_PAUSED ? PAUSED :
       STOPPED;
 #else
-    return false;
+    return Sound_Source_HW::STATE();
 #endif
   }
 
@@ -301,6 +307,7 @@ namespace Zeni {
   void Sound_Source::set_rolloff(const float &rolloff)                       {m_rolloff = rolloff;                       if(m_hw) m_hw->set_rolloff(rolloff);}
 
   int Sound_Source::get_priority() const {return m_priority;}
+  Time Sound_Source::get_unstop_time() const {return m_unstop_time;}
   const Sound_Buffer & Sound_Source::get_buffer() const {assert(m_buffer); return *m_buffer;}
   float Sound_Source::get_pitch() const {return m_pitch;}
   float Sound_Source::get_gain() const {return m_gain;}
@@ -311,8 +318,8 @@ namespace Zeni {
   float Sound_Source::get_max_distance() const {return m_max_distance;}
   float Sound_Source::get_rolloff() const {return m_rolloff;}
 
-  void Sound_Source::play()  {update_state(Sound_Source_HW::PLAYING); if(m_hw) m_hw->play();}
-  void Sound_Source::pause() {update_state(Sound_Source_HW::PAUSED); if(m_hw) m_hw->pause();}
+  void Sound_Source::play()  {update_state(Sound_Source_HW::PLAYING); if(m_hw) m_hw->play(); m_unstop_time.update();}
+  void Sound_Source::pause() {update_state(Sound_Source_HW::PAUSED); if(m_hw) m_hw->pause(); m_unstop_time.update();}
   void Sound_Source::stop()  {update_state(Sound_Source_HW::STOPPED); if(m_hw) m_hw->stop();}
 
   bool Sound_Source::is_playing() const {update_state(); return m_playing;}

@@ -64,13 +64,18 @@
 
 #include <SDL/SDL.h>
 
+#include <cassert>
 #include <string>
 #include <vector>
 
 namespace Zeni {
 
   struct Error {
-    Error(const std::string &msg_) : msg(msg_) {}
+    Error(const std::string &msg_) : msg(msg_) {
+#ifdef _WINDOWS
+      assert("Error! - Set a Breakpoint Here to Help Your Debugger Work Correctly" && false);
+#endif
+    }
     std::string msg;
   };
 
@@ -86,22 +91,40 @@ namespace Zeni {
     Core & operator=(const Core &);
 
   public:
-    const std::string & get_username();
-    std::string get_appdata_path(const std::string &unique_app_identifier);
+    static const std::string & get_uniqname(); ///< Get the unique app identifier for the game, set int zenilib.xml
+    const std::string & get_username(); ///< Get the logged-in user's username
+    std::string get_appdata_path(); ///< Get the path that should be used for user-modifiable storage
 
-    int get_num_joysticks() const; ///< Get the number of joysticks attached to the system
+    static bool create_directory(const std::string &directory_path); ///< Create a directory if it doesn't already exist; It is not considered an error if it already exists.
+    static bool remove_directory(const std::string &directory_path); ///< Remove a directory if it exists; It is not considered an error if it does not exist.
 
-    const std::string & get_joystick_name(const int &index) const; ///< Get the name of a given joystick
-    int get_joystick_num_axes(const int &index) const; ///< Get the number of axes for a joystick
-    int get_joystick_num_balls(const int &index) const; ///< Get the number of balls for a joystick
-    int get_joystick_num_hats(const int &index) const; ///< Get the number of hats for a joystick
-    int get_joystick_num_buttons(const int &index) const; ///< Get the number of buttons for a joystick
+    static bool file_exists(const std::string &file_path); ///< Test for the existence of a file
+    static bool delete_file(const std::string &file_path); ///< Delete a file
+    static bool copy_file(const std::string &from, const std::string &to); ///< Copy a file from one filepath to another
+
+#ifdef _WINDOWS
+    static bool is_screen_saver_enabled(); ///< Check to see if the screen saver is enabled
+    static void set_screen_saver(const bool &enabled); ///< Enable/Disable the screen saver
+#endif
+
+    size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
+
+    const std::string & get_joystick_name(const size_t &index) const; ///< Get the name of a given joystick
+    int get_joystick_num_axes(const size_t &index) const; ///< Get the number of axes for a joystick
+    int get_joystick_num_balls(const size_t &index) const; ///< Get the number of balls for a joystick
+    int get_joystick_num_hats(const size_t &index) const; ///< Get the number of hats for a joystick
+    int get_joystick_num_buttons(const size_t &index) const; ///< Get the number of buttons for a joystick
 
     void regenerate_joysticks(); ///< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
+
+    // Can be called once only, and only before Core is initialized; May throw Core_Initialized
+    static void preinit(const std::string &unique_app_identifier);
 
   private:
     void init_joysticks();
     void quit_joysticks();
+
+    static std::string & get_unique_app_identifier();
 
     std::string m_username;
     std::string m_appdata_path;
@@ -113,6 +136,10 @@ namespace Zeni {
 
   struct Core_Init_Failure : public Error {
     Core_Init_Failure() : Error("Zeni Core Failed to Initialize Correctly") {}
+  };
+
+  struct Core_Initialized : public Error {
+    Core_Initialized() : Error("Zeni Core Already Initialized") {}
   };
 
   struct Joystick_Init_Failure : public Error {

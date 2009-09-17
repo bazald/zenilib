@@ -36,7 +36,11 @@
 #include <cassert>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 
 namespace Zeni {
@@ -45,7 +49,7 @@ namespace Zeni {
   {
   }
 
-  Vertex3f::Vertex3f(const Point3f &position, const Vector3f &normal)
+  Vertex3f::Vertex3f(const Point3f &position, const Point3f &normal)
     : position(position),
     normal(normal)
   {
@@ -68,13 +72,13 @@ namespace Zeni {
   {
   }
 
-  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const Color &color)
+  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Point3f &normal, const Color &color)
     : Vertex3f(position, normal),
     m_argb(color.get_argb())
   {
   }
 
-  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Vector3f &normal, const long &argb)
+  Vertex3f_Color::Vertex3f_Color(const Point3f &position, const Point3f &normal, const Uint32 &argb)
     : Vertex3f(position, normal),
     m_argb(argb)
   {
@@ -108,7 +112,7 @@ namespace Zeni {
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
-    glNormal3f(normal.i, normal.j, normal.k);
+    glNormal3f(normal.x, normal.y, normal.z);
     glVertex3f(position.x, position.y, position.z);
   }
 #endif
@@ -123,7 +127,7 @@ namespace Zeni {
   {
   }
 
-  Vertex3f_Texture::Vertex3f_Texture(const Point3f &position_, const Vector3f &normal_, const Point2f &texture_coordinate_)
+  Vertex3f_Texture::Vertex3f_Texture(const Point3f &position_, const Point3f &normal_, const Point2f &texture_coordinate_)
     : Vertex3f(position_, normal_),
     texture_coordinate(texture_coordinate_)
   {
@@ -152,7 +156,7 @@ namespace Zeni {
 
   void Vertex3f_Texture::subrender_to(Video_GL &) const {
     glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
-    glNormal3f(normal.i, normal.j, normal.k);
+    glNormal3f(normal.x, normal.y, normal.z);
     glVertex3f(position.x, position.y, position.z);
   }
 #endif

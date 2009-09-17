@@ -42,14 +42,12 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Game.hxx>
-#endif
-
 #ifndef ZENI_GAME_H
 #define ZENI_GAME_H
 
+#include <Zeni/Console_State.h>
 #include <Zeni/Gamestate.h>
+#include <Zeni/Hash_Map.h>
 #include <Zeni/Timer.h>
 
 #include <stack>
@@ -69,8 +67,14 @@ namespace Zeni {
     Game & operator=(const Game &);
 
   public:
-    inline Gamestate_Base & get_current_state(); ///< Get a reference to the current Gamestate.
+    inline Gamestate get_top(); ///< Get a reference to the current Gamestate.
 
+#ifndef NDEBUG
+    inline Console_State & get_console(); ///< Get a reference to the Console_State
+#endif
+    inline void write_to_console(const std::string &text); ///< Write text to the console when in Debug mode
+
+    inline size_t size() const; ///< Get the current size of the Gamestate stack.
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
     inline Gamestate pop_state(); ///< Pop a Gamestate off the stack. Pop the current Gamestate with caution. All members will instantly become invalid.
 
@@ -78,17 +82,29 @@ namespace Zeni {
     inline void perform_logic(); ///< Called in main, calls the function by the same name in the current Gamestate.
     inline void render(); ///< Called in main, calls the function by the same name in the current Gamestate.
 
-    inline int get_fps() const; ///< Get the current approximation of the frames displayed per second.
-    
+    inline size_t get_fps() const; ///< Get the current approximation of the frames displayed per second.
+    inline bool get_key_state(const int &key) const; ///< Get the state of a key.
+    inline bool get_mouse_button_state(const int &button) const; ///< Get the state of a mouse button.
+
     void run();
 
   private:
     void calculate_fps();
 
     std::stack<Gamestate> m_states;
+    Unordered_Map<int, bool> m_keys;
+    Unordered_Map<int, bool> m_mouse_buttons;
 
     Time time;
-    int ticks_passed, fps, fps_next;
+    Time::Tick_Type ticks_passed, fps, fps_next;
+
+#ifndef NDEBUG
+    void activate_console();
+    void deactivate_console();
+    Gamestate & get_console_instance();
+
+    bool m_console_active;
+#endif
   };
 
   Game & get_Game(const std::vector<std::string> * const &args); ///< Get access to the singleton.

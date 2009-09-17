@@ -1,7 +1,6 @@
 ; Zenipex Automagic Ends
 
   RMDir "$INSTDIR"
-  RMDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}"
 
 ;Registry Keys
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

@@ -39,7 +39,9 @@
 #include <iomanip>
 
 #ifndef DISABLE_AL
+#define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/vorbisfile.h>
+#undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
 using namespace std;
@@ -144,7 +146,7 @@ namespace Zeni {
 
     int bytes = 0;
     int buffer_size = int(pcm_size);
-    vector<char> buffer(buffer_size);
+    vector<char> buffer( static_cast<size_t>(buffer_size) );
     for(char *begin = &buffer[0], *end = begin + pcm_size;
         begin != end;
         begin += bytes, buffer_size -= bytes) {
@@ -223,8 +225,12 @@ namespace Zeni {
       throw Sound_Init_Failure();
 
     // Check for Vorbis extension functionality; seems to always fail :(
+#ifdef _MACOSX
+    alIsExtensionPresent(const_cast<ALubyte *>(reinterpret_cast<const ALubyte *>("AL_EXT_vorbis")));
+#else
     alIsExtensionPresent("AL_EXT_vorbis");
-    cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
+#endif
+    //cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
     ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};

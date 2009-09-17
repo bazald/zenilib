@@ -85,10 +85,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Gamestate.hxx>
-#endif
-
 #ifndef ZENI_GAMESTATE_H
 #define ZENI_GAMESTATE_H
 
@@ -110,7 +106,7 @@ namespace Zeni {
     Gamestate_Base & operator=(const Gamestate_Base &rhs);
 
   public:
-    Gamestate_Base() : m_count(0) {}
+    Gamestate_Base() : m_count(0), m_pausable(false) {}
     virtual ~Gamestate_Base() {}
 
     // The control loop
@@ -120,11 +116,19 @@ namespace Zeni {
     /// Then perform logic.  Called by Game as part of the main gameloop.
     virtual void perform_logic() {}
     /// Then render.  Called by Game as part of the main gameloop.
-    virtual void render() {}
+    virtual void render();
+
+    /// Called when the Gamestate is pushed onto the stack in Game
+    virtual void on_push();
+    /// Called when the Gamestate is popped off the stack in Game
+    virtual void on_pop();
+
+    inline const bool & is_pausable() const;
+    inline void set_pausable(const bool &pausable_);
 
     // Converters
 
-    static char to_char(const SDL_keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or NULL (0 or '\0').
+    static char to_char(const SDL_keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or the null character (0).
     static SDLKey to_sym(const std::string &text_version); ///< Convert a text representation to an actual sym
     static std::string to_text(const SDLKey &sym); ///< Convert a sym to a text representation
 
@@ -155,12 +159,14 @@ namespace Zeni {
     inline void increment();
     inline void decrement();
     int m_count;
+
+    bool m_pausable;
   };
 
   class Gamestate {
   public:
     inline Gamestate();
-    inline Gamestate(Gamestate_Base *state);
+    inline Gamestate(Gamestate_Base * const &state);
     ~Gamestate();
 
     inline Gamestate(const Gamestate &state);
@@ -169,6 +175,11 @@ namespace Zeni {
     inline void on_event(const SDL_Event &event);
     inline void perform_logic();
     inline void render();
+
+    inline void on_push();
+    inline void on_pop();
+
+    inline const bool & is_pausable() const;
 
     inline Gamestate_Base & get();
 
@@ -180,7 +191,7 @@ namespace Zeni {
     Zeni_Input_ID(const Uint8 &type_ = SDL_KEYDOWN, const int &subid_ = 0, const int &which_ = 0);
 
     Uint8 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
-    int subid; ///< event.keysym.sym, event.button, event.axis; ignored for mouse motion (should be 0)
+    int subid; ///< event.keysym.sym, event.button, event.axis, mouse axis (x==0, y==1)
     int which; ///< Joystick Identifier; ignored for other events (should be 0)
     mutable float previous_confidence;
 
@@ -188,6 +199,9 @@ namespace Zeni {
   };
 
   class Gamestate_II : public Gamestate_Base {
+    Gamestate_II(const Gamestate_II &rhs);
+    Gamestate_II & operator=(const Gamestate_II &rhs);
+
   public:
     Gamestate_II();
 
@@ -197,26 +211,40 @@ namespace Zeni {
     virtual void on_event(const SDL_Event &event);
     virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
 
-    inline const float & get_min_confidence() const;
-    inline const float & get_max_confidence() const;
+    inline const int & get_joyball_min() const;
+    inline const int & get_joyball_max() const;
+    inline const float & get_joystick_min() const;
+    inline const float & get_joystick_max() const;
+    inline const int & get_mouse_min() const;
+    inline const int & get_mouse_max() const;
 
-    inline void set_min_confidence(const float &min);
-    inline void set_max_confidence(const float &max);
+    inline void set_joyball_min(const int &min); ///< Should be (0, inf) and less than max
+    inline void set_joyball_max(const int &max); ///< Should be (1, inf) and greater than min
+    inline void set_joystick_min(const float &min); ///< Should be [0.0, 1.0) and less than max
+    inline void set_joystick_max(const float &max); ///< Should be (0.0, 1.0] and greater than min
+    inline void set_mouse_min(const int &min); ///< Should be (0, inf) and less than max
+    inline void set_mouse_max(const int &max); ///< Should be (1, inf) and greater than min
 
     virtual int get_action(const Zeni_Input_ID &event);
     virtual Zeni_Input_ID get_event(const int &action);
     virtual void set_action(const Zeni_Input_ID &event, const int &action);
 
   private:
-    float m_min_confidence;
-    float m_max_confidence;
+    void fire_event(const Zeni_Input_ID &id, const float &confidence);
+
+    int m_joyball_min;
+    int m_joyball_max;
+    float m_joystick_min;
+    float m_joystick_max;
+    int m_mouse_min;
+    int m_mouse_max;
 
     std::map<Zeni_Input_ID, int> m_ii;
     std::map<int, Zeni_Input_ID> m_rii;
   };
 
-  struct Quit_Event : public Error {
-    Quit_Event() : Error("Quit Event Detected") {fired = true;}
+  struct Quit_Event {
+    Quit_Event() {fired = true;}
 
     static void fire() {throw Quit_Event();}
     static bool has_fired() {return fired;}

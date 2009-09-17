@@ -48,8 +48,6 @@
 
 #include <Zeni/Sound_Source.h>
 
-#include <list>
-
 namespace Zeni {
 
   class Sound_Source_Pool {
@@ -68,7 +66,7 @@ namespace Zeni {
   public:
     class Replacement_Policy {
     public:
-      /// (Default) Priority Sort:  Playing/Not-Playing, Priority
+      /// (Default) Priority Sort:  Playing/Not-Playing, Priority, Gain, Recency
       virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
       bool operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const;
@@ -78,7 +76,7 @@ namespace Zeni {
     public:
       Positional_Replacement_Policy(const Point3f &listener_position_);
 
-      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Computed Gain
+      /// Positional Priority Sort:  Playing/Not-Playing, Priority, Computed Gain, Recency
       virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 
       Point3f listener_position;
@@ -90,20 +88,30 @@ namespace Zeni {
 
     void pause_all(); ///< Pause all Sound_Sources.
     void unpause_all(); ///< Unpause all paused Sound_Sources.
-    void purge(); ///< Purge all Sound_Source_HW
+    void purge(); ///< Purge all Sound_Source_HW and all playing_and_destroying (created by play_sound(...))
 
     void update(); ///< Redistribute hardware Sound_Sources according to the Replacement_Policy.  Newer Sound_Sources are implicitly prioritized over older Sound_Sources.  (Called automatically)
+
+    void play_and_destroy(Sound_Source * const &sound_source); ///< Play a Sound_Source and destroy it; Used by play_sound(...)
+
+    bool is_muted() const; ///< Check to see if Sound_Sources are muted
+    void mute(const bool &mute_); ///< Mute or unmute all Sound_Sources.
 
   private:
     void set_Replacement_Policy(Replacement_Policy * const &replacement_policy); ///< Set the Replacement_Policy directly
     void insert_Sound_Source(Sound_Source &sound_source); // on Sound_Source construction
     void remove_Sound_Source(Sound_Source &sound_source); // on Sound_Source destruction
 
-    std::set<Sound_Source_HW *> m_assigned_hw;
+    void destroy_all_hw(); ///< Purge all Sound_Source_HW, but leave playing_and_destroying intact
+
     std::vector<Sound_Source *> m_handles;
 
     Replacement_Policy * m_replacement_policy;
     bool delete_m_replacement_policy;
+
+    std::vector<Sound_Source *> m_playing_and_destroying;
+
+    bool m_muted;
   };
 
   Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.

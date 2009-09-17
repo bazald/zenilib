@@ -38,7 +38,11 @@
 
 // Not HXXed
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 
 namespace Zeni {
@@ -49,18 +53,18 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
@@ -69,16 +73,16 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_DX9: return reinterpret_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_DX9: return static_cast<const Texture_DX9 *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
@@ -88,20 +92,22 @@ namespace Zeni {
 #define \
   TEXTURE_IV_FCN_CALL(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #define \
   TEXTURE_IV_FCN_CALL_CONST(member_function, ...) { \
     switch(vtype()) { \
-      case Texture_Base::VTYPE_GL: return reinterpret_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
-      case Texture_Base::VTYPE_SPRITE: return reinterpret_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_GL: return static_cast<const Texture_GL *>(this)->member_function(__VA_ARGS__); \
+      case Texture_Base::VTYPE_SPRITE: return static_cast<const Sprite *>(this)->member_function(__VA_ARGS__); \
     } \
   }
 
 #endif
+
+#define EMPTY()
 
   void Sprite::apply_texture_impl() const {
     static bool no_recurse = true;
@@ -115,12 +121,12 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     try {
-      get_Textures().apply_texture(m_frames[m_frame].second);
+      get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
     }
     catch(Database_Entry_Not_Found &) {
       try {
-        m_frames[m_frame].second = get_Textures().get_id(m_frames[m_frame].first);
-        get_Textures().apply_texture(m_frames[m_frame].second);
+        m_frames[size_t(m_frame)].second = get_Textures().get_id(m_frames[size_t(m_frame)].first);
+        get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
       }
       catch(...) {
         no_recurse = true;
@@ -145,11 +151,15 @@ namespace Zeni {
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
+
+  const Point2i & Texture_GL::get_size() const {
+    return m_size;
+  }
 #endif
 
 #ifndef DISABLE_DX9
   void Texture_DX9::apply_texture_impl() const {
-    Video_DX9 &vdx = reinterpret_cast<Video_DX9 &>(get_Video());
+    Video_DX9 &vdx = static_cast<Video_DX9 &>(get_Video());
     
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSV, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
@@ -168,14 +178,19 @@ namespace Zeni {
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
   }
+
+  const Point2i & Texture_DX9::get_size() const {
+    return m_size;
+  }
 #endif
 
   void Texture::apply_texture() const {
-    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl, );
+    TEXTURE_IV_FCN_CALL_CONST(apply_texture_impl, EMPTY());
   }
 
 #undef TEXTURE_IV_FCN_CALL
 #undef TEXTURE_IV_FCN_CALL_CONST
+#undef EMPTY
 
 }
 

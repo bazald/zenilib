@@ -38,12 +38,12 @@
 
 namespace Zeni {
 
-  Time & Time::operator=(const int &ticks) {
+  Time & Time::operator=(const Time::Tick_Type &ticks) {
     m_ticks = ticks;
     return *this;
   }
 
-  int Time::get_ticks_passed() const {
+  Time::Tick_Type Time::get_ticks_passed() const {
     return get_Timer().get_ticks() - m_ticks;
   }
 
@@ -51,7 +51,7 @@ namespace Zeni {
     return get_ticks_passed() * 0.001f;
   }
 
-  int Time::get_ticks_since(const Time &time) const {
+  Time::Tick_Type Time::get_ticks_since(const Time &time) const {
     return m_ticks - time.m_ticks;
   }
 
@@ -63,14 +63,18 @@ namespace Zeni {
     m_ticks = get_Timer().get_ticks();
   }
 
-  int Timer::get_ticks() {
+  bool Time::operator<(const Time &rhs) const {
+    return m_ticks < rhs.m_ticks;
+  }
+
+  Time::Tick_Type Timer::get_ticks() {
     Mutex::Lock lock(ticks_mutex);
     update();
     return m_ticks;
   }
 
-  int Timer::get_ticks_per_second() {
-    return 1000;
+  Time::Tick_Type Timer::get_ticks_per_second() {
+    return 1000u;
   }
 
   float Timer::get_seconds() {
@@ -154,6 +158,10 @@ namespace Zeni {
 #else
     gettimeofday(&m_ticks, 0);
 #endif
+  }
+
+  bool Time_HQ::operator<(const Time_HQ &rhs) const {
+    return m_ticks < rhs.m_ticks;
   }
 
 }

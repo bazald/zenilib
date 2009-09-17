@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Video_DX9.hxx>
-#endif
-
 #ifndef ZENI_VIDEO_DX9_H
 #define ZENI_VIDEO_DX9_H
 
@@ -58,6 +54,7 @@
 namespace Zeni {
 
   struct Color;
+  class Texture_DX9;
 
   class Video_DX9 : public Video {
     friend class Video;
@@ -80,8 +77,11 @@ namespace Zeni {
     inline bool has_vertex_buffers_impl() const; ///< Determine whether Vertex_Buffers are supported
 
     // Modifiers
-    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport); ///< Set a 2D view for a viewport
-    inline void set_3d_view_impl(const Camera &camera, const std::pair<Point2i, Point2i> &viewport); ///< Set a 3D view for a viewport
+    inline void set_2d_view_impl(const std::pair<Point2f, Point2f> &camera2d,
+      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(), get_Video().get_render_target_size()),
+      const bool &fix_aspect_ratio = false); ///< Set a 2D view for a viewport
+    inline void set_3d_view_impl(const Camera &camera,
+      const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set a 3D view for a viewport
     inline void set_backface_culling_impl(const bool &on); ///< Set backface culling on/off
     inline void set_vertical_sync_impl(const bool &on); ///< Set vertical_sync on/off
     inline void set_zwrite_impl(const bool &enabled); ///< Enable or disable writing to the Z-Buffer
@@ -115,6 +115,12 @@ namespace Zeni {
     inline void unset_fragment_shader_impl(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
 #endif
 
+    // Render-to-texture
+    inline void set_render_target_impl(Texture &texture); ///< Set a render target
+    inline void unset_render_target_impl(); ///< Unset a render target
+    inline void clear_render_target_impl(const Color &color = Color(0.0f, 0.0f, 0.0f, 0.0f)); ///< Clear the viewport
+    inline const Point2i & get_render_target_size_impl() const; ///< Get the dimensions of the render target
+
     // Model/World Transformation Stack Functions
     inline void select_world_matrix_impl() {} ///< Select the world (model view) matrix; Call before [translate/rotate/scale] scene
     inline void push_world_stack_impl(); ///< Push a model view matrix onto the stack
@@ -128,14 +134,16 @@ namespace Zeni {
     inline Point2f get_pixel_offset_impl() const; ///< Get the pixel offset in the 2d view
     inline void set_view_matrix_impl(const Matrix4f &view); ///< Set the view Matrix4f
     inline void set_projection_matrix_impl(const Matrix4f &projection); ///< Set the projection Matrix4f
-    inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport); ///< Set the viewport
+    inline void set_viewport_impl(const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), get_Video().get_render_target_size())); ///< Set the viewport
 
     // Creation Functions
     inline Texture * load_Texture_impl(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture_impl(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
+    inline Texture * create_Texture_impl(const Point2i &size, const bool &repeat); ///< Function for creating a Texture for render-to-texture
     inline Font * create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
-    inline Vertex_Buffer * create_Vertex_Buffer_impl(); ///< Function for creating a Vertex_Buffer
+    inline Vertex_Buffer_Renderer * create_Vertex_Buffer_Renderer_impl(Vertex_Buffer &vertex_buffer); ///< Function for creating a Vertex_Buffer_Renderer
 
     // Initialization Functions
     inline void initialize_impl(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
@@ -151,8 +159,8 @@ namespace Zeni {
     inline float get_dpi_ratio(); ///< Get the ratio of the screen's DPI to the normal DPI
 
     // Custom D3D-Related Functions
-    bool get_3d() const;
-    void set_3d(const bool &on);
+    bool is_fvf_3d() const;
+    void set_fvf_3d(const bool &on);
     void set_fvf(const bool &is_3d);
 
   protected:
@@ -173,9 +181,10 @@ namespace Zeni {
     LPD3DXMATRIXSTACK m_matrix_stack;
     int m_dpi;
 
-    Color m_ambient_color;
+    bool m_textured, m_fvf_3d;
 
-    bool m_textured, m_3d;
+    Texture_DX9 * m_render_target;
+    LPDIRECT3DSURFACE9 m_back_buffer;
   };
 
   struct Video_Device_Failure : public Error {

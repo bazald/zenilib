@@ -42,10 +42,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Material.hxx>
-#endif
-
 #ifndef ZENI_MATERIAL_H
 #define ZENI_MATERIAL_H
 
@@ -54,8 +50,13 @@
 #include <string>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
 #endif
+#endif
+
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif

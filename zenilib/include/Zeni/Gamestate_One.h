@@ -69,8 +69,8 @@
 * Contact: bazald@zenipex.com
 */
 
-#ifndef ZENIAPP_H
-#define ZENIAPP_H
+#ifndef GAMESTATE_ONE_H
+#define GAMESTATE_ONE_H
 
 #include <Zeni/Game.h>
 #include <Zeni/Video.h>
@@ -81,9 +81,16 @@
 namespace Zeni {
 
   class Gamestate_One : public Gamestate_Base {
+    Gamestate_One(const Gamestate_One &);
+    Gamestate_One & operator=(const Gamestate_One &);
+
   public:
     Gamestate_One(const std::vector<std::string> * const args = 0); ///< Your first constructor
     virtual ~Gamestate_One(); ///< Your last destructor, excluding statics, globals, ...
+
+    virtual void on_key(const SDL_KeyboardEvent &/*event*/) {
+      // Popup_Menu disabled
+    }
 
     virtual void perform_logic(); ///< Your game logic, on a frame by frame basis; Should probably be used to instantiate other game states, using some sort of static/global counter
   };

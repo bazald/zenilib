@@ -40,7 +40,12 @@
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Video.hxx>
 
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
+
 #include <iostream>
 
 namespace SDL {
@@ -55,13 +60,17 @@ namespace Zeni {
 
   Video_GL::Video_GL()
     : Video(Video_Base::ZENI_VIDEO_GL),
+#ifdef _LINUX
+      m_pglSwapIntervalEXT(0),
+#endif
       m_pglBindBufferARB(0),
       m_pglDeleteBuffersARB(0),
       m_pglGenBuffersARB(0),
       m_pglBufferDataARB(0),
       m_maximum_anisotropy(-1),
       m_vertex_buffers(false),
-      m_zwrite(false)
+      m_zwrite(false),
+      m_render_target(0)
 #ifdef MANUAL_GL_VSYNC_DELAY
       ,
       m_buffer_swap_end_time(0u),
@@ -77,18 +86,28 @@ namespace Zeni {
   }
 
   void Video_GL::render_all() {
+    assert(!m_render_target);
+
 #ifdef _WINDOWS
     glFlush();
 #else
     glFinish();
 #endif
 
-    glDepthMask(GL_TRUE);
+    get_Textures().unlose_resources();
+    get_Fonts().unlose_resources();
+
     glViewport(0, 0, get_screen_width(), get_screen_height());
+
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_TRUE);
+    set_clear_color_impl(get_clear_color());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_FALSE);
 
     get_Game().render();
-    
+
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
    Timer &tr = get_Timer();
@@ -114,7 +133,7 @@ namespace Zeni {
   }
 
   void Video_GL::init() {
-    std::cout << "Initializing OpenGL" << endl;
+    std::cout << "Initializing OpenGL" << std::endl;
 
     //double buffer, no stencil, no accumulation buffer
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -140,7 +159,7 @@ namespace Zeni {
     {
       const GLenum err = glewInit();
       if(GLEW_OK != err) {
-        cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
+        std::cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
         throw Video_Init_Failure();
       }
     }
@@ -156,8 +175,10 @@ namespace Zeni {
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
     // Set lighting variables
-    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    if(glGetError() == GL_INVALID_ENUM)
+      cerr << "Quality Warning:  Your graphics card does not support separate specular lighting in OpenGL.\n";
 
     // Initialize Assorted Variables
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -171,14 +192,32 @@ namespace Zeni {
     set_backface_culling(get_backface_culling());
     set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
-    set_ambient_lighting(Color());
+    set_ambient_lighting(get_ambient_lighting());
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
+    set_zwrite(is_zwrite_enabled());
+    set_ztest(is_ztest_enabled());
 
     // Manage extensions
     union {
       PFNGLBINDBUFFERARBPROC proc;
       void *ptr;
     } uni;
+
+#ifdef _LINUX
+    uni.ptr = SDL_GL_GetProcAddress("glXSwapInterval");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalEXT");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalSGI");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapInterval");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalEXT");
+    if(!uni.ptr)
+      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalSGI");
+    if(uni.ptr)
+      m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALSGIPROC)uni.proc;
+#endif
 
     m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
     if(m_vertex_buffers) {
@@ -195,10 +234,10 @@ namespace Zeni {
       m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)uni.proc;
     }
     else
-      cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) to OpenGL.\n";
+      std::cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) in OpenGL.\n";
 
     if(strstr((char*)glGetString(GL_EXTENSIONS), "GL_EXT_texture_filter_anisotropic"))
-      glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_maximum_anisotropy);
+      glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, reinterpret_cast<GLint *>(&m_maximum_anisotropy));
     else
       m_maximum_anisotropy = 0;
   }

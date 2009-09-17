@@ -42,15 +42,12 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vector3f.hxx>
-#endif
-
 #ifndef ZENI_VECTOR3F_H
 #define ZENI_VECTOR3F_H
 
 namespace Zeni {
 
+  struct Point3f;
   struct Vector3f;
 
   extern const float pi; ///< pi == 3.1415926...
@@ -66,9 +63,10 @@ namespace Zeni {
 
   struct Vector3f {
     /// The best way to create a Vector3f
-    inline Vector3f();
-    inline Vector3f(const float &i_, const float &j_, const float &k_);
-    inline Vector3f(const Vector3f &rhs);
+    inline Vector3f(const bool &degenerate_ = false);
+    inline Vector3f(const float &i_, const float &j_, const float &k_, const bool &degenerate_ = false);
+    inline Vector3f(const Vector3f &rhs, const bool &degenerate_ = false);
+    inline Vector3f(const Point3f &rhs);
 
     // Vector addition/subtraction
     inline Vector3f operator+(const Vector3f &rhs) const; ///< Get the sum
@@ -126,6 +124,8 @@ namespace Zeni {
       float k;
       float z;
     };
+
+    bool degenerate;
   };
 
   // Vector Scalar Multiplication Part II of II

@@ -70,7 +70,11 @@
 #include "Vector3f.hxx"
 #include "Quaternion.hxx"
 
+#ifdef _MACOSX
+#include <SDL_net/SDL_net.h>
+#else
 #include <SDL/SDL_net.h>
+#endif
 
 #include <string>
 #include <sstream>
@@ -87,10 +91,19 @@ bool operator>=(const IPaddress &lhs, const IPaddress &rhs);
 namespace Zeni {
   /*** Simple Helper Functions ***/
 
+  std::string ustoa(const unsigned short &number);
+  std::string stoa(const short &number);
   std::string uitoa(const unsigned int &number);
   std::string itoa(const int &number);
   std::string ultoa(const unsigned long &number);
   std::string ltoa(const long &number);
+#ifdef _WINDOWS
+  std::string ulltoa(const unsigned long long &number);
+  std::string lltoa(const long long &number);
+#else
+  std::string ulltoa(const unsigned long &number);
+  std::string lltoa(const long &number);
+#endif
   std::string ftoa(const float &number);
   std::string ftoa(const float &number, const unsigned int &precision);
   std::string dtoa(const double &number);
@@ -98,8 +111,8 @@ namespace Zeni {
   std::string ldtoa(const long double &number);
   std::string iptoa(const IPaddress &address);
 
-  int grab_bytes(std::istream &is, char * const &store, const int &num_bytes);
-  int grab_bytes(std::istream &is, std::string &store, const int &num_bytes);
+  size_t grab_bytes(std::istream &is, char * const &store, const size_t &num_bytes);
+  size_t grab_bytes(std::istream &is, std::string &store, const size_t &num_bytes);
   
   class Serializable {
   public:
@@ -136,7 +149,7 @@ namespace Zeni {
     
     Uint16 size() const {return sizeof(Serializable::m_size) + m_size;}
     
-    const unsigned char & operator[](const int &index) const {return reinterpret_cast<const unsigned char &>(m_uid[index]);}
+    const unsigned char & operator[](const size_t &index) const {return reinterpret_cast<const unsigned char &>(m_uid[index]);}
     
     virtual std::ostream & serialize(std::ostream &os) const;
     virtual std::istream & unserialize(std::istream &is);

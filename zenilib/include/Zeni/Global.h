@@ -31,7 +31,7 @@
 
 // Camera.h
 #define ZENI_DEFAULT_CAMERA_POSITION      (Point3f(0.0f, 0.0f, 0.0f))
-#define ZENI_DEFAULT_CAMERA_ORIENTATION   (Quaternion())
+#define ZENI_DEFAULT_CAMERA_ORIENTATION   Quaternion()
 #define ZENI_DEFAULT_CAMERA_NEAR_CLIP     (10.0f)
 #define ZENI_DEFAULT_CAMERA_FAR_CLIP      (1000.0f)
 #define ZENI_DEFAULT_CAMERA_FOV           (pi / 2)
@@ -71,6 +71,9 @@
 #define ZENI_DEFAULT_JUSTIFY          (ZENI_LEFT)
 #define ZENI_DEFAULT_TEXTBOX_EDITABLE (false)
 
+// Widget.cpp
+#define ZENI_TEXT_CURSOR_WIDTH (0.05f)
+
 // Video.hxx
 #define ZENI_2D_NEAR (-1.0f)
 #define ZENI_2D_FAR  (1.0f)
@@ -81,19 +84,36 @@
 // Collision.cpp
 #define ZENI_COLLISION_EPSILON (0.0001f)
 
+// Configurator_Video.cpp
+#define ZENI_REVERT_TIMEOUT 15
+
 // Font.cpp
-#define MINIMUM_VIRTUAL_SCREEN_HEIGHT (320.0f)
+#define MINIMUM_VIRTUAL_SCREEN_HEIGHT (240.0f)
 #define MAXIMUM_VIRTUAL_SCREEN_HEIGHT (9600.0f)
 
+// Game.cpp
+#define NASTY_MIN_RATE (0.5f)
+#define NASTY_MAX_RATE (2.0f)
+#define NASTY_RATE_CUTOFF (10)
+#define NASTY_ZERO_STEP_FREQUENCY (10)
+
 // Gamestate.cpp
-#define ZENI_DEFAULT_II_MIN_CONFIDENCE (0.1f)
-#define ZENI_DEFAULT_II_MAX_CONFIDENCE (1.0f)
+#define ZENI_DEFAULT_II_JOYBALL_MIN (1)
+#define ZENI_DEFAULT_II_JOYBALL_MAX (100)
+#define ZENI_DEFAULT_II_JOYSTICK_MIN (0.1f)
+#define ZENI_DEFAULT_II_JOYSTICK_MAX (1.0f)
+#define ZENI_DEFAULT_II_MOUSE_MIN (1)
+#define ZENI_DEFAULT_II_MOUSE_MAX (100)
 
 // Material.cpp
 #define ZENI_DIFFUSE_TO_SPECULAR(d) (Color(d.a, 0.5f * d.r + 0.5f, 0.5f * d.g + 0.5f, 0.5f * d.b + 0.5f))
 
 // Net_Primitives.cpp
 #define ZENI_SPRINTF_BUFFER_SIZE (64)
+
+// Texture.cpp
+#define ZENI_MAX_TEXTURE_WIDTH (2048)
+#define ZENI_MAX_TEXTURE_HEIGHT (2048)
 
 // Thread.cpp
 #define NO_ERROR_STATUS    (1)
@@ -104,6 +124,10 @@
 #define CLOSENESS_THRESHOLD_SQUARED (0.00001f)
 #define ALIKENESS_THRESHOLD         (0.95f)
 #define CLOSENESS_THRESHOLD         (0.001f)
+
+// Video.cpp
+#define MINIMUM_SCREEN_WIDTH  (320)
+#define MINIMUM_SCREEN_HEIGHT (200)
 
 // Nasty Conditions
 #define NASTY_SOUND_SOURCE_CAP (16lu)

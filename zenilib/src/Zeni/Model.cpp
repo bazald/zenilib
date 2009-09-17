@@ -38,7 +38,11 @@
 #include <Zeni/Vertex_Buffer.hxx>
 #include <Zeni/Video.hxx>
 
+#ifdef _MACOSX
+#include <lib3ds-2.0/lib3ds.h>
+#else
 #include <lib3ds.h>
+#endif
 #include <string>
 
 namespace Zeni {
@@ -337,7 +341,7 @@ namespace Zeni {
     Video &vr = get_Video();
 
     if(!mesh || !mesh->user_ptr)
-      create_vertex_buffer(vr.create_Vertex_Buffer(), model, node, mesh);
+      create_vertex_buffer(new Vertex_Buffer(), model, node, mesh);
 
     Vertex_Buffer * user_p = reinterpret_cast<Vertex_Buffer *>(mesh->user_ptr);
     if(!user_p)

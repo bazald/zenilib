@@ -36,7 +36,12 @@
 #include <Zeni/Quadrilateral.h>
 
 // Not HXXed
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
+
 #include <cassert>
 
 namespace Zeni {
@@ -71,8 +76,7 @@ namespace Zeni {
 
   template <typename VERTEX>
   Quadrilateral<VERTEX> & Quadrilateral<VERTEX>::operator=(const Quadrilateral<VERTEX> &rhs) {
-    reinterpret_cast<Renderable &>(*this) =
-      reinterpret_cast<const Renderable &>(rhs);
+    static_cast<Renderable &>(*this) = rhs;
 
     a = rhs.a;
     b = rhs.b;

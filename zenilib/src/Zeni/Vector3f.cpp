@@ -48,8 +48,12 @@ namespace Zeni {
   Vector3f & Vector3f::normalize() {
     float mplier = magnitude();
 
-    if(INFINTESSIMAL(mplier))
+    if(INFINTESSIMAL(mplier)) {
+      degenerate = true;
       return *this;
+    }
+    else
+      degenerate = false;
 
     mplier = 1.0f / mplier;
 
@@ -64,7 +68,7 @@ namespace Zeni {
     float mplier = magnitude();
 
     if(INFINTESSIMAL(mplier))
-      return *this;
+      return Vector3f(*this, true);
 
     mplier = 1.0f / mplier;
 
@@ -100,6 +104,7 @@ namespace Zeni {
     j = sin(theta) * i;
     i *= cos(theta);
     k = cos(phi) * magnitude;
+    degenerate = false;
   }
 }
 

@@ -62,10 +62,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Sound.hxx>
-#endif
-
 #ifndef ZENI_SOUND_SOURCE_H
 #define ZENI_SOUND_SOURCE_H
 
@@ -76,21 +72,6 @@
 #include <Zeni/Vector3f.h>
 
 #include <string>
-
-#ifndef DISABLE_AL
-#include <AL/alut.h>
-#else
-
-#define ALint int
-#define ALuint unsigned int
-#define ALfloat float
-#define ALenum int
-
-#define AL_NONE 0
-#define AL_TRUE true
-#define AL_FALSE false
-
-#endif
 
 #include <Zeni/Global.h>
 
@@ -108,17 +89,17 @@ namespace Zeni {
 
     Sound_Source_HW();
     Sound_Source_HW(const Sound_Buffer &buffer,
-                 const float &pitch = ZENI_DEFAULT_PITCH,
-                 const float &gain = ZENI_DEFAULT_GAIN,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
+                    const float &pitch = ZENI_DEFAULT_PITCH,
+                    const float &gain = ZENI_DEFAULT_GAIN,
+                    const Point3f &position = Point3f(),
+                    const Vector3f &velocity = Vector3f(),
+                    const bool &looping = false);
     Sound_Source_HW(const ALuint &buffer,
-                 const float &pitch = ZENI_DEFAULT_PITCH,
-                 const float &gain = ZENI_DEFAULT_GAIN,
-                 const Point3f &position = Point3f(),
-                 const Vector3f &velocity = Vector3f(),
-                 const bool &looping = false);
+                    const float &pitch = ZENI_DEFAULT_PITCH,
+                    const float &gain = ZENI_DEFAULT_GAIN,
+                    const Point3f &position = Point3f(),
+                    const Vector3f &velocity = Vector3f(),
+                    const bool &looping = false);
     ~Sound_Source_HW();
 
   public:
@@ -196,6 +177,7 @@ namespace Zeni {
     inline void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     inline int get_priority() const; ///< Get the Sound_Source's priority.
+    inline Time get_unstop_time() const; ///< Get the Time at which the Sound_Source was most recently played or unpaused.
     inline const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer's OpenAL id.
     inline float get_pitch() const; ///< Get the pitch.
     inline float get_gain() const; ///< Get the gain.
@@ -228,6 +210,7 @@ namespace Zeni {
 
     Sound_Source_HW * m_hw;
     int m_priority;
+    Time m_unstop_time;
 
     const Sound_Buffer * m_buffer;
     float m_pitch;

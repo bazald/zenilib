@@ -129,9 +129,9 @@ namespace Zeni {
   }
 
   int TCP_Socket::receive(string &data, const int &num_bytes) {
-    data.resize(num_bytes);
+    data.resize(size_t(num_bytes));
     const int retval = receive(const_cast<char *>(data.c_str()), num_bytes);
-    data.resize(retval);
+    data.resize(size_t(retval));
     return retval;
   }
 
@@ -174,26 +174,30 @@ namespace Zeni {
     return *SDLNet_UDP_GetPeerAddress(sock, -1);
   }
   
-  void UDP_Socket::send(const IPaddress &ip, const void * const &data, const int &num_bytes) {
-    UDPpacket packet =
-    {
-      -1,
-      reinterpret_cast<Uint8 *>(const_cast<void *>(data)),
-      num_bytes,
-      num_bytes,
-      0, // Will == -1 on error after UDP_Send, otherwise == # of bytes sent
-      ip
-    };
+  void UDP_Socket::send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes) {
+    if(num_bytes < 8167u) {
+      UDPpacket packet =
+      {
+        -1,
+        reinterpret_cast<Uint8 *>(const_cast<void *>(data)),
+        num_bytes,
+        num_bytes,
+        0, // Will == -1 on error after UDP_Send, otherwise == # of bytes sent
+        ip
+      };
 
-    if(!SDLNet_UDP_Send(sock, -1, &packet))
-      throw Socket_Closed();
+      if(!SDLNet_UDP_Send(sock, -1, &packet))
+        throw Socket_Closed();
+    }
+
+    throw UDP_Packet_Overflow();
   }
   
   void UDP_Socket::send(const IPaddress &ip, const std::string &data) {
-    UDP_Socket::send(ip, data.c_str(), int(data.size()));
+    UDP_Socket::send(ip, data.c_str(), Uint16(data.size()));
   }
 
-  int UDP_Socket::receive(IPaddress &ip, const void * const &data, const int &num_bytes) {
+  int UDP_Socket::receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes) {
     IPaddress ipaddress = {0, 0};
 
     UDPpacket packet =
@@ -220,11 +224,11 @@ namespace Zeni {
   }
   
   int UDP_Socket::receive(IPaddress &ip, std::string &data) {
-    int retval = UDP_Socket::receive(ip, data.c_str(), int(data.size()));
+    int retval = UDP_Socket::receive(ip, data.c_str(), Uint16(data.size()));
     
     if(int(data.size()) > retval) {
-      data[retval] = '\0';
-      data.resize(retval);
+      data[size_t(retval)] = '\0';
+      data.resize(size_t(retval));
     }
     
     return retval;
@@ -294,11 +298,12 @@ namespace Zeni {
                                                                                    Chunk &chunk) {
     // Attempt to complete an existing partial packet
     for(list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it) {
-      if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk))
+      if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk)) {
         if((*it)->complete())
           return *it;
         else
           return 0;
+      }
     }
     
     if(int(chunk_sets.size()) == m_size) // LRU Eviction
@@ -326,9 +331,9 @@ namespace Zeni {
     ++m_nonce_send;
     
     const Uint16 offset = static_cast<Uint16>(m_nonce_send.size()) + 2u * sizeof(Uint16);
-    const Uint16 split_size = m_chunk_size - offset;
-    const Uint16 num_full_chunks = static_cast<Uint16>(num_bytes) / split_size;
-    const Uint16 partial_chunk = static_cast<Uint16>(num_bytes) % split_size;
+    const Uint16 split_size = Uint16(m_chunk_size - offset);
+    const Uint16 num_full_chunks = Uint16(num_bytes / split_size);
+    const Uint16 partial_chunk = Uint16(num_bytes % split_size);
     const Uint16 num_chunks = num_full_chunks + (partial_chunk ? 1u : 0u);
     
     const char *ptr = reinterpret_cast<const char *>(data);
@@ -356,7 +361,7 @@ namespace Zeni {
         s = os.str();
       }
       
-      s.resize(offset + partial_chunk);
+      s.resize(size_t(offset + partial_chunk));
       memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
       
       UDP_Socket::send(ip, s);
@@ -411,8 +416,8 @@ namespace Zeni {
     int retval = receive(ip, data.c_str(), Uint16(data.size()));
     
     if(int(data.size()) > retval) {
-      data[retval] = '\0';
-      data.resize(retval);
+      data[size_t(retval)] = '\0';
+      data.resize(size_t(retval));
     }
     
     return retval;

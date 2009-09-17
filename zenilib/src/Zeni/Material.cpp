@@ -36,7 +36,11 @@
 #include <cmath>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 
 #include <Zeni/Global.h>
@@ -92,7 +96,7 @@ namespace Zeni {
 #ifndef DISABLE_GL
   void Material::set(Video_GL &vgl) const {
     if(vgl.get_lighting()) {
-      GLenum face = vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK;
+      GLenum face = GLenum(vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK);
 
       if(!(m_optimization & (1 << 0)))
         glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
@@ -132,7 +136,7 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   void Material::set(Video_DX9 &vdx) const {
     if(vdx.get_lighting()) {
-      if(!(m_optimization & ((1 << 5) - 1)))
+      if((m_optimization & ((1 << 5) - 1)) != 0x1F)
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
@@ -151,12 +155,12 @@ namespace Zeni {
 #endif
 
   bool Material::operator<(const Material &rhs) const {
-    return m_texture < rhs.m_texture || m_texture == rhs.m_texture &&
-      (diffuse < rhs.diffuse || diffuse == rhs.diffuse &&
-      (ambient < rhs.ambient || ambient == rhs.ambient &&
-      (specular < rhs.specular || specular == rhs.specular &&
-      (emissive < rhs.emissive || emissive == rhs.emissive &&
-      m_power < rhs.m_power))));
+    return m_texture < rhs.m_texture || (m_texture == rhs.m_texture &&
+      (diffuse < rhs.diffuse || (diffuse == rhs.diffuse &&
+      (ambient < rhs.ambient || (ambient == rhs.ambient &&
+      (specular < rhs.specular || (specular == rhs.specular &&
+      (emissive < rhs.emissive || (emissive == rhs.emissive &&
+      m_power < rhs.m_power)))))))));
   }
 
   bool Material::operator==(const Material &rhs) const {
@@ -169,6 +173,8 @@ namespace Zeni {
   }
 
   void Material::optimize_to_follow(const Material &rhs) {
+    m_optimization &= 0xFFFFFFC0;
+
     if(ambient == rhs.ambient)
       m_optimization |= (1 << 0);
     if(diffuse == rhs.diffuse)
@@ -184,6 +190,8 @@ namespace Zeni {
   }
 
   void Material::optimize_to_precede(const Material &rhs) {
+    m_optimization &= 0xFFFFF03F;
+
     if(ambient == rhs.ambient)
       m_optimization |= (1 << 6);
     if(diffuse == rhs.diffuse)

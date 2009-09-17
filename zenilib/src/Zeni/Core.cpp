@@ -36,6 +36,11 @@
 
 #ifdef _WINDOWS
 #include <shlobj.h>
+#include <WinUser.h>
+#else
+#include <sys/errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
 
 using namespace std;
@@ -102,12 +107,18 @@ namespace Zeni {
 
     /** Initialize SDL itself **/
 
-    if(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) == -1)
+    if(SDL_Init(SDL_INIT_TIMER) == -1)
       throw Core_Init_Failure();
 
     /** Initialize Joysticks **/
 
     init_joysticks();
+
+    /** Ensure g_unique_app_identifier is set **/
+
+    std::string &unique_app_identifier = get_unique_app_identifier();
+    if(unique_app_identifier.empty())
+      unique_app_identifier = "zenilib";
   }
 
   Core::~Core() {
@@ -130,40 +141,97 @@ namespace Zeni {
     return m_username;
   }
 
-  std::string Core::get_appdata_path(const std::string &unique_app_identifier) {
+  std::string Core::get_appdata_path() {
 #ifdef _WINDOWS
-    return m_appdata_path + "\\" + unique_app_identifier + "\\";
+    return m_appdata_path + "\\" + get_unique_app_identifier() + "\\";
 #else
-    return m_appdata_path + "/." + unique_app_identifier + "/";
+    return m_appdata_path + "/." + get_unique_app_identifier() + "/";
 #endif
   }
 
-  int Core::get_num_joysticks() const {
-    return int(m_joystick.size());
+  bool Core::create_directory(const std::string &directory_path) {
+#ifdef _WINDOWS
+    return CreateDirectory(directory_path.c_str(), NULL) != 0 ||
+           GetLastError() == ERROR_ALREADY_EXISTS;
+#else
+    const int status = mkdir(directory_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    return !status || errno == EEXIST;
+#endif
   }
 
-  const std::string & Core::get_joystick_name(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  bool Core::remove_directory(const std::string &directory_path) {
+#ifdef _WINDOWS
+    return RemoveDirectory(directory_path.c_str()) != 0 ||
+           GetLastError() == ERROR_PATH_NOT_FOUND;
+#else
+    return !rmdir(directory_path.c_str()) || errno == ENOENT;
+#endif
+  }
+
+  bool Core::file_exists(const std::string &file_path) {
+    ifstream fin(file_path.c_str());
+    return fin.good();
+  }
+
+  bool Core::delete_file(const std::string &file_path) {
+#ifdef _WINDOWS
+    return DeleteFile(file_path.c_str()) != 0 ||
+           GetLastError() == ERROR_PATH_NOT_FOUND;
+#else
+    return system(("rm " + file_path).c_str()) == 0;
+#endif
+  }
+
+  bool Core::copy_file(const std::string &from, const std::string &to) {
+    ifstream fin(from.c_str());
+    if(!fin)
+      return false;
+
+    ofstream fout(to.c_str());
+
+    for(char c; fin.get(c); fout.put(c));
+
+    return fout.good();
+  }
+
+#ifdef _WINDOWS
+  bool Core::is_screen_saver_enabled() {
+    BOOL is_active;
+    SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &is_active, 0);
+    return is_active != 0;
+  }
+
+  void Core::set_screen_saver(const bool &enabled) {
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, UINT(enabled), 0, SPIF_SENDCHANGE);
+  }
+#endif
+
+  size_t Core::get_num_joysticks() const {
+    return m_joystick.size();
+  }
+
+  const std::string & Core::get_joystick_name(const size_t &index) const {
+    assert(index < m_joystick.size());
     return m_joystick[index].second;
   }
   
-  int Core::get_joystick_num_axes(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_axes(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_balls(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_balls(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumBalls(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_hats(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_hats(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
-  int Core::get_joystick_num_buttons(const int &index) const {
-    assert(-1 < index && index < int(m_joystick.size()));
+  int Core::get_joystick_num_buttons(const size_t &index) const {
+    assert(index < m_joystick.size());
     return SDL_JoystickNumAxes(m_joystick[index].first);
   }
 
@@ -171,7 +239,16 @@ namespace Zeni {
     quit_joysticks();
     init_joysticks();
   }
-  
+
+  void Core::preinit(const std::string &unique_app_identifier_) {
+    std::string &unique_app_identifier = get_unique_app_identifier();
+
+    if(!unique_app_identifier.empty())
+      throw Core_Initialized();
+
+    unique_app_identifier = unique_app_identifier_;
+  }
+
   void Core::init_joysticks() {
     if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
       throw Joystick_Init_Failure();
@@ -180,7 +257,7 @@ namespace Zeni {
       m_joystick.push_back(make_pair(SDL_JoystickOpen(i),
                                     SDL_JoystickName(i)));
 
-      if(!m_joystick[i].first) {
+      if(!m_joystick[size_t(i)].first) {
         m_joystick.pop_back();
         quit_joysticks();
 
@@ -195,11 +272,16 @@ namespace Zeni {
     SDL_JoystickEventState(SDL_DISABLE);
 
     for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      SDL_JoystickClose(m_joystick[i].first);
+      SDL_JoystickClose(m_joystick[size_t(i)].first);
 
     m_joystick.clear();
 
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+  }
+
+  std::string & Core::get_unique_app_identifier() {
+    static std::string * unique_app_identifier = new std::string;
+    return *unique_app_identifier;
   }
 
 }

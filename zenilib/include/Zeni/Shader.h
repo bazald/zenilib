@@ -82,10 +82,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Shader.hxx>
-#endif
-
 #ifndef ZENI_SHADER_H
 #define ZENI_SHADER_H
 
@@ -99,7 +95,11 @@
 #endif
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
+#endif
 #include <Cg/cgGL.h>
 #endif
 
@@ -173,7 +173,7 @@ namespace Zeni {
 #endif
 
   private:
-    typedef stdext::hash_map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
+    typedef Unordered_Map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
     Parameters m_parameters;
 
     void initialize_parameter(const std::string &parameter_name);

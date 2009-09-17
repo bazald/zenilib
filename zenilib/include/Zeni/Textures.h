@@ -40,10 +40,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Textures.hxx>
-#endif
-
 #ifndef ZENI_TEXTURES_H
 #define ZENI_TEXTURES_H
 
@@ -90,12 +86,11 @@ namespace Zeni {
     void set_current_frame(const unsigned long &id, const int &frame_number); ///< Set the frame number for a Sprite
 
   private:
-    virtual void post_init();
-    virtual void post_uninit();
-    virtual void post_lose();
+    virtual void on_load();
+    virtual void on_clear();
+    virtual void on_lose();
 
-    virtual Texture * load(XML_Element &xml_element);
-    virtual bool keep(const Texture &type);
+    virtual Texture * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename);
 
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;

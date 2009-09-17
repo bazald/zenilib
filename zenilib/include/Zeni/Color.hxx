@@ -52,15 +52,15 @@ namespace Zeni {
   }
 
   Uint32 Color::get_rgba() const {
-    return (r_ub() << 24) | (g_ub() << 16) | (b_ub() << 8) | a_ub();
+    return Uint32(r_ub() << 24) | Uint32(g_ub() << 16) | Uint32(b_ub() << 8) | Uint32(a_ub());
   }
 
   Uint32 Color::get_argb() const {
-    return (a_ub() << 24) | (r_ub() << 16) | (g_ub() << 8) | b_ub();
+    return Uint32(a_ub() << 24) | Uint32(r_ub() << 16) | Uint32(g_ub() << 8) | Uint32(b_ub());
   }
 
   Uint32 Color::get_bgra() const {
-    return (b_ub() << 24) | (g_ub() << 16) | (r_ub() << 8) | a_ub();
+    return Uint32(b_ub() << 24) | Uint32(g_ub() << 16) | Uint32(r_ub() << 8) | Uint32(a_ub());
   }
 
   const float & Color::operator[](const int &index) const {

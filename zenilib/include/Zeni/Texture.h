@@ -42,23 +42,30 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Texture.hxx>
-#endif
-
 #ifndef ZENI_TEXTURE_H
 #define ZENI_TEXTURE_H
 
+#include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 #include <Zeni/IV.h>
 
+#ifdef _MACOSX
+#include <SDL_image/SDL_image.h>
+#else
 #include <SDL/SDL_image.h>
+#endif
+
 #include <string>
 #include <vector>
 
 #ifndef DISABLE_GL
+#ifdef _MACOSX
+#include <GLEW/glew.h>
+#else
 #include <GL/glew.h>
 #endif
+#endif
+
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif
@@ -80,7 +87,7 @@ namespace Zeni {
 #endif
       VTYPE_SPRITE = 3};
 
-    typedef IV<Texture_Base, VTYPE> IV;
+    typedef ::IV<Texture_Base, VTYPE> IV;
   };
 
   class Texture : public Texture_Base::IV {
@@ -94,7 +101,7 @@ namespace Zeni {
     inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
 
   protected:
-    static int build_from_surface(SDL_Surface * &surface);
+    static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution);
 
     const bool m_repeat;
   };
@@ -106,8 +113,10 @@ namespace Zeni {
     Sprite & operator=(const Sprite &rhs);
 
     void append_frame(const std::string &name); ///< Add a frame to the Sprite
+    void append_frame(const std::string &name, const unsigned long &id); ///< Add a frame to the Sprite
     int find_frame(const std::string &name, const int &starting_point = 0) const; ///< Search for a frame
     void insert_frame(const std::string &name, const int &at_this_index); ///< Insert a frame
+    void insert_frame(const std::string &name, const unsigned long &id, const int &at_this_index); ///< Insert a frame
     void remove_frame(const int &frame_number); ///< Remove a frame
 
     int get_num_frames() const; ///< Get the number of frames
@@ -125,19 +134,27 @@ namespace Zeni {
   class Texture_GL : public Texture {
     Texture_GL(const Texture_GL &);
     Texture_GL & operator=(const Texture_GL &);
+
+    friend class Video_GL;
     
   public:
     Texture_GL(const std::string &filename, const bool &repeat /* otherwise clamp */,
                const bool &lazy_loading = false);
     Texture_GL(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
+    Texture_GL(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_GL();
 
     inline void apply_texture_impl() const;
 
+    inline const Point2i & get_size() const;
+
   private:
     static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat);
 
+    Point2i m_size;
     mutable GLuint m_texture_id;
+    GLuint m_render_buffer;
+    GLuint m_frame_buffer_object;
     
     void load(const std::string &filename, const bool &repeat) const;
     
@@ -147,26 +164,31 @@ namespace Zeni {
 
 #ifndef DISABLE_DX9
   class Texture_DX9 : public Texture {
+    Texture_DX9(const Texture_DX9 &);
+    Texture_DX9 & operator=(const Texture_DX9 &);
+
+    friend class Video_DX9;
+
   public:
     Texture_DX9(const std::string &filename, const bool &repeat /* otherwise clamp */);
     Texture_DX9(SDL_Surface *surface, const bool &repeat /* otherwise clamp */);
+    Texture_DX9(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_DX9();
 
     inline void apply_texture_impl() const;
+
+    inline const Point2i & get_size() const;
 
   private:
     static void set_sampler_states();
     static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface);
 
+    Point2i m_size;
     mutable IDirect3DTexture9 *m_texture;
     
     void load(const std::string &filename) const;
   };
 #endif
-
-  struct Invalid_Anisotropy_Setting : public Error {
-    Invalid_Anisotropy_Setting() : Error("Invalid Anisotropy Setting") {}
-  };
 
   struct Texture_Init_Failure : public Error {
     Texture_Init_Failure() : Error("Zeni Texture Failed to Initialize Correctly") {}

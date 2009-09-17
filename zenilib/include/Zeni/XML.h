@@ -41,7 +41,7 @@
  */
 
 /**
- * \class Zeni::XML_Reader
+ * \class Zeni::XML_Document
  *
  * \ingroup Zenilib
  *
@@ -52,10 +52,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/XML.hxx>
-#endif
-
 #ifndef ZENI_XML_H
 #define ZENI_XML_H
 
@@ -64,19 +60,23 @@
 
 namespace Zeni {
 
-  class XML_Element {
+  class XML_Element_c {
   public:
-    inline XML_Element(const TiXmlHandle &handle);
+    inline XML_Element_c(const TiXmlHandle &handle);
 
-    /// Get a named subelement
-    inline XML_Element operator[](const std::string &field) const;
+    /** Tree Traversal **/
 
-    /// Get the first subelement
-    inline XML_Element first() const;
-    /// Get the next subelement
-    inline XML_Element next() const;
+    inline XML_Element_c operator[](const std::string &field) const; ///< Get a named subelement
 
+    inline XML_Element_c first() const; ///< Get the first subelement
+    inline XML_Element_c next() const; ///< Get the next subelement
+
+    /** Basic Element Functionality **/
+
+    inline bool good() const; ///< Test to see if the Element is valid
     inline std::string value() const; ///< Get the value of the element (For nodes, this is the name)
+
+    /** Text Accessors **/
 
     inline bool to_bool() const; ///< Get the contained string as a boolean
     inline int to_int() const; ///< Get the contained string as an integer
@@ -84,33 +84,104 @@ namespace Zeni {
     inline double to_double() const; ///< Get the contained string as a double precision floating point number
     inline std::string to_string() const; ///< Get the contained string
 
-  private:
+  protected:
+    inline TiXmlNode * child(const std::string &field) const;
+    inline TiXmlNode * first_child() const;
+    inline TiXmlNode * child_element(const std::string &field) const;
+    inline TiXmlNode * first_child_element() const;
+
     TiXmlHandle m_handle;
   };
 
-  class XML_Reader {
-    XML_Reader(const XML_Reader &);
-    XML_Reader & operator=(const XML_Reader &);
+  class XML_Element : public XML_Element_c {
+  public:
+    inline XML_Element(const TiXmlHandle &handle);
+
+    /** Tree Traversal **/
+
+    inline XML_Element operator[](const std::string &field); ///< Get a named subelement
+
+    inline XML_Element first(); ///< Get the first subelement
+    inline XML_Element next(); ///< Get the next subelement
+
+    /** Tree Modifiers **/
+
+    inline void create_child(const std::string &field); ///< Create a child node
+    inline void remove_child(const XML_Element &child); ///< Remove a child node, which will be rendered invalid
+
+    /** Text Modifiers **/
+
+    inline void set_bool(const bool &b); ///< Set the contained string as a boolean
+    inline void set_int(const int &i); ///< Set the contained string as an integer
+    inline void set_float(const float &f); ///< Set the contained string as a floating point number
+    inline void set_double(const double &d); ///< Set the contained string as a double precision floating point number
+    inline void set_string(const std::string &s); ///< Set the contained string
+  };
+
+  class XML_Document {
+    XML_Document(const XML_Document &);
+    XML_Document & operator=(const XML_Document &);
 
   public:
-    inline XML_Reader(const std::string &filename);
-    inline ~XML_Reader();
+    inline XML_Document();
+    inline XML_Document(const std::string &filename);
+    inline XML_Document(const std::string &filename, const std::string &backup);
+    inline ~XML_Document();
 
-    inline XML_Element operator[](const std::string &field) const;
+    /** Load and Save **/
 
-    inline XML_Element first() const;\
+    inline bool good() const;
+    inline void load(const std::string &filename);
+    inline void save();
+    inline void save(const std::string &filename);
+
+    inline bool try_load(const std::string &filename);
+    inline bool try_save();
+    inline bool try_save(const std::string &filename);
+
+    /** Tree Traversal **/
+
+    inline XML_Element_c operator[](const std::string &field) const; ///< Get a named subelement
+    inline XML_Element operator[](const std::string &field); ///< Get a named subelement
+
+    inline XML_Element_c first() const; ///< Get the first subelement
+    inline XML_Element first(); ///< Get the first subelement
+
+    /** Manipulation Functions **/
+
+    inline void create_root(const std::string &field); ///< (Re)Initializes the document with a given root field
 
   private:
     TiXmlDocument m_xml_file;
     XML_Element * m_root;
   };
 
-  struct Bad_XML : public Error {
-    Bad_XML() : Error("XML could not be loaded!") {}
+  struct XML_Load_Failure : public Error {
+    XML_Load_Failure() : Error("XML_Document could not be loaded.") {}
   };
 
-  struct Bad_XML_Access : public Error {
-    Bad_XML_Access() : Error("XML query could not be satisfied!") {}
+  struct XML_Save_Failure : public Error {
+    XML_Save_Failure() : Error("XML_Document could not be saved.") {}
+  };
+
+  struct XML_Document_Ungood : public Error {
+    XML_Document_Ungood() : Error("XML_Document not good!") {}
+  };
+
+  struct XML_Element_Ungood : public Error {
+    XML_Element_Ungood() : Error("XML_Element not good!") {}
+  };
+
+  struct XML_Element_Nonleaf : public Error {
+    XML_Element_Nonleaf() : Error("XML_Element attempted leaf-node operation on non-leaf node!") {}
+  };
+
+  struct XML_Create_Child_Failure : public Error {
+    XML_Create_Child_Failure() : Error("XML_Element failed to create a child node!") {}
+  };
+
+  struct XML_Remove_Child_Failure : public Error {
+    XML_Remove_Child_Failure() : Error("XML_Element failed to remove a child node!") {}
   };
 
 }

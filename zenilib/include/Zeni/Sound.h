@@ -60,10 +60,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Sound.hxx>
-#endif
-
 #ifndef ZENI_SOUND_H
 #define ZENI_SOUND_H
 
@@ -75,7 +71,11 @@
 #include <string>
 
 #ifndef DISABLE_AL
+#ifdef _MACOSX
+#include <ALUT/alut.h>
+#else
 #include <AL/alut.h>
+#endif
 #else
 
 #define ALint int

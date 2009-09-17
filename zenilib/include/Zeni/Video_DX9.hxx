@@ -60,14 +60,14 @@ namespace Zeni {
   }
 
   int Video_DX9::get_maximum_anisotropy_impl() const {
-    return m_d3d_capabilities.MaxAnisotropy;
+    return int(m_d3d_capabilities.MaxAnisotropy);
   }
 
   bool Video_DX9::has_vertex_buffers_impl() const {
     return true;
   }
 
-  void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
+  void Video_DX9::set_2d_view_impl(const std::pair<Point2f, Point2f> & /*camera2d*/, const std::pair<Point2i, Point2i> & /*viewport*/, const bool & /*fix_aspect_ratio*/) {
     Matrix4f world = Matrix4f::Scale(Vector3f(1.0f, 1.0f, 0.5f)) *
                      Matrix4f::Translate(Vector3f(0.0f, 0.0f, 1.0f));
     D3DXMATRIX * const world_ptr = reinterpret_cast<D3DXMATRIX *>(&world);
@@ -97,12 +97,12 @@ namespace Zeni {
   }
 
   void Video_DX9::set_zwrite_impl(const bool &enabled) {
-    m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, enabled);
+    m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, DWORD(enabled));
   }
 
   void Video_DX9::set_ztest_impl(const bool &enabled) {
     if(enabled) {
-      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
+      m_d3d_device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
       m_d3d_device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
     }
     else
@@ -134,8 +134,8 @@ namespace Zeni {
     else if(ref > 0xFF)
       ref = 0xFF;
 
-    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, enabled);
-    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, ref);
+    m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, DWORD(enabled));
+    m_d3d_device->SetRenderState(D3DRS_ALPHAREF, DWORD(ref));
     m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, func);
   }
 
@@ -171,12 +171,11 @@ namespace Zeni {
   }
 
   void Video_DX9::set_lighting_impl(const bool &on) {
-    m_d3d_device->SetRenderState(D3DRS_LIGHTING, on);
-    m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, on);
+    m_d3d_device->SetRenderState(D3DRS_LIGHTING, DWORD(on));
+    m_d3d_device->SetRenderState(D3DRS_SPECULARENABLE, DWORD(on));
   }
 
   void Video_DX9::set_ambient_lighting_impl(const Color &color) {
-    m_ambient_color = color;
     m_d3d_device->SetRenderState(D3DRS_AMBIENT, color.get_argb());
   }
 
@@ -184,14 +183,14 @@ namespace Zeni {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
-    light.set(number, *this);
+    light.set(DWORD(number), *this);
   }
 
   void Video_DX9::unset_light_impl(const int &number) {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
-    m_d3d_device->LightEnable(number, FALSE);
+    m_d3d_device->LightEnable(DWORD(number), FALSE);
   }
 
   void Video_DX9::set_material_impl(const Material &material) {
@@ -229,6 +228,53 @@ namespace Zeni {
     shader.unset(*this);
   }
 #endif
+
+  void Video_DX9::set_render_target_impl(Texture &texture) {
+    if(m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    Texture_DX9 &tdx = dynamic_cast<Texture_DX9 &>(texture);
+
+    LPDIRECT3DSURFACE9 render_surface = 0;
+
+    if(FAILED(tdx.m_texture->GetSurfaceLevel(0, &render_surface)))
+      throw Video_Render_To_Texture_Error();
+
+    if(FAILED(m_d3d_device->GetRenderTarget(0, &m_back_buffer)))
+      throw Video_Render_To_Texture_Error();
+    if(FAILED(m_d3d_device->SetRenderTarget(0, render_surface)))
+      throw Video_Render_To_Texture_Error();
+
+    m_render_target = &tdx;
+
+    m_d3d_device->BeginScene();
+  }
+
+  void Video_DX9::unset_render_target_impl() {
+    if(!m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    m_d3d_device->EndScene();
+
+    if(FAILED(m_d3d_device->SetRenderTarget(0, m_back_buffer)))
+      throw Video_Render_To_Texture_Error();
+    m_back_buffer = 0;
+
+    m_render_target = 0;
+  }
+
+  void Video_DX9::clear_render_target_impl(const Color &color) {
+    const Point2i &render_target_size = get_render_target_size();
+    set_viewport(std::make_pair(Point2i(0, 0), Point2i(render_target_size.x, render_target_size.y)));
+    m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(color.a_ub(), color.r_ub(), color.g_ub(), color.b_ub()), 1.0f, 0);
+  }
+
+  inline const Point2i & Video_DX9::get_render_target_size_impl() const {
+    if(m_render_target)
+      return m_render_target->get_size();
+    else
+      return get_screen_size();
+  }
 
   void Video_DX9::push_world_stack_impl() {
     get_matrix_stack()->Push();
@@ -272,7 +318,7 @@ namespace Zeni {
   }
 
   void Video_DX9::set_viewport_impl(const std::pair<Point2i, Point2i> &viewport) {
-    D3DVIEWPORT9 vp = {viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y, 0, 1};
+    D3DVIEWPORT9 vp = {DWORD(viewport.first.x), DWORD(viewport.first.y), DWORD(viewport.second.x - viewport.first.x), DWORD(viewport.second.y - viewport.first.y), 0u, 1u};
     m_d3d_device->SetViewport(&vp);
   }
 
@@ -284,12 +330,16 @@ namespace Zeni {
     return new Texture_DX9(surface, repeat);
   }
 
+  Texture * Video_DX9::create_Texture_impl(const Point2i &size, const bool &repeat) {
+    return new Texture_DX9(size, repeat);
+  }
+
   Font * Video_DX9::create_Font_impl(const std::string &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {
     return new Font_FT(filename, bold, italic, glyph_height, virtual_screen_height);
   }
 
-  Vertex_Buffer * Video_DX9::create_Vertex_Buffer_impl() {
-    return new Vertex_Buffer_DX9();
+  Vertex_Buffer_Renderer * Video_DX9::create_Vertex_Buffer_Renderer_impl(Vertex_Buffer &vertex_buffer) {
+    return new Vertex_Buffer_Renderer_DX9(vertex_buffer);
   }
 
 #ifndef DISABLE_CG
@@ -308,10 +358,6 @@ namespace Zeni {
 
   void Video_DX9::uninit_impl() {
     destroy_device();
-
-    if(m_d3d)
-      m_d3d->Release();
-    m_d3d = 0;
   }
 
   const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {

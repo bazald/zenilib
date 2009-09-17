@@ -50,10 +50,6 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifdef ZENI_INLINES
-#include <Zeni/Vertex2f.hxx>
-#endif
-
 #ifndef ZENI_VERTEX2F_H
 #define ZENI_VERTEX2F_H
 
@@ -66,15 +62,16 @@
 namespace Zeni {
 
   class Vertex2f {
-  public:
+  protected:
     Vertex2f();
     Vertex2f(const Point2f &position);
+  public:
     virtual ~Vertex2f();
 
     virtual Point3f get_position() const;
 
     inline void * get_address() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && defined(X64)
     inline unsigned long long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
 #else
     inline unsigned long get_offset() const; ///< A bit of a hack, necessary to memcpy data into Vertex_Buffers
