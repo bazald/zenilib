@@ -47,7 +47,7 @@ namespace Zeni {
 #if defined(_WINDOWS)
     , g_libpng_dll(LoadLibrary("libpng13.dll"))
 #elif defined(_LINUX)
-    , g_libpng_so(dlopen("libpng.so", RTLD_NOW | RTLD_GLOBAL))
+    , g_libpng_so(dlopen("libpng.so", RTLD_LAZY | RTLD_GLOBAL))
 #endif
   {
     init();
