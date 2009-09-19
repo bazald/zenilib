@@ -81,7 +81,7 @@ def arg_eval(arg):
 
 if not is_windows:
   cc = ARGUMENTS.get('cc', cc)
-  cpp0x = ARGUMENTS.get('cpp0x', cpp0x)
+  cpp0x = arg_eval(ARGUMENTS.get('cpp0x', cpp0x))
 debug = arg_eval(ARGUMENTS.get('debug', debug))
 noal = arg_eval(ARGUMENTS.get('noal', noal))
 if is_windows:
