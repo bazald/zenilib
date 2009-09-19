@@ -41,11 +41,19 @@ namespace Zeni {
   Textures::Textures()
     : Database<Texture>("config/textures.xml", "Textures")
   {
+#ifdef _WINDOWS
+    g_libpng_dll = LoadLibrary("libpng13.dll");
+#endif
+
     init();
   }
 
   Textures::~Textures() {
     uninit();
+
+#ifdef _WINDOWS
+    FreeLibrary(g_libpng_dll);
+#endif
   }
 
   Textures & get_Textures() {

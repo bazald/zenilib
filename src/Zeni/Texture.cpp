@@ -409,8 +409,8 @@ namespace Zeni {
     IDirect3DTexture9 * ppTexture;
 
     const int mode = Texture::build_from_surface(surface,
-      Point2i(min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
-              min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))));
+      Point2i(std::min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
+              std::min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))));
     const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states();

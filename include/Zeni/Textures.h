@@ -46,6 +46,10 @@
 #include <Zeni/Core.h>
 #include <Zeni/Database.h>
 
+#ifdef _WINDOWS
+#include <Windows.h>
+#endif
+
 namespace Zeni {
 
   class Texture;
@@ -95,6 +99,10 @@ namespace Zeni {
     static bool m_loaded, m_bilinear_filtering, m_mipmapping;
     static int m_anisotropic_filtering;
     static bool m_lazy_loading;
+
+#ifdef _WINDOWS
+    HMODULE g_libpng_dll;
+#endif
   };
 
   Textures & get_Textures(); ///< Get access to the singleton.
