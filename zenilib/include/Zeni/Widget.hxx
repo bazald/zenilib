@@ -43,7 +43,6 @@
 #include <Zeni/Colors.h>
 #include <Zeni/Fonts.h>
 
-#undef min
 #include <cassert>
 #include <algorithm>
 
