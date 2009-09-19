@@ -34,25 +34,32 @@
 #include <iostream>
 #include <fstream>
 
+#if defined(_LINUX)
+#include <dlfcn.h>
+#endif
+
 using namespace std;
 
 namespace Zeni {
 
   Textures::Textures()
     : Database<Texture>("config/textures.xml", "Textures")
-  {
-#ifdef _WINDOWS
-    g_libpng_dll = LoadLibrary("libpng13.dll");
+#if defined(_WINDOWS)
+    , g_libpng_dll(LoadLibrary("libpng13.dll"))
+#elif defined(_LINUX)
+    , g_libpng_so(dlopen("libpng.so", RTLD_NOW))
 #endif
-
+  {
     init();
   }
 
   Textures::~Textures() {
     uninit();
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
     FreeLibrary(g_libpng_dll);
+#elif defined(_LINUX)
+    dlclose(g_libpng_so);
 #endif
   }
 
