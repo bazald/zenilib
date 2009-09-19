@@ -100,8 +100,10 @@ namespace Zeni {
     static int m_anisotropic_filtering;
     static bool m_lazy_loading;
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
     HMODULE g_libpng_dll;
+#elif defined(_LINUX)
+    void * g_libpng_so;
 #endif
   };
 
