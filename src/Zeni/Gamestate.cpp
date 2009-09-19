@@ -39,13 +39,6 @@
 
 #include <Zeni/Global.h>
 
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-
 namespace Zeni {
 
   void Gamestate_Base::on_event(const SDL_Event &event) {

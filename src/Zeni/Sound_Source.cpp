@@ -49,9 +49,6 @@
 
 #include <Zeni/Global.h>
 
-#undef min
-#undef max
-
 using std::string;
 using std::min;
 using std::max;

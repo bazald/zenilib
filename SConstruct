@@ -297,7 +297,7 @@ libpath = ['.']
 if is_windows:
   #ccflags += ' /Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 '
   #ccflags += ' /wd4191 ' # eliminate OpenGL extension pointer cast warnings
-  ccflags += ' /FD /EHsc /fp:fast /W4 /nologo /c /TP /wd4005 /wd4312 /wd4505 /wd4311 /errorReport:prompt '
+  ccflags += ' /D "NOMINMAX" /D "WIN32_LEAN_AND_MEAN" /FD /EHsc /fp:fast /W4 /nologo /c /TP /wd4005 /wd4312 /wd4505 /wd4311 /errorReport:prompt '
   linkflags = '/NOLOGO /SUBSYSTEM:WINDOWS /DYNAMICBASE:NO /ERRORREPORT:PROMPT' + link_optimization
   cpppath += ['include_win']
   cpppath += [os.environ['PROGRAMFILES(X86)'] + '\\OpenAL 1.1 SDK\\include']
