@@ -396,7 +396,7 @@ namespace Zeni {
   }
 
   void Slider::set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_) {
-    m_line_segment = Zeni_Collision::Line_Segment(Point3f(end_point_a_), Point3f(end_point_b_));
+    m_line_segment = Collision::Line_Segment(Point3f(end_point_a_), Point3f(end_point_b_));
   }
 
   void Slider::set_slider_radius(const float &radius_) {
@@ -412,7 +412,7 @@ namespace Zeni {
       m_slider_position = slider_position_;
   }
 
-  const Zeni_Collision::Line_Segment & Slider::get_line_segment() const {
+  const Collision::Line_Segment & Slider::get_line_segment() const {
     return m_line_segment;
   }
 

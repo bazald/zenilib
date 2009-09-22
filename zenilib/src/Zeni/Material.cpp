@@ -45,11 +45,9 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
-  Material::Material(const Color &ambient_, const Color &diffuse_, const Color &specular_, const Color &emissive_, const float &power, const string &texture)
+  Material::Material(const Color &ambient_, const Color &diffuse_, const Color &specular_, const Color &emissive_, const float &power, const std::string &texture)
     : diffuse(diffuse_),
     ambient(ambient_),
     specular(specular_), 
@@ -62,7 +60,7 @@ namespace Zeni {
     set_texture(texture);
   }
 
-  Material::Material(const string &texture, const Color &ambient_and_diffuse)
+  Material::Material(const std::string &texture, const Color &ambient_and_diffuse)
     : diffuse(ambient_and_diffuse), 
     ambient(ambient_and_diffuse), 
     specular(ZENI_DIFFUSE_TO_SPECULAR(ambient_and_diffuse)), 

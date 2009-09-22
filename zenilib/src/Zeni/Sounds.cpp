@@ -38,8 +38,6 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 namespace Zeni {
 
   Sounds::Sounds()
@@ -58,7 +56,7 @@ namespace Zeni {
   }
 
   Sound_Buffer * Sounds::load(XML_Element_c &xml_element, const std::string &/*name*/, const std::string &/*filename*/) {
-    const string filepath = xml_element["filepath"].to_string();
+    const std::string filepath = xml_element["filepath"].to_string();
 
     return new Sound_Buffer(filepath);
   }

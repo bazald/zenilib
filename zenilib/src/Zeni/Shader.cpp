@@ -31,8 +31,6 @@
 #include <Zeni/Video.hxx>
 #include <iostream>
 
-using namespace std;
-
 #ifndef DISABLE_CG
 
 namespace Zeni {
@@ -117,7 +115,7 @@ namespace Zeni {
         entry_function.c_str(), /* Entry function name */
         NULL);                  /* Probably no extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
+      std::cerr << "Error initializing '" << filename.c_str() << "'\n";
       throw Shader_Init_Failure();
     }
   }
@@ -177,7 +175,7 @@ namespace Zeni {
         entry_function.c_str(), /* Entry function name */
         options);               /* Probably no extra compiler options */
     if(cgGetError() != CG_NO_ERROR) {
-      cerr << "Error initializing '" << filename.c_str() << "'\n";
+      std::cerr << "Error initializing '" << filename.c_str() << "'\n";
       throw Shader_Init_Failure();
     }
   }
@@ -229,7 +227,7 @@ namespace Zeni {
     if(cgGetError() != CG_NO_ERROR)
       throw Shader_Parameter_Error();
 
-    m_parameters[parameter_name] = make_pair(from, to);
+    m_parameters[parameter_name] = std::make_pair(from, to);
   }
 
   CGparameter Shader::get_from_parameter(const std::string &parameter_name) {

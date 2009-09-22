@@ -34,8 +34,6 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 namespace Zeni {
 
   Fonts::Fonts()
@@ -58,7 +56,7 @@ namespace Zeni {
   }
 
   Font * Fonts::load(XML_Element_c &xml_element, const std::string &/*name*/, const std::string &/*filename*/) {
-    const string filepath = xml_element["filepath"].to_string();
+    const std::string filepath = xml_element["filepath"].to_string();
     const float height = xml_element["height"].to_float();
     const bool bold = xml_element["bold"].to_bool();
     const bool italics = xml_element["italics"].to_bool();

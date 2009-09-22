@@ -28,8 +28,6 @@
 
 #include <Zeni/Resource.hxx>
 
-using namespace std;
-
 namespace Zeni {
 
   Resource::Resource()

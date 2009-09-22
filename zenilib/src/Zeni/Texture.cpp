@@ -171,7 +171,7 @@ namespace Zeni {
   }
 
   void Sprite::insert_frame(const std::string &name, const unsigned long &id, const int &at_this_index) {
-    std::pair<std::string, unsigned long> new_frame = make_pair(name, id);
+    std::pair<std::string, unsigned long> new_frame = std::make_pair(name, id);
     
     if(at_this_index < 0 || at_this_index > int(m_frames.size()))
       throw Frame_Out_of_Range();

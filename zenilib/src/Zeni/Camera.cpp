@@ -82,7 +82,7 @@ namespace Zeni {
                                          ZENI_DEFAULT_UP_VECTOR);
   }
 
-  void Camera::look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane) {
+  void Camera::look_at(const Point3f &world_coord, const Collision::Plane &horizon_plane) {
     look_at(world_coord, horizon_plane.get_normal());
   }
 

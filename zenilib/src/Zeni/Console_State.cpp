@@ -34,8 +34,6 @@
 #include <Zeni/Video.hxx>
 #include <Zeni/Widget.hxx>
 
-using namespace std;
-
 namespace Zeni {
 
   Console_State::Console_State()
@@ -242,7 +240,7 @@ namespace Zeni {
   }
 
   void Console_State::perform_logic() {
-    m_virtual_screen = make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f));
+    m_virtual_screen = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f));
     m_projector = Projector2D(m_virtual_screen);
 
     if(m_bg.c.position.x != m_virtual_screen.second.x) {

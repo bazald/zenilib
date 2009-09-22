@@ -38,8 +38,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
   Font::Font ()
@@ -161,11 +159,11 @@ namespace Zeni {
         m_glyph[int(text[pos])])
         width += m_glyph[int(text[pos])]->get_glyph_width();
       else {
-        max_width = max(max_width, width);
+        max_width = std::max(max_width, width);
         width = 0.0f;
       }
 
-    return max(max_width, width);
+    return std::max(max_width, width);
   }
 
   void Font_FT::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
@@ -297,8 +295,8 @@ NEXT_LINE_2:
       //char t[2] = {c, '\0'};
       //source[c] = TTF_RenderText_Blended(font, t, color2);
       source[c] = TTF_RenderGlyph_Blended(font, c, color2);
-      font_width = max(font_width, float(source[c] ? source[c]->w : 0));
-      font_height = max(font_height, float(source[c] ? source[c]->h : 0));
+      font_width = std::max(font_width, float(source[c] ? source[c]->w : 0));
+      font_height = std::max(font_height, float(source[c] ? source[c]->h : 0));
     }
 
     /*** Initialize Intermediate SDL Surface ***/

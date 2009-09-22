@@ -51,8 +51,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
   static bool video_mode_lt(const Point2i &lhs, const Point2i &rhs) {
@@ -108,10 +106,10 @@ namespace Zeni {
 
       const std::string appdata_path = cr.get_appdata_path();
 
-      const string user_normal = appdata_path + "config/zenilib.xml";
-      const string user_backup = user_normal + ".bak";
-      const string local_normal = "config/zenilib.xml";
-      const string local_backup = local_normal + ".bak";
+      const std::string user_normal = appdata_path + "config/zenilib.xml";
+      const std::string user_backup = user_normal + ".bak";
+      const std::string local_normal = "config/zenilib.xml";
+      const std::string local_backup = local_normal + ".bak";
 
       static bool last_resort_taken = false;
 
@@ -142,12 +140,12 @@ namespace Zeni {
       }
       catch(Video_Init_Failure &) {
         if(cr.copy_file(user_backup, user_normal) && cr.delete_file(user_backup)) {
-          cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
+          std::cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
           Video::preinit_from_file(user_normal);
           get_Video();
         }
         else if(cr.copy_file(local_backup, local_normal) && cr.delete_file(local_backup)) {
-          cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
+          std::cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
           Video::preinit_from_file(local_normal);
           get_Video();
         }
@@ -277,10 +275,10 @@ namespace Zeni {
 
     const std::string appdata_path = cr.get_appdata_path();
 
-    const string user_normal = appdata_path + "config/zenilib.xml";
-    const string user_backup = user_normal + ".bak";
-    const string local_normal = "config/zenilib.xml";
-    const string local_backup = local_normal + ".bak";
+    const std::string user_normal = appdata_path + "config/zenilib.xml";
+    const std::string user_backup = user_normal + ".bak";
+    const std::string local_normal = "config/zenilib.xml";
+    const std::string local_backup = local_normal + ".bak";
 
     // Create file
 
@@ -346,23 +344,23 @@ namespace Zeni {
     g_enabled = enabled;
   }
 
-  void Video::set_tt(const string &title, const string &taskmsg) {
+  void Video::set_tt(const std::string &title, const std::string &taskmsg) {
     get_m_title() = title;
     get_m_taskmsg() = taskmsg;
     set_tt();
   }
 
-  void Video::set_title(const string &title) {
+  void Video::set_title(const std::string &title) {
     get_m_title() = title;
     set_tt();
   }
 
-  void Video::set_taskmsg(const string &taskmsg) {
+  void Video::set_taskmsg(const std::string &taskmsg) {
     get_m_taskmsg() = taskmsg;
     set_tt();
   }
 
-  const bool Video::set_icon(const string &filename) {
+  const bool Video::set_icon(const std::string &filename) {
     get_m_icon() = filename;
     return set_icon();
   }
@@ -429,7 +427,7 @@ namespace Zeni {
     m_icon_surface = IMG_Load(get_m_icon().c_str());
 
     if(!m_icon_surface) {
-      cerr << "Could not load display window icon\n";
+      std::cerr << "Could not load display window icon\n";
       return false;
     }
 

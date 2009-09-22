@@ -27,7 +27,7 @@
 */
 
 /**
- * \class Zeni_Collision::Sphere
+ * \class Zeni::Collision::Sphere
  *
  * \ingroup Zenilib
  *
@@ -45,7 +45,7 @@
  */
 
 /**
- * \class Zeni_Collision::Plane
+ * \class Zeni::Collision::Plane
  *
  * \ingroup Zenilib
  *
@@ -62,7 +62,7 @@
  */
 
 /**
- * \class Zeni_Collision::Line_Segment
+ * \class Zeni::Collision::Line_Segment
  *
  * \ingroup Zenilib
  *
@@ -80,7 +80,7 @@
  */
 
 /**
- * \class Zeni_Collision::Ray
+ * \class Zeni::Collision::Ray
  *
  * \ingroup Zenilib
  *
@@ -98,7 +98,7 @@
  */
 
 /**
- * \class Zeni_Collision::Line
+ * \class Zeni::Collision::Line
  *
  * \ingroup Zenilib
  *
@@ -115,7 +115,7 @@
  */
 
 /**
- * \class Zeni_Collision::Infinite_Cylinder
+ * \class Zeni::Collision::Infinite_Cylinder
  *
  * \ingroup Zenilib
  *
@@ -133,7 +133,7 @@
  */
 
 /**
- * \class Zeni_Collision::Capsule
+ * \class Zeni::Collision::Capsule
  *
  * \ingroup Zenilib
  *
@@ -152,7 +152,7 @@
  */
 
 /**
- * \class Zeni_Collision::Parallelepiped
+ * \class Zeni::Collision::Parallelepiped
  *
  * \ingroup Zenilib
  *
@@ -177,303 +177,306 @@
 
 #include <utility>
 
-namespace Zeni_Collision {
+namespace Zeni {
+  namespace Collision {
 
-  class Sphere;
-  class Plane;
-  class Line;
-  class Ray;
-  class Line_Segment;
-  class Infinite_Cylinder;
-  class Capsule;
-  class Parallelepiped;
+    class Sphere;
+    class Plane;
+    class Line;
+    class Ray;
+    class Line_Segment;
+    class Infinite_Cylinder;
+    class Capsule;
+    class Parallelepiped;
 
-  class Sphere {
-  public:
-    Sphere() : center(0.0f, 0.0f, 0.0f), radius(0.0f) {}
-    Sphere(const Zeni::Point3f &center_, const float &radius_);
-    
-    float shortest_distance(const Sphere &rhs) const;
-    float shortest_distance(const Zeni::Point3f &rhs) const;
-    inline float shortest_distance(const Plane &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+    class Sphere {
+    public:
+      Sphere() : center(0.0f, 0.0f, 0.0f), radius(0.0f) {}
+      Sphere(const Point3f &center_, const float &radius_);
+      
+      float shortest_distance(const Sphere &rhs) const;
+      float shortest_distance(const Point3f &rhs) const;
+      inline float shortest_distance(const Plane &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_center() const {return center;}
-    const float & get_radius() const {return radius;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_center() const {return center;}
+      const float & get_radius() const {return radius;}
 
-  private:
-    Zeni::Point3f center;
-    float radius;
-  };
+    private:
+      Point3f center;
+      float radius;
+    };
 
-  class Plane {
-  public:
-    Plane() : point(0.0f, 0.0f, 0.0f), normal(0.0f, 0.0f, 1.0f) {}
-    Plane(const Zeni::Point3f &point_, const Zeni::Vector3f &normal_);
-    
-    float shortest_distance(const Plane &rhs) const;
-    float shortest_distance(const Zeni::Point3f &rhs) const;
-    float shortest_distance(const Sphere &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+    class Plane {
+    public:
+      Plane() : point(0.0f, 0.0f, 0.0f), normal(0.0f, 0.0f, 1.0f) {}
+      Plane(const Point3f &point_, const Vector3f &normal_);
+      
+      float shortest_distance(const Plane &rhs) const;
+      float shortest_distance(const Point3f &rhs) const;
+      float shortest_distance(const Sphere &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_point() const {return point;}
-    const Zeni::Vector3f & get_normal() const {return normal;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_point() const {return point;}
+      const Vector3f & get_normal() const {return normal;}
 
-  private:
-    Zeni::Point3f point;
-    Zeni::Vector3f normal;
-  };
+    private:
+      Point3f point;
+      Vector3f normal;
+    };
 
-  class Line_Segment {
-  public:
-    Line_Segment() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
-    Line_Segment(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_);
-    
-    /// Returns <distance, interpolation value [0.0f, 1.0f]>
-    std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
-    std::pair<float, float> nearest_point(const Zeni::Point3f &rhs) const;
-    std::pair<float, float> nearest_point(const Sphere &rhs) const;
-    std::pair<float, float> nearest_point(const Plane &rhs) const;
-    std::pair<float, float> nearest_point(const Line &rhs) const;
-    std::pair<float, float> nearest_point(const Ray &rhs) const;
-    std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
+    class Line_Segment {
+    public:
+      Line_Segment() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
+      Line_Segment(const Point3f &end_point_a_, const Point3f &end_point_b_);
+      
+      /// Returns <distance, interpolation value [0.0f, 1.0f]>
+      std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
+      std::pair<float, float> nearest_point(const Point3f &rhs) const;
+      std::pair<float, float> nearest_point(const Sphere &rhs) const;
+      std::pair<float, float> nearest_point(const Plane &rhs) const;
+      std::pair<float, float> nearest_point(const Line &rhs) const;
+      std::pair<float, float> nearest_point(const Ray &rhs) const;
+      std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
 
-    inline float shortest_distance(const Sphere &rhs) const;
-    inline float shortest_distance(const Zeni::Point3f &rhs) const;
-    inline float shortest_distance(const Plane &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+      inline float shortest_distance(const Sphere &rhs) const;
+      inline float shortest_distance(const Point3f &rhs) const;
+      inline float shortest_distance(const Plane &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
-    const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
-    const Zeni::Vector3f & get_direction() const {return direction;}
-    const float & get_direction2() const {return direction2;}
-    static bool has_lower_bound() {return true;}
-    static bool has_upper_bound() {return true;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_end_point_a() const {return end_point_a;}
+      const Point3f & get_end_point_b() const {return end_point_b;}
+      const Vector3f & get_direction() const {return direction;}
+      const float & get_direction2() const {return direction2;}
+      static bool has_lower_bound() {return true;}
+      static bool has_upper_bound() {return true;}
 
-  private:
-    Zeni::Point3f end_point_a;
-    Zeni::Point3f end_point_b;
+    private:
+      Point3f end_point_a;
+      Point3f end_point_b;
 
-    Zeni::Vector3f direction; // end_point_b - end_point_a
-    float direction2; // direction * direction
-  };
+      Vector3f direction; // end_point_b - end_point_a
+      float direction2; // direction * direction
+    };
 
-  class Ray {
-  public:
-    Ray() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
-    Ray(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_);
-    Ray(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_);
-    
-    /// Returns <distance, interpolation value [0.0f, inf)>
-    std::pair<float, float> nearest_point(const Ray &rhs) const;
-    std::pair<float, float> nearest_point(const Zeni::Point3f &rhs) const;
-    std::pair<float, float> nearest_point(const Sphere &rhs) const;
-    std::pair<float, float> nearest_point(const Plane &rhs) const;
-    std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
-    std::pair<float, float> nearest_point(const Line &rhs) const;
-    std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
+    class Ray {
+    public:
+      Ray() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
+      Ray(const Point3f &end_point_a_, const Point3f &end_point_b_);
+      Ray(const Point3f &end_point_a_, const Vector3f &direction_vector_);
+      
+      /// Returns <distance, interpolation value [0.0f, inf)>
+      std::pair<float, float> nearest_point(const Ray &rhs) const;
+      std::pair<float, float> nearest_point(const Point3f &rhs) const;
+      std::pair<float, float> nearest_point(const Sphere &rhs) const;
+      std::pair<float, float> nearest_point(const Plane &rhs) const;
+      std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
+      std::pair<float, float> nearest_point(const Line &rhs) const;
+      std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
 
-    inline float shortest_distance(const Sphere &rhs) const;
-    inline float shortest_distance(const Zeni::Point3f &rhs) const;
-    inline float shortest_distance(const Plane &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+      inline float shortest_distance(const Sphere &rhs) const;
+      inline float shortest_distance(const Point3f &rhs) const;
+      inline float shortest_distance(const Plane &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
-    const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
-    const Zeni::Vector3f & get_direction() const {return direction;}
-    const float & get_direction2() const {return direction2;}
-    static bool has_lower_bound() {return true;}
-    static bool has_upper_bound() {return false;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_end_point_a() const {return end_point_a;}
+      const Point3f & get_end_point_b() const {return end_point_b;}
+      const Vector3f & get_direction() const {return direction;}
+      const float & get_direction2() const {return direction2;}
+      static bool has_lower_bound() {return true;}
+      static bool has_upper_bound() {return false;}
 
-  private:
-    Zeni::Point3f end_point_a;
-    Zeni::Point3f end_point_b;
+    private:
+      Point3f end_point_a;
+      Point3f end_point_b;
 
-    Zeni::Vector3f direction; // end_point_b - end_point_a
-    float direction2; // direction * direction
-  };
+      Vector3f direction; // end_point_b - end_point_a
+      float direction2; // direction * direction
+    };
 
-  class Line {
-  public:
-    Line() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
-    Line(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_);
-    Line(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_);
+    class Line {
+    public:
+      Line() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
+      Line(const Point3f &end_point_a_, const Point3f &end_point_b_);
+      Line(const Point3f &end_point_a_, const Vector3f &direction_vector_);
 
-    float shortest_distance(const Line &rhs) const;
-    float shortest_distance(const Zeni::Point3f &rhs) const;
-    float shortest_distance(const Sphere &rhs) const;
-    float shortest_distance(const Line_Segment &rhs) const;
-    float shortest_distance(const Plane &rhs) const;
-    float shortest_distance(const Parallelepiped &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
+      float shortest_distance(const Line &rhs) const;
+      float shortest_distance(const Point3f &rhs) const;
+      float shortest_distance(const Sphere &rhs) const;
+      float shortest_distance(const Line_Segment &rhs) const;
+      float shortest_distance(const Plane &rhs) const;
+      float shortest_distance(const Parallelepiped &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_end_point_a() const {return end_point_a;}
-    const Zeni::Point3f & get_end_point_b() const {return end_point_b;}
-    const Zeni::Vector3f & get_direction() const {return direction;}
-    const float & get_direction2() const {return direction2;}
-    static bool has_lower_bound() {return false;}
-    static bool has_upper_bound() {return false;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_end_point_a() const {return end_point_a;}
+      const Point3f & get_end_point_b() const {return end_point_b;}
+      const Vector3f & get_direction() const {return direction;}
+      const float & get_direction2() const {return direction2;}
+      static bool has_lower_bound() {return false;}
+      static bool has_upper_bound() {return false;}
 
-  private:
-    Zeni::Point3f end_point_a;
-    Zeni::Point3f end_point_b;
+    private:
+      Point3f end_point_a;
+      Point3f end_point_b;
 
-    Zeni::Vector3f direction; // end_point_b - end_point_a
-    float direction2; // direction * direction
-  };
+      Vector3f direction; // end_point_b - end_point_a
+      float direction2; // direction * direction
+    };
 
-  class Infinite_Cylinder {
-  public:
-    Infinite_Cylinder() : radius(0) {}
-    Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
-                      const float &radius_);
-    Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_,
-                      const float &radius_);
+    class Infinite_Cylinder {
+    public:
+      Infinite_Cylinder() : radius(0) {}
+      Infinite_Cylinder(const Point3f &end_point_a_, const Point3f &end_point_b_,
+                        const float &radius_);
+      Infinite_Cylinder(const Point3f &end_point_a_, const Vector3f &direction_vector_,
+                        const float &radius_);
 
-    float shortest_distance(const Infinite_Cylinder &rhs) const;
-    float shortest_distance(const Zeni::Point3f &rhs) const;
-    float shortest_distance(const Sphere &rhs) const;
-    float shortest_distance(const Plane &rhs) const;
-    float shortest_distance(const Line &rhs) const;
-    float shortest_distance(const Ray &rhs) const;
-    float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+      float shortest_distance(const Infinite_Cylinder &rhs) const;
+      float shortest_distance(const Point3f &rhs) const;
+      float shortest_distance(const Sphere &rhs) const;
+      float shortest_distance(const Plane &rhs) const;
+      float shortest_distance(const Line &rhs) const;
+      float shortest_distance(const Ray &rhs) const;
+      float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_end_point_a() const {return line.get_end_point_a();}
-    const Zeni::Point3f & get_end_point_b() const {return line.get_end_point_b();}
-    const float & get_radius() const {return radius;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_end_point_a() const {return line.get_end_point_a();}
+      const Point3f & get_end_point_b() const {return line.get_end_point_b();}
+      const float & get_radius() const {return radius;}
 
-  private:
-    Line line;
-    float radius;
-  };
+    private:
+      Line line;
+      float radius;
+    };
 
-  class Capsule {
-  public:
-    Capsule() : radius(0) {}
-    Capsule(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
-                  const float &radius_);
+    class Capsule {
+    public:
+      Capsule() : radius(0) {}
+      Capsule(const Point3f &end_point_a_, const Point3f &end_point_b_,
+                    const float &radius_);
 
-    /// Returns <distance, interpolation value [0.0f, 1.0f]>
-    std::pair<float, float> nearest_point(const Capsule &rhs) const;
-    std::pair<float, float> nearest_point(const Zeni::Point3f &rhs) const;
-    std::pair<float, float> nearest_point(const Sphere &rhs) const;
-    std::pair<float, float> nearest_point(const Plane &rhs) const;
-    std::pair<float, float> nearest_point(const Line &rhs) const;
-    std::pair<float, float> nearest_point(const Ray &rhs) const;
-    std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
-    std::pair<float, float> nearest_point(const Infinite_Cylinder &rhs) const;
-    std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
+      /// Returns <distance, interpolation value [0.0f, 1.0f]>
+      std::pair<float, float> nearest_point(const Capsule &rhs) const;
+      std::pair<float, float> nearest_point(const Point3f &rhs) const;
+      std::pair<float, float> nearest_point(const Sphere &rhs) const;
+      std::pair<float, float> nearest_point(const Plane &rhs) const;
+      std::pair<float, float> nearest_point(const Line &rhs) const;
+      std::pair<float, float> nearest_point(const Ray &rhs) const;
+      std::pair<float, float> nearest_point(const Line_Segment &rhs) const;
+      std::pair<float, float> nearest_point(const Infinite_Cylinder &rhs) const;
+      std::pair<float, float> nearest_point(const Parallelepiped &rhs) const;
 
-    inline float shortest_distance(const Capsule &rhs) const;
-    inline float shortest_distance(const Zeni::Point3f &rhs) const;
-    inline float shortest_distance(const Sphere &rhs) const;
-    inline float shortest_distance(const Plane &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Parallelepiped &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
+      inline float shortest_distance(const Point3f &rhs) const;
+      inline float shortest_distance(const Sphere &rhs) const;
+      inline float shortest_distance(const Plane &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Parallelepiped &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_end_point_a() const {return line_segment.get_end_point_a();}
-    const Zeni::Point3f & get_end_point_b() const {return line_segment.get_end_point_b();}
-    const float & get_radius() const {return radius;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_end_point_a() const {return line_segment.get_end_point_a();}
+      const Point3f & get_end_point_b() const {return line_segment.get_end_point_b();}
+      const float & get_radius() const {return radius;}
 
-  private:
-    Line_Segment line_segment;
-    float radius;
-  };
+    private:
+      Line_Segment line_segment;
+      float radius;
+    };
 
-  class Parallelepiped {
-  public:
-    Parallelepiped() : point(0.0f, 0.0f, 0.0f), edge_a(1.0f, 0.0f, 0.0f), edge_b(0.0f, 1.0f, 0.0f), edge_c(0.0f, 0.0f, 1.0f) {}
-    Parallelepiped(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_,
-                   const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_);
+    class Parallelepiped {
+    public:
+      Parallelepiped() : point(0.0f, 0.0f, 0.0f), edge_a(1.0f, 0.0f, 0.0f), edge_b(0.0f, 1.0f, 0.0f), edge_c(0.0f, 0.0f, 1.0f) {}
+      Parallelepiped(const Point3f &point_, const Vector3f &edge_a_,
+                     const Vector3f &edge_b_, const Vector3f &edge_c_);
 
-    float shortest_distance(const Parallelepiped &rhs) const;
-    float shortest_distance(const Zeni::Point3f &rhs) const;
-    float shortest_distance(const Sphere &rhs) const;
-    float shortest_distance(const Plane &rhs) const;
-    float shortest_distance(const Infinite_Cylinder &rhs) const;
-    inline float shortest_distance(const Line &rhs) const;
-    inline float shortest_distance(const Ray &rhs) const;
-    inline float shortest_distance(const Line_Segment &rhs) const;
-    inline float shortest_distance(const Capsule &rhs) const;
+      float shortest_distance(const Parallelepiped &rhs) const;
+      float shortest_distance(const Point3f &rhs) const;
+      float shortest_distance(const Sphere &rhs) const;
+      float shortest_distance(const Plane &rhs) const;
+      float shortest_distance(const Infinite_Cylinder &rhs) const;
+      inline float shortest_distance(const Line &rhs) const;
+      inline float shortest_distance(const Ray &rhs) const;
+      inline float shortest_distance(const Line_Segment &rhs) const;
+      inline float shortest_distance(const Capsule &rhs) const;
 
-    template <typename TYPE>
-    bool intersects(const TYPE &rhs) const;
-    
-    const Zeni::Point3f & get_point() const {return point;}
-    const Zeni::Vector3f & get_edge_a() const {return edge_a;}
-    const Zeni::Vector3f & get_edge_b() const {return edge_b;}
-    const Zeni::Vector3f & get_edge_c() const {return edge_c;}
-    const Zeni::Matrix4f & get_convert_from() const {return convert_from;}
-    const Zeni::Matrix4f & get_convert_to() const {return convert_to;}
-    const Zeni::Point3f & get_center() const {return center;}
-    const Zeni::Vector3f & get_extents() const {return extents;}
-    const Zeni::Vector3f & get_normal_a() const {return normal_a;}
-    const Zeni::Vector3f & get_normal_b() const {return normal_b;}
-    const Zeni::Vector3f & get_normal_c() const {return normal_c;}
+      template <typename TYPE>
+      bool intersects(const TYPE &rhs) const;
+      
+      const Point3f & get_point() const {return point;}
+      const Vector3f & get_edge_a() const {return edge_a;}
+      const Vector3f & get_edge_b() const {return edge_b;}
+      const Vector3f & get_edge_c() const {return edge_c;}
+      const Matrix4f & get_convert_from() const {return convert_from;}
+      const Matrix4f & get_convert_to() const {return convert_to;}
+      const Point3f & get_center() const {return center;}
+      const Vector3f & get_extents() const {return extents;}
+      const Vector3f & get_normal_a() const {return normal_a;}
+      const Vector3f & get_normal_b() const {return normal_b;}
+      const Vector3f & get_normal_c() const {return normal_c;}
 
-  private:
-    Zeni::Point3f point;
-    Zeni::Vector3f edge_a;
-    Zeni::Vector3f edge_b;
-    Zeni::Vector3f edge_c;
+    private:
+      Point3f point;
+      Vector3f edge_a;
+      Vector3f edge_b;
+      Vector3f edge_c;
 
-    Zeni::Matrix4f convert_from;
-    Zeni::Matrix4f convert_to;
+      Matrix4f convert_from;
+      Matrix4f convert_to;
 
-    Zeni::Point3f center;
-    Zeni::Vector3f extents;
-    Zeni::Vector3f normal_a;
-    Zeni::Vector3f normal_b;
-    Zeni::Vector3f normal_c;
-  };
+      Point3f center;
+      Vector3f extents;
+      Vector3f normal_a;
+      Vector3f normal_b;
+      Vector3f normal_c;
+    };
+
+  }
 
 }
 

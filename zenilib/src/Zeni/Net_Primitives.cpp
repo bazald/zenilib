@@ -33,8 +33,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 /*** IPaddress functions ***/
 
 bool operator==(const IPaddress &lhs, const IPaddress &rhs) {
@@ -76,7 +74,7 @@ bool operator>=(const IPaddress &lhs, const IPaddress &rhs) {
 namespace Zeni {
   /*** Simple Helper Functions ***/
 
-  string ustoa(const unsigned short &number) {
+  std::string ustoa(const unsigned short &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -87,7 +85,7 @@ namespace Zeni {
     return buf;
   }
 
-  string stoa(const short &number) {
+  std::string stoa(const short &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -98,7 +96,7 @@ namespace Zeni {
     return buf;
   }
 
-  string uitoa(const unsigned int &number) {
+  std::string uitoa(const unsigned int &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -109,7 +107,7 @@ namespace Zeni {
     return buf;
   }
 
-  string itoa(const int &number) {
+  std::string itoa(const int &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -120,7 +118,7 @@ namespace Zeni {
     return buf;
   }
 
-  string ultoa(const unsigned long &number) {
+  std::string ultoa(const unsigned long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -131,7 +129,7 @@ namespace Zeni {
     return buf;
   }
 
-  string ltoa(const long &number) {
+  std::string ltoa(const long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -143,32 +141,32 @@ namespace Zeni {
   }
 
 #ifdef _WINDOWS
-  string ulltoa(const unsigned long long &number) {
+  std::string ulltoa(const unsigned long long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
     sprintf_s(buf, "%llu", number);
     return buf;
   }
 
-  string lltoa(const long long &number) {
+  std::string lltoa(const long long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
     sprintf_s(buf, "%lld", number);
     return buf;
   }
 #else
-  string ulltoa(const unsigned long &number) {
+  std::string ulltoa(const unsigned long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
     sprintf(buf, "%lu", number);
     return buf;
   }
 
-  string lltoa(const long &number) {
+  std::string lltoa(const long &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
     sprintf(buf, "%ld", number);
     return buf;
   }
 #endif
 
-  string ftoa(const float &number) {
+  std::string ftoa(const float &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -179,13 +177,13 @@ namespace Zeni {
     return buf;
   }
 
-  string ftoa(const float &number, const unsigned int &precision) {
-    ostringstream oss;
+  std::string ftoa(const float &number, const unsigned int &precision) {
+    std::ostringstream oss;
     oss << std::setprecision(std::streamsize(precision)) << number;
     return oss.str();
   }
 
-  string dtoa(const double &number) {
+  std::string dtoa(const double &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -196,13 +194,13 @@ namespace Zeni {
     return buf;
   }
 
-  string dtoa(const double &number, const unsigned int &precision) {
-    ostringstream oss;
+  std::string dtoa(const double &number, const unsigned int &precision) {
+    std::ostringstream oss;
     oss << std::setprecision(std::streamsize(precision)) << number;
     return oss.str();
   }
 
-  string ldtoa(const long double &number) {
+  std::string ldtoa(const long double &number) {
     char buf[ZENI_SPRINTF_BUFFER_SIZE];
   #ifdef _WINDOWS
     sprintf_s
@@ -213,7 +211,7 @@ namespace Zeni {
     return buf;
   }
 
-  string iptoa(const IPaddress &address) {
+  std::string iptoa(const IPaddress &address) {
     Uint32 host = SDLNet_Read32(&address.host);
     Uint16 port = SDLNet_Read16(&address.port);
 
