@@ -306,13 +306,12 @@ namespace Zeni {
     */
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    if(Textures::get_mipmapping())
+    if(GLEW_VERSION_1_4 && Textures::get_mipmapping())
       glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-
-    if(glGetError() == GL_INVALID_ENUM)
-      gluBuild2DMipmaps(GL_TEXTURE_2D, mode1, surface->w, surface->h, mode2, GL_UNSIGNED_BYTE, surface->pixels);
-    else
+    if(GLEW_VERSION_1_4 || !Textures::get_mipmapping())
       glTexImage2D(GL_TEXTURE_2D, 0, mode1, surface->w, surface->h, 0, mode2, GL_UNSIGNED_BYTE, surface->pixels);
+    else
+      gluBuild2DMipmaps(GL_TEXTURE_2D, mode1, surface->w, surface->h, mode2, GL_UNSIGNED_BYTE, surface->pixels);
 
     SDL_FreeSurface(surface);
     
