@@ -17,7 +17,7 @@ if is_windows:
 
 if not is_windows:
   cc = 'g++'
-cpp0x = False #not is_windows
+cpp0x = not is_windows
 debug = True
 lib = 'ar'
 noal = False
