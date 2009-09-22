@@ -584,10 +584,10 @@ namespace Zeni {
     virtual void on_accept();
 
   protected:
-    inline const Zeni_Collision::Line_Segment & get_line_segment() const;
+    inline const Collision::Line_Segment & get_line_segment() const;
 
   private:
-    Zeni_Collision::Line_Segment m_line_segment;
+    Collision::Line_Segment m_line_segment;
     float m_slider_radius;
 
     float m_slider_position;

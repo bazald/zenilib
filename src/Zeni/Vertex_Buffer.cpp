@@ -42,8 +42,6 @@
 
 //#define DISABLE_VBO
 
-using namespace std;
-
 #include <Zeni/Global.h>
 
 namespace Zeni {
@@ -69,7 +67,7 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  static void clear_triangles(vector<Triangle<VERTEX> *> &triangles) {
+  static void clear_triangles(std::vector<Triangle<VERTEX> *> &triangles) {
     for(unsigned int i = 0; i < triangles.size(); ++i)
       delete triangles[i];
     triangles.clear();
@@ -269,8 +267,8 @@ namespace Zeni {
 
   template <typename VERTEX>
   struct DESCRIBER {
-    bool operator()(vector<Triangle<VERTEX> *> &triangles,
-                    vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+    bool operator()(std::vector<Triangle<VERTEX> *> &triangles,
+                    std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
                     const size_t &triangles_done) const {
       size_t last = 0;
       if(!triangles.empty()) {
@@ -361,7 +359,7 @@ namespace Zeni {
         it != descriptors.end();
         ++it)
     {
-      vector< Vertex_Ref<VERTEX> > verts;
+      std::vector< Vertex_Ref<VERTEX> > verts;
 
       verts.reserve(3u * (*it)->num_elements);
       for(size_t i = (*it)->start, iend = (*it)->start + (*it)->num_elements;
@@ -375,9 +373,9 @@ namespace Zeni {
 
       std::stable_sort(verts.begin(), verts.end(), typename Vertex_Ref<VERTEX>::Z_Sorter());
 
-      typename vector< Vertex_Ref<VERTEX> >::iterator kend = verts.begin();
+      typename std::vector< Vertex_Ref<VERTEX> >::iterator kend = verts.begin();
 
-      for(typename vector< Vertex_Ref<VERTEX> >::iterator jt = verts.begin();
+      for(typename std::vector< Vertex_Ref<VERTEX> >::iterator jt = verts.begin();
           jt != verts.end();
           ++jt)
       {
@@ -390,7 +388,7 @@ namespace Zeni {
           }
         }
 
-        for(typename vector< Vertex_Ref<VERTEX> >::iterator kt = jt + 1;
+        for(typename std::vector< Vertex_Ref<VERTEX> >::iterator kt = jt + 1;
             kt != kend;
             ++kt)
         {
@@ -472,7 +470,7 @@ namespace Zeni {
           buffered_normals += n_size;
 
           memcpy(buffered_colors, reinterpret_cast<float *>((*vbo.m_triangles_cm[i])[j].get_address())+6, c_size);
-          swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
+          std::swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
 
@@ -554,7 +552,7 @@ namespace Zeni {
     }
   }
 
-  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
+  static void render(std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
     Video &vr = get_Video();
 
     for(size_t i = 0u; i < descriptors.size(); ++i) {
@@ -734,7 +732,7 @@ namespace Zeni {
       delete [] m_buf_t.data.alt;
   }
 
-  static void render(vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+  static void render(std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
     Vertex_Buffer_Renderer_DX9::VBO_DX9 &vbo_dx9,
     const unsigned int &stride,
     Video_DX9 &vdx) {

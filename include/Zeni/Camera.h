@@ -96,7 +96,7 @@ namespace Zeni {
     void turn_left_xy(const float &theta); ///< Turn the camera left about the z-axis.
 
     void look_at(const Point3f &world_coord, const Vector3f &horizon_plane_normal = ZENI_DEFAULT_UP_VECTOR); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for a Plane with the given normal Vector3f.
-    void look_at(const Point3f &world_coord, const Zeni_Collision::Plane &horizon_plane); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for the given Plane.
+    void look_at(const Point3f &world_coord, const Collision::Plane &horizon_plane); ///< Set the Camera to look at a specific Point3f while maintaining a horizontal horizon for the given Plane.
 
     Point3f position;
     Quaternion orientation; // relative to forward(1.0f, 0.0f, 0.0f), up(0.0f, 0.0f, 1.0f)

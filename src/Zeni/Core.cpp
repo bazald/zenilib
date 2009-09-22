@@ -43,12 +43,10 @@
 #include <sys/stat.h>
 #endif
 
-using namespace std;
-
 namespace Zeni {
 
-  static streambuf * cerr_bak = 0;
-  static streambuf * cout_bak = 0;
+  static std::streambuf * cerr_bak = 0;
+  static std::streambuf * cout_bak = 0;
 
   Core::Core()
     : m_username("username"),
@@ -57,17 +55,17 @@ namespace Zeni {
   {
     /** Redirect output **/
 
-    static ofstream cerr_file("stderr.txt");
-    static ofstream cout_file("stdout.txt");
+    static std::ofstream cerr_file("stderr.txt");
+    static std::ofstream cout_file("stdout.txt");
     
     if(cerr_file.is_open()) {
-      cerr_bak = cerr.rdbuf();
-      cerr.rdbuf(cerr_file.rdbuf());
+      cerr_bak = std::cerr.rdbuf();
+      std::cerr.rdbuf(cerr_file.rdbuf());
     }
 
     if(cout_file.is_open()) {
-      cout_bak = cout.rdbuf();
-      cout.rdbuf(cout_file.rdbuf());
+      cout_bak = std::cout.rdbuf();
+      std::cout.rdbuf(cout_file.rdbuf());
     }
 
     /** Get username **/
@@ -79,9 +77,9 @@ namespace Zeni {
       throw Core_Init_Failure();
 #else
     char username[4096];
-    FILE * whoami = popen("whoami", "r");
+    FILE * whoami = std::popen("whoami", "r");
     fgets(username, sizeof(username), whoami);
-    pclose(whoami);
+    std::pclose(whoami);
     int username_len = strlen(username);
     if(username_len)
       username[username_len - 1] = 0;
@@ -96,9 +94,9 @@ namespace Zeni {
       throw Core_Init_Failure();
 #else
     char appdata_path[4096];
-    FILE * pwd = popen("cd ~/ && pwd", "r");
+    FILE * pwd = std::popen("cd ~/ && pwd", "r");
     fgets(appdata_path, sizeof(appdata_path), pwd);
-    pclose(pwd);
+    std::pclose(pwd);
     int appdata_path_len = strlen(appdata_path);
     if(appdata_path_len)
       appdata_path[appdata_path_len - 1] = 0;
@@ -127,9 +125,9 @@ namespace Zeni {
     SDL_Quit();
 
     if(cout_bak)
-      cout.rdbuf(cout_bak);
+      std::cout.rdbuf(cout_bak);
     if(cerr_bak)
-      cerr.rdbuf(cerr_bak);
+      std::cerr.rdbuf(cerr_bak);
   }
 
   Core & get_Core() {
@@ -169,7 +167,7 @@ namespace Zeni {
   }
 
   bool Core::file_exists(const std::string &file_path) {
-    ifstream fin(file_path.c_str());
+    std::ifstream fin(file_path.c_str());
     return fin.good();
   }
 
@@ -183,11 +181,11 @@ namespace Zeni {
   }
 
   bool Core::copy_file(const std::string &from, const std::string &to) {
-    ifstream fin(from.c_str());
+    std::ifstream fin(from.c_str());
     if(!fin)
       return false;
 
-    ofstream fout(to.c_str());
+    std::ofstream fout(to.c_str());
 
     for(char c; fin.get(c); fout.put(c));
 
@@ -254,8 +252,8 @@ namespace Zeni {
       throw Joystick_Init_Failure();
 
     for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
-      m_joystick.push_back(make_pair(SDL_JoystickOpen(i),
-                                    SDL_JoystickName(i)));
+      m_joystick.push_back(std::make_pair(SDL_JoystickOpen(i),
+                                          SDL_JoystickName(i)));
 
       if(!m_joystick[size_t(i)].first) {
         m_joystick.pop_back();

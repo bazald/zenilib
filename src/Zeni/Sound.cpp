@@ -44,8 +44,6 @@
 #undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
-using namespace std;
-
 namespace Zeni {
 
   Sound_Buffer::Sound_Buffer()
@@ -59,7 +57,7 @@ namespace Zeni {
     m_buffer = alutCreateBufferHelloWorld();
 
     if(m_buffer == AL_NONE) {
-      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
+      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
       throw Sound_Buffer_Init_Failure();
     }
 #endif
@@ -74,17 +72,17 @@ namespace Zeni {
 //    m_buffer = alutCreateBufferHelloWorld();
 //
 //    if(m_buffer == AL_NONE) {
-//      cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << endl;
+//      std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
 //      throw Sound_Buffer_Init_Failure();
 //    }
 //#endif
 //
-//    swap(m_buffer, rhs.m_buffer);
-//    swap(m_loader, rhs.m_loader);
-//    swap(m_thread, rhs.m_thread);
+//    std::swap(m_buffer, rhs.m_buffer);
+//    std::swap(m_loader, rhs.m_loader);
+//    std::swap(m_thread, rhs.m_thread);
 //  }
 
-  Sound_Buffer::Sound_Buffer(const string &filename)
+  Sound_Buffer::Sound_Buffer(const std::string &filename)
     : m_buffer(AL_NONE),
       m_loader(0),
       m_thread(0)
@@ -107,13 +105,13 @@ namespace Zeni {
 
   //Sound_Buffer & Sound_Buffer::operator=(const Sound_Buffer &rhs) {
   //  Sound_Buffer temp(rhs);
-  //  swap(m_buffer, temp.m_buffer);
-  //  swap(m_loader, temp.m_loader);
-  //  swap(m_thread, temp.m_thread);
+  //  std::swap(m_buffer, temp.m_buffer);
+  //  std::swap(m_loader, temp.m_loader);
+  //  std::swap(m_thread, temp.m_thread);
   //  return *this;
   //}
 
-  pair<ALuint, float> Sound_Buffer::load_ogg_vorbis(const string &
+  std::pair<ALuint, float> Sound_Buffer::load_ogg_vorbis(const std::string &
 #ifndef DISABLE_AL
     filename
 #endif
@@ -125,7 +123,7 @@ namespace Zeni {
 
     OggVorbis_File oggFile;
     if(ov_fopen(const_cast<char *>(filename.c_str()), &oggFile))
-      return make_pair(AL_NONE, 0.0f);
+      return std::make_pair(AL_NONE, 0.0f);
 
     /*** Get Information About the Audio File ***/
 
@@ -139,14 +137,14 @@ namespace Zeni {
 
 #ifndef NDEBUG
     if(format == AL_FORMAT_STEREO16)
-      cerr << "WARNING: '" << filename << "' is stereo and will be unaffected by the OpenAL positional audio system." << endl;
+      std::cerr << "WARNING: '" << filename << "' is stereo and will be unaffected by the OpenAL positional audio system." << std::endl;
 #endif
 
     /*** Load the Audio File ***/
 
     int bytes = 0;
     int buffer_size = int(pcm_size);
-    vector<char> buffer( static_cast<size_t>(buffer_size) );
+    std::vector<char> buffer( static_cast<size_t>(buffer_size) );
     for(char *begin = &buffer[0], *end = begin + pcm_size;
         begin != end;
         begin += bytes, buffer_size -= bytes) {
@@ -164,17 +162,17 @@ namespace Zeni {
     alGenBuffers(1, &bufferID);
     alBufferData(bufferID, format, &buffer[0], static_cast<ALsizei>(buffer.size()), freq);
 
-    return make_pair(bufferID, duration);
+    return std::make_pair(bufferID, duration);
 
 #else
 
-    return make_pair(AL_NONE, 0.0f);
+    return std::make_pair(AL_NONE, 0.0f);
 
 #endif
 
   }
 
-  Sound_Buffer::Loader::Loader(const string &filename)
+  Sound_Buffer::Loader::Loader(const std::string &filename)
     : m_duration(0.0f),
     m_filename(filename)
   {
@@ -182,12 +180,12 @@ namespace Zeni {
 
   int Sound_Buffer::Loader::function() {
 #ifndef DISABLE_AL
-    pair<ALuint, float> loaded_ogg = load_ogg_vorbis(m_filename);
+    std::pair<ALuint, float> loaded_ogg = load_ogg_vorbis(m_filename);
     //if(loaded_ogg.first == AL_NONE)
     //  loaded_ogg.first = alutCreateBufferFromFile(m_filename.c_str());
 
     if(loaded_ogg.first == AL_NONE) {
-      cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << endl;
+      std::cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
       return -1;
     }
 
@@ -230,7 +228,7 @@ namespace Zeni {
 #else
     alIsExtensionPresent("AL_EXT_vorbis");
 #endif
-    //cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << endl;
+    //cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << std::endl;
 
     ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
     ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
@@ -255,7 +253,7 @@ namespace Zeni {
     return e_sound;
   }
 
-  void Sound::set_BGM(const string &
+  void Sound::set_BGM(const std::string &
 #ifndef DISABLE_AL
     filename
 #endif

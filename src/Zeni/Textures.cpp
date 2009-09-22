@@ -38,8 +38,6 @@
 #include <dlfcn.h>
 #endif
 
-using namespace std;
-
 namespace Zeni {
 
   Textures::Textures()
@@ -68,7 +66,7 @@ namespace Zeni {
     return e_texturedb;
   }
 
-  void Textures::apply_texture(const string &name) {
+  void Textures::apply_texture(const std::string &name) {
     (*this)[name].apply_texture();
   }
 
@@ -141,7 +139,7 @@ namespace Zeni {
     const bool is_sprite = is_sprite_e.good() && is_sprite_e.to_bool();
 
     if(!is_sprite) {
-      const string filepath = xml_element["filepath"].to_string();
+      const std::string filepath = xml_element["filepath"].to_string();
       const bool tile = xml_element["tile"].to_bool();
 
       return get_Video().load_Texture(filepath, tile, m_lazy_loading);
@@ -157,9 +155,9 @@ namespace Zeni {
             s->append_frame(identifier, get_id(identifier));
           }
           else if(texture.value() == "file") {
-            const string filepath = texture["filepath"].to_string();
+            const std::string filepath = texture["filepath"].to_string();
             const bool tile = texture["tile"].to_bool();
-            const string frame_name = name + '/' + ulltoa(frame_number);
+            const std::string frame_name = name + '/' + ulltoa(frame_number);
 
             Texture * const texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
 

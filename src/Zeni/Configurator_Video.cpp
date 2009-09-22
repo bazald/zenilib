@@ -37,8 +37,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
   Configurator_Video::Check_State::Accept_Button::Accept_Button(Check_State &check_video, const std::pair<Point2f, Point2f> &virtual_screen)
@@ -56,7 +54,7 @@ namespace Zeni {
   }
 
   Configurator_Video::Check_State::Check_State(const bool &failsafe)
-    : Widget_Gamestate(make_pair(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f))),
+    : Widget_Gamestate(std::make_pair(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f))),
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
@@ -397,17 +395,17 @@ namespace Zeni {
 #pragma warning( push )
 #pragma warning( disable : 4355 )
 #endif
-    : Widget_Gamestate(make_pair(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f))),
+    : Widget_Gamestate(std::make_pair(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f))),
     m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
 
-    anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
+    anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), std::make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
     bilinear_filtering(m_zenilib["Textures"]["Bilinear_Filtering"], Textures::get_bilinear_filtering(), Point2f(52.0f, 10.0f + 3 * 42.0f), 36.0f),
     mipmapping(m_zenilib["Textures"]["Mipmapping"], Textures::get_mipmapping(), Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
 
     api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
     full_screen(m_zenilib["Video"]["Full_Screen"], Video::is_fullscreen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
-    multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
+    multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), std::make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
 
     resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
     custom_resolution(*this, true, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),

@@ -32,8 +32,6 @@
 #include <vector>
 #include <list>
 
-using namespace std;
-
 namespace Zeni {
 
   Net::Net() {
@@ -112,7 +110,7 @@ namespace Zeni {
       throw Socket_Closed();
   }
 
-  void TCP_Socket::send(const string &data) {
+  void TCP_Socket::send(const std::string &data) {
     send(data.c_str(), int(data.size()));
   }
 
@@ -128,7 +126,7 @@ namespace Zeni {
     return retval;
   }
 
-  int TCP_Socket::receive(string &data, const int &num_bytes) {
+  int TCP_Socket::receive(std::string &data, const int &num_bytes) {
     data.resize(size_t(num_bytes));
     const int retval = receive(const_cast<char *>(data.c_str()), num_bytes);
     data.resize(size_t(retval));
@@ -267,7 +265,7 @@ namespace Zeni {
   }
   
   bool Split_UDP_Socket::Chunk_Set::complete() const {
-    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
+    for(std::vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
       if(!it->data)
         return false;
     
@@ -277,13 +275,13 @@ namespace Zeni {
   Split_UDP_Socket::Chunk Split_UDP_Socket::Chunk_Set::receive() const {
     Chunk packet;
     
-    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
+    for(std::vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
       packet.size += it->size;
     
     char * dst = new char [packet.size];
     packet.data = dst;
     
-    for(vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it) {
+    for(std::vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it) {
       memcpy(dst, it->data, it->size);
       dst += it->size;
     }
@@ -297,7 +295,7 @@ namespace Zeni {
                                                                                    const Uint16 &which,
                                                                                    Chunk &chunk) {
     // Attempt to complete an existing partial packet
-    for(list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it) {
+    for(std::list<Chunk_Set *>::iterator it = chunk_sets.begin(); it != chunk_sets.end(); ++it) {
       if((*it)->add_chunk(sender, incoming, num_chunks, which, chunk)) {
         if((*it)->complete())
           return *it;
@@ -338,31 +336,31 @@ namespace Zeni {
     
     const char *ptr = reinterpret_cast<const char *>(data);
     for(Uint16 chunk = 0; chunk < num_full_chunks; ++chunk, ptr += split_size) {
-      string s;
+      std::string s;
       
       {
-        ostringstream os;
+        std::ostringstream os;
         serialize(serialize(m_nonce_send.serialize(os), num_chunks), chunk);
         s = os.str();
       }
       
       s.resize(m_chunk_size);
-      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, split_size);
+      std::memcpy(const_cast<char *>(s.c_str()) + offset, ptr, split_size);
       
       UDP_Socket::send(ip, s);
     }
     
     if(partial_chunk) {
-      string s;
+      std::string s;
       
       {
-        ostringstream os;
+        std::ostringstream os;
         serialize(serialize(m_nonce_send.serialize(os), num_chunks), num_full_chunks);
         s = os.str();
       }
       
       s.resize(size_t(offset + partial_chunk));
-      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
+      std::memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
       
       UDP_Socket::send(ip, s);
     }
@@ -374,7 +372,7 @@ namespace Zeni {
 
   int Split_UDP_Socket::receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes) {
     for(int retval = -1; retval;) {
-      string s;
+      std::string s;
       s.resize(m_chunk_size);
       
       retval = UDP_Socket::receive(ip, s);
@@ -385,14 +383,14 @@ namespace Zeni {
         Chunk chunk;
         
         {
-          istringstream is(s);
+          std::istringstream is(s);
           unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
           
           const Uint16 offset = static_cast<Uint16>(nonce.size()) + 2u * sizeof(Uint16);
           
           chunk.size = s.size() - offset;
           chunk.data = new char [chunk.size];
-          memcpy(chunk.data, s.c_str() + offset, chunk.size);
+          std::memcpy(chunk.data, s.c_str() + offset, chunk.size);
         }
         
         const Chunk_Set * cs = m_chunk_collector.add_chunk(ip, nonce, num_chunks, which, chunk);
@@ -401,7 +399,7 @@ namespace Zeni {
         
         Chunk packet = cs->receive();
         if(num_bytes >= Uint16(packet.size)) {
-          memcpy(const_cast<void *>(data), packet.data, packet.size);
+          std::memcpy(const_cast<void *>(data), packet.data, packet.size);
           return int(packet.size);
         }
         

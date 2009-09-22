@@ -35,8 +35,6 @@
 #include <Zeni/Vertex_Buffer.h>
 #include <Zeni/Video.h>
 
-using std::swap;
-
 namespace Zeni {
 
   Logo::Logo(const Point2f &upper_left, const float &height, const Color &logo_color, const Color &text_color)

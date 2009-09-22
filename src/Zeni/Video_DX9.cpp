@@ -43,8 +43,6 @@
 #include <cassert>
 #include <iostream>
 
-using namespace std;
-
 namespace Zeni {
 
   Video_DX9::Video_DX9()
@@ -126,7 +124,7 @@ namespace Zeni {
     SDL_VERSION(&wmInfo.version);
     SDL_GetWMInfo(&wmInfo);
 
-    cout << "Initializing DirectX 9" << endl;
+    std::cout << "Initializing DirectX 9" << std::endl;
 
     m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
 

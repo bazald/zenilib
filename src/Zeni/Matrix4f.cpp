@@ -33,8 +33,6 @@
 
 #include <cmath>
 
-using namespace std;
-
 namespace Zeni {
 
   Matrix4f::Matrix4f()

@@ -31,8 +31,6 @@
 #include <Zeni/Video.hxx>
 #include <Zeni/Widget.hxx>
 
-using namespace std;
-
 namespace Zeni {
 
   Widget_Gamestate::Widget_Gamestate(const std::pair<Point2f, Point2f> &virtual_window_, const bool &fix_aspect_ratio_)

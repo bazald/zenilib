@@ -53,9 +53,6 @@ namespace SDL {
   #include <SDL/SDL_opengl.h>
 }
 
-using namespace std;
-using namespace SDL;
-
 namespace Zeni {
 
   Video_GL::Video_GL()
@@ -159,7 +156,7 @@ namespace Zeni {
     {
       const GLenum err = glewInit();
       if(GLEW_OK != err) {
-        std::cerr << "GLEW Error: " << glewGetErrorString(err) << endl;
+        std::cerr << "GLEW Error: " << glewGetErrorString(err) << std::endl;
         throw Video_Init_Failure();
       }
     }
@@ -178,7 +175,7 @@ namespace Zeni {
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
     if(glGetError() == GL_INVALID_ENUM)
-      cerr << "Quality Warning:  Your graphics card does not support separate specular lighting in OpenGL.\n";
+      std::cerr << "Quality Warning:  Your graphics card does not support separate specular lighting in OpenGL.\n";
 
     // Initialize Assorted Variables
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

@@ -39,8 +39,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
   Sound_Source_Pool::Sound_Source_Pool()
@@ -161,7 +159,7 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::purge() {
-    for(vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
+    for(std::vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
         it != m_playing_and_destroying.end();
         ++it)
     {
@@ -175,9 +173,9 @@ namespace Zeni {
   void Sound_Source_Pool::update() {
     /*** Handle the playing and destroying ***/
 
-    vector<Sound_Source *> keepers;
+    std::vector<Sound_Source *> keepers;
     keepers.reserve(m_playing_and_destroying.size());
-    for(vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
+    for(std::vector<Sound_Source *>::iterator it = m_playing_and_destroying.begin();
         it != m_playing_and_destroying.end();
         ++it)
     {
@@ -195,13 +193,13 @@ namespace Zeni {
 
     /*** Do the regular update ***/
 
-    vector<Sound_Source_HW *> unassigned_hw;
+    std::vector<Sound_Source_HW *> unassigned_hw;
     const size_t needed_hw = m_handles.size();
     size_t given_hw = 0;
 
     /*** Find out how much Sound_Source_HW is needed ***/
 
-    for(vector<Sound_Source *>::iterator it = m_handles.begin();
+    for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
         it != m_handles.end();
         ++it)
     {
@@ -242,7 +240,7 @@ namespace Zeni {
 
     /*** Assign Sound_Source_HW to high priority 'Sound_Source's ***/
 
-    vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
+    std::vector<Sound_Source_HW *>::iterator jt = unassigned_hw.begin();
 
     for(size_t i = cut; i != needed_hw; ++i) {
       Sound_Source &source = *m_handles[i];
@@ -298,7 +296,7 @@ namespace Zeni {
   }
 
   void Sound_Source_Pool::destroy_all_hw() {
-    for(vector<Sound_Source *>::iterator it = m_handles.begin();
+    for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
         it != m_handles.end();
         ++it)
     {

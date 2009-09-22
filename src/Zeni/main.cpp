@@ -48,28 +48,25 @@
 #include <mach-o/dyld.h>
 #endif
 
-using namespace std;
-using namespace Zeni;
-
 static bool load_config() {
-  XML_Document config_xml("config/zenilib.xml");
+  Zeni::XML_Document config_xml("config/zenilib.xml");
   bool user_config = true;
 
   {
-    Core::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
-    get_Core(); // Primarily to set up IO redirection
+    Zeni::Core::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
+    Zeni::Core &cr = Zeni::get_Core(); // Partially to set up IO redirection
 
-    if(config_xml.try_load(get_Core().get_appdata_path() + "config/zenilib.xml"))
-      cerr << "User-specific config file loaded from '"
-           << get_Core().get_appdata_path() + "config/zenilib.xml"
-           << "'." << endl;
+    if(config_xml.try_load(cr.get_appdata_path() + "config/zenilib.xml"))
+      std::cerr << "User-specific config file loaded from '"
+                << cr.get_appdata_path() + "config/zenilib.xml"
+                << "'." << std::endl;
     else {
-      cerr << "User-specific config file not found." << endl;
+      std::cerr << "User-specific config file not found." << std::endl;
       user_config = false;
     }
   }
 
-  XML_Element_c zenilib = config_xml["Zenilib"];
+  Zeni::XML_Element_c zenilib = config_xml["Zenilib"];
 
   struct {
     struct {
@@ -79,16 +76,16 @@ static bool load_config() {
     } textures;
 
     struct {
-      Video_Base::VIDEO_MODE api;
+      Zeni::Video_Base::VIDEO_MODE api;
       bool full_screen;
       int multisampling;
-      Point2i screen_resolution;
+      Zeni::Point2i screen_resolution;
       bool vertical_sync;
     } video;
   } config;
 
   {
-    XML_Element_c textures = zenilib["Textures"];
+    Zeni::XML_Element_c textures = zenilib["Textures"];
 
     config.textures.anisotropy = textures["Anisotropy"].to_int();
     if(config.textures.anisotropy < 0)
@@ -100,24 +97,24 @@ static bool load_config() {
   }
 
   {
-    XML_Element_c video = zenilib["Video"];
+    Zeni::XML_Element_c video = zenilib["Video"];
 
-    const string api = video["API"].to_string();
+    const std::string api = video["API"].to_string();
 #ifndef DISABLE_GL
     if(api == "OpenGL")
-      config.video.api = Video_Base::ZENI_VIDEO_GL;
+      config.video.api = Zeni::Video_Base::ZENI_VIDEO_GL;
     else
 #endif
 #ifndef DISABLE_DX9
       if(api == "DX9")
-        config.video.api = Video_Base::ZENI_VIDEO_DX9;
+        config.video.api = Zeni::Video_Base::ZENI_VIDEO_DX9;
       else
 #endif
       {
-        config.video.api = Video_Base::ZENI_VIDEO_ANY;
+        config.video.api = Zeni::Video_Base::ZENI_VIDEO_ANY;
 
         if(api == "Disabled")
-          Video::set_enabled(false);
+          Zeni::Video::set_enabled(false);
       }
 
     config.video.full_screen = video["Full_Screen"].to_bool();
@@ -127,7 +124,7 @@ static bool load_config() {
       config.video.multisampling = 16;
 
     {
-      XML_Element_c screen_resolution = video["Resolution"];
+      Zeni::XML_Element_c screen_resolution = video["Resolution"];
 
       config.video.screen_resolution.x = screen_resolution["Width"].to_int();
       config.video.screen_resolution.y = screen_resolution["Height"].to_int();
@@ -137,16 +134,16 @@ static bool load_config() {
   }
 
   // Start engines
-  Video::preinit_video_mode(config.video.api);
-  Video::preinit_screen_resolution(config.video.screen_resolution);
-  Video::preinit_full_screen(config.video.full_screen);
-  Video::preinit_multisampling(config.video.multisampling);
-  Video::preinit_vertical_sync(config.video.vertical_sync);
-  Video::preinit_show_frame(true);
+  Zeni::Video::preinit_video_mode(config.video.api);
+  Zeni::Video::preinit_screen_resolution(config.video.screen_resolution);
+  Zeni::Video::preinit_full_screen(config.video.full_screen);
+  Zeni::Video::preinit_multisampling(config.video.multisampling);
+  Zeni::Video::preinit_vertical_sync(config.video.vertical_sync);
+  Zeni::Video::preinit_show_frame(true);
 
-  Textures::set_texturing_mode(config.textures.anisotropy,
-                               config.textures.bilinear_filtering,
-                               config.textures.mipmapping);
+  Zeni::Textures::set_texturing_mode(config.textures.anisotropy,
+                                     config.textures.bilinear_filtering,
+                                     config.textures.mipmapping);
 
   return user_config;
 }
@@ -183,34 +180,34 @@ static std::string alErrorString(const ALenum &err) {
 #endif
 
 static void print_errors() {
-  cerr << "Printing all possible error strings:\n";
+  std::cerr << "Printing all possible error strings:" << std::endl;
 
-  cerr << "SDL       : " << (strlen(SDL_GetError()   ) ? SDL_GetError()    : "no error") << endl;
-  cerr << "SDL_image : " << (strlen(IMG_GetError ()  ) ? IMG_GetError ()   : "no error") << endl;
-  cerr << "SDL_net   : " << (strlen(SDLNet_GetError()) ? SDLNet_GetError() : "no error") << endl;
-  cerr << "SDL_ttf   : " << (strlen(TTF_GetError()   ) ? TTF_GetError()    : "no error") << endl;
+  std::cerr << "SDL       : " << (strlen(SDL_GetError()   ) ? SDL_GetError()    : "no error") << std::endl;
+  std::cerr << "SDL_image : " << (strlen(IMG_GetError ()  ) ? IMG_GetError ()   : "no error") << std::endl;
+  std::cerr << "SDL_net   : " << (strlen(SDLNet_GetError()) ? SDLNet_GetError() : "no error") << std::endl;
+  std::cerr << "SDL_ttf   : " << (strlen(TTF_GetError()   ) ? TTF_GetError()    : "no error") << std::endl;
 
 #ifndef DISABLE_DX9
   //DXGetErrorString?
 #endif
 
 #ifndef DISABLE_GL
-  cerr << "OpenGL    : " << gluErrorString(glGetError()) << endl;
+  std::cerr << "OpenGL    : " << gluErrorString(glGetError()) << std::endl;
 #endif
 
 #ifndef DISABLE_AL
-  cerr << "OpenAL    : " << alErrorString(alGetError()) << endl;
+  std::cerr << "OpenAL    : " << alErrorString(alGetError()) << std::endl;
 #endif
 
 #ifndef DISABLE_CG
-  cerr << "Cg        : " << cgGetErrorString(cgGetError()) << endl;
+  std::cerr << "Cg        : " << cgGetErrorString(cgGetError()) << std::endl;
 #endif
 }
 
 inline int main2(const size_t &argc, const char * const argv[]) {
-  srand(static_cast<unsigned int>(time(0)));
+  std::srand(static_cast<unsigned int>(std::time(0)));
 
-  vector<string> args(argc - 1u);
+  std::vector<std::string> args(argc - 1u);
   for(size_t i = 1u; i < argc; ++i)
     args[i - 1u] = argv[i];
 
@@ -219,24 +216,24 @@ inline int main2(const size_t &argc, const char * const argv[]) {
     const bool user_config = load_config();
 
     // Initialize Game
-    get_Game(&args);
+    Zeni::Game &gr = Zeni::get_Game(&args);
 
     // Check Rendering Options on Firstrun
-    if(!user_config && Video::is_enabled())
-      get_Game().push_state(new Zeni::Configurator_Video::Check_State(true));
+    if(!user_config && Zeni::Video::is_enabled())
+      gr.push_state(new Zeni::Configurator_Video::Check_State(true));
 
     // Run Game
-    get_Game().run();
+    gr.run();
   }
-  catch(Quit_Event &) {
-    cerr << "Exiting normally." << endl;
+  catch(Zeni::Quit_Event &) {
+    std::cerr << "Exiting normally." << std::endl;
   }
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4130 )
 #endif
-  catch(Error &error) {
-    cerr << error.msg << endl;
+  catch(Zeni::Error &error) {
+    std::cerr << error.msg << std::endl;
 
     print_errors();
 
@@ -244,7 +241,7 @@ inline int main2(const size_t &argc, const char * const argv[]) {
     return 1;
   }
   catch(...) {
-    cerr << "Unknown Error (Not of Type 'Zeni::Error')";
+    std::cerr << "Unknown Error (Not of Type 'Zeni::Error')";
 
     print_errors();
 
@@ -276,7 +273,7 @@ int main(int argc, char *argv[]) {
 #else
   if(!SetDllDirectory("bin")) {
 #endif
-    cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
+    std::cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
     return -1;
   }
 #else
@@ -287,7 +284,7 @@ int main(int argc, char *argv[]) {
 #else
     uint32_t size = sizeof(application_path);
     if(_NSGetExecutablePath(application_path, &size)) {
-      cerr << "Loading working directory failed.\n";
+      std::cerr << "Loading working directory failed.\n";
       return -1;
     }
     int length = strlen(application_path);
@@ -296,9 +293,9 @@ int main(int argc, char *argv[]) {
 #endif
       up_one_dir(application_path, length);
     if(chdir(application_path)) {
-      cerr << "chdir: " << application_path << '\n';
-      cerr << "Setting working directory failed with error code: '" << errno << "'\n";
-      cerr << strerror(errno) << '\n';
+      std::cerr << "chdir: " << application_path << '\n';
+      std::cerr << "Setting working directory failed with error code: '" << errno << "'\n";
+      std::cerr << strerror(errno) << '\n';
       return -1;
     }
   }

@@ -39,8 +39,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace std;
-
 namespace Zeni {
 
   Widget::~Widget() {
@@ -451,9 +449,9 @@ namespace Zeni {
     const std::pair<float, float> test = get_line_segment().nearest_point(mouse_pos);
     if(test.first < get_slider_radius()) {
       if(button == (m_mouse_wheel_inverted ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP))
-        set_value(min(get_range().second, get_value() + 1));
+        set_value(std::min(get_range().second, get_value() + 1));
       else
-        set_value(max(get_range().first, get_value() - 1));
+        set_value(std::max(get_range().first, get_value() - 1));
 
       on_slide();
     }
@@ -546,7 +544,7 @@ namespace Zeni {
     m_normal_button(*this, upper_left_, lower_right_),
     m_selector_slider(*this,
                       0.5f * (expanded_lower_right_.x - lower_right_.x),
-                      make_pair(lower_right_.x, expanded_lower_right_.x))
+                      std::make_pair(lower_right_.x, expanded_lower_right_.x))
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
@@ -698,8 +696,8 @@ namespace Zeni {
     size_t needed_above = centered;
     size_t needed_below = m_options.size() - centered - 1u;
 
-    view_start = centered - min(slots_above, needed_above);
-    view_end = centered + min(slots_below, needed_below) + 1u;
+    view_start = centered - std::min(slots_above, needed_above);
+    view_end = centered + std::min(slots_below, needed_below) + 1u;
     view_offset = centered;
 
     // Shift up as needed and possible
@@ -732,8 +730,8 @@ namespace Zeni {
       const float hx = 0.5f * (m_normal_button.get_lower_right().x + m_expanded.get_lower_right().x);
 
       m_selector_slider.set_end_points(Point2f(hx, v.first.y + r), Point2f(hx, v.second.y - r));
-      m_selector_slider.set_range(make_pair(int(view_offset - needed_above + slots_above),
-                                            int(view_offset + needed_below - slots_below)));
+      m_selector_slider.set_range(std::make_pair(int(view_offset - needed_above + slots_above),
+                                                 int(view_offset + needed_below - slots_below)));
       m_selector_slider.set_value(int(view_offset));
     }
   }
@@ -743,7 +741,7 @@ namespace Zeni {
     const Point2f &lr = m_normal_button.get_lower_right();
     const float bh = button_height();
     const float ex = view_hidden ? 2.0f * m_selector_slider.get_slider_radius() : 0.0f;
-    return make_pair(Point2f(ul.x, ul.y - bh * (view_offset - view_start)),
+    return std::make_pair(Point2f(ul.x, ul.y - bh * (view_offset - view_start)),
                      Point2f(lr.x + ex, ul.y + bh * (view_end - view_offset)));
   }
 
@@ -764,7 +762,7 @@ namespace Zeni {
   }
 
   void Selector::clear() {
-    for(vector<Selector_Button *>::const_iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
+    for(std::vector<Selector_Button *>::const_iterator it = m_selector_buttons.begin(); it != m_selector_buttons.end(); ++it)
       delete *it;
     m_selector_buttons.clear();
   }
@@ -807,11 +805,11 @@ namespace Zeni {
         case SDLK_BACKSPACE:
           if(mod_none)
           {
-            const string &t = get_text();
+            const std::string &t = get_text();
 
             if(m_edit_pos > 0) {
-              string t0 = t.substr(0u, m_edit_pos - 1u);
-              string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
+              std::string t0 = t.substr(0u, m_edit_pos - 1u);
+              std::string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
 
               m_text.text = t0 + t1;
               format();
@@ -824,11 +822,11 @@ namespace Zeni {
         case SDLK_DELETE:
           if(mod_none)
           {
-            const string &t = get_text();
+            const std::string &t = get_text();
 
             if(m_edit_pos < int(t.size())) {
-              string t0 = t.substr(0u, size_t(m_edit_pos));
-              string t1 = t.substr(m_edit_pos + 1u, t.size() - m_edit_pos - 1);
+              std::string t0 = t.substr(0u, size_t(m_edit_pos));
+              std::string t1 = t.substr(m_edit_pos + 1u, t.size() - m_edit_pos - 1);
 
               m_text.text = t0 + t1;
               format();
@@ -896,10 +894,10 @@ namespace Zeni {
           if(mod_none || mod_shift_only)
           {
             const char c = Gamestate_Base::to_char(keysym);
-            const string &t = get_text();
-            string t0 = t.substr(0u, size_t(m_edit_pos));
-            string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
-            string next = clean_string(t0 + c + t1);
+            const std::string &t = get_text();
+            std::string t0 = t.substr(0u, size_t(m_edit_pos));
+            std::string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
+            std::string next = clean_string(t0 + c + t1);
 
             if(next.size() != t.size()) {
               m_text.text = next;
@@ -1054,7 +1052,7 @@ namespace Zeni {
     if(t.empty())
       return;
 
-    list<Word> words;
+    std::list<Word> words;
     Word next_word;
 
     for(size_t i = 0, iend = t.size(); i != iend; ++i) {
@@ -1079,11 +1077,11 @@ namespace Zeni {
     if(next_word.type != Word::NONSENSE)
       words.push_back(next_word);
 
-    for(list<Word>::iterator it = words.begin(); it != words.end(); ++it)
+    for(std::list<Word>::iterator it = words.begin(); it != words.end(); ++it)
       append_word(*it);
 
     float glyph_top = 0.0f;
-    for(vector<Line>::iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
+    for(std::vector<Line>::iterator it = m_lines.begin(); it != m_lines.end(); ++it) {
       it->formatted = untablinebreak(it->unformatted);
       if(it->fpsplit)
         it->formatted += "-";
@@ -1189,7 +1187,7 @@ namespace Zeni {
   int Text_Box::get_max_cursor_seek() const {
     if(!m_lines.empty()) {
       size_t count = 0u;
-      for(vector<Line>::const_iterator it = m_lines.begin();        it != m_lines.end(); ++it)
+      for(std::vector<Line>::const_iterator it = m_lines.begin();        it != m_lines.end(); ++it)
       count += it->unformatted_glyph_sides.size();
       return int(count);
     }
@@ -1201,7 +1199,7 @@ namespace Zeni {
     if(!is_editable())
       return;
 
-    const string t = get_text();
+    const std::string t = get_text();
 
     if(edit_pos < 0 ||
       edit_pos > int(t.size()))
@@ -1275,19 +1273,19 @@ namespace Zeni {
     }
   }
 
-  string Text_Box::clean_string(const string &unclean_string) const {
-    string cleaned;
-    for(string::const_iterator it = unclean_string.begin(); it != unclean_string.end(); ++it)
+  std::string Text_Box::clean_string(const std::string &unclean_string) const {
+    std::string cleaned;
+    for(std::string::const_iterator it = unclean_string.begin(); it != unclean_string.end(); ++it)
       if(*it >= 0x20 ||
          *it == '\n' || *it == '\t')
         cleaned += *it;
     return cleaned;
   }
 
-  string Text_Box::untablinebreak(const string &tabbed_text) const {
-    string untabbed_text;
+  std::string Text_Box::untablinebreak(const std::string &tabbed_text) const {
+    std::string untabbed_text;
 
-    for(string::const_iterator it = tabbed_text.begin(); it != tabbed_text.end(); ++it) {
+    for(std::string::const_iterator it = tabbed_text.begin(); it != tabbed_text.end(); ++it) {
       if(*it != '\t') {
         if(*it > 0x1F)
           untabbed_text += *it;
@@ -1300,14 +1298,14 @@ namespace Zeni {
     return untabbed_text;
   }
 
-  float Text_Box::get_text_width(const Font &font, const string &text) {
-    const string untabbed_text = untablinebreak(text);
+  float Text_Box::get_text_width(const Font &font, const std::string &text) {
+    const std::string untabbed_text = untablinebreak(text);
 
     if(font.get_text_width(" "))
       return font.get_text_width(untabbed_text);
 
-    string fake_text;
-    for(string::const_iterator it = untabbed_text.begin(); it != untabbed_text.end(); ++it)
+    std::string fake_text;
+    for(std::string::const_iterator it = untabbed_text.begin(); it != untabbed_text.end(); ++it)
       if(*it != ' ')
         fake_text += *it;
       else

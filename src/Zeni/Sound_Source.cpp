@@ -49,10 +49,6 @@
 
 #include <Zeni/Global.h>
 
-using std::string;
-using std::min;
-using std::max;
-
 namespace Zeni {
 
   const Sound_Buffer & get_Hello_World_Buffer() {
