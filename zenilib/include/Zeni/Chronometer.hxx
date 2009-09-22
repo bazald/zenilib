@@ -57,18 +57,28 @@ namespace Zeni {
     : m_seconds_counted(rhs.m_seconds_counted),
     m_start_time(rhs.m_start_time),
     m_end_time(rhs.m_end_time),
-    m_running(rhs.running),
+    m_running(rhs.m_running),
     m_scaling_factor(rhs.m_scaling_factor)
   {
     get_chronometers().insert(this);
+
+    if(g_are_paused && m_running)
+      get_paused().insert(this);
   }
 
   template <class TIME>
   Chronometer<TIME> & Chronometer<TIME>::operator =(const Chronometer<TIME> &rhs) {
+    if(g_are_paused) {
+      if(m_running && !rhs.m_running)
+        get_paused().erase(this);
+      else if(rhs.m_running && !m_running)
+        get_paused().insert(this);
+    }
+
     m_seconds_counted = rhs.m_seconds_counted;
     m_start_time = rhs.m_start_time;
     m_end_time = rhs.m_end_time;
-    m_running = rhs.running;
+    m_running = rhs.m_running;
     m_scaling_factor = rhs.m_scaling_factor;
     return *this;
   }
