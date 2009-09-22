@@ -77,9 +77,9 @@ namespace Zeni {
       throw Core_Init_Failure();
 #else
     char username[4096];
-    FILE * whoami = std::popen("whoami", "r");
+    FILE * whoami = popen("whoami", "r");
     fgets(username, sizeof(username), whoami);
-    std::pclose(whoami);
+    pclose(whoami);
     int username_len = strlen(username);
     if(username_len)
       username[username_len - 1] = 0;
@@ -94,9 +94,9 @@ namespace Zeni {
       throw Core_Init_Failure();
 #else
     char appdata_path[4096];
-    FILE * pwd = std::popen("cd ~/ && pwd", "r");
+    FILE * pwd = popen("cd ~/ && pwd", "r");
     fgets(appdata_path, sizeof(appdata_path), pwd);
-    std::pclose(pwd);
+    pclose(pwd);
     int appdata_path_len = strlen(appdata_path);
     if(appdata_path_len)
       appdata_path[appdata_path_len - 1] = 0;

@@ -345,7 +345,7 @@ namespace Zeni {
       }
       
       s.resize(m_chunk_size);
-      std::memcpy(const_cast<char *>(s.c_str()) + offset, ptr, split_size);
+      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, split_size);
       
       UDP_Socket::send(ip, s);
     }
@@ -360,7 +360,7 @@ namespace Zeni {
       }
       
       s.resize(size_t(offset + partial_chunk));
-      std::memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
+      memcpy(const_cast<char *>(s.c_str()) + offset, ptr, partial_chunk);
       
       UDP_Socket::send(ip, s);
     }
@@ -390,7 +390,7 @@ namespace Zeni {
           
           chunk.size = s.size() - offset;
           chunk.data = new char [chunk.size];
-          std::memcpy(chunk.data, s.c_str() + offset, chunk.size);
+          memcpy(chunk.data, s.c_str() + offset, chunk.size);
         }
         
         const Chunk_Set * cs = m_chunk_collector.add_chunk(ip, nonce, num_chunks, which, chunk);
@@ -399,7 +399,7 @@ namespace Zeni {
         
         Chunk packet = cs->receive();
         if(num_bytes >= Uint16(packet.size)) {
-          std::memcpy(const_cast<void *>(data), packet.data, packet.size);
+          memcpy(const_cast<void *>(data), packet.data, packet.size);
           return int(packet.size);
         }
         
