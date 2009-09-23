@@ -317,7 +317,7 @@
 		D34A66F60FFE865E00146950 /* sounds.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = sounds.xml; path = ../config/sounds.xml; sourceTree = SOURCE_ROOT; };
 		D34A66F70FFE865E00146950 /* textures.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = textures.xml; path = ../config/textures.xml; sourceTree = SOURCE_ROOT; };
 		D34A66F80FFE865E00146950 /* zenilib.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zenilib.xml; path = ../config/zenilib.xml; sourceTree = SOURCE_ROOT; };
-		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "../Frameworks/lib3ds-2.0.framework"; sourceTree = "<absolute>"; };
+		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "../Frameworks/lib3ds-2.0.framework"; sourceTree = SOURCE_ROOT; };
 		D36C2DA8102B948900E71223 /* Logo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logo.h; path = ../include/Zeni/Logo.h; sourceTree = SOURCE_ROOT; };
 		D36C2DA9102B948900E71223 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../include/Zeni/Random.h; sourceTree = SOURCE_ROOT; };
 		D36C2DAA102B949F00E71223 /* Logo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logo.cpp; path = ../src/Zeni/Logo.cpp; sourceTree = SOURCE_ROOT; };
