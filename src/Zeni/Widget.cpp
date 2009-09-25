@@ -105,10 +105,12 @@ namespace Zeni {
     if(!wrr)
       throw Widget_Renderer_Wrong_Type();
 
-    const Quadrilateral<Vertex2f_Texture> quad(Vertex2f_Texture(wrr->get_upper_left(), tex_coord_ul),
-                                               Vertex2f_Texture(wrr->get_lower_left(), tex_coord_ll),
-                                               Vertex2f_Texture(wrr->get_lower_right(), tex_coord_lr),
-                                               Vertex2f_Texture(wrr->get_upper_right(), tex_coord_ur));
+    Quadrilateral<Vertex2f_Texture> quad(Vertex2f_Texture(wrr->get_upper_left(), tex_coord_ul),
+                                         Vertex2f_Texture(wrr->get_lower_left(), tex_coord_ll),
+                                         Vertex2f_Texture(wrr->get_lower_right(), tex_coord_lr),
+                                         Vertex2f_Texture(wrr->get_upper_right(), tex_coord_ur));
+    Material mat(texture);
+    quad.lend_Material(&mat);
 
     get_Video().render(quad);
   }
