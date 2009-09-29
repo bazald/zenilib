@@ -155,7 +155,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zenilib_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Zenilib.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zenilib.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D345B0711002818300A1B90A /* Title_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Title_State.h; path = ../include/Zeni/Title_State.h; sourceTree = SOURCE_ROOT; };
 		D345B0721002818300A1B90A /* Widget_Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget_Gamestate.h; path = ../include/Zeni/Widget_Gamestate.h; sourceTree = SOURCE_ROOT; };
 		D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget_Gamestate.cpp; path = ../src/Zeni/Widget_Gamestate.cpp; sourceTree = SOURCE_ROOT; };
@@ -321,12 +321,12 @@
 		D36C2DA8102B948900E71223 /* Logo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logo.h; path = ../include/Zeni/Logo.h; sourceTree = SOURCE_ROOT; };
 		D36C2DA9102B948900E71223 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../include/Zeni/Random.h; sourceTree = SOURCE_ROOT; };
 		D36C2DAA102B949F00E71223 /* Logo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logo.cpp; path = ../src/Zeni/Logo.cpp; sourceTree = SOURCE_ROOT; };
-		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
+		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = /System/Library/Frameworks/OpenAL.framework; sourceTree = "<absolute>"; };
 		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ../Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
-		D3E494830FFF0B5600B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494830FFF0B5600B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E494910FFF0BC900B647E1 /* application.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application.cxx; path = ../src/application.cxx; sourceTree = SOURCE_ROOT; };
 		D3E494920FFF0BC900B647E1 /* zenilib.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zenilib.cxx; path = ../src/zenilib.cxx; sourceTree = SOURCE_ROOT; };
-		D3E494B60FFF0C9200B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494B60FFF0C9200B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -438,9 +438,9 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Application.app */,
-				D3E494830FFF0B5600B647E1 /* Application.app */,
-				D3E494B60FFF0C9200B647E1 /* Application.app */,
+				8D1107320486CEB800E47090 /* Application_d.app */,
+				D3E494830FFF0B5600B647E1 /* Application_d.app */,
+				D3E494B60FFF0C9200B647E1 /* Application_d.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -796,7 +796,7 @@
 			name = Normal;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = 8D1107320486CEB800E47090 /* Application.app */;
+			productReference = 8D1107320486CEB800E47090 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3E4943B0FFF0B5600B647E1 /* SCU */ = {
@@ -815,7 +815,7 @@
 			name = SCU;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494830FFF0B5600B647E1 /* Application.app */;
+			productReference = D3E494830FFF0B5600B647E1 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */ = {
@@ -834,7 +834,7 @@
 			name = "SCU (Zenilib Only)";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494B60FFF0C9200B647E1 /* Application.app */;
+			productReference = D3E494B60FFF0C9200B647E1 /* Application_d.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
