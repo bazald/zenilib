@@ -97,7 +97,9 @@ namespace Zeni {
   struct Point2i {
     inline Point2i();
     inline Point2i(const int &x_, const int &y_);
+    inline explicit Point2i(const Point2f &rhs);
     inline explicit Point2i(const Point3i &rhs); ///< z in rhs is ignored.
+    inline explicit Point2i(const Point3f &rhs); ///< z in rhs is ignored.
 
     Point2i interpolate_to(const float &rhs_part, const Point2i &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
@@ -108,6 +110,8 @@ namespace Zeni {
   struct Point2f {
     inline Point2f();
     inline Point2f(const float &x_, const float &y_);
+    inline explicit Point2f(const Point2i &rhs);
+    inline explicit Point2f(const Point3i &rhs); ///< z in rhs is ignored.
     inline explicit Point2f(const Point3f &rhs); ///< z in rhs is ignored.
 
     Point2f interpolate_to(const float &rhs_part, const Point2f &rhs) const; ///< Get a point inbetween this point and another point of the same type.
@@ -120,6 +124,8 @@ namespace Zeni {
     inline Point3i();
     inline Point3i(const int &x_, const int &y_, const int &z_);
     inline explicit Point3i(const Point2i &rhs); ///< z is set to 0
+    inline explicit Point3i(const Point2f &rhs); ///< z is set to 0
+    inline explicit Point3i(const Point3f &rhs);
 
     Point3i interpolate_to(const float &rhs_part, const Point3i &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
@@ -129,7 +135,9 @@ namespace Zeni {
   struct Point3f {
     inline Point3f();
     inline Point3f(const float &x_, const float &y_, const float &z_);
+    inline explicit Point3f(const Point2i &rhs); ///< z is set to 0.0f
     inline explicit Point3f(const Point2f &rhs); ///< z is set to 0.0f
+    inline explicit Point3f(const Point3i &rhs);
     inline Point3f(const Vector3f &rhs);
 
     Point3f interpolate_to(const float &rhs_part, const Point3f &rhs) const;

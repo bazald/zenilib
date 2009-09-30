@@ -46,8 +46,18 @@ namespace Zeni {
   {
   }
 
+  Point2i::Point2i(const Point2f &rhs)
+    : x(int(rhs.x)), y(int(rhs.y))
+  {
+  }
+
   Point2i::Point2i(const Point3i &rhs)
     : x(rhs.x), y(rhs.y)
+  {
+  }
+
+  Point2i::Point2i(const Point3f &rhs)
+    : x(int(rhs.x)), y(int(rhs.y))
   {
   }
 
@@ -58,6 +68,16 @@ namespace Zeni {
 
   Point2f::Point2f(const float &x_, const float &y_)
     : x(x_), y(y_)
+  {
+  }
+
+  Point2f::Point2f(const Point2i &rhs)
+    : x(float(rhs.x)), y(float(rhs.y))
+  {
+  }
+
+  Point2f::Point2f(const Point3i &rhs)
+    : x(float(rhs.x)), y(float(rhs.y))
   {
   }
 
@@ -81,6 +101,16 @@ namespace Zeni {
   {
   }
 
+  Point3i::Point3i(const Point2f &rhs)
+    : x(int(rhs.x)), y(int(rhs.y)), z(0)
+  {
+  }
+
+  Point3i::Point3i(const Point3f &rhs)
+    : x(int(rhs.x)), y(int(rhs.y)), z(int(rhs.z))
+  {
+  }
+
   Point3f::Point3f()
     : x(0.0f), y(0.0f), z(0.0f)
   {
@@ -91,8 +121,18 @@ namespace Zeni {
   {
   }
 
+  Point3f::Point3f(const Point2i &rhs)
+    : x(float(rhs.x)), y(float(rhs.y)), z(0.0f)
+  {
+  }
+
   Point3f::Point3f(const Point2f &rhs)
     : x(rhs.x), y(rhs.y), z(0.0f)
+  {
+  }
+
+  Point3f::Point3f(const Point3i &rhs)
+    : x(float(rhs.x)), y(float(rhs.y)), z(float(rhs.z))
   {
   }
 

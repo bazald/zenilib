@@ -63,7 +63,7 @@ namespace Zeni {
 
   struct Vector3f {
     /// The best way to create a Vector3f
-    explicit inline Vector3f(const bool &degenerate_ = false);
+    inline explicit Vector3f(const bool &degenerate_ = false);
     inline Vector3f(const float &i_, const float &j_, const float &k_, const bool &degenerate_ = false);
     inline Vector3f(const Vector3f &rhs, const bool &degenerate_ = false);
     inline Vector3f(const Point3f &rhs);
