@@ -52,7 +52,7 @@
 namespace Zeni {
 
   struct Quaternion {
-    inline Quaternion(const bool &degenerate_ = false);
+    inline explicit Quaternion(const bool &degenerate_ = false);
     Quaternion(const float &time, const Vector3f &space, const bool &degenerate_ = false); ///< For advanced use only
     Quaternion(const float &yaw, const float &pitch, const float &roll, const bool &degenerate_ = false);
     Quaternion(const Quaternion &rhs, const bool &degenerate_ = false);
