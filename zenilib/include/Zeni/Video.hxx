@@ -314,7 +314,7 @@ namespace Zeni {
     const Matrix4f view = camera.get_view_matrix();
     set_view_matrix(view);
 
-    Matrix4f projection = camera.get_projection_matrix(viewport);
+    const Matrix4f projection = camera.get_projection_matrix(viewport);
     set_projection_matrix(projection);
 
     set_viewport(viewport);

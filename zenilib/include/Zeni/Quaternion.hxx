@@ -207,30 +207,29 @@ namespace Zeni {
   }
 
   Matrix4f Quaternion::get_matrix() const {
-    const float nt = -time;
     const float x2 = space.i * space.i;
     const float y2 = space.j * space.j;
     const float z2 = space.k * space.k;
     const float xy = space.i * space.j;
     const float xz = space.i * space.k;
     const float yz = space.j * space.k;
-    const float wx = nt * space.i;
-    const float wy = nt * space.j;
-    const float wz = nt * space.k;
+    const float wx = time * space.i;
+    const float wy = time * space.j;
+    const float wz = time * space.k;
    
     return Matrix4f(
       1.0f - 2.0f * (y2 + z2), 
-      2.0f * (xy + wz), 
-      2.0f * (xz - wy), 
-      0.0f,
-
       2.0f * (xy - wz), 
-      1.0f - 2.0f * (x2 + z2), 
-      2.0f * (yz + wx), 
+      2.0f * (xz + wy), 
       0.0f,
 
-      2.0f * (xz + wy), 
+      2.0f * (xy + wz), 
+      1.0f - 2.0f * (x2 + z2), 
       2.0f * (yz - wx), 
+      0.0f,
+
+      2.0f * (xz - wy), 
+      2.0f * (yz + wx), 
       1.0f - 2.0f * (x2 + y2), 
       0.0f,
 
