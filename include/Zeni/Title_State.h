@@ -93,6 +93,8 @@ namespace Zeni {
         get_Game().pop_state();
         get_Game().push_state(m_gamestate);
       }
+      else
+        m_widgets.on_event(event);
     }
 
     void perform_logic() {
