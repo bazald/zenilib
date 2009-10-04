@@ -227,6 +227,18 @@ namespace Zeni {
     return m_bgm_source->stop();
   }
 
+  std::string alErrorString(const ALenum &err) {
+    switch(err) {
+      case AL_NO_ERROR:          return "AL_NO_ERROR";          break;
+      case AL_INVALID_NAME:      return "AL_INVALID_NAME";      break;
+      case AL_INVALID_ENUM:      return "AL_INVALID_ENUM";      break;
+      case AL_INVALID_VALUE:     return "AL_INVALID_VALUE";     break;
+      case AL_INVALID_OPERATION: return "AL_INVALID_OPERATION"; break;
+      case AL_OUT_OF_MEMORY:     return "AL_OUT_OF_MEMORY";     break;
+      default:                   return "AL_UNKNOWN_ERROR";     break;
+    }
+  }
+
 }
 
 #include <Zeni/Sound_Source.hxx>
