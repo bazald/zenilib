@@ -70,6 +70,9 @@ namespace Zeni {
   }
 
   bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
+    if(&lhs == &rhs)
+      return false;
+
     if(!rhs.is_playing())
       return false;
     if(!lhs.is_playing())
@@ -98,6 +101,9 @@ namespace Zeni {
   }
 
   bool Sound_Source_Pool::Positional_Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
+    if(&lhs == &rhs)
+      return false;
+
     if(!rhs.is_playing())
       return false;
     if(!lhs.is_playing())
@@ -170,6 +176,41 @@ namespace Zeni {
     destroy_all_hw();
   }
 
+  static void sound_quicksort(
+    const std::vector<Sound_Source *>::iterator &begin,
+    const std::vector<Sound_Source *>::iterator &end,
+    const Sound_Source_Pool::Replacement_Policy &policy)
+  {
+    typedef std::vector<Sound_Source *>::difference_type diff_t;
+    const diff_t size = end - begin;
+
+    if(size < 2)
+      return;
+
+    std::vector<Sound_Source *> less, greater;
+    std::vector<Sound_Source *>::iterator pivot = begin + size / 2;
+    Sound_Source * const pivotValue = *pivot;
+
+    for(std::vector<Sound_Source *>::iterator x = begin; x != end; ++x)
+      if(x != pivot) {
+        if(policy(*x, pivotValue))
+          less.push_back(*x);
+        else
+          greater.push_back(*x);
+      }
+
+    pivot = std::copy(less.begin(), less.end(), begin);
+    *pivot = pivotValue;
+    const std::vector<Sound_Source *>::iterator gbegin = pivot + 1;
+    std::copy(greater.begin(), greater.end(), gbegin);
+
+    less.clear();
+    greater.clear();
+
+    sound_quicksort(begin, begin + diff_t(less.size()), policy);
+    sound_quicksort(gbegin, gbegin + diff_t(greater.size()), policy);
+  }
+
   void Sound_Source_Pool::update() {
     /*** Handle the playing and destroying ***/
 
@@ -228,7 +269,7 @@ namespace Zeni {
     const size_t cut = needed_hw - given_hw;
 
     if(cut) {
-      std::stable_sort(m_handles.begin(), m_handles.end(), *m_replacement_policy);
+      sound_quicksort(m_handles.begin(), m_handles.end(), *m_replacement_policy);
 
       for(size_t i = 0; i != cut; ++i) {
         Sound_Source &source = *m_handles[i];

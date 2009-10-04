@@ -107,7 +107,7 @@ namespace Zeni {
     alGenSources(1, &m_source);
 
     if(m_source == AL_NONE) {
-      std::cerr << "ALUT error" << ": " << alutGetErrorString(alutGetError()) << std::endl;
+      std::cerr << "OpenAL error: " << alErrorString(alGetError()) << std::endl;
       throw Sound_Source_HW_Init_Failure();
     }
 
