@@ -192,6 +192,8 @@ namespace Zeni {
     Sound_Init_Failure() : Error("Zeni Sound Failed to Initialize Correctly") {}
   };
 
+  inline std::string alErrorString(const ALenum &err);
+
 }
 
 #endif
