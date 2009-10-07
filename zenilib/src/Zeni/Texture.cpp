@@ -42,37 +42,37 @@
 
 namespace Zeni {
 
-  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution) {
+  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size) {
     bool scale = false;
 
-    int next_w = 1;
-    for(; next_w; next_w <<= 1)
-      if(next_w > surface->w) {
+    built_size.x = 1;
+    for(; built_size.x; built_size.x <<= 1)
+      if(built_size.x > surface->w) {
         scale = true;
         break;
       }
-      else if(surface->w == next_w)
+      else if(surface->w == built_size.x)
         break;
-    if(max_resolution.x && next_w > max_resolution.x) {
-      next_w = max_resolution.x;
+    if(max_resolution.x && built_size.x > max_resolution.x) {
+      built_size.x = max_resolution.x;
       scale = true;
     }
 
-    int next_h = 1;
-    for(; next_h; next_h <<= 1)
-      if(next_h > surface->h) {
+    built_size.y = 1;
+    for(; built_size.y; built_size.y <<= 1)
+      if(built_size.y > surface->h) {
         scale = true;
         break;
       }
-      else if(surface->h == next_h)
+      else if(surface->h == built_size.y)
         break;
-    if(max_resolution.y && next_h > max_resolution.y) {
-      next_h = max_resolution.y;
+    if(max_resolution.y && built_size.y > max_resolution.y) {
+      built_size.y = max_resolution.y;
       scale = true;
     }
 
-    double scale_w = next_w;
-    double scale_h = next_h;
+    double scale_w = built_size.x;
+    double scale_h = built_size.y;
 
     if(scale) {
       int actual_w, actual_h;
@@ -81,18 +81,18 @@ namespace Zeni {
                         scale_w/surface->w, scale_h/surface->h,
                         &actual_w, &actual_h);
 
-        if(next_w == actual_w &&
-           next_h == actual_h)
+        if(built_size.x == actual_w &&
+           built_size.y == actual_h)
           break;
 
-        if(actual_w < next_w)
+        if(actual_w < built_size.x)
           scale_w += 0.5;
-        else if(actual_w > next_w)
+        else if(actual_w > built_size.x)
           scale_w -= 0.5;
 
-        if(actual_h < next_h)
+        if(actual_h < built_size.y)
           scale_h += 0.5;
-        else if(actual_h > next_h)
+        else if(actual_h > built_size.y)
           scale_h -= 0.5;
       };
 
@@ -229,8 +229,8 @@ namespace Zeni {
 
   Texture_GL::Texture_GL(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_GL, repeat),
-    m_size(surface->w, surface->h),
-    m_texture_id(build_from_surface(surface, repeat)),
+    //m_size(surface->w, surface->h),
+    m_texture_id(build_from_surface(surface, repeat, m_size)),
     m_render_buffer(0),
     m_frame_buffer_object(0)
   {
@@ -238,8 +238,8 @@ namespace Zeni {
 
   Texture_GL::Texture_GL(const Point2i &size, const bool &repeat)
     : Texture(Texture_Base::VTYPE_GL, repeat),
-    m_size(size),
-    m_texture_id(build_from_surface(SDL_CreateRGBSurface(SDL_SWSURFACE, size.x, size.y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000), repeat)),
+    //m_size(size),
+    m_texture_id(build_from_surface(SDL_CreateRGBSurface(SDL_SWSURFACE, size.x, size.y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000), repeat, m_size)),
     m_render_buffer(0),
     m_frame_buffer_object(0)
   {
@@ -255,10 +255,10 @@ namespace Zeni {
       glDeleteTextures(1, &m_texture_id);
   }
 
-  GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+  GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat, Point2i &built_size) {
     GLuint texture_id = 0;
 
-    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT));
+    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT), built_size);
 
     const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
     const GLenum mode2 = GLenum(
@@ -328,9 +328,7 @@ namespace Zeni {
     }
     
     try {
-      const_cast<int &>(m_size.x) = surface->w;
-      const_cast<int &>(m_size.y) = surface->h;
-      m_texture_id = build_from_surface(surface, repeat);
+      m_texture_id = build_from_surface(surface, repeat, const_cast<Point2i &>(m_size));
     }
     catch(...) {
       SDL_FreeSurface(surface);
@@ -350,8 +348,8 @@ namespace Zeni {
 
   Texture_DX9::Texture_DX9(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_DX9, repeat),
-    m_size(surface->w, surface->h),
-    m_texture(build_from_surface(surface))
+    //m_size(surface->w, surface->h),
+    m_texture(build_from_surface(surface, m_size))
   {
   }
 
@@ -402,14 +400,15 @@ namespace Zeni {
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
   }
 
-  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface) {
+  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, Point2i &built_size) {
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     IDirect3DTexture9 * ppTexture;
 
     const int mode = Texture::build_from_surface(surface,
       Point2i(std::min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
-              std::min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))));
+              std::min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))),
+      built_size);
     const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states();
@@ -481,9 +480,7 @@ namespace Zeni {
     }
     
     try {
-      const_cast<int &>(m_size.x) = surface->w;
-      const_cast<int &>(m_size.y) = surface->h;
-      m_texture = build_from_surface(surface);
+      m_texture = build_from_surface(surface, const_cast<Point2i &>(m_size));
     }
     catch(...) {
       SDL_FreeSurface(surface);
