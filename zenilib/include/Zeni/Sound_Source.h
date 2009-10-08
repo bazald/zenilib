@@ -87,20 +87,16 @@ namespace Zeni {
     Sound_Source_HW(const Sound_Source_HW &rhs);
     Sound_Source_HW & operator=(const Sound_Source_HW &rhs);
 
-    Sound_Source_HW();
+    Sound_Source_HW(const ALuint &source = AL_NONE);
     Sound_Source_HW(const Sound_Buffer &buffer,
                     const float &pitch = ZENI_DEFAULT_PITCH,
                     const float &gain = ZENI_DEFAULT_GAIN,
                     const Point3f &position = Point3f(),
                     const Vector3f &velocity = Vector3f(),
                     const bool &looping = false);
-    Sound_Source_HW(const ALuint &buffer,
-                    const float &pitch = ZENI_DEFAULT_PITCH,
-                    const float &gain = ZENI_DEFAULT_GAIN,
-                    const Point3f &position = Point3f(),
-                    const Vector3f &velocity = Vector3f(),
-                    const bool &looping = false);
     ~Sound_Source_HW();
+
+    static Sound_Source_HW * Try_Construct();
 
   public:
     enum STATE {STOPPED, PAUSED, PLAYING};

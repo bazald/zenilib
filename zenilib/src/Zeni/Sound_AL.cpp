@@ -26,7 +26,7 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Sound.hxx>
+#include <Zeni/Sound_AL.hxx>
 
 #include <Zeni/Coordinate.hxx>
 #include <Zeni/Gamestate.hxx>
@@ -39,71 +39,44 @@
 #include <iomanip>
 
 #ifndef DISABLE_AL
+
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/vorbisfile.h>
 #undef OV_EXCLUDE_STATIC_CALLBACKS
-#endif
 
 namespace Zeni {
 
-  Sound::Sound(const Sound_Base::SOUND_MODE &vtype_)
-    : Sound_Base::IV(vtype_),
+  Sound_AL::Sound_AL()
+    : Sound(Sound_Base::ZENI_SOUND_AL),
     m_bgm(0),
     m_bgm_source(0)
   {
-    // Ensure Core is initialized
-    get_Core();
+    if(!alutInit(0, 0))
+      throw Sound_Init_Failure();
+
+    // Check for Vorbis extension functionality; seems to always fail :(
+    alIsExtensionPresent("AL_EXT_vorbis");
+    //cerr << "Valid Audio Formats: " << alutGetMIMETypes(ALUT_LOADER_BUFFER) << std::endl;
+
+    ALfloat listener_position[] = {0.0f, 0.0f, 0.0f};
+    ALfloat listener_velocity[] = {0.0f, 0.0f, 0.0f};
+    ALfloat listener_forward_and_up[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+
+    alListenerfv(AL_POSITION, listener_position);
+    alListenerfv(AL_VELOCITY, listener_velocity);
+    alListenerfv(AL_ORIENTATION, listener_forward_and_up);
   }
 
-  Sound::~Sound() {
-    delete m_bgm_source;
-    delete m_bgm;
+  Sound_AL::~Sound_AL() {
+    alutExit();
   }
-
-  Sound & get_Sound() {
-    if(!Sound::e_sound) {
-#ifndef DISABLE_AL
-      try {
-        Sound::e_sound = new Sound_AL;
-      }
-      catch(Sound_Init_Failure &) {
-#endif
-        Sound::e_sound = new Sound_NULL;
-#ifndef DISABLE_AL
-      }
-#endif
-    }
-
-    return *Sound::e_sound;
-  }
-
-  void Sound::set_BGM(const std::string &filename) {
-    assert_m_bgm();
-
-    bool playing = m_bgm_source->is_playing() ? true : false;
-
-    m_bgm_source->stop();
-    m_bgm_source->set_buffer(get_Hello_World_Buffer());
-    delete m_bgm;
-    m_bgm = 0;
-
-    m_bgmusic = filename;
-    m_bgm = new Sound_Buffer(m_bgmusic);
-    m_bgm_source->set_buffer(*m_bgm);
-    m_bgm_source->set_time(0.0f);
-
-    if(playing)
-      m_bgm_source->play();
-  }
-
-  void Sound::assert_m_bgm() {
-    if(!m_bgm)
-      m_bgm = new Sound_Buffer();
-
-    if(!m_bgm_source)
-      m_bgm_source = new Sound_Source(*m_bgm);
-  }
-
-  Sound * Sound::e_sound = 0;
 
 }
+
+#else
+
+namespace Zeni {
+  void * this_pointer_is_silent_sound = (void *)0xDEADBEEF;
+}
+
+#endif
