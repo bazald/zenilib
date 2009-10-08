@@ -27,24 +27,6 @@
 */
 
 /**
- * \class Zeni::Sound_Buffer
- *
- * \ingroup Zenilib
- *
- * \brief Stores Sound Data
- *
- * A Sound_Buffer stores sound data to be played from Sound_Sources.
- *
- * \note Mono sounds work best.
- *
- * \warning Stereo sounds will not be affected by the positional audio system.  Furthermore, in a surround sound speaker setup, they may play only through the left and right channels.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Sound
  *
  * \ingroup Zenilib
@@ -64,84 +46,34 @@
 #define ZENI_SOUND_H
 
 #include <Zeni/Core.h>
-#include <Zeni/Coordinate.h>
-#include <Zeni/Vector3f.h>
-#include <Zeni/Thread.h>
-
-#include <string>
-
-#ifndef DISABLE_AL
-#ifdef _MACOSX
-#include <ALUT/alut.h>
-#else
-#include <AL/alut.h>
-#endif
-#else
-
-#define ALint int
-#define ALuint unsigned int
-#define ALfloat float
-#define ALenum int
-
-#define AL_NONE 0
-#define AL_TRUE true
-#define AL_FALSE false
-
-#endif
+#include <Zeni/IV.h>
+#include <Zeni/Sound_Buffer.h>
 
 namespace Zeni {
 
-  class Sound_Source;
-
-  class Sound_Buffer {
-    Sound_Buffer(const Sound_Buffer &rhs);
-    Sound_Buffer & operator=(const Sound_Buffer &rhs);
-
+  class Sound_Base {
   public:
-    Sound_Buffer();
-    Sound_Buffer(const std::string &filename); ///< Load a Sound_Buffer from a file.  Only wav is guaranteed to be supported.
-    ~Sound_Buffer();
-
-    inline const ALuint & get_id() const; ///< Get the OpenAL id of the Sound_Buffer
-    inline const float & get_duration() const; ///< Get the duration of the Sound_Buffer in seconds
-
-    /// Ogg Vorbis Loader
-    static std::pair<ALuint, float> load_ogg_vorbis(const std::string &filename);
-
-  private:
-    mutable ALuint m_buffer;
-    mutable float m_duration;
-    
-    class Loader : public Task {
-      Loader(const Loader &);
-      Loader & operator=(const Loader &);
-    
-    public:
-      Loader(const std::string &filename);
-      
-      virtual int function();
-      
-      ALuint m_buffer;
-      float m_duration;
-      const std::string m_filename;
+    enum SOUND_MODE {ZENI_SOUND_ANY = 0
+      , ZENI_SOUND_NULL = 1
+#ifndef DISABLE_AL
+      , ZENI_SOUND_AL = 2
+#endif
     };
-    
-    void finish_loading() const;
-    
-    mutable Loader *m_loader;
-    mutable Thread *m_thread;
+
+    typedef ::IV<Sound_Base, SOUND_MODE> IV;
   };
 
-  class Sound {
+  class Sound : public Sound_Base::IV {
     // Get reference to only instance;
     friend Sound & get_Sound(); ///< Get access to the singleton.
-
-    Sound();
-    ~Sound();
 
     // Undefined
     Sound(const Sound &);
     Sound & operator=(const Sound &);
+
+  protected:
+    Sound(const Sound_Base::SOUND_MODE &vtype_);
+    virtual ~Sound();
 
   public:
     // Listener Functions
@@ -177,6 +109,8 @@ namespace Zeni {
   private:
     void assert_m_bgm(); ///< Initialize m_bgm and m_bgm_source if not already done.
 
+    static Sound *e_sound;
+
     std::string m_bgmusic;
     Sound_Buffer *m_bgm;
     Sound_Source *m_bgm_source;
@@ -184,15 +118,9 @@ namespace Zeni {
 
   Sound & get_Sound(); ///< Get access to the singleton.
 
-  struct Sound_Buffer_Init_Failure : public Error {
-    Sound_Buffer_Init_Failure() : Error("Zeni Sound Buffer Failed to Initialize Correctly") {}
-  };
-
   struct Sound_Init_Failure : public Error {
     Sound_Init_Failure() : Error("Zeni Sound Failed to Initialize Correctly") {}
   };
-
-  inline std::string alErrorString(const ALenum &err);
 
 }
 

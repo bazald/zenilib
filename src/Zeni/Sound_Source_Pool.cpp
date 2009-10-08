@@ -250,18 +250,20 @@ namespace Zeni {
 
     /*** Acquire more Sound_Source_HW if needed (and if possible) ***/
 
-    try {
-      while(needed_hw > given_hw
+    while(needed_hw > given_hw
 #ifdef TEST_NASTY_CONDITIONS
-        && given_hw < NASTY_SOUND_SOURCE_CAP
+      && given_hw < NASTY_SOUND_SOURCE_CAP
 #endif
-        ) {
-        unassigned_hw.push_back(new Sound_Source_HW());
+      )
+    {
+      Sound_Source_HW * const sshw = Sound_Source_HW::Try_Construct();
+
+      if(sshw) {
+        unassigned_hw.push_back(sshw);
         ++given_hw;
       }
-    }
-    catch(Sound_Source_HW_Init_Failure &)
-    {
+      else
+        break;
     }
 
     /*** Strip Sound_Source_HW from low priority 'Sound_Source's, as needed ***/

@@ -56,6 +56,7 @@
 #include <Zeni/Model.h>
 #include <Zeni/Mutex.h>
 #include <Zeni/Net.h>
+#include <Zeni/Popup_State.h>
 #include <Zeni/Projector.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Quaternion.h>
@@ -64,6 +65,9 @@
 #include <Zeni/Resource.h>
 #include <Zeni/Shader.h>
 #include <Zeni/Sound.h>
+#include <Zeni/Sound_AL.h>
+#include <Zeni/Sound_Buffer.h>
+#include <Zeni/Sound_NULL.h>
 #include <Zeni/Sound_Source.h>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Sounds.h>
@@ -108,6 +112,9 @@
 #include <Zeni/Resource.hxx>
 #include <Zeni/Shader.hxx>
 #include <Zeni/Sound.hxx>
+#include <Zeni/Sound_AL.hxx>
+#include <Zeni/Sound_Buffer.hxx>
+#include <Zeni/Sound_NULL.hxx>
 #include <Zeni/Sound_Source.hxx>
 #include <Zeni/Texture.hxx>
 #include <Zeni/Textures.hxx>

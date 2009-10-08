@@ -31,140 +31,129 @@
 
 // HXXed below
 #include <Zeni/Sound_Source.h>
+#include <Zeni/Sound_AL.h>
+#include <Zeni/Sound_NULL.h>
 
 #include <Zeni/Sound.h>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
-  const ALuint & Sound_Buffer::get_id() const {
-    if(m_loader)
-      finish_loading();
-    
-    return m_buffer;
-  }
+  /* Note that variadic macros *may* not be supported in some pre-C99 compilers.
+   * It is not hard to code around, but they are convenient.
+   */
 
-  const float & Sound_Buffer::get_duration() const {
-    if(m_loader)
-      finish_loading();
-
-    return m_duration;
-  }
-
-  void Sound::set_listener_position(const Point3f &
 #ifndef DISABLE_AL
-    position
+#ifndef DISABLE_NULL
+
+#define \
+  SOUND_IV_FCN_CALL(member_function, ...) { \
+    switch(vtype()) { \
+      case Sound_Base::ZENI_SOUND_NULL: return static_cast<Sound_NULL *>(this)->member_function(__VA_ARGS__); \
+      case Sound_Base::ZENI_SOUND_AL: return static_cast<Sound_AL *>(this)->member_function(__VA_ARGS__); \
+      default: abort(); /* implies ZENI_SOUND_ANY, which *should* be impossible */ \
+    } \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
+  }
+
+#define \
+  SOUND_IV_FCN_CALL_CONST(member_function, ...) { \
+    switch(vtype()) { \
+      case Sound_Base::ZENI_SOUND_NULL: return static_cast<const Sound_NULL *>(this)->member_function(__VA_ARGS__); \
+      case Sound_Base::ZENI_SOUND_AL: return static_cast<const Sound_AL *>(this)->member_function(__VA_ARGS__); \
+      default: abort(); /* implies ZENI_SOUND_ANY, which *should* be impossible */ \
+    } \
+    exit(END_OF_TIME); /* cannot be called, but suppresses a warning */ \
+  }
+
+#else
+
+#define \
+  SOUND_IV_FCN_CALL(member_function, ...) { \
+    return static_cast<Sound_AL *>(this)->member_function(__VA_ARGS__); \
+  }
+
+#define \
+  SOUND_IV_FCN_CALL_CONST(member_function, ...) { \
+    return static_cast<const Sound_AL *>(this)->member_function(__VA_ARGS__); \
+  }
+
 #endif
-    ) {
-#ifndef DISABLE_AL
-    ALfloat listener_position[3] = {position.x, position.y, position.z};
-    alListenerfv(AL_POSITION, listener_position);
+#else
+
+#define \
+  SOUND_IV_FCN_CALL(member_function, ...) { \
+    return static_cast<Sound_NULL *>(this)->member_function(__VA_ARGS__); \
+  }
+
+#define \
+  SOUND_IV_FCN_CALL_CONST(member_function, ...) { \
+    return static_cast<const Sound_NULL *>(this)->member_function(__VA_ARGS__); \
+  }
+
+#endif
+
+#define EMPTY()
+
+  void Sound::set_listener_position(const Point3f &position) {
+    SOUND_IV_FCN_CALL(set_listener_position_impl, position);
 
     assert_m_bgm();
 
     m_bgm_source->set_position(position);
-#endif
   }
 
-  void Sound::set_listener_velocity(const Vector3f &
-#ifndef DISABLE_AL
-    velocity
-#endif
-    ) {
-#ifndef DISABLE_AL
-    ALfloat listener_velocity[3] = {velocity.i, velocity.j, velocity.k};
-    alListenerfv(AL_VELOCITY, listener_velocity);
+  void Sound::set_listener_velocity(const Vector3f &velocity) {
+    SOUND_IV_FCN_CALL(set_listener_velocity_impl, velocity);
 
     assert_m_bgm();
 
     m_bgm_source->set_velocity(velocity);
-#endif
   }
 
-  void Sound::set_listener_forward_and_up(const Vector3f &
-#ifndef DISABLE_AL
-    forward
-#endif
-    , const Vector3f &
-#ifndef DISABLE_AL
-    up
-#endif
-    ) {
-#ifndef DISABLE_AL
-    ALfloat listener_forward_and_up[6] = {forward.i, forward.j, forward.k, up.i, up.j, up.k};
-    alListenerfv(AL_ORIENTATION, listener_forward_and_up);
-#endif
+  void Sound::set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up) {
+    SOUND_IV_FCN_CALL(set_listener_forward_and_up_impl, forward, up);
   }
 
   Point3f Sound::get_listener_position() const {
-    ALfloat listener_position[3] = {0.0f, 0.0f, 0.0f};
-#ifndef DISABLE_AL
-    alGetListenerfv(AL_POSITION, listener_position);
-#endif
-    return Point3f(listener_position[0], listener_position[1], listener_position[2]);
+    SOUND_IV_FCN_CALL_CONST(get_listener_position_impl, EMPTY());
   }
 
   Vector3f Sound::get_listener_velocity() const {
-    ALfloat listener_velocity[3] = {0.0f, 0.0f, 0.0f};
-#ifndef DISABLE_AL
-    alGetListenerfv(AL_VELOCITY, listener_velocity);
-#endif
-    return Vector3f(listener_velocity[0], listener_velocity[1], listener_velocity[2]);
+    SOUND_IV_FCN_CALL_CONST(get_listener_velocity_impl, EMPTY());
   }
 
   std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {
-    ALfloat lfau[6] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-#ifndef DISABLE_AL
-    alGetListenerfv(AL_ORIENTATION, lfau);
-#endif
-    return std::make_pair(Vector3f(lfau[0], lfau[1], lfau[2]), Vector3f(lfau[3], lfau[4], lfau[5]));
+    SOUND_IV_FCN_CALL_CONST(get_listener_forward_and_up_impl, EMPTY());
   }
 
-  void Sound::set_BGM_pitch(const float &
-#ifndef DISABLE_AL
-    pitch
-#endif
-    ) {
-#ifndef DISABLE_AL
+#undef SOUND_IV_FCN_CALL
+#undef SOUND_IV_FCN_CALL_CONST
+#undef EMPTY
+
+  void Sound::set_BGM_pitch(const float & pitch) {
     assert_m_bgm();
 
     m_bgm_source->set_pitch(pitch);
-#endif
   }
 
-  void Sound::set_BGM_gain(const float &
-#ifndef DISABLE_AL
-    gain
-#endif
-    ) {
-#ifndef DISABLE_AL
+  void Sound::set_BGM_gain(const float &gain) {
     assert_m_bgm();
 
     m_bgm_source->set_gain(gain);
-#endif
   }
 
-  void Sound::set_BGM_looping(const bool &
-#ifndef DISABLE_AL
-    looping
-#endif
-    ) {
-#ifndef DISABLE_AL
+  void Sound::set_BGM_looping(const bool &looping) {
     assert_m_bgm();
 
     m_bgm_source->set_looping(looping);
-#endif
   }
 
-  void Sound::set_BGM_time(const float &
-#ifndef DISABLE_AL
-    time
-#endif
-    ) {
-#ifndef DISABLE_AL
+  void Sound::set_BGM_time(const float &time) {
     assert_m_bgm();
 
     m_bgm_source->set_time(time);
-#endif
   }
 
   float Sound::get_BGM_pitch() {
@@ -227,20 +216,12 @@ namespace Zeni {
     return m_bgm_source->stop();
   }
 
-  std::string alErrorString(const ALenum &err) {
-    switch(err) {
-      case AL_NO_ERROR:          return "AL_NO_ERROR";          break;
-      case AL_INVALID_NAME:      return "AL_INVALID_NAME";      break;
-      case AL_INVALID_ENUM:      return "AL_INVALID_ENUM";      break;
-      case AL_INVALID_VALUE:     return "AL_INVALID_VALUE";     break;
-      case AL_INVALID_OPERATION: return "AL_INVALID_OPERATION"; break;
-      case AL_OUT_OF_MEMORY:     return "AL_OUT_OF_MEMORY";     break;
-      default:                   return "AL_UNKNOWN_ERROR";     break;
-    }
-  }
-
 }
 
+#include <Zeni/Global_Undef.h>
+
 #include <Zeni/Sound_Source.hxx>
+#include <Zeni/Sound_AL.hxx>
+#include <Zeni/Sound_NULL.hxx>
 
 #endif

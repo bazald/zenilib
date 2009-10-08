@@ -32,6 +32,7 @@
 #include <Zeni/Gamestate.hxx>
 #include <Zeni/Mutex.hxx>
 #include <Zeni/Sound.hxx>
+#include <Zeni/Sound_Buffer.hxx>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Vector3f.hxx>
@@ -56,8 +57,8 @@ namespace Zeni {
     return hello_world_buffer;
   }
 
-  Sound_Source_HW::Sound_Source_HW()
-    : m_source(AL_NONE),
+  Sound_Source_HW::Sound_Source_HW(const ALuint &source)
+    : m_source(source),
     m_buffer(0)
   {
     get_Sound();
@@ -79,6 +80,14 @@ namespace Zeni {
     if(m_source != AL_NONE && !Quit_Event::has_fired())
       alDeleteSources(1, &m_source);
 #endif
+  }
+
+  Sound_Source_HW * Sound_Source_HW::Try_Construct() {
+    ALuint source = AL_NONE;
+#ifndef DISABLE_AL
+    alGenSources(1, &source);
+#endif
+    return source != AL_NONE ? new Sound_Source_HW(source) : 0;
   }
 
   void Sound_Source_HW::init(const Sound_Buffer &buffer, const float &
@@ -104,11 +113,13 @@ namespace Zeni {
     ) {
     m_buffer = &buffer;
 #ifndef DISABLE_AL
-    alGenSources(1, &m_source);
-
     if(m_source == AL_NONE) {
-      std::cerr << "OpenAL error: " << alErrorString(alGetError()) << std::endl;
-      throw Sound_Source_HW_Init_Failure();
+      alGenSources(1, &m_source);
+
+      if(m_source == AL_NONE) {
+        std::cerr << "OpenAL error: " << alErrorString(alGetError()) << std::endl;
+        throw Sound_Source_HW_Init_Failure();
+      }
     }
 
     alSourcei(m_source, AL_BUFFER, ALint(buffer.get_id()));
