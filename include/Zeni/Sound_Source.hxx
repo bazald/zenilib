@@ -30,6 +30,7 @@
 #define ZENI_SOUND_SOURCE_HXX
 
 // HXXed below
+#include <Zeni/Sound_Buffer.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Sound_Source.h>
@@ -332,6 +333,7 @@ namespace Zeni {
 
 #include <Zeni/Global_Undef.h>
 
+#include <Zeni/Sound_Buffer.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif
