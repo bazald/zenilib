@@ -33,8 +33,6 @@
  *
  * \brief A Vertex_Buffer that accepts Triangle and Quadrilaterals.
  *
- * \note Created with a call to get_Video().create_Vertex_Buffer()
- *
  * \author bazald
  *
  * Contact: bazald@zenipex.com
