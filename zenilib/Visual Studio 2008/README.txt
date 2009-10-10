@@ -2,7 +2,8 @@
 ********** ENABLING DEBUGGING **********
 ****************************************
 
-Unfortunately, this must be done on a per-host and per-user basis:
+These instructions should no longer be necessary, but just in case
+you tamper with your settings, this will fix them.
 
   1. Right-click on project 'Application' in the Solution Explorer.
   2. Left-click on Properties in the menu that pops up.
@@ -10,36 +11,6 @@ Unfortunately, this must be done on a per-host and per-user basis:
   4. For 'All Configurations' in 'Win32' and in 'x64'
      Set the 'Working Directory' to '..'
      Set the 'Environment' to 'PATH=bin;bin\x64'
-
-
-
-**************************************
-********** CLEANING SCRIPTS **********
-**************************************
-
-zenilib_clean.bat
-  -Delete files generated during the build process
-
-zenilib_clean_extra.bat
-  -zenilib_clean.bat
-  -Delete per-user settings for the Visual Studio project
-
-zenilib_clean+strip_aio.bat
-  -zenilib_clean_extra.bat
-  -zenilib_strip_debug.bat
-  -zenilib_strip_x64.bat
-
-zenilib_strip_debug.bat
-  -Delete all debug builds
-
-zenilib_strip_sources.bat.unsafe
-  -intended to be used a COPY of your actual project, for public release
-  -will erase all source files if you follow my file organization conventions
-  -will prompt you on each action
-  -must have the '.unsafe' removed in order to run it
-
-zenilib_strip_x64.bat
-  -Delete all x64 builds and DLLs
 
 
 
