@@ -24,3 +24,6 @@ DEL /Q "..\*_d"
 DEL /Q "..\*_x64d"
 
 FOR /F "tokens=*" %%G IN ('DIR /B /AD /S "..\*_d.app"') DO RMDIR /S /Q "%%G"
+
+
+RMDIR /S /Q "..\docs\Zeni"

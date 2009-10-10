@@ -29,8 +29,10 @@
 #ifndef POPUP_STATE_H
 #define POPUP_STATE_H
 
+#include <Zeni/Sound_NULL.h>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Widget_Gamestate.h>
+#include <Zeni/Line_Segment.hxx>
 
 namespace Zeni {
 
@@ -189,6 +191,10 @@ namespace Zeni {
         : Check_Box(upper_left, lower_right,
                     !get_Sound_Source_Pool().is_muted())
       {
+        if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
+          set_checked(false);
+          set_editable(false);
+        }
       }
 
       void on_accept() {
@@ -197,22 +203,32 @@ namespace Zeni {
       }
 
       void render_impl() const {
+        Colors &cr = get_Colors();
+        Video &vr = get_Video();
+
         const Point2f &ul = get_upper_left();
-        Color color = get_Colors()["title_bg"];
-        color.a = 0.5f;
-        const Quadrilateral<Vertex2f_Color> bg(Vertex2f_Color(ul, color),
-                                               Vertex2f_Color(Point2f(ul.x, ul.y + 60.0f), color),
-                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y + 60.0f), color),
-                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y), color));
-        get_Video().render(bg);
+        Color bgc = cr["title_bg"];
+        bgc.a = 0.5f;
+        const Quadrilateral<Vertex2f_Color> bg(Vertex2f_Color(ul, bgc),
+                                               Vertex2f_Color(Point2f(ul.x, ul.y + 60.0f), bgc),
+                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y + 60.0f), bgc),
+                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y), bgc));
+        vr.render(bg);
 
         Check_Box::render_impl();
 
         Font &font = get_Fonts()["system_36_800x600"];
-        font.render_text(" Sound",
-                         Point2f(get_lower_right().x,
+        const Color fgc = cr["default_button_bg_normal"];
+        font.render_text("Sound",
+                         Point2f(get_lower_right().x + 15.0f,
                                  0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
-                         get_Colors()["default_button_bg_normal"]);
+                         fgc);
+
+        if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
+          const Line_Segment<Vertex2f_Color> ns(Vertex2f_Color(Point2f(get_lower_right().x + 10.0f, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc),
+                                                Vertex2f_Color(Point2f(get_lower_right().x + 20.0f + font.get_text_width("Sound"), 0.5f * (get_lower_right().y + get_upper_left().y)), fgc));
+          vr.render(ns);
+        }
       }
     } sound_check_box;
 

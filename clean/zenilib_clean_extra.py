@@ -22,6 +22,8 @@ def main():
   zenilib.destroy("*_x64d")
   
   zenilib.destroy("../*_d.app")
+  
+  zenilib.destroy("docs/Zeni")
 
 if __name__ == '__main__':
   main(*sys.argv[1:])

@@ -301,7 +301,7 @@ namespace Zeni {
   }
 
   bool Sound_Source_Pool::is_muted() const {
-    return m_muted;
+    return m_muted || dynamic_cast<Sound_NULL *>(&get_Sound());
   }
 
   void Sound_Source_Pool::mute(const bool &mute_) {
