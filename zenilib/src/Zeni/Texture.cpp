@@ -99,6 +99,8 @@ namespace Zeni {
       SDL_Surface *surf2 = zoomSurface(surface,
         scale_w/surface->w,
         scale_h/surface->h, 1);
+      if(!surf2)
+        throw Texture_Init_Failure();
 
       if(surf2) {
         SDL_FreeSurface(surface);
@@ -106,26 +108,28 @@ namespace Zeni {
       }
     }
 
-    switch(surface->format->BytesPerPixel) {
-    case 3:
+    if(surface->format->BytesPerPixel == 3) {
       if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
         return -'R';
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
         return -'B';
-      break;
-
-    case 4:
+    }
+    else if(surface->format->BytesPerPixel == 4) {
       if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
         return 'R';
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
         return 'B';
-      break;
-
-    default:
-      break;
     }
 
-    throw Texture_Init_Failure();
+    SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, surface->w, surface->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+    if(!surf2)
+      throw Texture_Init_Failure();
+
+    SDL_BlitSurface(surface, 0, surf2, 0);
+    SDL_FreeSurface(surface);
+    surface = surf2;
+
+    return 'R';
   }
 
   Sprite::Sprite()

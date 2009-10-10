@@ -81,6 +81,10 @@ namespace Zeni {
     return *this;
   }
 
+  SDL_Surface & Image::get_surface() {
+    return *m_surface_ptr;
+  }
+
   const int & Image::width() const {
     return m_surface_ptr->w;
   }
