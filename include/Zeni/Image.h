@@ -65,6 +65,7 @@ namespace Zeni {
     inline Image(const Image &rhs);
     inline Image & operator=(const Image &rhs);
 
+    inline SDL_Surface & get_surface(); ///< Get access to the SDL_Surface.
     inline const int & width() const; ///< Get the number of pixels in the image in the x-direction.
     inline const int & height() const; ///< Get the number of pixels in the image in the y-direction.
     inline const bool & tileable() const; ///< Determine if the given Image is tileable.
