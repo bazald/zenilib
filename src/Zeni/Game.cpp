@@ -67,39 +67,40 @@ namespace Zeni {
     
     for(;;) {
       for(SDL_Event event; SDL_PollEvent(&event);) {
-        if(event.type == SDL_KEYDOWN) {
+        if(event.type == SDL_KEYDOWN ||
+           event.type == SDL_KEYUP)
+        {
           const SDL_keysym &s = event.key.keysym;
           const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
                                 !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
                                 !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
                                 !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
                                 !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
-          if(s.sym == SDLK_F4 && alt_only)
-            throw Quit_Event();
+
 #ifndef NDEBUG
-          else if(s.sym == SDLK_BACKQUOTE && alt_only) {
-            if(m_console_active)
-              deactivate_console();
-            else
-              activate_console();
+          if(s.sym == SDLK_BACKQUOTE && alt_only) {
+            if(event.type == SDL_KEYDOWN) {
+              if(m_console_active)
+                deactivate_console();
+              else
+                activate_console();
+            }
+
             continue;
           }
 #endif
-        }
-#ifndef NDEBUG
-        else if(event.type == SDL_KEYUP) {
-          const SDL_keysym &s = event.key.keysym;
-          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
-                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
-                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
-                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
-                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
-          if(s.sym == SDLK_BACKQUOTE && alt_only)
-            continue;
-        }
-#endif
 
-        on_event(event);
+          on_event(event);
+
+          if(event.type == SDL_KEYDOWN && s.sym == SDLK_F4 && alt_only)
+              throw Quit_Event();
+        }
+        else {
+          on_event(event);
+
+          if(event.type == SDL_QUIT)
+            throw Quit_Event();
+        }
       }
 
 #ifdef TEST_NASTY_CONDITIONS
