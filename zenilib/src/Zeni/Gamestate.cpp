@@ -115,7 +115,6 @@ namespace Zeni {
   }
 
   void Gamestate_Base::on_quit(const SDL_QuitEvent &) {
-    throw Quit_Event();
   }
 
   void Gamestate_Base::on_system_wm_event(const SDL_SysWMEvent &) {
