@@ -12,6 +12,9 @@
 		002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
 		8D11072B0486CEB800E47090 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		D303AC771083CD5B00335C27 /* Sound_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D303AC741083CD5B00335C27 /* Sound_AL.cpp */; };
+		D303AC781083CD5B00335C27 /* Sound_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D303AC751083CD5B00335C27 /* Sound_Buffer.cpp */; };
+		D303AC791083CD5B00335C27 /* Sound_NULL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D303AC761083CD5B00335C27 /* Sound_NULL.cpp */; };
 		D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */; };
 		D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D34A63CD0FFD722E00146950 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
@@ -156,6 +159,16 @@
 		32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zenilib_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Zenilib.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zenilib.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D303AC601083CCC600335C27 /* Popup_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Popup_State.h; path = ../include/Zeni/Popup_State.h; sourceTree = SOURCE_ROOT; };
+		D303AC611083CCDE00335C27 /* Sound_AL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_AL.h; path = ../include/Zeni/Sound_AL.h; sourceTree = SOURCE_ROOT; };
+		D303AC621083CCDE00335C27 /* Sound_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_Buffer.h; path = ../include/Zeni/Sound_Buffer.h; sourceTree = SOURCE_ROOT; };
+		D303AC631083CCDE00335C27 /* Sound_NULL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_NULL.h; path = ../include/Zeni/Sound_NULL.h; sourceTree = SOURCE_ROOT; };
+		D303AC641083CCF400335C27 /* Sound_AL.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sound_AL.hxx; path = ../include/Zeni/Sound_AL.hxx; sourceTree = SOURCE_ROOT; };
+		D303AC651083CCF400335C27 /* Sound_Buffer.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sound_Buffer.hxx; path = ../include/Zeni/Sound_Buffer.hxx; sourceTree = SOURCE_ROOT; };
+		D303AC661083CCF400335C27 /* Sound_NULL.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sound_NULL.hxx; path = ../include/Zeni/Sound_NULL.hxx; sourceTree = SOURCE_ROOT; };
+		D303AC741083CD5B00335C27 /* Sound_AL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_AL.cpp; path = ../src/Zeni/Sound_AL.cpp; sourceTree = SOURCE_ROOT; };
+		D303AC751083CD5B00335C27 /* Sound_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_Buffer.cpp; path = ../src/Zeni/Sound_Buffer.cpp; sourceTree = SOURCE_ROOT; };
+		D303AC761083CD5B00335C27 /* Sound_NULL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_NULL.cpp; path = ../src/Zeni/Sound_NULL.cpp; sourceTree = SOURCE_ROOT; };
 		D345B0711002818300A1B90A /* Title_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Title_State.h; path = ../include/Zeni/Title_State.h; sourceTree = SOURCE_ROOT; };
 		D345B0721002818300A1B90A /* Widget_Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget_Gamestate.h; path = ../include/Zeni/Widget_Gamestate.h; sourceTree = SOURCE_ROOT; };
 		D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget_Gamestate.cpp; path = ../src/Zeni/Widget_Gamestate.cpp; sourceTree = SOURCE_ROOT; };
@@ -548,9 +561,12 @@
 				D34A66670FFE839B00146950 /* Renderable.cpp */,
 				D34A66680FFE839B00146950 /* Resource.cpp */,
 				D34A66690FFE839B00146950 /* Shader.cpp */,
-				D34A666A0FFE839B00146950 /* Sound_Source_Pool.cpp */,
-				D34A666B0FFE839B00146950 /* Sound_Source.cpp */,
 				D34A666C0FFE839B00146950 /* Sound.cpp */,
+				D303AC741083CD5B00335C27 /* Sound_AL.cpp */,
+				D303AC751083CD5B00335C27 /* Sound_Buffer.cpp */,
+				D303AC761083CD5B00335C27 /* Sound_NULL.cpp */,
+				D34A666B0FFE839B00146950 /* Sound_Source.cpp */,
+				D34A666A0FFE839B00146950 /* Sound_Source_Pool.cpp */,
 				D34A666D0FFE839B00146950 /* Sounds.cpp */,
 				D34A666E0FFE839B00146950 /* Texture.cpp */,
 				D34A666F0FFE839B00146950 /* Textures.cpp */,
@@ -685,6 +701,7 @@
 				D34A65F20FFE836500146950 /* Mutex.h */,
 				D34A65F40FFE836500146950 /* Net_Primitives.h */,
 				D34A65F50FFE836500146950 /* Net.h */,
+				D303AC601083CCC600335C27 /* Popup_State.h */,
 				D34A65F70FFE836500146950 /* Projector.h */,
 				D34A65F90FFE836500146950 /* Quadrilateral.h */,
 				D34A65FB0FFE836500146950 /* Quaternion.h */,
@@ -692,9 +709,12 @@
 				D34A65FD0FFE836500146950 /* Renderable.h */,
 				D34A65FF0FFE836500146950 /* Resource.h */,
 				D34A66010FFE836500146950 /* Shader.h */,
-				D34A66040FFE836500146950 /* Sound_Source_Pool.h */,
-				D34A66050FFE836500146950 /* Sound_Source.h */,
 				D34A66060FFE836500146950 /* Sound.h */,
+				D303AC611083CCDE00335C27 /* Sound_AL.h */,
+				D303AC621083CCDE00335C27 /* Sound_Buffer.h */,
+				D303AC631083CCDE00335C27 /* Sound_NULL.h */,
+				D34A66050FFE836500146950 /* Sound_Source.h */,
+				D34A66040FFE836500146950 /* Sound_Source_Pool.h */,
 				D34A66080FFE836500146950 /* Sounds.h */,
 				D34A66090FFE836500146950 /* Texture.h */,
 				D34A660B0FFE836500146950 /* Textures.h */,
@@ -744,6 +764,9 @@
 				D34A66020FFE836500146950 /* Shader.hxx */,
 				D34A66030FFE836500146950 /* Sound_Source.hxx */,
 				D34A66070FFE836500146950 /* Sound.hxx */,
+				D303AC641083CCF400335C27 /* Sound_AL.hxx */,
+				D303AC651083CCF400335C27 /* Sound_Buffer.hxx */,
+				D303AC661083CCF400335C27 /* Sound_NULL.hxx */,
 				D34A660A0FFE836500146950 /* Texture.hxx */,
 				D34A660C0FFE836500146950 /* Textures.hxx */,
 				D34A660F0FFE836500146950 /* Timer.hxx */,
@@ -939,6 +962,9 @@
 				D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */,
 				D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */,
 				D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */,
+				D303AC771083CD5B00335C27 /* Sound_AL.cpp in Sources */,
+				D303AC781083CD5B00335C27 /* Sound_Buffer.cpp in Sources */,
+				D303AC791083CD5B00335C27 /* Sound_NULL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
