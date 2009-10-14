@@ -97,19 +97,19 @@ namespace Zeni {
 #define EMPTY()
 
   void Sound::set_listener_position(const Point3f &position) {
-    SOUND_IV_FCN_CALL(set_listener_position_impl, position);
-
     assert_m_bgm();
 
     m_bgm_source->set_position(position);
+
+    SOUND_IV_FCN_CALL(set_listener_position_impl, position);
   }
 
   void Sound::set_listener_velocity(const Vector3f &velocity) {
-    SOUND_IV_FCN_CALL(set_listener_velocity_impl, velocity);
-
     assert_m_bgm();
 
     m_bgm_source->set_velocity(velocity);
+
+    SOUND_IV_FCN_CALL(set_listener_velocity_impl, velocity);
   }
 
   void Sound::set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up) {
