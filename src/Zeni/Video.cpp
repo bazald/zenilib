@@ -81,7 +81,7 @@ namespace Zeni {
     SDL_PixelFormat fmt;
     memset(&fmt, 0, sizeof(SDL_PixelFormat));
     fmt.BitsPerPixel = 32;
-    for(SDL_Rect ** mode = SDL_ListModes(&fmt, SDL_FULLSCREEN | SDL_OPENGL); *mode; ++mode)
+    for(SDL_Rect ** mode = SDL_ListModes(&fmt, SDL_FULLSCREEN | SDL_OPENGL); mode && *mode; ++mode)
       m_modes.push_back(Point2i((*mode)->w, (*mode)->h));
 
     if(m_modes.empty())
