@@ -94,7 +94,7 @@ namespace Zeni {
     Color specular; ///< The specular Color
     Color ambient; ///< The ambient Color
     Point3f position; ///< The position of the Light (irrelevant for directional lights or purely ambient lights)
-    Vector3f spot_direction; ///< The direction of the Light (relevent only to spotlights)
+    Point3f spot_direction; ///< The direction of the Light (relevent only to spotlights)
     float range; ///< The max distance reached by the light; NOT SUPPORTED BY OPENGL
     float spot_exponent; ///< Similar to Falloff in OpenGL, describes the intensity of the Light from the inner cone to the outer cone (Note that the inner cone is size 0 in OpenGL)
     float constant_attenuation; ///< Part of the equation describing the weakening of Light over distance.  Read online for more information.
