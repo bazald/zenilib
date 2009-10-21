@@ -64,9 +64,9 @@ namespace Zeni {
     GLfloat pos[] = {position.x, position.y, position.z, 1.0f};
 
     if(light_type == LIGHT_DIRECTIONAL) {
-      pos[0] = -spot_direction.i;
-      pos[1] = -spot_direction.j;
-      pos[2] = -spot_direction.k;
+      pos[0] = -spot_direction.x;
+      pos[1] = -spot_direction.y;
+      pos[2] = -spot_direction.z;
       pos[3] = 0.0f;
     }
 
