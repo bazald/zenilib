@@ -118,8 +118,9 @@ namespace Zeni {
 
   Sound & get_Sound(); ///< Get access to the singleton.
 
-  struct Sound_Init_Failure : public Error {
-    Sound_Init_Failure() : Error("Zeni Sound Failed to Initialize Correctly") {}
+  struct Sound_Init_Failure {
+    Sound_Init_Failure() : msg("Zeni Sound Failed to Initialize Correctly") {}
+    std::string msg;
   };
 
 }
