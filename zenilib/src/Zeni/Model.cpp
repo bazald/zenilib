@@ -78,9 +78,9 @@ namespace Zeni {
 
     /*** BEGIN NEW FLIP-TEST ***/
 
-    const Vector3f scl_track(node->scl_track.keys->value[0],
-                             node->scl_track.keys->value[1],
-                             node->scl_track.keys->value[2]);
+    const Vector3f scl_track(node ? node->scl_track.keys->value[0] : 1.0f,
+                             node ? node->scl_track.keys->value[1] : 1.0f,
+                             node ? node->scl_track.keys->value[2] : 1.0f);
     const bool flip_order = scl_track.i * scl_track.j * scl_track.k < 0.0f;
 
     /*** END NEW FLIP-TEST ***/
