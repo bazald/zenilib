@@ -71,14 +71,25 @@ namespace Zeni {
            event.type == SDL_KEYUP)
         {
           const SDL_keysym &s = event.key.keysym;
-          const bool alt_only = (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+          const bool modifiers = 
+#if defined(_MACOSX)
+                                (get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER)) &&
+                                !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
                                 !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+#elif defined(_WINDOWS)
+                                (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
+                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
+#else
+                                (get_key_state(SDLK_LCTRL) || get_key_state(SDLK_RCTRL)) &&
+                                !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
+#endif
                                 !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
-                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT) &&
-                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER);
+                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT);
 
 #ifndef NDEBUG
-          if(s.sym == SDLK_BACKQUOTE && alt_only) {
+          if(s.sym == SDLK_BACKQUOTE && modifiers) {
             if(event.type == SDL_KEYDOWN) {
               if(m_console_active)
                 deactivate_console();
@@ -92,8 +103,15 @@ namespace Zeni {
 
           on_event(event);
 
-          if(event.type == SDL_KEYDOWN && s.sym == SDLK_F4 && alt_only)
-              throw Quit_Event();
+          if(event.type == SDL_KEYDOWN && modifiers &&
+#ifdef _WINDOWS
+             s.sym == SDLK_F4)
+#else
+             s.sym == SDLK_q)
+#endif
+          {
+            throw Quit_Event();
+          }
         }
         else {
           on_event(event);
