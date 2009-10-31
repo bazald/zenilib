@@ -5,7 +5,7 @@ This software was built with many open source, free-as-in-libre, and free-as-in-
 ~bazald@zenipex.com
 
 The Zenipex Library
-zenilib    0.3.2.2           (GNU Runtime GPL)       http://zenilib.com
+zenilib    0.3.2.3           (GNU Runtime GPL)       http://zenilib.com
 
 DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/directx/sdk/
 OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
