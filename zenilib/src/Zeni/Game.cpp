@@ -73,19 +73,19 @@ namespace Zeni {
           const SDL_keysym &s = event.key.keysym;
           const bool modifiers = 
 #if defined(_MACOSX)
-                                (get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER)) &&
+                                (get_key_state(SDLK_LMETA) || get_key_state(SDLK_RMETA)) &&
                                 !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
                                 !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
 #elif defined(_WINDOWS)
                                 (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
                                 !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
-                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
+                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
 #else
                                 (get_key_state(SDLK_LCTRL) || get_key_state(SDLK_RCTRL)) &&
                                 !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
-                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
-#endif
                                 !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) &&
+#endif
+                                !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
                                 !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT);
 
 #ifndef NDEBUG
