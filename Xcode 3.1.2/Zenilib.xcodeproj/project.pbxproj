@@ -74,6 +74,39 @@
 		D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D34A67B00FFE88A500146950 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
 		D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36C2DAA102B949F00E71223 /* Logo.cpp */; };
+		D3B6898210B61200004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D3B6898310B61200004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D3B6898410B61200004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D3B6898510B61200004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3B6898610B61200004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D3B6898710B61200004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D3B6898810B61200004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D3B6898910B61200004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D3B6898A10B61200004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D3B6898B10B61200004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D3B6898C10B61200004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
+		D3B6898D10B61209004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D3B6898E10B61209004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D3B6898F10B61209004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D3B6899010B61209004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3B6899110B61209004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D3B6899210B61209004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D3B6899310B61209004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D3B6899410B61209004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D3B6899510B61209004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D3B6899610B61209004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D3B6899710B61209004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
+		D3B6899810B61216004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D3B6899910B61216004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D3B6899A10B61216004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D3B6899B10B61216004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3B6899C10B61216004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D3B6899D10B61216004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D3B6899E10B61216004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D3B6899F10B61216004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D3B689A010B61216004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D3B689A110B61216004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D3B689A210B61216004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494910FFF0BC900B647E1 /* application.cxx */; };
 		D3DB81E90FFF1AD700788B73 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
 		D3E4934A0FFF038300B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
@@ -121,6 +154,17 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D3B6898210B61200004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */,
+				D3B6898310B61200004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */,
+				D3B6898410B61200004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
+				D3B6898510B61200004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */,
+				D3B6898610B61200004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
+				D3B6898710B61200004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
+				D3B6898810B61200004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
+				D3B6898910B61200004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
+				D3B6898A10B61200004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
+				D3B6898B10B61200004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
+				D3B6898C10B61200004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */,
 			);
 			name = "Copy Frameworks into .app bundle";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,6 +175,17 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D3B6898D10B61209004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */,
+				D3B6898E10B61209004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */,
+				D3B6898F10B61209004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
+				D3B6899010B61209004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */,
+				D3B6899110B61209004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
+				D3B6899210B61209004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
+				D3B6899310B61209004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
+				D3B6899410B61209004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
+				D3B6899510B61209004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
+				D3B6899610B61209004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
+				D3B6899710B61209004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */,
 			);
 			name = "Copy Frameworks into .app bundle";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +196,17 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D3B6899810B61216004AC7B7 /* lib3ds-2.0.framework in Copy Frameworks into .app bundle */,
+				D3B6899910B61216004AC7B7 /* Ogg.framework in Copy Frameworks into .app bundle */,
+				D3B6899A10B61216004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
+				D3B6899B10B61216004AC7B7 /* ALUT.framework in Copy Frameworks into .app bundle */,
+				D3B6899C10B61216004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
+				D3B6899D10B61216004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
+				D3B6899E10B61216004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
+				D3B6899F10B61216004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
+				D3B689A010B61216004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
+				D3B689A110B61216004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
+				D3B689A210B61216004AC7B7 /* SDL.framework in Copy Frameworks into .app bundle */,
 			);
 			name = "Copy Frameworks into .app bundle";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -811,6 +877,7 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				002F39FD09D0883400EBEB88 /* Copy Frameworks into .app bundle */,
+				D3B689D410B619F7004AC7B7 /* Copy Game Files */,
 			);
 			buildRules = (
 			);
@@ -830,6 +897,7 @@
 				D3E4943E0FFF0B5600B647E1 /* Sources */,
 				D3E494700FFF0B5600B647E1 /* Frameworks */,
 				D3E4947F0FFF0B5600B647E1 /* Copy Frameworks into .app bundle */,
+				D3B689FC10B61FA9004AC7B7 /* Copy Game Files */,
 			);
 			buildRules = (
 			);
@@ -849,6 +917,7 @@
 				D3E4949F0FFF0C9200B647E1 /* Sources */,
 				D3E494A30FFF0C9200B647E1 /* Frameworks */,
 				D3E494B20FFF0C9200B647E1 /* Copy Frameworks into .app bundle */,
+				D3B689FE10B61FB3004AC7B7 /* Copy Game Files */,
 			);
 			buildRules = (
 			);
@@ -905,6 +974,51 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D3B689D410B619F7004AC7B7 /* Copy Game Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Game Files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./copy_game_files.sh;
+		};
+		D3B689FC10B61FA9004AC7B7 /* Copy Game Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Game Files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./copy_game_files.sh;
+		};
+		D3B689FE10B61FB3004AC7B7 /* Copy Game Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Game Files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./copy_game_files.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {

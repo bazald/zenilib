@@ -271,6 +271,7 @@ int main(int argc, char *argv[]) {
     char application_path[FILENAME_MAX];
 #ifndef _MACOSX
     int length = readlink("/proc/self/exe", application_path, FILENAME_MAX);
+    up_one_dir(application_path, length);
 #else
     uint32_t size = sizeof(application_path);
     if(_NSGetExecutablePath(application_path, &size)) {
@@ -279,9 +280,10 @@ int main(int argc, char *argv[]) {
     }
     int length = strlen(application_path);
     
-    for(int i = 0; i != 4; ++i)
-#endif
+    for(int i = 0; i != 2; ++i)
       up_one_dir(application_path, length);
+    memcpy(application_path + length, "/zenilib", 9);
+#endif
     if(chdir(application_path)) {
       std::cerr << "chdir: " << application_path << '\n';
       std::cerr << "Setting working directory failed with error code: '" << errno << "'\n";
