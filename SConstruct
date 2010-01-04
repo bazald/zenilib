@@ -320,6 +320,14 @@ else:
   linkflags = ''
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
+  if os.getenv('CPATH'):
+    cpppath += os.getenv('CPATH').split(':')
+  if os.getenv('C_INCLUDE_PATH'):
+    cpppath += os.getenv('C_INCLUDE_PATH').split(':')
+  if os.getenv('CPLUS_INCLUDE_PATH'):
+    cpppath += os.getenv('CPLUS_INCLUDE_PATH').split(':')
+  if os.getenv('LDPATH'):
+    libpath += os.getenv('LDPATH').split(':')
 
 if soar:
   cpppath += ['../SoarSuite/Core/ClientSML/include/']
