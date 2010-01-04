@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import math, sys, os.path, glob, string, re, os, subprocess
 
 #for entry in os.environ:
@@ -42,28 +45,34 @@ if not is_windows:
 
 ### Generate help
 
-opts = Options('custom.py')
+try:
+  vars = Variables('custom.py')
+  deprecated_opts = False
+except TypeError:
+  vars = Variables('custom.py')
+  deprecated_opts = True
+
 if not is_windows:
-  opts.Add('cc', 'Replace \'g++\' as the C++ compiler', cc)
-  opts.Add('cpp0x', 'Set to 1 to enable the c++0x standard (if supported)', cpp0x)
-opts.Add('debug', 'Set to 1 to build with debug information', debug)
-opts.Add('noal', 'Set to 1 to disable the use of OpenAL', noal)
+  vars.Add('cc', 'Replace \'g++\' as the C++ compiler', cc)
+  vars.Add('cpp0x', 'Set to 1 to enable the c++0x standard (if supported)', cpp0x)
+vars.Add('debug', 'Set to 1 to build with debug information', debug)
+vars.Add('noal', 'Set to 1 to disable the use of OpenAL', noal)
 if is_windows:
-  opts.Add('nodx9', 'Set to 1 to disable the use of DirectX 9', nodx9)
-opts.Add('nogl', 'Set to 1 to disable the use of OpenGL', nogl)
+  vars.Add('nodx9', 'Set to 1 to disable the use of DirectX 9', nodx9)
+vars.Add('nogl', 'Set to 1 to disable the use of OpenGL', nogl)
 if is_windows:
-  opts.Add('nowgl', 'Set to 1 to disable the use of Windows GL Extensions', nowgl)
+  vars.Add('nowgl', 'Set to 1 to disable the use of Windows GL Extensions', nowgl)
 if not is_windows:
-  opts.Add('pedantic', 'Set to 1 to add warnings for violations of ANSI standards', pedantic)
-  opts.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', profile)
-opts.Add('scu', 'Set to \'scu\' to use SCU for everything, \'zeni\' to use SCU on zenilib only, \'no\' to disable', scu)
+  vars.Add('pedantic', 'Set to 1 to add warnings for violations of ANSI standards', pedantic)
+  vars.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', profile)
+vars.Add('scu', 'Set to \'scu\' to use SCU for everything, \'zeni\' to use SCU on zenilib only, \'no\' to disable', scu)
 if not is_windows:
-  opts.Add('soar', 'Set to 1 to use Soar', soar)
-opts.Add('stress', 'Set to 1 to stress test your code', stress)
+  vars.Add('soar', 'Set to 1 to use Soar', soar)
+vars.Add('stress', 'Set to 1 to stress test your code', stress)
 if not is_windows:
-  opts.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', tune)
+  vars.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', tune)
 if is_windows:
-  opts.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', x64)
+  vars.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', x64)
 
 ### Read arguments
 
@@ -337,16 +346,30 @@ if soar:
   libpath += ['../SoarSuite/SoarLibrary/lib/']
   libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
-env = Environment(
-  AR = lib,
-  CC = cc,
-  CXX = cc,
-  CCFLAGS = ccflags,
-  CPPPATH = cpppath,
-  LINK = link,
-  LINKFLAGS = linkflags,
-  LIBS = libs,
-  LIBPATH = libpath)
+if deprecated_opts is False:
+  env = Environment(
+    variables = vars,
+    AR = lib,
+    CC = cc,
+    CXX = cc,
+    CCFLAGS = ccflags,
+    CPPPATH = cpppath,
+    LINK = link,
+    LINKFLAGS = linkflags,
+    LIBS = libs,
+    LIBPATH = libpath)
+else:
+  env = Environment(
+    options = vars,
+    AR = lib,
+    CC = cc,
+    CXX = cc,
+    CCFLAGS = ccflags,
+    CPPPATH = cpppath,
+    LINK = link,
+    LINKFLAGS = linkflags,
+    LIBS = libs,
+    LIBPATH = libpath)
 
 env.Program(
   program_name,
@@ -363,5 +386,5 @@ if is_windows:
 
 ### Provide help
 
-opts.Update(env)
-Help(opts.GenerateHelpText(env))
+vars.Update(env)
+Help(vars.GenerateHelpText(env))
