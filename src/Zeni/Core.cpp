@@ -78,7 +78,8 @@ namespace Zeni {
 #else
     char username[4096];
     FILE * whoami = popen("whoami", "r");
-    fgets(username, sizeof(username), whoami);
+    if(!fgets(username, sizeof(username), whoami))
+      throw Core_Init_Failure();
     pclose(whoami);
     int username_len = strlen(username);
     if(username_len)
@@ -95,7 +96,8 @@ namespace Zeni {
 #else
     char appdata_path[4096];
     FILE * pwd = popen("cd ~/ && pwd", "r");
-    fgets(appdata_path, sizeof(appdata_path), pwd);
+    if(!fgets(appdata_path, sizeof(appdata_path), pwd))
+      throw Core_Init_Failure();
     pclose(pwd);
     int appdata_path_len = strlen(appdata_path);
     if(appdata_path_len)
