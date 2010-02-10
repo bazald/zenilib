@@ -873,6 +873,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Normal" */;
 			buildPhases = (
+				CD9D9689111E0E4E00CDA839 /* Install Frameworks */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -893,6 +894,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "SCU" */;
 			buildPhases = (
+				CD9D9659111E08AA00CDA839 /* Install Frameworks */,
 				D3E4943C0FFF0B5600B647E1 /* Resources */,
 				D3E4943E0FFF0B5600B647E1 /* Sources */,
 				D3E494700FFF0B5600B647E1 /* Frameworks */,
@@ -918,6 +920,7 @@
 				D3E494A30FFF0C9200B647E1 /* Frameworks */,
 				D3E494B20FFF0C9200B647E1 /* Copy Frameworks into .app bundle */,
 				D3B689FE10B61FB3004AC7B7 /* Copy Game Files */,
+				CD9D968B111E0E6400CDA839 /* Install Frameworks */,
 			);
 			buildRules = (
 			);
@@ -976,6 +979,48 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		CD9D9659111E08AA00CDA839 /* Install Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d ../Frameworks ]\nthen echo \"You have the Frameworks installed\"\nelse\ncurl -C - -O http://www-personal.umich.edu/~bazald/zenilib/support/zenilib_0.3.3.0_frameworks.zip\nfi\nunzip -q zenilib_0.3.3.0_frameworks.zip\nrm -d -f -R __MACOSX\nmv Frameworks ../Frameworks\n";
+		};
+		CD9D9689111E0E4E00CDA839 /* Install Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d ../Frameworks ]\nthen echo \"You have the Frameworks installed\"\nelse\ncurl -C - -O http://www-personal.umich.edu/~bazald/zenilib/support/zenilib_0.3.3.0_frameworks.zip\nfi\nunzip -q zenilib_0.3.3.0_frameworks.zip\nrm -d -f -R __MACOSX\nmv Frameworks ../Frameworks\n";
+		};
+		CD9D968B111E0E6400CDA839 /* Install Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d ../Frameworks ]\nthen echo \"You have the Frameworks installed\"\nelse\curl -C - -O http://www-personal.umich.edu/~bazald/zenilib/support/zenilib_0.3.3.0_frameworks.zip\nfi\nunzip -q zenilib_0.3.3.0_frameworks.zip\nrm -d -f -R __MACOSX\nmv Frameworks ../Frameworks\n";
+		};
 		D3B689D410B619F7004AC7B7 /* Copy Game Files */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
