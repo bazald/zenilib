@@ -11,7 +11,6 @@ DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/d
 OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
 OpenGL                       (Proprietary)
 
-ALUT       1.1.0             (GNU LGPL)              http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
 Cg Toolkit 2.2 April 2009    (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
 FreeType2  2.3.7             (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
 GLEW       1.5.1             (BSD License)           http://glew.sourceforge.net/
