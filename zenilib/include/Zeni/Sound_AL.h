@@ -67,8 +67,10 @@
 
 #ifndef DISABLE_AL
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
 #include <alc.h>
+#elif defined(_MACOSX)
+#include <OpenAL/alc.h>
 #else
 #include <AL/alc.h>
 #endif
