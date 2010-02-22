@@ -67,7 +67,11 @@
 
 #ifndef DISABLE_AL
 
+#ifdef _WINDOWS
 #include <alc.h>
+#else
+#include <AL/alc.h>
+#endif
 
 namespace Zeni {
 

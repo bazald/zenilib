@@ -54,7 +54,11 @@
 #include <string>
 
 #ifndef DISABLE_AL
+#ifdef _WINDOWS
 #include <al.h>
+#else
+#include <AL/al.h>
+#endif
 #else
 
 #define ALint int
