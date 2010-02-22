@@ -162,7 +162,11 @@ static bool load_config() {
 #endif
 
 #ifndef DISABLE_AL
+#ifdef _WINDOWS
 #include <al.h>
+#else
+#include <AL/al.h>
+#endif
 #endif
 
 static void print_errors() {
