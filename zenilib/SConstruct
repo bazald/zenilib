@@ -248,9 +248,9 @@ else:
 
 if not noal:
   if is_windows:
-    libs += ['OpenAL32', 'alut', 'libvorbis', 'libvorbisfile']
+    libs += ['OpenAL32', 'libvorbis', 'libvorbisfile']
   else:
-    libs += ['openal', 'alut', 'libvorbis', 'vorbisfile']
+    libs += ['openal', 'libvorbis', 'vorbisfile']
 
 if not nodx9:
   libs += ['d3d9', 'd3dx9', 'gdi32', 'CgD3D9']

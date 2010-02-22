@@ -162,11 +162,7 @@ static bool load_config() {
 #endif
 
 #ifndef DISABLE_AL
-#ifdef _MACOSX
-#include <ALUT/alut.h>
-#else
-#include <AL/alut.h>
-#endif
+#include <al.h>
 #endif
 
 static void print_errors() {

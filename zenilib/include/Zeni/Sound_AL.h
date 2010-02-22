@@ -67,6 +67,8 @@
 
 #ifndef DISABLE_AL
 
+#include <alc.h>
+
 namespace Zeni {
 
   class Sound_AL : public Sound {
@@ -92,6 +94,9 @@ namespace Zeni {
 
   private:
     void assert_m_bgm(); ///< Initialize m_bgm and m_bgm_source if not already done.
+
+    ALCdevice *m_device;
+    ALCcontext *m_context;
 
     std::string m_bgmusic;
     Sound_Buffer *m_bgm;

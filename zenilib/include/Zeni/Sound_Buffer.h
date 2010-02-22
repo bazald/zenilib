@@ -54,11 +54,7 @@
 #include <string>
 
 #ifndef DISABLE_AL
-#ifdef _MACOSX
-#include <ALUT/alut.h>
-#else
-#include <AL/alut.h>
-#endif
+#include <al.h>
 #else
 
 #define ALint int
