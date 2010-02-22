@@ -54,13 +54,20 @@ namespace Zeni {
     m_bgm_source(0)
   {
     m_device = alcOpenDevice(0);
-
     if(!m_device)
       throw Sound_Init_Failure();
 
     m_context = alcCreateContext(m_device, 0);
-    if(!alcMakeContextCurrent(m_context))
+    if(!m_context) {
+      alcCloseDevice(m_device);
       throw Sound_Init_Failure();
+    }
+
+    if(!alcMakeContextCurrent(m_context)) {
+      alcDestroyContext(m_context);
+      alcCloseDevice(m_device);
+      throw Sound_Init_Failure();
+    }
 
     // Check for Vorbis extension functionality; seems to always fail :(
     alIsExtensionPresent("AL_EXT_vorbis");
