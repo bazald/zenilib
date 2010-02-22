@@ -162,8 +162,10 @@ static bool load_config() {
 #endif
 
 #ifndef DISABLE_AL
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
 #include <al.h>
+#elif defined(_MACOSX)
+#include <OpenAL/al.h>
 #else
 #include <AL/al.h>
 #endif
