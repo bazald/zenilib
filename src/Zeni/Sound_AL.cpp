@@ -48,10 +48,18 @@ namespace Zeni {
 
   Sound_AL::Sound_AL()
     : Sound(Sound_Base::ZENI_SOUND_AL),
+    m_device(0),
+    m_context(0),
     m_bgm(0),
     m_bgm_source(0)
   {
-    if(!alutInit(0, 0))
+    m_device = alcOpenDevice(0);
+
+    if(!m_device)
+      throw Sound_Init_Failure();
+
+    m_context = alcCreateContext(m_device, 0);
+    if(!alcMakeContextCurrent(m_context))
       throw Sound_Init_Failure();
 
     // Check for Vorbis extension functionality; seems to always fail :(
@@ -68,7 +76,8 @@ namespace Zeni {
   }
 
   Sound_AL::~Sound_AL() {
-    alutExit();
+    alcDestroyContext(m_context);
+    alcCloseDevice(m_device);
   }
 
 }

@@ -55,12 +55,16 @@ namespace Zeni {
     Sound &sr = get_Sound();
 
     if(dynamic_cast<Sound_AL *>(&sr)) {
-      m_buffer = alutCreateBufferHelloWorld();
+      alGenBuffers(1, &m_buffer);
 
       if(m_buffer == AL_NONE) {
-        std::cerr << "ALUT error on Hello World: " << alutGetErrorString(alutGetError()) << std::endl;
+        std::cerr << "OpenAL error on alGenBuffers: " << alErrorString(alGetError()) << std::endl;
         throw Sound_Buffer_Init_Failure();
       }
+
+      char buffer[64];
+      memset(buffer, 0, sizeof(buffer));
+      alBufferData(m_buffer, AL_FORMAT_MONO16, buffer, sizeof(buffer), 22050);
     }
 #endif
   }
@@ -187,7 +191,7 @@ namespace Zeni {
     //  loaded_ogg.first = alutCreateBufferFromFile(m_filename.c_str());
 
     if(loaded_ogg.first == AL_NONE) {
-      std::cerr << "ALUT error on '" << m_filename << "': " << alutGetErrorString(alutGetError()) << std::endl;
+      std::cerr << "OpenAL error on '" << m_filename << "': " << alErrorString(alGetError()) << std::endl;
       return -1;
     }
 
