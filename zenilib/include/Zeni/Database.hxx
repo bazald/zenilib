@@ -170,6 +170,7 @@ namespace Zeni {
 
     if(lr.handles.empty()) {
       m_entries.erase(lr.id);
+      delete it->second;
       m_lookups.erase(it);
     }
     else
