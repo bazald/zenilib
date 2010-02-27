@@ -239,7 +239,7 @@ if x64:
 
 ### Decide libraries
 
-libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_gfx', 'SDL_ttf', 'SDL_net', 'Cg']
+libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net', 'Cg']
 
 if is_windows:
   libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']

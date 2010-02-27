@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
@@ -178,7 +178,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
@@ -278,7 +278,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
@@ -383,7 +383,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
@@ -483,7 +483,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
@@ -582,7 +582,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"
@@ -682,7 +682,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
 				GenerateDebugInformation="true"
@@ -787,7 +787,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib\x64;..\lib_win\x64;&quot;$(DXSDK_Dir)Lib\x64&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64&quot;"
 				GenerateDebugInformation="true"

@@ -28,19 +28,21 @@
 
 #include <Zeni/Texture.hxx>
 
-#ifndef DISABLE_GL
-#ifdef _MACOSX
-#include <SDL_gfx/SDL_rotozoom.h>
-#else
-#include <SDL/SDL_rotozoom.h>
-#endif
-#endif
-
 #include <iostream>
 
 #include <Zeni/Global.h>
 
 namespace Zeni {
+
+  void Texture::simplify_surface(SDL_Surface * &surface) {
+    SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, surface->w, surface->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+    if(!surf2)
+      throw Texture_Init_Failure();
+
+    SDL_BlitSurface(surface, 0, surf2, 0);
+    SDL_FreeSurface(surface);
+    surface = surf2;
+  }
 
   int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size) {
     bool scale = false;
@@ -71,44 +73,21 @@ namespace Zeni {
       scale = true;
     }
 
-    double scale_w = built_size.x;
-    double scale_h = built_size.y;
-
     if(scale) {
-      int actual_w, actual_h;
-      for(int i = 0; i < END_OF_TIME; ++i) {
-        zoomSurfaceSize(surface->w, surface->h,
-                        scale_w/surface->w, scale_h/surface->h,
-                        &actual_w, &actual_h);
+      simplify_surface(surface);
 
-        if(built_size.x == actual_w &&
-           built_size.y == actual_h)
-          break;
-
-        if(actual_w < built_size.x)
-          scale_w += 0.5;
-        else if(actual_w > built_size.x)
-          scale_w -= 0.5;
-
-        if(actual_h < built_size.y)
-          scale_h += 0.5;
-        else if(actual_h > built_size.y)
-          scale_h -= 0.5;
-      };
-
-      SDL_Surface *surf2 = zoomSurface(surface,
-        scale_w/surface->w,
-        scale_h/surface->h, 1);
+      SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, built_size.x, built_size.y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
       if(!surf2)
         throw Texture_Init_Failure();
+
+      SDL_SoftStretch(surface, 0, surf2, 0);
 
       if(surf2) {
         SDL_FreeSurface(surface);
         surface = surf2;
       }
     }
-
-    if(surface->format->BytesPerPixel == 3) {
+    else if(surface->format->BytesPerPixel == 3) {
       if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
         return -'R';
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
@@ -120,14 +99,8 @@ namespace Zeni {
       else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
         return 'B';
     }
-
-    SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, surface->w, surface->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-    if(!surf2)
-      throw Texture_Init_Failure();
-
-    SDL_BlitSurface(surface, 0, surf2, 0);
-    SDL_FreeSurface(surface);
-    surface = surf2;
+    else
+      simplify_surface(surface);
 
     return 'R';
   }
