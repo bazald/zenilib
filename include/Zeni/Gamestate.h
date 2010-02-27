@@ -140,6 +140,9 @@ namespace Zeni {
     // Mouse events
     virtual void on_mouse_motion(const SDL_MouseMotionEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_mouse_button(const SDL_MouseButtonEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#if SDL_VERSION_ATLEAST(1,3,0)
+    virtual void on_mouse_wheel(const SDL_MouseWheelEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#endif
     // "Joystick" events
     virtual void on_joy_axis(const SDL_JoyAxisEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_joy_ball(const SDL_JoyBallEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
@@ -148,10 +151,16 @@ namespace Zeni {
     // Quit events
     virtual void on_quit(const SDL_QuitEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Annoying events
+#if SDL_VERSION_ATLEAST(1,3,0)
+    virtual void on_proximity(const SDL_ProximityEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_window_event(const SDL_WindowEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#endif
     virtual void on_system_wm_event(const SDL_SysWMEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_active(const SDL_ActiveEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_video_resize(const SDL_ResizeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#if !SDL_VERSION_ATLEAST(1,3,0)
     virtual void on_video_expose(const SDL_ExposeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#endif
     // Custom events
     virtual void on_user_event(const SDL_UserEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 

@@ -796,12 +796,16 @@ namespace Zeni {
       Game &gr = get_Game();
       const bool mod_alt = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT);
       const bool mod_ctrl = gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL);
-      const bool mod_meta = gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA);
+#if SDL_VERSION_ATLEAST(1,3,0)
+      const bool mod_gui = gr.get_key_state(SDLK_LGUI) || gr.get_key_state(SDLK_RGUI);
+#else
+      const bool mod_gui = gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA) ||
+                           gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
+#endif
       const bool mod_shift = gr.get_key_state(SDLK_LSHIFT) || gr.get_key_state(SDLK_RSHIFT);
-      const bool mod_super = gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
-      const bool mod_none = !mod_alt && !mod_ctrl && !mod_meta && !mod_shift && !mod_super;
-      const bool mod_ctrl_only = !mod_alt && mod_ctrl && !mod_meta && !mod_shift && !mod_super;
-      const bool mod_shift_only = !mod_alt && !mod_ctrl && !mod_meta && mod_shift && !mod_super;
+      const bool mod_none = !mod_alt && !mod_ctrl && !mod_gui && !mod_shift;
+      const bool mod_ctrl_only = !mod_alt && mod_ctrl && !mod_gui && !mod_shift;
+      const bool mod_shift_only = !mod_alt && !mod_ctrl && !mod_gui && mod_shift;
 
       switch(keysym.sym) {
         case SDLK_BACKSPACE:

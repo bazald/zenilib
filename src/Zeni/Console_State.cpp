@@ -195,8 +195,12 @@ namespace Zeni {
     Game &gr = get_Game();
     const bool mod_nonshift = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT) ||
                               gr.get_key_state(SDLK_LCTRL) || gr.get_key_state(SDLK_RCTRL) ||
+#if SDL_VERSION_ATLEAST(1,3,0)
+                              gr.get_key_state(SDLK_LGUI) || gr.get_key_state(SDLK_LGUI);
+#else
                               gr.get_key_state(SDLK_LMETA) || gr.get_key_state(SDLK_RMETA) ||
                               gr.get_key_state(SDLK_LSUPER) || gr.get_key_state(SDLK_RSUPER);
+#endif
 
     if(event.type == SDL_KEYDOWN &&
        !mod_nonshift)

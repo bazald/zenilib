@@ -88,7 +88,7 @@ namespace Zeni {
   }
 
   void Widget::on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector) {
-    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    const Point2f projected = projector.unproject(Point2f(float(event.x), float(event.y)));
     on_mouse_button(Point2i(int(projected.x), int(projected.y)),
                     event.type == SDL_MOUSEBUTTONDOWN,
                     event.button);
@@ -99,7 +99,7 @@ namespace Zeni {
   }
 
   void Widget::on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector) {
-    const Point2f projected = projector.unproject(Point2f(event.x, event.y));
+    const Point2f projected = projector.unproject(Point2f(float(event.x), float(event.y)));
     on_mouse_motion(Point2i(int(projected.x), int(projected.y)));
   }
 

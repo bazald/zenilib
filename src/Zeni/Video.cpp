@@ -78,11 +78,21 @@ namespace Zeni {
       throw Video_Init_Failure();
 
     // Initialize Video Mode Listing
+#if SDL_VERSION_ATLEAST(1,3,0)
+    const int num_modes = SDL_GetNumDisplayModes();
+    for(int i = 0; i != num_modes; ++i) {
+      SDL_DisplayMode mode;
+      SDL_GetDisplayMode(i, &mode);
+      if(m_modes.empty() || m_modes.rbegin()->x != mode.w || m_modes.rbegin()->y != mode.h)
+        m_modes.push_back(Point2i(mode.w, mode.h));
+    }
+#else
     SDL_PixelFormat fmt;
     memset(&fmt, 0, sizeof(SDL_PixelFormat));
     fmt.BitsPerPixel = 32;
     for(SDL_Rect ** mode = SDL_ListModes(&fmt, SDL_FULLSCREEN | SDL_OPENGL); mode && *mode; ++mode)
       m_modes.push_back(Point2i((*mode)->w, (*mode)->h));
+#endif
 
     if(m_modes.empty())
       throw Video_Init_Failure();
