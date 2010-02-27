@@ -19,7 +19,6 @@
 		D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D34A63CD0FFD722E00146950 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
 		D34A63CE0FFD722E00146950 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
-		D34A63CF0FFD722E00146950 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D34A63D00FFD722E00146950 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D34A63D10FFD722E00146950 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D34A63D20FFD722E00146950 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -79,7 +78,6 @@
 		D3B6898410B61200004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
 		D3B6898610B61200004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D3B6898710B61200004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
-		D3B6898810B61200004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D3B6898910B61200004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D3B6898A10B61200004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D3B6898B10B61200004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -89,7 +87,6 @@
 		D3B6898F10B61209004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
 		D3B6899110B61209004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D3B6899210B61209004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
-		D3B6899310B61209004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D3B6899410B61209004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D3B6899510B61209004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D3B6899610B61209004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -99,7 +96,6 @@
 		D3B6899A10B61216004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
 		D3B6899C10B61216004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
 		D3B6899D10B61216004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
-		D3B6899E10B61216004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D3B6899F10B61216004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D3B689A010B61216004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D3B689A110B61216004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -111,7 +107,6 @@
 		D3E4943F0FFF0B5600B647E1 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		D3E494710FFF0B5600B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D3E494720FFF0B5600B647E1 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
-		D3E494730FFF0B5600B647E1 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D3E494740FFF0B5600B647E1 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D3E494750FFF0B5600B647E1 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D3E494760FFF0B5600B647E1 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -128,7 +123,6 @@
 		D3E494A20FFF0C9200B647E1 /* zenilib.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494920FFF0BC900B647E1 /* zenilib.cxx */; };
 		D3E494A40FFF0C9200B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D3E494A50FFF0C9200B647E1 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
-		D3E494A60FFF0C9200B647E1 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
 		D3E494A70FFF0C9200B647E1 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
 		D3E494A80FFF0C9200B647E1 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
 		D3E494A90FFF0C9200B647E1 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
@@ -153,7 +147,6 @@
 				D3B6898410B61200004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
 				D3B6898610B61200004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
 				D3B6898710B61200004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
-				D3B6898810B61200004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
 				D3B6898910B61200004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
 				D3B6898A10B61200004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
 				D3B6898B10B61200004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
@@ -173,7 +166,6 @@
 				D3B6898F10B61209004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
 				D3B6899110B61209004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
 				D3B6899210B61209004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
-				D3B6899310B61209004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
 				D3B6899410B61209004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
 				D3B6899510B61209004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
 				D3B6899610B61209004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
@@ -193,7 +185,6 @@
 				D3B6899A10B61216004AC7B7 /* Vorbis.framework in Copy Frameworks into .app bundle */,
 				D3B6899C10B61216004AC7B7 /* Cg.framework in Copy Frameworks into .app bundle */,
 				D3B6899D10B61216004AC7B7 /* GLEW.framework in Copy Frameworks into .app bundle */,
-				D3B6899E10B61216004AC7B7 /* SDL_gfx.framework in Copy Frameworks into .app bundle */,
 				D3B6899F10B61216004AC7B7 /* SDL_image.framework in Copy Frameworks into .app bundle */,
 				D3B689A010B61216004AC7B7 /* SDL_net.framework in Copy Frameworks into .app bundle */,
 				D3B689A110B61216004AC7B7 /* SDL_ttf.framework in Copy Frameworks into .app bundle */,
@@ -232,7 +223,6 @@
 		D34A63C40FFD722E00146950 /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = ../Frameworks/Cg.framework; sourceTree = SOURCE_ROOT; };
 		D34A63C50FFD722E00146950 /* GLEW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLEW.framework; path = ../Frameworks/GLEW.framework; sourceTree = SOURCE_ROOT; };
 		D34A63C60FFD722E00146950 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = ../Frameworks/Ogg.framework; sourceTree = SOURCE_ROOT; };
-		D34A63C70FFD722E00146950 /* SDL_gfx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_gfx.framework; path = ../Frameworks/SDL_gfx.framework; sourceTree = SOURCE_ROOT; };
 		D34A63C80FFD722E00146950 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = ../Frameworks/SDL_image.framework; sourceTree = SOURCE_ROOT; };
 		D34A63C90FFD722E00146950 /* SDL_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_net.framework; path = ../Frameworks/SDL_net.framework; sourceTree = SOURCE_ROOT; };
 		D34A63CA0FFD722E00146950 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = ../Frameworks/SDL_ttf.framework; sourceTree = SOURCE_ROOT; };
@@ -405,7 +395,6 @@
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */,
-				D34A63CF0FFD722E00146950 /* SDL_gfx.framework in Frameworks */,
 				D34A63D00FFD722E00146950 /* SDL_image.framework in Frameworks */,
 				D34A63D10FFD722E00146950 /* SDL_net.framework in Frameworks */,
 				D34A63D20FFD722E00146950 /* SDL_ttf.framework in Frameworks */,
@@ -425,7 +414,6 @@
 			files = (
 				D3E494710FFF0B5600B647E1 /* Cocoa.framework in Frameworks */,
 				D3E494720FFF0B5600B647E1 /* SDL.framework in Frameworks */,
-				D3E494730FFF0B5600B647E1 /* SDL_gfx.framework in Frameworks */,
 				D3E494740FFF0B5600B647E1 /* SDL_image.framework in Frameworks */,
 				D3E494750FFF0B5600B647E1 /* SDL_net.framework in Frameworks */,
 				D3E494760FFF0B5600B647E1 /* SDL_ttf.framework in Frameworks */,
@@ -445,7 +433,6 @@
 			files = (
 				D3E494A40FFF0C9200B647E1 /* Cocoa.framework in Frameworks */,
 				D3E494A50FFF0C9200B647E1 /* SDL.framework in Frameworks */,
-				D3E494A60FFF0C9200B647E1 /* SDL_gfx.framework in Frameworks */,
 				D3E494A70FFF0C9200B647E1 /* SDL_image.framework in Frameworks */,
 				D3E494A80FFF0C9200B647E1 /* SDL_net.framework in Frameworks */,
 				D3E494A90FFF0C9200B647E1 /* SDL_ttf.framework in Frameworks */,
@@ -479,7 +466,6 @@
 				D34A63CB0FFD722E00146950 /* Vorbis.framework */,
 				D34A63C40FFD722E00146950 /* Cg.framework */,
 				D34A63C50FFD722E00146950 /* GLEW.framework */,
-				D34A63C70FFD722E00146950 /* SDL_gfx.framework */,
 				D34A63C80FFD722E00146950 /* SDL_image.framework */,
 				D34A63C90FFD722E00146950 /* SDL_net.framework */,
 				D34A63CA0FFD722E00146950 /* SDL_ttf.framework */,

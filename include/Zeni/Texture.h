@@ -101,6 +101,7 @@ namespace Zeni {
     inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
 
   protected:
+    static void simplify_surface(SDL_Surface * &surface);
     static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size);
 
     const bool m_repeat;
