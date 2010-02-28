@@ -205,6 +205,7 @@ namespace Zeni {
   }
 
   bool Video::is_mouse_hidden() const {
+#if SDL_VERSION_ATLEAST(1,3,0)
     const int s = SDL_SelectMouse(-1);
 
     for(int i = 0, size = SDL_GetNumMice(); i != size; ++i) {
@@ -217,6 +218,9 @@ namespace Zeni {
 
     SDL_SelectMouse(s);
     return true;
+#else
+    return SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE;
+#endif
   }
 
   void Video::mouse_grab(const bool &grab) {
@@ -230,6 +234,7 @@ namespace Zeni {
   }
 
   void Video::mouse_hide(const bool &hide) {
+#if SDL_VERSION_ATLEAST(1,3,0)
     const int s = SDL_SelectMouse(-1);
 
     for(int i = 0, size = SDL_GetNumMice(); i != size; ++i) {
@@ -238,6 +243,9 @@ namespace Zeni {
     }
 
     SDL_SelectMouse(s);
+#else
+    SDL_ShowCursor(hide ? SDL_DISABLE : SDL_ENABLE);
+#endif
   }
 
   const std::string & Video::get_title() const {

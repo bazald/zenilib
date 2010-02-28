@@ -175,7 +175,9 @@ namespace Zeni {
     inline void uninit_impl();
 
   private:
+#if SDL_VERSION_ATLEAST(1,3,0)
     SDL_GLContext m_context;
+#endif
 
 #ifdef _LINUX
     PFNGLXSWAPINTERVALSGIPROC m_pglSwapIntervalEXT;

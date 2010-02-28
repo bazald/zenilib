@@ -406,8 +406,10 @@ namespace Zeni {
   }
 
   void Video_GL::uninit_impl() {
+#if SDL_VERSION_ATLEAST(1,3,0)
     if(m_context)
       SDL_GL_DeleteContext(m_context);
+#endif
   }
 
 }

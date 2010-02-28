@@ -57,7 +57,9 @@ namespace Zeni {
 
   Video_GL::Video_GL()
     : Video(Video_Base::ZENI_VIDEO_GL),
+#if SDL_VERSION_ATLEAST(1,3,0)
       m_context(0),
+#endif
 #ifdef _LINUX
       m_pglSwapIntervalEXT(0),
 #endif
