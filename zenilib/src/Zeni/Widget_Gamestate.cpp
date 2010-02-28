@@ -48,21 +48,25 @@ namespace Zeni {
   }
 
   void Widget_Gamestate::on_push() {
-    m_hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
-    if(m_hide_cursor)
-      SDL_ShowCursor(true);
+    Video &vr = get_Video();
 
-    m_grab_input = SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+    m_hide_cursor = vr.is_mouse_hidden();
+    if(m_hide_cursor)
+      vr.mouse_hide(false);
+
+    m_grab_input = vr.is_mouse_grabbed();
     if(m_grab_input)
-      SDL_WM_GrabInput(SDL_GRAB_OFF);
+      vr.mouse_grab(false);
   }
 
   void Widget_Gamestate::on_pop() {
+    Video &vr = get_Video();
+
     if(m_hide_cursor)
-      SDL_ShowCursor(false);
+      vr.mouse_hide(true);
 
     if(m_grab_input)
-      SDL_WM_GrabInput(SDL_GRAB_ON);
+      vr.mouse_grab(true);
   }
 
   void Widget_Gamestate::on_key(const SDL_KeyboardEvent &event) {

@@ -120,19 +120,27 @@ namespace Zeni {
     set_opengl_flag(false);
     Video::init();
     
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(get_window(), &wmInfo);
+    HWND hWnd = wmInfo.window;
+#else
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     SDL_GetWMInfo(&wmInfo);
+    HWND hWnd = wmInfo.window;
+#endif
 
     std::cout << "Initializing DirectX 9" << std::endl;
 
     m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
 
-    m_dpi = GetDeviceCaps(GetDC(wmInfo.window), LOGPIXELSY);
+    m_dpi = GetDeviceCaps(GetDC(hWnd), LOGPIXELSY);
 
     ZeroMemory(&m_d3d_parameters, sizeof(m_d3d_parameters));
 
-    m_d3d_parameters.hDeviceWindow = wmInfo.window;
+    m_d3d_parameters.hDeviceWindow = hWnd;
     
     m_d3d_parameters.Windowed = true;
     m_d3d_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;

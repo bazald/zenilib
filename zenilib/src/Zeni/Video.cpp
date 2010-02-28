@@ -59,7 +59,11 @@ namespace Zeni {
 
   Video::Video(const Video_Base::VIDEO_MODE &vtype_)
     : Video_Base::IV(vtype_),
-    m_display_surface(0), 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    m_window(0),
+#else
+    m_display_surface(0),
+#endif
     m_icon_surface(0),
     m_opengl_flag(0), 
     m_color(1.0f, 1.0f, 1.0f, 1.0f),
@@ -76,6 +80,8 @@ namespace Zeni {
 
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) == -1)
       throw Video_Init_Failure();
+
+    Core::print_error();
 
     // Initialize Video Mode Listing
 #if SDL_VERSION_ATLEAST(1,3,0)
@@ -99,15 +105,11 @@ namespace Zeni {
 
     std::sort(m_modes.begin(), m_modes.end(), &video_mode_lt);
 
-#ifdef _WINDOWS
     Core::set_screen_saver(false);
-#endif
   }
 
   Video::~Video() {
-#ifdef _WINDOWS
     Core::set_screen_saver(true);
-#endif
   }
 
   Video & get_Video() {
@@ -375,6 +377,12 @@ namespace Zeni {
     return set_icon();
   }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+  void Video::alert_window_destroyed() {
+    m_window = 0;
+  }
+#endif
+
   void Video::init() {
     // Ensure Core is initialized
     get_Core();
@@ -383,8 +391,10 @@ namespace Zeni {
     // Initialize SDL + Variables
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
 
+#if !SDL_VERSION_ATLEAST(1,3,0)
     set_tt();
     set_icon();
+#endif
 
     const Point2i &max_res = *m_modes.rbegin();
 
@@ -407,32 +417,61 @@ namespace Zeni {
       g_screen_size.y = max_res.y;
 
     // Initialize Window
+#if SDL_VERSION_ATLEAST(1,3,0)
+    m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
+      (get_opengl_flag() ? SDL_WINDOW_OPENGL : 0) | 
+      (g_screen_full ? SDL_WINDOW_FULLSCREEN
+                     : ((g_screen_show_frame ? 0 : SDL_WINDOW_BORDERLESS) |
+                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0))));
+    Core::assert_no_error();
+#else
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       (get_opengl_flag() ? SDL_OPENGL : 0) | 
       (g_screen_full ? SDL_FULLSCREEN
                      : (VideoInfo->wm_available ? ((g_screen_show_frame ? 0 : SDL_NOFRAME) |
                                                    (g_screen_resizable ? SDL_RESIZABLE : 0))
                                                 : 0)));
+    Core::assert_no_error();
+#endif
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(!m_window) {
+#else
     if(!m_display_surface) {
+#endif
       g_initialized = false;
       throw Video_Init_Failure();
     }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    set_tt();
+    set_icon();
+
+    SDL_ShowWindow(m_window);
+#else
     g_screen_size.x = m_display_surface->w;
     g_screen_size.y = m_display_surface->h;
+#endif
   }
 
   void Video::set_tt() {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(get_window())
+      SDL_SetWindowTitle(get_window(), get_m_title().c_str());
+#else
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
     if(VideoInfo->wm_available)
       SDL_WM_SetCaption(get_m_title().c_str(), get_m_taskmsg().c_str());
+#endif
   }
 
   bool Video::set_icon() {
+#if !SDL_VERSION_ATLEAST(1,3,0)
+    SDL_SetWindowTitle(get_window(), get_m_title().c_str());
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
     if(!VideoInfo->wm_available)
       return false;
+#endif
 
     m_icon_surface = IMG_Load(get_m_icon().c_str());
 
@@ -441,7 +480,13 @@ namespace Zeni {
       return false;
     }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(get_window())
+      SDL_SetWindowIcon(get_window(), m_icon_surface);
+#else
     SDL_WM_SetIcon(m_icon_surface, NULL);
+#endif
+
     return true;
   }
 

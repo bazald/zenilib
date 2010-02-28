@@ -22,13 +22,13 @@ public:
 
 private:
   void on_push() {
-    //SDL_WM_GrabInput(SDL_GRAB_ON);
-    SDL_ShowCursor(false);
+    //get_Video().mouse_grab(true);
+    get_Video().mouse_hide(true);
   }
 
   void on_pop() {
-    //SDL_WM_GrabInput(SDL_GRAB_OFF);
-    SDL_ShowCursor(true);
+    //get_Video().mouse_grab(false);
+    get_Video().mouse_hide(false);
   }
 };
 

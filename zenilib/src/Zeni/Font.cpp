@@ -292,9 +292,11 @@ NEXT_LINE_2:
     SDL_Color color2 = {0xFF, 0xFF, 0xFF, 0xFF};
     SDL_Surface *source[256] = {0};
     for(unsigned char c = 1; c; ++c) {
+      Core::assert_no_error();
       //char t[2] = {c, '\0'};
       //source[c] = TTF_RenderText_Blended(font, t, color2);
       source[c] = TTF_RenderGlyph_Blended(font, c, color2);
+      Core::print_error();
       font_width = std::max(font_width, float(source[c] ? source[c]->w : 0));
       font_height = std::max(font_height, float(source[c] ? source[c]->h : 0));
     }
@@ -320,7 +322,9 @@ NEXT_LINE_2:
         throw Font_Init_Failure();
     }
 
+    SDL_LockSurface(font_surface);
     SDL_FillRect(font_surface, 0, SDL_MapRGBA(font_surface->format, 0, 0, 0, SDL_ALPHA_TRANSPARENT));
+    SDL_UnlockSurface(font_surface);
 
     /*** Initialize Glyphs ***/
 

@@ -57,6 +57,7 @@ namespace Zeni {
 
   Video_GL::Video_GL()
     : Video(Video_Base::ZENI_VIDEO_GL),
+      m_context(0),
 #ifdef _LINUX
       m_pglSwapIntervalEXT(0),
 #endif
@@ -122,12 +123,22 @@ namespace Zeni {
 #endif
     
     /// Swap the buffers <-- NOT part of the CPU saver, but the reason it is "needed"
-    SDL_GL_SwapBuffers();
+#if SDL_VERSION_ATLEAST(1,3,0)
+   SDL_GL_SwapWindow(get_window());
+#else
+   SDL_GL_SwapBuffers();
+#endif
     
 #ifdef MANUAL_GL_VSYNC_DELAY
    m_buffer_swap_end_time = tr.get_time();
 #endif
   }
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+  void Video_GL::alert_window_destroyed() {
+    m_context = 0;
+  }
+#endif
 
   void Video_GL::init() {
     std::cout << "Initializing OpenGL" << std::endl;
@@ -152,6 +163,10 @@ namespace Zeni {
 
     set_opengl_flag(true);
     Video::init();
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+    m_context = SDL_GL_CreateContext(get_window());
+#endif
 
     {
       const GLenum err = glewInit();

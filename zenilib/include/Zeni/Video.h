@@ -228,6 +228,12 @@ namespace Zeni {
     void set_taskmsg(const std::string &taskmsg); ///< Set the taskbar message
     const bool set_icon(const std::string &filename); ///< Set the window icon
 
+    // Mouse Functions
+    inline bool is_mouse_grabbed() const; ///< Find out if the (primary) Window has grabbed the mouse
+    inline bool is_mouse_hidden() const; ///< Find out if the mouse cursor is hidden
+    inline void mouse_grab(const bool &grab); ///< Tell the (primary) Window to grab/ungrab the mouse
+    inline void mouse_hide(const bool &hide); ///< Hide/Unhide the mouse
+
     // Creation Functions
     inline Texture * load_Texture(const std::string &filename, const bool &repeat, const bool &lazy_loading = false); ///< Function for loading a Texture; used internally by Textures
     inline Texture * create_Texture(SDL_Surface * const &surface, const bool &repeat); ///< Function for creating a Texture from an SDL_Surface
@@ -263,8 +269,15 @@ namespace Zeni {
     static void save(); ///< Save options
     static void set_failsafe_defaults(); ///< Set failsafe default options
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    inline SDL_Window * get_window(); ///< Get the (primary) window for your application
+    virtual void alert_window_destroyed(); ///< Tell Video that its SDL_Window has been destroyed
+#endif
+
   protected:
+#if !SDL_VERSION_ATLEAST(1,3,0)
     inline SDL_Surface * get_display_surface();
+#endif
 
     inline const bool & get_opengl_flag() const;
     inline void set_opengl_flag(const bool &on = true);
@@ -280,7 +293,12 @@ namespace Zeni {
     // Set icon
     bool set_icon();
 
-    SDL_Surface *m_display_surface, *m_icon_surface;
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_Window *m_window;
+#else
+    SDL_Surface *m_display_surface;
+#endif
+    SDL_Surface *m_icon_surface;
 
     static Video_Base::VIDEO_MODE g_video_mode;
     static bool g_enabled;
