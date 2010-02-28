@@ -467,7 +467,6 @@ namespace Zeni {
 
   bool Video::set_icon() {
 #if !SDL_VERSION_ATLEAST(1,3,0)
-    SDL_SetWindowTitle(get_window(), get_m_title().c_str());
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
     if(!VideoInfo->wm_available)
       return false;
