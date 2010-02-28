@@ -194,15 +194,26 @@ namespace Zeni {
     return fout.good();
   }
 
-#ifdef _WINDOWS
+#if SDL_VERSION_ATLEAST(1,3,0) || defined(_WINDOWS)
   bool Core::is_screen_saver_enabled() {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    return SDL_IsScreenSaverEnabled() != 0;
+#else
     BOOL is_active;
     SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &is_active, 0);
     return is_active != 0;
+#endif
   }
 
   void Core::set_screen_saver(const bool &enabled) {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(enabled)
+      SDL_EnableScreenSaver();
+    else
+      SDL_DisableScreenSaver();
+#else
     SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, UINT(enabled), 0, SPIF_SENDCHANGE);
+#endif
   }
 #endif
 
@@ -247,6 +258,24 @@ namespace Zeni {
       throw Core_Initialized();
 
     unique_app_identifier = unique_app_identifier_;
+  }
+
+  void Core::assert_no_error() {
+    if(strlen(SDL_GetError())) {
+      std::cerr << "SDL       : " << SDL_GetError() << std::endl;
+      SDL_ClearError();
+      assert(false);
+    }
+  }
+
+  bool Core::print_error() {
+    if(strlen(SDL_GetError())) {
+      std::cerr << "SDL       : " << SDL_GetError() << std::endl;
+      SDL_ClearError();
+      return true;
+    }
+
+    return false;
   }
 
   void Core::init_joysticks() {

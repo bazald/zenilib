@@ -80,16 +80,10 @@ namespace Zeni {
       glDisable(GL_CULL_FACE);
   }
 
-#ifdef DISABLE_WGL
   void Video_GL::set_vertical_sync_impl(const bool &on) {
-#ifdef _LINUX
-    if(m_pglSwapIntervalEXT)
-      m_pglSwapIntervalEXT(on);
-    else
-#endif
-      SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
-#else
-  void Video_GL::set_vertical_sync_impl(const bool &on) {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_GL_SetSwapInterval(on);
+#elif !defined(DISABLE_WGL)
     typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
     PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT = 0;
 
@@ -101,6 +95,11 @@ namespace Zeni {
       if(wglSwapIntervalEXT)
         wglSwapIntervalEXT(on);
     }
+#elif defined(_LINUX)
+    if(m_pglSwapIntervalEXT)
+      m_pglSwapIntervalEXT(on);
+#else
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #endif
   }
 
@@ -404,6 +403,11 @@ namespace Zeni {
 
   void Video_GL::pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, const GLenum usage) const {
     m_pglBufferDataARB(target, size, data, usage);
+  }
+
+  void Video_GL::uninit_impl() {
+    if(m_context)
+      SDL_GL_DeleteContext(m_context);
   }
 
 }

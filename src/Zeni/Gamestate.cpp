@@ -153,22 +153,23 @@ namespace Zeni {
     if(event.state & SDL_APPINPUTFOCUS) {
       static bool hide_cursor = false;
       static bool grab_input = false;
+      Video &vr = get_Video();
 
       if(event.gain) {
         if(hide_cursor)
-          SDL_ShowCursor(false);
+          vr.mouse_hide(true);
 
         if(grab_input)
-          SDL_WM_GrabInput(SDL_GRAB_ON);
+          vr.mouse_grab(true);
       }
       else {
-        hide_cursor = SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE;
+        hide_cursor = vr.is_mouse_hidden();
         if(hide_cursor)
-          SDL_ShowCursor(true);
+          vr.mouse_hide(false);
 
-        grab_input = SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+        grab_input = vr.is_mouse_grabbed();
         if(grab_input)
-          SDL_WM_GrabInput(SDL_GRAB_OFF);
+          vr.mouse_grab(false);
 
         if(m_pausable)
           get_Game().push_state(new Popup_Pause_State(get_Game().pop_state()));

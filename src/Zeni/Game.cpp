@@ -124,6 +124,16 @@ namespace Zeni {
             throw Quit_Event();
           }
         }
+#if SDL_VERSION_ATLEAST(1,3,0)
+        else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
+          on_event(event);
+
+          if(event.window.windowID == SDL_GetWindowID(get_Video().get_window())) {
+            get_Video().alert_window_destroyed();
+            throw Quit_Event();
+          }
+        }
+#endif
         else {
           on_event(event);
 

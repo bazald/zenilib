@@ -166,11 +166,17 @@ namespace Zeni {
     PFNGLGENBUFFERSARBPROC get_pglGenBuffersARB() const {return m_pglGenBuffersARB;}
     PFNGLBUFFERDATAARBPROC get_pglBufferDataARB() const {return m_pglBufferDataARB;}
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    virtual void alert_window_destroyed(); ///< Tell Video that its SDL_Window has been destroyed
+#endif
+
   protected:
     virtual void init();
-    inline void uninit_impl() {}
+    inline void uninit_impl();
 
   private:
+    SDL_GLContext m_context;
+
 #ifdef _LINUX
     PFNGLXSWAPINTERVALSGIPROC m_pglSwapIntervalEXT;
 #endif

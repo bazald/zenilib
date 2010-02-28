@@ -160,9 +160,15 @@ namespace Zeni {
     return g_initialized;
   }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+  SDL_Window * Video::get_window() {
+    return m_window;
+  }
+#else
   SDL_Surface * Video::get_display_surface() {
     return m_display_surface;
   }
+#endif
 
   const bool & Video::get_opengl_flag() const {
     return m_opengl_flag;
@@ -187,6 +193,51 @@ namespace Zeni {
 
   const std::pair<Point2i, Point2i> & Video::get_viewport() const {
     return m_viewport;
+  }
+
+  bool Video::is_mouse_grabbed() const {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_Window * const window = get_Video().get_window();
+    return window && SDL_GetWindowGrab(window) == SDL_GRAB_ON;
+#else
+    return SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+#endif
+  }
+
+  bool Video::is_mouse_hidden() const {
+    const int s = SDL_SelectMouse(-1);
+
+    for(int i = 0, size = SDL_GetNumMice(); i != size; ++i) {
+      SDL_SelectMouse(i);
+      if(SDL_ShowCursor(SDL_QUERY) != SDL_DISABLE) {
+        SDL_SelectMouse(s);
+        return false;
+      }
+    }
+
+    SDL_SelectMouse(s);
+    return true;
+  }
+
+  void Video::mouse_grab(const bool &grab) {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_Window * const window = get_Video().get_window();
+    if(window)
+      SDL_SetWindowGrab(window, grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
+    SDL_WM_GrabInput(grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#endif
+  }
+
+  void Video::mouse_hide(const bool &hide) {
+    const int s = SDL_SelectMouse(-1);
+
+    for(int i = 0, size = SDL_GetNumMice(); i != size; ++i) {
+      SDL_SelectMouse(i);
+      SDL_ShowCursor(hide ? SDL_DISABLE : SDL_ENABLE);
+    }
+
+    SDL_SelectMouse(s);
   }
 
   const std::string & Video::get_title() const {
@@ -561,8 +612,21 @@ namespace Zeni {
 #endif
 
   void Video::uninit() {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    Core::assert_no_error();
+
+    if(m_window)
+      SDL_DestroyWindow(m_window);
+    m_window = 0;
+
+    Core::print_error();
+
+    alert_window_destroyed();
+#else
     SDL_FreeSurface(m_display_surface);
     m_display_surface = 0;
+#endif
+
     g_initialized = false;
 
     VIDEO_IV_FCN_CALL(uninit_impl, EMPTY());

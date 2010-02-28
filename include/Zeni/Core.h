@@ -102,7 +102,7 @@ namespace Zeni {
     static bool delete_file(const std::string &file_path); ///< Delete a file
     static bool copy_file(const std::string &from, const std::string &to); ///< Copy a file from one filepath to another
 
-#ifdef _WINDOWS
+#if SDL_VERSION_ATLEAST(1,3,0) || defined(_WINDOWS)
     static bool is_screen_saver_enabled(); ///< Check to see if the screen saver is enabled
     static void set_screen_saver(const bool &enabled); ///< Enable/Disable the screen saver
 #endif
@@ -119,6 +119,9 @@ namespace Zeni {
 
     // Can be called once only, and only before Core is initialized; May throw Core_Initialized
     static void preinit(const std::string &unique_app_identifier);
+
+    static void assert_no_error(); ///< If there is an SDL error, print it and assert(false)
+    static bool print_error(); ///< If there is an SDL error, print it and then clear it; returns true iff there was an error
 
   private:
     void init_joysticks();
