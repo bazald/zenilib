@@ -194,28 +194,32 @@ namespace Zeni {
     return fout.good();
   }
 
-#if SDL_VERSION_ATLEAST(1,3,0) || defined(_WINDOWS)
   bool Core::is_screen_saver_enabled() {
 #if SDL_VERSION_ATLEAST(1,3,0)
     return SDL_IsScreenSaverEnabled() != 0;
-#else
+#elif defined(_WINDOWS)
     BOOL is_active;
     SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &is_active, 0);
     return is_active != 0;
+#else
+    return true;
 #endif
   }
 
-  void Core::set_screen_saver(const bool &enabled) {
+  void Core::set_screen_saver(const bool &
+#if SDL_VERSION_ATLEAST(1,3,0) || defined(_WINDOWS)
+    enabled
+#endif
+    ) {
 #if SDL_VERSION_ATLEAST(1,3,0)
     if(enabled)
       SDL_EnableScreenSaver();
     else
       SDL_DisableScreenSaver();
-#else
+#elif defined(_WINDOWS)
     SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, UINT(enabled), 0, SPIF_SENDCHANGE);
 #endif
   }
-#endif
 
   size_t Core::get_num_joysticks() const {
     return m_joystick.size();

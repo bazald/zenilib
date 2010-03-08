@@ -55,9 +55,7 @@ namespace Zeni {
         Chronometer<Time_HQ>::pause_all();
         Chronometer<Time>::pause_all();
         get_Sound_Source_Pool().pause_all();
-#ifdef _WINDOWS
-        Core::set_screen_saver(true);
-#endif
+        get_Core().set_screen_saver(true);
       }
 
       Widget_Gamestate::on_push();
@@ -70,9 +68,7 @@ namespace Zeni {
         Chronometer<Time_HQ>::unpause_all();
         Chronometer<Time>::unpause_all();
         get_Sound_Source_Pool().unpause_all();
-#ifdef _WINDOWS
-        Core::set_screen_saver(false);
-#endif
+        get_Core().set_screen_saver(false);
       }
 
       m_gamestate.on_pop();

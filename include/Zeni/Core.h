@@ -102,10 +102,8 @@ namespace Zeni {
     static bool delete_file(const std::string &file_path); ///< Delete a file
     static bool copy_file(const std::string &from, const std::string &to); ///< Copy a file from one filepath to another
 
-#if SDL_VERSION_ATLEAST(1,3,0) || defined(_WINDOWS)
-    static bool is_screen_saver_enabled(); ///< Check to see if the screen saver is enabled
-    static void set_screen_saver(const bool &enabled); ///< Enable/Disable the screen saver
-#endif
+    bool is_screen_saver_enabled(); ///< Check to see if the screen saver is enabled
+    void set_screen_saver(const bool &enabled); ///< Enable/Disable the screen saver
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 
