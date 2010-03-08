@@ -74,9 +74,9 @@ namespace Zeni {
           const bool modifiers = 
 #if defined(_MACOSX)
 #if SDL_VERSION_ATLEAST(1,3,0)
-                                (get_key_state(SDLK_LGUI) || get_key_state(SDLK_RGUI) &&
+                                (get_key_state(SDLK_LGUI) || get_key_state(SDLK_RGUI)) &&
 #else
-                                (get_key_state(SDLK_LMETA) || get_key_state(SDLK_RMETA) || get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER) &&
+                                (get_key_state(SDLK_LMETA) || get_key_state(SDLK_RMETA) || get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER)) &&
 #endif
                                 !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
                                 !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&

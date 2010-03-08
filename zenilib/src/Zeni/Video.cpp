@@ -105,11 +105,11 @@ namespace Zeni {
 
     std::sort(m_modes.begin(), m_modes.end(), &video_mode_lt);
 
-    Core::set_screen_saver(false);
+    get_Core().set_screen_saver(false);
   }
 
   Video::~Video() {
-    Core::set_screen_saver(true);
+    get_Core().set_screen_saver(true);
   }
 
   Video & get_Video() {
