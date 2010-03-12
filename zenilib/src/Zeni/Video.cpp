@@ -416,6 +416,9 @@ namespace Zeni {
     else if(g_screen_size.y > max_res.y)
       g_screen_size.y = max_res.y;
 
+    // Vertical sync can only be specified before Window creation on some platforms
+    set_vertical_sync(get_vertical_sync());
+
     // Initialize Window
 #if SDL_VERSION_ATLEAST(1,3,0)
     m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
