@@ -118,6 +118,7 @@
 // Thread.cpp
 #define NO_ERROR_STATUS    (1)
 #define ZENI_ERROR_STATUS  (0x32202)
+#define STD_ERROR_STATUS   (0x253322)
 #define OTHER_ERROR_STATUS (-1)
 
 // Vertex_Buffer.cpp
