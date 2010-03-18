@@ -53,6 +53,11 @@ namespace Zeni {
       task.msg = error.msg;
       task.m_done = true;
     }
+    catch(std::exception &error) {
+      task.status = STD_ERROR_STATUS;
+      task.msg = error.what();
+      task.m_done = true;
+    }
     catch(...) {
       task.status = OTHER_ERROR_STATUS;
       task.msg = "Unknown Error (Not of Type 'Zeni::Error')";
@@ -89,6 +94,11 @@ namespace Zeni {
         task.msg = error.msg;
         task.m_done = task.m_terminated = true;
         return task.status;
+      }
+      catch(std::exception &error) {
+        task.status = STD_ERROR_STATUS;
+        task.msg = error.what();
+        task.m_done = true;
       }
       catch(...) {
         task.status = OTHER_ERROR_STATUS;

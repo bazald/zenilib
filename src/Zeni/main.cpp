@@ -229,11 +229,19 @@ inline int main2(const size_t &argc, const char * const argv[]) {
 
     print_errors();
 
-    assert("Error caught in main - Please see stderr.txt" == 0);
+    assert("Zeni::Error caught in main - Please see stderr.txt" == 0);
+    return 1;
+  }
+  catch(std::exception &except) {
+    std::cerr << except.what() << std::endl;
+
+    print_errors();
+
+    assert("std::exception caught in main - Please see stderr.txt" == 0);
     return 1;
   }
   catch(...) {
-    std::cerr << "Unknown Error (Not of Type 'Zeni::Error')";
+    std::cerr << "Unknown Error (Neither Zeni::Error nor std::exception)";
 
     print_errors();
 
