@@ -36,21 +36,23 @@
 
 namespace Zeni {
 
+  void Image::set_Color(const Point2i &pixel, const Color &color)
+  {
+    const SDL_PixelFormat * const &format = m_surface_ptr->format;
+    Uint32 &pixel_value = get_pixel(pixel);
+
+    const Uint32 alpha = (Uint32(color.a * m_max_alpha) << format->Ashift) & format->Amask;
+    const Uint32 red   = (Uint32(color.r * m_max_red)   << format->Rshift) & format->Rmask;
+    const Uint32 green = (Uint32(color.g * m_max_green) << format->Gshift) & format->Gmask;
+    const Uint32 blue  = (Uint32(color.b * m_max_blue)  << format->Bshift) & format->Bmask;
+
+    pixel_value = (pixel_value & ~(format->Amask + format->Rmask + format->Gmask + format->Bmask)) + alpha + red + green + blue;
+  }
+
   Color Image::extract_Color(const Point2i &pixel) const
   {
-    assert(0 <= pixel.x && pixel.x < m_surface_ptr->w);
-    assert(0 <= pixel.y && pixel.y < m_surface_ptr->h);
-
     const SDL_PixelFormat * const &format = m_surface_ptr->format;
-    assert(format);
-
-    const Uint8 &BytesPerPixel = format->BytesPerPixel;
-
-    unsigned char *row_ptr =
-      reinterpret_cast<unsigned char *>(m_surface_ptr->pixels) +
-      m_surface_ptr->pitch * pixel.y;
-    unsigned char *pixel_ptr = row_ptr + BytesPerPixel * pixel.x;
-    const Uint32 pixel_value = *reinterpret_cast<Uint32 *>(pixel_ptr);
+    const Uint32 &pixel_value = get_pixel(pixel);
 
     const Uint32 alpha = ((pixel_value & format->Amask) >> format->Ashift) << format->Aloss;
     const Uint32 red   = ((pixel_value & format->Rmask) >> format->Rshift) << format->Rloss;
@@ -58,9 +60,9 @@ namespace Zeni {
     const Uint32 blue  = ((pixel_value & format->Bmask) >> format->Bshift) << format->Bloss;
 
     return Color(m_max_alpha ? (float(alpha) / m_max_alpha) : 1.0f,
-                 float(red) / m_max_red,
-                 float(green) / m_max_green,
-                 float(blue) / m_max_blue);
+      float(red) / m_max_red,
+      float(green) / m_max_green,
+      float(blue) / m_max_blue);
   }
 
   Color Image::extract_Color(const Point2f &coordinate) const
@@ -120,6 +122,50 @@ namespace Zeni {
     const Color lc = llc.interpolate_to(x_rhs_part, lrc);
 
     return uc.interpolate_to(y_rhs_part, lc);
+  }
+
+  void Image::resize(const int &width, const int &height) {
+    const SDL_PixelFormat * const &format = m_surface_ptr->format;
+    Image resized(SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, format->BitsPerPixel, format->Rmask, format->Gmask, format->Bmask, format->Amask), m_tileable);
+
+    const float w = float(width);
+    const float h = float(height);
+
+    for(int i = 0; i != width; ++i)
+      for(int j = 0; j != height; ++j)
+        resized.set_Color(Point2i(i, j), extract_Color(Point2f(i / w, j / h)));
+
+    std::swap(m_surface_ptr, resized.m_surface_ptr);
+  }
+
+  SDL_Surface * Image::get_copy() const {
+    return SDL_ConvertSurface(m_surface_ptr, m_surface_ptr->format, SDL_SWSURFACE);
+  }
+
+  void Image::init() {
+    const SDL_PixelFormat * const &format = m_surface_ptr->format;
+
+    m_max_alpha = ((format->Amask) >> format->Ashift) << format->Aloss;
+    m_max_red   = ((format->Rmask) >> format->Rshift) << format->Rloss;
+    m_max_green = ((format->Gmask) >> format->Gshift) << format->Gloss;
+    m_max_blue  = ((format->Bmask) >> format->Bshift) << format->Bloss;
+  }
+
+  Uint32 & Image::get_pixel(const Point2i &pixel) const {
+    assert(0 <= pixel.x && pixel.x < m_surface_ptr->w);
+    assert(0 <= pixel.y && pixel.y < m_surface_ptr->h);
+
+    const SDL_PixelFormat * const &format = m_surface_ptr->format;
+    assert(format);
+
+    const Uint8 &BytesPerPixel = format->BytesPerPixel;
+
+    unsigned char *row_ptr =
+      reinterpret_cast<unsigned char *>(m_surface_ptr->pixels) +
+      m_surface_ptr->pitch * pixel.y;
+    unsigned char *pixel_ptr = row_ptr + BytesPerPixel * pixel.x;
+
+    return *reinterpret_cast<Uint32 *>(pixel_ptr);
   }
 
 }
