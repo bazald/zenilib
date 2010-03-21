@@ -35,18 +35,24 @@ namespace Zeni {
 
   Image::Image(const std::string &filename, const bool &tileable_)
     : m_surface_ptr(IMG_Load(filename.c_str())),
-      m_tileable(tileable_)
+    m_tileable(tileable_)
   {
     if(!m_surface_ptr ||
-       !m_surface_ptr->format)
+      !m_surface_ptr->format)
       throw Image_Init_Failure();
-    
-    const SDL_PixelFormat * const &format = m_surface_ptr->format;
 
-    m_max_alpha = ((format->Amask) >> format->Ashift) << format->Aloss;
-    m_max_red   = ((format->Rmask) >> format->Rshift) << format->Rloss;
-    m_max_green = ((format->Gmask) >> format->Gshift) << format->Gloss;
-    m_max_blue  = ((format->Bmask) >> format->Bshift) << format->Bloss;
+    init();
+  }
+
+  Image::Image(SDL_Surface * surface_ptr, const bool &tileable_)
+    : m_surface_ptr(surface_ptr),
+    m_tileable(tileable_)
+  {
+    if(!m_surface_ptr ||
+      !m_surface_ptr->format)
+      throw Image_Init_Failure();
+
+    init();
   }
 
   Image::~Image() {

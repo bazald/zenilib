@@ -60,6 +60,7 @@ namespace Zeni {
   class Image {
   public:
     inline Image(const std::string &filename, const bool &tileable_ = false);
+    inline Image(SDL_Surface * surface_ptr, const bool &tileable_ = false); ///< Create an Image from surface_ptr, giving the Image ownership of surface_ptr
     inline ~Image();
     
     inline Image(const Image &rhs);
@@ -70,11 +71,19 @@ namespace Zeni {
     inline const int & height() const; ///< Get the number of pixels in the image in the y-direction.
     inline const bool & tileable() const; ///< Determine if the given Image is tileable.
 
+    void set_Color(const Point2i &pixel, const Color &color); ///< Set the Color value of the pixel specified [0, 0] being the upper left, (width, height) being the lower right.
     Color extract_Color(const Point2i &pixel) const; ///< Get the Color value of the pixel specified [0, 0] being the upper left, (width, height) being the lower right.
 
     Color extract_Color(const Point2f &coordinate) const; ///< Get the Color value of a given coordinate, [0.0f, 0.0f] to (1.0f, 1.0f), with wrapping if (tileable == true).
 
+    void resize(const int &width, const int &height);
+
+    SDL_Surface * get_copy() const; ///< Get a copy of the SDL_Surface
+
   private:
+    void init();
+    Uint32 & get_pixel(const Point2i &pixel) const;
+
     SDL_Surface * m_surface_ptr;
     bool m_tileable;
 

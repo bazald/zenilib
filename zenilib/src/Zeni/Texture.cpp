@@ -76,16 +76,10 @@ namespace Zeni {
     if(scale) {
       simplify_surface(surface);
 
-      SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, built_size.x, built_size.y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-      if(!surf2)
-        throw Texture_Init_Failure();
+      Image image(surface);
+      image.resize(built_size.x, built_size.y);
 
-      SDL_SoftStretch(surface, 0, surf2, 0);
-
-      if(surf2) {
-        SDL_FreeSurface(surface);
-        surface = surf2;
-      }
+      surface = image.get_copy();
     }
     else if(surface->format->BytesPerPixel == 3) {
       if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
