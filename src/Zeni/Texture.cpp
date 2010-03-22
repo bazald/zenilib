@@ -45,7 +45,7 @@ namespace Zeni {
     surface = surf2;
   }
 
-  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size) {
+  int Texture::build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size, const std::string * const &name) {
     bool scale = false;
 
     built_size.x = 1;
@@ -75,6 +75,11 @@ namespace Zeni {
     }
 
     if(scale) {
+      std::cerr << "Performance Warning: Texture ";
+      if(name)
+        std::cerr << '\'' << *name << "' ";
+      std::cerr << "width or height not a power of two.  Scaling up now.\n";
+
       simplify_surface(surface);
 
       Image image(surface);
@@ -227,10 +232,10 @@ namespace Zeni {
       glDeleteTextures(1, &m_texture_id);
   }
 
-  GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat, Point2i &built_size) {
+  GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat, Point2i &built_size, const std::string * const &name) {
     GLuint texture_id = 0;
 
-    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT), built_size);
+    const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT), built_size, name);
 
     const GLint mode1 = mode > 0 ? GL_RGBA : GL_RGB;
     const GLenum mode2 = GLenum(
@@ -300,7 +305,7 @@ namespace Zeni {
     }
     
     try {
-      m_texture_id = build_from_surface(surface, repeat, const_cast<Point2i &>(m_size));
+      m_texture_id = build_from_surface(surface, repeat, const_cast<Point2i &>(m_size), &filename);
     }
     catch(...) {
       SDL_FreeSurface(surface);
@@ -372,7 +377,7 @@ namespace Zeni {
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
   }
 
-  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, Point2i &built_size) {
+  IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, Point2i &built_size, const std::string * const &name) {
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     IDirect3DTexture9 * ppTexture;
@@ -380,7 +385,8 @@ namespace Zeni {
     const int mode = Texture::build_from_surface(surface,
       Point2i(std::min(ZENI_MAX_TEXTURE_WIDTH,  int(vdx.get_d3d_capabilities().MaxTextureWidth)),
               std::min(ZENI_MAX_TEXTURE_HEIGHT, int(vdx.get_d3d_capabilities().MaxTextureHeight))),
-      built_size);
+      built_size,
+      name);
     const int stride = surface->format->BytesPerPixel;
 
     set_sampler_states();
@@ -452,7 +458,7 @@ namespace Zeni {
     }
     
     try {
-      m_texture = build_from_surface(surface, const_cast<Point2i &>(m_size));
+      m_texture = build_from_surface(surface, const_cast<Point2i &>(m_size), &filename);
     }
     catch(...) {
       SDL_FreeSurface(surface);
