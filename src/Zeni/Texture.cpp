@@ -26,6 +26,7 @@
 * the GNU General Public License.
 */
 
+#include <Zeni/Image.hxx>
 #include <Zeni/Texture.hxx>
 
 #include <iostream>
