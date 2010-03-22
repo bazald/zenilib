@@ -102,7 +102,7 @@ namespace Zeni {
 
   protected:
     static void simplify_surface(SDL_Surface * &surface);
-    static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size);
+    static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size, const std::string * const &name = 0);
 
     const bool m_repeat;
   };
@@ -150,7 +150,7 @@ namespace Zeni {
     inline const Point2i & get_size() const;
 
   private:
-    static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat, Point2i &built_size);
+    static GLuint build_from_surface(SDL_Surface *surface, const bool &repeat, Point2i &built_size, const std::string * const &name = 0);
 
     Point2i m_size;
     mutable GLuint m_texture_id;
@@ -182,7 +182,7 @@ namespace Zeni {
 
   private:
     static void set_sampler_states();
-    static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface, Point2i &built_size);
+    static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface, Point2i &built_size, const std::string * const &name = 0);
 
     Point2i m_size;
     mutable IDirect3DTexture9 *m_texture;
