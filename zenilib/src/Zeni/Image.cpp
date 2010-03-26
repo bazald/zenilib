@@ -26,7 +26,7 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Image.h>
+#include <Zeni/Image.hxx>
 
 #include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
