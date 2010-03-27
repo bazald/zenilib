@@ -46,7 +46,7 @@ namespace Zeni {
     const Uint32 green = (Uint32(color.g * m_max_green) << format->Gshift) & format->Gmask;
     const Uint32 blue  = (Uint32(color.b * m_max_blue)  << format->Bshift) & format->Bmask;
 
-    pixel_value = (pixel_value & ~(format->Amask + format->Rmask + format->Gmask + format->Bmask)) + alpha + red + green + blue;
+    pixel_value = (pixel_value & ~(format->Amask | format->Rmask | format->Gmask | format->Bmask)) | alpha | red | green | blue;
   }
 
   Color Image::extract_Color(const Point2i &pixel) const

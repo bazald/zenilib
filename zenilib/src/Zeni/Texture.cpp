@@ -36,11 +36,12 @@
 namespace Zeni {
 
   void Texture::simplify_surface(SDL_Surface * &surface) {
-    SDL_Surface *surf2 = SDL_CreateRGBSurface(SDL_SWSURFACE, surface->w, surface->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+    SDL_PixelFormat fmt = {0, 32, 4, 0, 0, 0, 0, 0, 8, 16, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000, 0, 0};
+
+    SDL_Surface * const surf2 = SDL_ConvertSurface(surface, &fmt, SDL_SWSURFACE);
     if(!surf2)
       throw Texture_Init_Failure();
 
-    SDL_BlitSurface(surface, 0, surf2, 0);
     SDL_FreeSurface(surface);
     surface = surf2;
   }
