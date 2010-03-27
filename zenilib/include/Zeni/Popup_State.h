@@ -201,19 +201,24 @@ namespace Zeni {
       void render_impl() const {
         Colors &cr = get_Colors();
         Video &vr = get_Video();
+        Font &font = get_Fonts()["system_36_800x600"];
 
         const Point2f &ul = get_upper_left();
+        const Point2f &lr = get_lower_right();
         Color bgc = cr["title_bg"];
         bgc.a = 0.5f;
+
+        const float tw = font.get_text_width("Sound");
+        const float tl = 0.2f * tw;
+        const float tr = 1.4f * tw;
         const Quadrilateral<Vertex2f_Color> bg(Vertex2f_Color(ul, bgc),
-                                               Vertex2f_Color(Point2f(ul.x, ul.y + 60.0f), bgc),
-                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y + 60.0f), bgc),
-                                               Vertex2f_Color(Point2f(ul.x + 180.0f, ul.y), bgc));
+                                               Vertex2f_Color(Point2f(ul.x, lr.y), bgc),
+                                               Vertex2f_Color(Point2f(lr.x + tr, lr.y), bgc),
+                                               Vertex2f_Color(Point2f(lr.x + tr, ul.y), bgc));
         vr.render(bg);
 
         Check_Box::render_impl();
 
-        Font &font = get_Fonts()["system_36_800x600"];
         const Color fgc = cr["default_button_bg_normal"];
         font.render_text("Sound",
                          Point2f(get_lower_right().x + 15.0f,
@@ -221,8 +226,8 @@ namespace Zeni {
                          fgc);
 
         if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
-          const Line_Segment<Vertex2f_Color> ns(Vertex2f_Color(Point2f(get_lower_right().x + 10.0f, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc),
-                                                Vertex2f_Color(Point2f(get_lower_right().x + 20.0f + font.get_text_width("Sound"), 0.5f * (get_lower_right().y + get_upper_left().y)), fgc));
+          const Line_Segment<Vertex2f_Color> ns(Vertex2f_Color(Point2f(get_lower_right().x + tl, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc),
+                                                Vertex2f_Color(Point2f(get_lower_right().x + tr, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc));
           vr.render(ns);
         }
       }
