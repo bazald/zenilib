@@ -62,7 +62,7 @@ namespace Zeni {
         : Text_Box(Point2f(000.0f, 50.0f), Point2f(800.0f, 250.0f),
                    "title", title_, get_Colors()["title_text"])
       {
-        give_BG_Renderer(new Widget_Renderer_Color(get_Colors()["title_bg"]));
+        give_BG_Renderer(new Widget_Renderer_Color(Color(0.0f, 0.0f, 0.0f, 0.0f)));
       }
     } title;
 
