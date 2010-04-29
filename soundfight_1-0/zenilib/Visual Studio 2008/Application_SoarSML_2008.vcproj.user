@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioUserFile
+	ProjectType="Visual C++"
+	Version="9.00"
+	ShowAllFiles="false"
+	>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin\x64"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin\x64"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug SCU|Win32"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug SCU|x64"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin\x64"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release SCU|Win32"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release SCU|x64"
+			>
+			<DebugSettings
+				WorkingDirectory=".."
+				Environment="PATH=bin\x64"
+			/>
+		</Configuration>
+	</Configurations>
+</VisualStudioUserFile>

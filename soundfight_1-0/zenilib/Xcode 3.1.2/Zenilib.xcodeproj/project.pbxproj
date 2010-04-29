@@ -1,0 +1,1208 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
+		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
+		8D11072B0486CEB800E47090 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */; };
+		D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D34A63CD0FFD722E00146950 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D34A63CE0FFD722E00146950 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D34A63CF0FFD722E00146950 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D34A63D00FFD722E00146950 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D34A63D10FFD722E00146950 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D34A63D20FFD722E00146950 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D34A63D30FFD722E00146950 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D34A667A0FFE839B00146950 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A664F0FFE839B00146950 /* Camera.cpp */; };
+		D34A667B0FFE839B00146950 /* Collision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66500FFE839B00146950 /* Collision.cpp */; };
+		D34A667C0FFE839B00146950 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66510FFE839B00146950 /* Color.cpp */; };
+		D34A667D0FFE839B00146950 /* Colors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66520FFE839B00146950 /* Colors.cpp */; };
+		D34A667E0FFE839B00146950 /* Configurator_Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66530FFE839B00146950 /* Configurator_Video.cpp */; };
+		D34A667F0FFE839B00146950 /* Console_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66540FFE839B00146950 /* Console_State.cpp */; };
+		D34A66800FFE839B00146950 /* Coordinate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66550FFE839B00146950 /* Coordinate.cpp */; };
+		D34A66810FFE839B00146950 /* Core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66560FFE839B00146950 /* Core.cpp */; };
+		D34A66820FFE839B00146950 /* EZ2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66570FFE839B00146950 /* EZ2D.cpp */; };
+		D34A66830FFE839B00146950 /* Fog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66580FFE839B00146950 /* Fog.cpp */; };
+		D34A66840FFE839B00146950 /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66590FFE839B00146950 /* Font.cpp */; };
+		D34A66850FFE839B00146950 /* Fonts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665A0FFE839B00146950 /* Fonts.cpp */; };
+		D34A66860FFE839B00146950 /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665B0FFE839B00146950 /* Game.cpp */; };
+		D34A66870FFE839B00146950 /* Gamestate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665C0FFE839B00146950 /* Gamestate.cpp */; };
+		D34A66880FFE839B00146950 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665D0FFE839B00146950 /* Image.cpp */; };
+		D34A66890FFE839B00146950 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665E0FFE839B00146950 /* Light.cpp */; };
+		D34A668A0FFE839B00146950 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A665F0FFE839B00146950 /* main.cpp */; };
+		D34A668B0FFE839B00146950 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66600FFE839B00146950 /* Material.cpp */; };
+		D34A668C0FFE839B00146950 /* Matrix4f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66610FFE839B00146950 /* Matrix4f.cpp */; };
+		D34A668D0FFE839B00146950 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66620FFE839B00146950 /* Model.cpp */; };
+		D34A668E0FFE839B00146950 /* Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66630FFE839B00146950 /* Mutex.cpp */; };
+		D34A668F0FFE839B00146950 /* Net_Primitives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66640FFE839B00146950 /* Net_Primitives.cpp */; };
+		D34A66900FFE839B00146950 /* Net.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66650FFE839B00146950 /* Net.cpp */; };
+		D34A66910FFE839B00146950 /* Quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66660FFE839B00146950 /* Quaternion.cpp */; };
+		D34A66920FFE839B00146950 /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66670FFE839B00146950 /* Renderable.cpp */; };
+		D34A66930FFE839B00146950 /* Resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66680FFE839B00146950 /* Resource.cpp */; };
+		D34A66940FFE839B00146950 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66690FFE839B00146950 /* Shader.cpp */; };
+		D34A66950FFE839B00146950 /* Sound_Source_Pool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666A0FFE839B00146950 /* Sound_Source_Pool.cpp */; };
+		D34A66960FFE839B00146950 /* Sound_Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666B0FFE839B00146950 /* Sound_Source.cpp */; };
+		D34A66970FFE839B00146950 /* Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666C0FFE839B00146950 /* Sound.cpp */; };
+		D34A66980FFE839B00146950 /* Sounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666D0FFE839B00146950 /* Sounds.cpp */; };
+		D34A66990FFE839B00146950 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666E0FFE839B00146950 /* Texture.cpp */; };
+		D34A669A0FFE839B00146950 /* Textures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A666F0FFE839B00146950 /* Textures.cpp */; };
+		D34A669B0FFE839B00146950 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66700FFE839B00146950 /* Thread.cpp */; };
+		D34A669C0FFE839B00146950 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66710FFE839B00146950 /* Timer.cpp */; };
+		D34A669D0FFE839B00146950 /* Vector3f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66720FFE839B00146950 /* Vector3f.cpp */; };
+		D34A669E0FFE839B00146950 /* Vertex_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66730FFE839B00146950 /* Vertex_Buffer.cpp */; };
+		D34A669F0FFE839B00146950 /* Vertex2f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66740FFE839B00146950 /* Vertex2f.cpp */; };
+		D34A66A00FFE839B00146950 /* Vertex3f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66750FFE839B00146950 /* Vertex3f.cpp */; };
+		D34A66A10FFE839B00146950 /* Video_DX9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66760FFE839B00146950 /* Video_DX9.cpp */; };
+		D34A66A20FFE839B00146950 /* Video_GL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66770FFE839B00146950 /* Video_GL.cpp */; };
+		D34A66A30FFE839B00146950 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66780FFE839B00146950 /* Video.cpp */; };
+		D34A66A40FFE839B00146950 /* Widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66790FFE839B00146950 /* Widget.cpp */; };
+		D34A66A90FFE83A600146950 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A50FFE83A600146950 /* tinystr.cpp */; };
+		D34A66AA0FFE83A600146950 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A60FFE83A600146950 /* tinyxml.cpp */; };
+		D34A66AB0FFE83A600146950 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A70FFE83A600146950 /* tinyxmlerror.cpp */; };
+		D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66A80FFE83A600146950 /* tinyxmlparser.cpp */; };
+		D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
+		D34A67B00FFE88A500146950 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36C2DAA102B949F00E71223 /* Logo.cpp */; };
+		D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494910FFF0BC900B647E1 /* application.cxx */; };
+		D3DB81E90FFF1AD700788B73 /* Gamestate_One.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */; };
+		D3E4934A0FFF038300B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
+		D3E493560FFF039600B647E1 /* ALUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3E4943D0FFF0B5600B647E1 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
+		D3E4943F0FFF0B5600B647E1 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		D3E494710FFF0B5600B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		D3E494720FFF0B5600B647E1 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
+		D3E494730FFF0B5600B647E1 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D3E494740FFF0B5600B647E1 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D3E494750FFF0B5600B647E1 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D3E494760FFF0B5600B647E1 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D3E494770FFF0B5600B647E1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
+		D3E494780FFF0B5600B647E1 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D3E494790FFF0B5600B647E1 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D3E4947A0FFF0B5600B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
+		D3E4947B0FFF0B5600B647E1 /* ALUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3E4947C0FFF0B5600B647E1 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D3E4947D0FFF0B5600B647E1 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D3E4947E0FFF0B5600B647E1 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+		D3E494940FFF0BC900B647E1 /* zenilib.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494920FFF0BC900B647E1 /* zenilib.cxx */; };
+		D3E4949E0FFF0C9200B647E1 /* Zenilib.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* Zenilib.strings */; };
+		D3E494A00FFF0C9200B647E1 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		D3E494A20FFF0C9200B647E1 /* zenilib.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3E494920FFF0BC900B647E1 /* zenilib.cxx */; };
+		D3E494A40FFF0C9200B647E1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		D3E494A50FFF0C9200B647E1 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
+		D3E494A60FFF0C9200B647E1 /* SDL_gfx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C70FFD722E00146950 /* SDL_gfx.framework */; };
+		D3E494A70FFF0C9200B647E1 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C80FFD722E00146950 /* SDL_image.framework */; };
+		D3E494A80FFF0C9200B647E1 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C90FFD722E00146950 /* SDL_net.framework */; };
+		D3E494A90FFF0C9200B647E1 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CA0FFD722E00146950 /* SDL_ttf.framework */; };
+		D3E494AA0FFF0C9200B647E1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F3C0009D093BD00EBEB88 /* OpenGL.framework */; };
+		D3E494AB0FFF0C9200B647E1 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C50FFD722E00146950 /* GLEW.framework */; };
+		D3E494AC0FFF0C9200B647E1 /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C40FFD722E00146950 /* Cg.framework */; };
+		D3E494AD0FFF0C9200B647E1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493490FFF038300B647E1 /* OpenAL.framework */; };
+		D3E494AE0FFF0C9200B647E1 /* ALUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E493550FFF039600B647E1 /* ALUT.framework */; };
+		D3E494AF0FFF0C9200B647E1 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63C60FFD722E00146950 /* Ogg.framework */; };
+		D3E494B00FFF0C9200B647E1 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A63CB0FFD722E00146950 /* Vorbis.framework */; };
+		D3E494B10FFF0C9200B647E1 /* lib3ds-2.0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		002F39FD09D0883400EBEB88 /* Copy Frameworks into .app bundle */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Frameworks into .app bundle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E4947F0FFF0B5600B647E1 /* Copy Frameworks into .app bundle */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Frameworks into .app bundle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E494B20FFF0C9200B647E1 /* Copy Frameworks into .app bundle */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Frameworks into .app bundle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		002F39F909D0881F00EBEB88 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../Frameworks/SDL.framework; sourceTree = SOURCE_ROOT; };
+		002F3A2B09D0888800EBEB88 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = SOURCE_ROOT; };
+		002F3A2C09D0888800EBEB88 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = SOURCE_ROOT; };
+		002F3C0009D093BD00EBEB88 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Zenilib.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zenilib_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Zenilib.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zenilib.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D345B0711002818300A1B90A /* Title_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Title_State.h; path = ../include/Zeni/Title_State.h; sourceTree = SOURCE_ROOT; };
+		D345B0721002818300A1B90A /* Widget_Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget_Gamestate.h; path = ../include/Zeni/Widget_Gamestate.h; sourceTree = SOURCE_ROOT; };
+		D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget_Gamestate.cpp; path = ../src/Zeni/Widget_Gamestate.cpp; sourceTree = SOURCE_ROOT; };
+		D34A63C40FFD722E00146950 /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = ../Frameworks/Cg.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C50FFD722E00146950 /* GLEW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLEW.framework; path = ../Frameworks/GLEW.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C60FFD722E00146950 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = ../Frameworks/Ogg.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C70FFD722E00146950 /* SDL_gfx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_gfx.framework; path = ../Frameworks/SDL_gfx.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C80FFD722E00146950 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = ../Frameworks/SDL_image.framework; sourceTree = SOURCE_ROOT; };
+		D34A63C90FFD722E00146950 /* SDL_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_net.framework; path = ../Frameworks/SDL_net.framework; sourceTree = SOURCE_ROOT; };
+		D34A63CA0FFD722E00146950 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = ../Frameworks/SDL_ttf.framework; sourceTree = SOURCE_ROOT; };
+		D34A63CB0FFD722E00146950 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../Frameworks/Vorbis.framework; sourceTree = SOURCE_ROOT; };
+		D34A65C80FFE836500146950 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../include/Zeni/Camera.h; sourceTree = SOURCE_ROOT; };
+		D34A65C90FFE836500146950 /* Camera.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Camera.hxx; path = ../include/Zeni/Camera.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65CA0FFE836500146950 /* Chronometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chronometer.h; path = ../include/Zeni/Chronometer.h; sourceTree = SOURCE_ROOT; };
+		D34A65CB0FFE836500146950 /* Chronometer.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Chronometer.hxx; path = ../include/Zeni/Chronometer.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65CC0FFE836500146950 /* Collision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Collision.h; path = ../include/Zeni/Collision.h; sourceTree = SOURCE_ROOT; };
+		D34A65CD0FFE836500146950 /* Collision.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Collision.hxx; path = ../include/Zeni/Collision.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65CE0FFE836500146950 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = ../include/Zeni/Color.h; sourceTree = SOURCE_ROOT; };
+		D34A65CF0FFE836500146950 /* Color.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Color.hxx; path = ../include/Zeni/Color.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65D00FFE836500146950 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Colors.h; path = ../include/Zeni/Colors.h; sourceTree = SOURCE_ROOT; };
+		D34A65D10FFE836500146950 /* Configurator_Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Configurator_Video.h; path = ../include/Zeni/Configurator_Video.h; sourceTree = SOURCE_ROOT; };
+		D34A65D20FFE836500146950 /* Console_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Console_State.h; path = ../include/Zeni/Console_State.h; sourceTree = SOURCE_ROOT; };
+		D34A65D30FFE836500146950 /* Coordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Coordinate.h; path = ../include/Zeni/Coordinate.h; sourceTree = SOURCE_ROOT; };
+		D34A65D40FFE836500146950 /* Coordinate.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Coordinate.hxx; path = ../include/Zeni/Coordinate.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65D50FFE836500146950 /* Core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Core.h; path = ../include/Zeni/Core.h; sourceTree = SOURCE_ROOT; };
+		D34A65D60FFE836500146950 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Database.h; path = ../include/Zeni/Database.h; sourceTree = SOURCE_ROOT; };
+		D34A65D70FFE836500146950 /* Database.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Database.hxx; path = ../include/Zeni/Database.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65D80FFE836500146950 /* EZ2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EZ2D.h; path = ../include/Zeni/EZ2D.h; sourceTree = SOURCE_ROOT; };
+		D34A65D90FFE836500146950 /* Fog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Fog.h; path = ../include/Zeni/Fog.h; sourceTree = SOURCE_ROOT; };
+		D34A65DA0FFE836500146950 /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = ../include/Zeni/Font.h; sourceTree = SOURCE_ROOT; };
+		D34A65DB0FFE836500146950 /* Font.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Font.hxx; path = ../include/Zeni/Font.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65DC0FFE836500146950 /* Fonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Fonts.h; path = ../include/Zeni/Fonts.h; sourceTree = SOURCE_ROOT; };
+		D34A65DD0FFE836500146950 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Game.h; path = ../include/Zeni/Game.h; sourceTree = SOURCE_ROOT; };
+		D34A65DE0FFE836500146950 /* Game.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Game.hxx; path = ../include/Zeni/Game.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65DF0FFE836500146950 /* Gamestate_One.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamestate_One.h; path = ../include/Zeni/Gamestate_One.h; sourceTree = SOURCE_ROOT; };
+		D34A65E00FFE836500146950 /* Gamestate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamestate.h; path = ../include/Zeni/Gamestate.h; sourceTree = SOURCE_ROOT; };
+		D34A65E10FFE836500146950 /* Gamestate.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Gamestate.hxx; path = ../include/Zeni/Gamestate.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65E20FFE836500146950 /* Global_Undef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Global_Undef.h; path = ../include/Zeni/Global_Undef.h; sourceTree = SOURCE_ROOT; };
+		D34A65E30FFE836500146950 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Global.h; path = ../include/Zeni/Global.h; sourceTree = SOURCE_ROOT; };
+		D34A65E40FFE836500146950 /* Hash_Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hash_Map.h; path = ../include/Zeni/Hash_Map.h; sourceTree = SOURCE_ROOT; };
+		D34A65E50FFE836500146950 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../include/Zeni/Image.h; sourceTree = SOURCE_ROOT; };
+		D34A65E60FFE836500146950 /* Image.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Image.hxx; path = ../include/Zeni/Image.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65E70FFE836500146950 /* IV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IV.h; path = ../include/Zeni/IV.h; sourceTree = SOURCE_ROOT; };
+		D34A65E80FFE836500146950 /* Light.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Light.h; path = ../include/Zeni/Light.h; sourceTree = SOURCE_ROOT; };
+		D34A65E90FFE836500146950 /* Light.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Light.hxx; path = ../include/Zeni/Light.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65EA0FFE836500146950 /* Line_Segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Line_Segment.h; path = ../include/Zeni/Line_Segment.h; sourceTree = SOURCE_ROOT; };
+		D34A65EB0FFE836500146950 /* Line_Segment.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Line_Segment.hxx; path = ../include/Zeni/Line_Segment.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65EC0FFE836500146950 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Material.h; path = ../include/Zeni/Material.h; sourceTree = SOURCE_ROOT; };
+		D34A65ED0FFE836500146950 /* Material.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Material.hxx; path = ../include/Zeni/Material.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65EE0FFE836500146950 /* Matrix4f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Matrix4f.h; path = ../include/Zeni/Matrix4f.h; sourceTree = SOURCE_ROOT; };
+		D34A65EF0FFE836500146950 /* Matrix4f.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Matrix4f.hxx; path = ../include/Zeni/Matrix4f.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65F00FFE836500146950 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Model.h; path = ../include/Zeni/Model.h; sourceTree = SOURCE_ROOT; };
+		D34A65F10FFE836500146950 /* Model.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Model.hxx; path = ../include/Zeni/Model.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65F20FFE836500146950 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mutex.h; path = ../include/Zeni/Mutex.h; sourceTree = SOURCE_ROOT; };
+		D34A65F30FFE836500146950 /* Mutex.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Mutex.hxx; path = ../include/Zeni/Mutex.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65F40FFE836500146950 /* Net_Primitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Net_Primitives.h; path = ../include/Zeni/Net_Primitives.h; sourceTree = SOURCE_ROOT; };
+		D34A65F50FFE836500146950 /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Net.h; path = ../include/Zeni/Net.h; sourceTree = SOURCE_ROOT; };
+		D34A65F60FFE836500146950 /* Net.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Net.hxx; path = ../include/Zeni/Net.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65F70FFE836500146950 /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Projector.h; path = ../include/Zeni/Projector.h; sourceTree = SOURCE_ROOT; };
+		D34A65F80FFE836500146950 /* Projector.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Projector.hxx; path = ../include/Zeni/Projector.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65F90FFE836500146950 /* Quadrilateral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quadrilateral.h; path = ../include/Zeni/Quadrilateral.h; sourceTree = SOURCE_ROOT; };
+		D34A65FA0FFE836500146950 /* Quadrilateral.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Quadrilateral.hxx; path = ../include/Zeni/Quadrilateral.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65FB0FFE836500146950 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quaternion.h; path = ../include/Zeni/Quaternion.h; sourceTree = SOURCE_ROOT; };
+		D34A65FC0FFE836500146950 /* Quaternion.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Quaternion.hxx; path = ../include/Zeni/Quaternion.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65FD0FFE836500146950 /* Renderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderable.h; path = ../include/Zeni/Renderable.h; sourceTree = SOURCE_ROOT; };
+		D34A65FE0FFE836500146950 /* Renderable.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Renderable.hxx; path = ../include/Zeni/Renderable.hxx; sourceTree = SOURCE_ROOT; };
+		D34A65FF0FFE836500146950 /* Resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../include/Zeni/Resource.h; sourceTree = SOURCE_ROOT; };
+		D34A66000FFE836500146950 /* Resource.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Resource.hxx; path = ../include/Zeni/Resource.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66010FFE836500146950 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shader.h; path = ../include/Zeni/Shader.h; sourceTree = SOURCE_ROOT; };
+		D34A66020FFE836500146950 /* Shader.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Shader.hxx; path = ../include/Zeni/Shader.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66030FFE836500146950 /* Sound_Source.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sound_Source.hxx; path = ../include/Zeni/Sound_Source.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66040FFE836500146950 /* Sound_Source_Pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_Source_Pool.h; path = ../include/Zeni/Sound_Source_Pool.h; sourceTree = SOURCE_ROOT; };
+		D34A66050FFE836500146950 /* Sound_Source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_Source.h; path = ../include/Zeni/Sound_Source.h; sourceTree = SOURCE_ROOT; };
+		D34A66060FFE836500146950 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound.h; path = ../include/Zeni/Sound.h; sourceTree = SOURCE_ROOT; };
+		D34A66070FFE836500146950 /* Sound.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sound.hxx; path = ../include/Zeni/Sound.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66080FFE836500146950 /* Sounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sounds.h; path = ../include/Zeni/Sounds.h; sourceTree = SOURCE_ROOT; };
+		D34A66090FFE836500146950 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture.h; path = ../include/Zeni/Texture.h; sourceTree = SOURCE_ROOT; };
+		D34A660A0FFE836500146950 /* Texture.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Texture.hxx; path = ../include/Zeni/Texture.hxx; sourceTree = SOURCE_ROOT; };
+		D34A660B0FFE836500146950 /* Textures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Textures.h; path = ../include/Zeni/Textures.h; sourceTree = SOURCE_ROOT; };
+		D34A660C0FFE836500146950 /* Textures.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Textures.hxx; path = ../include/Zeni/Textures.hxx; sourceTree = SOURCE_ROOT; };
+		D34A660D0FFE836500146950 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = ../include/Zeni/Thread.h; sourceTree = SOURCE_ROOT; };
+		D34A660E0FFE836500146950 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = ../include/Zeni/Timer.h; sourceTree = SOURCE_ROOT; };
+		D34A660F0FFE836500146950 /* Timer.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Timer.hxx; path = ../include/Zeni/Timer.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66100FFE836500146950 /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangle.h; path = ../include/Zeni/Triangle.h; sourceTree = SOURCE_ROOT; };
+		D34A66110FFE836500146950 /* Triangle.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Triangle.hxx; path = ../include/Zeni/Triangle.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66120FFE836500146950 /* Vector3f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector3f.h; path = ../include/Zeni/Vector3f.h; sourceTree = SOURCE_ROOT; };
+		D34A66130FFE836500146950 /* Vector3f.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Vector3f.hxx; path = ../include/Zeni/Vector3f.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66140FFE836500146950 /* Vertex_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vertex_Buffer.h; path = ../include/Zeni/Vertex_Buffer.h; sourceTree = SOURCE_ROOT; };
+		D34A66150FFE836500146950 /* Vertex_Buffer.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Vertex_Buffer.hxx; path = ../include/Zeni/Vertex_Buffer.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66160FFE836500146950 /* Vertex2f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vertex2f.h; path = ../include/Zeni/Vertex2f.h; sourceTree = SOURCE_ROOT; };
+		D34A66170FFE836500146950 /* Vertex2f.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Vertex2f.hxx; path = ../include/Zeni/Vertex2f.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66180FFE836500146950 /* Vertex3f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vertex3f.h; path = ../include/Zeni/Vertex3f.h; sourceTree = SOURCE_ROOT; };
+		D34A66190FFE836500146950 /* Vertex3f.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Vertex3f.hxx; path = ../include/Zeni/Vertex3f.hxx; sourceTree = SOURCE_ROOT; };
+		D34A661A0FFE836500146950 /* Video_DX9.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Video_DX9.h; path = ../include/Zeni/Video_DX9.h; sourceTree = SOURCE_ROOT; };
+		D34A661B0FFE836500146950 /* Video_DX9.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Video_DX9.hxx; path = ../include/Zeni/Video_DX9.hxx; sourceTree = SOURCE_ROOT; };
+		D34A661C0FFE836500146950 /* Video_GL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Video_GL.h; path = ../include/Zeni/Video_GL.h; sourceTree = SOURCE_ROOT; };
+		D34A661D0FFE836500146950 /* Video_GL.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Video_GL.hxx; path = ../include/Zeni/Video_GL.hxx; sourceTree = SOURCE_ROOT; };
+		D34A661E0FFE836500146950 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Video.h; path = ../include/Zeni/Video.h; sourceTree = SOURCE_ROOT; };
+		D34A661F0FFE836500146950 /* Video.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Video.hxx; path = ../include/Zeni/Video.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66200FFE836500146950 /* Widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget.h; path = ../include/Zeni/Widget.h; sourceTree = SOURCE_ROOT; };
+		D34A66210FFE836500146950 /* Widget.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Widget.hxx; path = ../include/Zeni/Widget.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66220FFE836500146950 /* XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XML.h; path = ../include/Zeni/XML.h; sourceTree = SOURCE_ROOT; };
+		D34A66230FFE836500146950 /* XML.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = XML.hxx; path = ../include/Zeni/XML.hxx; sourceTree = SOURCE_ROOT; };
+		D34A66240FFE836B00146950 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = ../include/tinyxml.h; sourceTree = SOURCE_ROOT; };
+		D34A66250FFE836B00146950 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = ../include/tinystr.h; sourceTree = SOURCE_ROOT; };
+		D34A66260FFE836B00146950 /* zenilib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zenilib.h; path = ../include/zenilib.h; sourceTree = SOURCE_ROOT; };
+		D34A664F0FFE839B00146950 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../src/Zeni/Camera.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66500FFE839B00146950 /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Collision.cpp; path = ../src/Zeni/Collision.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66510FFE839B00146950 /* Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Color.cpp; path = ../src/Zeni/Color.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66520FFE839B00146950 /* Colors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Colors.cpp; path = ../src/Zeni/Colors.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66530FFE839B00146950 /* Configurator_Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Configurator_Video.cpp; path = ../src/Zeni/Configurator_Video.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66540FFE839B00146950 /* Console_State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Console_State.cpp; path = ../src/Zeni/Console_State.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66550FFE839B00146950 /* Coordinate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Coordinate.cpp; path = ../src/Zeni/Coordinate.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66560FFE839B00146950 /* Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Core.cpp; path = ../src/Zeni/Core.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66570FFE839B00146950 /* EZ2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EZ2D.cpp; path = ../src/Zeni/EZ2D.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66580FFE839B00146950 /* Fog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Fog.cpp; path = ../src/Zeni/Fog.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66590FFE839B00146950 /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Font.cpp; path = ../src/Zeni/Font.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665A0FFE839B00146950 /* Fonts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Fonts.cpp; path = ../src/Zeni/Fonts.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665B0FFE839B00146950 /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Game.cpp; path = ../src/Zeni/Game.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665C0FFE839B00146950 /* Gamestate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamestate.cpp; path = ../src/Zeni/Gamestate.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665D0FFE839B00146950 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = ../src/Zeni/Image.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665E0FFE839B00146950 /* Light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Light.cpp; path = ../src/Zeni/Light.cpp; sourceTree = SOURCE_ROOT; };
+		D34A665F0FFE839B00146950 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../src/Zeni/main.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66600FFE839B00146950 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Material.cpp; path = ../src/Zeni/Material.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66610FFE839B00146950 /* Matrix4f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Matrix4f.cpp; path = ../src/Zeni/Matrix4f.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66620FFE839B00146950 /* Model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Model.cpp; path = ../src/Zeni/Model.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66630FFE839B00146950 /* Mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mutex.cpp; path = ../src/Zeni/Mutex.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66640FFE839B00146950 /* Net_Primitives.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Net_Primitives.cpp; path = ../src/Zeni/Net_Primitives.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66650FFE839B00146950 /* Net.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Net.cpp; path = ../src/Zeni/Net.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66660FFE839B00146950 /* Quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Quaternion.cpp; path = ../src/Zeni/Quaternion.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66670FFE839B00146950 /* Renderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Renderable.cpp; path = ../src/Zeni/Renderable.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66680FFE839B00146950 /* Resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Resource.cpp; path = ../src/Zeni/Resource.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66690FFE839B00146950 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shader.cpp; path = ../src/Zeni/Shader.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666A0FFE839B00146950 /* Sound_Source_Pool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_Source_Pool.cpp; path = ../src/Zeni/Sound_Source_Pool.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666B0FFE839B00146950 /* Sound_Source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_Source.cpp; path = ../src/Zeni/Sound_Source.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666C0FFE839B00146950 /* Sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound.cpp; path = ../src/Zeni/Sound.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666D0FFE839B00146950 /* Sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sounds.cpp; path = ../src/Zeni/Sounds.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666E0FFE839B00146950 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = ../src/Zeni/Texture.cpp; sourceTree = SOURCE_ROOT; };
+		D34A666F0FFE839B00146950 /* Textures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Textures.cpp; path = ../src/Zeni/Textures.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66700FFE839B00146950 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = ../src/Zeni/Thread.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66710FFE839B00146950 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Timer.cpp; path = ../src/Zeni/Timer.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66720FFE839B00146950 /* Vector3f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vector3f.cpp; path = ../src/Zeni/Vector3f.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66730FFE839B00146950 /* Vertex_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vertex_Buffer.cpp; path = ../src/Zeni/Vertex_Buffer.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66740FFE839B00146950 /* Vertex2f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vertex2f.cpp; path = ../src/Zeni/Vertex2f.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66750FFE839B00146950 /* Vertex3f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vertex3f.cpp; path = ../src/Zeni/Vertex3f.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66760FFE839B00146950 /* Video_DX9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Video_DX9.cpp; path = ../src/Zeni/Video_DX9.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66770FFE839B00146950 /* Video_GL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Video_GL.cpp; path = ../src/Zeni/Video_GL.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66780FFE839B00146950 /* Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Video.cpp; path = ../src/Zeni/Video.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66790FFE839B00146950 /* Widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget.cpp; path = ../src/Zeni/Widget.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66A50FFE83A600146950 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = ../src/TinyXML/tinystr.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66A60FFE83A600146950 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = ../src/TinyXML/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66A70FFE83A600146950 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = ../src/TinyXML/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66A80FFE83A600146950 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../src/TinyXML/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamestate_One.cpp; path = ../src/Gamestate_One.cpp; sourceTree = SOURCE_ROOT; };
+		D34A66E70FFE85D900146950 /* zeni_fragment_shaders.cg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zeni_fragment_shaders.cg; path = ../shaders/zeni_fragment_shaders.cg; sourceTree = SOURCE_ROOT; };
+		D34A66E80FFE85D900146950 /* zeni_vertex_shaders.cg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zeni_vertex_shaders.cg; path = ../shaders/zeni_vertex_shaders.cg; sourceTree = SOURCE_ROOT; };
+		D34A66F40FFE865E00146950 /* colors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = colors.xml; path = ../config/colors.xml; sourceTree = SOURCE_ROOT; };
+		D34A66F50FFE865E00146950 /* fonts.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = fonts.xml; path = ../config/fonts.xml; sourceTree = SOURCE_ROOT; };
+		D34A66F60FFE865E00146950 /* sounds.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = sounds.xml; path = ../config/sounds.xml; sourceTree = SOURCE_ROOT; };
+		D34A66F70FFE865E00146950 /* textures.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = textures.xml; path = ../config/textures.xml; sourceTree = SOURCE_ROOT; };
+		D34A66F80FFE865E00146950 /* zenilib.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zenilib.xml; path = ../config/zenilib.xml; sourceTree = SOURCE_ROOT; };
+		D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "lib3ds-2.0.framework"; path = "../Frameworks/lib3ds-2.0.framework"; sourceTree = "<absolute>"; };
+		D36C2DA8102B948900E71223 /* Logo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logo.h; path = ../include/Zeni/Logo.h; sourceTree = SOURCE_ROOT; };
+		D36C2DA9102B948900E71223 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../include/Zeni/Random.h; sourceTree = SOURCE_ROOT; };
+		D36C2DAA102B949F00E71223 /* Logo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logo.cpp; path = ../src/Zeni/Logo.cpp; sourceTree = SOURCE_ROOT; };
+		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../Frameworks/OpenAL.framework; sourceTree = SOURCE_ROOT; };
+		D3E493550FFF039600B647E1 /* ALUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ALUT.framework; path = ../Frameworks/ALUT.framework; sourceTree = SOURCE_ROOT; };
+		D3E494830FFF0B5600B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494910FFF0BC900B647E1 /* application.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application.cxx; path = ../src/application.cxx; sourceTree = SOURCE_ROOT; };
+		D3E494920FFF0BC900B647E1 /* zenilib.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zenilib.cxx; path = ../src/zenilib.cxx; sourceTree = SOURCE_ROOT; };
+		D3E494B60FFF0C9200B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */,
+				D34A63CF0FFD722E00146950 /* SDL_gfx.framework in Frameworks */,
+				D34A63D00FFD722E00146950 /* SDL_image.framework in Frameworks */,
+				D34A63D10FFD722E00146950 /* SDL_net.framework in Frameworks */,
+				D34A63D20FFD722E00146950 /* SDL_ttf.framework in Frameworks */,
+				002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */,
+				D34A63CD0FFD722E00146950 /* GLEW.framework in Frameworks */,
+				D34A63CC0FFD722E00146950 /* Cg.framework in Frameworks */,
+				D3E4934A0FFF038300B647E1 /* OpenAL.framework in Frameworks */,
+				D3E493560FFF039600B647E1 /* ALUT.framework in Frameworks */,
+				D34A63CE0FFD722E00146950 /* Ogg.framework in Frameworks */,
+				D34A63D30FFD722E00146950 /* Vorbis.framework in Frameworks */,
+				D34A67B00FFE88A500146950 /* lib3ds-2.0.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E494700FFF0B5600B647E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E494710FFF0B5600B647E1 /* Cocoa.framework in Frameworks */,
+				D3E494720FFF0B5600B647E1 /* SDL.framework in Frameworks */,
+				D3E494730FFF0B5600B647E1 /* SDL_gfx.framework in Frameworks */,
+				D3E494740FFF0B5600B647E1 /* SDL_image.framework in Frameworks */,
+				D3E494750FFF0B5600B647E1 /* SDL_net.framework in Frameworks */,
+				D3E494760FFF0B5600B647E1 /* SDL_ttf.framework in Frameworks */,
+				D3E494770FFF0B5600B647E1 /* OpenGL.framework in Frameworks */,
+				D3E494780FFF0B5600B647E1 /* GLEW.framework in Frameworks */,
+				D3E494790FFF0B5600B647E1 /* Cg.framework in Frameworks */,
+				D3E4947A0FFF0B5600B647E1 /* OpenAL.framework in Frameworks */,
+				D3E4947B0FFF0B5600B647E1 /* ALUT.framework in Frameworks */,
+				D3E4947C0FFF0B5600B647E1 /* Ogg.framework in Frameworks */,
+				D3E4947D0FFF0B5600B647E1 /* Vorbis.framework in Frameworks */,
+				D3E4947E0FFF0B5600B647E1 /* lib3ds-2.0.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E494A30FFF0C9200B647E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E494A40FFF0C9200B647E1 /* Cocoa.framework in Frameworks */,
+				D3E494A50FFF0C9200B647E1 /* SDL.framework in Frameworks */,
+				D3E494A60FFF0C9200B647E1 /* SDL_gfx.framework in Frameworks */,
+				D3E494A70FFF0C9200B647E1 /* SDL_image.framework in Frameworks */,
+				D3E494A80FFF0C9200B647E1 /* SDL_net.framework in Frameworks */,
+				D3E494A90FFF0C9200B647E1 /* SDL_ttf.framework in Frameworks */,
+				D3E494AA0FFF0C9200B647E1 /* OpenGL.framework in Frameworks */,
+				D3E494AB0FFF0C9200B647E1 /* GLEW.framework in Frameworks */,
+				D3E494AC0FFF0C9200B647E1 /* Cg.framework in Frameworks */,
+				D3E494AD0FFF0C9200B647E1 /* OpenAL.framework in Frameworks */,
+				D3E494AE0FFF0C9200B647E1 /* ALUT.framework in Frameworks */,
+				D3E494AF0FFF0C9200B647E1 /* Ogg.framework in Frameworks */,
+				D3E494B00FFF0C9200B647E1 /* Vorbis.framework in Frameworks */,
+				D3E494B10FFF0C9200B647E1 /* lib3ds-2.0.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* SDLmain */ = {
+			isa = PBXGroup;
+			children = (
+				002F3A2B09D0888800EBEB88 /* SDLMain.h */,
+				002F3A2C09D0888800EBEB88 /* SDLMain.m */,
+			);
+			name = SDLmain;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D34A67AF0FFE88A500146950 /* lib3ds-2.0.framework */,
+				D34A63C60FFD722E00146950 /* Ogg.framework */,
+				D34A63CB0FFD722E00146950 /* Vorbis.framework */,
+				D3E493550FFF039600B647E1 /* ALUT.framework */,
+				D34A63C40FFD722E00146950 /* Cg.framework */,
+				D34A63C50FFD722E00146950 /* GLEW.framework */,
+				D34A63C70FFD722E00146950 /* SDL_gfx.framework */,
+				D34A63C80FFD722E00146950 /* SDL_image.framework */,
+				D34A63C90FFD722E00146950 /* SDL_net.framework */,
+				D34A63CA0FFD722E00146950 /* SDL_ttf.framework */,
+				002F39F909D0881F00EBEB88 /* SDL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				D3E493490FFF038300B647E1 /* OpenAL.framework */,
+				002F3C0009D093BD00EBEB88 /* OpenGL.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* Application.app */,
+				D3E494830FFF0B5600B647E1 /* Application.app */,
+				D3E494B60FFF0C9200B647E1 /* Application.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* «PROJECTNAMEASXML» */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66DC0FFE856E00146950 /* Application */,
+				D34A63E00FFD729A00146950 /* Zenilib */,
+				080E96DDFE201D6D7F000001 /* SDLmain */,
+				29B97315FDCFA39411CA2CEA /* Precompiled Headers */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = "«PROJECTNAMEASXML»";
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Precompiled Headers */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */,
+			);
+			name = "Precompiled Headers";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				089C165CFE840E0CC02AAC07 /* Zenilib.strings */,
+				8D1107310486CEB800E47090 /* Zenilib.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D34A63E00FFD729A00146950 /* Zenilib */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66E20FFE85A700146950 /* Header Files */,
+				D34A65140FFD747B00146950 /* Include Files */,
+				D34A66E10FFE859E00146950 /* Shader Files */,
+				D34A64470FFD72C400146950 /* Source Files */,
+				D3E494950FFF0BCC00B647E1 /* SCU Files */,
+			);
+			name = Zenilib;
+			sourceTree = "<group>";
+		};
+		D34A64470FFD72C400146950 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A64A80FFD741B00146950 /* TinyXML */,
+				D34A64A90FFD742200146950 /* Zeni */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		D34A64A80FFD741B00146950 /* TinyXML */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66A50FFE83A600146950 /* tinystr.cpp */,
+				D34A66A60FFE83A600146950 /* tinyxml.cpp */,
+				D34A66A70FFE83A600146950 /* tinyxmlerror.cpp */,
+				D34A66A80FFE83A600146950 /* tinyxmlparser.cpp */,
+			);
+			name = TinyXML;
+			sourceTree = "<group>";
+		};
+		D34A64A90FFD742200146950 /* Zeni */ = {
+			isa = PBXGroup;
+			children = (
+				D34A664F0FFE839B00146950 /* Camera.cpp */,
+				D34A66500FFE839B00146950 /* Collision.cpp */,
+				D34A66510FFE839B00146950 /* Color.cpp */,
+				D34A66520FFE839B00146950 /* Colors.cpp */,
+				D34A66530FFE839B00146950 /* Configurator_Video.cpp */,
+				D34A66540FFE839B00146950 /* Console_State.cpp */,
+				D34A66550FFE839B00146950 /* Coordinate.cpp */,
+				D34A66560FFE839B00146950 /* Core.cpp */,
+				D34A66570FFE839B00146950 /* EZ2D.cpp */,
+				D34A66580FFE839B00146950 /* Fog.cpp */,
+				D34A66590FFE839B00146950 /* Font.cpp */,
+				D34A665A0FFE839B00146950 /* Fonts.cpp */,
+				D34A665B0FFE839B00146950 /* Game.cpp */,
+				D34A665C0FFE839B00146950 /* Gamestate.cpp */,
+				D34A665D0FFE839B00146950 /* Image.cpp */,
+				D34A665E0FFE839B00146950 /* Light.cpp */,
+				D36C2DAA102B949F00E71223 /* Logo.cpp */,
+				D34A665F0FFE839B00146950 /* main.cpp */,
+				D34A66600FFE839B00146950 /* Material.cpp */,
+				D34A66610FFE839B00146950 /* Matrix4f.cpp */,
+				D34A66620FFE839B00146950 /* Model.cpp */,
+				D34A66630FFE839B00146950 /* Mutex.cpp */,
+				D34A66640FFE839B00146950 /* Net_Primitives.cpp */,
+				D34A66650FFE839B00146950 /* Net.cpp */,
+				D34A66660FFE839B00146950 /* Quaternion.cpp */,
+				D34A66670FFE839B00146950 /* Renderable.cpp */,
+				D34A66680FFE839B00146950 /* Resource.cpp */,
+				D34A66690FFE839B00146950 /* Shader.cpp */,
+				D34A666A0FFE839B00146950 /* Sound_Source_Pool.cpp */,
+				D34A666B0FFE839B00146950 /* Sound_Source.cpp */,
+				D34A666C0FFE839B00146950 /* Sound.cpp */,
+				D34A666D0FFE839B00146950 /* Sounds.cpp */,
+				D34A666E0FFE839B00146950 /* Texture.cpp */,
+				D34A666F0FFE839B00146950 /* Textures.cpp */,
+				D34A66700FFE839B00146950 /* Thread.cpp */,
+				D34A66710FFE839B00146950 /* Timer.cpp */,
+				D34A66720FFE839B00146950 /* Vector3f.cpp */,
+				D34A66730FFE839B00146950 /* Vertex_Buffer.cpp */,
+				D34A66740FFE839B00146950 /* Vertex2f.cpp */,
+				D34A66750FFE839B00146950 /* Vertex3f.cpp */,
+				D34A66760FFE839B00146950 /* Video_DX9.cpp */,
+				D34A66770FFE839B00146950 /* Video_GL.cpp */,
+				D34A66780FFE839B00146950 /* Video.cpp */,
+				D345B07C100281C700A1B90A /* Widget_Gamestate.cpp */,
+				D34A66790FFE839B00146950 /* Widget.cpp */,
+			);
+			name = Zeni;
+			sourceTree = "<group>";
+		};
+		D34A65140FFD747B00146950 /* Include Files */ = {
+			isa = PBXGroup;
+			children = (
+				D394228710560B04008E05F4 /* Zeni */,
+			);
+			name = "Include Files";
+			sourceTree = "<group>";
+		};
+		D34A66DC0FFE856E00146950 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66E00FFE859100146950 /* Configuration Files */,
+				D34A66DF0FFE858D00146950 /* Header Files */,
+				D34A66DE0FFE858700146950 /* Include Files */,
+				D34A66DD0FFE858200146950 /* Source Files */,
+				D3E494960FFF0BF800B647E1 /* SCU Files */,
+			);
+			name = Application;
+			sourceTree = "<group>";
+		};
+		D34A66DD0FFE858200146950 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66AD0FFE83AE00146950 /* Gamestate_One.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		D34A66DE0FFE858700146950 /* Include Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Include Files";
+			sourceTree = "<group>";
+		};
+		D34A66DF0FFE858D00146950 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66260FFE836B00146950 /* zenilib.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		D34A66E00FFE859100146950 /* Configuration Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66F40FFE865E00146950 /* colors.xml */,
+				D34A66F50FFE865E00146950 /* fonts.xml */,
+				D34A66F60FFE865E00146950 /* sounds.xml */,
+				D34A66F70FFE865E00146950 /* textures.xml */,
+				D34A66F80FFE865E00146950 /* zenilib.xml */,
+			);
+			name = "Configuration Files";
+			sourceTree = "<group>";
+		};
+		D34A66E10FFE859E00146950 /* Shader Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66E70FFE85D900146950 /* zeni_fragment_shaders.cg */,
+				D34A66E80FFE85D900146950 /* zeni_vertex_shaders.cg */,
+			);
+			name = "Shader Files";
+			sourceTree = "<group>";
+		};
+		D34A66E20FFE85A700146950 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66E90FFE85F600146950 /* TinyXML */,
+				D34A66EA0FFE85FB00146950 /* Zeni */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		D34A66E90FFE85F600146950 /* TinyXML */ = {
+			isa = PBXGroup;
+			children = (
+				D34A66240FFE836B00146950 /* tinyxml.h */,
+				D34A66250FFE836B00146950 /* tinystr.h */,
+			);
+			name = TinyXML;
+			sourceTree = "<group>";
+		};
+		D34A66EA0FFE85FB00146950 /* Zeni */ = {
+			isa = PBXGroup;
+			children = (
+				D34A65C80FFE836500146950 /* Camera.h */,
+				D34A65CA0FFE836500146950 /* Chronometer.h */,
+				D34A65CC0FFE836500146950 /* Collision.h */,
+				D34A65CE0FFE836500146950 /* Color.h */,
+				D34A65D00FFE836500146950 /* Colors.h */,
+				D34A65D10FFE836500146950 /* Configurator_Video.h */,
+				D34A65D20FFE836500146950 /* Console_State.h */,
+				D34A65D30FFE836500146950 /* Coordinate.h */,
+				D34A65D50FFE836500146950 /* Core.h */,
+				D34A65D60FFE836500146950 /* Database.h */,
+				D34A65D80FFE836500146950 /* EZ2D.h */,
+				D34A65D90FFE836500146950 /* Fog.h */,
+				D34A65DA0FFE836500146950 /* Font.h */,
+				D34A65DC0FFE836500146950 /* Fonts.h */,
+				D34A65DD0FFE836500146950 /* Game.h */,
+				D34A65DF0FFE836500146950 /* Gamestate_One.h */,
+				D34A65E00FFE836500146950 /* Gamestate.h */,
+				D34A65E20FFE836500146950 /* Global_Undef.h */,
+				D34A65E30FFE836500146950 /* Global.h */,
+				D34A65E40FFE836500146950 /* Hash_Map.h */,
+				D34A65E50FFE836500146950 /* Image.h */,
+				D34A65E70FFE836500146950 /* IV.h */,
+				D34A65E80FFE836500146950 /* Light.h */,
+				D34A65EA0FFE836500146950 /* Line_Segment.h */,
+				D36C2DA8102B948900E71223 /* Logo.h */,
+				D34A65EC0FFE836500146950 /* Material.h */,
+				D34A65EE0FFE836500146950 /* Matrix4f.h */,
+				D34A65F00FFE836500146950 /* Model.h */,
+				D34A65F20FFE836500146950 /* Mutex.h */,
+				D34A65F40FFE836500146950 /* Net_Primitives.h */,
+				D34A65F50FFE836500146950 /* Net.h */,
+				D34A65F70FFE836500146950 /* Projector.h */,
+				D34A65F90FFE836500146950 /* Quadrilateral.h */,
+				D34A65FB0FFE836500146950 /* Quaternion.h */,
+				D36C2DA9102B948900E71223 /* Random.h */,
+				D34A65FD0FFE836500146950 /* Renderable.h */,
+				D34A65FF0FFE836500146950 /* Resource.h */,
+				D34A66010FFE836500146950 /* Shader.h */,
+				D34A66040FFE836500146950 /* Sound_Source_Pool.h */,
+				D34A66050FFE836500146950 /* Sound_Source.h */,
+				D34A66060FFE836500146950 /* Sound.h */,
+				D34A66080FFE836500146950 /* Sounds.h */,
+				D34A66090FFE836500146950 /* Texture.h */,
+				D34A660B0FFE836500146950 /* Textures.h */,
+				D34A660D0FFE836500146950 /* Thread.h */,
+				D34A660E0FFE836500146950 /* Timer.h */,
+				D345B0711002818300A1B90A /* Title_State.h */,
+				D34A66100FFE836500146950 /* Triangle.h */,
+				D34A66120FFE836500146950 /* Vector3f.h */,
+				D34A66140FFE836500146950 /* Vertex_Buffer.h */,
+				D34A66160FFE836500146950 /* Vertex2f.h */,
+				D34A66180FFE836500146950 /* Vertex3f.h */,
+				D34A661A0FFE836500146950 /* Video_DX9.h */,
+				D34A661C0FFE836500146950 /* Video_GL.h */,
+				D34A661E0FFE836500146950 /* Video.h */,
+				D345B0721002818300A1B90A /* Widget_Gamestate.h */,
+				D34A66200FFE836500146950 /* Widget.h */,
+				D34A66220FFE836500146950 /* XML.h */,
+			);
+			name = Zeni;
+			sourceTree = "<group>";
+		};
+		D394228710560B04008E05F4 /* Zeni */ = {
+			isa = PBXGroup;
+			children = (
+				D34A65C90FFE836500146950 /* Camera.hxx */,
+				D34A65CB0FFE836500146950 /* Chronometer.hxx */,
+				D34A65CD0FFE836500146950 /* Collision.hxx */,
+				D34A65CF0FFE836500146950 /* Color.hxx */,
+				D34A65D40FFE836500146950 /* Coordinate.hxx */,
+				D34A65D70FFE836500146950 /* Database.hxx */,
+				D34A65DB0FFE836500146950 /* Font.hxx */,
+				D34A65DE0FFE836500146950 /* Game.hxx */,
+				D34A65E10FFE836500146950 /* Gamestate.hxx */,
+				D34A65E60FFE836500146950 /* Image.hxx */,
+				D34A65E90FFE836500146950 /* Light.hxx */,
+				D34A65EB0FFE836500146950 /* Line_Segment.hxx */,
+				D34A65ED0FFE836500146950 /* Material.hxx */,
+				D34A65EF0FFE836500146950 /* Matrix4f.hxx */,
+				D34A65F10FFE836500146950 /* Model.hxx */,
+				D34A65F30FFE836500146950 /* Mutex.hxx */,
+				D34A65F60FFE836500146950 /* Net.hxx */,
+				D34A65F80FFE836500146950 /* Projector.hxx */,
+				D34A65FA0FFE836500146950 /* Quadrilateral.hxx */,
+				D34A65FC0FFE836500146950 /* Quaternion.hxx */,
+				D34A65FE0FFE836500146950 /* Renderable.hxx */,
+				D34A66000FFE836500146950 /* Resource.hxx */,
+				D34A66020FFE836500146950 /* Shader.hxx */,
+				D34A66030FFE836500146950 /* Sound_Source.hxx */,
+				D34A66070FFE836500146950 /* Sound.hxx */,
+				D34A660A0FFE836500146950 /* Texture.hxx */,
+				D34A660C0FFE836500146950 /* Textures.hxx */,
+				D34A660F0FFE836500146950 /* Timer.hxx */,
+				D34A66110FFE836500146950 /* Triangle.hxx */,
+				D34A66130FFE836500146950 /* Vector3f.hxx */,
+				D34A66150FFE836500146950 /* Vertex_Buffer.hxx */,
+				D34A66170FFE836500146950 /* Vertex2f.hxx */,
+				D34A66190FFE836500146950 /* Vertex3f.hxx */,
+				D34A661B0FFE836500146950 /* Video_DX9.hxx */,
+				D34A661D0FFE836500146950 /* Video_GL.hxx */,
+				D34A661F0FFE836500146950 /* Video.hxx */,
+				D34A66210FFE836500146950 /* Widget.hxx */,
+				D34A66230FFE836500146950 /* XML.hxx */,
+			);
+			name = Zeni;
+			sourceTree = "<group>";
+		};
+		D3E494950FFF0BCC00B647E1 /* SCU Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3E494920FFF0BC900B647E1 /* zenilib.cxx */,
+			);
+			name = "SCU Files";
+			sourceTree = "<group>";
+		};
+		D3E494960FFF0BF800B647E1 /* SCU Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3E494910FFF0BC900B647E1 /* application.cxx */,
+			);
+			name = "SCU Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* Normal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Normal" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				002F39FD09D0883400EBEB88 /* Copy Frameworks into .app bundle */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Normal;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "«PROJECTNAME»";
+			productReference = 8D1107320486CEB800E47090 /* Application.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D3E4943B0FFF0B5600B647E1 /* SCU */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "SCU" */;
+			buildPhases = (
+				D3E4943C0FFF0B5600B647E1 /* Resources */,
+				D3E4943E0FFF0B5600B647E1 /* Sources */,
+				D3E494700FFF0B5600B647E1 /* Frameworks */,
+				D3E4947F0FFF0B5600B647E1 /* Copy Frameworks into .app bundle */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SCU;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "«PROJECTNAME»";
+			productReference = D3E494830FFF0B5600B647E1 /* Application.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "SCU (Zenilib Only)" */;
+			buildPhases = (
+				D3E4949D0FFF0C9200B647E1 /* Resources */,
+				D3E4949F0FFF0C9200B647E1 /* Sources */,
+				D3E494A30FFF0C9200B647E1 /* Frameworks */,
+				D3E494B20FFF0C9200B647E1 /* Copy Frameworks into .app bundle */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SCU (Zenilib Only)";
+			productInstallPath = "$(HOME)/Applications";
+			productName = "«PROJECTNAME»";
+			productReference = D3E494B60FFF0C9200B647E1 /* Application.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zenilib" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* «PROJECTNAMEASXML» */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* Normal */,
+				D3E4943B0FFF0B5600B647E1 /* SCU */,
+				D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* Zenilib.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E4943C0FFF0B5600B647E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E4943D0FFF0B5600B647E1 /* Zenilib.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E4949D0FFF0C9200B647E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E4949E0FFF0C9200B647E1 /* Zenilib.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */,
+				D34A667A0FFE839B00146950 /* Camera.cpp in Sources */,
+				D34A667B0FFE839B00146950 /* Collision.cpp in Sources */,
+				D34A667C0FFE839B00146950 /* Color.cpp in Sources */,
+				D34A667D0FFE839B00146950 /* Colors.cpp in Sources */,
+				D34A667E0FFE839B00146950 /* Configurator_Video.cpp in Sources */,
+				D34A667F0FFE839B00146950 /* Console_State.cpp in Sources */,
+				D34A66800FFE839B00146950 /* Coordinate.cpp in Sources */,
+				D34A66810FFE839B00146950 /* Core.cpp in Sources */,
+				D34A66820FFE839B00146950 /* EZ2D.cpp in Sources */,
+				D34A66830FFE839B00146950 /* Fog.cpp in Sources */,
+				D34A66840FFE839B00146950 /* Font.cpp in Sources */,
+				D34A66850FFE839B00146950 /* Fonts.cpp in Sources */,
+				D34A66860FFE839B00146950 /* Game.cpp in Sources */,
+				D34A66870FFE839B00146950 /* Gamestate.cpp in Sources */,
+				D34A66880FFE839B00146950 /* Image.cpp in Sources */,
+				D34A66890FFE839B00146950 /* Light.cpp in Sources */,
+				D34A668A0FFE839B00146950 /* main.cpp in Sources */,
+				D34A668B0FFE839B00146950 /* Material.cpp in Sources */,
+				D34A668C0FFE839B00146950 /* Matrix4f.cpp in Sources */,
+				D34A668D0FFE839B00146950 /* Model.cpp in Sources */,
+				D34A668E0FFE839B00146950 /* Mutex.cpp in Sources */,
+				D34A668F0FFE839B00146950 /* Net_Primitives.cpp in Sources */,
+				D34A66900FFE839B00146950 /* Net.cpp in Sources */,
+				D34A66910FFE839B00146950 /* Quaternion.cpp in Sources */,
+				D34A66920FFE839B00146950 /* Renderable.cpp in Sources */,
+				D34A66930FFE839B00146950 /* Resource.cpp in Sources */,
+				D34A66940FFE839B00146950 /* Shader.cpp in Sources */,
+				D34A66950FFE839B00146950 /* Sound_Source_Pool.cpp in Sources */,
+				D34A66960FFE839B00146950 /* Sound_Source.cpp in Sources */,
+				D34A66970FFE839B00146950 /* Sound.cpp in Sources */,
+				D34A66980FFE839B00146950 /* Sounds.cpp in Sources */,
+				D34A66990FFE839B00146950 /* Texture.cpp in Sources */,
+				D34A669A0FFE839B00146950 /* Textures.cpp in Sources */,
+				D34A669B0FFE839B00146950 /* Thread.cpp in Sources */,
+				D34A669C0FFE839B00146950 /* Timer.cpp in Sources */,
+				D34A669D0FFE839B00146950 /* Vector3f.cpp in Sources */,
+				D34A669E0FFE839B00146950 /* Vertex_Buffer.cpp in Sources */,
+				D34A669F0FFE839B00146950 /* Vertex2f.cpp in Sources */,
+				D34A66A00FFE839B00146950 /* Vertex3f.cpp in Sources */,
+				D34A66A10FFE839B00146950 /* Video_DX9.cpp in Sources */,
+				D34A66A20FFE839B00146950 /* Video_GL.cpp in Sources */,
+				D34A66A30FFE839B00146950 /* Video.cpp in Sources */,
+				D34A66A40FFE839B00146950 /* Widget.cpp in Sources */,
+				D34A66A90FFE83A600146950 /* tinystr.cpp in Sources */,
+				D34A66AA0FFE83A600146950 /* tinyxml.cpp in Sources */,
+				D34A66AB0FFE83A600146950 /* tinyxmlerror.cpp in Sources */,
+				D34A66AC0FFE83A600146950 /* tinyxmlparser.cpp in Sources */,
+				D34A66AE0FFE83AE00146950 /* Gamestate_One.cpp in Sources */,
+				D345B07D100281C700A1B90A /* Widget_Gamestate.cpp in Sources */,
+				D36C2DAB102B949F00E71223 /* Logo.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E4943E0FFF0B5600B647E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E4943F0FFF0B5600B647E1 /* SDLMain.m in Sources */,
+				D3E494940FFF0BC900B647E1 /* zenilib.cxx in Sources */,
+				D3DB81E80FFF1AB000788B73 /* application.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E4949F0FFF0C9200B647E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3E494A00FFF0C9200B647E1 /* SDLMain.m in Sources */,
+				D3E494A20FFF0C9200B647E1 /* zenilib.cxx in Sources */,
+				D3DB81E90FFF1AD700788B73 /* Gamestate_One.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* Zenilib.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = Zenilib.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ..;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application_d;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				CONFIGURATION_BUILD_DIR = ..;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = .;
+				FRAMEWORK_SEARCH_PATHS = (
+					../Frameworks,
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+					/System/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					_DEBUG,
+					TEST_NASTY_CONDITIONS,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../include,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				PREBINDING = NO;
+				SDKROOT = "";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = .;
+				FRAMEWORK_SEARCH_PATHS = (
+					../Frameworks,
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+					/System/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					NDEBUG,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../include,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				PREBINDING = NO;
+				SDKROOT = "";
+			};
+			name = Release;
+		};
+		D3E494810FFF0B5600B647E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ..;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application_d;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		D3E494820FFF0B5600B647E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				CONFIGURATION_BUILD_DIR = ..;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D3E494B40FFF0C9200B647E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ..;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application_d;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		D3E494B50FFF0C9200B647E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				CONFIGURATION_BUILD_DIR = ..;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					./Home/Library/Frameworks,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Zenilib.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = Application;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Normal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Zenilib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3E494800FFF0B5600B647E1 /* Build configuration list for PBXNativeTarget "SCU" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3E494810FFF0B5600B647E1 /* Debug */,
+				D3E494820FFF0B5600B647E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3E494B30FFF0C9200B647E1 /* Build configuration list for PBXNativeTarget "SCU (Zenilib Only)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3E494B40FFF0C9200B647E1 /* Debug */,
+				D3E494B50FFF0C9200B647E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

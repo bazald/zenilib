@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!-- Colors to load into the Colors Database in Zenilib
+
+For each entry in Colors:
+
+  1. The name should match that which you want to use in C++
+  2. alpha, red, green, and blue should be between 0.0 and 1.0
+  3. alpha of 1.0 means completely opaque
+     alpha of 0.0 means fully transparent
+
+Keep in mind that the values given in this file by default are 
+not terribly useful.  You should choose a Color name for each 
+element in your game to enable easy skinning.
+-->
+<Colors>
+  <system_font>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </system_font>
+  <console_foreground>
+    <alpha>0.8</alpha>
+    <red>0.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </console_foreground>
+  <console_background>
+    <alpha>0.5</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </console_background>
+  <console_border>
+    <alpha>0.2</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>1.0</blue>
+  </console_border>
+  <title_bg>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </title_bg>
+  <title_text>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>1.0</blue>
+  </title_text>
+  <default_button_bg_normal>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </default_button_bg_normal>
+  <default_button_bg_clicked>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>1.0</blue>
+  </default_button_bg_clicked>
+  <default_button_bg_hovered_strayed>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>0.5</blue>
+  </default_button_bg_hovered_strayed>
+  <default_button_text_normal>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </default_button_text_normal>
+  <default_button_text_clicked>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </default_button_text_clicked>
+  <default_button_text_hovered_strayed>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </default_button_text_hovered_strayed>
+  <black>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </black>
+  <white>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>1.0</blue>
+  </white>
+  <red>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </red>
+  <green>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </green>
+  <blue>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>1.0</blue>
+  </blue>
+  <cyan>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>1.0</green>
+    <blue>1.0</blue>
+  </cyan>
+  <magenta>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>0.0</green>
+    <blue>1.0</blue>
+  </magenta>
+  <yellow>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>1.0</green>
+    <blue>0.0</blue>
+  </yellow>
+  <orange>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>0.64</green>
+    <blue>0.0</blue>
+  </orange>
+  <pink>
+    <alpha>1.0</alpha>
+    <red>1.0</red>
+    <green>0.78</green>
+    <blue>0.79</blue>
+  </pink>
+  <purple>
+    <alpha>1.0</alpha>
+    <red>0.31</red>
+    <green>0.0</green>
+    <blue>0.31</blue>
+  </purple>
+  <turquoise>
+    <alpha>1.0</alpha>
+    <red>0.16</red>
+    <green>0.88</green>
+    <blue>0.81</blue>
+  </turquoise>
+  <violet>
+    <alpha>1.0</alpha>
+    <red>0.93</red>
+    <green>0.51</green>
+    <blue>0.93</blue>
+  </violet>
+</Colors>
