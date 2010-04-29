@@ -88,7 +88,7 @@
 #ifndef ZENI_GAMESTATE_H
 #define ZENI_GAMESTATE_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_keysym.h>

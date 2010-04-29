@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Zenilib"
-	ProjectGUID="{2A690D67-1B22-41F1-A729-C46016EC83DC}"
+	ProjectGUID="{8EA94055-FDE3-46B9-B410-38190FFCFB1E}"
 	RootNamespace="Zenilib"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(PlatformName)\zenilib_d"
-			IntermediateDirectory="$(PlatformName)\zenilib_d"
+			OutputDirectory="../out/$(ConfigurationName)"
+			IntermediateDirectory="../obj/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
@@ -44,17 +44,18 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="DISABLE_DX9;DISABLE_AL;DISABLE_CG;MANUAL_GL_VSYNC_DELAY;GLEW_STATIC;WIN32;_DEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
+				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
 				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
@@ -74,6 +75,312 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="../lib/$(ProjectName)D.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="../out/$(ConfigurationName)"
+			IntermediateDirectory="../obj/$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="DISABLE_DX9;DISABLE_AL;DISABLE_CG;MANUAL_GL_VSYNC_DELAY;GLEW_STATIC;WIN32;NDEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN"
+				StringPooling="true"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="1"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4005;4297;4312;4505;"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="../lib/$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug SCU|Win32"
+			OutputDirectory="../out/$(ConfigurationName)"
+			IntermediateDirectory="../obj/$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="0"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="DISABLE_DX9;DISABLE_AL;DISABLE_CG;MANUAL_GL_VSYNC_DELAY;GLEW_STATIC;WIN32;_DEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;TEST_NASTY_CONDITIONS"
+				KeepComments="false"
+				StringPooling="true"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="3"
+				SmallerTypeCheck="true"
+				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="true"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="1"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4005;4312;4505;"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="../lib/$(ProjectName)D.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release SCU|Win32"
+			OutputDirectory="../out/$(ConfigurationName)"
+			IntermediateDirectory="../obj/$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="false"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="DISABLE_DX9;DISABLE_AL;DISABLE_CG;MANUAL_GL_VSYNC_DELAY;GLEW_STATIC;WIN32;NDEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN"
+				StringPooling="true"
+				MinimalRebuild="false"
+				SmallerTypeCheck="false"
+				RuntimeLibrary="2"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="1"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4005;4297;4312;4505;"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="../lib/$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Final Release SCU|Win32"
+			OutputDirectory="../out/$(ConfigurationName)"
+			IntermediateDirectory="../obj/$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="DISABLE_DX9;DISABLE_AL;DISABLE_CG;FINAL_RELEASE;MANUAL_GL_VSYNC_DELAY;GLEW_STATIC;WIN32;NDEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN"
+				StringPooling="true"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="1"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
+				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4005;4297;4312;4505;"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="../lib/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -117,7 +424,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
@@ -135,81 +441,6 @@
 				WarnAsError="false"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4005;4312;4505;"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)\zenilib"
-			IntermediateDirectory="$(PlatformName)\zenilib"
-			ConfigurationType="4"
-			CharacterSet="0"
-			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
-				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4297;4312;4505;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -266,7 +497,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -286,78 +516,6 @@
 				WarnAsError="false"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4005;4297;4312;4505;"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug SCU|Win32"
-			OutputDirectory="$(PlatformName)\zenilib_d"
-			IntermediateDirectory="$(PlatformName)\zenilib_d"
-			ConfigurationType="4"
-			CharacterSet="0"
-			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
-				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
-				KeepComments="false"
-				MinimalRebuild="false"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
-				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4005;4312;4505;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -413,7 +571,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS"
@@ -431,81 +588,6 @@
 				WarnAsError="false"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4005;4312;4505;"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release SCU|Win32"
-			OutputDirectory="$(PlatformName)\zenilib"
-			IntermediateDirectory="$(PlatformName)\zenilib"
-			ConfigurationType="4"
-			CharacterSet="0"
-			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\Zenilib_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\zenilib.pch"
-				ProgramDataBaseFileName="$(IntDir)\zenilib.pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4297;4312;4505;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -562,7 +644,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -632,7 +713,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -640,7 +721,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -668,7 +757,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -676,7 +765,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -704,7 +801,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -712,7 +809,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -740,7 +845,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -748,7 +853,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -776,14 +889,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -792,7 +897,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|x64"
+					Name="Final Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -812,14 +917,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -828,7 +925,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|x64"
+					Name="Final Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -848,7 +945,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -856,7 +953,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -884,7 +989,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -892,7 +997,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -920,7 +1033,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -928,7 +1041,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -956,7 +1077,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -964,7 +1085,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -992,7 +1121,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1000,7 +1129,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1028,7 +1165,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1036,7 +1173,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1064,7 +1209,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1072,7 +1217,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1100,7 +1253,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1108,7 +1261,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1136,7 +1297,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1144,7 +1305,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1172,7 +1341,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1180,7 +1349,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1208,14 +1385,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -1224,7 +1393,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|x64"
+					Name="Final Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1244,7 +1413,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1252,7 +1421,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1280,7 +1457,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1288,7 +1465,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1316,7 +1501,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1324,7 +1509,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1352,7 +1545,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1360,7 +1553,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1388,7 +1589,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1396,7 +1597,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1424,7 +1633,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1432,7 +1641,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1460,7 +1677,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1468,7 +1685,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1496,7 +1721,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1504,7 +1729,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1532,7 +1765,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1540,7 +1773,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1568,7 +1809,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1576,7 +1817,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1604,7 +1853,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1612,7 +1861,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1640,7 +1897,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1648,7 +1905,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1676,7 +1941,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1684,7 +1949,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1712,7 +1985,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1720,7 +1993,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1748,7 +2029,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1756,7 +2037,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1784,7 +2073,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1792,7 +2081,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1820,7 +2117,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1828,7 +2125,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1856,7 +2161,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1864,7 +2169,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1892,7 +2205,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1900,7 +2213,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1928,7 +2249,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1936,7 +2257,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1964,7 +2293,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1972,7 +2301,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2000,7 +2337,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2008,7 +2345,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2036,7 +2381,43 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Debug SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Zeni\Vector2f.cpp"
+				>
+				<FileConfiguration
+					Name="Debug SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2052,7 +2433,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|x64"
+					Name="Final Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2072,7 +2453,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2080,7 +2461,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2108,7 +2497,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2116,7 +2505,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2144,7 +2541,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2152,7 +2549,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2180,7 +2585,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2188,7 +2593,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2216,7 +2629,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2224,7 +2637,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2252,7 +2673,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2260,7 +2681,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2288,7 +2717,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2296,7 +2725,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2324,7 +2761,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2332,7 +2769,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Final Release SCU|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2360,14 +2805,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -2376,7 +2813,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|x64"
+					Name="Final Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2428,6 +2865,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Database.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\Error.h"
 				>
 			</File>
 			<File
@@ -2484,6 +2925,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Zeni\Line_Segment.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Zeni\LineStrip.h"
 				>
 			</File>
 			<File
@@ -2583,6 +3028,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Vector2f.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Vector3f.h"
 				>
 			</File>
@@ -2676,6 +3125,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\LineStrip.hxx"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Material.hxx"
 				>
 			</File>
@@ -2744,6 +3197,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\Zeni\Vector2f.hxx"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Zeni\Vector3f.hxx"
 				>
 			</File>
@@ -2795,7 +3252,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|x64"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -2803,7 +3260,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool

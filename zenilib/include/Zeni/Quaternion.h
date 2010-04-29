@@ -49,21 +49,26 @@
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   struct Quaternion {
-    inline Quaternion(const bool &degenerate_ = false);
-    Quaternion(const float &time, const Vector3f &space, const bool &degenerate_ = false); ///< For advanced use only
-    Quaternion(const float &yaw, const float &pitch, const float &roll, const bool &degenerate_ = false);
-    Quaternion(const Quaternion &rhs, const bool &degenerate_ = false);
+    inline Quaternion();
+    Quaternion(const float &time, const Vector3f &space); ///< For advanced use only
+    Quaternion(const float &yaw, const float &pitch, const float &roll);
+    Quaternion(const Quaternion &rhs);
+
+	inline bool operator==(const Quaternion &rhs) const; ///< A simple equality test.
+    inline bool operator!=(const Quaternion &rhs) const; ///< inverse of ==
 
     /// Create a Quaternion from an Axis/Angle pair
     static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
     /// Create a Quaternion from a Forward/Up Vector3f pair
     static Quaternion Forward_Up(const Vector3f &destination_forward,
                                  const Vector3f &destination_up,
-                                 const Vector3f &default_forward,
-                                 const Vector3f &default_up);
+                                 const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
+                                 const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum
@@ -83,7 +88,7 @@ namespace Zeni {
 
     // Vector Scalar Multiplication I of II
     inline Quaternion operator*(const float &rhs) const; ///< Get the scalar multiple
-    inline Quaternion operator/(const float &rhs) const; ///< Get the scalar... something
+    inline Quaternion operator/(const float &rhs) const; ///< Get the scalar quotient
     inline Quaternion & operator*=(const float &rhs); ///< Set equal to the scalar multiple
     inline Quaternion & operator/=(const float &rhs); ///< Set equal to the scalar something
     inline Quaternion operator-() const; ///< Get the negation
@@ -110,19 +115,19 @@ namespace Zeni {
     inline float & operator[](const int &index); ///< Get 'index'
 
     float time;
-	  Vector3f space;
-
-    bool degenerate;
+    Vector3f space;
   };
 
   inline Quaternion operator*(const float &lhs, const Quaternion &rhs) { ///< Get the scalar multiple
     return rhs * lhs;
   }
 
-  inline Quaternion operator/(const float &lhs, const Quaternion &rhs) { ///< Get the scalar... something
+  inline Quaternion operator/(const float &lhs, const Quaternion &rhs) { ///< Get the scalar quotient
     return rhs * lhs;
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

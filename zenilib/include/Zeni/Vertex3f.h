@@ -59,6 +59,7 @@
 #include <Zeni/Vector3f.h>
 
 #include <string>
+#include <iostream>
 
 namespace Zeni {
 
@@ -80,6 +81,9 @@ namespace Zeni {
 
     Point3f position;
     Point3f normal;
+	friend std::ostream& operator <<(std::ostream &os,const Vertex3f &v);
+
+
   };
 
   class Vertex3f_Color : public Renderable, public Vertex3f {
@@ -91,7 +95,7 @@ namespace Zeni {
     Vertex3f_Color(const Point3f &position, const Color &color);
     Vertex3f_Color(const Point3f &position, const Uint32 &argb);
 
-    Vertex3f * interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs) const; ///< Get a Vertex3f_Color between two vertices; rhs must be a Vertex3f_Color
+    inline void interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs); ///< Get a Vertex3f_Color between two vertices; rhs must be a Vertex3f_Color
 
     inline const Uint32 & get_color() const; ///< Get the current Color
     inline void set_color(const Color &color); ///< Set the current Color
@@ -111,6 +115,7 @@ namespace Zeni {
 #endif
 
   private:
+  public:
     Uint32 m_argb;
   };
 

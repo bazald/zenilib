@@ -113,6 +113,7 @@ namespace Zeni {
 #endif
 
   private:
+  public:
     Uint32 m_argb;
   };
 
@@ -141,6 +142,7 @@ namespace Zeni {
 #endif
 
     Point2f texture_coordinate;
+
   };
 
 }

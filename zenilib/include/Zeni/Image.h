@@ -45,7 +45,7 @@
 
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 
 #ifdef _MACOSX
 #include <SDL_image/SDL_image.h>

@@ -48,6 +48,9 @@
 
 #include <Zeni/Sound_Source.h>
 
+
+#include <vector>
+
 namespace Zeni {
 
   class Sound_Source_Pool {

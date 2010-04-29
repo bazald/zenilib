@@ -47,6 +47,7 @@
 
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
+#include <Zeni/Error.h>
 #include <Zeni/IV.h>
 
 #ifdef _MACOSX

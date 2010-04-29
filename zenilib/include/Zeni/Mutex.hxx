@@ -30,6 +30,8 @@
 #define ZENI_MUTEX_HXX
 
 #include <Zeni/Mutex.h>
+
+#include <Zeni/Core.h>
 #include <cassert>
 
 namespace Zeni {

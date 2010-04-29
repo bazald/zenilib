@@ -113,8 +113,8 @@ namespace Zeni {
 
       vr.set_2d(std::make_pair(Point2f(), Point2f(800.0f, 600.0f)));
 
-      Color color = get_Colors()["title_bg"];
-      color.a = 0.5f;
+      Color color( 0x00000000 );// = get_Colors()["title_bg"];
+      color.a = 0.75f;
       Quadrilateral<Vertex2f_Color> quad(Vertex2f_Color(Point2f(), color),
                                          Vertex2f_Color(Point2f(0.0f, 600.0f), color),
                                          Vertex2f_Color(Point2f(800.0f, 600.0f), color),

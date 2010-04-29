@@ -50,6 +50,7 @@
 #include <Zeni/Image.h>
 #include <Zeni/Light.h>
 #include <Zeni/Line_Segment.h>
+#include <Zeni/LineStrip.h>
 #include <Zeni/Logo.h>
 #include <Zeni/Material.h>
 #include <Zeni/Matrix4f.h>
@@ -73,6 +74,7 @@
 #include <Zeni/Timer.h>
 #include <Zeni/Title_State.h>
 #include <Zeni/Triangle.h>
+#include <Zeni/Vector2f.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Vertex3f.h>
@@ -96,6 +98,7 @@
 #include <Zeni/Image.hxx>
 #include <Zeni/Light.hxx>
 #include <Zeni/Line_Segment.hxx>
+#include <Zeni/LineStrip.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Matrix4f.hxx>
 #include <Zeni/Model.hxx>
@@ -113,6 +116,7 @@
 #include <Zeni/Textures.hxx>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Triangle.hxx>
+#include <Zeni/Vector2f.hxx>
 #include <Zeni/Vector3f.hxx>
 #include <Zeni/Vertex2f.hxx>
 #include <Zeni/Vertex3f.hxx>

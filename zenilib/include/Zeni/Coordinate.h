@@ -83,6 +83,7 @@
 #ifndef ZENI_COORDINATE_H
 #define ZENI_COORDINATE_H
 
+#include <Zeni/Vector2f.h>
 #include <Zeni/Vector3f.h>
 
 #include <SDL/SDL_stdinc.h>
@@ -90,9 +91,9 @@
 namespace Zeni {
 
   struct Point2i;
-  struct Point2f;
   struct Point3i;
-  struct Point3f;
+  typedef Vector2f Point2f;
+  typedef Vector3f Point3f;
 
   struct Point2i {
     inline Point2i();
@@ -105,17 +106,6 @@ namespace Zeni {
     static const Sint32 z;
   };
 
-  struct Point2f {
-    inline Point2f();
-    inline Point2f(const float &x_, const float &y_);
-    inline explicit Point2f(const Point3f &rhs); ///< z in rhs is ignored.
-
-    Point2f interpolate_to(const float &rhs_part, const Point2f &rhs) const; ///< Get a point inbetween this point and another point of the same type.
-
-    float x, y;
-    static const float z;
-  };
-
   struct Point3i {
     inline Point3i();
     inline Point3i(const int &x_, const int &y_, const int &z_);
@@ -124,26 +114,6 @@ namespace Zeni {
     Point3i interpolate_to(const float &rhs_part, const Point3i &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
     Sint32 x, y, z;
-  };
-
-  struct Point3f {
-    inline Point3f();
-    inline Point3f(const float &x_, const float &y_, const float &z_);
-    inline explicit Point3f(const Point2f &rhs); ///< z is set to 0.0f
-    inline Point3f(const Vector3f &rhs);
-
-    Point3f interpolate_to(const float &rhs_part, const Point3f &rhs) const;
-
-    // Subtraction
-    inline Vector3f operator-(const Point3f &rhs) const;
-
-    // Vector3f addition
-    inline Point3f operator+(const Vector3f &rhs) const;
-    inline Point3f operator-(const Vector3f &rhs) const;
-    inline Point3f & operator+=(const Vector3f &rhs);
-    inline Point3f & operator-=(const Vector3f &rhs);
-
-    float x, y, z;
   };
 
 }

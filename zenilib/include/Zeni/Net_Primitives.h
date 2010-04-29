@@ -177,7 +177,6 @@ namespace Zeni {
   std::ostream & serialize(std::ostream &os, const Point2i &value);
   std::ostream & serialize(std::ostream &os, const Point2f &value);
   std::ostream & serialize(std::ostream &os, const Point3i &value);
-  std::ostream & serialize(std::ostream &os, const Point3f &value);
   std::ostream & serialize(std::ostream &os, const Vector3f &value);
   std::ostream & serialize(std::ostream &os, const Quaternion &value);
   std::ostream & serialize(std::ostream &os, const IPaddress &address);
@@ -197,7 +196,6 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, Point2i &value);
   std::istream & unserialize(std::istream &is, Point2f &value);
   std::istream & unserialize(std::istream &is, Point3i &value);
-  std::istream & unserialize(std::istream &is, Point3f &value);
   std::istream & unserialize(std::istream &is, Vector3f &value);
   std::istream & unserialize(std::istream &is, Quaternion &value);
   std::istream & unserialize(std::istream &is, IPaddress &address);

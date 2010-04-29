@@ -74,24 +74,16 @@ namespace Zeni {
     return m_world_to_screen * world_coord;
   }
 
-  Point3f Projector2D::project(const Point3f &world_coord) const {
-    return project(Vector3f(world_coord));
-  }
-
   Point2f Projector2D::project(const Point2f &world_coord) const {
-    return Point2f(project(Vector3f(Point3f(world_coord))));
+    return Point2f(project(Vector3f(world_coord)));
   }
 
   Vector3f Projector2D::unproject(const Vector3f &screen_coord) const {
     return m_screen_to_world * screen_coord;
   }
 
-  Point3f Projector2D::unproject(const Point3f &screen_coord) const {
-    return unproject(Vector3f(screen_coord));
-  }
-
   Point2f Projector2D::unproject(const Point2f &screen_coord) const {
-    return Point2f(unproject(Vector3f(Point3f(screen_coord))));
+    return Point2f(unproject(Vector3f(screen_coord)));
   }
 
   void Projector2D::init(
@@ -120,17 +112,9 @@ namespace Zeni {
     return (((m_world_to_camera * world_coord).divide_by(Vector3f(scale, scale, 1.0f)) - m_uln).divide_by(m_uln2lrf)).multiply_by(size()) + offset();
   }
 
-  Point3f Projector3D::project(const Point3f &world_coord) const {
-    return project(Vector3f(world_coord));
-  }
-
   Vector3f Projector3D::unproject(const Vector3f &screen_coord) const {
     const float scale = screen_coord.k * m_near2far + 1.0f - screen_coord.k;
     return m_camera_to_world * ((screen_coord - offset()).divide_by(size()).multiply_by(m_uln2lrf) + m_uln).multiply_by(Vector3f(scale, scale, 1.0f));
-  }
-
-  Point3f Projector3D::unproject(const Point3f &screen_coord) const {
-    return unproject(Vector3f(screen_coord));
   }
 
   void Projector3D::init(

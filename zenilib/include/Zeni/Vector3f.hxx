@@ -32,7 +32,7 @@
 #include <Zeni/Vector3f.h>
 
 // HXXed below
-#include <Zeni/Coordinate.h>
+#include <Zeni/Vector2f.h>
 
 // Not HXXed
 #include <cassert>
@@ -40,45 +40,52 @@
 
 namespace Zeni {
 
-  Vector3f::Vector3f(const bool &degenerate_)
-    : i(0.0f), j(0.0f), k(0.0f), degenerate(degenerate_)
+  Vector3f::Vector3f()
+    : i(0.0f), j(0.0f), k(0.0f)
   {
   }
 
-  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_, const bool &degenerate_)
-    : i(i_), j(j_), k(k_), degenerate(degenerate_)
+  Vector3f::Vector3f(const float &i_, const float &j_, const float &k_)
+    : i(i_), j(j_), k(k_)
   {
   }
 
-  Vector3f::Vector3f(const Vector3f &rhs, const bool &degenerate_)
-    : i(rhs.i), j(rhs.j), k(rhs.k), degenerate(rhs.degenerate || degenerate_)
+  Vector3f::Vector3f(const Vector3f &rhs)
+    : i(rhs.i), j(rhs.j), k(rhs.k)
   {
   }
 
-  Vector3f::Vector3f(const Point3f &rhs)
-    : i(rhs.x), j(rhs.y), k(rhs.z)
-  {
+  Vector3f::Vector3f(const Vector2f &rhs)    
+    : i(rhs.x), j(rhs.y), k(0.0f)  
+  {  
+  }  
+
+  bool Vector3f::operator==(const Vector3f &rhs) const {
+    return i == rhs.i &&
+           j == rhs.j &&
+           k == rhs.k;
+  }
+
+  bool Vector3f::operator!=(const Vector3f &rhs) const {
+    return !(*this == rhs);
   }
 
   Vector3f Vector3f::operator+(const Vector3f &rhs) const {
     return Vector3f(i + rhs.i,
       j + rhs.j,
-      k + rhs.k,
-      degenerate || rhs.degenerate);
+      k + rhs.k);
   }
 
   Vector3f Vector3f::operator-(const Vector3f &rhs) const {
     return Vector3f(i - rhs.i,
       j - rhs.j,
-      k - rhs.k,
-      degenerate || rhs.degenerate);
+      k - rhs.k);
   }
 
   Vector3f & Vector3f::operator+=(const Vector3f &rhs) {
     i += rhs.i;
     j += rhs.j;
     k += rhs.k;
-    degenerate |= rhs.degenerate;
     return *this;
   }
 
@@ -86,7 +93,6 @@ namespace Zeni {
     i -= rhs.i;
     j -= rhs.j;
     k -= rhs.k;
-    degenerate |= rhs.degenerate;
     return *this;
   }
 
@@ -100,21 +106,19 @@ namespace Zeni {
   Vector3f Vector3f::operator%(const Vector3f &rhs) const {
     return Vector3f(j * rhs.k - rhs.j *k,
       rhs.i *k - i * rhs.k,
-      i * rhs.j - rhs.i *j,
-      degenerate || rhs.degenerate);
+      i * rhs.j - rhs.i *j);
   }
 
   Vector3f & Vector3f::operator%=(const Vector3f &rhs) {
-    degenerate |= rhs.degenerate;
     return *this = *this % rhs;
   }
 
   Vector3f Vector3f::operator*(const float &rhs) const {
-    return Vector3f(i * rhs, j * rhs, k * rhs, degenerate);
+    return Vector3f(i * rhs, j * rhs, k * rhs);
   }
 
   Vector3f Vector3f::operator/(const float &rhs) const {
-    return Vector3f(i / rhs, j / rhs, k / rhs, degenerate);
+    return Vector3f(i / rhs, j / rhs, k / rhs);
   }
 
   Vector3f & Vector3f::operator*=(const float &rhs) {
@@ -132,7 +136,7 @@ namespace Zeni {
   }
 
   Vector3f Vector3f::operator-() const {
-    return *this * -1;
+    return *this * -1.0f;
   }
 
   // Vector Scalar Multiplication Part II of II
@@ -173,19 +177,23 @@ namespace Zeni {
   }
 
   Vector3f Vector3f::multiply_by(const Vector3f &rhs) const {
-    return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k, degenerate || rhs.degenerate);
+    return Vector3f(i*rhs.i, j*rhs.j, k*rhs.k);
   }
 
   Vector3f Vector3f::divide_by(const Vector3f &rhs) const {
-    return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k, degenerate || rhs.degenerate);
+    return Vector3f(i/rhs.i, j/rhs.j, k/rhs.k);
+  }
+
+  Vector3f Vector3f::interpolate_to(const float &rhs_part, const Vector3f &rhs) const {
+    const float lhs_part = 1.0f - rhs_part;
+    return lhs_part * *this + rhs_part * rhs;
   }
 
   float Vector3f::angle_between(const Vector3f &rhs) const {
-    const float a = magnitude();
-    const float b = rhs.magnitude();
-    const float c = (rhs - *this).magnitude();
-
-    return acos((a * a + b * b - c * c) / (2 * a * b));
+    float val = normalized() * rhs.normalized();
+    val = std::min( val, 1.0f );
+    val = std::max( val, -1.0f );
+    return acosf( val );
   }
   
   const float & Vector3f::operator[](const int &index) const {
@@ -202,6 +210,6 @@ namespace Zeni {
 
 }
 
-#include <Zeni/Coordinate.hxx>
+#include <Zeni/Vector2f.hxx>
 
 #endif

@@ -82,7 +82,7 @@ namespace Zeni {
     static void pause_all(); ///< Pause all Chronometer<TIME> objects
     static void unpause_all(); ///< Unpause all Chronometer<TIME> objects
 
-  private:
+  //private:
     static std::set<Chronometer<TIME> *> & get_chronometers();
     static std::set<Chronometer<TIME> *> & get_paused();
     static bool g_are_paused;

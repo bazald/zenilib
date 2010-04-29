@@ -31,7 +31,6 @@
 
 // HXXed below
 #include <Zeni/Gamestate.h>
-#include <Zeni/Mutex.h>
 
 #include <Zeni/Game.h>
 
@@ -42,6 +41,13 @@ namespace Zeni {
       throw Zero_Gamestate();
 
     return m_states.top();
+  }
+
+  Gamestate Game::get_bottom() {
+    if(m_states.empty())
+      throw Zero_Gamestate();
+
+    return *m_base_state;
   }
 
 #ifndef NDEBUG
@@ -65,6 +71,9 @@ namespace Zeni {
   void Game::push_state(const Gamestate &state) {
     m_states.push(state);
 
+    if( m_states.size() == 1 )
+      m_base_state = &m_states.top();
+
 #ifndef NDEBUG
     if(m_console_active)
       get_console().set_child(m_states.top());
@@ -82,6 +91,9 @@ namespace Zeni {
 
       gs = m_states.top();
       m_states.pop();
+
+      if( m_states.empty() )
+        m_base_state = NULL;
 
 #ifndef NDEBUG
       if(m_console_active) {
@@ -219,6 +231,5 @@ namespace Zeni {
 }
 
 #include <Zeni/Gamestate.hxx>
-#include <Zeni/Mutex.hxx>
 
 #endif

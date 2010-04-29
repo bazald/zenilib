@@ -112,8 +112,8 @@
 #define ZENI_SPRINTF_BUFFER_SIZE (64)
 
 // Texture.cpp
-#define ZENI_MAX_TEXTURE_WIDTH (2048)
-#define ZENI_MAX_TEXTURE_HEIGHT (2048)
+#define ZENI_MAX_TEXTURE_WIDTH (4096)
+#define ZENI_MAX_TEXTURE_HEIGHT (4096)
 
 // Thread.cpp
 #define NO_ERROR_STATUS    (1)
@@ -134,7 +134,7 @@
 
 // Miscellaney
 #define END_OF_TIME (42)
-#define INFINTESSIMAL(x) (fabs(x) < 0.001f)
+#define INFINTESSIMAL(x) (fabs(x) < 0.000001f)
 #define INFINTESSIMAL_SQUARED(x) ((x) < 0.0001f)
 
 #endif

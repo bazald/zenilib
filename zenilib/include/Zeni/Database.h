@@ -43,7 +43,7 @@
 #ifndef ZENI_DATABASE_H
 #define ZENI_DATABASE_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/XML.h>
 #include <list>

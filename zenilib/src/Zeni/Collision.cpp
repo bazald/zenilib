@@ -35,11 +35,6 @@
 
 #include <Zeni/Global.h>
 
-using namespace Zeni;
-using std::make_pair;
-using std::max;
-using std::min;
-
 namespace Zeni_Collision {
 
   /* Begin Helpers and Templates
@@ -49,11 +44,11 @@ namespace Zeni_Collision {
    */
 
   inline std::pair<float, float> unpoof(const std::pair<float, float> &lhs, const float &radii) {
-    return make_pair(max(0.0f, lhs.first - radii), lhs.second);
+    return std::make_pair(std::max(0.0f, lhs.first - radii), lhs.second);
   }
 
   inline float unpoof(const float &lhs, const float &radii) {
-    return max(0.0f, lhs - radii);
+    return std::max(0.0f, lhs - radii);
   }
 
   inline void absolute_float_unclamp(float &value, const float &new_value) {
@@ -79,44 +74,44 @@ namespace Zeni_Collision {
   }
 
   template <typename LINE_TYPE>
-  std::pair<float, float> nearest_point(const LINE_TYPE &lhs, const Point3f &rhs) {
-    const Vector3f w  = rhs - lhs.get_end_point_a();
-    const Vector3f &u = lhs.get_direction();
+  std::pair<float, float> nearest_point(const LINE_TYPE &lhs, const Zeni::Point3f &rhs) {
+    const Zeni::Vector3f w  = rhs - lhs.get_end_point_a();
+    const Zeni::Vector3f &u = lhs.get_direction();
 
     const float &uu = lhs.get_direction2();
     const float uw = u * w;
 
-    Vector3f closest_point = lhs.get_end_point_a() - rhs;
+    Zeni::Vector3f closest_point = lhs.get_end_point_a() - rhs;
 
     if(LINE_TYPE::has_lower_bound() && uw < 0.0f)
-      return make_pair(closest_point.magnitude(), 0.0f);
+      return std::make_pair(closest_point.magnitude(), 0.0f);
     else if(LINE_TYPE::has_upper_bound() && uw > uu)
-      return make_pair((closest_point + u).magnitude(), 1.0f);
+      return std::make_pair((closest_point + u).magnitude(), 1.0f);
 
     const float t = uw / uu;
-    return make_pair((closest_point + t * u).magnitude(), t);
+    return std::make_pair((closest_point + t * u).magnitude(), t);
   }
 
   template <typename LINE_TYPE>
   std::pair<float, float> nearest_point(const LINE_TYPE &lhs, const Plane &rhs) {
-    const Vector3f w = rhs.get_point() - lhs.get_end_point_a();
-    const Vector3f &u = lhs.get_direction();
-    const Vector3f &n = rhs.get_normal();
+    const Zeni::Vector3f w = rhs.get_point() - lhs.get_end_point_a();
+    const Zeni::Vector3f &u = lhs.get_direction();
+    const Zeni::Vector3f &n = rhs.get_normal();
 
     const float t = (n * w) / (n * u);
     if(LINE_TYPE::has_lower_bound() && t < 0.0f)
-      return make_pair(rhs.shortest_distance(lhs.get_end_point_a()), 0.0f);
+      return std::make_pair(rhs.shortest_distance(lhs.get_end_point_a()), 0.0f);
     else if(LINE_TYPE::has_upper_bound() && t > 1.0f)
-      return make_pair(rhs.shortest_distance(lhs.get_end_point_a() + u), 1.0f);
+      return std::make_pair(rhs.shortest_distance(lhs.get_end_point_a() + u), 1.0f);
 
-    return make_pair(rhs.shortest_distance(lhs.get_end_point_a() + t * u), t);
+    return std::make_pair(rhs.shortest_distance(lhs.get_end_point_a() + t * u), t);
   }
 
   template <typename LINE_TYPE1, typename LINE_TYPE2>
   std::pair<float, float> nearest_point(const LINE_TYPE1 &lhs, const LINE_TYPE2 &rhs) {
-    const Vector3f w = lhs.get_end_point_a() - rhs.get_end_point_a();
-    const Vector3f &u = lhs.get_direction();
-    const Vector3f &v = rhs.get_direction();
+    const Zeni::Vector3f w = lhs.get_end_point_a() - rhs.get_end_point_a();
+    const Zeni::Vector3f &u = lhs.get_direction();
+    const Zeni::Vector3f &v = rhs.get_direction();
     
     const float &uu = lhs.get_direction2();
     const float uv = u * v;
@@ -151,7 +146,7 @@ namespace Zeni_Collision {
       tc_denom = vv;
     }
     
-    Vector3f min_dist(w);
+    Zeni::Vector3f min_dist(w);
     float final_numer;
     
     if(LINE_TYPE2::has_lower_bound() && tc_numer < 0.0f)
@@ -162,29 +157,29 @@ namespace Zeni_Collision {
     }
     else {
       const float t = sc_numer / sc_denom;
-      return make_pair((min_dist + t * u - (tc_numer / tc_denom) * v).magnitude(), t);
+      return std::make_pair((min_dist + t * u - (tc_numer / tc_denom) * v).magnitude(), t);
     }
 
     if(LINE_TYPE1::has_lower_bound() && final_numer < 0.0f)
-      return make_pair(min_dist.magnitude(), 0.0f);
+      return std::make_pair(min_dist.magnitude(), 0.0f);
     else if(LINE_TYPE1::has_upper_bound() && final_numer > uu)
-      return make_pair((min_dist + u).magnitude(), 1.0f);
+      return std::make_pair((min_dist + u).magnitude(), 1.0f);
 
     const float t = final_numer / uu;
-    return make_pair((min_dist + t * u).magnitude(), t);
+    return std::make_pair((min_dist + t * u).magnitude(), t);
   }
 
   template <typename LINE_TYPE>
   std::pair<float, float> nearest_point(const LINE_TYPE &lhs, const Parallelepiped &rhs) {
-    const Vector3f end_point_a = rhs.get_convert_to() * (lhs.get_end_point_a() - rhs.get_point());
-    const Vector3f end_point_b = rhs.get_convert_to() * (lhs.get_end_point_b() - rhs.get_point());
-    const Vector3f direction = end_point_b - end_point_a;
+    const Zeni::Vector3f end_point_a = rhs.get_convert_to() * (lhs.get_end_point_a() - rhs.get_point());
+    const Zeni::Vector3f end_point_b = rhs.get_convert_to() * (lhs.get_end_point_b() - rhs.get_point());
+    const Zeni::Vector3f direction = end_point_b - end_point_a;
 
-    const Vector3f tmin = -end_point_a.divide_by(direction);
-    const Vector3f tmax = (Vector3f(1.0f, 1.0f, 1.0f) - end_point_a).divide_by(direction);
+    const Zeni::Vector3f tmin = -end_point_a.divide_by(direction);
+    const Zeni::Vector3f tmax = (Zeni::Vector3f(1.0f, 1.0f, 1.0f) - end_point_a).divide_by(direction);
 
-    const Vector3f real_min(min(tmin.i, tmax.i), min(tmin.j, tmax.j), min(tmin.k, tmax.k));
-    const Vector3f real_max(max(tmin.i, tmax.i), max(tmin.j, tmax.j), max(tmin.k, tmax.k));
+    const Zeni::Vector3f real_min(std::min(tmin.i, tmax.i), std::min(tmin.j, tmax.j), std::min(tmin.k, tmax.k));
+    const Zeni::Vector3f real_max(std::max(tmin.i, tmax.i), std::max(tmin.j, tmax.j), std::max(tmin.k, tmax.k));
 
     /** Begin Degenerative (Axis Aligned) Safe Code **/
 
@@ -199,11 +194,11 @@ namespace Zeni_Collision {
       ++valid_axes;
     }
     else if(end_point_a.i < 0.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i, 0.0f, 0.0f));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(end_point_a.i, 0.0f, 0.0f));
       invalid_axes_distance2 += diff * diff;
     }
     else if(end_point_a.i > 1.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(end_point_a.i - 1.0f, 0.0f, 0.0f));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(end_point_a.i - 1.0f, 0.0f, 0.0f));
       invalid_axes_distance2 += diff * diff;
     }
 
@@ -213,11 +208,11 @@ namespace Zeni_Collision {
       ++valid_axes;
     }
     else if(end_point_a.j < 0.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j, 0.0f));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(0.0f, end_point_a.j, 0.0f));
       invalid_axes_distance2 += diff * diff;
     }
     else if(end_point_a.j > 1.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, end_point_a.j - 1.0f, 0.0f));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(0.0f, end_point_a.j - 1.0f, 0.0f));
       invalid_axes_distance2 += diff * diff;
     }
 
@@ -227,16 +222,16 @@ namespace Zeni_Collision {
       ++valid_axes;
     }
     else if(end_point_a.k < 0.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(0.0f, 0.0f, end_point_a.k));
       invalid_axes_distance2 += diff * diff;
     }
     else if(end_point_a.k > 1.0f) {
-      const Vector3f diff = (rhs.get_convert_from() * Vector3f(0.0f, 0.0f, end_point_a.k - 1.0f));
+      const Zeni::Vector3f diff = (rhs.get_convert_from() * Zeni::Vector3f(0.0f, 0.0f, end_point_a.k - 1.0f));
       invalid_axes_distance2 += diff * diff;
     }
 
     if(!valid_axes)
-      return make_pair(invalid_axes_distance2, 0.0f);
+      return std::make_pair(invalid_axes_distance2, 0.0f);
 
     /** End Degenerative (Axis Aligned) Safe Code **/
 
@@ -251,34 +246,39 @@ namespace Zeni_Collision {
       max_min = 1.0f;
 
     if(min_max > max_min)
-      return make_pair(sqrt(invalid_axes_distance2), max_min);
+      return std::make_pair(sqrt(invalid_axes_distance2), max_min);
 
-    Point3f closest_point = end_point_a + min_max * direction;
+    Zeni::Point3f closest_point = end_point_a + min_max * direction;
     simple_clamp(closest_point.x, 0.0f, 1.0f);
     simple_clamp(closest_point.y, 0.0f, 1.0f);
     simple_clamp(closest_point.z, 0.0f, 1.0f);
-    closest_point = rhs.get_point() + rhs.get_convert_from() * Vector3f(closest_point);
+    closest_point = rhs.get_point() + rhs.get_convert_from() * Zeni::Vector3f(closest_point);
 
-    const Vector3f valid_axes_distance = lhs.get_end_point_a() + min_max * lhs.get_direction() - closest_point;
+    const Zeni::Vector3f valid_axes_distance = lhs.get_end_point_a() + min_max * lhs.get_direction() - closest_point;
     const float valid_axes_distance2 = valid_axes_distance * valid_axes_distance;
     const float total_distance = sqrt(invalid_axes_distance2 + valid_axes_distance2);
 
-    return make_pair(total_distance, min_max);
+    return std::make_pair(total_distance, min_max);
   }
 
   /* End Helpers and Templates
    */
 
-  Sphere::Sphere(const Point3f &center_, const float &radius_)
+  Sphere::Sphere(const Zeni::Point3f &center_, const float &radius_)
     : center(center_),
     radius(radius_)
   {
   }
 
+  void Sphere::set(const Zeni::Point3f &center_, const float &radius_) {
+    center = center_;
+    radius = radius_;
+  }
+
   float Sphere::shortest_distance(const Sphere &rhs) const {
     return unpoof((center - rhs.center).magnitude(), radius + rhs.radius);
   }
-  float Sphere::shortest_distance(const Point3f &rhs) const {
+  float Sphere::shortest_distance(const Zeni::Point3f &rhs) const {
     return unpoof((center - rhs).magnitude(), radius);
   }
 
@@ -289,27 +289,19 @@ namespace Zeni_Collision {
   }
 
   float Plane::shortest_distance(const Plane &rhs) const {
-    const Vector3f line_normal = normal % rhs.normal;
+    const Zeni::Vector3f line_normal = normal % rhs.normal;
     if(line_normal.magnitude() < ZENI_COLLISION_EPSILON)
       return shortest_distance(rhs.point);
 
     return 0.0f;
   }
 
-  float Plane::shortest_distance(const Point3f &rhs) const {
+  float Plane::shortest_distance(const Zeni::Point3f &rhs) const {
     return fabs((point - rhs) * normal);
   }
 
   float Plane::shortest_distance(const Sphere &rhs) const {
     return unpoof(shortest_distance(rhs.get_center()), rhs.get_radius());
-  }
-
-  Line::Line(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_)
-    : end_point_a(end_point_a_),
-    end_point_b(end_point_b_),
-    direction(end_point_b - end_point_a),
-    direction2(direction * direction)
-  {
   }
 
   Line::Line(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_)
@@ -320,7 +312,7 @@ namespace Zeni_Collision {
   {
   }
 
-  float Line::shortest_distance(const Point3f &rhs) const {
+  float Line::shortest_distance(const Zeni::Point3f &rhs) const {
     return Zeni_Collision::nearest_point(*this, rhs).first;
   }
   float Line::shortest_distance(const Sphere &rhs) const {
@@ -339,15 +331,7 @@ namespace Zeni_Collision {
     return Zeni_Collision::nearest_point(*this, rhs).first;
   }
 
-  Ray::Ray(const Point3f &end_point_a_, const Point3f &end_point_b_)
-    : end_point_a(end_point_a_),
-    end_point_b(end_point_b_),
-    direction(end_point_b - end_point_a),
-    direction2(direction * direction)
-  {
-  }
-
-  Ray::Ray(const Point3f &end_point_a_, const Vector3f &direction_vector_)
+  Ray::Ray(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_)
     : end_point_a(end_point_a_),
     end_point_b(end_point_a_ + direction_vector_),
     direction(direction_vector_),
@@ -355,7 +339,7 @@ namespace Zeni_Collision {
   {
   }
 
-  std::pair<float, float> Ray::nearest_point(const Point3f &rhs) const {
+  std::pair<float, float> Ray::nearest_point(const Zeni::Point3f &rhs) const {
     return Zeni_Collision::nearest_point(*this, rhs);
   }
   std::pair<float, float> Ray::nearest_point(const Sphere &rhs) const {
@@ -377,7 +361,7 @@ namespace Zeni_Collision {
     return Zeni_Collision::nearest_point(*this, rhs);
   }
 
-  Line_Segment::Line_Segment(const Point3f &end_point_a_, const Point3f &end_point_b_)
+  Line_Segment::Line_Segment(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_)
     : end_point_a(end_point_a_),
     end_point_b(end_point_b_),
     direction(end_point_b - end_point_a),
@@ -385,7 +369,7 @@ namespace Zeni_Collision {
   {
   }
 
-  std::pair<float, float> Line_Segment::nearest_point(const Point3f &rhs) const {
+  std::pair<float, float> Line_Segment::nearest_point(const Zeni::Point3f &rhs) const {
     return Zeni_Collision::nearest_point(*this, rhs);
   }
   std::pair<float, float> Line_Segment::nearest_point(const Sphere &rhs) const {
@@ -407,13 +391,6 @@ namespace Zeni_Collision {
     return Zeni_Collision::nearest_point(*this, rhs);
   }
 
-  Infinite_Cylinder::Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_, 
-                               const float &radius_)
-    : line(end_point_a_, end_point_b_),
-    radius(radius_)
-  {
-  }
-
   Infinite_Cylinder::Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_, 
                                const float &radius_)
     : line(end_point_a_, direction_vector_),
@@ -421,7 +398,7 @@ namespace Zeni_Collision {
   {
   }
 
-  float Infinite_Cylinder::shortest_distance(const Point3f &rhs) const {
+  float Infinite_Cylinder::shortest_distance(const Zeni::Point3f &rhs) const {
     return unpoof(line.shortest_distance(rhs), radius);
   }
   float Infinite_Cylinder::shortest_distance(const Sphere &rhs) const {
@@ -450,7 +427,13 @@ namespace Zeni_Collision {
   {
   }
 
-  std::pair<float, float> Capsule::nearest_point(const Point3f &rhs) const {
+  void Capsule::set(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
+                    const float &radius_) {
+    line_segment = Line_Segment(end_point_a_, end_point_b_);
+	radius = radius_;
+  }
+
+  std::pair<float, float> Capsule::nearest_point(const Zeni::Point3f &rhs) const {
     return unpoof(line_segment.nearest_point(rhs), radius);
   }
   std::pair<float, float> Capsule::nearest_point(const Sphere &rhs) const {
@@ -477,25 +460,31 @@ namespace Zeni_Collision {
   std::pair<float, float> Capsule::nearest_point(const Parallelepiped &rhs) const {
     return unpoof(line_segment.nearest_point(rhs), radius);
   }
-  
-  Parallelepiped::Parallelepiped(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_,
-                                 const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_)
-    : point(point_),
-    edge_a(edge_a_),
-    edge_b(edge_b_),
-    edge_c(edge_c_),
-    convert_from(edge_a, edge_b, edge_c),
-    convert_to(convert_from.inverted()),
-    center(point),
-    normal_a((edge_b % edge_c).normalized()),
-    normal_b((edge_c % edge_a).normalized()),
-    normal_c((edge_a % edge_b).normalized())
-  {
-    const Vector3f ha = 0.5f * edge_a;
-    const Vector3f hb = 0.5f * edge_b;
-    const Vector3f hc = 0.5f * edge_c;
 
-    center += ha + hb + hc;
+  Parallelepiped::Parallelepiped(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_, 
+	                             const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_) {
+    set(point_, edge_a_, edge_b_, edge_c_);
+  }
+
+  void Parallelepiped::set(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_,
+                           const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_) {
+    point = point_;
+	edge_a = edge_a_;
+	edge_b = edge_b_;
+	edge_c = edge_c_;
+
+	convert_from = Zeni::Matrix4f(edge_a, edge_b, edge_c);
+    convert_to = convert_from.inverted();
+
+    normal_a = (edge_b % edge_c).normalized();
+    normal_b = (edge_c % edge_a).normalized();
+    normal_c = (edge_a % edge_b).normalized();
+
+    const Zeni::Vector3f ha = 0.5f * edge_a;
+    const Zeni::Vector3f hb = 0.5f * edge_b;
+    const Zeni::Vector3f hc = 0.5f * edge_c;
+
+    center = point + ha + hb + hc;
 
     absolute_float_unclamp(extents.i, ha * normal_a);
     absolute_float_unclamp(extents.i, hb * normal_a);
@@ -509,19 +498,19 @@ namespace Zeni_Collision {
   }
 
   float Parallelepiped::shortest_distance(const Parallelepiped &rhs) const {
-    const Vector3f &a = extents;
-    const Point3f &Pa = center;
-    const Vector3f * const A = &normal_a;
+    const Zeni::Vector3f &a = extents;
+    const Zeni::Point3f &Pa = center;
+    const Zeni::Vector3f * const A = &normal_a;
 
-    const Vector3f &b = rhs.extents;
-    const Point3f &Pb = rhs.center;
-    const Vector3f * const B = &rhs.normal_a;
+    const Zeni::Vector3f &b = rhs.extents;
+    const Zeni::Point3f &Pb = rhs.center;
+    const Zeni::Vector3f * const B = &rhs.normal_a;
 
     // translation, in parent frame
-    const Vector3f v = Pb - Pa;
+    const Zeni::Vector3f v = Pb - Pa;
 
     // translation, in A's frame
-    const Vector3f T(v * A[0], v * A[1], v * A[2]);
+    const Zeni::Vector3f T(v * A[0], v * A[1], v * A[2]);
 
     // B's basis with respect to A's local frame (rotation matrix)
     float R[3][3];
@@ -589,21 +578,21 @@ namespace Zeni_Collision {
   }
 
   float Parallelepiped::shortest_distance(const Zeni::Point3f &rhs) const {
-    const Point3f converted_point = convert_to * (rhs - point);
+    const Zeni::Point3f converted_point = convert_to * (rhs - point);
 
-    Point3f nearest_point = converted_point;
+    Zeni::Point3f nearest_point = converted_point;
     simple_clamp(nearest_point.x, 0.0f, 1.0f);
     simple_clamp(nearest_point.y, 0.0f, 1.0f);
     simple_clamp(nearest_point.z, 0.0f, 1.0f);
 
-    const Vector3f difference = convert_from * (converted_point - nearest_point);
+    const Zeni::Vector3f difference = convert_from * (converted_point - nearest_point);
 
     return difference.magnitude();
   }
 
   float Parallelepiped::shortest_distance(const Plane &rhs) const {
-    const Point3f &p = rhs.get_point();
-    const Vector3f &n = rhs.get_normal();
+    const Zeni::Point3f &p = rhs.get_point();
+    const Zeni::Vector3f &n = rhs.get_normal();
 
     const float diff_001 = edge_c * n;
     const float diff_010 = edge_b * n;

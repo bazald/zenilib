@@ -148,6 +148,7 @@ namespace Zeni {
   }
 
   Font_FT::~Font_FT() {
+    delete m_texture;
     for(int i = 1; i < num_glyphs; ++i)
       delete m_glyph[i];
   }
@@ -188,11 +189,12 @@ NEXT_LINE:
 
     if(justify != ZENI_LEFT) {
       for(size_t j = i; j < text.size(); ++j) {
-        if(text[j] == '\r' || text[j] == '\n' ||
-          !m_glyph[int(text[j])])
-          break;
+        if(unsigned int(text[i]) < num_glyphs && m_glyph[unsigned int(text[i])]) {
+          if(text[j] == '\r' || text[j] == '\n')
+            break;
 
-        x_diff -= m_glyph[int(text[j])]->get_glyph_width();
+          x_diff -= m_glyph[unsigned int(text[j])]->get_glyph_width();
+        }
       }
 
       if(justify == ZENI_CENTER)
@@ -210,9 +212,11 @@ NEXT_LINE:
         cy += m_font_height;
         goto NEXT_LINE;
       }
-      else if(m_glyph[int(text[i])]) {
-        m_glyph[int(text[i])]->render(vr, Point2f(cx, cy), m_vratio);
-        cx += m_glyph[int(text[i])]->get_glyph_width();
+      else if( unsigned int(text[i]) < num_glyphs ) {
+        if(m_glyph[int(text[i])]) {
+          m_glyph[int(text[i])]->render(vr, Point2f(cx, cy), m_vratio);
+          cx += m_glyph[int(text[i])]->get_glyph_width();
+        }
       }
     }
 

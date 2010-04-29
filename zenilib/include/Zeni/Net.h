@@ -108,7 +108,7 @@
 
 #include "Net_Primitives.h"
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 
 #ifdef _MACOSX
 #include <SDL_net/SDL_net.h>

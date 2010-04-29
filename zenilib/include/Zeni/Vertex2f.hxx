@@ -31,6 +31,13 @@
 
 #include <Zeni/Vertex2f.h>
 
+// HXXed below
+#include <Zeni/Coordinate.h>
+
+// Not HXXed
+#include <cassert>
+#include <cmath>
+
 namespace Zeni {
 
   void * Vertex2f::get_address() const {
@@ -60,5 +67,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Coordinate.hxx>
 
 #endif

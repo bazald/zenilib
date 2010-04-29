@@ -44,7 +44,7 @@
 #ifndef ZENI_RENDERABLE_H
 #define ZENI_RENDERABLE_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 
 namespace Zeni {
 
@@ -78,7 +78,7 @@ namespace Zeni {
 
     /** Manage Render_Wrappers **/
 
-    inline const Material * get_Material() const; ///< Get the Material
+    inline /*const*/ Material * get_Material() const; ///< Get the Material
     void give_Material(Material * const &material); ///< Set the Material, giving the Renderable ownership
     void lend_Material(const Material * const &material); ///< Set the Material, giving the Renderable no ownership
     void fax_Material(const Material * const &material); ///< Set the Material, giving the Renderable a copy

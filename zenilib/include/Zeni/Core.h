@@ -62,22 +62,14 @@
 #ifndef ZENI_CORE_H
 #define ZENI_CORE_H
 
+#include <Zeni/Error.h>
+
 #include <SDL/SDL.h>
 
-#include <cassert>
 #include <string>
 #include <vector>
 
 namespace Zeni {
-
-  struct Error {
-    Error(const std::string &msg_) : msg(msg_) {
-#ifdef _WINDOWS
-      assert("Error! - Set a Breakpoint Here to Help Your Debugger Work Correctly" && false);
-#endif
-    }
-    std::string msg;
-  };
 
   class Core {
     // Get reference to only instance; Might throw Core_Init_Failure

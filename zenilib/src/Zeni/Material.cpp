@@ -75,6 +75,18 @@ namespace Zeni {
     set_texture(texture);
   }
 
+  Material::Material(const unsigned long &textureId, const Color &ambient_and_diffuse)
+    : diffuse(ambient_and_diffuse), 
+    ambient(ambient_and_diffuse), 
+    specular(ZENI_DIFFUSE_TO_SPECULAR(ambient_and_diffuse)), 
+    emissive(ZENI_DEFAULT_MATERIAL_EMISSIVE),
+    m_power(ZENI_DEFAULT_MATERIAL_POWER),
+    m_texture("<generated>"),
+    m_texture_id(textureId),
+    m_optimization(0)
+  {
+  }
+
   float Material::get_shininess() const {
     return 0.1f * log(m_power)/log(2.0f);
   }

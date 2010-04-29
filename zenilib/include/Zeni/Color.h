@@ -46,6 +46,7 @@
 #define ZENI_COLOR_H
 
 #include <SDL/SDL_stdinc.h>
+#include <iostream>
 
 namespace Zeni {
 
@@ -64,7 +65,7 @@ namespace Zeni {
     inline Uint32 get_argb() const; ///< Get a Uint32 representation of 0xAARRGGBB
     inline Uint32 get_bgra() const; ///< Get a Uint32 representation of 0xBBGGRRAA - Endianness swap of rgba
 
-    Color interpolate_to(const float &rhs_part, const Color &rhs) const; ///< Get a color that is inbetween this color and another color.
+    inline Color interpolate_to(const float &rhs_part, const Color &rhs) const; ///< Get a color that is inbetween this color and another color.
 
     bool operator<(const Color &rhs) const; ///< To provide an arbitrary total ordering. Do not depend on it remaining the same in the future.
 

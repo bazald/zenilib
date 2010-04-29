@@ -49,7 +49,7 @@ namespace Zeni {
   }
 
   Vertex2f::Vertex2f(const Point2f &position)
-    : position(position.x, position.y, position.z)
+    : position(position.x, position.y, 0.0f)
   {
   }
 

@@ -42,7 +42,7 @@
 namespace Zeni {
 
   Game::Game(const std::vector<std::string> * const args)
-    : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
+    : m_base_state(NULL), time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
 #ifndef NDEBUG
     , m_console_active(false)
 #endif

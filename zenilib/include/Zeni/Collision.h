@@ -175,7 +175,7 @@
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
 
-#include <utility>
+#include <xutility>
 
 namespace Zeni_Collision {
 
@@ -192,7 +192,9 @@ namespace Zeni_Collision {
   public:
     Sphere() : center(0.0f, 0.0f, 0.0f), radius(0.0f) {}
     Sphere(const Zeni::Point3f &center_, const float &radius_);
-    
+
+    void set(const Zeni::Point3f &center_, const float &radius_);
+
     float shortest_distance(const Sphere &rhs) const;
     float shortest_distance(const Zeni::Point3f &rhs) const;
     inline float shortest_distance(const Plane &rhs) const;
@@ -285,7 +287,6 @@ namespace Zeni_Collision {
   class Ray {
   public:
     Ray() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
-    Ray(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_);
     Ray(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_);
     
     /// Returns <distance, interpolation value [0.0f, inf)>
@@ -328,7 +329,6 @@ namespace Zeni_Collision {
   class Line {
   public:
     Line() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
-    Line(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_);
     Line(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_);
 
     float shortest_distance(const Line &rhs) const;
@@ -362,8 +362,6 @@ namespace Zeni_Collision {
   class Infinite_Cylinder {
   public:
     Infinite_Cylinder() : radius(0) {}
-    Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
-                      const float &radius_);
     Infinite_Cylinder(const Zeni::Point3f &end_point_a_, const Zeni::Vector3f &direction_vector_,
                       const float &radius_);
 
@@ -393,7 +391,10 @@ namespace Zeni_Collision {
   public:
     Capsule() : radius(0) {}
     Capsule(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
-                  const float &radius_);
+            const float &radius_);
+
+    void set(const Zeni::Point3f &end_point_a_, const Zeni::Point3f &end_point_b_,
+        const float &radius_);
 
     /// Returns <distance, interpolation value [0.0f, 1.0f]>
     std::pair<float, float> nearest_point(const Capsule &rhs) const;
@@ -433,6 +434,9 @@ namespace Zeni_Collision {
     Parallelepiped() : point(0.0f, 0.0f, 0.0f), edge_a(1.0f, 0.0f, 0.0f), edge_b(0.0f, 1.0f, 0.0f), edge_c(0.0f, 0.0f, 1.0f) {}
     Parallelepiped(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_,
                    const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_);
+    
+    void set(const Zeni::Point3f &point_, const Zeni::Vector3f &edge_a_,
+             const Zeni::Vector3f &edge_b_, const Zeni::Vector3f &edge_c_);
 
     float shortest_distance(const Parallelepiped &rhs) const;
     float shortest_distance(const Zeni::Point3f &rhs) const;

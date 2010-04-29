@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Generate Application_Name.h"
-				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h&#x0D;&#x0A;"
 				Outputs="Application_Name.h"
 			/>
 			<Tool
@@ -48,8 +48,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;TEST_NASTY_CONDITIONS"
 				KeepComments="false"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -57,6 +57,204 @@
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4005;4312;4505;4311"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/NODEFAULTLIB:msvcrt"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(PlatformName)\zenilib_d\&quot;;..\lib;..\lib_win;../external/lib;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
+				GenerateMapFile="false"
+				MapExports="false"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib\bin&apos;."
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName)_d.exe&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
+			ConfigurationType="1"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h&#x0D;&#x0A;"
+				Outputs="Application_Name.h"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4005;4297;4312;4505;4311"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
+				GenerateMapFile="false"
+				MapExports="false"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				OptimizeForWindows98="0"
+				LinkTimeCodeGeneration="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib\bin&apos;."
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug SCU|Win32"
+			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
+			ConfigurationType="1"
+			CharacterSet="0"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h&#x0D;&#x0A;"
+				Outputs="Application_Name.h"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;TEST_NASTY_CONDITIONS"
+				KeepComments="false"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="true"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="zenilib.h"
 				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
@@ -113,6 +311,108 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName)_d.exe&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release SCU|Win32"
+			OutputDirectory="$(PlatformName)\$(ProjectName)"
+			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
+			ConfigurationType="1"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Generate Application_Name.h"
+				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h&#x0D;&#x0A;"
+				Outputs="Application_Name.h"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\include;..\include_win;..\external\include;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;NOMINMAX;WIN32_LEAN_AND_MEAN;"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				FloatingPointModel="2"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="zenilib.h"
+				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
+				WarningLevel="4"
+				WarnAsError="false"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4005;4297;4312;4505;4311"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="2"
+				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
+				GenerateMapFile="false"
+				MapExports="false"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				OptimizeForWindows98="0"
+				LinkTimeCodeGeneration="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copy the build to &apos;zenilib\bin&apos;."
+				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -210,108 +510,6 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe&quot;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)\$(ProjectName)"
-			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
-			ConfigurationType="1"
-			CharacterSet="0"
-			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Generate Application_Name.h"
-				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
-				Outputs="Application_Name.h"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
-				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4297;4312;4505;4311"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
-				GenerateDebugInformation="true"
-				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
-				GenerateMapFile="false"
-				MapExports="false"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="0"
-				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -416,102 +614,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug SCU|Win32"
-			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
-			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
-			ConfigurationType="1"
-			CharacterSet="0"
-			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Generate Application_Name.h"
-				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
-				Outputs="Application_Name.h"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS"
-				KeepComments="false"
-				MinimalRebuild="false"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
-				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4005;4312;4505;4311"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/NODEFAULTLIB:msvcrt"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(PlatformName)\zenilib_d\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
-				GenerateDebugInformation="true"
-				AssemblyDebug="1"
-				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
-				GenerateMapFile="false"
-				MapExports="false"
-				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName)_d.exe&quot;"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Debug SCU|x64"
 			OutputDirectory="$(PlatformName)\$(ProjectName)_d"
 			IntermediateDirectory="$(PlatformName)\$(ProjectName)_d"
@@ -606,108 +708,6 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy the build to &apos;zenilib\bin\x64&apos;."
 				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe&quot;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release SCU|Win32"
-			OutputDirectory="$(PlatformName)\$(ProjectName)"
-			IntermediateDirectory="$(PlatformName)\$(ProjectName)"
-			ConfigurationType="1"
-			CharacterSet="0"
-			WholeProgramOptimization="1"
-			BuildLogFile="$(IntDir)\$(ProjectName)_BuildLog.html"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-				Description="Generate Application_Name.h"
-				CommandLine="echo #define APPLICATION_NAME &quot;$(ProjectName)&quot; &gt; Application_Name.h"
-				Outputs="Application_Name.h"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\include;..\include_win;&quot;$(DXSDK_Dir)Include&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
-				FloatingPointModel="2"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="zenilib.h"
-				PrecompiledHeaderFile="$(IntDir)\$(ProjectName).pch"
-				ProgramDataBaseFileName="$(IntDir)\$(ProjectName).pdb"
-				WarningLevel="4"
-				WarnAsError="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4297;4312;4505;4311"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_gfx.lib SDL_image.lib SDL_net.lib SDL_ttf.lib lib3ds-2_0.lib cg.lib d3d9.lib d3dx9.lib cgD3D9.lib opengl32.lib glew32.lib glu32.lib cgGL.lib OpenAL32.lib alut.lib libogg.lib libvorbis.lib libvorbisfile.lib Advapi32.lib SHFolder.lib Shell32.lib User32.lib Zenilib.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(PlatformName)\zenilib\;..\lib;..\lib_win;&quot;$(DXSDK_Dir)Lib\x86&quot;;&quot;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32&quot;"
-				GenerateDebugInformation="true"
-				AssemblyDebug="2"
-				ProgramDatabaseFile="$(TargetDir)$(ProjectName).pdb"
-				GenerateMapFile="false"
-				MapExports="false"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="0"
-				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				DependencyInformationFile="$(IntDir)\$(ProjectName).dep"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Copy the build to &apos;zenilib\bin&apos;."
-				CommandLine="copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\bin\$(ProjectName).exe&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -832,23 +832,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -865,7 +849,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|x64"
+					Name="Release SCU|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -874,7 +858,23 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release SCU|Win32"
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug SCU|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -925,7 +925,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|x64"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -934,7 +934,23 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug SCU|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SCU|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -952,23 +968,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug SCU|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug SCU|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SCU|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

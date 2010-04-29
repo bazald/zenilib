@@ -63,8 +63,8 @@
 #ifndef ZENI_SOUND_H
 #define ZENI_SOUND_H
 
-#include <Zeni/Core.h>
 #include <Zeni/Coordinate.h>
+#include <Zeni/Error.h>
 #include <Zeni/Vector3f.h>
 #include <Zeni/Thread.h>
 

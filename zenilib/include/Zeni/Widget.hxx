@@ -247,6 +247,7 @@ namespace Zeni {
 
   Widget_Renderer_Texture::Widget_Renderer_Texture(const std::string &texture_)
     : texture(texture_),
+	material(texture),
     tex_coord_ul(0.0f, 0.0f),
     tex_coord_ll(0.0f, 1.0f),
     tex_coord_lr(1.0f, 1.0f),
@@ -260,11 +261,16 @@ namespace Zeni {
                                                    const Point2f &tex_coord_lr_,
                                                    const Point2f &tex_coord_ur_)
     : texture(texture_),
+	material(texture),
     tex_coord_ul(tex_coord_ul_),
     tex_coord_ll(tex_coord_ll_),
     tex_coord_lr(tex_coord_lr_),
     tex_coord_ur(tex_coord_ur_)
   {
+  }
+
+  Material& Widget_Renderer_Texture::get_material() {
+    return material;
   }
 
   Widget_Renderer_Tricolor::Widget_Renderer_Tricolor()
@@ -287,6 +293,28 @@ namespace Zeni {
     text_normal(text_normal_),
     text_clicked(text_clicked_),
     text_hovered_strayed(text_hovered_strayed_)
+  {
+  }
+
+  Widget_Renderer_Tritexture::Widget_Renderer_Tritexture(const std::string &base_texture_)
+    : base_texture(base_texture_),
+    tex_coord_ul(0.0f, 0.0f),
+    tex_coord_ll(0.0f, 1.0f),
+    tex_coord_lr(1.0f, 1.0f),
+    tex_coord_ur(1.0f, 0.0f)
+  {
+  }
+
+  Widget_Renderer_Tritexture::Widget_Renderer_Tritexture(const std::string &base_texture_,
+                                                         const Point2f &tex_coord_ul_,
+                                                         const Point2f &tex_coord_ll_,
+                                                         const Point2f &tex_coord_lr_,
+                                                         const Point2f &tex_coord_ur_)
+    : base_texture(base_texture_),
+    tex_coord_ul(tex_coord_ul_),
+    tex_coord_ll(tex_coord_ll_),
+    tex_coord_lr(tex_coord_lr_),
+    tex_coord_ur(tex_coord_ur_)
   {
   }
 
@@ -324,6 +352,13 @@ namespace Zeni {
     return m_state;
   }
 
+  Texture_Button::Texture_Button(const std::string &texture_base_name_, const Point2f &upper_left_, const Point2f &lower_right_)
+    : Widget_Button( upper_left_, lower_right_ ),
+	Widget_Renderer_Tritexture( texture_base_name_ )
+  {
+    lend_Renderer( this );
+  }
+
   Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
                            const std::string &font_name_, const std::string &text_)
     : Widget_Button(upper_left_, lower_right_),
@@ -346,6 +381,26 @@ namespace Zeni {
   const bool & Check_Box::is_checked() const {return m_checked;}
   const void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
   const bool & Check_Box::is_toggling() const {return m_toggling;}
+
+  Handle_Widget::Handle_Widget(const Point2f &center_, const float &width_, const Color &color_ )
+  : Widget_Rectangle(Point2f(center_.x - width_*0.5f, center_.y - width_*0.5f),
+                     Point2f(center_.x + width_*0.5f, center_.y + width_*0.5f)),
+    Widget_Renderer_Color( color_ ),
+    m_down(false)
+  {
+  }
+
+  void Handle_Widget::set_center(const Point2f& center_) {
+    float width = get_width();
+    set_upper_left(Point2f(center_.x - width*0.5f, center_.y - width*0.5f));
+    set_lower_right(Point2f(center_.x + width*0.5f, center_.y + width*0.5f));
+  }
+
+  bool Handle_Widget::is_inside(const Point2i &pos) const {
+    return
+      get_upper_left().x < pos.x && pos.x < get_lower_right().x &&
+      get_upper_left().y < pos.y && pos.y < get_lower_right().y;
+  }
 
   Radio_Button::Radio_Button(Radio_Button_Set &radio_button_set_,
                              const Point2f &upper_left_, const Point2f &lower_right_,
@@ -679,6 +734,16 @@ namespace Zeni {
       m_busy_one = 0;
       set_busy(false);
     }
+  }
+
+  void Widgets::clear_and_delete_all() {
+    std::vector<Widget *>::iterator i = m_widgets.begin();
+	while( i != m_widgets.end() )
+	{
+      Widget *temp = *i;
+      ++i;
+      delete temp;
+	}
   }
 
 }

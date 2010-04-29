@@ -57,18 +57,18 @@ namespace Zeni {
   {
     /** Redirect output **/
 
-    static ofstream cerr_file("stderr.txt");
-    static ofstream cout_file("stdout.txt");
-    
-    if(cerr_file.is_open()) {
-      cerr_bak = cerr.rdbuf();
-      cerr.rdbuf(cerr_file.rdbuf());
-    }
+    //static ofstream cerr_file("stderr.txt");
+    //static ofstream cout_file("stdout.txt");
+    //
+    //if(cerr_file.is_open()) {
+    //  cerr_bak = cerr.rdbuf();
+    //  cerr.rdbuf(cerr_file.rdbuf());
+    //}
 
-    if(cout_file.is_open()) {
-      cout_bak = cout.rdbuf();
-      cout.rdbuf(cout_file.rdbuf());
-    }
+    //if(cout_file.is_open()) {
+    //  cout_bak = cout.rdbuf();
+    //  cout.rdbuf(cout_file.rdbuf());
+    //}
 
     /** Get username **/
 
@@ -107,6 +107,7 @@ namespace Zeni {
 
     /** Initialize SDL itself **/
 
+    SDL_putenv("SDL_VIDEO_CENTERED=center");
     if(SDL_Init(SDL_INIT_TIMER) == -1)
       throw Core_Init_Failure();
 
@@ -126,10 +127,10 @@ namespace Zeni {
 
     SDL_Quit();
 
-    if(cout_bak)
-      cout.rdbuf(cout_bak);
-    if(cerr_bak)
-      cerr.rdbuf(cerr_bak);
+    //if(cout_bak)
+    //  cout.rdbuf(cout_bak);
+    //if(cerr_bak)
+    //  cerr.rdbuf(cerr_bak);
   }
 
   Core & get_Core() {

@@ -43,6 +43,7 @@
 #ifndef ZENI_VERTEX_BUFFER_H
 #define ZENI_VERTEX_BUFFER_H
 
+#include <Zeni/Error.h>
 #include <Zeni/Triangle.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
@@ -86,7 +87,6 @@ namespace Zeni {
     }
   };
 
-  class Render_Wrapper;
   class Vertex_Buffer;
 
   class Vertex_Buffer_Renderer {

@@ -63,6 +63,14 @@ namespace Zeni {
     return Uint32(b_ub() << 24) | Uint32(g_ub() << 16) | Uint32(r_ub() << 8) | Uint32(a_ub());
   }
 
+  Color Color::interpolate_to(const float &rhs_part, const Color &rhs) const {
+    float lhs_part = 1.0f - rhs_part;
+    return Color(lhs_part * a + rhs_part * rhs.a, 
+                 lhs_part * r + rhs_part * rhs.r, 
+                 lhs_part * g + rhs_part * rhs.g,
+                 lhs_part * b + rhs_part * rhs.b);
+  }
+
   const float & Color::operator[](const int &index) const {
     assert(-1 < index && index < 4);
     const float * const ptr = &r;

@@ -68,6 +68,7 @@ namespace Zeni {
 
   public:
     inline Gamestate get_top(); ///< Get a reference to the current Gamestate.
+    inline Gamestate get_bottom(); ///< Get a reference to the base Gamestate.
 
 #ifndef NDEBUG
     inline Console_State & get_console(); ///< Get a reference to the Console_State
@@ -91,6 +92,7 @@ namespace Zeni {
   private:
     void calculate_fps();
 
+	Gamestate* m_base_state;
     std::stack<Gamestate> m_states;
     Unordered_Map<int, bool> m_keys;
     Unordered_Map<int, bool> m_mouse_buttons;

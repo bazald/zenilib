@@ -41,32 +41,37 @@
 
 namespace Zeni {
 
-  Quaternion::Quaternion(const bool &degenerate_)
+  Quaternion::Quaternion()
     : time(1.0f),
-    space(0.0f, 0.0f, 0.0f),
-    degenerate(degenerate_)
+    space(0.0f, 0.0f, 0.0f)
   {
   }
 
+  bool Quaternion::operator==(const Quaternion &rhs) const {
+    return time == rhs.time && 
+		   space == rhs.space;
+  }
+  bool Quaternion::operator!=(const Quaternion &rhs) const {
+    return !(*this == rhs);
+  }
+
   Quaternion Quaternion::operator+(const Quaternion &rhs) const {
-    return Quaternion(time + rhs.time, space + rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(time + rhs.time, space + rhs.space);
 	}
 
 	Quaternion Quaternion::operator-(const Quaternion &rhs) const {
-    return Quaternion(time - rhs.time, space - rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(time - rhs.time, space - rhs.space);
 	}
 
 	Quaternion & Quaternion::operator+=(const Quaternion &rhs) {
     time += rhs.time;
     space += rhs.space;
-    degenerate |= rhs.degenerate;
     return *this;
 	}
 
 	Quaternion & Quaternion::operator-=(const Quaternion &rhs) {
     time -= rhs.time;
     space -= rhs.space;
-    degenerate |= rhs.degenerate;
     return *this;
 	}
 
@@ -79,35 +84,35 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::grassman_product(const Quaternion &rhs) const {
-    return Quaternion(time * rhs.time - space * rhs.space, time * rhs.space + rhs.time * space + space % rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(time * rhs.time - space * rhs.space, time * rhs.space + rhs.time * space + space % rhs.space);
   }
 
   Quaternion Quaternion::grassman_even_product(const Quaternion &rhs) const {
-    return Quaternion(time * rhs.time - space * rhs.space, time * rhs.space + space * rhs.time, degenerate || rhs.degenerate);
+    return Quaternion(time * rhs.time - space * rhs.space, time * rhs.space + space * rhs.time);
   }
 
   Quaternion Quaternion::grassman_odd_product(const Quaternion &rhs) const {
-    return Quaternion(0.0f, space % rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(0.0f, space % rhs.space);
   }
 
   Quaternion Quaternion::euclidean_product(const Quaternion &rhs) const {
-    return Quaternion(time * rhs.time + space * rhs.space, time * rhs.space - space * rhs.time - space % rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(time * rhs.time + space * rhs.space, time * rhs.space - space * rhs.time - space % rhs.space);
   }
 
   Quaternion Quaternion::euclidean_even_product(const Quaternion &rhs) const {
-    return Quaternion(time * rhs.time + space * rhs.space, Vector3f(), degenerate || rhs.degenerate);
+    return Quaternion(time * rhs.time + space * rhs.space, Vector3f());
   }
 
   Quaternion Quaternion::euclidean_odd_product(const Quaternion &rhs) const {
-    return Quaternion(0.0f, time * rhs.space - space * rhs.time - space % rhs.space, degenerate || rhs.degenerate);
+    return Quaternion(0.0f, time * rhs.space - space * rhs.time - space % rhs.space);
   }
 
   Quaternion Quaternion::operator*(const float &rhs) const {
-    return Quaternion(time * rhs, space * rhs, degenerate);
+    return Quaternion(time * rhs, space * rhs);
   }
 
   Quaternion Quaternion::operator/(const float &rhs) const {
-    return Quaternion(time / rhs, space / rhs, degenerate);
+    return Quaternion(time / rhs, space / rhs);
   }
 
   Quaternion & Quaternion::operator*=(const float &rhs) {
@@ -123,7 +128,7 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::operator-() const {
-    return Quaternion(time * -1, space * -1, degenerate);
+    return Quaternion(time * -1, space * -1);
   }
 
   float Quaternion::magnitude2() const {
@@ -135,7 +140,7 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::conjugate() const {
-    return Quaternion(time, -space, degenerate);
+    return Quaternion(time, -space);
   }
 
   Quaternion Quaternion::reciprocal() const {
@@ -144,16 +149,16 @@ namespace Zeni {
   }
 
   Quaternion Quaternion::absolute_value() const {
-    return Quaternion(magnitude(), Vector3f(), degenerate);
+    return Quaternion(magnitude(), Vector3f());
   }
 
   Quaternion Quaternion::norm() const {
-    return Quaternion(magnitude2(), Vector3f(), degenerate);
+    return Quaternion(magnitude2(), Vector3f());
   }
 
   Quaternion Quaternion::determinant() const {
     const float temp = magnitude2();
-    return Quaternion(temp * temp, Vector3f(), degenerate);
+    return Quaternion(temp * temp, Vector3f());
   }
 
   Quaternion Quaternion::adjoint() const {
@@ -186,10 +191,11 @@ namespace Zeni {
     const float v2new = 2.0f * ((t4 + t6) * v1 + (t5 + t10) * v2 + (t9 - t2) * v3) + v2;
     const float v3new = 2.0f * ((t7 - t3) * v1 + (t2 +  t9) * v2 + (t5 + t8) * v3) + v3;
     
-    return Vector3f(v1new, v2new, v3new, degenerate || rhs.degenerate);
+    return Vector3f(v1new, v2new, v3new);
   }
 
   std::pair<Vector3f, float> Quaternion::get_rotation() const {
+	//@todo better to keep normalized?
     Quaternion q = normalized();
 
     if(q.time < -1.0f)
@@ -200,7 +206,7 @@ namespace Zeni {
     const float angle = 2.0f * acos(q.time);
     float s = sqrt(1.0f - q.time * q.time);
 
-    if(fabs(s) < 0.001f)
+    if(fabsf(s) < 0.001f)
       return std::make_pair(q.space, angle);
     
     return std::make_pair(q.space / s, angle);
@@ -219,17 +225,17 @@ namespace Zeni {
    
 	  return Matrix4f(
       1.0f - 2.0f * (y2 + z2), 
-		  2.0f * (xy + wz), 
-		  2.0f * (xz - wy), 
+		  2.0f * (xy - wz), 
+		  2.0f * (xz + wy), 
       0.0f,
 
-      2.0f * (xy - wz), 
+      2.0f * (xy + wz), 
       1.0f - 2.0f * (x2 + z2), 
-      2.0f * (yz + wx), 
+      2.0f * (yz - wx), 
       0.0f,
 
-      2.0f * (xz + wy), 
-      2.0f * (yz - wx), 
+      2.0f * (xz - wy), 
+      2.0f * (yz + wx), 
       1.0f - 2.0f * (x2 + y2), 
       0.0f,
 

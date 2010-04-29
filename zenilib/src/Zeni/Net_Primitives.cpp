@@ -388,10 +388,6 @@ namespace Zeni {
     return serialize(serialize(serialize(os, value.x), value.y), value.z);
   }
   
-  std::ostream & serialize(std::ostream &os, const Point3f &value) {
-    return serialize(serialize(serialize(os, value.x), value.y), value.z);
-  }
-  
   std::ostream & serialize(std::ostream &os, const Vector3f &value) {
     return serialize(serialize(serialize(os, value.i), value.j), value.k);
   }
@@ -487,10 +483,6 @@ namespace Zeni {
   }
   
   std::istream & unserialize(std::istream &is, Point3i &value) {
-    return unserialize(unserialize(unserialize(is, value.x), value.y), value.z);
-  }
-  
-  std::istream & unserialize(std::istream &is, Point3f &value) {
     return unserialize(unserialize(unserialize(is, value.x), value.y), value.z);
   }
   

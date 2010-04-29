@@ -47,6 +47,12 @@ namespace Zeni {
   }
 #endif
 
+  void Vertex3f_Color::interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs) {
+    position = position.interpolate_to(rhs_part, rhs.position);
+	normal = 0.5f*(normal + rhs.normal);
+	m_argb = Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb();
+  }
+
   const Uint32 & Vertex3f_Color::get_color() const {
     return m_argb;
   }

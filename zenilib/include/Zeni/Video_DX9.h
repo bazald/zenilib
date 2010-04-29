@@ -44,6 +44,7 @@
 #define ZENI_VIDEO_DX9_H
 
 #include <Zeni/Color.h>
+#include <Zeni/Error.h>
 #include <Zeni/Video.h>
 
 #ifndef DISABLE_DX9

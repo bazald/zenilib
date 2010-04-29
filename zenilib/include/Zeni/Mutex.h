@@ -85,7 +85,7 @@
 #ifndef ZENI_MUTEX_H
 #define ZENI_MUTEX_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 
 #include <SDL/SDL_mutex.h>
 //#ifdef _WINDOWS

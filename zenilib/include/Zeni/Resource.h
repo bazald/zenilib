@@ -43,7 +43,7 @@
 #ifndef ZENI_RESOURCE_H
 #define ZENI_RESOURCE_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/Mutex.h>
 

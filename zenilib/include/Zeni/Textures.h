@@ -43,8 +43,8 @@
 #ifndef ZENI_TEXTURES_H
 #define ZENI_TEXTURES_H
 
-#include <Zeni/Core.h>
 #include <Zeni/Database.h>
+#include <Zeni/Error.h>
 
 namespace Zeni {
 

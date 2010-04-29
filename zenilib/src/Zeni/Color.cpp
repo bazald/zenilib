@@ -47,19 +47,11 @@ namespace Zeni {
   }
 
   Color::Color(const Uint32 &argb)
-    : r(((argb >> 16) & 0xFF) / 256.0f),
-      g(((argb >> 8) & 0xFF) / 256.0f),
-      b((argb & 0xFF) / 256.0f),
-      a(((argb >> 24) & 0xFF) / 256.0f)
+    : r(((argb >> 16) & 0xFF) / 255.0f),
+      g(((argb >> 8) & 0xFF) / 255.0f),
+      b((argb & 0xFF) / 255.0f),
+      a(((argb >> 24) & 0xFF) / 255.0f)
   {
-  }
-
-  Color Color::interpolate_to(const float &rhs_part, const Color &rhs) const {
-    float lhs_part = 1.0f - rhs_part;
-    return Color(lhs_part * a + rhs_part * rhs.a, 
-                 lhs_part * r + rhs_part * rhs.r, 
-                 lhs_part * g + rhs_part * rhs.g,
-                 lhs_part * b + rhs_part * rhs.b);
   }
 
   bool Color::operator<(const Color &rhs) const {
@@ -75,5 +67,4 @@ namespace Zeni {
            g == rhs.g &&
            b == rhs.b;
   }
-
 }

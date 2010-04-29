@@ -70,34 +70,6 @@
  */
 
 /**
- * \class Zeni::Widget_Rectangle_Color
- *
- * \ingroup Zenilib
- *
- * \brief A Colored Rectangle Widget
- *
- * Any Widget using a Colored Rectangle should incorporate this object.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
- * \class Zeni::Widget_Rectangle_Texture
- *
- * \ingroup Zenilib
- *
- * \brief A Textured Rectangle Widget
- *
- * Any Widget using a Textured Rectangle should incorporate this object.
- *
- * \author bazald
- *
- * Contact: bazald@zenipex.com
- */
-
-/**
  * \class Zeni::Widget_Button
  *
  * \ingroup Zenilib
@@ -235,6 +207,7 @@
 #include <Zeni/Font.h>
 #include <Zeni/Line_Segment.h>
 #include <Zeni/Projector.h>
+#include <Zeni/Material.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
@@ -371,7 +344,10 @@ namespace Zeni {
 
     virtual Widget_Renderer_Texture * get_duplicate() const;
 
+    inline Material& get_material();
+
     std::string texture;
+	Material material;
     Point2f tex_coord_ul;
     Point2f tex_coord_ll;
     Point2f tex_coord_lr;
@@ -395,6 +371,29 @@ namespace Zeni {
     Color text_normal;
     Color text_clicked;
     Color text_hovered_strayed;
+  };
+
+  class Widget_Renderer_Tritexture : public Widget_Render_Function {
+  public:
+    // In addition to the texture name passend in here, there must 
+    // also be "<texture>_click" and "<texture>_hover" textures
+    inline Widget_Renderer_Tritexture(const std::string &base_texture_);
+    inline Widget_Renderer_Tritexture(const std::string &base_texture_,
+                                      const Point2f &tex_coord_ul_,
+                                      const Point2f &tex_coord_ll_,
+                                      const Point2f &tex_coord_lr_,
+                                      const Point2f &tex_coord_ur_);
+
+    /// rect must be of type Widget_Button
+    virtual void render_to(const Widget &widget);
+
+    virtual Widget_Renderer_Tritexture * get_duplicate() const;
+
+    std::string base_texture;
+    Point2f tex_coord_ul;
+    Point2f tex_coord_ll;
+    Point2f tex_coord_lr;
+    Point2f tex_coord_ur;
   };
 
   class Widget_Renderer_Check_Box : public Widget_Render_Function {
@@ -484,6 +483,13 @@ namespace Zeni {
     State m_state;
   };
 
+  class Texture_Button : public Widget_Button, public Widget_Renderer_Tritexture {
+  public:
+    inline Texture_Button(const std::string &texture_base_name_, const Point2f &upper_left_, const Point2f &lower_right_);
+
+    virtual void on_accept() = 0;
+  };
+
   class Text_Button : public Widget_Button, public Widget_Renderer_Text {
     Text_Button(const Text_Button &);
     Text_Button & operator=(const Text_Button &);
@@ -518,6 +524,23 @@ namespace Zeni {
     bool m_toggling;
   };
 
+  class Handle_Widget : public Widget, public Widget_Rectangle, public Widget_Renderer_Color {
+  public:
+    inline Handle_Widget(const Point2f &center_, const float &width_, const Color &color_ );
+
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
+    virtual void on_mouse_motion(const Point2i &pos);
+
+    inline void set_center(const Point2f& center_);
+    
+    virtual void render_impl() const;
+
+  protected:
+    inline bool is_inside(const Point2i &pos) const;
+
+    bool m_down;
+  };
+
   class Radio_Button;
   class Radio_Button_Set : public Widget {
     Radio_Button_Set(const Radio_Button_Set &);
@@ -526,6 +549,8 @@ namespace Zeni {
     friend class Radio_Button;
 
   public:
+    Radio_Button_Set() {}
+
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
@@ -568,6 +593,16 @@ namespace Zeni {
            const float &slider_radius_,
            const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
+    Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
+           const float &slider_radius_,
+           const Color &line_color_, const Color &slider_color_,
+           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+
+    Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
+           const float &slider_radius_,
+           Widget_Render_Function * const &renderer,
+           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
     inline const float & get_slider_radius() const;
@@ -586,7 +621,7 @@ namespace Zeni {
   protected:
     inline const Zeni_Collision::Line_Segment & get_line_segment() const;
 
-  private:
+  //private:
     Zeni_Collision::Line_Segment m_line_segment;
     float m_slider_radius;
 
@@ -605,6 +640,12 @@ namespace Zeni {
     Slider_Int(const Range &range,
                const Point2f &end_point_a_, const Point2f &end_point_b_,
                const float &slider_radius_,
+               const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+
+    Slider_Int(const Range &range,
+               const Point2f &end_point_a_, const Point2f &end_point_b_,
+               const float &slider_radius_,
+               Widget_Render_Function * const &renderer,
                const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline const Range & get_range() const;
@@ -934,6 +975,7 @@ namespace Zeni {
 
     inline void lend_Widget(Widget &widget);
     inline void unlend_Widget(Widget &widget);
+	inline void clear_and_delete_all();
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
 

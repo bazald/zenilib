@@ -76,6 +76,7 @@
 #define ZENI_MODEL_H
 
 #include <Zeni/Coordinate.h>
+#include <Zeni/Error.h>
 #include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 

@@ -133,7 +133,7 @@ namespace Zeni {
   }
 
   void Video_GL::init() {
-    std::cout << "Initializing OpenGL" << std::endl;
+    //std::cout << "Initializing OpenGL" << std::endl;
 
     //double buffer, no stencil, no accumulation buffer
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);

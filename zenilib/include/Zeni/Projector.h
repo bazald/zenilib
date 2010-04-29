@@ -101,11 +101,9 @@ namespace Zeni {
       const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(), get_Video().get_render_target_size()));
 
     inline Vector3f project(const Vector3f &world_coord) const; ///< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
-    inline Point3f project(const Point3f &world_coord) const; ///< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
     inline Point2f project(const Point2f &world_coord) const; ///< Map coordinates in the viewing area to screen-like coordinates ([0, 1], [0, 1], [0, 1])
 
     inline Vector3f unproject(const Vector3f &screen_coord) const; ///< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
-    inline Point3f unproject(const Point3f &screen_coord) const; ///< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
     inline Point2f unproject(const Point2f &screen_coord) const; ///< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing area
 
   private:
@@ -124,10 +122,7 @@ namespace Zeni {
       const std::pair<Point2i, Point2i> &viewport = std::make_pair(Point2i(), get_Video().get_render_target_size()));
 
     inline Vector3f project(const Vector3f &world_coord) const; ///< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])
-    inline Point3f project(const Point3f &world_coord) const; ///< Map coordinates in the viewing frustum to screen-like coordinates ([0, 1], [0, 1], [0, 1])
-
     inline Vector3f unproject(const Vector3f &screen_coord) const; ///< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing frustum
-    inline Point3f unproject(const Point3f &screen_coord) const; ///< Map screen-like coordinates ([0, 1], [0, 1], [0, 1]) to coordinates in the viewing frustum
 
   private:
     inline void init(

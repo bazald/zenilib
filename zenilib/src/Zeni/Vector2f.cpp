@@ -26,7 +26,7 @@
 * the GNU General Public License.
 */
 
-#include <Zeni/Vector3f.hxx>
+#include <Zeni/Vector2f.hxx>
 
 #include <cmath>
 
@@ -34,7 +34,7 @@
 
 namespace Zeni {
 
-  Vector3f & Vector3f::normalize() {
+  Vector2f & Vector2f::normalize() {
     float mplier = magnitude();
 
     if(INFINTESSIMAL(mplier)) {
@@ -46,60 +46,43 @@ namespace Zeni {
 
     i *= mplier;
     j *= mplier;
-    k *= mplier;
 
     return *this;
   }
 
-  Vector3f Vector3f::normalized() const {
+  Vector2f Vector2f::normalized() const {
     float mplier = magnitude();
 
     if(INFINTESSIMAL(mplier)) {
 	  assert(!"normalizing null vector");
-      return Vector3f(*this);
+      return Vector2f(*this);
 	}
 
     mplier = 1.0f / mplier;
 
-    return Vector3f(i * mplier, j * mplier, k * mplier);
+    return Vector2f(i * mplier, j * mplier);
   }
 
-  float Vector3f::theta() const {
+  float Vector2f::theta() const {
     return atan2(j,i);
   }
 
-  float Vector3f::phi() const {
-    const float xy_mag = sqrt(pow(i, 2) + pow(j, 2));
-
-    if(xy_mag > 0.0f)
-      return pi_over_two + atan(-k / xy_mag);
-
-    if(k < 0.0f)
-      return pi;
-
-    return 0.0f;
+  void Vector2f::set_spherical(const float &theta, const float &magnitude) {
+    i = magnitude * cos(theta);
+    j = magnitude * sin(theta);
   }
 
-  void Vector3f::set_spherical(const float &theta, const float &phi, const float &magnitude) {
-    i = sin(phi) * magnitude;
-    j = sin(theta) * i;
-    i *= cos(theta);
-    k = cos(phi) * magnitude;
-  }
-
-  std::ostream& operator <<(std::ostream &os,const Vector3f &v)
+  std::ostream& operator <<(std::ostream &os,const Vector2f &v)
   {
-	  os << v.i << ", " << v.j << ", " << v.k;
+	  os << v.i << ", " << v.j;
 	  return os;
   }
 
-  std::istream& operator >>(std::istream &is, Vector3f &v)
+  std::istream& operator >>(std::istream &is, Vector2f &v)
   {
 	  is >> v.i;
 	  is.ignore();
 	  is >> v.j;
-	  is.ignore();
-	  is >> v.k;
 	  return is;
   }
 

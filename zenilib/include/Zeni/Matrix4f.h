@@ -47,6 +47,7 @@
 #ifndef ZENI_MATRIX_H
 #define ZENI_MATRIX_H
 
+#include <Zeni/coordinate.h>
 #include <Zeni/Vector3f.h>
 #include <vector>
 
@@ -109,7 +110,7 @@ namespace Zeni {
 
     // Matrix Scalar Operations
     inline Matrix4f operator*(const float &rhs) const; ///< Get the scalar multiple
-    inline Matrix4f operator/(const float &rhs) const; ///< Get the scalar... something
+    inline Matrix4f operator/(const float &rhs) const; ///< Get the scalar quotient
     inline Matrix4f & operator*=(const float &rhs); ///< Set equal to the scalar multiple
     inline Matrix4f & operator/=(const float &rhs); ///< Set equal to the scalar something
     inline Matrix4f operator-() const; ///< Get the negation

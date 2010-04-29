@@ -284,12 +284,12 @@ namespace Zeni {
   }
   
   Vector3f Matrix4f::get_column(const int &column) const {
-    assert(-1 < column && column < 3);
+    assert(-1 < column && column < 4);
     return Vector3f(m_matrix[column][0], m_matrix[column][1], m_matrix[column][2]);
   }
 
   Vector3f Matrix4f::get_row(const int &row) const {
-    assert(-1 < row && row < 3);
+    assert(-1 < row && row < 4);
     return Vector3f(m_matrix[0][row], m_matrix[1][row], m_matrix[2][row]);
   }
 

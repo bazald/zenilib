@@ -85,7 +85,7 @@
 #ifndef ZENI_SHADER_H
 #define ZENI_SHADER_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 #include <Zeni/Hash_Map.h>
 
 #ifndef DISABLE_CG

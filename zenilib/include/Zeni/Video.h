@@ -48,9 +48,9 @@
 #ifndef ZENI_VIDEO_H
 #define ZENI_VIDEO_H
 
-#include <Zeni/Core.h>
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
+#include <Zeni/Error.h>
 #include <Zeni/IV.h>
 #include <Zeni/Matrix4f.h>
 

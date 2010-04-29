@@ -256,6 +256,10 @@ namespace Zeni {
   }
 
   GLuint Texture_GL::build_from_surface(SDL_Surface *surface, const bool &repeat) {
+    if( surface == NULL )
+	{
+		throw Texture_Init_Failure(); // SDL_CreateRGBSurface possibly ran out of memory
+	}
     GLuint texture_id = 0;
 
     const int mode = Texture::build_from_surface(surface, Point2i(ZENI_MAX_TEXTURE_WIDTH, ZENI_MAX_TEXTURE_HEIGHT));
@@ -444,10 +448,10 @@ namespace Zeni {
         if(stride == 4)
           rgba |= Uint32(src[3]) << 24;
 
-        dest[0] = static_cast<unsigned char>((rgba >> surface->format->Bshift) << surface->format->Bloss);
-        dest[1] = static_cast<unsigned char>((rgba >> surface->format->Gshift) << surface->format->Gloss);
-        dest[2] = static_cast<unsigned char>((rgba >> surface->format->Rshift) << surface->format->Rloss);
-        dest[3] = static_cast<unsigned char>((rgba >> surface->format->Ashift) << surface->format->Aloss);
+        dest[0] = static_cast<unsigned char>(((rgba >> surface->format->Bshift) << surface->format->Bloss)&0xFF);
+        dest[1] = static_cast<unsigned char>(((rgba >> surface->format->Gshift) << surface->format->Gloss)&0xFF);
+        dest[2] = static_cast<unsigned char>(((rgba >> surface->format->Rshift) << surface->format->Rloss)&0xFF);
+        dest[3] = static_cast<unsigned char>(((rgba >> surface->format->Ashift) << surface->format->Aloss)&0xFF);
       }
 
     if(FAILED(ppTexture->UnlockRect(0))) {

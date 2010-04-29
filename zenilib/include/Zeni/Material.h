@@ -79,6 +79,8 @@ namespace Zeni {
              const std::string &texture = "");
     Material(const std::string &texture,
              const Color &ambient_and_diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE);
+    Material(const unsigned long &textureId,
+             const Color &ambient_and_diffuse = ZENI_DEFAULT_MATERIAL_DIFFUSE);
 
     // Accessors
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)

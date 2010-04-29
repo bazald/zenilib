@@ -101,6 +101,7 @@
 
 #include <Zeni/Mutex.h>
 
+#include <SDL/SDL_thread.h>
 #include <set>
 
 namespace Zeni {

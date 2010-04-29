@@ -55,6 +55,8 @@
 #ifndef ZENI_XML_H
 #define ZENI_XML_H
 
+#include <Zeni/Error.h>
+
 #include <tinyxml.h>
 #include <string>
 
