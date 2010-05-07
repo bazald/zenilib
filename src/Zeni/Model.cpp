@@ -101,8 +101,8 @@ namespace Zeni {
       if(material) {///HACK
         const float opacity = 1.0f - material->transparency;
 
-        mat = Material(Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
-          Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
+        mat = Material(mesh->texcos ? Color() : Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
+          mesh->texcos ? Color() : Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
           Color(opacity, material->specular[0], material->specular[1], material->specular[2]),
           Color(1.0f, 0.0f, 0.0f, 0.0f),
           1.0f, mesh->texcos ? material->texture1_map.name : "");
