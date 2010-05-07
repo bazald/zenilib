@@ -416,11 +416,10 @@ namespace Zeni {
     else if(g_screen_size.y > max_res.y)
       g_screen_size.y = max_res.y;
 
+#if !SDL_VERSION_ATLEAST(1,3,0)
     // Vertical sync can only be specified before Window creation on some platforms
-#if SDL_VERSION_ATLEAST(1,3,0)
-    SDL_GL_SetSwapInterval(get_vertical_sync());
-#else
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, get_vertical_sync());
+    if(get_opengl_flag())
+      SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, get_vertical_sync());
 #endif
 
     // Initialize Window
@@ -451,6 +450,9 @@ namespace Zeni {
     }
 
 #if SDL_VERSION_ATLEAST(1,3,0)
+    if(get_opengl_flag())
+      SDL_GL_SetSwapInterval(get_vertical_sync());
+
     set_tt();
     set_icon();
 
