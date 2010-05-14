@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hm;hpp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Include Files">
+      <UniqueIdentifier>{404efd59-d14a-4532-ba3b-780abd1141a5}</UniqueIdentifier>
+      <Extensions>hxx;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="SCU File">
+      <UniqueIdentifier>{c8b44aa4-d853-4c7f-82d3-e847a788f0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{76482fb0-b382-45fe-8fe9-1e54bc1b0ae5}</UniqueIdentifier>
+      <Extensions>cg</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Zeni\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Colors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Configurator_Video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Console_State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Coordinate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\EZ2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Fog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Gamestate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Logo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Matrix4f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Net.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Net_Primitives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Quaternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Renderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Resource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound_AL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound_NULL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound_Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sound_Source_Pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Sounds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TinyXML\tinystr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TinyXML\tinyxml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TinyXML\tinyxmlerror.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TinyXML\tinyxmlparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vector3f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex2f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex3f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video_DX9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video_GL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Widget_Gamestate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zenilib.cxx">
+      <Filter>SCU File</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Zeni\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Chronometer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Configurator_Video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Console_State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Coordinate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\EZ2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Fog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Gamestate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Gamestate_One.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Global_Undef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Hash_Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\IV.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Line_Segment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Logo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Matrix4f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Net.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Net_Primitives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Popup_State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Projector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quadrilateral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_AL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_NULL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_Source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_Source_Pool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sounds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Title_State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector3f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex2f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex3f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex_Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_DX9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_GL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Widget_Gamestate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\XML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Camera.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Chronometer.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Collision.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Color.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Coordinate.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Database.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Font.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Game.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Gamestate.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Image.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Light.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Line_Segment.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Material.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Matrix4f.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Model.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Mutex.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Net.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Projector.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quadrilateral.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quaternion.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Renderable.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Resource.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Shader.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_AL.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_Buffer.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_NULL.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Sound_Source.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Texture.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Textures.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Timer.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Triangle.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector3f.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex2f.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex3f.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex_Buffer.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_DX9.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_GL.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Widget.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\XML.hxx">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\zeni_fragment_shaders.cg">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\shaders\zeni_vertex_shaders.cg">
+      <Filter>Shader Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
