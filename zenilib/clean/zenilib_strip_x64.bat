@@ -1,4 +1,5 @@
 RMDIR /S /Q "..\Visual Studio 2008\x64"
+RMDIR /S /Q "..\Visual Studio 2010\x64"
 
 RMDIR /S /Q "..\bin\x64"
 RMDIR /S /Q "..\lib_win\x64"

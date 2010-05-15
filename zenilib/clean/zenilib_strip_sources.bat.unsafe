@@ -16,6 +16,7 @@ DEL /P "Doxyfile"
 DEL /P "SConstruct"
 
 RMDIR /S "Visual Studio 2008"
+RMDIR /S "Visual Studio 2010"
 RMDIR /S "Xcode 3.1.2"
 
 RMDIR /S "clean"

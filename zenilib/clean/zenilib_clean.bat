@@ -1,14 +1,20 @@
 RMDIR /S /Q "..\Visual Studio 2008\SoarLibrary"
 RMDIR /S /Q "..\Visual Studio 2008\Win32"
 RMDIR /S /Q "..\Visual Studio 2008\x64"
+RMDIR /S /Q "..\Visual Studio 2010\SoarLibrary"
+RMDIR /S /Q "..\Visual Studio 2010\Win32"
+RMDIR /S /Q "..\Visual Studio 2010\x64"
+RMDIR /S /Q "..\Visual Studio 2010\ipch"
 
 DEL /Q "..\Visual Studio 2008\Application_Name.h"
+DEL /Q "..\Visual Studio 2010\Application_Name.h"
 
 DEL /Q "..\smltrace.txt"
 DEL /Q "..\stderr.txt"
 DEL /Q "..\stdout.txt"
 
 DEL /Q "..\Visual Studio 2008\*.ncb"
+DEL /Q "..\Visual Studio 2010\*.sdf"
 
 
 RMDIR /S /Q "..\Xcode 3.1.2\build"
@@ -48,3 +54,4 @@ DEL /Q "..\*.map"
 DEL /Q "..\*.pdb"
 
 DEL /Q "..\Visual Studio 2008\*.obj"
+DEL /Q "..\Visual Studio 2010\*.obj"
