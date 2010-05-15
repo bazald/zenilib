@@ -21,6 +21,7 @@ def main():
   zenilib.destroy("SConstruct")
   
   zenilib.destroy("Visual Studio 2008")
+  zenilib.destroy("Visual Studio 2010")
   zenilib.destroy("Xcode 3.1.2")
   
   zenilib.destroy("clean")
