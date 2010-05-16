@@ -3,8 +3,8 @@
 **************************************
 
 Batch files (.bat) and Python scripts should have equivalent results.
-The batch files should run in Windows, provided you are not using a network drive.
-The Python scripts should run fine on network drives, but they require Python to be installed.
+The batch files are for Windows.
+The Python scripts are for any OS with a Python interpreter installed.
 
 zenilib_clean.bat/py
   -Delete files generated during the build process

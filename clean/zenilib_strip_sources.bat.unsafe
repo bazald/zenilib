@@ -1,22 +1,22 @@
 CD "..\"
 
-DEL /P "bin\x64\cgc.exe"
-DEL /P "bin\cgc.exe"
-DEL /P "bin\cgfxcat.exe"
-DEL /P "bin\cginfo.exe"
+DEL /P "%~dp0..\bin\x64\cgc.exe"
+DEL /P "%~dp0..\bin\cgc.exe"
+DEL /P "%~dp0..\bin\cgfxcat.exe"
+DEL /P "%~dp0..\bin\cginfo.exe"
 
 
-RMDIR /S "include"
-RMDIR /S "include_win"
-RMDIR /S "lib_win"
-RMDIR /S "src"
+RMDIR /S "%~dp0..\include"
+RMDIR /S "%~dp0..\include_win"
+RMDIR /S "%~dp0..\lib_win"
+RMDIR /S "%~dp0..\src"
 
-DEL /P "docs\header.txt"
-DEL /P "Doxyfile"
-DEL /P "SConstruct"
+DEL /P "%~dp0..\docs\header.txt"
+DEL /P "%~dp0..\Doxyfile"
+DEL /P "%~dp0..\SConstruct"
 
-RMDIR /S "Visual Studio 2008"
-RMDIR /S "Visual Studio 2010"
-RMDIR /S "Xcode 3.1.2"
+RMDIR /S "%~dp0..\Visual Studio 2008"
+RMDIR /S "%~dp0..\Visual Studio 2010"
+RMDIR /S "%~dp0..\Xcode 3.1.2"
 
-RMDIR /S "clean"
+RMDIR /S "%~dp0"
