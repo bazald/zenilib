@@ -36,15 +36,15 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/,
 {
 #ifdef X64
 #ifdef NDEBUG
-  return launch("bin\\x64\\" APPLICATION_NAME "_x64.exe", lpCmdLine);
+  return launch(APPLICATION_NAME "_x64.exe", lpCmdLine);
 #else
-  return launch("bin\\x64\\" APPLICATION_NAME "_x64d.exe", lpCmdLine);
+  return launch(APPLICATION_NAME "_x64d.exe", lpCmdLine);
 #endif
 #else
 #ifdef NDEBUG
-  return launch("bin\\" APPLICATION_NAME ".exe", lpCmdLine);
+  return launch(APPLICATION_NAME ".exe", lpCmdLine);
 #else
-  return launch("bin\\" APPLICATION_NAME "_d.exe", lpCmdLine);
+  return launch(APPLICATION_NAME "_d.exe", lpCmdLine);
 #endif
 #endif
 }
@@ -59,7 +59,15 @@ int launch(const std::string &local_exe, const std::string &arguments) {
 
   for(int i = int(nSize) - 1; i != -1; --i)
     if(dir[i] == '\\') {
-      dir[i] = '\0';
+#ifdef X64
+      if(i + 9 > BUFFER_SIZE)
+        return -2;
+      memcpy(dir + i, "\\bin\\x64", 9);
+#else
+      if(i + 5 > BUFFER_SIZE)
+        return -2;
+      memcpy(dir + i, "\\bin", 5);
+#endif
       break;
     }
     else

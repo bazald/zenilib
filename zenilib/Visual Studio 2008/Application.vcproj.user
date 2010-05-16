@@ -9,64 +9,64 @@
 			Name="Debug|Win32"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin"
+				Command="$(SolutionDir)..\bin\$(ProjectName)_d.exe"
+				WorkingDirectory="..\bin"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin\x64"
+				Command="$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe"
+				WorkingDirectory="..\bin\x64"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin"
+				Command="$(SolutionDir)..\bin\$(ProjectName).exe"
+				WorkingDirectory="..\bin"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin\x64"
+				Command="$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe"
+				WorkingDirectory="..\bin\x64"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|Win32"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin"
+				Command="$(SolutionDir)..\bin\$(ProjectName)_d.exe"
+				WorkingDirectory="..\bin"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug SCU|x64"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin\x64"
+				Command="$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe"
+				WorkingDirectory="..\bin\x64"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release SCU|Win32"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin"
+				Command="$(SolutionDir)..\bin\$(ProjectName).exe"
+				WorkingDirectory="..\bin"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release SCU|x64"
 			>
 			<DebugSettings
-				WorkingDirectory=".."
-				Environment="PATH=bin\x64"
+				Command="$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe"
+				WorkingDirectory="..\bin\x64"
 			/>
 		</Configuration>
 	</Configurations>

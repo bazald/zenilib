@@ -269,12 +269,20 @@ static void up_one_dir(char path[], int &length) {
 int main(int argc, char *argv[]) {
 #ifdef _WINDOWS
 #ifdef X64
+  if(_chdir("..\\..")) {
+#else
+  if(_chdir("..")) {
+#endif
+    std::cerr << "Setting working directory failed with error code ':" << GetLastError() << "'\n";
+    return -1;
+  }
+#ifdef X64
   if(!SetDllDirectory("bin\\x64")) {
 #else
   if(!SetDllDirectory("bin")) {
 #endif
     std::cerr << "Setting DLL directory failed with error code ':" << GetLastError() << "'\n";
-    return -1;
+    return -2;
   }
 #else
   {
