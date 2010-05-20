@@ -162,7 +162,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y</Command>
+      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -172,7 +172,7 @@
     </CustomBuildStep>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -215,7 +215,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
+      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -228,7 +228,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -271,7 +271,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y</Command>
+      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -286,7 +286,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -328,7 +328,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
+      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -346,7 +346,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -386,7 +386,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y</Command>
+      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -396,7 +396,7 @@
     </CustomBuildStep>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -440,7 +440,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
+      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -453,7 +453,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -497,7 +497,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin /Y</Command>
+      <Command>del ..\bin\ElementXML.dll ..\bin\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -512,7 +512,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -555,7 +555,7 @@
     </BuildLog>
     <PreBuildEvent>
       <Message>Copying SoarSML DLLs from SoarSuite</Message>
-      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy SoarLibrary\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy SoarLibrary\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
+      <Command>del ..\bin\x64\ElementXML.dll ..\bin\x64\SoarKernelSML.dll &amp;&amp; copy ..\..\SoarSuite\out\bin\ElementXML.dll ..\bin\x64 /Y &amp;&amp; copy ..\..\SoarSuite\out\bin\SoarKernelSML.dll ..\bin\x64 /Y</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Generate Application_Name.h</Message>
@@ -573,7 +573,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\Core\ClientSML\include;..\..\SoarSuite\Core\ConnectionSML\include;..\..\SoarSuite\Core\shared;..\..\SoarSuite\Tools\TOHSML;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;..\..\SoarSuite\out\include;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -657,9 +657,29 @@
     <None Include="..\config\zenilib.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Application_SoarSML.vcxproj">
-      <Project>{dfc46808-04a8-43ee-aadb-0e6277ba50c9}</Project>
+    <ProjectReference Include="..\..\SoarSuite\Core\ClientSML\ClientSML9.vcxproj">
+      <Project>{3edbed11-a1b3-4e00-8b6e-652523d482f0}</Project>
+      <Private>false</Private>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SoarSuite\Core\ConnectionSML\ConnectionSML9.vcxproj">
+      <Project>{161dc1ad-fb4b-4370-9fd5-b02e2a0d8a36}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SoarSuite\Core\ElementXML\ElementXML9.vcxproj">
+      <Project>{e9ab0b6e-f1ca-4a63-817b-ab47f7e5417e}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="Zenilib.vcxproj">
       <Project>{2a690d67-1b22-41f1-a729-c46016ec83dc}</Project>
