@@ -339,11 +339,9 @@ else:
     libpath += os.getenv('LDPATH').split(':')
 
 if soar:
-  cpppath += ['../SoarSuite/Core/ClientSML/src/']
-  cpppath += ['../SoarSuite/Core/ConnectionSML/src/']
-  cpppath += ['../SoarSuite/Core/shared/']
-  cpppath += ['../SoarSuite/TOHSML/']
-  libpath += ['../SoarSuite/out/lib/']
+  soarpath = os.getenv('SOAR_HOME')
+  cpppath += [soarpath + '/include']
+  libpath += [soarpath + '/lib']
   libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
 if deprecated_opts is False:
