@@ -66,6 +66,8 @@ namespace Zeni {
   public:
     class Replacement_Policy {
     public:
+      virtual ~Replacement_Policy() {};
+
       /// (Default) Priority Sort:  Playing/Not-Playing, Priority, Gain, Recency
       virtual bool operator()(const Sound_Source &lhs, const Sound_Source &rhs) const;
 

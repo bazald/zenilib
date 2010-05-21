@@ -27,6 +27,7 @@ noal = False
 nodx9 = not is_windows
 nogl = False
 nowgl = not is_windows
+nocg = False
 pedantic = False
 profile = False
 scu = 'zeni'
@@ -62,6 +63,7 @@ if is_windows:
 vars.Add('nogl', 'Set to 1 to disable the use of OpenGL', nogl)
 if is_windows:
   vars.Add('nowgl', 'Set to 1 to disable the use of Windows GL Extensions', nowgl)
+vars.Add('nocg', 'Set to 1 to disable the use of Cg shaders', nocg)
 if not is_windows:
   vars.Add('pedantic', 'Set to 1 to add warnings for violations of ANSI standards', pedantic)
   vars.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', profile)
@@ -98,6 +100,7 @@ if is_windows:
 nogl = arg_eval(ARGUMENTS.get('nogl', nogl))
 if is_windows:
   nowgl = arg_eval(ARGUMENTS.get('nowgl', nowgl))
+nocg = arg_eval(ARGUMENTS.get('nocg', nocg))
 if not is_windows:
   pedantic = arg_eval(ARGUMENTS.get('pedantic', pedantic))
   profile = arg_eval(ARGUMENTS.get('profile', profile))
@@ -230,6 +233,8 @@ if nogl:
   ccflags += define + 'DISABLE_GL'
 if nowgl:
   ccflags += define + 'DISABLE_WGL'
+if nocg:
+  ccflags += define + 'DISABLE_CG'
 if profile:
   ccflags += ' -pg '
 if tune:
@@ -239,7 +244,7 @@ if x64:
 
 ### Decide libraries
 
-libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net', 'Cg']
+libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
 
 if is_windows:
   libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
@@ -252,14 +257,21 @@ if not noal:
   else:
     libs += ['openal', 'libvorbis', 'vorbisfile']
 
+if not nocg:
+  libs += ['Cg']
+
 if not nodx9:
-  libs += ['d3d9', 'd3dx9', 'gdi32', 'CgD3D9']
+  libs += ['d3d9', 'd3dx9', 'gdi32']
+  if not nocg:
+    libs += ['CgD3D9']
 
 if not nogl:
   if is_windows:
-    libs += ['opengl32', 'glew32', 'glu32', 'CgGL']
+    libs += ['opengl32', 'glew32', 'glu32']
   else:
-    libs += ['GL', 'GLEW', 'GLU', 'CgGL']
+    libs += ['GL', 'GLEW', 'GLU']
+  if not nocg:
+    libs += ['CgGL']
 
 ### Decide build options
 
