@@ -203,10 +203,10 @@
     <ClCompile Include="Launcher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Application_SoarSML.vcxproj">
+    <ProjectReference Include="Application.vcxproj">
       <Project>{dfc46808-04a8-43ee-aadb-0e6277ba50c9}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
