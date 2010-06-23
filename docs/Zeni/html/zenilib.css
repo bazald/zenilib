@@ -1,0 +1,22 @@
+#zenilib {
+  float: left;
+  font-family: cursive;
+}
+
+#zenilib a {
+  background-color: #b7ffff;
+  color: navy;
+}
+#zenilib a:hover {
+  text-decoration: none;
+  background-color: navy;
+  color: #b7ffff;
+}
+#zenilib a:active {
+  background-color: #b7ffff;
+  color: blue;
+}
+
+#sourceforge {float: right;}
+
+#endhead {clear: both;}
