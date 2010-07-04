@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Model
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief An Abstraction of a 3D Model
  *
@@ -44,7 +44,7 @@
 /**
  * \class Zeni::Model_Visitor
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A visitor base class
  *
@@ -59,7 +59,7 @@
 /**
  * \class Zeni::Model_Extents
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A visitor for determining the extents or bounds of a model
  *

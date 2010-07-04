@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Gamestate_Base
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief The base class for all gamestates.
  *
@@ -48,7 +48,7 @@
 /**
  * \class Zeni::Gamestate
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A smartpointer for a Gamestate_Base
  *
@@ -68,7 +68,7 @@
 /**
  * \class Zeni::Gamestate_II
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A new Gamestate base with an Integrated Input technique
  *

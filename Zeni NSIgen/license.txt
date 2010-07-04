@@ -5,7 +5,7 @@ This software was built with many open source, free-as-in-libre, and free-as-in-
 ~bazald@zenipex.com
 
 The Zenipex Library
-zenilib    0.3.2.3           (GNU Runtime GPL)       http://zenilib.com
+zenilib    0.3.3.0           (GNU Runtime GPL)       http://zenilib.com
 
 DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/directx/sdk/
 OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
@@ -21,7 +21,6 @@ libpng     1.2.33            (zlib/libpng License)   http://www.libpng.org/pub/p
 libtiff    3.8.2             (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
 libvorbis  1.2.0             (Xiph BSD-like License) http://xiph.org/downloads/
 SDL        1.2.13            (GNU LGPL)              http://www.libsdl.org/download-1.2.php
-SDL_gfx    2.0.17            (GNU LGPL)              http://www.ferzkopp.net/joomla/content/view/19/14/
 SDL_image  1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
 SDL_net    1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
 SDL_ttf    2.0.9             (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/

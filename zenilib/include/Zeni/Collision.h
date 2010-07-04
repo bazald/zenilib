@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Collision::Sphere
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Sphere
  *
@@ -47,7 +47,7 @@
 /**
  * \class Zeni::Collision::Plane
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Plane
  *
@@ -64,7 +64,7 @@
 /**
  * \class Zeni::Collision::Line_Segment
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Line Segment
  *
@@ -82,7 +82,7 @@
 /**
  * \class Zeni::Collision::Ray
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Ray
  *
@@ -100,7 +100,7 @@
 /**
  * \class Zeni::Collision::Line
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Line
  *
@@ -117,7 +117,7 @@
 /**
  * \class Zeni::Collision::Infinite_Cylinder
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Infinite Cylinder
  *
@@ -135,7 +135,7 @@
 /**
  * \class Zeni::Collision::Capsule
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Capsule
  *
@@ -154,7 +154,7 @@
 /**
  * \class Zeni::Collision::Parallelepiped
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Collision Parallelepiped
  *

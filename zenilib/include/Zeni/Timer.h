@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Time
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Snapshot of the Timer
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::Timer
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Timer Singleton
  *
@@ -60,7 +60,7 @@
 /**
  * \class Zeni::Time_HQ
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Snapshot of the Timer_HQ
  *
@@ -74,7 +74,7 @@
 /**
  * \class Zeni::Timer_HQ
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A High Quality Timer Singleton
  *

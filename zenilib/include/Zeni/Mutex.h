@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Semaphore
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A simple Semaphore class
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::Mutex
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A simple Mutex class
  *
@@ -57,7 +57,7 @@
 /**
  * \class Zeni::Recursive_Mutex
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A more sophisticated Mutex class
  *
@@ -71,7 +71,7 @@
 /**
  * \class Zeni::Condition_Variable
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A simple Condition Variable class
  *

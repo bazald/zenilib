@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Shader_System
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A rendering context for Cg
  *
@@ -47,7 +47,7 @@
 /**
  * \class Zeni::Shader
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A base class for Vertex_Shader and Fragment_Shader
  *
@@ -61,7 +61,7 @@
 /**
  * \class Zeni::Vertex_Shader
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A shader for manipulating vertex data as it is streamed through the GPU.
  *
@@ -73,7 +73,7 @@
 /**
  * \class Zeni::Fragment_Shader
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A shader for manipulating fragment/pixel data as it is streamed through the GPU.
  *

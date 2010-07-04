@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Net
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief The Net Singleton
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::TCP_Socket
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A TCP Socket for sending and receiving data
  *
@@ -57,7 +57,7 @@
 /**
  * \class Zeni::TCP_Listener
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Socket for accepting new TCP connections (in the form of TCP_Sockets)
  *
@@ -71,7 +71,7 @@
 /**
  * \class Zeni::UDP_Socket
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A UDP Socket for sending and receiving data
  *
@@ -89,7 +89,7 @@
 /**
  * \class Zeni::Split_UDP_Socket
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A higher level UDP_Socket
  *
