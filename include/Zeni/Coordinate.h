@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Point2i
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A 2D Point represented with integers
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::Point2f
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A 2D Point represented with floats
  *
@@ -55,7 +55,7 @@
 /**
  * \class Zeni::Point3i
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A 3D Point represented with integers
  *
@@ -69,7 +69,7 @@
 /**
  * \class Zeni::Point3f
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A 3D Point represented with floats
  *

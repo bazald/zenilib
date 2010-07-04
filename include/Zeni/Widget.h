@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Widget
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief The Widget base class
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::Widget_Text
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Widget Text rendering
  *
@@ -57,7 +57,7 @@
 /**
  * \class Zeni::Widget_Rectangle
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief Rectangle positioning
  *
@@ -72,7 +72,7 @@
 /**
  * \class Zeni::Widget_Rectangle_Color
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Colored Rectangle Widget
  *
@@ -86,7 +86,7 @@
 /**
  * \class Zeni::Widget_Rectangle_Texture
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Textured Rectangle Widget
  *
@@ -100,7 +100,7 @@
 /**
  * \class Zeni::Widget_Button
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Button Widget
  *
@@ -114,7 +114,7 @@
 /**
  * \class Zeni::Text_Button
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Text Button Widget
  *
@@ -128,7 +128,7 @@
 /**
  * \class Zeni::Check_Box
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Check Box
  *
@@ -142,7 +142,7 @@
 /**
  * \class Zeni::Radio_Button
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Radio Button
  *
@@ -156,7 +156,7 @@
 /**
  * \class Zeni::Radio_Button_Set
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Set of Radio Buttons
  *
@@ -170,7 +170,7 @@
 /**
  * \class Zeni::Slider
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Slider
  *
@@ -185,7 +185,7 @@
 /**
  * \class Zeni::Text_Box
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Text_Box
  *
@@ -200,7 +200,7 @@
 /**
  * \class Zeni::Widget_Input_Repeater
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief An Input Repeater Class
  *
@@ -215,7 +215,7 @@
 /**
  * \class Zeni::Widgets
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Widget Set
  *

@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -27,13 +27,13 @@
 */
 
 /**
- * \class Zeni::Fog
+ * \struct Zeni::Fog
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief An Abstraction of Fog
  *
- * The Fog class simply provides Fog data to both Direct3D9 and OpenGL.
+ * The Fog struct simply provides Fog data to both Direct3D9 and OpenGL.
  *
  * \author bazald
  *

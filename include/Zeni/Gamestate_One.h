@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -26,25 +26,14 @@
 * the GNU General Public License.
 */
 
-/** \defgroup Zenilib Zenipex Library
+/** \defgroup zenilib Zenipex Library
 *
 * \brief 3D Game Development Framework
 *
 * This library acts as as frontend to SDL (Simple Directmedia Layer), 
 * OpenGL, and Direct3D 9.  It also uses SDL_image, SDL_mixer, SDL_ttf, 
-* SDL_gfx, and lib3ds.  It has successfully been compiled using Microsoft 
-* Visual Studio 2005 (Express and Professional) and mingw32 in Windows, 
-* and using g++ in Linux.
-*
-* Featurelist:
-* Cameras
-* Fonts
-* Gamestates and a Game Loop
-* Dynamic Lighting and Materials
-* Model Loading and Rendering
-* Sound Loading and Playing
-* Texturing
-* Timers
+* and lib3ds, among other libraries.  It has successfully been compiled 
+* using Microsoft Visual Studio, XCode, and GCC.
 *
 * All built-in rendering functionality is supported in both OpenGL and 
 * Direct3D 9.
@@ -53,7 +42,7 @@
 /**
 * \class Zeni::Gamestate_One
 *
-* \ingroup Zenilib
+* \ingroup zenilib
 *
 * \brief Initial Gamestate
 *

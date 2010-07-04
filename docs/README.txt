@@ -1,4 +1,4 @@
-Zenipex Library           (Most Recently Updated at 0.3.0.0)
+Zenipex Library           (Most Recently Updated at 0.3.3.0)
 ============================================================
 
 Contents
@@ -80,10 +80,11 @@ me an e-mail.
 3. Supported Platforms
 ======================
  
-This software is known to operate on:
+This software is known to compile and run on:
  
-- Windows: XP, Vista x64
-- Linux: {Ku,U,Xu}buntu
+- Windows: XP, Vista, 7
+- MacOS X: 10.4 and up
+- Linux: Ubuntu (and derivatives)
 
 It should be possible to build it on any platform supported by:
 
@@ -101,7 +102,6 @@ libpng     1.2.33            (zlib/libpng License)   http://www.libpng.org/pub/p
 libtiff    3.8.2             (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
 libvorbis  1.2.0             (Xiph BSD-like License) http://xiph.org/downloads/
 SDL        1.2.13            (GNU LGPL)              http://www.libsdl.org/download-1.2.php
-SDL_gfx    2.0.17            (GNU LGPL)              http://www.ferzkopp.net/joomla/content/view/19/14/
 SDL_image  1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
 SDL_net    1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
 SDL_ttf    2.0.9             (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/

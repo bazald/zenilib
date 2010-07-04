@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * The Zenipex Library is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License as 
@@ -29,7 +29,7 @@
 /**
  * \class Zeni::Task
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Task to be run in a Runonce_Computation
  *
@@ -43,7 +43,7 @@
 /**
  * \class Zeni::Repeatable_Task
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Task to be run repeatedly in a Repeatable_Computation
  *
@@ -57,7 +57,7 @@
 /**
  * \class Zeni::Thread
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief A Thread
  *
@@ -71,7 +71,7 @@
 /**
  * \class Zeni::Repeatable_Computation
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief The preferred way of running a Task
  *
@@ -85,7 +85,7 @@
 /**
  * \class Zeni::Runonce_Computation
  *
- * \ingroup Zenilib
+ * \ingroup zenilib
  *
  * \brief The preferred way of running a Repeatable_Task
  *

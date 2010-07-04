@@ -1,11 +1,11 @@
-# Doxyfile 1.5.7.1
+# Doxyfile 1.6.3
 
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Zenipex Library "
-PROJECT_NUMBER         = 0.3.2.3
+PROJECT_NUMBER         = 0.3.3.0
 OUTPUT_DIRECTORY       = ./docs/Zeni
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -33,7 +33,7 @@ QT_AUTOBRIEF           = NO
 MULTILINE_CPP_IS_BRIEF = NO
 INHERIT_DOCS           = YES
 SEPARATE_MEMBER_PAGES  = NO
-TAB_SIZE               = 8
+TAB_SIZE               = 2
 ALIASES                = 
 OPTIMIZE_OUTPUT_FOR_C  = NO
 OPTIMIZE_OUTPUT_JAVA   = NO
@@ -126,7 +126,7 @@ FILE_PATTERNS          = *.c \
                          *.dox \
                          *.py
 RECURSIVE              = NO
-EXCLUDE                = 
+EXCLUDE                = ./src/TinyXML
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
@@ -183,6 +183,7 @@ QHG_LOCATION           =
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
 GENERATE_TREEVIEW      = NO
+USE_INLINE_TREES       = YES
 TREEVIEW_WIDTH         = 250
 FORMULA_FONTSIZE       = 10
 #---------------------------------------------------------------------------
@@ -243,8 +244,9 @@ MACRO_EXPANSION        = NO
 EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = ./include_win \
-                         "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\include" \
-                         "C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include" \
+                         ./include_win/SDL \
+                         "C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/include" \
+                         "C:/Program Files/Microsoft SDKs/Windows/v6.0A/Include" \
                          "C:/Program Files (x86)/Microsoft DirectX SDK (March 2009)/Include" \
                          "C:/Program Files (x86)/OpenAL 1.1 SDK/include"
 INCLUDE_FILE_PATTERNS  = 

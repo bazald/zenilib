@@ -1,5 +1,5 @@
 /* This file is part of the Zenipex Library.
-* Copyleft (C) 2009 Mitchell Keith Bloch a.k.a. bazald
+* Copyleft (C) 2010 Mitchell Keith Bloch a.k.a. bazald
 *
 * This source file is simply under the public domain.
 */
@@ -53,7 +53,15 @@ private:
 
     Zeni::Font &fr = get_Fonts()["title"];
 
-    fr.render_text("ALT-F4 to Quit",
+    fr.render_text(
+#if defined(_WINDOWS)
+                   "ALT-F4"
+#elif defined(_MACOSX)
+                   "Apple-Q"
+#else
+                   "Ctrl-Q"
+#endif
+                           " to Quit",
                    Point2f(400.0f, 300.0f - 0.5f * fr.get_text_height()),
                    get_Colors()["title_text"],
                    ZENI_CENTER);
