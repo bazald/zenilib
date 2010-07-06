@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="zenilib">
+		<Project filename="application.cbp" active="1">
+			<Depends filename="zenilib.cbp" />
+		</Project>
+		<Project filename="zenilib.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

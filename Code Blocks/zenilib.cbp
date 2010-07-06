@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="zenilib" />
+		<Option makefile="../SConstruct" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command='scons --directory=../ zenilib scu=zeni' />
+			<CompileFile command='scons --directory=../ zenilib scu=zeni' />
+			<Clean command='scons --directory=../ -c zenilib scu=zeni' />
+			<DistClean command='scons --directory=../ -c zenilib scu=zeni' />
+		</MakeCommands>
+		<Build>
+			<Target title="Debug">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='scons --directory=../ zenilib scu=zeni debug=true' />
+					<CompileFile command='scons --directory=../ zenilib scu=zeni debug=true' />
+					<Clean command='scons --directory=../ -c zenilib scu=zeni debug=true' />
+					<DistClean command='scons --directory=../ -c zenilib scu=zeni debug=true' />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='scons --directory=../ zenilib scu=zeni debug=false' />
+					<CompileFile command='scons --directory=../ zenilib scu=zeni debug=false' />
+					<Clean command='scons --directory=../ -c zenilib scu=zeni debug=false' />
+					<DistClean command='scons --directory=../ -c zenilib scu=zeni debug=false' />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="../include/Zeni/Camera.h" />
+		<Unit filename="../include/Zeni/Camera.hxx" />
+		<Unit filename="../include/Zeni/Chronometer.h" />
+		<Unit filename="../include/Zeni/Chronometer.hxx" />
+		<Unit filename="../include/Zeni/Collision.h" />
+		<Unit filename="../include/Zeni/Collision.hxx" />
+		<Unit filename="../include/Zeni/Color.h" />
+		<Unit filename="../include/Zeni/Color.hxx" />
+		<Unit filename="../include/Zeni/Colors.h" />
+		<Unit filename="../include/Zeni/Configurator_Video.h" />
+		<Unit filename="../include/Zeni/Console_State.h" />
+		<Unit filename="../include/Zeni/Coordinate.h" />
+		<Unit filename="../include/Zeni/Coordinate.hxx" />
+		<Unit filename="../include/Zeni/Core.h" />
+		<Unit filename="../include/Zeni/Database.h" />
+		<Unit filename="../include/Zeni/Database.hxx" />
+		<Unit filename="../include/Zeni/EZ2D.h" />
+		<Unit filename="../include/Zeni/Fog.h" />
+		<Unit filename="../include/Zeni/Font.h" />
+		<Unit filename="../include/Zeni/Font.hxx" />
+		<Unit filename="../include/Zeni/Fonts.h" />
+		<Unit filename="../include/Zeni/Game.h" />
+		<Unit filename="../include/Zeni/Game.hxx" />
+		<Unit filename="../include/Zeni/Gamestate.h" />
+		<Unit filename="../include/Zeni/Gamestate.hxx" />
+		<Unit filename="../include/Zeni/Gamestate_One.h" />
+		<Unit filename="../include/Zeni/Global.h" />
+		<Unit filename="../include/Zeni/Global_Undef.h" />
+		<Unit filename="../include/Zeni/Hash_Map.h" />
+		<Unit filename="../include/Zeni/IV.h" />
+		<Unit filename="../include/Zeni/Image.h" />
+		<Unit filename="../include/Zeni/Image.hxx" />
+		<Unit filename="../include/Zeni/Light.h" />
+		<Unit filename="../include/Zeni/Light.hxx" />
+		<Unit filename="../include/Zeni/Line_Segment.h" />
+		<Unit filename="../include/Zeni/Line_Segment.hxx" />
+		<Unit filename="../include/Zeni/Logo.h" />
+		<Unit filename="../include/Zeni/Material.h" />
+		<Unit filename="../include/Zeni/Material.hxx" />
+		<Unit filename="../include/Zeni/Matrix4f.h" />
+		<Unit filename="../include/Zeni/Matrix4f.hxx" />
+		<Unit filename="../include/Zeni/Model.h" />
+		<Unit filename="../include/Zeni/Model.hxx" />
+		<Unit filename="../include/Zeni/Mutex.h" />
+		<Unit filename="../include/Zeni/Mutex.hxx" />
+		<Unit filename="../include/Zeni/Net.h" />
+		<Unit filename="../include/Zeni/Net.hxx" />
+		<Unit filename="../include/Zeni/Net_Primitives.h" />
+		<Unit filename="../include/Zeni/Popup_State.h" />
+		<Unit filename="../include/Zeni/Projector.h" />
+		<Unit filename="../include/Zeni/Projector.hxx" />
+		<Unit filename="../include/Zeni/Quadrilateral.h" />
+		<Unit filename="../include/Zeni/Quadrilateral.hxx" />
+		<Unit filename="../include/Zeni/Quaternion.h" />
+		<Unit filename="../include/Zeni/Quaternion.hxx" />
+		<Unit filename="../include/Zeni/Random.h" />
+		<Unit filename="../include/Zeni/Renderable.h" />
+		<Unit filename="../include/Zeni/Renderable.hxx" />
+		<Unit filename="../include/Zeni/Resource.h" />
+		<Unit filename="../include/Zeni/Resource.hxx" />
+		<Unit filename="../include/Zeni/Shader.h" />
+		<Unit filename="../include/Zeni/Shader.hxx" />
+		<Unit filename="../include/Zeni/Sound.h" />
+		<Unit filename="../include/Zeni/Sound.hxx" />
+		<Unit filename="../include/Zeni/Sound_AL.h" />
+		<Unit filename="../include/Zeni/Sound_AL.hxx" />
+		<Unit filename="../include/Zeni/Sound_Buffer.h" />
+		<Unit filename="../include/Zeni/Sound_Buffer.hxx" />
+		<Unit filename="../include/Zeni/Sound_NULL.h" />
+		<Unit filename="../include/Zeni/Sound_NULL.hxx" />
+		<Unit filename="../include/Zeni/Sound_Source.h" />
+		<Unit filename="../include/Zeni/Sound_Source.hxx" />
+		<Unit filename="../include/Zeni/Sound_Source_Pool.h" />
+		<Unit filename="../include/Zeni/Sounds.h" />
+		<Unit filename="../include/Zeni/Texture.h" />
+		<Unit filename="../include/Zeni/Texture.hxx" />
+		<Unit filename="../include/Zeni/Textures.h" />
+		<Unit filename="../include/Zeni/Textures.hxx" />
+		<Unit filename="../include/Zeni/Thread.h" />
+		<Unit filename="../include/Zeni/Timer.h" />
+		<Unit filename="../include/Zeni/Timer.hxx" />
+		<Unit filename="../include/Zeni/Title_State.h" />
+		<Unit filename="../include/Zeni/Triangle.h" />
+		<Unit filename="../include/Zeni/Triangle.hxx" />
+		<Unit filename="../include/Zeni/Vector3f.h" />
+		<Unit filename="../include/Zeni/Vector3f.hxx" />
+		<Unit filename="../include/Zeni/Vertex2f.h" />
+		<Unit filename="../include/Zeni/Vertex2f.hxx" />
+		<Unit filename="../include/Zeni/Vertex3f.h" />
+		<Unit filename="../include/Zeni/Vertex3f.hxx" />
+		<Unit filename="../include/Zeni/Vertex_Buffer.h" />
+		<Unit filename="../include/Zeni/Vertex_Buffer.hxx" />
+		<Unit filename="../include/Zeni/Video.h" />
+		<Unit filename="../include/Zeni/Video.hxx" />
+		<Unit filename="../include/Zeni/Video_DX9.h" />
+		<Unit filename="../include/Zeni/Video_DX9.hxx" />
+		<Unit filename="../include/Zeni/Video_GL.h" />
+		<Unit filename="../include/Zeni/Video_GL.hxx" />
+		<Unit filename="../include/Zeni/Widget.h" />
+		<Unit filename="../include/Zeni/Widget.hxx" />
+		<Unit filename="../include/Zeni/Widget_Gamestate.h" />
+		<Unit filename="../include/Zeni/XML.h" />
+		<Unit filename="../include/Zeni/XML.hxx" />
+		<Unit filename="../include/tinystr.h" />
+		<Unit filename="../include/tinyxml.h" />
+		<Unit filename="../include/zenilib.h" />
+		<Unit filename="../src/TinyXML/tinystr.cpp" />
+		<Unit filename="../src/TinyXML/tinyxml.cpp" />
+		<Unit filename="../src/TinyXML/tinyxmlerror.cpp" />
+		<Unit filename="../src/TinyXML/tinyxmlparser.cpp" />
+		<Unit filename="../src/Zeni/Camera.cpp" />
+		<Unit filename="../src/Zeni/Collision.cpp" />
+		<Unit filename="../src/Zeni/Color.cpp" />
+		<Unit filename="../src/Zeni/Colors.cpp" />
+		<Unit filename="../src/Zeni/Configurator_Video.cpp" />
+		<Unit filename="../src/Zeni/Console_State.cpp" />
+		<Unit filename="../src/Zeni/Coordinate.cpp" />
+		<Unit filename="../src/Zeni/Core.cpp" />
+		<Unit filename="../src/Zeni/EZ2D.cpp" />
+		<Unit filename="../src/Zeni/Fog.cpp" />
+		<Unit filename="../src/Zeni/Font.cpp" />
+		<Unit filename="../src/Zeni/Fonts.cpp" />
+		<Unit filename="../src/Zeni/Game.cpp" />
+		<Unit filename="../src/Zeni/Gamestate.cpp" />
+		<Unit filename="../src/Zeni/Image.cpp" />
+		<Unit filename="../src/Zeni/Light.cpp" />
+		<Unit filename="../src/Zeni/Logo.cpp" />
+		<Unit filename="../src/Zeni/Material.cpp" />
+		<Unit filename="../src/Zeni/Matrix4f.cpp" />
+		<Unit filename="../src/Zeni/Model.cpp" />
+		<Unit filename="../src/Zeni/Mutex.cpp" />
+		<Unit filename="../src/Zeni/Net.cpp" />
+		<Unit filename="../src/Zeni/Net_Primitives.cpp" />
+		<Unit filename="../src/Zeni/Quaternion.cpp" />
+		<Unit filename="../src/Zeni/Renderable.cpp" />
+		<Unit filename="../src/Zeni/Resource.cpp" />
+		<Unit filename="../src/Zeni/Shader.cpp" />
+		<Unit filename="../src/Zeni/Sound.cpp" />
+		<Unit filename="../src/Zeni/Sound_AL.cpp" />
+		<Unit filename="../src/Zeni/Sound_Buffer.cpp" />
+		<Unit filename="../src/Zeni/Sound_NULL.cpp" />
+		<Unit filename="../src/Zeni/Sound_Source.cpp" />
+		<Unit filename="../src/Zeni/Sound_Source_Pool.cpp" />
+		<Unit filename="../src/Zeni/Sounds.cpp" />
+		<Unit filename="../src/Zeni/Texture.cpp" />
+		<Unit filename="../src/Zeni/Textures.cpp" />
+		<Unit filename="../src/Zeni/Thread.cpp" />
+		<Unit filename="../src/Zeni/Timer.cpp" />
+		<Unit filename="../src/Zeni/Vector3f.cpp" />
+		<Unit filename="../src/Zeni/Vertex2f.cpp" />
+		<Unit filename="../src/Zeni/Vertex3f.cpp" />
+		<Unit filename="../src/Zeni/Vertex_Buffer.cpp" />
+		<Unit filename="../src/Zeni/Video.cpp" />
+		<Unit filename="../src/Zeni/Video_DX9.cpp" />
+		<Unit filename="../src/Zeni/Video_GL.cpp" />
+		<Unit filename="../src/Zeni/Widget.cpp" />
+		<Unit filename="../src/Zeni/Widget_Gamestate.cpp" />
+		<Unit filename="../src/Zeni/main.cpp" />
+		<Unit filename="../src/zenilib.cxx" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

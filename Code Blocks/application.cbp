@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="application" />
+		<Option makefile="../SConstruct" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command='scons --directory=../ application scu=zeni' />
+			<CompileFile command='scons --directory=../ application scu=zeni' />
+			<Clean command='scons --directory=../ -c application scu=zeni' />
+			<DistClean command='scons --directory=../ -c application scu=zeni' />
+		</MakeCommands>
+		<Build>
+			<Target title="Debug">
+				<Option output="../application_x64d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir=".." />
+				<Option object_output="/home/bazald/afs/umich.edu/Private/zeni_ss/Code Blocks/.objs" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='scons --directory=../ application scu=zeni debug=true' />
+					<CompileFile command='scons --directory=../ application scu=zeni debug=true' />
+					<Clean command='scons --directory=../ -c application scu=zeni debug=true' />
+					<DistClean command='scons --directory=../ -c application scu=zeni debug=true' />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="../application_x64d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir=".." />
+				<Option object_output="/home/bazald/afs/umich.edu/Private/zeni_ss/Code Blocks/.objs" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='scons --directory=../ application scu=zeni debug=false' />
+					<CompileFile command='scons --directory=../ application scu=zeni debug=false' />
+					<Clean command='scons --directory=../ -c application scu=zeni debug=false' />
+					<DistClean command='scons --directory=../ -c application scu=zeni debug=false' />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="../include/zenilib.h" />
+		<Unit filename="../src/Gamestate_One.cpp" />
+		<Unit filename="../src/application.cxx" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
