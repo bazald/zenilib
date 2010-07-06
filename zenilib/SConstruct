@@ -398,3 +398,10 @@ if is_windows:
 
 vars.Update(env)
 Help(vars.GenerateHelpText(env))
+
+### Alias targets
+
+env.Alias('application', program_name)
+env.Alias('zenilib', 'lib' + library_name + '.a')
+if is_windows:
+  env.Alias('launcher', launcher_name)
