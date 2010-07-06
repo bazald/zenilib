@@ -3,18 +3,28 @@
 
 import math, sys, os.path, glob, string, re, os, subprocess
 
-#for entry in os.environ:
-#  print entry + ' = ' + os.environ[entry]
-
 is_windows = sys.platform == 'win32'
 is_win64   = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or (os.environ.has_key('PROCESSOR_ARCHITEW6432') and os.environ['PROCESSOR_ARCHITEW6432'] == 'AMD64'))
 is_linux   = sys.platform == 'linux2'
 is_mac     = sys.platform == 'darwin'
 
 if is_windows:
-  VSINSTALLDIR = os.environ['VS90COMNTOOLS']
-  VSINSTALLDIR = VSINSTALLDIR[:VSINSTALLDIR.find('Common')]
-  VCBINDIR = VSINSTALLDIR + '\\VC\\BIN\\'
+  if(os.environ.has_key('VS100COMNTOOLS')):
+    VSINSTALLDIR = os.environ['VS100COMNTOOLS']
+    VSINSTALLDIR = VSINSTALLDIR[:VSINSTALLDIR.find('Common')]
+    VCBINDIR = VSINSTALLDIR + '\\VC\\BIN\\'
+    VCVARSBAT86 = ' "' + VCBINDIR + 'vcvars32.bat" '
+    VCVARSBAT64 = ' "' + VCBINDIR + 'amd64\\vcvars64.bat" '
+  elif(os.environ.has_key('VS90COMNTOOLS')):
+    VSINSTALLDIR = os.environ['VS90COMNTOOLS']
+    VSINSTALLDIR = VSINSTALLDIR[:VSINSTALLDIR.find('Common')]
+    VCBINDIR = VSINSTALLDIR + '\\VC\\BIN\\'
+    VCVARSBAT86 = ' "' + VCBINDIR + 'vcvars32.bat" '
+    VCVARSBAT64 = ' "' + VCBINDIR + 'amd64\\vcvars64.bat" '
+  else:
+    print "No compatible version of VisualC found.\nAttempt to use GNU toolchain."
+    is_windows = False
+    is_linux = True
 
 ### Defaults
 
@@ -113,32 +123,6 @@ if not is_windows:
 if is_windows:
   x64 = arg_eval(ARGUMENTS.get('x64', x64))
 
-### Print arguments
-
-#if not is_windows:
-  #print 'cc = ' + str(cc)
-  #print 'cpp0x = ' + str(cpp0x)
-#print 'debug = ' + str(debug)
-#if not is_windows:
-  #print 'link = ' + str(link)
-#print 'noal = ' + str(noal)
-#if is_windows:
-  #print 'nodx9 = ' + str(nodx9)
-#print 'nogl = ' + str(nogl)
-#if is_windows:
-  #print 'nowgl = ' + str(nowgl)
-#if not is_windows:
-  #print 'pedantic = ' + str(pedantic)
-  #print 'profile = ' + str(profile)
-#print 'scu = ' + str(scu)
-#if not is_windows:
-  #print 'soar = ' + str(soar)
-#print 'stress = ' + str(stress)
-#if not is_windows:
-  #print 'tune = ' + str(tune)
-#if is_windows:
-  #print 'x64 = ' + str(x64)
-
 ### Get g++ Version (if applicable)
 
 def gcc_version():
@@ -168,11 +152,11 @@ if is_windows:
   if x64:
     cc = ' "' + VCBINDIR + 'amd64\\cl.exe" '
     lib = ' "' + VCBINDIR + 'amd64\\lib.exe" '
-    link = '"' + VCBINDIR + 'vcvars64.bat"' + ' && ' + ' "' + VCBINDIR + 'amd64\\link.exe" '
+    link = VCVARSBAT64 + ' && "' + VCBINDIR + 'amd64\\link.exe" '
   else:
     cc = ' "' + VCBINDIR + 'cl.exe" '
     lib = ' "' + VCBINDIR + 'lib.exe" '
-    link = ' "' + VCBINDIR + 'link.exe" '
+    link = VCVARSBAT86 + ' && "' + VCBINDIR + 'link.exe" '
 else:
   link = cc
 
@@ -381,27 +365,23 @@ else:
     LIBS = libs,
     LIBPATH = libpath)
 
-env.Program(
+application = env.Program(
   program_name,
   program)
+env.Alias('application', application)
 
-env.StaticLibrary(
+zenilib = env.StaticLibrary(
   library_name,
   library)
+env.Alias('zenilib', zenilib)
 
 if is_windows:
-  env.Program(
+  launcher = env.Program(
     launcher_name,
     launcher)
+  env.Alias('launcher', launcher)
 
 ### Provide help
 
 vars.Update(env)
 Help(vars.GenerateHelpText(env))
-
-### Alias targets
-
-env.Alias('application', program_name)
-env.Alias('zenilib', 'lib' + library_name + '.a')
-if is_windows:
-  env.Alias('launcher', launcher_name)
