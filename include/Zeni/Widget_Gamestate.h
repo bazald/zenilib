@@ -76,6 +76,7 @@ namespace Zeni {
 
     bool m_hide_cursor;
     bool m_grab_input;
+    Color m_clear_color;
   };
 
 }

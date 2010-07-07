@@ -91,6 +91,10 @@ namespace Zeni {
     m_state->perform_logic();
   }
 
+  void Gamestate::prerender() {
+    m_state->prerender();
+  }
+
   void Gamestate::render() {
     m_state->render();
   }

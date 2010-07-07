@@ -234,6 +234,8 @@ namespace Zeni {
     ~Configurator_Video();
 
   private:
+    void on_push();
+
     void on_key(const SDL_KeyboardEvent &event);
 
     void render();

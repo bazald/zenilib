@@ -47,7 +47,7 @@
 * \brief Initial Gamestate
 *
 * This class is close to having the simplest definition possible for a 
-* Gamestate in Zenilib.  It is to be used similarly to a main function, 
+* Gamestate in zenilib.  It is to be used similarly to a main function, 
 * in that it should exist only as a launching pad to more meaningful 
 * Gamestates.
 *

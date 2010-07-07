@@ -152,6 +152,7 @@ namespace Zeni {
 
     // D3D-Related Functions
     inline const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details
+    inline const D3DPRESENT_PARAMETERS & get_d3d_parameters(); ///< See DirectX Documentation for details
     inline LPDIRECT3D9 & get_d3d(); ///< See DirectX Documentation for details
     inline LPDIRECT3DDEVICE9 & get_d3d_device(); ///< See DirectX Documentation for details
     inline LPD3DXMATRIXSTACK & get_matrix_stack(); ///< Get access to a matrix stack stored by this class
@@ -184,6 +185,7 @@ namespace Zeni {
     bool m_textured, m_fvf_3d;
 
     Texture_DX9 * m_render_target;
+    ID3DXRenderToSurface * m_render_to_surface;
     LPDIRECT3DSURFACE9 m_back_buffer;
   };
 

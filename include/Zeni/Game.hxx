@@ -171,6 +171,31 @@ namespace Zeni {
     gs.perform_logic();
   }
 
+  void Game::prerender() {
+    Gamestate gs;
+#ifndef NDEBUG
+    Gamestate console_child;
+#endif
+
+    {
+      if(m_states.empty())
+        throw Zero_Gamestate();
+
+#ifndef NDEBUG
+      if(m_console_active) {
+        gs = get_console_instance();
+        console_child = get_console().get_child();
+      }
+      else
+#endif
+      {
+        gs = m_states.top();
+      }
+    }
+
+    gs.prerender();
+  }
+
   void Game::render() {
     Gamestate gs;
 #ifndef NDEBUG

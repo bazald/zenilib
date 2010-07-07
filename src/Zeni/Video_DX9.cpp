@@ -53,6 +53,7 @@ namespace Zeni {
     m_textured(false),
     m_fvf_3d(false),
     m_render_target(0),
+    m_render_to_surface(0),
     m_back_buffer(0)
   {
     m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -70,7 +71,7 @@ namespace Zeni {
   }
 
   void Video_DX9::render_all() {
-    assert(!m_render_target);
+    assert(!m_render_target && !m_render_to_surface);
 
     static bool reset = false;
 
@@ -94,10 +95,12 @@ namespace Zeni {
 
     get_Textures().unlose_resources();
     get_Fonts().unlose_resources();
-    
+
     HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
-    
+
     if(result == S_OK) {
+      get_Game().prerender();
+
       D3DVIEWPORT9 vp = {0, 0, DWORD(get_screen_width()), DWORD(get_screen_height()), 0, 1};
       m_d3d_device->SetViewport(&vp);
       m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);

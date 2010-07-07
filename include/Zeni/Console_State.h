@@ -84,7 +84,7 @@ namespace Zeni {
     void on_mouse_motion(const SDL_MouseMotionEvent &event);
 
     void perform_logic();
-
+    void prerender();
     void render();
 
     std::pair<Point2f, Point2f> m_virtual_screen;

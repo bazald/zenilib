@@ -240,27 +240,22 @@ namespace Zeni {
     if(FAILED(tdx.m_texture->GetSurfaceLevel(0, &render_surface)))
       throw Video_Render_To_Texture_Error();
 
-    if(FAILED(m_d3d_device->GetRenderTarget(0, &m_back_buffer)))
-      throw Video_Render_To_Texture_Error();
-    if(FAILED(m_d3d_device->SetRenderTarget(0, render_surface)))
+    m_render_to_surface = tdx.render_to_surface();
+
+    if(!m_render_to_surface || FAILED(m_render_to_surface->BeginScene(render_surface, 0)))
       throw Video_Render_To_Texture_Error();
 
     m_render_target = &tdx;
-
-    m_d3d_device->BeginScene();
   }
 
   void Video_DX9::unset_render_target_impl() {
-    if(!m_render_target)
+    if(!m_render_target || !m_render_to_surface)
       throw Video_Render_To_Texture_Error();
-
-    m_d3d_device->EndScene();
-
-    if(FAILED(m_d3d_device->SetRenderTarget(0, m_back_buffer)))
-      throw Video_Render_To_Texture_Error();
-    m_back_buffer = 0;
 
     m_render_target = 0;
+
+    m_render_to_surface->EndScene(D3DX_FILTER_NONE);
+    m_render_to_surface = 0;
   }
 
   void Video_DX9::clear_render_target_impl(const Color &color) {
@@ -362,6 +357,10 @@ namespace Zeni {
 
   const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {
     return m_d3d_capabilities;
+  }
+
+  const D3DPRESENT_PARAMETERS & Video_DX9::get_d3d_parameters() {
+    return m_d3d_parameters;
   }
 
   LPDIRECT3D9 & Video_DX9::get_d3d() {

@@ -57,10 +57,14 @@ namespace Zeni {
     m_grab_input = vr.is_mouse_grabbed();
     if(m_grab_input)
       vr.mouse_grab(false);
+
+    m_clear_color = vr.get_clear_color();
   }
 
   void Widget_Gamestate::on_pop() {
     Video &vr = get_Video();
+
+    vr.set_clear_color(m_clear_color);
 
     if(m_hide_cursor)
       vr.mouse_hide(true);

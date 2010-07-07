@@ -115,6 +115,8 @@ namespace Zeni {
     virtual void on_event(const SDL_Event &event);
     /// Then perform logic.  Called by Game as part of the main gameloop.
     virtual void perform_logic() {}
+    /// No actual rendering, but any logic strictly necessary for rendering.
+    virtual void prerender() {}
     /// Then render.  Called by Game as part of the main gameloop.
     virtual void render();
 
@@ -183,6 +185,7 @@ namespace Zeni {
 
     inline void on_event(const SDL_Event &event);
     inline void perform_logic();
+    inline void prerender();
     inline void render();
 
     inline void on_push();

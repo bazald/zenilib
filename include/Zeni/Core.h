@@ -35,7 +35,7 @@
  *
  * A simple class for throwing an error message.
  *
- * \note This is also a base class for all error messages in Zenilib.
+ * \note This is also a base class for all error messages in zenilib.
  *
  * \author bazald
  *

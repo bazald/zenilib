@@ -469,11 +469,17 @@ namespace Zeni {
 
     /** Set Title **/
 
-    get_Video().set_title("Zenilib Configurator");
+    get_Video().set_title("zenilib Configurator");
   }
 
   Configurator_Video::~Configurator_Video() {
     get_Video().set_title(m_prev_title);
+  }
+
+  void Configurator_Video::on_push() {
+    Widget_Gamestate::on_push();
+
+    get_Video().set_clear_color(get_Colors()["configurator_bg"]);
   }
 
   void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {
@@ -491,7 +497,7 @@ namespace Zeni {
     Font &font = get_Fonts()["system_36_500x600"];
     const Color color = get_Colors()["system_font"];
 
-    font.render_text("Zenilib Renderer Configuration:", Point2f(10.0f, 10.0f), color);
+    font.render_text("zenilib Renderer Configuration:", Point2f(10.0f, 10.0f), color);
     font.render_text("Textures:", Point2f(10.0f, 10.0f + 1 * 42.0f), color);
     font.render_text("Video:", Point2f(10.0f, 10.0f + 5 * 42.0f), color);
     font.render_text("x", Point2f(52.0f + 100.0f, 10.0f + 9 * 42.0f), color, ZENI_CENTER);
