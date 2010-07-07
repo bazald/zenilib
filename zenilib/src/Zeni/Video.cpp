@@ -499,12 +499,12 @@ namespace Zeni {
   }
 
   std::string & Video::get_m_title() {
-    static std::string title = "Zenilib Application";
+    static std::string title = "zenilib Application";
     return title;
   }
 
   std::string & Video::get_m_taskmsg() {
-    static std::string taskmsg = "Zenilib Application";
+    static std::string taskmsg = "zenilib Application";
     return taskmsg;
   }
 

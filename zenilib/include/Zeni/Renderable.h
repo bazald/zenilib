@@ -34,7 +34,7 @@
  * \brief A Renderable Interface
  *
  * This class provides an interface for anything that "knows how to render itself" 
- * it all rendering engines supported by Zenilib.
+ * it all rendering engines supported by zenilib.
  *
  * \author bazald
  *

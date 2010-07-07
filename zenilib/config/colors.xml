@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- Colors to load into the Colors Database in Zenilib
+<!-- Colors to load into the Colors Database in zenilib
 
 For each entry in Colors:
 
@@ -49,6 +49,12 @@ element in your game to enable easy skinning.
     <green>1.0</green>
     <blue>1.0</blue>
   </title_text>
+  <configurator_bg>
+    <alpha>1.0</alpha>
+    <red>0.0</red>
+    <green>0.0</green>
+    <blue>0.0</blue>
+  </configurator_bg>
   <default_button_bg_normal>
     <alpha>1.0</alpha>
     <red>1.0</red>

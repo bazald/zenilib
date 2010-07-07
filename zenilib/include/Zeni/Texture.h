@@ -179,6 +179,7 @@ namespace Zeni {
     inline void apply_texture_impl() const;
 
     inline const Point2i & get_size() const;
+    inline ID3DXRenderToSurface * render_to_surface() const;
 
   private:
     static void set_sampler_states();
@@ -186,7 +187,9 @@ namespace Zeni {
 
     Point2i m_size;
     mutable IDirect3DTexture9 *m_texture;
-    
+
+    ID3DXRenderToSurface *m_render_to_surface;
+
     void load(const std::string &filename) const;
   };
 #endif

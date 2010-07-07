@@ -182,6 +182,10 @@ namespace Zeni {
   const Point2i & Texture_DX9::get_size() const {
     return m_size;
   }
+
+  ID3DXRenderToSurface * Texture_DX9::render_to_surface() const {
+    return m_render_to_surface;
+  }
 #endif
 
   void Texture::apply_texture() const {

@@ -80,6 +80,7 @@ namespace Zeni {
 
     inline void on_event(const SDL_Event &event); ///< Called in main, calls the function by the same name in the current Gamestate.
     inline void perform_logic(); ///< Called in main, calls the function by the same name in the current Gamestate.
+    inline void prerender(); ///< Called in main, calls the function by the same name in the current Gamestate.
     inline void render(); ///< Called in main, calls the function by the same name in the current Gamestate.
 
     inline size_t get_fps() const; ///< Get the current approximation of the frames displayed per second.

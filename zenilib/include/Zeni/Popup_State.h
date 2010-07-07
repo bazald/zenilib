@@ -90,6 +90,12 @@ namespace Zeni {
         m_gamestate.perform_logic();
     }
 
+    void prerender() {
+      Widget_Gamestate::prerender();
+
+      m_gamestate.prerender();
+    }
+
     void render() {
       m_gamestate.render();
 

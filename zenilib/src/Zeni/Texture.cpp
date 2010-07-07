@@ -323,7 +323,8 @@ namespace Zeni {
 #ifndef DISABLE_DX9
   Texture_DX9::Texture_DX9(const std::string &filename, const bool &repeat) 
     : Texture(Texture_Base::VTYPE_DX9, repeat),
-    m_texture(0)
+    m_texture(0),
+    m_render_to_surface(0)
   {
     load(filename);
   }
@@ -331,14 +332,16 @@ namespace Zeni {
   Texture_DX9::Texture_DX9(SDL_Surface *surface, const bool &repeat)
     : Texture(Texture_Base::VTYPE_DX9, repeat),
     //m_size(surface->w, surface->h),
-    m_texture(build_from_surface(surface, m_size))
+    m_texture(build_from_surface(surface, m_size)),
+    m_render_to_surface(0)
   {
   }
 
   Texture_DX9::Texture_DX9(const Point2i &size, const bool &repeat)
     : Texture(Texture_Base::VTYPE_DX9, repeat),
     m_size(size),
-    m_texture(0)
+    m_texture(0),
+    m_render_to_surface(0)
   {
     Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
 
@@ -352,9 +355,25 @@ namespace Zeni {
     {
       throw Texture_Init_Failure();
     }
+
+    if(FAILED(D3DXCreateRenderToSurface(vr.get_d3d_device(),
+                                        UINT(size.x), UINT(size.y),
+                                        D3DFMT_A8R8G8B8,
+                                        true,
+                                        D3DFMT_D16,
+                                        &m_render_to_surface)))
+    {
+      if(m_texture)
+        m_texture->Release();
+
+      throw Texture_Init_Failure();
+    }
   }
 
   Texture_DX9::~Texture_DX9() {
+    if(m_render_to_surface)
+      m_render_to_surface->Release();
+
     if(m_texture)
       m_texture->Release();
   }

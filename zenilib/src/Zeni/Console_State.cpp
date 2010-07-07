@@ -259,10 +259,10 @@ namespace Zeni {
     m_child->perform_logic();
   }
 
-  void Console_State::render() {
+  void Console_State::prerender() {
     assert(m_child);
 
-    m_child->render();
+    m_child->prerender();
 
     if(m_log_dirty) {
       m_log.set_text(m_text);
@@ -274,6 +274,12 @@ namespace Zeni {
       m_text = m_log.get_text();
       m_log_dirty = false;
     }
+  }
+
+  void Console_State::render() {
+    assert(m_child);
+
+    m_child->render();
 
     Video &vr = get_Video();
 
