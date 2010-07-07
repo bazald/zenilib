@@ -45,6 +45,7 @@ soar = False
 stress = True
 tune = False
 x64 = False
+manual_vsync_delay = False
 
 ### Get architecture
 
@@ -85,6 +86,7 @@ if not is_windows:
   vars.Add('tune', 'Set to 1 to tune the executable for this computer\'s architecture', tune)
 if is_windows:
   vars.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', x64)
+vars.Add('manual_vsync_delay', 'Set to 1 to save CPU time', manual_vsync_delay)
 
 ### Read arguments
 
@@ -120,8 +122,9 @@ if not is_windows:
 stress = arg_eval(ARGUMENTS.get('stress', stress))
 if not is_windows:
   tune = arg_eval(ARGUMENTS.get('tune', tune))
-if is_windows:
-  x64 = arg_eval(ARGUMENTS.get('x64', x64))
+  if is_windows:
+    x64 = arg_eval(ARGUMENTS.get('x64', x64))
+manual_vsync_delay = arg_eval(ARGUMENTS.get('manual_vsync_delay', manual_vsync_delay))
 
 ### Get g++ Version (if applicable)
 
@@ -225,6 +228,8 @@ if tune:
   ccflags += ' -march=native -mfpmath=sse -fomit-frame-pointer '
 if x64:
   ccflags += define + 'X64'
+if manual_vsync_delay:
+  ccflags += define + 'MANUAL_GL_VSYNC_DELAY'
 
 ### Decide libraries
 

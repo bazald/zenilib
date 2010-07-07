@@ -98,7 +98,13 @@ namespace Zeni {
       glDisable(GL_CULL_FACE);
   }
 
-  void Video_GL::set_vertical_sync_impl(const bool &on) {
+  void Video_GL::set_vertical_sync_impl(const bool &on_) {
+#ifdef MANUAL_GL_VSYNC_DELAY
+    const bool on = false;
+#else
+    const bool on = on_;
+#endif
+
 #if SDL_VERSION_ATLEAST(1,3,0)
     SDL_GL_SetSwapInterval(on);
 #elif !defined(DISABLE_WGL)
@@ -114,8 +120,12 @@ namespace Zeni {
         wglSwapIntervalEXT(on);
     }
 #elif defined(_LINUX)
-    if(m_pglSwapIntervalEXT)
-      m_pglSwapIntervalEXT(on);
+    if(m_pglSwapIntervalSGI)
+      m_pglSwapIntervalSGI(on);
+    else if(m_pglSwapIntervalEXT)
+      m_pglSwapIntervalEXT(0, 0, on);
+    else
+      SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #else
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #endif
