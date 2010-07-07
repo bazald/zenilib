@@ -55,11 +55,11 @@ private:
 
     fr.render_text(
 #if defined(_WINDOWS)
-                   "ALT-F4"
+                   "ALT+F4"
 #elif defined(_MACOSX)
-                   "Apple-Q"
+                   "Apple+Q"
 #else
-                   "Ctrl-Q"
+                   "Ctrl+Q"
 #endif
                            " to Quit",
                    Point2f(400.0f, 300.0f - 0.5f * fr.get_text_height()),

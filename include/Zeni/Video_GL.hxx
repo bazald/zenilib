@@ -67,14 +67,32 @@ namespace Zeni {
       translate_scene(Vector3f(0.0f, camera2d.second.y, 0.0f));
       scale_scene(Vector3f(1.0f, -1.0f, 1.0f));
       translate_scene(Vector3f(0.0f, -camera2d.first.y, 0.0f));
+
+      if(get_backface_culling())
+        glCullFace(GL_FRONT);
     }
+    else if(get_backface_culling())
+      glCullFace(GL_BACK);
+  }
+
+  void Video_GL::set_3d_view_impl(const Camera & /*camera*/, const std::pair<Point2i, Point2i> & /*viewport*/) {
+    if(m_render_target) {
+      if(get_backface_culling())
+        glCullFace(GL_FRONT);
+    }
+    else if(get_backface_culling())
+      glCullFace(GL_BACK);
   }
 
   void Video_GL::set_backface_culling_impl(const bool &on) {
     if(on) {
       // Enable Backface Culling
       glEnable(GL_CULL_FACE);
-      glCullFace(GL_BACK);
+
+      if(m_render_target)
+        glCullFace(GL_FRONT);
+      else
+        glCullFace(GL_BACK);
     }
     else
       glDisable(GL_CULL_FACE);
