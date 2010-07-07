@@ -43,6 +43,7 @@
 #ifndef ZENI_VIDEO_GL_H
 #define ZENI_VIDEO_GL_H
 
+#include <Zeni/Timer.h>
 #include <Zeni/Video.h>
 
 #ifndef DISABLE_GL
@@ -180,7 +181,8 @@ namespace Zeni {
 #endif
 
 #ifdef _LINUX
-    PFNGLXSWAPINTERVALSGIPROC m_pglSwapIntervalEXT;
+    PFNGLXSWAPINTERVALEXTPROC m_pglSwapIntervalEXT;
+    PFNGLXSWAPINTERVALSGIPROC m_pglSwapIntervalSGI;
 #endif
     PFNGLBINDBUFFERARBPROC m_pglBindBufferARB;
     PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
@@ -193,7 +195,7 @@ namespace Zeni {
     Texture_GL * m_render_target;
 
 #ifdef MANUAL_GL_VSYNC_DELAY
-    Time m_buffer_swap_end_time;
+    Zeni::Time m_buffer_swap_end_time;
     float m_time_taken;
     float m_weight_new;
 #endif

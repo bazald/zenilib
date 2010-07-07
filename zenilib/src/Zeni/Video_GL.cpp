@@ -122,7 +122,7 @@ namespace Zeni {
      m_time_taken = (1.0f - m_weight_new) * m_time_taken + m_weight_new * new_time_taken;
      
      if(m_time_taken < time_allowed)
-       SDL_Delay(unsigned int(time_allowed - m_time_taken));
+       SDL_Delay(static_cast<unsigned int>(time_allowed - m_time_taken));
    }
 #endif
     
@@ -206,48 +206,31 @@ namespace Zeni {
     set_color(get_color());
     set_clear_color(get_clear_color());
     set_backface_culling(get_backface_culling());
-    set_vertical_sync(get_vertical_sync());
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());
 
-    // Manage extensions
-    union {
-      PFNGLBINDBUFFERARBPROC proc;
-      void *ptr;
-    } uni;
-
 #ifdef _LINUX
-    uni.ptr = SDL_GL_GetProcAddress("glXSwapInterval");
-    if(!uni.ptr)
-      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalEXT");
-    if(!uni.ptr)
-      uni.ptr = SDL_GL_GetProcAddress("glXSwapIntervalSGI");
-    if(!uni.ptr)
-      uni.ptr = SDL_GL_GetProcAddress("wglSwapInterval");
-    if(!uni.ptr)
-      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalEXT");
-    if(!uni.ptr)
-      uni.ptr = SDL_GL_GetProcAddress("wglSwapIntervalSGI");
-    if(uni.ptr)
-      m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALSGIPROC)uni.proc;
+    m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)SDL_GL_GetProcAddress("glXSwapIntervalEXT");
+    if(!m_pglSwapIntervalEXT)
+      m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)SDL_GL_GetProcAddress("wglSwapIntervalEXT");
+
+    m_pglSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)SDL_GL_GetProcAddress("glXSwapIntervalSGI");
+    if(!m_pglSwapIntervalSGI)
+      m_pglSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)SDL_GL_GetProcAddress("wglSwapIntervalSGI");
 #endif
+
+    // Has to be done after finding the function pointer
+    set_vertical_sync(get_vertical_sync());
 
     m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
     if(m_vertex_buffers) {
-      uni.ptr = SDL_GL_GetProcAddress("glBindBufferARB");;
-      m_pglBindBufferARB = (PFNGLBINDBUFFERARBPROC)uni.proc;
-
-      uni.ptr = SDL_GL_GetProcAddress("glDeleteBuffersARB");
-      m_pglDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)uni.proc;
-
-      uni.ptr = SDL_GL_GetProcAddress("glGenBuffersARB");
-      m_pglGenBuffersARB = (PFNGLGENBUFFERSARBPROC)uni.proc;
-
-      uni.ptr = SDL_GL_GetProcAddress("glBufferDataARB");
-      m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)uni.proc;
+      m_pglBindBufferARB = (PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
+      m_pglDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");
+      m_pglGenBuffersARB = (PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
+      m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
     }
     else
       std::cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) in OpenGL.\n";
