@@ -3,7 +3,7 @@
 import os, sys, zenilib
 
 def main():
-  os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
+  os.chdir( zenilib.dir )
   zenilib.auto_accept = False
   
   zenilib.destroy("bin/x64/cgc.exe")
@@ -20,6 +20,7 @@ def main():
   zenilib.destroy("Doxyfile")
   zenilib.destroy("SConstruct")
   
+  zenilib.destroy("Code Blocks")
   zenilib.destroy("Visual Studio 2008")
   zenilib.destroy("Visual Studio 2010")
   zenilib.destroy("Xcode 3.1.2")

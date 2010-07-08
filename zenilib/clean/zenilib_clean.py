@@ -3,7 +3,7 @@
 import os, sys, zenilib
 
 def main():
-  os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
+  os.chdir( zenilib.dir )
   zenilib.auto_accept = True
   
   zenilib.destroy("Visual Studio 2008/SoarLibrary")

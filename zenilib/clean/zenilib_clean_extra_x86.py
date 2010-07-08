@@ -6,7 +6,7 @@ def main():
   zenilib_clean_extra.main()
   zenilib_strip_x64.main()
   
-  os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
+  os.chdir( zenilib.dir )
   zenilib.auto_accept = False
   
   zenilib.destroy("Frameworks")
