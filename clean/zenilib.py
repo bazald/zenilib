@@ -3,6 +3,7 @@
 import glob, os, shutil, sys
 
 auto_accept = False
+dir = os.path.dirname( os.path.realpath( __file__ ) ) + "/.."
 
 def isspace(c):
   return c == ' ' or c == '\t' or c == '\r' or c == '\n'

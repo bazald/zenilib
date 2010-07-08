@@ -5,7 +5,7 @@ import os, sys, zenilib, zenilib_clean
 def main():
   zenilib_clean.main()
   
-  os.chdir( os.path.dirname( os.path.realpath( __file__ ) ) + "/.." )
+  os.chdir( zenilib.dir )
   zenilib.auto_accept = True
   
   zenilib.destroy("Visual Studio 2008/*.suo")
@@ -20,7 +20,7 @@ def main():
   zenilib.destroy("*_d")
   zenilib.destroy("*_x64d")
   
-  zenilib.destroy("../*_d.app")
+  zenilib.destroy("*_d.app")
   
   zenilib.destroy("docs/Zeni")
 
