@@ -223,10 +223,10 @@ namespace Zeni {
     // Window Decorations
     inline const std::string & get_title() const; ///< Get the window title
     inline const std::string & get_taskmsg() const; ///< Get the taskbar message
-    void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message
-    void set_title(const std::string &title); ///< Set the window title
-    void set_taskmsg(const std::string &taskmsg); ///< Set the taskbar message
-    const bool set_icon(const std::string &filename); ///< Set the window icon
+    static void set_tt(const std::string &title, const std::string &taskmsg); ///< Set the window title and taskbar message
+    static void set_title(const std::string &title); ///< Set the window title
+    static void set_taskmsg(const std::string &taskmsg); ///< Set the taskbar message
+    static bool set_icon(const std::string &filename); ///< Set the window icon
 
     // Mouse Functions
     inline bool is_mouse_grabbed() const; ///< Find out if the (primary) Window has grabbed the mouse

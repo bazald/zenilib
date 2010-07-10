@@ -359,22 +359,29 @@ namespace Zeni {
   void Video::set_tt(const std::string &title, const std::string &taskmsg) {
     get_m_title() = title;
     get_m_taskmsg() = taskmsg;
-    set_tt();
+
+    if(e_video)
+      e_video->set_tt();
   }
 
   void Video::set_title(const std::string &title) {
     get_m_title() = title;
-    set_tt();
+
+    if(e_video)
+      e_video->set_tt();
   }
 
   void Video::set_taskmsg(const std::string &taskmsg) {
     get_m_taskmsg() = taskmsg;
-    set_tt();
+
+    if(e_video)
+      e_video->set_tt();
   }
 
-  const bool Video::set_icon(const std::string &filename) {
+  bool Video::set_icon(const std::string &filename) {
     get_m_icon() = filename;
-    return set_icon();
+
+		return !e_video || e_video->set_icon();
   }
 
 #if SDL_VERSION_ATLEAST(1,3,0)
