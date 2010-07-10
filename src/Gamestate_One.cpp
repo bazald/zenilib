@@ -87,7 +87,9 @@ namespace Zeni {
     if(args)
       g_args = *args;
 
-    get_Video().set_title("Zenilib Application");
+    Video::set_title("zenilib Application");
+
+    get_Video();
     get_Textures();
     get_Fonts();
     get_Sounds();
