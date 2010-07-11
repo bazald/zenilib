@@ -1,4 +1,4 @@
-Zenipex Library           (Most Recently Updated at 0.3.3.0)
+Zenipex Library           (Most Recently Updated at 0.3.3.1)
 ============================================================
 
 Contents
@@ -83,7 +83,7 @@ me an e-mail.
 This software is known to compile and run on:
  
 - Windows: XP, Vista, 7
-- MacOS X: 10.4 and up
+- MacOS X: 10.5 and up
 - Linux: Ubuntu (and derivatives)
 
 It should be possible to build it on any platform supported by:
