@@ -69,7 +69,11 @@ static bool load_config() {
 
   Zeni::XML_Element_c zenilib = config_xml["Zenilib"];
 
-  struct {
+  struct
+#ifndef _MSC_VER
+    __attribute__ ((visibility("hidden")))
+#endif
+  {
     struct {
       int anisotropy;
       bool bilinear_filtering;

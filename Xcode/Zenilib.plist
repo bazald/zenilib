@@ -16,13 +16,20 @@
 	<string>Application</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleSignature</key>
-	<string>~BAZ</string>
 	<key>CFBundleVersion</key>
-	<string>0.3.2.0</string>
+	<string>0.3.3.1</string>
 	<key>NSMainNibFile</key>
 	<string>SDLMain</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>LSMinimumSystemVersionByArchitecture</key>
+	<dict>
+		<key>x86_64</key>
+		<string>10.6.0</string>
+		<key>i386</key>
+		<string>10.4.0</string>
+		<key>ppc</key>
+		<string>10.4.0</string>
+	</dict>
 </dict>
 </plist>

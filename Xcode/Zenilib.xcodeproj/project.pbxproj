@@ -206,7 +206,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Zenilib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zenilib_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Zenilib.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Zenilib.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D303AC601083CCC600335C27 /* Popup_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Popup_State.h; path = ../include/Zeni/Popup_State.h; sourceTree = SOURCE_ROOT; };
 		D303AC611083CCDE00335C27 /* Sound_AL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_AL.h; path = ../include/Zeni/Sound_AL.h; sourceTree = SOURCE_ROOT; };
 		D303AC621083CCDE00335C27 /* Sound_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound_Buffer.h; path = ../include/Zeni/Sound_Buffer.h; sourceTree = SOURCE_ROOT; };
@@ -382,10 +382,10 @@
 		D36C2DA9102B948900E71223 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../include/Zeni/Random.h; sourceTree = SOURCE_ROOT; };
 		D36C2DAA102B949F00E71223 /* Logo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logo.cpp; path = ../src/Zeni/Logo.cpp; sourceTree = SOURCE_ROOT; };
 		D3E493490FFF038300B647E1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = /System/Library/Frameworks/OpenAL.framework; sourceTree = "<absolute>"; };
-		D3E494830FFF0B5600B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494830FFF0B5600B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E494910FFF0BC900B647E1 /* application.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = application.cxx; path = ../src/application.cxx; sourceTree = SOURCE_ROOT; };
 		D3E494920FFF0BC900B647E1 /* zenilib.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zenilib.cxx; path = ../src/zenilib.cxx; sourceTree = SOURCE_ROOT; };
-		D3E494B60FFF0C9200B647E1 /* Application_d.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application_d.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E494B60FFF0C9200B647E1 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,9 +489,9 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Application_d.app */,
-				D3E494830FFF0B5600B647E1 /* Application_d.app */,
-				D3E494B60FFF0C9200B647E1 /* Application_d.app */,
+				8D1107320486CEB800E47090 /* Application.app */,
+				D3E494830FFF0B5600B647E1 /* Application.app */,
+				D3E494B60FFF0C9200B647E1 /* Application.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -859,7 +859,7 @@
 			name = Normal;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = 8D1107320486CEB800E47090 /* Application_d.app */;
+			productReference = 8D1107320486CEB800E47090 /* Application.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3E4943B0FFF0B5600B647E1 /* SCU */ = {
@@ -880,7 +880,7 @@
 			name = SCU;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494830FFF0B5600B647E1 /* Application_d.app */;
+			productReference = D3E494830FFF0B5600B647E1 /* Application.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3E4949C0FFF0C9200B647E1 /* SCU (Zenilib Only) */ = {
@@ -901,7 +901,7 @@
 			name = "SCU (Zenilib Only)";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "«PROJECTNAME»";
-			productReference = D3E494B60FFF0C9200B647E1 /* Application_d.app */;
+			productReference = D3E494B60FFF0C9200B647E1 /* Application.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1138,10 +1138,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = ..;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -1162,10 +1159,7 @@
 					i386,
 				);
 				CONFIGURATION_BUILD_DIR = ..;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Zenilib.plist;
@@ -1193,6 +1187,7 @@
 					_DEBUG,
 					TEST_NASTY_CONDITIONS,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1200,13 +1195,18 @@
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				VALID_ARCHS = "i386 ppc x86_64";
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				CONFIGURATION_BUILD_DIR = .;
 				FRAMEWORK_SEARCH_PATHS = (
 					../Frameworks,
@@ -1221,6 +1221,7 @@
 					DISABLE_WGL,
 					NDEBUG,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1228,7 +1229,8 @@
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				VALID_ARCHS = "i386 ppc x86_64";
 			};
 			name = Release;
 		};
@@ -1237,11 +1239,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = ..;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1263,11 +1261,7 @@
 					i386,
 				);
 				CONFIGURATION_BUILD_DIR = ..;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
@@ -1283,10 +1277,7 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = ..;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -1307,10 +1298,7 @@
 					i386,
 				);
 				CONFIGURATION_BUILD_DIR = ..;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					./Home/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Zenilib.plist;
