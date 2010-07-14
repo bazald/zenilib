@@ -49,6 +49,8 @@ namespace Zeni {
   class Console_State;
 
   struct Console_Function {
+    virtual ~Console_Function() {}
+
     virtual void operator()(Console_State &console,
                             const std::string &name,
                             const std::vector<std::string> &args);
