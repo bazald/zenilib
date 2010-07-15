@@ -307,9 +307,20 @@ namespace Zeni {
     // Unbind all
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-    // Generate Mipmap
+    // Prepare to Generate Mipmap
     glBindTexture(GL_TEXTURE_2D, m_render_target->m_texture_id);
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST);
+
     glGenerateMipmapEXT(GL_TEXTURE_2D);
+
+    // Cleanup after Mipmap Generation
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      Textures::get_mipmapping() ?
+      (Textures::get_bilinear_filtering() ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST) :
+      (Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST));
+    glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     m_render_target = 0;
