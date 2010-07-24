@@ -18,6 +18,6 @@ DEL /P "%~dp0..\SConstruct"
 RMDIR /S "%~dp0..\Code Blocks"
 RMDIR /S "%~dp0..\Visual Studio 2008"
 RMDIR /S "%~dp0..\Visual Studio 2010"
-RMDIR /S "%~dp0..\Xcode 3.1.2"
+RMDIR /S "%~dp0..\Xcode"
 
 RMDIR /S "%~dp0"

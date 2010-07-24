@@ -17,7 +17,7 @@ DEL /Q "%~dp0..\Visual Studio 2008\*.ncb"
 DEL /Q "%~dp0..\Visual Studio 2010\*.sdf"
 
 
-RMDIR /S /Q "%~dp0..\Xcode 3.1.2\build"
+RMDIR /S /Q "%~dp0..\Xcode\build"
 
 
 DEL /Q "%~dp0..\*.dblite"

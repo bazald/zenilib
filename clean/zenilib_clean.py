@@ -25,7 +25,7 @@ def main():
   zenilib.destroy("Visual Studio 2010/*.sdf")
   
   
-  zenilib.destroy("Xcode 3.1.2/build")
+  zenilib.destroy("Xcode/build")
   
   
   zenilib.destroy("*.dblite")
