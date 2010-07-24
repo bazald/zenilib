@@ -11,6 +11,8 @@ def main():
   zenilib.destroy("bin/cgfxcat.exe")
   zenilib.destroy("bin/cginfo.exe")
   
+  zenilib.destroy("config/zenilib.xml.bak")
+  
   zenilib.destroy("include")
   zenilib.destroy("include_win")
   zenilib.destroy("lib_win")

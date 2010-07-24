@@ -5,6 +5,7 @@ DEL /P "%~dp0..\bin\cgc.exe"
 DEL /P "%~dp0..\bin\cgfxcat.exe"
 DEL /P "%~dp0..\bin\cginfo.exe"
 
+DEL /P "%~dp0..\config\zenilib.xml.bak"
 
 RMDIR /S "%~dp0..\include"
 RMDIR /S "%~dp0..\include_win"
