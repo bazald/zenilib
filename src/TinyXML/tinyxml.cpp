@@ -51,14 +51,14 @@ FILE* TiXmlFOpen( const char* filename, const char* mode )
 
 void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 {
-	int i=0;
+	TiXmlString::size_type i=0;
 
 	while( i<(int)str.length() )
 	{
 		unsigned char c = (unsigned char) str[i];
 
 		if (    c == '&' 
-		     && i < ( (int)str.length() - 2 )
+		     && i < TiXmlString::size_type( (int)str.length() - 2 )
 			 && str[i+1] == '#'
 			 && str[i+2] == 'x' )
 		{
@@ -72,7 +72,7 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 			// while fails (error case) and break (semicolon found).
 			// However, there is no mechanism (currently) for
 			// this function to return an error.
-			while ( i<(int)str.length()-1 )
+			while ( i < TiXmlString::size_type( str.length()-1 ) )
 			{
 				outString->append( str.c_str() + i, 1 );
 				++i;
@@ -119,7 +119,7 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 
 			//*ME:	warning C4267: convert 'size_t' to 'int'
 			//*ME:	Int-Cast to make compiler happy ...
-			outString->append( buf, (int)strlen( buf ) );
+			outString->append( buf, TiXmlString::size_type( strlen( buf ) ) );
 			++i;
 		}
 		else
@@ -951,9 +951,9 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 	location.Clear();
 
 	// Get the file size, so we can pre-allocate the string. HUGE speed impact.
-	long length = 0;
+	TiXmlString::size_type length = 0;
 	fseek( file, 0, SEEK_END );
-	length = ftell( file );
+	length = TiXmlString::size_type( ftell( file ) );
 	fseek( file, 0, SEEK_SET );
 
 	// Strange case, but good to handle up front.
