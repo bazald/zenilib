@@ -53,7 +53,7 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 {
 	TiXmlString::size_type i=0;
 
-	while( i<(int)str.length() )
+  while( i< TiXmlString::size_type( str.length() ) )
 	{
 		unsigned char c = (unsigned char) str[i];
 
