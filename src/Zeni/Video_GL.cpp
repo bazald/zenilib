@@ -212,14 +212,26 @@ namespace Zeni {
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());
 
-#ifdef _LINUX
-    m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)SDL_GL_GetProcAddress("glXSwapIntervalEXT");
-    if(!m_pglSwapIntervalEXT)
-      m_pglSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)SDL_GL_GetProcAddress("wglSwapIntervalEXT");
+    union {
+      void * v;
+      PFNGLXSWAPINTERVALEXTPROC pglSwapIntervalEXT;
+      PFNGLXSWAPINTERVALSGIPROC pglSwapIntervalSGI;
+      PFNGLBINDBUFFERARBPROC pglBindBufferARB;
+      PFNGLDELETEBUFFERSARBPROC pglDeleteBuffersARB;
+      PFNGLGENBUFFERSARBPROC pglGenBuffersARB;
+      PFNGLBUFFERDATAARBPROC pglBufferDataARB;
+    } ptr;
 
-    m_pglSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)SDL_GL_GetProcAddress("glXSwapIntervalSGI");
-    if(!m_pglSwapIntervalSGI)
-      m_pglSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)SDL_GL_GetProcAddress("wglSwapIntervalSGI");
+#ifdef _LINUX
+    ptr.v = SDL_GL_GetProcAddress("glXSwapIntervalEXT");
+    if(!ptr.v)
+      ptr.v = SDL_GL_GetProcAddress("wglSwapIntervalEXT");
+    m_pglSwapIntervalEXT = ptr.pglSwapIntervalEXT;
+
+    ptr.v = SDL_GL_GetProcAddress("glXSwapIntervalSGI");
+    if(!ptr.v)
+      ptr.v = SDL_GL_GetProcAddress("wglSwapIntervalSGI");
+    m_pglSwapIntervalSGI = ptr.pglSwapIntervalSGI;
 #endif
 
     // Has to be done after finding the function pointer
@@ -227,10 +239,17 @@ namespace Zeni {
 
     m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
     if(m_vertex_buffers) {
-      m_pglBindBufferARB = (PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
-      m_pglDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");
-      m_pglGenBuffersARB = (PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
-      m_pglBufferDataARB = (PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
+      ptr.v = SDL_GL_GetProcAddress("glBindBufferARB");
+      m_pglBindBufferARB = ptr.pglBindBufferARB;
+
+      ptr.v = SDL_GL_GetProcAddress("glDeleteBuffersARB");
+      m_pglDeleteBuffersARB = ptr.pglDeleteBuffersARB;
+
+      ptr.v = SDL_GL_GetProcAddress("glGenBuffersARB");
+      m_pglGenBuffersARB = ptr.pglGenBuffersARB;
+
+      ptr.v = SDL_GL_GetProcAddress("glBufferDataARB");
+      m_pglBufferDataARB = ptr.pglBufferDataARB;
     }
     else
       std::cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) in OpenGL.\n";
