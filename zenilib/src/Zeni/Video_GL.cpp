@@ -214,8 +214,10 @@ namespace Zeni {
 
     union {
       void * v;
+#ifdef _LINUX
       PFNGLXSWAPINTERVALEXTPROC pglSwapIntervalEXT;
       PFNGLXSWAPINTERVALSGIPROC pglSwapIntervalSGI;
+#endif
       PFNGLBINDBUFFERARBPROC pglBindBufferARB;
       PFNGLDELETEBUFFERSARBPROC pglDeleteBuffersARB;
       PFNGLGENBUFFERSARBPROC pglGenBuffersARB;
