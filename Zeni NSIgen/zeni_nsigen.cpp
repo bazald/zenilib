@@ -26,18 +26,10 @@
 using namespace std;
 
 bool g_x64 = false;
-bool g_win2k_winxpb4sp2 = false;
 
 vector<string> g_excluded;
 
 /** String Manipulation Functions **/
-
-static string cut_all_directories(const string &file_name) {
-  const int cut = file_name.rfind('\\') + 1;
-  if(cut > 0)
-    return file_name.substr(cut, file_name.size() - cut);
-  return file_name;
-}
 
 static string cut_root_directory(const string &file_name) {
   const int cut = file_name.find('\\') + 1;
@@ -53,30 +45,15 @@ static string get_directory(const string &file_name) {
   return "";
 }
 
-static string get_extension(const string &file_name) {
-  const int cut = file_name.rfind('.') + 1;
-  if(cut > 0)
-    return file_name.substr(cut, file_name.size() - cut);
-  return "";
-}
-
 static string to_lower(string str) {
   for(string::iterator it = str.begin(); it != str.end(); ++it)
     *it = char(tolower(*it));
   return str;
 }
 
-static string to_upper(string str) {
-  for(string::iterator it = str.begin(); it != str.end(); ++it)
-    *it = char(toupper(*it));
-  return str;
-}
-
 static bool exclude_path(const std::string &str, const bool &report) {
   const string sl = to_lower(str);
-  const bool exclude = !g_x64 && sl.find("x64") != -1 ||
-                       !g_win2k_winxpb4sp2 && (sl.find("dxdllreg_x86.cab") != -1 ||
-                                               sl.find("dxnt.cab") != -1);
+  const bool exclude = !g_x64 && sl.find("x64") != -1;
   if(exclude && report)
     g_excluded.push_back(str.substr(str.find('\\') + 1));
   return exclude;
@@ -211,9 +188,6 @@ static bool yes_or_no(const bool &default_value) {
 int main(int /*argc*/, char ** /*argv*/) {
   cout << "Include 64-bit binaries [y/N]? ";
   g_x64 = yes_or_no(false);
-
-  cout << "Install additional files for Windows 2000, XP, and XP SP1 [y/N]? ";
-  g_win2k_winxpb4sp2 = yes_or_no(false);
 
   ofstream nsi("Zenilib.nsi");
   ifstream nsi_0("Zeni NSIgen\\NSI_0_Preuser.txt");
