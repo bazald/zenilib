@@ -90,7 +90,7 @@ namespace Zeni {
     if(SHGetFolderPath(0, CSIDL_APPDATA | CSIDL_FLAG_CREATE, 0, SHGFP_TYPE_CURRENT, appdata_path) != S_OK)
       throw Core_Init_Failure();
 #else
-    const char * const appdata_path = pws ? pws->pw_dir : "default";
+    const char * const appdata_path = pws ? pws->pw_dir : "/tmp/";
 #endif
     m_appdata_path = appdata_path;
 
