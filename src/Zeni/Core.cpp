@@ -39,8 +39,10 @@
 #include <WinUser.h>
 #else
 #include <sys/errno.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <unistd.h>
 #endif
 
 namespace Zeni {
@@ -57,7 +59,7 @@ namespace Zeni {
 
     static std::ofstream cerr_file("stderr.txt");
     static std::ofstream cout_file("stdout.txt");
-    
+
     if(cerr_file.is_open()) {
       cerr_bak = std::cerr.rdbuf();
       std::cerr.rdbuf(cerr_file.rdbuf());
@@ -76,32 +78,19 @@ namespace Zeni {
     if(!GetUserName(username, &username_len))
       throw Core_Init_Failure();
 #else
-    char username[4096];
-    FILE * whoami = popen("whoami", "r");
-    if(!fgets(username, sizeof(username), whoami))
-      throw Core_Init_Failure();
-    pclose(whoami);
-    int username_len = strlen(username);
-    if(username_len)
-      username[username_len - 1] = 0;
+    passwd * const pws = getpwuid(geteuid());
+    const char * const username = pws ? pws->pw_name : "default";
 #endif
     m_username = username;
 
     /** Get appdata path **/
 
 #ifdef _WINDOWS
-	  char appdata_path[MAX_PATH];
+    char appdata_path[MAX_PATH];
     if(SHGetFolderPath(0, CSIDL_APPDATA | CSIDL_FLAG_CREATE, 0, SHGFP_TYPE_CURRENT, appdata_path) != S_OK)
       throw Core_Init_Failure();
 #else
-    char appdata_path[4096];
-    FILE * pwd = popen("cd ~/ && pwd", "r");
-    if(!fgets(appdata_path, sizeof(appdata_path), pwd))
-      throw Core_Init_Failure();
-    pclose(pwd);
-    int appdata_path_len = strlen(appdata_path);
-    if(appdata_path_len)
-      appdata_path[appdata_path_len - 1] = 0;
+    const char * const appdata_path = pws ? pws->pw_dir : "default";
 #endif
     m_appdata_path = appdata_path;
 
