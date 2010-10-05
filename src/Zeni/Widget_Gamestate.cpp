@@ -89,6 +89,8 @@ namespace Zeni {
 
   void Widget_Gamestate::perform_logic() {
     m_projector = Projector2D(m_virtual_window, get_Video().get_viewport());
+
+    m_widgets.perform_logic();
   }
 
   void Widget_Gamestate::render() {

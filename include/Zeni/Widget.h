@@ -276,6 +276,8 @@ namespace Zeni {
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button) = 0;
     virtual void on_mouse_motion(const Point2i &pos) = 0;
 
+    virtual void perform_logic() {}
+
     inline void render() const;
 
     inline const Widget_Render_Function * get_Renderer() const; ///< Get the current Widget_Render_Function
@@ -902,7 +904,7 @@ namespace Zeni {
     virtual void on_mouse_motion(const Point2i &pos);
 
     /// Call this function in your perform_logic function to get this Widget to actually do its job
-    inline void perform_logic();
+    virtual void perform_logic();
 
     // render is simply passed through
     virtual void render_impl() const;
@@ -939,6 +941,8 @@ namespace Zeni {
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
+
+    virtual void perform_logic();
 
     virtual void render_impl() const;
 
