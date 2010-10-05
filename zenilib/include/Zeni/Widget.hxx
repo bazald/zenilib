@@ -638,22 +638,6 @@ namespace Zeni {
   void Widget_Input_Repeater::set_repeat_delay(const int &repeat_delay_) {m_repeat_delay = repeat_delay_;}
   void Widget_Input_Repeater::set_repeat_interval(const int &repeat_interval_) {m_repeat_interval = repeat_interval_;}
 
-  void Widget_Input_Repeater::perform_logic() {
-    if(!m_active)
-      return;
-
-    const Time current_time = get_Timer().get_time();
-    const int ticks = int(current_time.get_ticks_since(m_last_repeated));
-
-    if((m_delay_finished && ticks > m_repeat_interval) ||
-       (!m_delay_finished && ticks > m_repeat_delay))
-    {
-      m_delay_finished = true;
-      m_last_repeated = current_time;
-      m_widget->on_key(m_keysym, m_down);
-    }
-  }
-
   Widgets::Widgets()
     : m_busy_one(0)
   {

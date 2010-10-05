@@ -1374,6 +1374,22 @@ namespace Zeni {
     set_busy(m_widget->is_busy());
   }
 
+  void Widget_Input_Repeater::perform_logic() {
+    if(!m_active)
+      return;
+
+    const Time current_time = get_Timer().get_time();
+    const int ticks = int(current_time.get_ticks_since(m_last_repeated));
+
+    if((m_delay_finished && ticks > m_repeat_interval) ||
+       (!m_delay_finished && ticks > m_repeat_delay))
+    {
+      m_delay_finished = true;
+      m_last_repeated = current_time;
+      m_widget->on_key(m_keysym, m_down);
+    }
+  }
+
   void Widget_Input_Repeater::render_impl() const {
     m_widget->render();
   }
@@ -1458,6 +1474,13 @@ namespace Zeni {
         }
       }
     }
+  }
+
+  void Widgets::perform_logic() {
+    std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+    for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(), iend = m_widgets.rend(); it != iend; ++it)
+      (*it)->perform_logic();
   }
 
   void Widgets::render_impl() const {
