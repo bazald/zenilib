@@ -97,15 +97,17 @@ namespace Zeni {
 
       Material mat;
       Color pseudo_color;
+      bool textured = false;
 
       if(material) {///HACK
         const float opacity = 1.0f - material->transparency;
+        textured = material->texture1_map.name[0] != '\0' && mesh->texcos;
 
-        mat = Material(mesh->texcos ? Color() : Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
-          mesh->texcos ? Color() : Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
+        mat = Material(textured ? Color() : Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
+          textured ? Color() : Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
           Color(opacity, material->specular[0], material->specular[1], material->specular[2]),
           Color(1.0f, 0.0f, 0.0f, 0.0f),
-          1.0f, mesh->texcos ? material->texture1_map.name : "");
+          1.0f, material->texture1_map.name);
         mat.set_shininess(material->shininess);
 
         pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
@@ -133,7 +135,7 @@ namespace Zeni {
         nc *= -1;
       }
 
-      if(mat.get_texture().size()) {
+      if(textured) {
         Point2f ta(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[0]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[0]][1]));
         const Point2f tb(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[1]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[1]][1]));
         Point2f tc(tex_offset.x + tex_scale.x * (1.0f - mesh->texcos[face->index[2]][0]), tex_offset.y + tex_scale.y * (1.0f - mesh->texcos[face->index[2]][1]));
