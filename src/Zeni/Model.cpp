@@ -96,21 +96,25 @@ namespace Zeni {
       }
 
       Material mat;
-      Color pseudo_color;
       bool textured = false;
 
       if(material) {///HACK
         const float opacity = 1.0f - material->transparency;
         textured = material->texture1_map.name[0] != '\0' && mesh->texcos;
 
-        mat = Material(textured ? Color() : Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]),
-          textured ? Color() : Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]),
-          Color(opacity, material->specular[0], material->specular[1], material->specular[2]),
-          Color(1.0f, 0.0f, 0.0f, 0.0f),
-          1.0f, material->texture1_map.name);
-        mat.set_shininess(material->shininess);
+        if(textured) {
+          mat.ambient.a = opacity;
+          mat.diffuse.a = opacity;
+          mat.set_texture(material->texture1_map.name);
+        }
+        else {
+          mat.ambient = Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]);
+          mat.diffuse = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
+        }
 
-        pseudo_color = Color(opacity, material->diffuse[0], material->diffuse[1], material->diffuse[2]);
+        mat.specular = Color(opacity, material->specular[0], material->specular[1], material->specular[2]);
+        mat.emissive = Color(opacity, 0.0f, 0.0f, 0.0f).interpolate_to(material->self_illum, mat.diffuse);
+        mat.set_shininess(material->shininess);
       }
 
       const Point2f tex_offset(material ? material->texture1_map.offset[0] : 0.0f,
@@ -151,7 +155,7 @@ namespace Zeni {
         user_p->fax_triangle(&triangle);
       }
       else {
-        const Uint32 argb = pseudo_color.get_argb();
+        const Uint32 argb = mat.diffuse.get_argb();
 
         Triangle<Vertex3f_Color> triangle(Vertex3f_Color(pa, na, argb),
                                           Vertex3f_Color(pb, nb, argb),
