@@ -46,6 +46,10 @@
 
 namespace Zeni {
 
+  void Vertex_Buffer_Macrorenderer::operator()(const Vertex_Buffer_Microrenderer &microrenderer) const {
+    microrenderer();
+  }
+
   Vertex_Buffer_Renderer::Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer)
     : m_vbo(vertex_buffer)
   {
@@ -61,7 +65,8 @@ namespace Zeni {
   Vertex_Buffer::Vertex_Buffer()
     : m_align_normals(false),
     m_renderer(0),
-    m_prerendered(false)
+    m_prerendered(false),
+    m_macrorenderer(new Vertex_Buffer_Macrorenderer)
   {
     get_vbos().insert(this);
   }
@@ -76,6 +81,9 @@ namespace Zeni {
   Vertex_Buffer::~Vertex_Buffer() {
     clear_triangles(m_triangles_cm);
     clear_triangles(m_triangles_t);
+
+    delete m_renderer;
+    delete m_macrorenderer;
 
     get_vbos().erase(this);
   }
@@ -225,6 +233,11 @@ namespace Zeni {
       get_Video().render(*m_triangles_cm[i]);
     for(unsigned int i = 0; i < m_triangles_t.size(); ++i)
       get_Video().render(*m_triangles_t[i]);
+  }
+
+  void Vertex_Buffer::give_Macrorenderer(Vertex_Buffer_Macrorenderer * const &macrorenderer) {
+    delete m_macrorenderer;
+    m_macrorenderer = macrorenderer;
   }
 
   template <typename VERTEX>
@@ -552,13 +565,33 @@ namespace Zeni {
     }
   }
 
-  static void render(std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
+  class VB_Renderer_GL : public Vertex_Buffer_Microrenderer {
+  public:
+    VB_Renderer_GL(const GLint &first_, const GLsizei &count_)
+      : first(first_),
+      count(count_)
+    {
+    }
+
+  private:
+    void operator()() const {
+      glDrawArrays(GL_TRIANGLES, first, count);
+    }
+
+    GLint first;
+    GLsizei count;
+  };
+
+  static void render(const Vertex_Buffer_Macrorenderer &macrorenderer, std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
     Video &vr = get_Video();
 
     for(size_t i = 0u; i < descriptors.size(); ++i) {
       if(descriptors[i]->material.get())
         vr.set_material(*descriptors[i]->material);
-      glDrawArrays(GL_TRIANGLES, int(3u*descriptors[i]->start), int(3u*descriptors[i]->num_elements));
+
+      VB_Renderer_GL microrenderer(int(3u*descriptors[i]->start), int(3u*descriptors[i]->num_elements));
+      macrorenderer(microrenderer);
+
       if(descriptors[i]->material.get())
         vr.unset_material(*descriptors[i]->material);
     }
@@ -585,7 +618,7 @@ namespace Zeni {
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
       glColorPointer(4, GL_UNSIGNED_BYTE, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[2].alt);
 
-      Zeni::render(m_vbo.m_descriptors_cm);
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm);
 
       glDisableClientState(GL_COLOR_ARRAY);
     }
@@ -605,7 +638,7 @@ namespace Zeni {
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
       glTexCoordPointer(2, GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[5].alt);
 
-      Zeni::render(m_vbo.m_descriptors_t);
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);
 
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
@@ -732,7 +765,53 @@ namespace Zeni {
       delete [] m_buf_t.data.alt;
   }
 
-  static void render(std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
+  class VB_Renderer_DX9VBO : public Vertex_Buffer_Microrenderer {
+  public:
+    VB_Renderer_DX9VBO(Video_DX9 &vdx, const size_t &StartVertex_, const size_t &PrimitiveCount_)
+      : d3d_device(vdx.get_d3d_device()),
+      StartVertex(StartVertex_),
+      PrimitiveCount(PrimitiveCount_)
+    {
+    }
+
+  private:
+    void operator()() const {
+      d3d_device->DrawPrimitive(D3DPT_TRIANGLELIST,
+                                UINT(StartVertex),
+                                UINT(PrimitiveCount));
+    }
+
+    LPDIRECT3DDEVICE9 d3d_device;
+    size_t StartVertex;
+    size_t PrimitiveCount;
+  };
+
+  class VB_Renderer_DX9 : public Vertex_Buffer_Microrenderer {
+  public:
+    VB_Renderer_DX9(Video_DX9 &vdx, const size_t &PrimitiveCount_, const void * const &pVertexStreamZeroData_, const size_t &VertexStreamZeroStride_)
+      : d3d_device(vdx.get_d3d_device()),
+      PrimitiveCount(PrimitiveCount_),
+      pVertexStreamZeroData(pVertexStreamZeroData_),
+      VertexStreamZeroStride(VertexStreamZeroStride_)
+    {
+    }
+
+  private:
+    void operator()() const {
+      d3d_device->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
+                                  UINT(PrimitiveCount),
+                                  pVertexStreamZeroData,
+                                  UINT(VertexStreamZeroStride));
+    }
+
+    LPDIRECT3DDEVICE9 d3d_device;
+    size_t PrimitiveCount;
+    const void * pVertexStreamZeroData;
+    size_t VertexStreamZeroStride;
+  };
+
+  static void render(const Vertex_Buffer_Macrorenderer &macrorenderer,
+    std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors,
     Vertex_Buffer_Renderer_DX9::VBO_DX9 &vbo_dx9,
     const unsigned int &stride,
     Video_DX9 &vdx) {
@@ -741,15 +820,14 @@ namespace Zeni {
         if(descriptors[i]->material.get())
           vdx.set_material(*descriptors[i]->material);
 
-        if(vbo_dx9.is_vbo)
-          vdx.get_d3d_device()->DrawPrimitive(D3DPT_TRIANGLELIST,
-                                              UINT(3u * descriptors[i]->start),
-                                              UINT(descriptors[i]->num_elements));
-        else
-          vdx.get_d3d_device()->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-                                                UINT(descriptors[i]->num_elements),
-                                                vbo_dx9.data.alt + 3u * descriptors[i]->start,
-                                                UINT(stride));
+        if(vbo_dx9.is_vbo) {
+          VB_Renderer_DX9VBO microrenderer(vdx, 3u * descriptors[i]->start, descriptors[i]->num_elements);
+          macrorenderer(microrenderer);
+        }
+        else {
+          VB_Renderer_DX9 microrenderer(vdx, descriptors[i]->num_elements, vbo_dx9.data.alt + 3u * descriptors[i]->start, stride);
+          macrorenderer(microrenderer);
+        }
 
         if(descriptors[i]->material.get())
           vdx.unset_material(*descriptors[i]->material);
@@ -764,12 +842,12 @@ namespace Zeni {
     if(m_buf_c.data.vbo || m_buf_c.data.alt) {
       if(m_buf_c.is_vbo)
         vdx.get_d3d_device()->SetStreamSource(0, m_buf_c.data.vbo, 0, UINT(vertex_c_size()));
-      Zeni::render(m_vbo.m_descriptors_cm, m_buf_c, UINT(vertex_c_size()), vdx);
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm, m_buf_c, UINT(vertex_c_size()), vdx);
     }
     if(m_buf_t.data.vbo || m_buf_t.data.alt) {
       if(m_buf_t.is_vbo)
         vdx.get_d3d_device()->SetStreamSource(0, m_buf_t.data.vbo, 0, UINT(vertex_t_size()));
-      Zeni::render(m_vbo.m_descriptors_t, m_buf_t, UINT(vertex_t_size()), vdx);
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t, m_buf_t, UINT(vertex_t_size()), vdx);
     }
   }
 

@@ -87,6 +87,16 @@ namespace Zeni {
   class Render_Wrapper;
   class Vertex_Buffer;
 
+  class Vertex_Buffer_Microrenderer {
+  public:
+    virtual void operator()() const = 0;
+  };
+
+  class Vertex_Buffer_Macrorenderer {
+  public:
+    virtual void operator()(const Vertex_Buffer_Microrenderer &microrenderer) const;
+  };
+
   class Vertex_Buffer_Renderer {
     Vertex_Buffer_Renderer(const Vertex_Buffer_Renderer &);
     Vertex_Buffer_Renderer & operator=(const Vertex_Buffer_Renderer &);
@@ -144,6 +154,7 @@ namespace Zeni {
     void fax_quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
+    void give_Macrorenderer(Vertex_Buffer_Macrorenderer * const &macrorenderer); ///< Wraps the final render call
 
     void render(); ///< Render the Vertex_Buffer
     void lose(); ///< Lose the Vertex_Buffer
@@ -175,6 +186,8 @@ namespace Zeni {
 
     Vertex_Buffer_Renderer * m_renderer;
     bool m_prerendered;
+
+    Vertex_Buffer_Macrorenderer * m_macrorenderer;
 
   public:
     static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
