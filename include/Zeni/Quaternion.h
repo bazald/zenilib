@@ -48,6 +48,7 @@
 
 #include <Zeni/Vector3f.h>
 #include <Zeni/Matrix4f.h>
+#include <Zeni/Global.h>
 
 namespace Zeni {
 
@@ -62,8 +63,8 @@ namespace Zeni {
     /// Create a Quaternion from a Forward/Up Vector3f pair
     static Quaternion Forward_Up(const Vector3f &destination_forward,
                                  const Vector3f &destination_up,
-                                 const Vector3f &default_forward,
-                                 const Vector3f &default_up);
+                                 const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
+                                 const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum
@@ -124,5 +125,7 @@ namespace Zeni {
   }
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif
