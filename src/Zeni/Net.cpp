@@ -184,8 +184,10 @@ namespace Zeni {
         ip
       };
 
-      if(!SDLNet_UDP_Send(sock, -1, &packet))
-        throw Socket_Closed();
+      if(SDLNet_UDP_Send(sock, -1, &packet))
+        return;
+
+      throw Socket_Closed();
     }
 
     throw UDP_Packet_Overflow();
