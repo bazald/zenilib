@@ -105,16 +105,16 @@ namespace Zeni {
     return retval;
   }
 
-  void TCP_Socket::send(const void * const &data, const int &num_bytes) {
+  void TCP_Socket::send(const void * const &data, const Uint16 &num_bytes) {
     if(SDLNet_TCP_Send(sock, const_cast<void *>(data), num_bytes) < num_bytes)
       throw Socket_Closed();
   }
 
   void TCP_Socket::send(const std::string &data) {
-    send(data.c_str(), int(data.size()));
+    send(data.c_str(), Uint16(data.size()));
   }
 
-  int TCP_Socket::receive(void * const &data, const int &num_bytes) {
+  int TCP_Socket::receive(void * const &data, const Uint16 &num_bytes) {
     int retval = check_socket();
     
     if(retval) {
@@ -126,14 +126,14 @@ namespace Zeni {
     return retval;
   }
 
-  int TCP_Socket::receive(std::string &data, const int &num_bytes) {
+  int TCP_Socket::receive(std::string &data, const Uint16 &num_bytes) {
     data.resize(size_t(num_bytes));
     const int retval = receive(const_cast<char *>(data.c_str()), num_bytes);
     data.resize(size_t(retval));
     return retval;
   }
 
-  TCP_Listener::TCP_Listener(const unsigned short &port)
+  TCP_Listener::TCP_Listener(const Uint16 &port)
     : sock(0)
   {
     get_Net();
@@ -154,7 +154,7 @@ namespace Zeni {
     return SDLNet_TCP_Accept(sock);
   }
 
-  UDP_Socket::UDP_Socket(const unsigned short &port)
+  UDP_Socket::UDP_Socket(const Uint16 &port)
     : sock(0)
   {
     get_Net();

@@ -139,7 +139,7 @@ namespace Zeni {
 
   public:
     /// Default port 0 indicates a pure lookup with no intention of connecting.
-    inline IPaddress resolve_host(const std::string &host, const unsigned short &port = 0);
+    inline IPaddress resolve_host(const std::string &host, const Uint16 &port = 0);
     /// If you want to find a URL associated with an IP address
     inline std::string reverse_lookup(IPaddress ip);
   };
@@ -159,12 +159,12 @@ namespace Zeni {
     int check_socket();
     
     /// Send data
-    void send(const void * const &data, const int &num_bytes);
+    void send(const void * const &data, const Uint16 &num_bytes);
     void send(const std::string &data);
 
     /// Receive up to num_bytes
-    int receive(void * const &data, const int &num_bytes);
-    int receive(std::string &data, const int &num_bytes);
+    int receive(void * const &data, const Uint16 &num_bytes);
+    int receive(std::string &data, const Uint16 &num_bytes);
 
   private:
     TCPsocket sock;
@@ -176,7 +176,7 @@ namespace Zeni {
     TCP_Listener & operator=(const TCP_Listener &);
     
   public:
-    TCP_Listener(const unsigned short &port);
+    TCP_Listener(const Uint16 &port);
     ~TCP_Listener();
 
     TCPsocket accept(); ///< Will cause an error to be thrown if there exists nothing to listen to; Expect to catch it
@@ -190,7 +190,7 @@ namespace Zeni {
     UDP_Socket & operator=(const UDP_Socket &);
     
   public:
-    UDP_Socket(const unsigned short &port);
+    UDP_Socket(const Uint16 &port);
     virtual ~UDP_Socket();
     
     IPaddress peer_address() const; ///< Apparently only works if the port was explicitly specified

@@ -33,7 +33,7 @@
 
 namespace Zeni {
 
-  IPaddress Net::resolve_host(const std::string &host, const unsigned short &port) {
+  IPaddress Net::resolve_host(const std::string &host, const Uint16 &port) {
     IPaddress ip;
     SDLNet_ResolveHost(&ip, host.c_str(), port);
     return ip;
