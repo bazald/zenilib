@@ -136,7 +136,7 @@ namespace Zeni {
 
   class VLUID : public Serializable {
   public:
-    char compare(const VLUID &rhs) const;
+    int compare(const VLUID &rhs) const;
     bool operator==(const VLUID &rhs) const {return !compare(rhs);}
     bool operator!=(const VLUID &rhs) const {return compare(rhs) != 0;}
     bool operator<(const VLUID &rhs) const {return compare(rhs) < 0;}
@@ -155,7 +155,7 @@ namespace Zeni {
     virtual std::istream & unserialize(std::istream &is);
     
   private:
-    std::string m_uid;
+    std::basic_string<unsigned char> m_uid;
   };
 
   typedef VLUID Nonce;

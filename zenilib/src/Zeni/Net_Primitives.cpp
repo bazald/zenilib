@@ -252,7 +252,7 @@ namespace Zeni {
   
   /*** VLUID Class ***/
 
-  char VLUID::compare(const VLUID &rhs) const {
+  int VLUID::compare(const VLUID &rhs) const {
     if(m_size > rhs.m_size)
       return 1;
     else if(rhs.m_size > m_size)
@@ -260,8 +260,8 @@ namespace Zeni {
     
     Sint32 index = m_size - 1;
     for(; index > -1; --index) {
-      const char &c = m_uid[size_t(index)];
-      const char &rhs_c = rhs.m_uid[size_t(index)];
+      const unsigned char &c = m_uid[size_t(index)];
+      const unsigned char &rhs_c = rhs.m_uid[size_t(index)];
       
       if(c > rhs_c)
         return 1;
@@ -280,7 +280,7 @@ namespace Zeni {
     
     if(index == m_size) {
       if(++m_size)
-        m_uid += char(1);
+        m_uid += static_cast<unsigned char>(0);
       else
         m_uid.clear();
     }
@@ -297,7 +297,7 @@ namespace Zeni {
   std::ostream & VLUID::serialize(std::ostream &os) const {
     Serializable::serialize(os);
     
-    return os.write(m_uid.c_str(), m_size);
+    return os.write(reinterpret_cast<const char *>(m_uid.c_str()), m_size);
   }
   
   std::istream & VLUID::unserialize(std::istream &is) {
@@ -306,7 +306,7 @@ namespace Zeni {
     if(is) {
       m_uid.resize(m_size);
       
-      if(!is.read(const_cast<char * const>(m_uid.c_str()), m_size))
+      if(!is.read(const_cast<char *>(reinterpret_cast<const char *>(m_uid.c_str())), m_size))
         m_uid.clear();
     }
     else
