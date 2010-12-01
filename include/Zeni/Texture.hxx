@@ -140,6 +140,16 @@ namespace Zeni {
     no_recurse = true;
   }
 
+  const Point2i & Sprite::get_size() const {
+    try {
+      return get_Textures()[m_frames[size_t(m_frame)].second].get_size();
+    }
+    catch(Database_Entry_Not_Found &) {
+      m_frames[size_t(m_frame)].second = get_Textures().get_id(m_frames[size_t(m_frame)].first);
+      return get_Textures()[m_frames[size_t(m_frame)].second].get_size();
+    }
+  }
+
 #ifndef DISABLE_GL
   void Texture_GL::apply_texture_impl() const {
     if(!m_texture_id)

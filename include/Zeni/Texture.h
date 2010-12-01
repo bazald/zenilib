@@ -100,6 +100,8 @@ namespace Zeni {
 
     inline void apply_texture() const; ///< Apply a Texture to upcoming polygons
 
+    virtual const Point2i & get_size() const = 0; ///< Get the resolution of the Texture on the GPU
+
   protected:
     static void simplify_surface(SDL_Surface * &surface);
     static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size, const std::string * const &name = 0);
@@ -125,6 +127,8 @@ namespace Zeni {
     void set_current_frame(const int &frame_number); ///< Set this frame
 
     inline void apply_texture_impl() const; ///< Apply the current Texture frame to upcoming polygons
+
+    inline const Point2i & get_size() const; ///< Get the resolution of the current Texture on the GPU
 
   private:
     mutable std::vector<std::pair<std::string, unsigned long> > m_frames;
