@@ -280,10 +280,12 @@ namespace Zeni {
     Texture_GL &tgl = dynamic_cast<Texture_GL &>(texture);
 
     if(!tgl.m_frame_buffer_object) {
+      const Point2i &tex_size = tgl.get_size();
+
       // Generate Depth Buffer
       glGenRenderbuffersEXT(1, &tgl.m_render_buffer);
       glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, tgl.m_render_buffer);
-      glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT16, tgl.get_size().x, tgl.get_size().y);
+      glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT16, tex_size.x, tex_size.y);
       glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 
       // Generate Framebuffer Object
