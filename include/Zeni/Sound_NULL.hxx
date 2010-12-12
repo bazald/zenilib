@@ -48,6 +48,9 @@ namespace Zeni {
   {
   }
 
+  void Sound_NULL::set_listener_gain_impl(const float &) {
+  }
+
   Point3f Sound_NULL::get_listener_position_impl() const {
     return Point3f();
   }
@@ -58,6 +61,10 @@ namespace Zeni {
 
   std::pair<Vector3f, Vector3f> Sound_NULL::get_listener_forward_and_up_impl() const {
     return std::make_pair(Vector3f(1.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f));
+  }
+
+  float Sound_NULL::get_listener_gain_impl() const {
+    return m_listener_gain;
   }
 
 }

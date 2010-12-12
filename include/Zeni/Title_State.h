@@ -135,7 +135,7 @@ namespace Zeni {
     }
 
     void render() {
-      sound_check_box.set_checked(!get_Sound_Source_Pool().is_muted());
+      sound_check_box.set_checked(!get_Sound().is_listener_muted());
       Widget_Gamestate::render();
     }
 

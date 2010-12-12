@@ -116,6 +116,16 @@ namespace Zeni {
     SOUND_IV_FCN_CALL(set_listener_forward_and_up_impl, forward, up);
   }
 
+  void Sound::set_listener_gain(const float &gain) {
+    m_listener_gain = gain;
+    SOUND_IV_FCN_CALL(set_listener_gain_impl, m_listener_muted ? 0.0f : m_listener_gain);
+  }
+
+  void Sound::set_listener_muted(const bool &muted) {
+    m_listener_muted = muted;
+    SOUND_IV_FCN_CALL(set_listener_gain_impl, m_listener_muted ? 0.0f : m_listener_gain);
+  }
+
   Point3f Sound::get_listener_position() const {
     SOUND_IV_FCN_CALL_CONST(get_listener_position_impl, EMPTY());
   }
@@ -126,6 +136,14 @@ namespace Zeni {
 
   std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {
     SOUND_IV_FCN_CALL_CONST(get_listener_forward_and_up_impl, EMPTY());
+  }
+
+  float Sound::get_listener_gain() const {
+    SOUND_IV_FCN_CALL_CONST(get_listener_gain_impl, EMPTY());
+  }
+
+  bool Sound::is_listener_muted() const {
+    return m_listener_muted;
   }
 
 #undef SOUND_IV_FCN_CALL

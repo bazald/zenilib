@@ -49,10 +49,12 @@ namespace Zeni {
     inline void set_listener_position_impl(const Point3f &position); ///< Set the position of the listener and BGM.
     inline void set_listener_velocity_impl(const Vector3f &velocity); ///< Set the velocity of the listener and BGM for the doppler effect.
     inline void set_listener_forward_and_up_impl(const Vector3f &forward, const Vector3f &up); ///< Set the orientation of the listener
+    inline void set_listener_gain_impl(const float &gain); ///< Set the listener gain
 
     inline Point3f get_listener_position_impl() const; ///< Get the position of the listener and BGM.
     inline Vector3f get_listener_velocity_impl() const; ///< Get the velocity of the listener and BGM.
     inline std::pair<Vector3f, Vector3f> get_listener_forward_and_up_impl() const; ///< Set the orientation of the listener
+    inline float get_listener_gain_impl() const; ///< Get the listener gain
   };
 
 }

@@ -80,10 +80,14 @@ namespace Zeni {
     inline void set_listener_position(const Point3f &position); ///< Set the position of the listener and BGM.
     inline void set_listener_velocity(const Vector3f &velocity); ///< Set the velocity of the listener and BGM for the doppler effect.
     inline void set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up); ///< Set the orientation of the listener
+    inline void set_listener_gain(const float &gain); ///< Set the listener gain
+    inline void set_listener_muted(const bool &muted); ///< Set the listener gain
 
     inline Point3f get_listener_position() const; ///< Get the position of the listener and BGM.
     inline Vector3f get_listener_velocity() const; ///< Get the velocity of the listener and BGM.
     inline std::pair<Vector3f, Vector3f> get_listener_forward_and_up() const; ///< Set the orientation of the listener
+    inline float get_listener_gain() const; ///< Get the listener gain
+    inline bool is_listener_muted() const; ///< Is the listener muted
 
     // BackGround Music Functions
     void set_BGM(const std::string &filename); ///< Set BackGround Music
@@ -114,6 +118,11 @@ namespace Zeni {
     std::string m_bgmusic;
     Sound_Buffer *m_bgm;
     Sound_Source *m_bgm_source;
+
+  protected:
+    float m_listener_gain;
+  private:
+    bool m_listener_muted;
   };
 
   Sound & get_Sound(); ///< Get access to the singleton.
