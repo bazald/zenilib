@@ -49,7 +49,9 @@ namespace Zeni {
   Sound::Sound(const Sound_Base::SOUND_MODE &vtype_)
     : Sound_Base::IV(vtype_),
     m_bgm(0),
-    m_bgm_source(0)
+    m_bgm_source(0),
+    m_listener_gain(1.0f),
+    m_listener_muted(false)
   {
     // Ensure Core is initialized
     get_Core();

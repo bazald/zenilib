@@ -191,7 +191,7 @@ namespace Zeni {
     public:
       Sound_Check_Box(const Point2f &upper_left, const Point2f &lower_right)
         : Check_Box(upper_left, lower_right,
-                    !get_Sound_Source_Pool().is_muted())
+                    !get_Sound().is_listener_muted())
       {
         if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
           set_checked(false);
@@ -201,7 +201,7 @@ namespace Zeni {
 
       void on_accept() {
         Check_Box::on_accept();
-        get_Sound_Source_Pool().mute(!is_checked());
+        get_Sound().set_listener_muted(!is_checked());
       }
 
       void render_impl() const {

@@ -300,20 +300,6 @@ namespace Zeni {
     sound_source->play();
   }
 
-  bool Sound_Source_Pool::is_muted() const {
-    return m_muted || dynamic_cast<Sound_NULL *>(&get_Sound());
-  }
-
-  void Sound_Source_Pool::mute(const bool &mute_) {
-    if(mute_ == m_muted)
-      return;
-
-    if(mute_)
-      destroy_all_hw();
-
-    m_muted = mute_;
-  }
-
   void Sound_Source_Pool::set_Replacement_Policy(Sound_Source_Pool::Replacement_Policy * const &replacement_policy) {
     assert(replacement_policy);
 

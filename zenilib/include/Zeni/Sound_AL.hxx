@@ -53,6 +53,10 @@ namespace Zeni {
     alListenerfv(AL_ORIENTATION, listener_forward_and_up);
   }
 
+  void Sound_AL::set_listener_gain_impl(const float &gain) {
+    alListenerf(AL_GAIN, gain);
+  }
+
   Point3f Sound_AL::get_listener_position_impl() const {
     ALfloat listener_position[3] = {0.0f, 0.0f, 0.0f};
     alGetListenerfv(AL_POSITION, listener_position);
@@ -69,6 +73,12 @@ namespace Zeni {
     ALfloat lfau[6] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     alGetListenerfv(AL_ORIENTATION, lfau);
     return std::make_pair(Vector3f(lfau[0], lfau[1], lfau[2]), Vector3f(lfau[3], lfau[4], lfau[5]));
+  }
+
+  float Sound_AL::get_listener_gain_impl() const {
+    ALfloat gain;
+    alGetListenerf(AL_GAIN, &gain);
+    return gain;
   }
 
   std::string alErrorString(const ALenum &err) {
