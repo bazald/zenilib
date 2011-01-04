@@ -47,11 +47,13 @@
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
 
+/* \cond */
 #ifdef _MACOSX
 #include <SDL_image/SDL_image.h>
 #else
 #include <SDL/SDL_image.h>
 #endif
+/* \endcond */
 
 #include <string>
 

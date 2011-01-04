@@ -50,9 +50,11 @@
 #include <Zeni/Hash_Map.h>
 #include <Zeni/Timer.h>
 
+/* \cond */
 #include <stack>
 #include <string>
 #include <vector>
+/* \endcond */
 
 namespace Zeni {
 
