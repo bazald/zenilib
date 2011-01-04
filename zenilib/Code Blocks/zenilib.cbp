@@ -8,32 +8,41 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<MakeCommands>
-			<Build command='scons --directory=../ zenilib scu=zeni' />
-			<CompileFile command='scons --directory=../ zenilib scu=zeni' />
-			<Clean command='scons --directory=../ -c zenilib scu=zeni' />
-			<DistClean command='scons --directory=../ -c zenilib scu=zeni' />
+			<Build command="$(scons) --directory=.. zenilib scu=zeni" />
+			<CompileFile command="$(scons) --directory=.. zenilib scu=zeni" />
+			<Clean command="$(scons) --directory=.. -c zenilib scu=zeni" />
+			<DistClean command="$(scons) --directory=.. -c zenilib scu=zeni" />
+			<AskRebuildNeeded command="$(scons) --directory=.. -q zenilib scu=zeni" />
+			<SilentBuild command="$(scons) --directory=.. -Q zenilib scu=zeni" />
 		</MakeCommands>
 		<Build>
 			<Target title="Debug">
 				<Option type="4" />
 				<Option compiler="gcc" />
 				<MakeCommands>
-					<Build command='scons --directory=../ zenilib scu=zeni debug=true' />
-					<CompileFile command='scons --directory=../ zenilib scu=zeni debug=true' />
-					<Clean command='scons --directory=../ -c zenilib scu=zeni debug=true' />
-					<DistClean command='scons --directory=../ -c zenilib scu=zeni debug=true' />
+					<Build command="$(scons) --directory=.. zenilib scu=zeni debug=true" />
+					<CompileFile command="$(scons) --directory=.. zenilib scu=zeni debug=true" />
+					<Clean command="$(scons) --directory=.. -c zenilib scu=zeni debug=true" />
+					<DistClean command="$(scons) --directory=.. -c zenilib scu=zeni debug=true" />
+					<AskRebuildNeeded command="$(scons) --directory=.. -q zenilib scu=zeni debug=true" />
+					<SilentBuild command="$(scons) --directory=.. -Q zenilib scu=zeni debug=true" />
 				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option type="4" />
 				<Option compiler="gcc" />
 				<MakeCommands>
-					<Build command='scons --directory=../ zenilib scu=zeni debug=false' />
-					<CompileFile command='scons --directory=../ zenilib scu=zeni debug=false' />
-					<Clean command='scons --directory=../ -c zenilib scu=zeni debug=false' />
-					<DistClean command='scons --directory=../ -c zenilib scu=zeni debug=false' />
+					<Build command="$(scons) --directory=.. zenilib scu=zeni debug=false" />
+					<CompileFile command="$(scons) --directory=.. zenilib scu=zeni debug=false" />
+					<Clean command="$(scons) --directory=.. -c zenilib scu=zeni debug=false" />
+					<DistClean command="$(scons) --directory=.. -c zenilib scu=zeni debug=false" />
+					<AskRebuildNeeded command="$(scons) --directory=.. -q zenilib scu=zeni debug=false" />
+					<SilentBuild command="$(scons) --directory=.. -Q zenilib scu=zeni debug=false" />
 				</MakeCommands>
 			</Target>
+			<Environment>
+				<Variable name="scons" value="scons" />
+			</Environment>
 		</Build>
 		<Unit filename="../include/Zeni/Camera.h" />
 		<Unit filename="../include/Zeni/Camera.hxx" />
