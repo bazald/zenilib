@@ -27,7 +27,7 @@
 */
 
 /**
- * \class Zeni::Color
+ * \struct Zeni::Color
  *
  * \ingroup zenilib
  *
@@ -45,7 +45,9 @@
 #ifndef ZENI_COLOR_H
 #define ZENI_COLOR_H
 
+/* \cond */
 #include <SDL/SDL_stdinc.h>
+/* \endcond */
 
 namespace Zeni {
 

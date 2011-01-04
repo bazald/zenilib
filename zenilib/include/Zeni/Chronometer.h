@@ -31,7 +31,9 @@
 
 #include <Zeni/Timer.h>
 
+/* \cond */
 #include <set>
+/* \endcond */
 
 namespace Zeni {
 

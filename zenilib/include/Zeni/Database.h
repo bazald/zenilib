@@ -46,8 +46,10 @@
 #include <Zeni/Core.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/XML.h>
+/* \cond */
 #include <list>
 #include <set>
+/* \endcond */
 
 namespace Zeni {
 
