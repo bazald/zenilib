@@ -432,10 +432,10 @@ namespace Zeni {
     // Initialize Window
 #if SDL_VERSION_ATLEAST(1,3,0)
     m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
-      (get_opengl_flag() ? SDL_WINDOW_OPENGL : 0) | 
+      (get_opengl_flag() ? SDL_WINDOW_OPENGL : 0u) | 
       (g_screen_full ? SDL_WINDOW_FULLSCREEN
-                     : ((g_screen_show_frame ? 0 : SDL_WINDOW_BORDERLESS) |
-                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0))));
+                     : ((g_screen_show_frame ? 0u : SDL_WINDOW_BORDERLESS) |
+                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0u))));
     Core::assert_no_error();
 #else
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,

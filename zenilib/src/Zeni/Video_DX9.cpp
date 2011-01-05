@@ -127,7 +127,7 @@ namespace Zeni {
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     SDL_GetWindowWMInfo(get_window(), &wmInfo);
-    HWND hWnd = wmInfo.window;
+    HWND hWnd = wmInfo.win.window;
 #else
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);

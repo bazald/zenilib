@@ -154,7 +154,6 @@ namespace Zeni {
     virtual void on_quit(const SDL_QuitEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Annoying events
 #if SDL_VERSION_ATLEAST(1,3,0)
-    virtual void on_proximity(const SDL_ProximityEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_window_event(const SDL_WindowEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 #endif
     virtual void on_system_wm_event(const SDL_SysWMEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
@@ -200,9 +199,9 @@ namespace Zeni {
   };
 
   struct Zeni_Input_ID {
-    Zeni_Input_ID(const Uint8 &type_ = SDL_KEYDOWN, const int &subid_ = 0, const int &which_ = 0);
+    Zeni_Input_ID(const Uint16 &type_ = SDL_KEYDOWN, const int &subid_ = 0, const int &which_ = 0);
 
-    Uint8 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
+    Uint16 type; ///< directly copied from SDL_Event; UP types are converted to DOWN types
     int subid; ///< event.keysym.sym, event.button, event.axis, mouse axis (x==0, y==1)
     int which; ///< Joystick Identifier; ignored for other events (should be 0)
     mutable float previous_confidence;

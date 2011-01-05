@@ -79,10 +79,6 @@ namespace Zeni {
       on_quit(event.quit);
       break;
 #if SDL_VERSION_ATLEAST(1,3,0)
-    case SDL_PROXIMITYIN:
-    case SDL_PROXIMITYOUT:
-      on_proximity(event.proximity);
-      break;
     case SDL_WINDOWEVENT:
       on_window_event(event.window);
       break;
@@ -139,9 +135,6 @@ namespace Zeni {
   }
 
 #if SDL_VERSION_ATLEAST(1,3,0)
-  void Gamestate_Base::on_proximity(const SDL_ProximityEvent &) {
-  }
-
   void Gamestate_Base::on_window_event(const SDL_WindowEvent &) {
   }
 #endif
@@ -1097,7 +1090,7 @@ default: return "SDLK_UNKNOWN";
       m_state->decrement();
   }
 
-  Zeni_Input_ID::Zeni_Input_ID(const Uint8 &type_, const int &subid_, const int &which_)
+  Zeni_Input_ID::Zeni_Input_ID(const Uint16 &type_, const int &subid_, const int &which_)
     : type(type_),
     subid(subid_),
     which(which_),
