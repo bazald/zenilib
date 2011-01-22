@@ -47,7 +47,7 @@ namespace Zeni {
    * Contact: bazald@zenipex.com
    */
 
-  template <class TIME>
+  template <class TIME = Time>
   class Chronometer {
   public:
     Chronometer();
@@ -57,7 +57,7 @@ namespace Zeni {
     Chronometer & operator =(const Chronometer &rhs);
 
     // Starting and Stopping
-    const bool & running() const; ///< Get whether the Chronometer is currently counting or stopped.
+    const bool & is_running() const; ///< Get whether the Chronometer is currently counting or stopped.
     const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
     const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
 

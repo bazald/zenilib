@@ -84,7 +84,7 @@ namespace Zeni {
   }
 
   template <class TIME>
-  const bool & Chronometer<TIME>::running() const {
+  const bool & Chronometer<TIME>::is_running() const {
     return m_running;
   }
 
@@ -172,7 +172,7 @@ namespace Zeni {
         it != chronometers.end();
         ++it)
     {
-      if((*it)->running()) {
+      if((*it)->is_running()) {
         (*it)->stop();
         paused.insert(*it);
       }
