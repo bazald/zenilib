@@ -143,7 +143,7 @@ namespace Zeni {
       lr->handles.erase(it);
     }
 
-    lr->handles.push_front(Lookup::Handle(type, "", true, keep));
+    lr->handles.push_front(typename Lookup::Handle(type, "", true, keep));
 
     m_entries[lr->id] = type;
 
