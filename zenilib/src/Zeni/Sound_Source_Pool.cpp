@@ -199,16 +199,16 @@ namespace Zeni {
           greater.push_back(*x);
       }
 
-    pivot = std::copy(less.begin(), less.end(), begin);
-    *pivot = pivotValue;
-    const std::vector<Sound_Source *>::iterator gbegin = pivot + 1;
-    std::copy(greater.begin(), greater.end(), gbegin);
+    const std::vector<Sound_Source *>::iterator less_end = std::copy(less.begin(), less.end(), begin);
+    *less_end = pivotValue;
+    const std::vector<Sound_Source *>::iterator greater_begin = less_end + 1;
+    std::copy(greater.begin(), greater.end(), greater_begin);
 
     less.clear();
     greater.clear();
 
-    sound_quicksort(begin, begin + diff_t(less.size()), policy);
-    sound_quicksort(gbegin, gbegin + diff_t(greater.size()), policy);
+    sound_quicksort(begin, less_end, policy);
+    sound_quicksort(greater_begin, end, policy);
   }
 
   void Sound_Source_Pool::update() {

@@ -111,13 +111,12 @@ namespace Zeni {
     inline void set_BGM_time(const float &time); ///< Set the current position in the BGM, offset in seconds.
 
   private:
-    void assert_m_bgm(); ///< Initialize m_bgm and m_bgm_source if not already done.
+    Sound_Source & get_BGM_Source(); ///< Initialize m_bgm if needed and return a corresponding Sound_Source
 
     static Sound *e_sound;
 
     std::string m_bgmusic;
     Sound_Buffer *m_bgm;
-    Sound_Source *m_bgm_source;
 
   protected:
     float m_listener_gain;
