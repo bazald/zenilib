@@ -186,17 +186,30 @@ namespace Zeni {
 
   float Sound_Source::get_time() const {
     if(m_playing) {
-      const float current_play_position = m_play_position + m_play_time.get_seconds_passed();
+      const Time current_time;
+      if(m_hw)
+        m_play_position = m_hw->get_time();
+      else {
+        float time_step = current_time.get_seconds_since(m_play_time);
+        m_play_position += time_step;
+      }
+      m_play_time = current_time;
 
-      if(current_play_position < m_buffer->get_duration())
-        return current_play_position;
-      else if(m_looping)
-        return fmod(current_play_position, m_buffer->get_duration());
-      else
-        return m_buffer->get_duration();
+      if(m_play_position > m_buffer->get_duration()) {
+        if(m_looping)
+          m_play_position = fmod(m_play_position, m_buffer->get_duration());
+        else {
+          m_playing = false;
+          m_stopped = true;
+
+          m_play_position = 0.0f;
+        }
+      }
     }
-    else
-      return m_play_position;
+    else if(m_hw)
+      m_play_position = m_hw->get_time();
+
+    return m_play_position;
   }
 
   float Sound_Source::calculate_gain(const Point3f &listener_position) const {
@@ -235,6 +248,8 @@ namespace Zeni {
     if(m_hw) {
       update_state();
 
+      m_hw->stop();
+
       m_hw = 0;
     }
 
@@ -248,22 +263,24 @@ namespace Zeni {
 
   void Sound_Source::update_state(const Sound_Source_HW::STATE &state) const {
     if(state == Sound_Source_HW::PLAYING) {
-      m_play_time.update();
-
       m_playing = true;
       m_paused = m_stopped = false;
+
+      m_play_time.update();
+
+      get_time();
     }
     else if(state == Sound_Source_HW::PAUSED) {
-      m_play_position = get_time();
+      get_time();
 
       m_paused = true;
       m_playing = m_stopped = false;
     }
     else if(!m_paused && state == Sound_Source_HW::STOPPED) {
-      m_play_position = 0.0f;
-
       m_stopped = true;
-      m_playing = false;
+      m_playing = m_paused = false;
+
+      get_time();
     }
   }
 

@@ -64,6 +64,7 @@
 #define ZENI_DEFAULT_MAX_SOUND_DISTANCE (1000.0f)
 #define ZENI_DEFAULT_ROLLOFF            (1.0f)
 #define ZENI_DEFAULT_SOUND_PRIORITY     (1024)
+#define ZENI_DEFAULT_MUSIC_PRIORITY     (4096)
 
 // Widget.h
 #define ZENI_DEFAULT_SLIDER_POSITION  (0.5f)
@@ -131,7 +132,7 @@
 #define MINIMUM_SCREEN_HEIGHT (200)
 
 // Nasty Conditions
-#define NASTY_SOUND_SOURCE_CAP (16lu)
+#define NASTY_SOUND_SOURCE_CAP (24lu)
 
 // Miscellaney
 #define END_OF_TIME (42)

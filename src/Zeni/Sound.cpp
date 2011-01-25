@@ -44,12 +44,13 @@
 #undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   Sound::Sound(const Sound_Base::SOUND_MODE &vtype_)
     : Sound_Base::IV(vtype_),
     m_bgm(0),
-    m_bgm_source(0),
     m_listener_gain(1.0f),
     m_listener_muted(false)
   {
@@ -58,7 +59,7 @@ namespace Zeni {
   }
 
   Sound::~Sound() {
-    delete m_bgm_source;
+    get_BGM_Source().set_buffer(get_Hello_World_Buffer());
     delete m_bgm;
   }
 
@@ -80,32 +81,39 @@ namespace Zeni {
   }
 
   void Sound::set_BGM(const std::string &filename) {
-    assert_m_bgm();
+    Sound_Source &bgm_source = get_BGM_Source();
 
-    bool playing = m_bgm_source->is_playing() ? true : false;
+    bool playing = bgm_source.is_playing() ? true : false;
 
-    m_bgm_source->stop();
-    m_bgm_source->set_buffer(get_Hello_World_Buffer());
+    bgm_source.stop();
+    bgm_source.set_buffer(get_Hello_World_Buffer());
     delete m_bgm;
     m_bgm = 0;
 
     m_bgmusic = filename;
     m_bgm = new Sound_Buffer(m_bgmusic);
-    m_bgm_source->set_buffer(*m_bgm);
-    m_bgm_source->set_time(0.0f);
+    bgm_source.set_buffer(*m_bgm);
+    bgm_source.set_time(0.0f);
 
     if(playing)
-      m_bgm_source->play();
+      bgm_source.play();
   }
 
-  void Sound::assert_m_bgm() {
-    if(!m_bgm)
+  Sound_Source & Sound::get_BGM_Source() {
+    static Sound_Source bgm_source;
+
+    if(!m_bgm) {
       m_bgm = new Sound_Buffer();
 
-    if(!m_bgm_source)
-      m_bgm_source = new Sound_Source(*m_bgm);
+      bgm_source.set_buffer(*m_bgm);
+      bgm_source.set_priority(ZENI_DEFAULT_MUSIC_PRIORITY);
+    }
+
+    return bgm_source;
   }
 
   Sound * Sound::e_sound = 0;
 
 }
+
+#include <Zeni/Global_Undef.h>

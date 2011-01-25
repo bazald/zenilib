@@ -97,17 +97,13 @@ namespace Zeni {
 #define EMPTY()
 
   void Sound::set_listener_position(const Point3f &position) {
-    assert_m_bgm();
-
-    m_bgm_source->set_position(position);
+    get_BGM_Source().set_position(position);
 
     SOUND_IV_FCN_CALL(set_listener_position_impl, position);
   }
 
   void Sound::set_listener_velocity(const Vector3f &velocity) {
-    assert_m_bgm();
-
-    m_bgm_source->set_velocity(velocity);
+    get_BGM_Source().set_velocity(velocity);
 
     SOUND_IV_FCN_CALL(set_listener_velocity_impl, velocity);
   }
@@ -151,87 +147,59 @@ namespace Zeni {
 #undef EMPTY
 
   void Sound::set_BGM_pitch(const float & pitch) {
-    assert_m_bgm();
-
-    m_bgm_source->set_pitch(pitch);
+    get_BGM_Source().set_pitch(pitch);
   }
 
   void Sound::set_BGM_gain(const float &gain) {
-    assert_m_bgm();
-
-    m_bgm_source->set_gain(gain);
+    get_BGM_Source().set_gain(gain);
   }
 
   void Sound::set_BGM_looping(const bool &looping) {
-    assert_m_bgm();
-
-    m_bgm_source->set_looping(looping);
+    get_BGM_Source().set_looping(looping);
   }
 
   void Sound::set_BGM_time(const float &time) {
-    assert_m_bgm();
-
-    m_bgm_source->set_time(time);
+    get_BGM_Source().set_time(time);
   }
 
   float Sound::get_BGM_pitch() {
-    assert_m_bgm();
-
-    return m_bgm_source->get_pitch();
+    return get_BGM_Source().get_pitch();
   }
 
   float Sound::get_BGM_gain() {
-    assert_m_bgm();
-
-    return m_bgm_source->get_gain();
+    return get_BGM_Source().get_gain();
   }
 
   bool Sound::is_BGM_looping() {
-    assert_m_bgm();
-
-    return m_bgm_source->is_looping();
+    return get_BGM_Source().is_looping();
   }
 
   float Sound::get_BGM_time() {
-    assert_m_bgm();
-
-    return m_bgm_source->get_time();
+    return get_BGM_Source().get_time();
   }
 
   bool Sound::playing_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->is_playing();
+    return get_BGM_Source().is_playing();
   }
 
   bool Sound::paused_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->is_paused();
+    return get_BGM_Source().is_paused();
   }
 
   bool Sound::stopped_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->is_stopped();
+    return get_BGM_Source().is_stopped();
   }
 
   void Sound::play_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->play();
+    get_BGM_Source().play();
   }
 
   void Sound::pause_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->pause();
+    get_BGM_Source().pause();
   }
   
   void Sound::stop_BGM() {
-    assert_m_bgm();
-
-    return m_bgm_source->stop();
+    get_BGM_Source().stop();
   }
 
 }
