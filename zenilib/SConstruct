@@ -87,6 +87,7 @@ if not is_windows:
 if is_windows:
   vars.Add('x64', 'Set to 1 to compile for the AMD64/EMT64 target', x64)
 vars.Add('manual_vsync_delay', 'Set to 1 to save CPU time', manual_vsync_delay)
+vars.Add('application_name', 'Force output file name')
 
 ### Read arguments
 
@@ -125,6 +126,10 @@ if not is_windows:
   if is_windows:
     x64 = arg_eval(ARGUMENTS.get('x64', x64))
 manual_vsync_delay = arg_eval(ARGUMENTS.get('manual_vsync_delay', manual_vsync_delay))
+if(ARGUMENTS.get('application_name')):
+  application_name = ARGUMENTS.get('application_name')
+else:
+  application_name = False
 
 ### Get g++ Version (if applicable)
 
@@ -265,10 +270,13 @@ if not nogl:
 ### Decide build options
 
 launcher_name = 'Launcher'
-if is_windows:
-  program_name = 'Application'
+if application_name:
+  program_name = application_name
 else:
-  program_name = 'application'
+  if is_windows:
+    program_name = 'Application'
+  else:
+    program_name = 'application'
 library_name = 'zenilib'
 
 if debug:
@@ -294,7 +302,8 @@ if is_windows:
   write_appname_header()
 
 launcher_name += suffix
-program_name += suffix
+if not application_name:
+  program_name += suffix
 library_name += suffix
 
 libs += [library_name]
