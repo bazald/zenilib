@@ -1,19 +1,19 @@
 /* This file is part of the Zenipex Library.
 * Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
 *
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
+* The Zenipex Library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of the
 * License, or (at your option) any later version.
 *
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+* The Zenipex Library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 * General Public License for more details.
 *
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
+* You should have received a copy of the GNU General Public License
+* along with the Zenipex Library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA.
 *
 * As a special exception, you may use this file as part of a free software
@@ -35,13 +35,15 @@
 
 #include <string>
 
+#include <Zeni/Global.h>
+
 namespace Zeni {
 
   /**
    * Render an image in 2D by specifying the coordinates of its corners in screenspace.
    * (0,0) is upper_left, (width, height) is lower_right.
    *
-   * \note The color_filter will only be applied if lighting is enabled, and then odd effects may result if ambient_lighting is set to anything other than the default.
+   * \note If lighting is enabled, then odd effects may result if ambient_lighting is set to anything other than the default.
    */
   void render_image(
     const std::string &image_name,
@@ -52,11 +54,11 @@ namespace Zeni {
 
   /**
    * Render an image with rotation and scaling.
-   * 
+   *
    * This works identically to the function with fewer arguments but it takes the
    * extra step of rotating around and scaling away from a given point.
-   * 
-   * \note The color_filter will only be applied if lighting is enabled, and then odd effects may result if ambient_lighting is set to anything other than the default.
+   *
+   * \note If lighting is enabled, then odd effects may result if ambient_lighting is set to anything other than the default.
    */
   void render_image(
     const std::string &image_name,
@@ -103,8 +105,14 @@ namespace Zeni {
    * Play a sound effect.
    */
   void play_sound(
-    const std::string &sound_name);
+    const std::string &sound_name,
+    const float &pitch = ZENI_DEFAULT_PITCH,
+    const float &gain = ZENI_DEFAULT_GAIN,
+    const Point3f &position = Point3f(),
+    const Vector3f &velocity = Vector3f());
 
 }
+
+#include <Zeni/Global_Undef.h>
 
 #endif

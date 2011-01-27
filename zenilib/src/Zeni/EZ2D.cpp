@@ -1,19 +1,19 @@
 /* This file is part of the Zenipex Library.
 * Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
 *
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
+* The Zenipex Library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of the
 * License, or (at your option) any later version.
 *
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+* The Zenipex Library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 * General Public License for more details.
 *
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
+* You should have received a copy of the GNU General Public License
+* along with the Zenipex Library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 * 02110-1301 USA.
 *
 * As a special exception, you may use this file as part of a free software
@@ -76,7 +76,7 @@ namespace Zeni {
 
       const Point3f about3 = Point3f(about);
 
-      Vector3f 
+      Vector3f
         ulv = Point3f(upper_left) - about3,
         llv = Point3f(upper_left.x, lower_right.y, 0.0f) - about3,
         lrv = Point3f(lower_right) - about3,
@@ -168,11 +168,14 @@ namespace Zeni {
         sprite->set_current_frame(framecap - 1);
   }
 
-  
   void play_sound(
-    const std::string &sound_name) {
+    const std::string &sound_name,
+    const float &pitch,
+    const float &gain,
+    const Point3f &position,
+    const Vector3f &velocity) {
 
-      get_Sound_Source_Pool().play_and_destroy(new Sound_Source(get_Sounds()[sound_name]));
+      get_Sound_Source_Pool().play_and_destroy(new Sound_Source(get_Sounds()[sound_name], pitch, gain, position, velocity));
   }
 
 }
