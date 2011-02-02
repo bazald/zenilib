@@ -92,17 +92,13 @@ namespace Zeni {
 
       surface = image.get_copy();
     }
-    else if(surface->format->BytesPerPixel == 3) {
-      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16)
-        return -'R';
-      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16)
-        return -'B';
-    }
-    else if(surface->format->BytesPerPixel == 4) {
-      if(surface->format->Rshift == 0 && surface->format->Gshift == 8 && surface->format->Bshift == 16 && surface->format->Ashift == 24)
-        return 'R';
-      else if(surface->format->Bshift == 0 && surface->format->Gshift == 8 && surface->format->Rshift == 16 && surface->format->Ashift == 24)
-        return 'B';
+    else if((surface->format->BytesPerPixel == 3 || surface->format->BytesPerPixel == 4) && surface->format->Gshift == 8) {
+      if(surface->format->Rshift == 0 && surface->format->Bshift == 16)
+        return surface->format->BytesPerPixel == 3 ? -'R' : 'R';
+      else if(surface->format->Bshift == 0 && surface->format->Rshift == 16)
+        return surface->format->BytesPerPixel == 3 ? -'B' : 'B';
+      else
+        simplify_surface(surface);
     }
     else
       simplify_surface(surface);
@@ -247,7 +243,7 @@ namespace Zeni {
       mode == -'R' ? GL_RGB :
       mode == -'B' ? GL_BGR :
       mode == 'R' ? GL_RGBA :
-      /*mode == 'A' ?*/ GL_BGRA);
+      /*mode == 'B' ?*/ GL_BGRA);
 
     // Allocate a unique id for the texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
