@@ -116,9 +116,9 @@ if not is_windows:
     x64 = arg_eval(ARGUMENTS.get('x64', x64))
 manual_vsync_delay = arg_eval(ARGUMENTS.get('manual_vsync_delay', manual_vsync_delay))
 if(ARGUMENTS.get('application_name')):
-  application_name = ARGUMENTS.get('application_name')
+  application_target = ARGUMENTS.get('application_name')
 else:
-  application_name = False
+  application_target = False
 
 ### Get g++ Version (if applicable)
 
@@ -157,19 +157,88 @@ if is_windows:
 else:
   link = cc
 
-### Decide single compilation unit
-
-launcher = ['Visual Studio 2008/Launcher.cpp']
-
-if scu == 'scu':
-  program = 'src/application.cxx'
-else:
-  program = [Glob('src/*.cpp')]
+### Collect src files
 
 if scu == 'scu' or scu == 'zeni':
-  library = ['src/zeni.cxx', 'src/zeni_audio.cxx', 'src/zeni_core.cxx', 'src/zeni_graphics.cxx', 'src/zeni_net.cxx', 'src/zeni_rest.cxx']
+  zeni_src = ['src/zeni.cxx']
+  zeni_audio_src = ['src/zeni_audio.cxx']
+  zeni_core_src = ['src/zeni_core.cxx']
+  zeni_graphics_src = ['src/zeni_graphics.cxx']
+  zeni_net_src = ['src/zeni_net.cxx']
+  zeni_rest_src = ['src/zeni_rest.cxx']
 else:
-  library = [Glob('src/Zeni/*.cpp')]
+  zeni_src = [
+    'src/Zeni/Camera.cpp',
+    'src/Zeni/Collision.cpp',
+    'src/Zeni/Color.cpp',
+    'src/Zeni/Colors.cpp',
+    'src/Zeni/Coordinate.cpp',
+    'src/Zeni/File_Ops.cpp',
+    'src/Zeni/Matrix4f.cpp',
+    'src/Zeni/Quaternion.cpp',
+    'src/Zeni/Quit_Event.cpp',
+    'src/Zeni/Random.cpp',
+    'src/Zeni/Resource.cpp',
+    'src/Zeni/Serialization.cpp',
+    'src/Zeni/String.cpp',
+    'src/Zeni/Timer_HQ.cpp',
+    'src/Zeni/Vector2f.cpp',
+    'src/Zeni/Vector3f.cpp',
+    'src/Zeni/XML.cpp']
+  zeni_audio_src = [
+    'src/Zeni/Sound.cpp',
+    'src/Zeni/Sound_Buffer.cpp',
+    'src/Zeni/Sound_Renderer_AL.cpp',
+    'src/Zeni/Sound_Source.cpp',
+    'src/Zeni/Sound_Source_Pool.cpp',
+    'src/Zeni/Sounds.cpp']
+  zeni_core_src = [
+    'src/Zeni/Core.cpp',
+    'src/Zeni/Joysticks.cpp',
+    'src/Zeni/Mutex.cpp',
+    'src/Zeni/Thread.cpp',
+    'src/Zeni/Timer.cpp']
+  zeni_graphics_src = [
+    'src/Zeni/EZ2D.cpp',
+    'src/Zeni/Fog.cpp',
+    'src/Zeni/Font.cpp',
+    'src/Zeni/Fonts.cpp',
+    'src/Zeni/Image.cpp',
+    'src/Zeni/Light.cpp',
+    'src/Zeni/Material.cpp',
+    'src/Zeni/Model.cpp',
+    'src/Zeni/Projector.cpp',
+    'src/Zeni/Renderable.cpp',
+    'src/Zeni/Shader.cpp',
+    'src/Zeni/Texture.cpp',
+    'src/Zeni/Textures.cpp',
+    'src/Zeni/Vertex2f.cpp',
+    'src/Zeni/Vertex3f.cpp',
+    'src/Zeni/Vertex_Buffer.cpp',
+    'src/Zeni/Video.cpp',
+    'src/Zeni/Video_DX9.cpp',
+    'src/Zeni/Video_GL.cpp',
+    'src/Zeni/Window.cpp']
+  zeni_net_src = [
+    'src/Zeni/Net.cpp',
+    'src/Zeni/VLUID.cpp']
+  zeni_rest_src = [
+    'src/Zeni/Configurator_Video.cpp',
+    'src/Zeni/Console_State.cpp',
+    'src/Zeni/Game.cpp',
+    'src/Zeni/Gamestate.cpp',
+    'src/Zeni/Gamestate_II.cpp',
+    'src/Zeni/Logo.cpp',
+    'src/Zeni/main.cpp',
+    'src/Zeni/Widget.cpp',
+    'src/Zeni/Widget_Gamestate.cpp']
+
+if scu == 'scu':
+  application_src = 'src/application.cxx'
+else:
+  application_src = [Glob('src/*.cpp')]
+
+launcher_src = ['Visual Studio 2010/Launcher.cpp']
 
 ### Decide defines / options
 
@@ -229,20 +298,11 @@ if manual_vsync_delay:
 
 application_libs = ['tinyxml', 'SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
 
-if is_windows:
-  application_libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
-else:
-  application_libs += ['lib3ds', 'dl']
-
-if not nocg:
-  application_libs += ['Cg']
-
 dx9_libs = []
 if not nodx9:
   dx9_libs += ['gdi32']
   if not nocg:
     dx9_libs += ['CgD3D9']
-application_libs += dx9_libs
 
 gl_libs = []
 if not nogl:
@@ -252,19 +312,8 @@ if not nogl:
     gl_libs += ['GL', 'GLEW', 'GLU']
   if not nocg:
     gl_libs += ['CgGL']
-application_libs += gl_libs
 
 ### Decide build options
-
-launcher_name = 'Launcher'
-if application_name:
-  program_name = application_name
-else:
-  if is_windows:
-    program_name = 'Application'
-  else:
-    program_name = 'application'
-library_name = 'zenilib'
 
 if debug:
   suffix = '_d'
@@ -275,6 +324,19 @@ else:
   if is_windows:
     link_optimization = ' /INCREMENTAL:NO /OPT:REF /OPT:ICF /LTCG '
 
+zeni_target = 'zeni' + suffix
+zeni_audio_target = 'zeni_audio' + suffix
+zeni_core_target = 'zeni_core' + suffix
+zeni_graphics_target = 'zeni_graphics' + suffix
+zeni_net_target = 'zeni_net' + suffix
+zeni_rest_target = 'zeni_rest' + suffix
+if not application_target:
+  if is_windows:
+    application_target = 'Application' + suffix
+  else:
+    application_target = 'application' + suffix
+launcher_target = 'Launcher' + suffix
+
 def write_appname_header():
   fout = open("Visual Studio 2010\\Application_Name.h", "w")
   fout.write('#define APPLICATION_NAME "' + program_name + '"')
@@ -282,23 +344,10 @@ def write_appname_header():
 if is_windows:
   write_appname_header()
 
-launcher_name += suffix
-if not application_name:
-  program_name += suffix
-zeni_target = 'zeni' + suffix
-zeni_audio_target = 'zeni_audio' + suffix
-zeni_core_target = 'zeni_core' + suffix
-zeni_graphics_target = 'zeni_graphics' + suffix
-zeni_net_target = 'zeni_net' + suffix
-zeni_rest_target = 'zeni_rest' + suffix
-
-application_libs += [library_name]
-
 ### Finally define the environment + library + program
 
 cpppath = ['include']
-sodir = './bin'
-libpath = [sodir]
+libpath = ['./bin']
 
 if is_windows:
   #ccflags += ' /Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 '
@@ -359,7 +408,6 @@ env = Environment(
 
 # Build Shared Library: zeni
 
-zeni_sources = ['src/zeni.cxx']
 zeni_env = Environment(
   variables = vars,
   AR = lib,
@@ -371,13 +419,12 @@ zeni_env = Environment(
   LIBS = ['tinyxml'],
   LIBPATH = ['.'])
 zeni = zeni_env.SharedLibrary(
-  target = sodir + '/' + zeni_target,
-  source = zeni_sources)
+  target = './bin/' + zeni_target,
+  source = zeni_src)
 env.Alias('zeni', zeni)
 
 # Build Shared Library: zeni_audio
 
-zeni_audio_sources = ['src/zeni_audio.cxx']
 zeni_audio_env = Environment(
   variables = vars,
   AR = lib,
@@ -388,15 +435,14 @@ zeni_audio_env = Environment(
   LINK = link,
   LINKFLAGS = linkflags,
   LIBS = [zeni_target],
-  LIBPATH = [sodir])
+  LIBPATH = ['./bin'])
 zeni_audio = zeni_audio_env.SharedLibrary(
-  target = sodir + '/' + zeni_audio_target,
-  source = zeni_audio_sources)
+  target = './bin/' + zeni_audio_target,
+  source = zeni_audio_src)
 env.Alias('zeni_audio', zeni_audio)
   
 # Build Shared Library: zeni_core
 
-zeni_core_sources = ['src/zeni_core.cxx']
 zeni_core_env = Environment(
   variables = vars,
   AR = lib,
@@ -407,15 +453,14 @@ zeni_core_env = Environment(
   LINK = link,
   LINKFLAGS = linkflags,
   LIBS = ['SDL', zeni_target],
-  LIBPATH = [sodir])
+  LIBPATH = ['./bin'])
 zeni_core = zeni_core_env.SharedLibrary(
-  target = sodir + '/' + zeni_core_target,
-  source = zeni_core_sources)
+  target = './bin/' + zeni_core_target,
+  source = zeni_core_src)
 env.Alias('zeni_core', zeni_core)
 
 # Build Shared Library: zeni_graphics
 
-zeni_graphics_sources = ['src/zeni_graphics.cxx']
 zeni_graphics_env = Environment(
   variables = vars,
   AR = lib,
@@ -428,13 +473,12 @@ zeni_graphics_env = Environment(
   LIBS = dx9_libs + gl_libs + ['SDL_image', 'SDL_ttf', '3ds', zeni_target],
   LIBPATH = libpath)
 zeni_graphics = zeni_graphics_env.SharedLibrary(
-  target = sodir + '/' + zeni_graphics_target,
-  source = zeni_graphics_sources)
+  target = './bin/' + zeni_graphics_target,
+  source = zeni_graphics_src)
 env.Alias('zeni_graphics', zeni_graphics)
 
 # Build Shared Library: zeni_net
 
-zeni_net_sources = ['src/zeni_net.cxx']
 zeni_net_env = Environment(
   variables = vars,
   AR = lib,
@@ -447,13 +491,12 @@ zeni_net_env = Environment(
   LIBS = ['SDL_net', zeni_target],
   LIBPATH = libpath)
 zeni_net = zeni_net_env.SharedLibrary(
-  target = sodir + '/' + zeni_net_target,
-  source = zeni_net_sources)
+  target = './bin/' + zeni_net_target,
+  source = zeni_net_src)
 env.Alias('zeni_net', zeni_net)
 
 # Build Shared Library: zeni_rest
 
-zeni_rest_sources = ['src/zeni_rest.cxx']
 zeni_rest_env = Environment(
   variables = vars,
   AR = lib,
@@ -464,23 +507,23 @@ zeni_rest_env = Environment(
   LINK = link,
   LINKFLAGS = linkflags,
   LIBS = [zeni_target],
-  LIBPATH = [sodir])
+  LIBPATH = ['./bin'])
 zeni_rest = zeni_rest_env.SharedLibrary(
-  target = sodir + '/' + zeni_rest_target,
-  source = zeni_rest_sources)
+  target = './bin/' + zeni_rest_target,
+  source = zeni_rest_src)
 env.Alias('zeni_rest', zeni_rest)
 
 # Build Application
 
 application = env.Program(
-  program_name,
-  program)
+  target = application_target,
+  source = application_src)
 env.Alias('application', application)
 
 if is_windows:
   launcher = env.Program(
-    launcher_name,
-    launcher)
+    target = launcher_target,
+    source = launcher_src)
   env.Alias('launcher', launcher)
 
 ### Provide help
