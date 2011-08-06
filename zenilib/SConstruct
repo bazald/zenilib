@@ -15,12 +15,6 @@ if is_windows:
     VCBINDIR = VSINSTALLDIR + '\\VC\\BIN\\'
     VCVARSBAT86 = ' "' + VCBINDIR + 'vcvars32.bat" '
     VCVARSBAT64 = ' "' + VCBINDIR + 'amd64\\vcvars64.bat" '
-  elif(os.environ.has_key('VS90COMNTOOLS')):
-    VSINSTALLDIR = os.environ['VS90COMNTOOLS']
-    VSINSTALLDIR = VSINSTALLDIR[:VSINSTALLDIR.find('Common')]
-    VCBINDIR = VSINSTALLDIR + '\\VC\\BIN\\'
-    VCVARSBAT86 = ' "' + VCBINDIR + 'vcvars32.bat" '
-    VCVARSBAT64 = ' "' + VCBINDIR + 'amd64\\vcvars64.bat" '
   else:
     print "No compatible version of VisualC found.\nAttempt to use GNU toolchain."
     is_windows = False
@@ -57,12 +51,7 @@ if not is_windows:
 
 ### Generate help
 
-try:
-  vars = Variables('custom.py')
-  deprecated_opts = False
-except TypeError:
-  vars = Variables('custom.py')
-  deprecated_opts = True
+vars = Variables('custom.py')
 
 if not is_windows:
   vars.Add('cc', 'Replace \'g++\' as the C++ compiler', cc)
@@ -189,7 +178,7 @@ if is_windows:
   ccflags = ' /D "WIN32" /D "_WINDOWS" '
 else:
   define = ' -D'
-  ccflags = ' -D_CRT_SECURE_NO_DEPRECATE -DZENI_DLL= -DZENI_EXT= -DZENI_AUDIO_DLL= -DZENI_AUDIO_EXT= -DZENI_CORE_DLL= -DZENI_CORE_EXT= -DZENI_GRAPHICS_DLL= -DZENI_GRAPHICS_EXT= -DZENI_NET_DLL= -DZENI_NET_EXT= -DZENI_REST_DLL= -DZENI_REST_EXT='
+  ccflags = ' -D_CRT_SECURE_NO_DEPRECATE -DZENI_DLL= -DZENI_EXT= -DZENI_AUDIO_DLL= -DZENI_AUDIO_EXT= -DZENI_CORE_DLL= -DZENI_CORE_EXT= -DZENI_GRAPHICS_DLL= -DZENI_GRAPHICS_EXT= -DZENI_NET_DLL= -DZENI_NET_EXT= -DZENI_REST_DLL= -DZENI_REST_EXT= -fPIC '
   if is_mac:
     ccflags += ' -D_MACOSX '
   elif is_linux:
@@ -238,28 +227,32 @@ if manual_vsync_delay:
 
 ### Decide libraries
 
-libs = ['tinyxml', 'SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
+application_libs = ['tinyxml', 'SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
 
 if is_windows:
-  libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
+  application_libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
 else:
-  libs += ['lib3ds', 'dl']
+  application_libs += ['lib3ds', 'dl']
 
 if not nocg:
-  libs += ['Cg']
+  application_libs += ['Cg']
 
+dx9_libs = []
 if not nodx9:
-  libs += ['gdi32']
+  dx9_libs += ['gdi32']
   if not nocg:
-    libs += ['CgD3D9']
+    dx9_libs += ['CgD3D9']
+application_libs += dx9_libs
 
+gl_libs = []
 if not nogl:
   if is_windows:
-    libs += ['opengl32', 'glew32', 'glu32']
+    gl_libs += ['opengl32', 'glew32', 'glu32']
   else:
-    libs += ['GL', 'GLEW', 'GLU']
+    gl_libs += ['GL', 'GLEW', 'GLU']
   if not nocg:
-    libs += ['CgGL']
+    gl_libs += ['CgGL']
+application_libs += gl_libs
 
 ### Decide build options
 
@@ -283,7 +276,7 @@ else:
     link_optimization = ' /INCREMENTAL:NO /OPT:REF /OPT:ICF /LTCG '
 
 def write_appname_header():
-  fout = open("Visual Studio 2008\\Application_Name.h", "w")
+  fout = open("Visual Studio 2010\\Application_Name.h", "w")
   fout.write('#define APPLICATION_NAME "' + program_name + '"')
 
 if is_windows:
@@ -292,14 +285,20 @@ if is_windows:
 launcher_name += suffix
 if not application_name:
   program_name += suffix
-library_name += suffix
+zeni_target = 'zeni' + suffix
+zeni_audio_target = 'zeni_audio' + suffix
+zeni_core_target = 'zeni_core' + suffix
+zeni_graphics_target = 'zeni_graphics' + suffix
+zeni_net_target = 'zeni_net' + suffix
+zeni_rest_target = 'zeni_rest' + suffix
 
-libs += [library_name]
+application_libs += [library_name]
 
 ### Finally define the environment + library + program
 
 cpppath = ['include']
-libpath = ['.']
+sodir = './bin'
+libpath = [sodir]
 
 if is_windows:
   #ccflags += ' /Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 '
@@ -322,8 +321,6 @@ if is_windows:
     libpath += ['lib_win']
 else:
   ccflags += ' -Wall '
-  if gcc[0] > 3:
-    ccflags += ' -Wno-variadic-macros '
   linkflags = ''
   cpppath += ['/usr/local/include']
   libpath += ['/usr/local/lib']
@@ -340,42 +337,145 @@ if soar:
   soarpath = os.getenv('SOAR_HOME')
   cpppath += [soarpath + '/include']
   libpath += [soarpath + '/lib']
-  libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
+  application_libs += ['ClientSML', 'ConnectionSML', 'ElementXML']
 
-if deprecated_opts is False:
-  env = Environment(
-    variables = vars,
-    AR = lib,
-    CC = cc,
-    CXX = cc,
-    CCFLAGS = ccflags,
-    CPPPATH = cpppath,
-    LINK = link,
-    LINKFLAGS = linkflags,
-    LIBS = libs,
-    LIBPATH = libpath)
-else:
-  env = Environment(
-    options = vars,
-    AR = lib,
-    CC = cc,
-    CXX = cc,
-    CCFLAGS = ccflags,
-    CPPPATH = cpppath,
-    LINK = link,
-    LINKFLAGS = linkflags,
-    LIBS = libs,
-    LIBPATH = libpath)
+for path in libpath:
+  linkflags += " -Wl,-rpath=" + path
+linkflags += " "
+
+# Prepare to Build Application
+
+env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = ['SDLmain', zeni_target, zeni_audio_target, zeni_core_target, zeni_graphics_target, zeni_net_target, zeni_rest_target],
+  LIBPATH = libpath)
+
+# Build Shared Library: zeni
+
+zeni_sources = ['src/zeni.cxx']
+zeni_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINKFLAGS = linkflags,
+  LIBS = ['tinyxml'],
+  LIBPATH = ['.'])
+zeni = zeni_env.SharedLibrary(
+  target = sodir + '/' + zeni_target,
+  source = zeni_sources)
+env.Alias('zeni', zeni)
+
+# Build Shared Library: zeni_audio
+
+zeni_audio_sources = ['src/zeni_audio.cxx']
+zeni_audio_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = [zeni_target],
+  LIBPATH = [sodir])
+zeni_audio = zeni_audio_env.SharedLibrary(
+  target = sodir + '/' + zeni_audio_target,
+  source = zeni_audio_sources)
+env.Alias('zeni_audio', zeni_audio)
+  
+# Build Shared Library: zeni_core
+
+zeni_core_sources = ['src/zeni_core.cxx']
+zeni_core_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = ['SDL', zeni_target],
+  LIBPATH = [sodir])
+zeni_core = zeni_core_env.SharedLibrary(
+  target = sodir + '/' + zeni_core_target,
+  source = zeni_core_sources)
+env.Alias('zeni_core', zeni_core)
+
+# Build Shared Library: zeni_graphics
+
+zeni_graphics_sources = ['src/zeni_graphics.cxx']
+zeni_graphics_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = dx9_libs + gl_libs + ['SDL_image', 'SDL_ttf', '3ds', zeni_target],
+  LIBPATH = libpath)
+zeni_graphics = zeni_graphics_env.SharedLibrary(
+  target = sodir + '/' + zeni_graphics_target,
+  source = zeni_graphics_sources)
+env.Alias('zeni_graphics', zeni_graphics)
+
+# Build Shared Library: zeni_net
+
+zeni_net_sources = ['src/zeni_net.cxx']
+zeni_net_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = ['SDL_net', zeni_target],
+  LIBPATH = libpath)
+zeni_net = zeni_net_env.SharedLibrary(
+  target = sodir + '/' + zeni_net_target,
+  source = zeni_net_sources)
+env.Alias('zeni_net', zeni_net)
+
+# Build Shared Library: zeni_rest
+
+zeni_rest_sources = ['src/zeni_rest.cxx']
+zeni_rest_env = Environment(
+  variables = vars,
+  AR = lib,
+  CC = cc,
+  CXX = cc,
+  CCFLAGS = ccflags,
+  CPPPATH = cpppath,
+  LINK = link,
+  LINKFLAGS = linkflags,
+  LIBS = [zeni_target],
+  LIBPATH = [sodir])
+zeni_rest = zeni_rest_env.SharedLibrary(
+  target = sodir + '/' + zeni_rest_target,
+  source = zeni_rest_sources)
+env.Alias('zeni_rest', zeni_rest)
+
+# Build Application
 
 application = env.Program(
   program_name,
   program)
 env.Alias('application', application)
-
-zenilib = env.StaticLibrary(
-  library_name,
-  library)
-env.Alias('zenilib', zenilib)
 
 if is_windows:
   launcher = env.Program(

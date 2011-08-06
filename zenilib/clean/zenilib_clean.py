@@ -6,18 +6,13 @@ def main():
   os.chdir( zenilib.dir )
   zenilib.auto_accept = True
   
-  zenilib.destroy("Visual Studio 2008/SoarLibrary")
-  zenilib.destroy("Visual Studio 2008/Win32")
-  zenilib.destroy("Visual Studio 2008/x64")
   zenilib.destroy("Visual Studio 2010/SoarLibrary")
   zenilib.destroy("Visual Studio 2010/Win32")
   zenilib.destroy("Visual Studio 2010/x64")
   zenilib.destroy("Visual Studio 2010/ipch")
   
-  zenilib.destroy("Visual Studio 2008/Application_Name.h")
   zenilib.destroy("Visual Studio 2010/Application_Name.h")
   
-  zenilib.destroy("Visual Studio 2008/*.ncb")
   zenilib.destroy("Visual Studio 2010/*.opensdf")
   zenilib.destroy("Visual Studio 2010/*.sdf")
   
@@ -31,10 +26,10 @@ def main():
   
   zenilib.destroy(".sconsign.dblite")
   
-  zenilib.destroy("src/TinyXML/*.o")
   zenilib.destroy("src/Zeni/*.o")
+  zenilib.destroy("src/Zeni/*.os")
   zenilib.destroy("src/*.o")
-  zenilib.destroy("*.a")
+  zenilib.destroy("src/*.os")
   
   zenilib.destroy("bin/x64/*.exp")
   zenilib.destroy("bin/x64/*.ilk")
@@ -61,7 +56,6 @@ def main():
   zenilib.destroy("*.map")
   zenilib.destroy("*.pdb")
   
-  zenilib.destroy("Visual Studio 2008/*.obj")
   zenilib.destroy("Visual Studio 2010/*.obj")
 
 if __name__ == '__main__':

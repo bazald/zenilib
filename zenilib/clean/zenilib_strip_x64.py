@@ -6,7 +6,6 @@ def main():
   os.chdir( zenilib.dir )
   zenilib.auto_accept = True
   
-  zenilib.destroy("Visual Studio 2008/x64")
   zenilib.destroy("Visual Studio 2010/x64")
   
   zenilib.destroy("bin/x64")

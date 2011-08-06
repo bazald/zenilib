@@ -8,13 +8,13 @@ def main():
   os.chdir( zenilib.dir )
   zenilib.auto_accept = True
   
-  zenilib.destroy("Visual Studio 2008/*.suo")
   zenilib.destroy("Visual Studio 2010/*.suo")
-  zenilib.destroy("Visual Studio 2008/*.user", ["Application.vcproj.user", "Application_SoarSML.vcproj.user", "Launcher.vcproj.user"])
   zenilib.destroy("Visual Studio 2010/*.user", ["Application.vcxproj.user", "Application_SoarSML.vcxproj.user", "Launcher.vcxproj.user"])
   
   zenilib.destroy("bin/*_d.dll")
+  zenilib.destroy("bin/*_d.so")
   zenilib.destroy("bin/x64/*_d.dll")
+  zenilib.destroy("bin/x64/*_d.so")
   zenilib.destroy("lib_win/*_d.exp")
   zenilib.destroy("lib_win/*_d.lib")
   zenilib.destroy("lib_win/x64/*_d.exp")

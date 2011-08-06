@@ -9,6 +9,9 @@ def main():
   os.chdir( zenilib.dir )
   zenilib.auto_accept = False
   
+  zenilib.destroy("bin/*.so")
+  zenilib.destroy("bin/x64/*.so")
+  
   zenilib.destroy("Frameworks")
 
 if __name__ == '__main__':
