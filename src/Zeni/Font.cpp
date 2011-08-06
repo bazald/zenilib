@@ -1,42 +1,28 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Font.hxx>
+#include <zeni_graphics.h>
 
+#include <Zeni/Define.h>
 
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Color.hxx>
-#include <Zeni/Quadrilateral.hxx>
-#include <Zeni/Texture.h>
-#include <Zeni/Vertex2f.hxx>
-#include <Zeni/Video.hxx>
-
-#include <Zeni/Global.h>
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
 
@@ -51,7 +37,7 @@ namespace Zeni {
   Font::Font(const bool &bold, const bool &italic,
              const float &glyph_height,
              const float &virtual_screen_height,
-             const std::string &font_name)
+             const String &font_name)
     : m_bold(bold),
     m_italic(italic),
     m_glyph_height(glyph_height),
@@ -130,17 +116,17 @@ namespace Zeni {
     memset(m_glyph, 0, num_glyphs * sizeof(Glyph *));
   }
 
-  Font_FT::Font_FT(const std::string &filepath,
+  Font_FT::Font_FT(const String &filepath,
                    const bool &bold, const bool &italic,
                    const float &glyph_height,
                    const float &virtual_screen_height)
     : Font(bold, italic, glyph_height,
            (virtual_screen_height < MINIMUM_VIRTUAL_SCREEN_HEIGHT ||
            virtual_screen_height > MAXIMUM_VIRTUAL_SCREEN_HEIGHT) ?
-           float(get_Video().get_screen_height()) : virtual_screen_height,
+           float(get_Window().get_height()) : virtual_screen_height,
            filepath),
     m_font_height(glyph_height),
-    m_vratio(get_Video().get_screen_height() / get_virtual_screen_height())
+    m_vratio(get_Window().get_height() / get_virtual_screen_height())
   {
     init(filepath);
   }
@@ -148,13 +134,16 @@ namespace Zeni {
   Font_FT::~Font_FT() {
     for(int i = 1; i < num_glyphs; ++i)
       delete m_glyph[i];
+
+    delete m_texture;
   }
   
-  float Font_FT::get_text_width(const std::string &text) const {
+  float Font_FT::get_text_width(const String &text) const {
     float max_width = 0.0f, width = 0.0f;
-    unsigned int pos = 0;
+    int pos = 0;
+    const int size = int(text.size());
 
-    for(; pos < text.size(); ++pos)
+    for(; pos < size; ++pos)
       if(text[pos] != '\r' && text[pos] != '\n' &&
         m_glyph[int(text[pos])])
         width += m_glyph[int(text[pos])]->get_glyph_width();
@@ -166,7 +155,7 @@ namespace Zeni {
     return std::max(max_width, width);
   }
 
-  void Font_FT::render_text(const std::string &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
+  void Font_FT::render_text(const String &text, const Point2f &position, const Color &color, const JUSTIFY &justify) const {
     Video &vr = get_Video();
     const float &x = position.x;
     const float &y = position.y;
@@ -219,7 +208,7 @@ NEXT_LINE:
     vr.set_color(previous_color);
   }
 
-  void Font_FT::render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down, const Color &color, const JUSTIFY &justify) const {
+  void Font_FT::render_text(const String &text, const Point3f &position, const Vector3f &right, const Vector3f &down, const Color &color, const JUSTIFY &justify) const {
     Video &vr = get_Video();
 
     const Color previous_color = vr.get_color();
@@ -271,7 +260,7 @@ NEXT_LINE_2:
     vr.set_color(previous_color);
   }
 
-  void Font_FT::init(const std::string &filepath) {
+  void Font_FT::init(const String &filepath) {
     TTF_Font *font = TTF_OpenFont(filepath.c_str(), int(get_text_height() * m_vratio + 0.5f));
     if(!font)
       throw Font_Init_Failure();
@@ -356,4 +345,4 @@ NEXT_LINE_2:
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

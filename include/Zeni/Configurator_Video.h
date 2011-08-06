@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
 * \class Zeni::Configurator_Video
@@ -47,16 +36,16 @@
 
 namespace Zeni {
 
-  class Configurator_Video : public Widget_Gamestate {
+  class ZENI_REST_DLL Configurator_Video : public Widget_Gamestate {
     Configurator_Video(const Configurator_Video &);
     Configurator_Video & operator=(const Configurator_Video &);
 
   public:
-    class Check_State : public Zeni::Widget_Gamestate {
+    class ZENI_REST_DLL Check_State : public Zeni::Widget_Gamestate {
       Check_State(const Check_State &);
       Check_State operator=(const Check_State &);
 
-      class Accept_Button : public Zeni::Text_Button {
+      class ZENI_REST_DLL Accept_Button : public Zeni::Text_Button {
         Accept_Button(const Accept_Button &);
         Accept_Button operator=(const Accept_Button &);
 
@@ -81,6 +70,7 @@ namespace Zeni {
       void perform_logic();
 
       Accept_Button m_accept_button;
+      int m_seconds_remaining;
       Text_Box m_text;
 
       Time m_start_time;
@@ -90,15 +80,15 @@ namespace Zeni {
     };
 
   private:
-    class Check_Box_Element : public Check_Box {
+    class ZENI_REST_DLL Check_Box_Element : public Check_Box {
       Check_Box_Element(const Check_Box_Element &);
       Check_Box_Element & operator=(const Check_Box_Element &);
 
     public:
       Check_Box_Element(const XML_Element &element,
-                        const bool &checked,
-                        const Point2f &upper_left,
-                        const float &height);
+                                         const bool &checked,
+                                         const Point2f &upper_left,
+                                         const float &height);
 
       void on_accept();
 
@@ -108,16 +98,16 @@ namespace Zeni {
       XML_Element m_element;
     };
 
-    class Slider_Element : public Slider_Int {
+    class ZENI_REST_DLL Slider_Element : public Slider_Int {
       Slider_Element(const Slider_Element &);
       Slider_Element & operator=(const Slider_Element &);
 
     public:
       Slider_Element(const XML_Element &element,
-                     const int &value,
-                     const std::pair<int, int> &range,
-                     const Point2f &upper_left,
-                     const Point2f &lower_right);
+                                      const int &value,
+                                      const std::pair<int, int> &range,
+                                      const Point2f &upper_left,
+                                      const Point2f &lower_right);
 
       void on_accept();
 
@@ -128,15 +118,15 @@ namespace Zeni {
       Point2f m_text_coord;
     };
 
-    class Text_Element : public Text_Box {
+    class ZENI_REST_DLL Text_Element : public Text_Box {
       Text_Element(const Text_Element &);
       Text_Element & operator=(const Text_Element &);
 
     public:
       Text_Element(const XML_Element &element,
-                   const std::string &text,
-                   const Point2f &upper_left,
-                   const Point2f &lower_right);
+                                    const String &text,
+                                    const Point2f &upper_left,
+                                    const Point2f &lower_right);
 
       void on_change();
 
@@ -146,52 +136,59 @@ namespace Zeni {
       XML_Element m_element;
     };
 
-    class Selector_Element : public Selector {
+    class ZENI_REST_DLL Selector_Element : public Selector {
       Selector_Element(const Selector_Element &);
       Selector_Element & operator=(const Selector_Element &);
 
     public:
       Selector_Element(const XML_Element &element,
-                       const Point2f &upper_left,
-                       const Point2f &lower_right,
-                       const Point2f &expanded_upper_left,
-                       const Point2f &expanded_lower_right);
+                                        const Point2f &upper_left,
+                                        const Point2f &lower_right,
+                                        const Point2f &expanded_upper_left,
+                                        const Point2f &expanded_lower_right);
 
-      void add_entry(const std::string &option, const std::string &save_as);
+      void add_entry(const String &option, const String &save_as);
 
-      void on_accept(const std::string &option);
+      void on_accept(const String &option);
 
     private:
       XML_Element m_element;
-      std::map<std::string, std::string> m_save_as;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+      std::map<String, String> m_save_as;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     };
 
-    class Resolution_Element : public Selector {
+    class ZENI_REST_DLL Resolution_Element : public Selector {
       Resolution_Element(const Resolution_Element &);
       Resolution_Element & operator=(const Resolution_Element &);
 
     public:
       Resolution_Element(const XML_Element &element,
-                         const Point2f &upper_left,
-                         const Point2f &lower_right,
-                         const Point2f &expanded_upper_left,
-                         const Point2f &expanded_lower_right);
+                                          const Point2f &upper_left,
+                                          const Point2f &lower_right,
+                                          const Point2f &expanded_upper_left,
+                                          const Point2f &expanded_lower_right);
 
-      void on_accept(const std::string &option);
+      void on_accept(const String &option);
 
     private:
       XML_Element m_element;
     };
 
-    class Custom_Resolution_Box : public Check_Box {
+    class ZENI_REST_DLL Custom_Resolution_Box : public Check_Box {
       Custom_Resolution_Box(const Custom_Resolution_Box &);
       Custom_Resolution_Box & operator=(const Custom_Resolution_Box &);
 
     public:
       Custom_Resolution_Box(Configurator_Video &configurator,
-                            const bool &checked,
-                            const Point2f &upper_left,
-                            const float &height);
+                                             const bool &checked,
+                                             const Point2f &upper_left,
+                                             const float &height);
 
       void apply();
 
@@ -203,14 +200,14 @@ namespace Zeni {
       Configurator_Video &m_configurator;
     };
 
-    class Apply_Button : public Text_Button {
+    class ZENI_REST_DLL Apply_Button : public Text_Button {
       Apply_Button(const Apply_Button &);
       Apply_Button & operator=(const Apply_Button &);
 
     public:
       Apply_Button(XML_Document &file,
-                  const Point2f &upper_left,
-                  const Point2f &lower_right);
+                                    const Point2f &upper_left,
+                                    const Point2f &lower_right);
 
       void on_accept();
 
@@ -218,13 +215,13 @@ namespace Zeni {
       XML_Document * m_file;
     };
 
-    class Cancel_Button : public Text_Button {
+    class ZENI_REST_DLL Cancel_Button : public Text_Button {
       Cancel_Button(const Cancel_Button &);
       Cancel_Button & operator=(const Cancel_Button &);
 
     public:
       Cancel_Button(const Point2f &upper_left,
-                  const Point2f &lower_right);
+                                     const Point2f &lower_right);
 
       void on_accept();
     };
@@ -263,7 +260,7 @@ namespace Zeni {
     Cancel_Button cancel;
 
   private:
-    std::string m_prev_title;
+    String m_prev_title;
   };
 
 }

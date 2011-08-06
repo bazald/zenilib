@@ -17,18 +17,18 @@ def main():
   zenilib.destroy("Visual Studio 2008/Application_Name.h")
   zenilib.destroy("Visual Studio 2010/Application_Name.h")
   
+  zenilib.destroy("Visual Studio 2008/*.ncb")
+  zenilib.destroy("Visual Studio 2010/*.sdf")
+  
   zenilib.destroy("smltrace.txt")
   zenilib.destroy("stderr.txt")
   zenilib.destroy("stdout.txt")
-  
-  zenilib.destroy("Visual Studio 2008/*.ncb")
-  zenilib.destroy("Visual Studio 2010/*.sdf")
   
   
   zenilib.destroy("Xcode/build")
   
   
-  zenilib.destroy("*.dblite")
+  zenilib.destroy(".sconsign.dblite")
   
   zenilib.destroy("src/TinyXML/*.o")
   zenilib.destroy("src/Zeni/*.o")

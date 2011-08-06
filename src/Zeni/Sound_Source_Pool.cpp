@@ -1,53 +1,57 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Sound_Source_Pool.h>
-
-#include <Zeni/Sound.hxx>
-#include <Zeni/Sound_Source.hxx>
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Mutex.hxx>
-#include <Zeni/Vector3f.hxx>
+#include <zeni_audio.h>
 
 #include <algorithm>
 #include <iostream>
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
+
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+#include <Zeni/Singleton.hxx>
 
 namespace Zeni {
+
+  template class ZENI_AUDIO_DLL Singleton<Sound_Source_Pool>;
+
+  Sound_Source_Pool * Sound_Source_Pool::create() {
+    return new Sound_Source_Pool;
+  }
+
+  Singleton<Sound_Source_Pool>::Uninit Sound_Source_Pool::g_uninit;
+  Singleton<Sound_Source_Pool>::Reinit Sound_Source_Pool::g_reinit;
 
   Sound_Source_Pool::Sound_Source_Pool()
     : m_replacement_policy(new Replacement_Policy()),
     delete_m_replacement_policy(true),
     m_muted(false)
   {
+    Sound::remove_post_reinit(&g_reinit);
+
     // Ensure Sound is initialized
-    get_Sound();
+    Sound &sr = get_Sound();
+
+    sr.lend_pre_uninit(&g_uninit);
+    sr.lend_post_reinit(&g_reinit);
   }
 
   Sound_Source_Pool::~Sound_Source_Pool() {
@@ -62,11 +66,6 @@ namespace Zeni {
 
     if(delete_m_replacement_policy)
       delete m_replacement_policy;
-  }
-
-  Sound_Source_Pool & get_Sound_Source_Pool() {
-    static Sound_Source_Pool e_Sound_Source_Pool;
-    return e_Sound_Source_Pool;
   }
 
   bool Sound_Source_Pool::Replacement_Policy::operator()(const Sound_Source &lhs, const Sound_Source &rhs) const {
@@ -337,6 +336,20 @@ namespace Zeni {
     }
   }
 
+  Sound_Source_Pool & get_Sound_Source_Pool() {
+    return Sound_Source_Pool::get();
+  }
+
+  void play_sound(
+    const String &sound_name,
+    const float &pitch,
+    const float &gain,
+    const Point3f &position,
+    const Vector3f &velocity)
+  {
+    get_Sound_Source_Pool().play_and_destroy(new Sound_Source(get_Sounds()[sound_name], pitch, gain, position, velocity));
+  }
+
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

@@ -1,39 +1,29 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef ZENI_DATABASE_HXX
 #define ZENI_DATABASE_HXX
 
 // HXXed below
 #include <Zeni/Resource.h>
-#include <Zeni/XML.h>
 
 #include <Zeni/Database.h>
+
+#include <Zeni/XML.h>
 
 #include <algorithm>
 #include <iostream>
@@ -47,7 +37,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  Database<TYPE>::Lookup::Handle::Handle(const std::string &filename_)
+  Database<TYPE>::Lookup::Handle::Handle(const String &filename_)
     : ptr(0),
     filename(filename_),
     lent(false)
@@ -56,7 +46,7 @@ namespace Zeni {
 
   template <class TYPE>
   Database<TYPE>::Lookup::Handle::Handle(TYPE * const &ptr_,
-                                         const std::string &filename_,
+                                         const String &filename_,
                                          const bool &lent_,
                                          const bool &keep_)
     : ptr(ptr_),
@@ -85,7 +75,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  Database<TYPE>::Database(const std::string &filename, const std::string &xml_identifier)
+  Database<TYPE>::Database(const String &filename, const String &xml_identifier)
     : m_xml_identifier(xml_identifier),
     m_lost(true)
   {
@@ -97,7 +87,7 @@ namespace Zeni {
   }
   
   template <class TYPE>
-  unsigned long Database<TYPE>::give(const std::string &name, TYPE * const &type, const bool &keep, const std::string &filename) {
+  unsigned long Database<TYPE>::give(const String &name, TYPE * const &type, const bool &keep, const String &filename) {
     if(!type)
       throw Null_Database_Entry_Set();
 
@@ -124,7 +114,7 @@ namespace Zeni {
   }
   
   template <class TYPE>
-  unsigned long Database<TYPE>::lend(const std::string &name, TYPE * const &type, const bool &keep) {
+  unsigned long Database<TYPE>::lend(const String &name, TYPE * const &type, const bool &keep) {
     if(!type)
       throw Null_Database_Entry_Set();
 
@@ -151,7 +141,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::clear(const std::string &name, const std::string &filename) {
+  void Database<TYPE>::clear(const String &name, const String &filename) {
     typename Lookups::iterator it = m_lookups.find(name);
 
     if(it == m_lookups.end())
@@ -178,7 +168,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  unsigned long Database<TYPE>::get_id(const std::string &name) const {
+  unsigned long Database<TYPE>::get_id(const String &name) const {
     typename Lookups::const_iterator it = m_lookups.find(name);
 
     if(it == m_lookups.end() || !it->second->id)
@@ -188,7 +178,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  unsigned long Database<TYPE>::find(const std::string &name) const {
+  unsigned long Database<TYPE>::find(const String &name) const {
     typename Lookups::const_iterator it = m_lookups.find(name);
 
     if(it != m_lookups.end() && it->second->id && find(it->second->id))
@@ -221,7 +211,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  TYPE & Database<TYPE>::operator[](const std::string &name) const {
+  TYPE & Database<TYPE>::operator[](const String &name) const {
     return (*this)[get_id(name)];
   }
 
@@ -231,7 +221,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::load_file(const std::string &filename) {
+  void Database<TYPE>::load_file(const String &filename) {
     Filenames::iterator it = std::find(m_filenames.begin(), m_filenames.end(), filename);
     if(it != m_filenames.end())
       m_filenames.erase(it);
@@ -239,11 +229,11 @@ namespace Zeni {
 
     XML_Document types_xml(filename.c_str());
     XML_Element_c types = types_xml[m_xml_identifier];
-    std::string name;
+    String name;
 
     try {
       for(XML_Element_c it = types.first(); it.good(); it = it.next()) {
-        const std::string name = it.value();
+        const String name = it.value();
 
         if(!give_priority(name, false, false, filename)) {
           TYPE * const type = load(it, name, filename);
@@ -264,7 +254,7 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  void Database<TYPE>::unload_file(const std::string &filename) {
+  void Database<TYPE>::unload_file(const String &filename) {
     Filenames::iterator it = std::find(m_filenames.begin(), m_filenames.end(), filename);
     if(it == m_filenames.end())
       throw Database_File_Not_Loaded(filename);
@@ -347,10 +337,10 @@ namespace Zeni {
   }
 
   template <class TYPE>
-  bool Database<TYPE>::give_priority(const std::string &name,
+  bool Database<TYPE>::give_priority(const String &name,
                                      const bool &lent,
                                      const bool &keep,
-                                     const std::string &filename)
+                                     const String &filename)
   {
     const typename Lookups::const_iterator it = m_lookups.find(name);
     if(it == m_lookups.end())
@@ -416,6 +406,5 @@ namespace Zeni {
 }
 
 #include <Zeni/Resource.hxx>
-#include <Zeni/XML.hxx>
 
 #endif

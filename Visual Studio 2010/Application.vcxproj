@@ -46,7 +46,16 @@
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -55,23 +64,14 @@
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -83,22 +83,22 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
@@ -107,54 +107,83 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(ProjectName)_d\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\bin\x64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(ProjectName)_d\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(ProjectName)_d\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(ProjectName)_d\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(ProjectName)\</OutDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\bin\x64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(ProjectName)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(ProjectName)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">$(Platform)\$(ProjectName)_d\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">..\bin\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">..\bin\x64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">$(Platform)\$(ProjectName)_d\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">$(Platform)\$(ProjectName)_d\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">$(Platform)\$(ProjectName)_d\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">$(Platform)\$(ProjectName)\</OutDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">..\bin\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">..\bin\x64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">$(Platform)\$(ProjectName)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">$(Platform)\$(ProjectName)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">$(Platform)\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreLinkEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PostBuildEventUseInBuild>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">$(ProjectName)_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <BuildLog>
@@ -168,8 +197,8 @@
     </CustomBuildStep>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -184,14 +213,15 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib_d\;..\lib;..\lib_win;$(DXSDK_Dir)Lib\x86;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
@@ -199,9 +229,12 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin'.</Message>
+      <Message>
+      </Message>
       <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName)_d.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -215,13 +248,10 @@
 </Command>
       <Outputs>Application_Name.h;%(Outputs)</Outputs>
     </CustomBuildStep>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -235,26 +265,29 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4005;4986;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;4986;4121;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib_d\;..\lib\x64;..\lib_win\x64;$(DXSDK_Dir)Lib\x64;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapExports>true</MapExports>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <TargetMachine>MachineX64</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin\x64'.</Message>
-      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe"</Command>
+      <Message>
+      </Message>
+      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName)_d.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -274,8 +307,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -287,13 +320,14 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib\;..\lib;..\lib_win;$(DXSDK_Dir)Lib\x86;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>false</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
@@ -304,9 +338,12 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin'.</Message>
+      <Message>
+      </Message>
       <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName).exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -320,9 +357,6 @@
 </Command>
       <Outputs>Application_Name.h;%(Outputs)</Outputs>
     </CustomBuildStep>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -330,8 +364,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -342,14 +376,17 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4005;4986;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;4986;4121;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib\;..\lib\x64;..\lib_win\x64;$(DXSDK_Dir)Lib\x64;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>false</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -357,11 +394,13 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <TargetMachine>MachineX64</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin\x64'.</Message>
-      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe"</Command>
+      <Message>
+      </Message>
+      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName).exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">
@@ -376,8 +415,8 @@
     </CustomBuildStep>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -393,14 +432,15 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib_d\;..\lib;..\lib_win;$(DXSDK_Dir)Lib\x86;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
@@ -408,9 +448,12 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin'.</Message>
+      <Message>
+      </Message>
       <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName)_d.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -424,13 +467,10 @@
 </Command>
       <Outputs>Application_Name.h;%(Outputs)</Outputs>
     </CustomBuildStep>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;X64;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -445,26 +485,29 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4005;4986;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;4986;4121;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib_d\;..\lib\x64;..\lib_win\x64;$(DXSDK_Dir)Lib\x64;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapExports>true</MapExports>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <TargetMachine>MachineX64</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin\x64'.</Message>
-      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\x64\$(ProjectName)_x64d.exe"</Command>
+      <Message>
+      </Message>
+      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName)_d.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">
@@ -484,8 +527,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -498,13 +541,14 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib\;..\lib;..\lib_win;$(DXSDK_Dir)Lib\x86;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>false</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
@@ -515,9 +559,12 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin'.</Message>
+      <Message>
+      </Message>
       <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName).exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -531,9 +578,6 @@
 </Command>
       <Outputs>Application_Name.h;%(Outputs)</Outputs>
     </CustomBuildStep>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -541,8 +585,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;$(ProgramFiles)\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -554,14 +598,17 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4005;4986;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;4986;4121;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_net.lib;SDL_ttf.lib;lib3ds-2_0.lib;cg.lib;d3d9.lib;d3dx9.lib;cgD3D9.lib;opengl32.lib;glew32.lib;glu32.lib;cgGL.lib;OpenAL32.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;Advapi32.lib;SHFolder.lib;Shell32.lib;User32.lib;Zenilib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Platform)\zenilib\;..\lib\x64;..\lib_win\x64;$(DXSDK_Dir)Lib\x64;$(ProgramFiles)\OpenAL 1.1 SDK\libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib_win\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>false</AssemblyDebug>
-      <ProgramDatabaseFile>$(TargetDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -569,37 +616,25 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <TargetMachine>MachineX64</TargetMachine>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(IntDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
-      <Message>Copy the build to 'zenilib\bin\x64'.</Message>
-      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\x64\$(ProjectName)_x64.exe"</Command>
+      <Message>
+      </Message>
+      <Command>copy "$(OutDir)$(ProjectName).exe" "$(SolutionDir)..\bin\$(ProjectName).exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Gamestate_One.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">Create</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">Create</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\src\application.cxx">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">
       </PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">
@@ -607,15 +642,34 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">
       </PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\bootstrap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug SCU|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release SCU|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\zenilib.h" />
+    <ClInclude Include="..\include\zeni_audio.h" />
+    <ClInclude Include="..\include\zeni_core.h" />
+    <ClInclude Include="..\include\zeni_graphics.h" />
+    <ClInclude Include="..\include\zeni_net.h" />
+    <ClInclude Include="..\include\zeni_rest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\config\colors.xml" />
@@ -625,9 +679,53 @@
     <None Include="..\config\zenilib.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Zenilib.vcxproj">
-      <Project>{2a690d67-1b22-41f1-a729-c46016ec83dc}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    <ProjectReference Include="zeni.vcxproj">
+      <Project>{931e3d3a-9442-4e9e-b09f-eb83103a71c9}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="zeni_audio.vcxproj">
+      <Project>{a1669cee-fded-4952-a111-2105cb6ae60e}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="zeni_core.vcxproj">
+      <Project>{6c0f3eb0-f9ba-403a-b961-4abba7149363}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="zeni_graphics.vcxproj">
+      <Project>{4f337db7-3d2b-4732-a05b-2125a33b65f0}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="zeni_net.vcxproj">
+      <Project>{8fa5dd90-01e6-449b-90f9-50283bbc2372}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="zeni_rest.vcxproj">
+      <Project>{36802773-3c56-451a-8515-d5347a40ae42}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

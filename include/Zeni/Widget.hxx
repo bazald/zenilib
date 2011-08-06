@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef ZENI_WIDGET_HXX
 #define ZENI_WIDGET_HXX
@@ -33,7 +22,6 @@
 #include <Zeni/Font.h>
 #include <Zeni/Material.h>
 #include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Video.h>
 
@@ -232,7 +220,7 @@ namespace Zeni {
     return new Widget_Renderer_Pair<T1, T2>(first_, delete_first_, second_, delete_second_);
   }
 
-  Widget_Renderer_Text::Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_)
+  Widget_Renderer_Text::Widget_Renderer_Text(const String &font_name_, const String &text_, const Color &color_)
     : font_name(font_name_),
     text(text_),
     color(color_)
@@ -244,7 +232,7 @@ namespace Zeni {
   {
   }
 
-  Widget_Renderer_Texture::Widget_Renderer_Texture(const std::string &texture_)
+  Widget_Renderer_Texture::Widget_Renderer_Texture(const String &texture_)
     : texture(texture_),
     tex_coord_ul(0.0f, 0.0f),
     tex_coord_ll(0.0f, 1.0f),
@@ -253,7 +241,7 @@ namespace Zeni {
   {
   }
 
-  Widget_Renderer_Texture::Widget_Renderer_Texture(const std::string &texture_,
+  Widget_Renderer_Texture::Widget_Renderer_Texture(const String &texture_,
                                                    const Point2f &tex_coord_ul_,
                                                    const Point2f &tex_coord_ll_,
                                                    const Point2f &tex_coord_lr_,
@@ -324,7 +312,7 @@ namespace Zeni {
   }
 
   Text_Button::Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                           const std::string &font_name_, const std::string &text_)
+                           const String &font_name_, const String &text_)
     : Widget_Button(upper_left_, lower_right_),
     Widget_Renderer_Text(font_name_, text_, Color())
   {
@@ -508,11 +496,11 @@ namespace Zeni {
     give_Slider_BG_Renderer(renderer->get_duplicate());
   }
 
-  const std::string & Selector::get_font() const {
+  const String & Selector::get_font() const {
     return m_font;
   }
 
-  void Selector::set_font(const std::string &font_) {
+  void Selector::set_font(const String &font_) {
     m_font = font_;
 
     m_normal_button.font_name = m_font;
@@ -520,7 +508,7 @@ namespace Zeni {
       (*it)->font_name = m_font;
   }
 
-  const std::string & Text_Box::get_font_name() const {
+  const String & Text_Box::get_font_name() const {
     return m_text.font_name;
   }
 
@@ -528,7 +516,7 @@ namespace Zeni {
     return get_Fonts()[m_text.font_name];
   }
 
-  const std::string & Text_Box::get_text() const {
+  const String & Text_Box::get_text() const {
     return m_text.text;
   }
   
@@ -548,13 +536,13 @@ namespace Zeni {
     return int(get_height() / get_font().get_text_height());
   }
 
-  void Text_Box::set_font_name(const std::string &font_name_) {
+  void Text_Box::set_font_name(const String &font_name_) {
     m_text.font_name = font_name_;
     format();
     seek(m_edit_pos);
   }
 
-  void Text_Box::set_text(const std::string &text_) {
+  void Text_Box::set_text(const String &text_) {
     m_text.text = text_;
     format();
     seek(std::min(m_edit_pos, this->get_max_seek()));
@@ -569,7 +557,7 @@ namespace Zeni {
   }
 
   void Text_Box::erase_lines(const int &begin, const int &end) {
-    std::string new_text;
+    String new_text;
 
     assert(-1 < begin);
     assert(begin <= end);
@@ -669,7 +657,6 @@ namespace Zeni {
 #include <Zeni/Font.hxx>
 #include <Zeni/Material.hxx>
 #include <Zeni/Projector.hxx>
-#include <Zeni/Quadrilateral.hxx>
 #include <Zeni/Timer.hxx>
 #include <Zeni/Video.hxx>
 

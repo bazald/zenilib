@@ -1,43 +1,31 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Console_State.h>
+#include <zeni_rest.h>
 
-#include <Zeni/Colors.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Video.hxx>
-#include <Zeni/Widget.hxx>
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
 
   Console_State::Console_State()
-    : m_virtual_screen(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f)),
+    : m_virtual_screen(Point2f(0.0f, 0.0f), Point2f(float(get_Window().get_width() * 600.0f / get_Window().get_height()), 600.0f)),
     m_projector(m_virtual_screen),
     m_bg(Vertex2f_Color(Point2f(0.0f, 0.0f), get_Colors()["console_border"]),
          Vertex2f_Color(Point2f(0.0f, 54.0f + 7.0f * get_Fonts()["system_36_x600"].get_text_height()), get_Colors()["console_border"]),
@@ -67,7 +55,7 @@ namespace Zeni {
   }
 
   Console_State::~Console_State() {
-    for(std::map<std::string, Console_Function *>::iterator it = m_functions.begin(); it != m_functions.end(); ++it)
+    for(std::map<String, Console_Function *>::iterator it = m_functions.begin(); it != m_functions.end(); ++it)
       delete it->second;
   }
 
@@ -87,7 +75,7 @@ namespace Zeni {
     m_child = 0;
   }
 
-  void Console_State::write_to_log(const std::string &text) {
+  void Console_State::write_to_log(const String &text) {
     if(!m_text.empty())
       m_text += '\n';
     m_text += text;
@@ -107,7 +95,7 @@ namespace Zeni {
     m_log_dirty = true;
   }
 
-  void Console_State::give_function(const std::string &name, Console_Function * const &function) {
+  void Console_State::give_function(const String &name, Console_Function * const &function) {
     assert(function);
 
     if(m_functions[name])
@@ -115,17 +103,17 @@ namespace Zeni {
     m_functions[name] = function;
   }
 
-  void Console_State::fire_command(const std::string &text) {
+  void Console_State::fire_command(const String &text) {
     if(text.empty())
       return;
 
-    std::string command;
-    std::vector<std::string> args;
+    String command;
+    std::vector<String> args;
 
-    std::string token;
+    String token;
     bool in_quotes = false;
     bool escaped = false;
-    for(std::string::const_iterator it = text.begin(); it != text.end(); ++it) {
+    for(String::const_iterator it = text.begin(); it != text.end(); ++it) {
       if(escaped) {
         token += *it;
         escaped = false;
@@ -175,7 +163,7 @@ namespace Zeni {
     else if(command.empty())
       return;
 
-    std::map<std::string, Console_Function *>::iterator func = m_functions.find(command);
+    std::map<String, Console_Function *>::iterator func = m_functions.find(command);
     if(func != m_functions.end())
       (*(func->second))(*this, command, args);
     else
@@ -215,7 +203,7 @@ namespace Zeni {
 
         default:
           if(m_prompt.get_edit_pos() != -1) {
-            const std::string backup_text = m_prompt.get_text();
+            const String backup_text = m_prompt.get_text();
             const int backup_pos = m_prompt.get_edit_pos();
             const bool restore = m_prompt.get_num_lines() == 1;
 
@@ -235,16 +223,16 @@ namespace Zeni {
 
   void Console_State::on_mouse_button(const SDL_MouseButtonEvent &event) {
     m_prompt.on_event(event, m_virtual_screen);
-    m_handled_event = (float(event.y) / get_Video().get_screen_height()) < (m_bg.c.position.y / 600.0f);
+    m_handled_event = (float(event.y) / get_Window().get_height()) < (m_bg.c.position.y / 600.0f);
   }
 
   void Console_State::on_mouse_motion(const SDL_MouseMotionEvent &event) {
     m_prompt.on_event(event, m_virtual_screen);
-    m_handled_event = (float(event.y) / get_Video().get_screen_height()) < (m_bg.c.position.y / 600.0f);
+    m_handled_event = (float(event.y) / get_Window().get_height()) < (m_bg.c.position.y / 600.0f);
   }
 
   void Console_State::perform_logic() {
-    m_virtual_screen = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Video().get_screen_width() * 600.0f / get_Video().get_screen_height()), 600.0f));
+    m_virtual_screen = std::make_pair(Point2f(0.0f, 0.0f), Point2f(float(get_Window().get_width() * 600.0f / get_Window().get_height()), 600.0f));
     m_projector = Projector2D(m_virtual_screen);
 
     if(m_bg.c.position.x != m_virtual_screen.second.x) {
@@ -298,13 +286,13 @@ namespace Zeni {
   }
 
   void Console_Function::operator()(Console_State &console,
-                                    const std::string &name,
-                                    const std::vector<std::string> &args)
+                                    const String &name,
+                                    const std::vector<String> &args)
   {
-    std::string fargs;
+    String fargs;
 
     if(!args.empty()) {
-      std::vector<std::string>::const_iterator it = args.begin();
+      std::vector<String>::const_iterator it = args.begin();
       fargs += *it;
       for(++it; it != args.end(); ++it)
         fargs += ", " + *it;

@@ -1,39 +1,28 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
- * \class Zeni::Collision::Sphere
+ * \class ZENI_DLL Zeni::Collision::Sphere
  *
  * \ingroup zenilib
  *
  * \brief Collision Sphere
  *
- * This class describes an Sphere object in 3-space.  The  
+ * This class ZENI_DLL describes an Sphere object in 3-space.  The  
  * Sphere extends the Point3f to have a radius.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
@@ -45,13 +34,13 @@
  */
 
 /**
- * \class Zeni::Collision::Plane
+ * \class ZENI_DLL Zeni::Collision::Plane
  *
  * \ingroup zenilib
  *
  * \brief Collision Plane
  *
- * This class describes a Plane object in 3-space.  It is possible to test 
+ * This class ZENI_DLL describes a Plane object in 3-space.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
  * Zeni_Collision.
@@ -62,13 +51,13 @@
  */
 
 /**
- * \class Zeni::Collision::Line_Segment
+ * \class ZENI_DLL Zeni::Collision::Line_Segment
  *
  * \ingroup zenilib
  *
  * \brief Collision Line Segment
  *
- * This class describes a Line Segment object in 3-space.  It is possible to test 
+ * This class ZENI_DLL describes a Line Segment object in 3-space.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
  * Zeni_Collision.  Additionally, it is possible to determine the closest point on
@@ -80,13 +69,13 @@
  */
 
 /**
- * \class Zeni::Collision::Ray
+ * \class ZENI_DLL Zeni::Collision::Ray
  *
  * \ingroup zenilib
  *
  * \brief Collision Ray
  *
- * This class describes a Ray object in 3-space.  It is possible to test 
+ * This class ZENI_DLL describes a Ray object in 3-space.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
  * Zeni_Collision.  Additionally, it is possible to determine the closest point on
@@ -98,13 +87,13 @@
  */
 
 /**
- * \class Zeni::Collision::Line
+ * \class ZENI_DLL Zeni::Collision::Line
  *
  * \ingroup zenilib
  *
  * \brief Collision Line
  *
- * This class describes a Line object in 3-space.  It is possible to test 
+ * This class ZENI_DLL describes a Line object in 3-space.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
  * Zeni_Collision.
@@ -115,13 +104,13 @@
  */
 
 /**
- * \class Zeni::Collision::Infinite_Cylinder
+ * \class ZENI_DLL Zeni::Collision::Infinite_Cylinder
  *
  * \ingroup zenilib
  *
  * \brief Collision Infinite Cylinder
  *
- * This class describes an Infinite Cylinder object in 3-space.  The  
+ * This class ZENI_DLL describes an Infinite Cylinder object in 3-space.  The  
  * Infinite_Cylinder extends the Line to have a radius.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
@@ -133,13 +122,13 @@
  */
 
 /**
- * \class Zeni::Collision::Capsule
+ * \class ZENI_DLL Zeni::Collision::Capsule
  *
  * \ingroup zenilib
  *
  * \brief Collision Capsule
  *
- * This class describes a Capsule object in 3-space.  The Capsule 
+ * This class ZENI_DLL describes a Capsule object in 3-space.  The Capsule 
  * extends the Line_Segment to have a radius.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
@@ -152,13 +141,13 @@
  */
 
 /**
- * \class Zeni::Collision::Parallelepiped
+ * \class ZENI_DLL Zeni::Collision::Parallelepiped
  *
  * \ingroup zenilib
  *
  * \brief Collision Parallelepiped
  *
- * This class describes a Parallelepiped object in 3-space.  It is possible to test 
+ * This class ZENI_DLL describes a Parallelepiped object in 3-space.  It is possible to test 
  * to see if it intersects any other object in Zeni_Collision, and it is also 
  * possible to find the shortest distance between it and any other object in 
  * Zeni_Collision.
@@ -180,16 +169,16 @@
 namespace Zeni {
   namespace Collision {
 
-    class Sphere;
-    class Plane;
-    class Line;
-    class Ray;
-    class Line_Segment;
-    class Infinite_Cylinder;
-    class Capsule;
-    class Parallelepiped;
+    class ZENI_DLL Sphere;
+    class ZENI_DLL Plane;
+    class ZENI_DLL Line;
+    class ZENI_DLL Ray;
+    class ZENI_DLL Line_Segment;
+    class ZENI_DLL Infinite_Cylinder;
+    class ZENI_DLL Capsule;
+    class ZENI_DLL Parallelepiped;
 
-    class Sphere {
+    class ZENI_DLL Sphere {
     public:
       Sphere() : center(0.0f, 0.0f, 0.0f), radius(0.0f) {}
       Sphere(const Point3f &center_, const float &radius_);
@@ -215,7 +204,7 @@ namespace Zeni {
       float radius;
     };
 
-    class Plane {
+    class ZENI_DLL Plane {
     public:
       Plane() : point(0.0f, 0.0f, 0.0f), normal(0.0f, 0.0f, 1.0f) {}
       Plane(const Point3f &point_, const Vector3f &normal_);
@@ -241,7 +230,7 @@ namespace Zeni {
       Vector3f normal;
     };
 
-    class Line_Segment {
+    class ZENI_DLL Line_Segment {
     public:
       Line_Segment() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
       Line_Segment(const Point3f &end_point_a_, const Point3f &end_point_b_);
@@ -283,7 +272,7 @@ namespace Zeni {
       float direction2; // direction * direction
     };
 
-    class Ray {
+    class ZENI_DLL Ray {
     public:
       Ray() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
       Ray(const Point3f &end_point_a_, const Point3f &end_point_b_);
@@ -326,7 +315,7 @@ namespace Zeni {
       float direction2; // direction * direction
     };
 
-    class Line {
+    class ZENI_DLL Line {
     public:
       Line() : end_point_a(0.0f, 0.0f, 0.0f), end_point_b(0.0f, 0.0f, 0.0f) {}
       Line(const Point3f &end_point_a_, const Point3f &end_point_b_);
@@ -360,13 +349,13 @@ namespace Zeni {
       float direction2; // direction * direction
     };
 
-    class Infinite_Cylinder {
+    class ZENI_DLL Infinite_Cylinder {
     public:
       Infinite_Cylinder() : radius(0) {}
       Infinite_Cylinder(const Point3f &end_point_a_, const Point3f &end_point_b_,
-                        const float &radius_);
+                                              const float &radius_);
       Infinite_Cylinder(const Point3f &end_point_a_, const Vector3f &direction_vector_,
-                        const float &radius_);
+                                              const float &radius_);
 
       float shortest_distance(const Infinite_Cylinder &rhs) const;
       float shortest_distance(const Point3f &rhs) const;
@@ -390,11 +379,11 @@ namespace Zeni {
       float radius;
     };
 
-    class Capsule {
+    class ZENI_DLL Capsule {
     public:
       Capsule() : radius(0) {}
       Capsule(const Point3f &end_point_a_, const Point3f &end_point_b_,
-                    const float &radius_);
+                                    const float &radius_);
 
       /// Returns <distance, interpolation value [0.0f, 1.0f]>
       std::pair<float, float> nearest_point(const Capsule &rhs) const;
@@ -429,11 +418,11 @@ namespace Zeni {
       float radius;
     };
 
-    class Parallelepiped {
+    class ZENI_DLL Parallelepiped {
     public:
       Parallelepiped() : point(0.0f, 0.0f, 0.0f), edge_a(1.0f, 0.0f, 0.0f), edge_b(0.0f, 1.0f, 0.0f), edge_c(0.0f, 0.0f, 1.0f) {}
       Parallelepiped(const Point3f &point_, const Vector3f &edge_a_,
-                     const Vector3f &edge_b_, const Vector3f &edge_c_);
+                                           const Vector3f &edge_b_, const Vector3f &edge_c_);
 
       float shortest_distance(const Parallelepiped &rhs) const;
       float shortest_distance(const Point3f &rhs) const;

@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Quaternion
@@ -44,15 +33,15 @@
 #ifndef ZENI_QUATERNION_H
 #define ZENI_QUATERNION_H
 
-#include <string>
-
-#include <Zeni/Vector3f.h>
+#include <Zeni/Serialization.h>
+#include <Zeni/String.h>
 #include <Zeni/Matrix4f.h>
-#include <Zeni/Global.h>
+
+#include <Zeni/Define.h>
 
 namespace Zeni {
 
-  struct Quaternion {
+  struct ZENI_DLL Quaternion {
     inline explicit Quaternion(const bool &degenerate_ = false);
     Quaternion(const float &time, const Vector3f &space, const bool &degenerate_ = false); ///< For advanced use only
     Quaternion(const float &yaw, const float &pitch, const float &roll, const bool &degenerate_ = false);
@@ -62,9 +51,9 @@ namespace Zeni {
     static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
     /// Create a Quaternion from a Forward/Up Vector3f pair
     static Quaternion Forward_Up(const Vector3f &destination_forward,
-                                 const Vector3f &destination_up,
-                                 const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
-                                 const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
+                                                       const Vector3f &destination_up,
+                                                       const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
+                                                       const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum
@@ -124,8 +113,11 @@ namespace Zeni {
     return rhs * lhs;
   }
 
+  std::ostream & serialize(std::ostream &os, const Quaternion &value);
+  std::istream & unserialize(std::istream &is, Quaternion &value);
+
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>
 
 #endif

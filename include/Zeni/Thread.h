@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Task
@@ -101,20 +90,21 @@
 
 #include <Zeni/Mutex.h>
 
+#include <SDL/SDL_thread.h>
 #include <set>
 
 namespace Zeni {
 
-  extern int run_task(void *task_ptr);
-  extern int run_repeatable_task(void *task_ptr);
+  ZENI_CORE_DLL extern int run_task(void *task_ptr);
+  ZENI_CORE_DLL extern int run_repeatable_task(void *task_ptr);
 
-  class Task {
+  class ZENI_CORE_DLL Task {
     Task(const Task &rhs);
     Task & operator=(const Task &rhs);
     
     friend class Repeatable_Task;
-    friend int run_task(void *task_ptr);
-    friend int run_repeatable_task(void *task_ptr);
+    friend ZENI_CORE_DLL int run_task(void *task_ptr);
+    friend ZENI_CORE_DLL int run_repeatable_task(void *task_ptr);
     
   public:
     typedef std::set<const Task *> Depends;
@@ -152,10 +142,17 @@ namespace Zeni {
     }
     
     int status;
-    std::string msg;
+    String msg;
     
   private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Depends m_depends;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     
     mutable Recursive_Mutex m_done_mutex;
     mutable Condition_Variable m_done_condition;
@@ -165,11 +162,11 @@ namespace Zeni {
 #define GUARANTEED_FINISHED_BEGIN(TASK) {Recursive_Mutex::Lock GF_lock(TASK.done_mutex()); {Condition_Variable &GF_condition = TASK.done_condition(); const bool &GF_done = TASK.done_variable(); for(;;) {if(TASK.status) throw Error(TASK.msg); if(GF_done) break; GF_condition.wait(GF_lock);}} {
 #define GUARANTEED_FINISHED_END() }}
 
-  class Repeatable_Task : public Task {
+  class ZENI_CORE_DLL Repeatable_Task : public Task {
     Repeatable_Task(const Repeatable_Task &rhs);
     Repeatable_Task & operator=(const Repeatable_Task &rhs);
     
-    friend int run_repeatable_task(void *task_ptr);
+    friend ZENI_CORE_DLL int run_repeatable_task(void *task_ptr);
     
   public:
     Repeatable_Task() : m_terminated(false) {}
@@ -189,7 +186,7 @@ namespace Zeni {
     bool m_terminated;
   };
 
-  class Thread {
+  class ZENI_CORE_DLL Thread {
     Thread(const Thread &rhs);
     Thread & operator=(const Thread &rhs);
     
@@ -204,9 +201,42 @@ namespace Zeni {
   private:
     SDL_Thread *m_impl;
     int *m_status;
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    class Uninit : public Event::Handler {
+      void operator()() {
+        SDL_WaitThread(m_thread.m_impl, m_thread.m_status);
+        m_thread.m_impl = 0;
+
+        get_Core().remove_pre_uninit(this);
+      }
+
+      Uninit * duplicate() const {
+        return new Uninit(m_thread);
+      }
+
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+
+    public:
+      Uninit(Thread &thread_)
+        : m_thread(thread_)
+      {
+      }
+
+    private:
+      Thread &m_thread;
+    } m_uninit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
   };
   
-  class Runonce_Computation {
+  class ZENI_CORE_DLL Runonce_Computation {
     Runonce_Computation(const Runonce_Computation &rhs);
     Runonce_Computation & operator=(const Runonce_Computation &rhs);
     
@@ -220,7 +250,7 @@ namespace Zeni {
     mutable Thread *m_thread;
   };
   
-  class Repeatable_Computation {
+  class ZENI_CORE_DLL Repeatable_Computation {
     Repeatable_Computation(const Repeatable_Computation &rhs);
     Repeatable_Computation & operator=(const Repeatable_Computation &rhs);
     

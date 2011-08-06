@@ -1,48 +1,32 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Vertex_Buffer.hxx>
-
-#include <Zeni/Color.hxx>
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Material.hxx>
-#include <Zeni/Quadrilateral.hxx>
-#include <Zeni/Renderable.hxx>
-#include <Zeni/Vector3f.hxx>
-#include <Zeni/Vertex2f.hxx>
-#include <Zeni/Vertex3f.hxx>
-#include <Zeni/Video_GL.hxx>
+#include <zeni_graphics.h>
 
 #include <algorithm>
 
 //#define DISABLE_VBO
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
+
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
 
@@ -68,7 +52,11 @@ namespace Zeni {
     m_prerendered(false),
     m_macrorenderer(new Vertex_Buffer_Macrorenderer)
   {
+    Video &vr = get_Video();
+
     get_vbos().insert(this);
+
+    vr.lend_pre_uninit(&g_uninit);
   }
 
   template <typename VERTEX>
@@ -448,11 +436,6 @@ namespace Zeni {
 
     Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
 
-#ifndef DISABLE_VBO
-    if(!m_pglDeleteBuffersARB)
-      m_pglDeleteBuffersARB = vgl.get_pglDeleteBuffersARB();
-#endif
-
     const size_t v_size = vertex_size();
     const size_t n_size = normal_size();
     const size_t c_size = color_size();
@@ -487,7 +470,7 @@ namespace Zeni {
           buffered_colors += c_size;
         }
 
-      if(m_pglDeleteBuffersARB) {
+      if(buffers_supported(vgl)) {
         for(int i = 0; i < 3; ++i)
           vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
 
@@ -530,7 +513,7 @@ namespace Zeni {
           buffered_texels += t_size;
         }
 
-      if(m_pglDeleteBuffersARB) {
+      if(buffers_supported(vgl)) {
         for(int i = 3; i < 6; ++i)
           vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
 
@@ -554,10 +537,12 @@ namespace Zeni {
   }
 
   Vertex_Buffer_Renderer_GL::~Vertex_Buffer_Renderer_GL() {
-    if(m_pglDeleteBuffersARB) {
+    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
+
+    if(buffers_supported(vgl)) {
       for(int i = 0; i < 6; ++i)
         if(m_vbuf[i].vbo)
-          m_pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
+          vgl.pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
     }
     else {
       for(int i = 0; i < 6; ++i)
@@ -599,24 +584,25 @@ namespace Zeni {
 
   void Vertex_Buffer_Renderer_GL::render() {
     Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
+    const bool buffers_supported_ = buffers_supported(vgl);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
 
     if(!m_vbo.m_descriptors_cm.empty()) {
       // Bind Vertex Buffer
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
-      glVertexPointer(3, GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[0].alt);
+      glVertexPointer(3, GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[0].alt);
       // Bind Normal Buffer
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1].vbo);
-      glNormalPointer(GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[1].alt);
+      glNormalPointer(GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[1].alt);
       // Bind Color Buffer
       glEnableClientState(GL_COLOR_ARRAY);
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
-      glColorPointer(4, GL_UNSIGNED_BYTE, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[2].alt);
+      glColorPointer(4, GL_UNSIGNED_BYTE, 0, buffers_supported_ ? 0 : m_vbuf[2].alt);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm);
 
@@ -625,18 +611,18 @@ namespace Zeni {
 
     if(!m_vbo.m_descriptors_t.empty()) {
       // Bind Vertex Buffer
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3].vbo);
-      glVertexPointer(3, GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[3].alt);
+      glVertexPointer(3, GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[3].alt);
       // Bind Normal Buffer
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4].vbo);
-      glNormalPointer(GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[4].alt);
+      glNormalPointer(GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[4].alt);
       // Bind Texel Buffer
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-      if(m_pglDeleteBuffersARB)
+      if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
-      glTexCoordPointer(2, GL_FLOAT, 0, m_pglDeleteBuffersARB ? 0 : m_vbuf[5].alt);
+      glTexCoordPointer(2, GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[5].alt);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);
 
@@ -646,8 +632,6 @@ namespace Zeni {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
   }
-  
-  PFNGLDELETEBUFFERSARBPROC Vertex_Buffer_Renderer_GL::m_pglDeleteBuffersARB = 0;
 
 #endif
 #ifndef DISABLE_DX9
@@ -853,6 +837,8 @@ namespace Zeni {
 
 #endif
 
+  Vertex_Buffer::Uninit Vertex_Buffer::g_uninit;
+
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

@@ -26,8 +26,14 @@ FOR /F "tokens=*" %%G IN ('DIR /B "%~dp0..\Visual Studio 2010\*.user"') DO (
 )
 
 
+DEL /Q "%~dp0..\bin\*_d.dll"
+DEL /Q "%~dp0..\bin\x64\*_d.dll"
+DEL /Q "%~dp0..\lib_win\*_d.exp"
+DEL /Q "%~dp0..\lib_win\*_d.lib"
+DEL /Q "%~dp0..\lib_win\x64\*_d.exp"
+DEL /Q "%~dp0..\lib_win\x64\*_d.lib"
 DEL /Q "%~dp0..\bin\*_d.exe"
-DEL /Q "%~dp0..\bin\x64\*_x64d.exe"
+DEL /Q "%~dp0..\bin\x64\*_d.exe"
 DEL /Q "%~dp0..\*_d.exe"
 DEL /Q "%~dp0..\*_x64d.exe"
 DEL /Q "%~dp0..\*_d"

@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Font
@@ -58,6 +47,7 @@
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
+#include <Zeni/String.h>
 
 #ifdef _MACOSX
 #include <SDL_ttf/SDL_ttf.h>
@@ -65,64 +55,62 @@
 #include <SDL/SDL_ttf.h>
 #endif
 
-#include <string>
-
 #ifndef DISABLE_DX9
 #include <d3dx9.h>
 #endif
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
 
 namespace Zeni {
 
   struct Color;
-  class Video;
-  class Video_GL;
-  class Video_DX9;
-  class Texture;
+  class ZENI_GRAPHICS_DLL Video;
+  class ZENI_GRAPHICS_DLL Video_GL;
+  class ZENI_GRAPHICS_DLL Video_DX9;
+  class ZENI_GRAPHICS_DLL Texture;
 
   enum JUSTIFY {ZENI_LEFT = 0, ZENI_CENTER = 1, ZENI_RIGHT = 2};
 
-  class Font {
+  class ZENI_GRAPHICS_DLL Font {
   public:
     Font(); ///< Instantiate a new Font with a call to get_Video().create_Font()
     Font(const bool &bold, const bool &italic,
-         const float &glyph_height,
-         const float &virtual_screen_height,
-         const std::string &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to get_Video().create_Font()
+                          const float &glyph_height,
+                          const float &virtual_screen_height,
+                          const String &font_name = "Untitled Font"); ///< Instantiate a new Font with a call to get_Video().create_Font()
     virtual ~Font() {}
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
-    inline const std::string & get_font_name() const; ///< Get the name of the font.
+    inline const String & get_font_name() const; ///< Get the name of the font.
     inline float get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
-    virtual float get_text_width(const std::string &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+    virtual float get_text_width(const String &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
     inline float get_virtual_screen_height() const; ///< Get the intended virtual screen height for the rendering of this Font
 
     /// Render text at screen position (x, y), with justification JUSTIFY.
-    virtual void render_text(const std::string &text, const Point2f &position,
+    virtual void render_text(const String &text, const Point2f &position,
       const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const = 0;
     /// Render text with greater control over position and orientation, with justification JUSTIFY.
-    virtual void render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
+    virtual void render_text(const String &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
       const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const = 0;
 
   private:
     bool m_bold, m_italic;
     float m_glyph_height;
     float m_virtual_screen_height;
-    std::string m_font_name;
+    String m_font_name;
   };
 
-  class Font_FT : public Font {
+  class ZENI_GRAPHICS_DLL Font_FT : public Font {
     static const int num_glyphs = 256;
 
-    struct Glyph {
+    struct ZENI_GRAPHICS_DLL Glyph {
       Glyph();
       Glyph(TTF_Font *font_, const unsigned char &c,
-            SDL_Surface *source,
-            SDL_Surface *render_target, const SDL_Rect &dstrect,
-            const int &total_width, const int &total_height,
-            const float &vratio);
+                             SDL_Surface *source,
+                             SDL_Surface *render_target, const SDL_Rect &dstrect,
+                             const int &total_width, const int &total_height,
+                             const float &vratio);
 
       inline float get_glyph_width() const;
 
@@ -137,21 +125,21 @@ namespace Zeni {
 
   public:
     Font_FT(); ///< Instantiate a new Font with a call to get_Video().create_Font()
-    Font_FT(const std::string &filepath,
-            const bool &bold, const bool &italic,
-            const float &glyph_height,
-            const float &virtual_screen_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
+    Font_FT(const String &filepath,
+                             const bool &bold, const bool &italic,
+                             const float &glyph_height,
+                             const float &virtual_screen_height); ///< Instantiate a new Font with a call to get_Video().create_Font()
     ~Font_FT();
 
-    virtual float get_text_width(const std::string &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
+    virtual float get_text_width(const String &text) const; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
 
-    virtual void render_text(const std::string &text, const Point2f &position,
+    virtual void render_text(const String &text, const Point2f &position,
       const Color &color, const JUSTIFY &justify = ZENI_LEFT) const;
-    virtual void render_text(const std::string &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
+    virtual void render_text(const String &text, const Point3f &position, const Vector3f &right, const Vector3f &down,
       const Color &color, const JUSTIFY &justify = ZENI_DEFAULT_JUSTIFY) const;
 
   private:
-    void init(const std::string &filepath);
+    void init(const String &filepath);
 
     Glyph *m_glyph[num_glyphs];
     Texture *m_texture;
@@ -159,17 +147,17 @@ namespace Zeni {
     float m_vratio;
   };
 
-  struct Font_Type_Unsupported : Error {
-    Font_Type_Unsupported(const std::string &filename) : Error("Unsupported Font Type: ") 
+  struct ZENI_GRAPHICS_DLL Font_Type_Unsupported : Error {
+    Font_Type_Unsupported(const String &filename) : Error("Unsupported Font Type: ") 
     {msg += filename;}
   };
 
-  struct Font_Init_Failure : Error {
+  struct ZENI_GRAPHICS_DLL Font_Init_Failure : Error {
     Font_Init_Failure() : Error("Zeni Font Initialization Failure!") {}
   };
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>
 
 #endif
