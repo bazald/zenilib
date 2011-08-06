@@ -47,10 +47,6 @@
 #endif
 #endif
 
-#ifndef DISABLE_DX9
-#include <d3dx9.h>
-#endif
-
 #include <Zeni/Define.h>
 
 namespace Zeni {

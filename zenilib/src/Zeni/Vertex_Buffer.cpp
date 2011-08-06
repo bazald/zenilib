@@ -19,6 +19,10 @@
 
 #include <algorithm>
 
+#ifndef DISABLE_DX9
+#include <d3dx9.h>
+#endif
+
 //#define DISABLE_VBO
 
 #include <Zeni/Define.h>

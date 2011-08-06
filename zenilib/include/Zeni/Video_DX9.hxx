@@ -41,14 +41,6 @@
 
 namespace Zeni {
 
-  const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {
-    return m_d3d_capabilities;
-  }
-
-  const D3DPRESENT_PARAMETERS & Video_DX9::get_d3d_parameters() {
-    return m_d3d_parameters;
-  }
-
   LPDIRECT3D9 & Video_DX9::get_d3d() {
     return m_d3d;
   }

@@ -10,6 +10,7 @@ DEL /Q "%~dp0..\Visual Studio 2008\Application_Name.h"
 DEL /Q "%~dp0..\Visual Studio 2010\Application_Name.h"
 
 DEL /Q "%~dp0..\Visual Studio 2008\*.ncb"
+DEL /Q "%~dp0..\Visual Studio 2010\*.opensdf"
 DEL /Q "%~dp0..\Visual Studio 2010\*.sdf"
 
 DEL /Q "%~dp0..\smltrace.txt"
