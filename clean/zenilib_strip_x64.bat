@@ -1,4 +1,3 @@
-RMDIR /S /Q "%~dp0..\Visual Studio 2008\x64"
 RMDIR /S /Q "%~dp0..\Visual Studio 2010\x64"
 
 RMDIR /S /Q "%~dp0..\bin\x64"
