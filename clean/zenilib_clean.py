@@ -18,6 +18,7 @@ def main():
   zenilib.destroy("Visual Studio 2010/Application_Name.h")
   
   zenilib.destroy("Visual Studio 2008/*.ncb")
+  zenilib.destroy("Visual Studio 2010/*.opensdf")
   zenilib.destroy("Visual Studio 2010/*.sdf")
   
   zenilib.destroy("smltrace.txt")

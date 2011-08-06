@@ -39,9 +39,6 @@
 #include <set>
 #include <memory>
 
-#ifndef DISABLE_DX9
-#include <d3dx9.h>
-#endif
 #ifndef DISABLE_GL
 #if defined(REQUIRE_GL_ES)
 #include <GLES/gl.h>
@@ -51,6 +48,8 @@
 #include <GL/glew.h>
 #endif
 #endif
+
+struct IDirect3DVertexBuffer9;
 
 namespace Zeni {
 

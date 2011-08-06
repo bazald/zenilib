@@ -56,9 +56,8 @@
 #endif
 #endif
 
-#ifndef DISABLE_DX9
-#include <d3dx9.h>
-#endif
+struct IDirect3DTexture9;
+struct ID3DXRenderToSurface;
 
 namespace Zeni {
 

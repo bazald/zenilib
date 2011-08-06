@@ -37,8 +37,18 @@
 
 #ifndef DISABLE_DX9
 
-#include <d3d9.h>
-#include <d3dx9.h>
+typedef enum _D3DFORMAT D3DFORMAT;
+typedef enum _D3DPOOL D3DPOOL;
+typedef struct _D3DCAPS9 D3DCAPS9, *LPD3DCAPS9;
+typedef struct _D3DPRESENT_PARAMETERS_ D3DPRESENT_PARAMETERS, *LPD3DPRESENT_PARAMETERS;
+typedef struct ID3DXMatrixStack *LPD3DXMATRIXSTACK;
+typedef struct ID3DXRenderToSurface *LPD3DXRENDERTOSURFACE;
+typedef struct IDirect3D9 *LPDIRECT3D9;
+typedef struct IDirect3DBaseTexture9 *LPDIRECT3DBASETEXTURE9;
+typedef struct IDirect3DDevice9 *LPDIRECT3DDEVICE9;
+typedef struct IDirect3DSurface9 *LPDIRECT3DSURFACE9;
+typedef struct IDirect3DTexture9 *LPDIRECT3DTEXTURE9;
+typedef struct tagPALETTEENTRY PALETTEENTRY;
 
 namespace Zeni {
 
@@ -179,8 +189,8 @@ namespace Zeni {
 #endif
 
     // D3D-Related Functions
-    inline const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details
-    inline const D3DPRESENT_PARAMETERS & get_d3d_parameters(); ///< See DirectX Documentation for details
+    const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details
+    const D3DPRESENT_PARAMETERS & get_d3d_parameters(); ///< See DirectX Documentation for details
     inline LPDIRECT3D9 & get_d3d(); ///< See DirectX Documentation for details
     inline LPDIRECT3DDEVICE9 & get_d3d_device(); ///< See DirectX Documentation for details
     inline LPD3DXMATRIXSTACK & get_matrix_stack(); ///< Get access to a matrix stack stored by this class
@@ -212,8 +222,8 @@ namespace Zeni {
 
     void set_fvf();
 
-    D3DCAPS9 m_d3d_capabilities;
-    D3DPRESENT_PARAMETERS m_d3d_parameters;
+    LPD3DCAPS9 m_d3d_capabilities;
+    LPD3DPRESENT_PARAMETERS m_d3d_parameters;
 
     LPDIRECT3D9 m_d3d;
     LPDIRECT3DDEVICE9 m_d3d_device;

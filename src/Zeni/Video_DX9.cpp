@@ -24,6 +24,9 @@
 #include <cassert>
 #include <iostream>
 
+#include <d3d9.h>
+#include <d3dx9.h>
+
 #if defined(_DEBUG) && defined(_WINDOWS)
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define new DEBUG_NEW
@@ -32,7 +35,9 @@
 namespace Zeni {
 
   Video_DX9::Video_DX9()
-    : m_d3d(0),
+    : m_d3d_capabilities(0),
+    m_d3d_parameters(0),
+    m_d3d(0),
     m_d3d_device(0),
     m_matrix_stack(0),
     m_textured(false),
@@ -120,6 +125,9 @@ namespace Zeni {
       init();
     }
     catch(...) {
+      delete m_d3d_parameters;
+      delete m_d3d_capabilities;
+
       FreeLibrary(m_d3dx9);
       FreeLibrary(m_d3d9);
 
@@ -134,6 +142,9 @@ namespace Zeni {
 
     if(m_d3d)
       m_d3d->Release();
+
+    delete m_d3d_parameters;
+    delete m_d3d_capabilities;
 
     FreeLibrary(m_d3dx9);
     FreeLibrary(m_d3d9);
@@ -155,7 +166,7 @@ namespace Zeni {
         throw Video_Device_Failure();
       
       if(result == D3DERR_DEVICENOTRESET) {
-        if(FAILED(m_d3d_device->Reset(&m_d3d_parameters)))
+        if(FAILED(m_d3d_device->Reset(m_d3d_parameters)))
           throw Video_Device_Failure();
       
         g_video_dx9_reset = false;
@@ -222,7 +233,7 @@ namespace Zeni {
   }
 
   int Video_DX9::get_maximum_anisotropy() const {
-    return int(m_d3d_capabilities.MaxAnisotropy);
+    return int(m_d3d_capabilities->MaxAnisotropy);
   }
 
   bool Video_DX9::has_vertex_buffers() const {
@@ -540,6 +551,14 @@ namespace Zeni {
   }
 #endif
 
+  const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {
+    return *m_d3d_capabilities;
+  }
+
+  const D3DPRESENT_PARAMETERS & Video_DX9::get_d3d_parameters() {
+    return *m_d3d_parameters;
+  }
+
   void Video_DX9::init() {
 #if SDL_VERSION_ATLEAST(1,3,0)
     SDL_SysWMinfo wmInfo;
@@ -555,52 +574,60 @@ namespace Zeni {
 
     std::cout << "Initializing DirectX 9" << std::endl;
 
-    m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_capabilities);
+    try {
+      m_d3d_capabilities = new D3DCAPS9;
+      m_d3d_parameters = new D3DPRESENT_PARAMETERS;
+    }
+    catch (...) {
+      throw Video_Init_Failure();
+    }
+
+    m_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_capabilities);
 
     m_dpi = GetDeviceCaps(GetDC(hWnd), LOGPIXELSY);
 
-    ZeroMemory(&m_d3d_parameters, sizeof(m_d3d_parameters));
+    ZeroMemory(m_d3d_parameters, sizeof(m_d3d_parameters));
 
-    m_d3d_parameters.hDeviceWindow = hWnd;
+    m_d3d_parameters->hDeviceWindow = hWnd;
     
-    m_d3d_parameters.Windowed = true;
-    m_d3d_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+    m_d3d_parameters->Windowed = true;
+    m_d3d_parameters->FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
-    m_d3d_parameters.BackBufferCount = 1;
-    m_d3d_parameters.BackBufferWidth = UINT(get_Window().get_width());
-    m_d3d_parameters.BackBufferHeight = UINT(get_Window().get_height());
-    m_d3d_parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
-    m_d3d_parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    m_d3d_parameters.PresentationInterval = get_vertical_sync() ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
-    m_d3d_parameters.Flags = 0; //D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
+    m_d3d_parameters->BackBufferCount = 1;
+    m_d3d_parameters->BackBufferWidth = UINT(get_Window().get_width());
+    m_d3d_parameters->BackBufferHeight = UINT(get_Window().get_height());
+    m_d3d_parameters->BackBufferFormat = D3DFMT_A8R8G8B8;
+    m_d3d_parameters->SwapEffect = D3DSWAPEFFECT_DISCARD;
+    m_d3d_parameters->PresentationInterval = get_vertical_sync() ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
+    m_d3d_parameters->Flags = 0; //D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 
-    m_d3d_parameters.EnableAutoDepthStencil = true;
-    m_d3d_parameters.AutoDepthStencilFormat = D3DFMT_D16;
+    m_d3d_parameters->EnableAutoDepthStencil = true;
+    m_d3d_parameters->AutoDepthStencilFormat = D3DFMT_D16;
 
     if(get_multisampling() > 1)
       switch(get_multisampling()) {
-      case 2: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; break;
-      case 3: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; break;
-      case 4: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; break;
-      case 5: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; break;
-      case 6: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; break;
-      case 7: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; break;
-      case 8: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; break;
-      case 9: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; break;
-      case 10: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; break;
-      case 11: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; break;
-      case 12: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; break;
-      case 13: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; break;
-      case 14: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; break;
-      case 15: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; break;
+      case 2: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; break;
+      case 3: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; break;
+      case 4: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; break;
+      case 5: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; break;
+      case 6: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; break;
+      case 7: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; break;
+      case 8: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; break;
+      case 9: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; break;
+      case 10: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; break;
+      case 11: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; break;
+      case 12: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; break;
+      case 13: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; break;
+      case 14: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; break;
+      case 15: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; break;
       case 16:
-      default: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_16_SAMPLES; break;
+      default: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_16_SAMPLES; break;
       }
     else if(get_multisampling() < 0)
-      m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_16_SAMPLES;
+      m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_16_SAMPLES;
     else
-      m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-    m_d3d_parameters.MultiSampleQuality = 0;
+      m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_NONE;
+    m_d3d_parameters->MultiSampleQuality = 0;
 
     // Initialize the D3D device
     if(!init_device())
@@ -612,23 +639,23 @@ namespace Zeni {
   
   bool Video_DX9::init_device() {
     DWORD num_quality_levels;
-    while(FAILED(m_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, m_d3d_parameters.Windowed, m_d3d_parameters.MultiSampleType, &num_quality_levels))) {
-      switch(m_d3d_parameters.MultiSampleType) {
-      case D3DMULTISAMPLE_2_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_NONE; preinit_multisampling(0); break;
-      case D3DMULTISAMPLE_3_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; preinit_multisampling(2); break;
-      case D3DMULTISAMPLE_4_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; preinit_multisampling(3); break;
-      case D3DMULTISAMPLE_5_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; preinit_multisampling(4); break;
-      case D3DMULTISAMPLE_6_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; preinit_multisampling(5); break;
-      case D3DMULTISAMPLE_7_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; preinit_multisampling(6); break;
-      case D3DMULTISAMPLE_8_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; preinit_multisampling(7); break;
-      case D3DMULTISAMPLE_9_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; preinit_multisampling(8); break;
-      case D3DMULTISAMPLE_10_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; preinit_multisampling(9); break;
-      case D3DMULTISAMPLE_11_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; preinit_multisampling(10); break;
-      case D3DMULTISAMPLE_12_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; preinit_multisampling(11); break;
-      case D3DMULTISAMPLE_13_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; preinit_multisampling(12); break;
-      case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; preinit_multisampling(13); break;
-      case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; preinit_multisampling(14); break;
-      case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters.MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; preinit_multisampling(15); break;
+    while(FAILED(m_d3d->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, m_d3d_parameters->Windowed, m_d3d_parameters->MultiSampleType, &num_quality_levels))) {
+      switch(m_d3d_parameters->MultiSampleType) {
+      case D3DMULTISAMPLE_2_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_NONE; preinit_multisampling(0); break;
+      case D3DMULTISAMPLE_3_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_2_SAMPLES; preinit_multisampling(2); break;
+      case D3DMULTISAMPLE_4_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_3_SAMPLES; preinit_multisampling(3); break;
+      case D3DMULTISAMPLE_5_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_4_SAMPLES; preinit_multisampling(4); break;
+      case D3DMULTISAMPLE_6_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_5_SAMPLES; preinit_multisampling(5); break;
+      case D3DMULTISAMPLE_7_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_6_SAMPLES; preinit_multisampling(6); break;
+      case D3DMULTISAMPLE_8_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_7_SAMPLES; preinit_multisampling(7); break;
+      case D3DMULTISAMPLE_9_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_8_SAMPLES; preinit_multisampling(8); break;
+      case D3DMULTISAMPLE_10_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_9_SAMPLES; preinit_multisampling(9); break;
+      case D3DMULTISAMPLE_11_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_10_SAMPLES; preinit_multisampling(10); break;
+      case D3DMULTISAMPLE_12_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_11_SAMPLES; preinit_multisampling(11); break;
+      case D3DMULTISAMPLE_13_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_12_SAMPLES; preinit_multisampling(12); break;
+      case D3DMULTISAMPLE_14_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_13_SAMPLES; preinit_multisampling(13); break;
+      case D3DMULTISAMPLE_15_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_14_SAMPLES; preinit_multisampling(14); break;
+      case D3DMULTISAMPLE_16_SAMPLES: m_d3d_parameters->MultiSampleType = D3DMULTISAMPLE_15_SAMPLES; preinit_multisampling(15); break;
 
       case D3DMULTISAMPLE_NONE:
       default:
@@ -636,11 +663,11 @@ namespace Zeni {
       }
     }
 
-    const bool try_hardware = (m_d3d_capabilities.VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) != 0;
+    const bool try_hardware = (m_d3d_capabilities->VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) != 0;
 
-    if((!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device))) &&
-       (!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_MIXED_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device))) &&
-       FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3d_parameters, &m_d3d_device)))
+    if((!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters->hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, m_d3d_parameters, &m_d3d_device))) &&
+       (!try_hardware || FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters->hDeviceWindow, D3DCREATE_MIXED_VERTEXPROCESSING, m_d3d_parameters, &m_d3d_device))) &&
+       FAILED(m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_d3d_parameters->hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, m_d3d_parameters, &m_d3d_device)))
     {
       // HARDWARE, MIXED, and SOFTWARE all failed
       return false;
