@@ -1,48 +1,51 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Vertex2f.h>
-
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Color.hxx>
-#include <Zeni/Video_DX9.hxx>
+#include <zeni_graphics.h>
 
 #include <cassert>
 
 #ifndef DISABLE_GL
-#ifdef _MACOSX
+#if defined(REQUIRE_GL_ES)
+#include <GLES/gl.h>
+#elif defined(_MACOSX)
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
 #endif
 #endif
 
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+#include <Zeni/Line_Segment.hxx>
+#include <Zeni/Quadrilateral.hxx>
+#include <Zeni/Triangle.hxx>
+
 namespace Zeni {
+
+  template class ZENI_GRAPHICS_DLL Line_Segment<Vertex2f_Color>;
+  template class ZENI_GRAPHICS_DLL Line_Segment<Vertex2f_Texture>;
+  template class ZENI_GRAPHICS_DLL Quadrilateral<Vertex2f_Color>;
+  template class ZENI_GRAPHICS_DLL Quadrilateral<Vertex2f_Texture>;
+  template class ZENI_GRAPHICS_DLL Triangle<Vertex2f_Color>;
+  template class ZENI_GRAPHICS_DLL Triangle<Vertex2f_Texture>;
 
   Vertex2f::Vertex2f()
   {
@@ -60,7 +63,7 @@ namespace Zeni {
     return position;
   }
 
-  Vertex2f * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const {
+  Vertex2f_Color * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const {
     const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
     return new Vertex2f_Color(Point2f(midpt.x, midpt.y), 
       Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
@@ -86,19 +89,94 @@ namespace Zeni {
     return false;
   }
 
+#ifdef REQUIRE_GL_ES
+  template <>
+  void Line_Segment<Vertex2f_Color>::render_to(Video_GL &) const {
+    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
+                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24)};
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Color), a.get_address());
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_BYTE, 0, c4ub);
+
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+
+  template <>
+  void Triangle<Vertex2f_Color>::render_to(Video_GL &) const {
+    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
+                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24),
+                     ((c.get_color() & 0x00FFFFFF) << 8) | ((c.get_color() & 0xFF000000) >> 24)};
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Color), a.get_address());
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_BYTE, 0, c4ub);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+
+  template <>
+  void Quadrilateral<Vertex2f_Color>::render_to(Video_GL &) const {
+    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
+                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24),
+                     ((c.get_color() & 0x00FFFFFF) << 8) | ((c.get_color() & 0xFF000000) >> 24),
+                     ((d.get_color() & 0x00FFFFFF) << 8) | ((d.get_color() & 0xFF000000) >> 24)};
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Color), a.get_address());
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_BYTE, 0, c4ub);
+
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+#endif
+
 #ifndef DISABLE_GL
-  void Vertex2f_Color::render_to(Video_GL &screen) const {
+  void Vertex2f_Color::render_to(Video_GL &
+#ifndef REQUIRE_GL_ES
+    screen
+#endif
+    ) const
+  {
+#ifdef REQUIRE_GL_ES
+    Uint32 c4ub = ((m_argb & 0x00FFFFFF) << 8)
+                | ((m_argb & 0xFF000000) >> 24);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, 0, get_address());
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_BYTE, 0, &c4ub);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+#else
     glBegin(GL_POINTS);
     subrender_to(screen);
     glEnd();
+#endif
   }
 
   void Vertex2f_Color::subrender_to(Video_GL &) const {
+#ifndef REQUIRE_GL_ES
     glColor4ub(GLubyte((m_argb >> 16) & 0xFF), 
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
     glVertex2f(position.x, position.y);
+#endif
   }
 #endif
 
@@ -118,7 +196,7 @@ namespace Zeni {
   {
   }
 
-  Vertex2f * Vertex2f_Texture::interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const {
+  Vertex2f_Texture * Vertex2f_Texture::interpolate_to(const float &rhs_part, const Vertex2f_Texture &rhs) const {
     const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
     return new Vertex2f_Texture(Point2f(midpt.x, midpt.y), 
       texture_coordinate.interpolate_to(rhs_part, rhs.texture_coordinate));
@@ -128,14 +206,57 @@ namespace Zeni {
     return false;
   }
 
+#ifdef REQUIRE_GL_ES
+  template <>
+  void Line_Segment<Vertex2f_Texture>::render_to(Video_GL &) const {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), a.get_address());
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), &a.texture_coordinate);
+
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+
+  template <>
+  void Triangle<Vertex2f_Texture>::render_to(Video_GL &) const {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), a.get_address());
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), &a.texture_coordinate);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+
+  template <>
+  void Quadrilateral<Vertex2f_Texture>::render_to(Video_GL &) const {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), a.get_address());
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex2f_Texture), &a.texture_coordinate);
+
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+#endif
+
 #ifndef DISABLE_GL
   void Vertex2f_Texture::render_to(Video_GL &) const {
     assert(false);
   }
 
   void Vertex2f_Texture::subrender_to(Video_GL &) const {
+#ifndef REQUIRE_GL_ES
     glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
     glVertex2f(position.x, position.y);
+#endif
   }
 #endif
 

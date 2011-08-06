@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Database
@@ -43,7 +32,7 @@
 #ifndef ZENI_DATABASE_H
 #define ZENI_DATABASE_H
 
-#include <Zeni/Core.h>
+#include <Zeni/Error.h>
 #include <Zeni/Hash_Map.h>
 #include <Zeni/XML.h>
 /* \cond */
@@ -58,13 +47,13 @@ namespace Zeni {
     struct Lookup {
       struct Handle {
         Handle();
-        Handle(const std::string &filename_);
-        Handle(TYPE * const &ptr_, const std::string &filename_, const bool &lent_, const bool &keep_);
+        Handle(const String &filename_);
+        Handle(TYPE * const &ptr_, const String &filename_, const bool &lent_, const bool &keep_);
 
         bool operator==(const Handle &rhs) const;
 
         TYPE * ptr;
-        std::string filename;
+        String filename;
         bool lent;
         bool keep;
       };
@@ -84,8 +73,8 @@ namespace Zeni {
       Handles handles;
     };
 
-    typedef std::list<std::string> Filenames;
-    typedef Unordered_Map<std::string, Lookup *> Lookups; // (id, filename)
+    typedef std::list<String> Filenames;
+    typedef Unordered_Map<String, Lookup *> Lookups; // (id, filename)
     typedef Unordered_Map<unsigned long, TYPE *> Entries; // (datum, lent)
 
     // Undefined
@@ -93,25 +82,25 @@ namespace Zeni {
     Database & operator=(const Database &);
 
   public:
-    Database(const std::string &filename, const std::string &xml_identifier);
+    Database(const String &filename, const String &xml_identifier);
     virtual ~Database();
 
-    unsigned long get_id(const std::string &name) const; ///< Get an id by name, possibly throwing an Error
-    unsigned long find(const std::string &name) const; ///< Get an id by name, without throwing an Error
+    unsigned long get_id(const String &name) const; ///< Get an id by name, possibly throwing an Error
+    unsigned long find(const String &name) const; ///< Get an id by name, without throwing an Error
     bool find(const unsigned long &id) const; ///< Check to see that an id is valid
     
-    TYPE & operator[](const std::string &name) const; ///< Get a TYPE by name
+    TYPE & operator[](const String &name) const; ///< Get a TYPE by name
     TYPE & operator[](const unsigned long &id) const; ///< Get a TYPE by id
 
     // Loaders
-    unsigned long give(const std::string &name, TYPE * const &type, const bool &keep, const std::string &filename = ""); ///< Add an entry (which it will later delete)
-    unsigned long lend(const std::string &name, TYPE * const &type, const bool &keep); ///< Add an entry (which it will NEVER delete)
-    void clear(const std::string &name, const std::string &filename = ""); ///< Clear an entry
+    unsigned long give(const String &name, TYPE * const &type, const bool &keep, const String &filename = ""); ///< Add an entry (which it will later delete)
+    unsigned long lend(const String &name, TYPE * const &type, const bool &keep); ///< Add an entry (which it will NEVER delete)
+    void clear(const String &name, const String &filename = ""); ///< Clear an entry
 
     // Initialization Functions
     void clear(); ///< Permanently clear all resources.
-    void load_file(const std::string &filename); ///< Load all resources from a given file, giving them highest priority
-    void unload_file(const std::string &filename); ///< Unload all resources from a given file, reloading lower priority resources
+    void load_file(const String &filename); ///< Load all resources from a given file, giving them highest priority
+    void unload_file(const String &filename); ///< Unload all resources from a given file, reloading lower priority resources
     void reload(); ///< lose_resources + init
 
     const bool & lost_resources(); ///< Check to see if resources have been lost
@@ -121,36 +110,44 @@ namespace Zeni {
   protected:
     void init();
     void uninit();
-    bool give_priority(const std::string &name, const bool &lent, const bool &keep, const std::string &filename = ""); ///< If 'lent', 'keep', and 'filename' match, give priority over other 'name' entries
+    bool give_priority(const String &name, const bool &lent, const bool &keep, const String &filename = ""); ///< If 'lent', 'keep', and 'filename' match, give priority over other 'name' entries
 
   private:
     virtual void on_load() {}
     virtual void on_clear() {}
     virtual void on_lose() {}
 
-    virtual TYPE * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename) = 0;
+    virtual TYPE * load(XML_Element_c &xml_element, const String &name, const String &filename) = 0;
 
-    std::string m_xml_identifier;
+    String m_xml_identifier;
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Filenames m_filenames;
     Lookups m_lookups;
     Entries m_entries;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+
     bool m_lost;
   };
 
-  struct Database_File_Not_Loaded : public Error {
-    Database_File_Not_Loaded(const std::string &identifier) : Error("Zeni File '" + identifier + "' Not Loaded") {}
+  struct ZENI_DLL Database_File_Not_Loaded : public Error {
+    Database_File_Not_Loaded(const String &identifier) : Error("Zeni File '" + identifier + "' Not Loaded") {}
   };
 
-  struct Database_Entry_Not_Found : public Error {
-    Database_Entry_Not_Found(const std::string &identifier) : Error("Zeni Database Entry '" + identifier + "' Not Found") {}
+  struct ZENI_DLL Database_Entry_Not_Found : public Error {
+    Database_Entry_Not_Found(const String &identifier) : Error("Zeni Database Entry '" + identifier + "' Not Found") {}
   };
 
-  struct Database_Load_Entry_Failed : public Error {
-    Database_Load_Entry_Failed(const std::string &identifier) : Error("Zeni Database Entry '" + identifier + "' Could Not Be Loaded") {}
+  struct ZENI_DLL Database_Load_Entry_Failed : public Error {
+    Database_Load_Entry_Failed(const String &identifier) : Error("Zeni Database Entry '" + identifier + "' Could Not Be Loaded") {}
   };
 
-  struct Null_Database_Entry_Set : public Error {
+  struct ZENI_DLL Null_Database_Entry_Set : public Error {
     Null_Database_Entry_Set() : Error("Null Entry Added to Zeni Database") {}
   };
 

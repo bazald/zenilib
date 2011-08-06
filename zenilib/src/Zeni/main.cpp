@@ -1,38 +1,21 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Configurator_Video.h>
-#include <Zeni/Game.hxx>
-#include <Zeni/Gamestate.hxx>
-#include <Zeni/Sound.hxx>
-#include <Zeni/Textures.hxx>
-#include <Zeni/Video.hxx>
-#include <Zeni/XML.hxx>
+#include <zeni_rest.h>
 
 #include <cassert>
 #include <ctime>
@@ -49,17 +32,22 @@
 #include <mach-o/dyld.h>
 #endif
 
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
 static bool load_config() {
   Zeni::XML_Document config_xml("config/zenilib.xml");
   bool user_config = true;
 
   {
-    Zeni::Core::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
-    Zeni::Core &cr = Zeni::get_Core(); // Partially to set up IO redirection
+    Zeni::File_Ops::preinit(config_xml["Zenilib"]["Uniqname"].to_string());
+    Zeni::File_Ops &fo = Zeni::get_File_Ops(); // Partially to set up IO redirection
 
-    if(config_xml.try_load(cr.get_appdata_path() + "config/zenilib.xml"))
+    if(config_xml.try_load(fo.get_appdata_path() + "config/zenilib.xml"))
       std::cerr << "User-specific config file loaded from '"
-                << cr.get_appdata_path() + "config/zenilib.xml"
+                << fo.get_appdata_path() + "config/zenilib.xml"
                 << "'." << std::endl;
     else {
       std::cerr << "User-specific config file not found." << std::endl;
@@ -81,7 +69,7 @@ static bool load_config() {
     } textures;
 
     struct {
-      Zeni::Video_Base::VIDEO_MODE api;
+      Zeni::Video::VIDEO_MODE api;
       bool full_screen;
       int multisampling;
       Zeni::Point2i screen_resolution;
@@ -104,22 +92,22 @@ static bool load_config() {
   {
     Zeni::XML_Element_c video = zenilib["Video"];
 
-    const std::string api = video["API"].to_string();
+    const Zeni::String api = video["API"].to_string();
 #ifndef DISABLE_GL
     if(api == "OpenGL")
-      config.video.api = Zeni::Video_Base::ZENI_VIDEO_GL;
+      config.video.api = Zeni::Video::ZENI_VIDEO_GL;
     else
 #endif
 #ifndef DISABLE_DX9
       if(api == "DX9")
-        config.video.api = Zeni::Video_Base::ZENI_VIDEO_DX9;
+        config.video.api = Zeni::Video::ZENI_VIDEO_DX9;
       else
 #endif
       {
-        config.video.api = Zeni::Video_Base::ZENI_VIDEO_ANY;
+        config.video.api = Zeni::Video::ZENI_VIDEO_ANY;
 
         if(api == "Disabled")
-          Zeni::Video::set_enabled(false);
+          Zeni::Window::set_enabled(false);
       }
 
     config.video.full_screen = video["Full_Screen"].to_bool();
@@ -139,12 +127,12 @@ static bool load_config() {
   }
 
   // Start engines
+  Zeni::Window::preinit_resolution(config.video.screen_resolution);
+  Zeni::Window::preinit_full_screen(config.video.full_screen);
+  Zeni::Window::preinit_show_frame(true);
   Zeni::Video::preinit_video_mode(config.video.api);
-  Zeni::Video::preinit_screen_resolution(config.video.screen_resolution);
-  Zeni::Video::preinit_full_screen(config.video.full_screen);
   Zeni::Video::preinit_multisampling(config.video.multisampling);
   Zeni::Video::preinit_vertical_sync(config.video.vertical_sync);
-  Zeni::Video::preinit_show_frame(true);
 
   Zeni::Textures::set_texturing_mode(config.textures.anisotropy,
                                      config.textures.bilinear_filtering,
@@ -165,64 +153,64 @@ static bool load_config() {
 #include <SDL/SDL_ttf.h>
 #endif
 
-#ifndef DISABLE_AL
-#if defined(_WINDOWS)
-#include <al.h>
-#elif defined(_MACOSX)
-#include <OpenAL/al.h>
-#else
-#include <AL/al.h>
-#endif
-#endif
-
 static void print_errors() {
   std::cerr << "Printing all possible error strings:" << std::endl;
 
   std::cerr << "SDL       : " << (strlen(SDL_GetError()   ) ? SDL_GetError()    : "no error") << std::endl;
-  std::cerr << "SDL_image : " << (strlen(IMG_GetError ()  ) ? IMG_GetError ()   : "no error") << std::endl;
+  std::cerr << "SDL_image : " << (strlen(IMG_GetError( )  ) ? IMG_GetError()    : "no error") << std::endl;
   std::cerr << "SDL_net   : " << (strlen(SDLNet_GetError()) ? SDLNet_GetError() : "no error") << std::endl;
   std::cerr << "SDL_ttf   : " << (strlen(TTF_GetError()   ) ? TTF_GetError()    : "no error") << std::endl;
 
-#ifndef DISABLE_DX9
-  //DXGetErrorString?
-#endif
-
-#ifndef DISABLE_GL
-  std::cerr << "OpenGL    : " << gluErrorString(glGetError()) << std::endl;
-#endif
+  Zeni::Video::print_errors();
 
 #ifndef DISABLE_AL
-  std::cerr << "OpenAL    : " << Zeni::alErrorString(alGetError()) << std::endl;
-#endif
-
-#ifndef DISABLE_CG
-  std::cerr << "Cg        : " << cgGetErrorString(cgGetError()) << std::endl;
+  std::cerr << "OpenAL    : " << Zeni::Sound_Renderer_AL::errorString() << std::endl;
 #endif
 }
 
-inline int main2(const size_t &argc, const char * const argv[]) {
+inline int main2(const int argc, const char * const * const argv) {
   std::srand(static_cast<unsigned int>(std::time(0)));
 
-  std::vector<std::string> args(argc - 1u);
-  for(size_t i = 1u; i < argc; ++i)
-    args[i - 1u] = argv[i];
+  Zeni::g_argc = argc;
+  Zeni::g_argv = argv;
 
   try {
     // Load config
     const bool user_config = load_config();
 
     // Initialize Game
-    Zeni::Game &gr = Zeni::get_Game(&args);
+    Zeni::Game &gr = Zeni::get_Game();
 
     // Check Rendering Options on Firstrun
-    if(!user_config && Zeni::Video::is_enabled())
+    if(!user_config && Zeni::Window::is_enabled())
       gr.push_state(new Zeni::Configurator_Video::Check_State(true));
 
-    // Run Game
-    gr.run();
-  }
-  catch(Zeni::Quit_Event &) {
-    std::cerr << "Exiting normally." << std::endl;
+    try {
+      // Run Game
+      gr.run();
+    }
+    catch(Zeni::Quit_Event &) {
+      print_errors();
+
+      Zeni::Game::completely_destroy();
+      //Zeni::Net::completely_destroy();
+      Zeni::Fonts::completely_destroy();
+      Zeni::Textures::completely_destroy();
+      Zeni::Video::completely_destroy();
+      Zeni::Window::completely_destroy();
+      Zeni::Sound_Source_Pool::completely_destroy();
+      Zeni::Sound::completely_destroy();
+      Zeni::Sounds::completely_destroy();
+      Zeni::Core::completely_destroy();
+      Zeni::Joysticks::completely_destroy();
+      Zeni::Timer::completely_destroy();
+      Zeni::Colors::completely_destroy();
+      Zeni::File_Ops::completely_destroy();
+      Zeni::Resource::completely_destroy();
+      Zeni::Timer_HQ::completely_destroy();
+
+      std::cerr << "Exiting normally." << std::endl;
+    }
   }
 #ifdef _WINDOWS
 #pragma warning( push )
@@ -256,8 +244,6 @@ inline int main2(const size_t &argc, const char * const argv[]) {
 #pragma warning( pop )
 #endif
 
-  print_errors();
-
   return 0;
 }
 
@@ -270,8 +256,10 @@ static void up_one_dir(char path[], int &length) {
     }
 }
 
-int main(int argc, char *argv[]) {
+ZENI_REST_DLL int zenilib_main(int argc, char **argv) {
 #ifdef _WINDOWS
+  _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
 #ifdef X64
   if(_chdir("..\\..")) {
 #else
@@ -315,5 +303,5 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  return main2(size_t(argc), argv);
+  return main2(argc, argv);
 }

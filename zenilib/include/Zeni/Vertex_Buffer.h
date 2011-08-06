@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Vertex_Buffer
@@ -54,7 +43,9 @@
 #include <d3dx9.h>
 #endif
 #ifndef DISABLE_GL
-#ifdef _MACOSX
+#if defined(REQUIRE_GL_ES)
+#include <GLES/gl.h>
+#elif defined(_MACOSX)
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
@@ -84,20 +75,20 @@ namespace Zeni {
     }
   };
 
-  class Render_Wrapper;
-  class Vertex_Buffer;
+  class ZENI_GRAPHICS_DLL Render_Wrapper;
+  class ZENI_GRAPHICS_DLL Vertex_Buffer;
 
-  class Vertex_Buffer_Microrenderer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Microrenderer {
   public:
     virtual void operator()() const = 0;
   };
 
-  class Vertex_Buffer_Macrorenderer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Macrorenderer {
   public:
     virtual void operator()(const Vertex_Buffer_Microrenderer &microrenderer) const;
   };
 
-  class Vertex_Buffer_Renderer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer {
     Vertex_Buffer_Renderer(const Vertex_Buffer_Renderer &);
     Vertex_Buffer_Renderer & operator=(const Vertex_Buffer_Renderer &);
 
@@ -111,18 +102,25 @@ namespace Zeni {
     Vertex_Buffer &m_vbo;
   };
 
-  class Vertex_Buffer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
     Vertex_Buffer & operator=(const Vertex_Buffer &);
 
-    friend class Vertex_Buffer_Renderer_GL;
-    friend class Vertex_Buffer_Renderer_DX9;
+    friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL;
+    friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_DX9;
 
   public:
-    struct Vertex_Buffer_Range {
+    struct ZENI_GRAPHICS_DLL Vertex_Buffer_Range {
       Vertex_Buffer_Range(Material * const &m, const size_t &s, const size_t &ne);
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
       safe_ptr<Material> material;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
       size_t start;
       size_t num_elements;
     };
@@ -176,11 +174,18 @@ namespace Zeni {
     // Align normals of similar vertices
     void align_similar_normals();
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::vector<Triangle<Vertex3f_Color> *> m_triangles_cm;
     std::vector<Triangle<Vertex3f_Texture> *> m_triangles_t;
 
     std::vector<Vertex_Buffer_Range *> m_descriptors_cm;
     std::vector<Vertex_Buffer_Range *> m_descriptors_t;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     bool m_align_normals;
 
@@ -193,12 +198,38 @@ namespace Zeni {
     static void lose_all(); /// Lose all Vertex_Buffer objects, presumably when losing resources in Textures and Fonts
 
   private:
+  private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static class Uninit : public Event::Handler {
+      void operator()() {
+        Vertex_Buffer::lose_all();
+      }
+
+      Uninit * duplicate() const {
+        return new Uninit;
+      }
+
+    public:
+      Uninit() {}
+
+    private:
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+    } g_uninit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+
     static std::set<Vertex_Buffer *> & get_vbos();
   };
 
 #ifndef DISABLE_GL
 
-  class Vertex_Buffer_Renderer_GL : public Vertex_Buffer_Renderer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL : public Vertex_Buffer_Renderer {
     Vertex_Buffer_Renderer_GL(const Vertex_Buffer_Renderer_GL &);
     Vertex_Buffer_Renderer_GL operator=(const Vertex_Buffer_Renderer_GL &);
 
@@ -213,19 +244,18 @@ namespace Zeni {
     inline size_t normal_size() const;
     inline size_t color_size() const;
     inline size_t texel_size() const;
+    inline bool buffers_supported(Video_GL &vgl) const;
 
-    union VBO_GL {
+    union ZENI_GRAPHICS_DLL VBO_GL {
       GLuint vbo;
       unsigned char * alt;
     } m_vbuf[6];
-    
-    static PFNGLDELETEBUFFERSARBPROC m_pglDeleteBuffersARB;
   };
 
 #endif
 #ifndef DISABLE_DX9
 
-  class Vertex_Buffer_Renderer_DX9 : public Vertex_Buffer_Renderer {
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_DX9 : public Vertex_Buffer_Renderer {
     Vertex_Buffer_Renderer_DX9(const Vertex_Buffer_Renderer_DX9 &);
     Vertex_Buffer_Renderer_DX9 operator=(const Vertex_Buffer_Renderer_DX9 &);
 
@@ -240,10 +270,10 @@ namespace Zeni {
     inline size_t vertex_t_size() const;
 
   public:
-    struct VBO_DX9 {
+    struct ZENI_GRAPHICS_DLL VBO_DX9 {
       bool is_vbo;
 
-      union VBO_DX9_impl {
+      union ZENI_GRAPHICS_DLL VBO_DX9_impl {
         IDirect3DVertexBuffer9 * vbo;
         char * alt;
       } data;
@@ -252,11 +282,11 @@ namespace Zeni {
 
 #endif
 
-  struct VBuf_Init_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL VBuf_Init_Failure : public Error {
     VBuf_Init_Failure() : Error("Zeni Vertex Buffer Failed to Initialize Correctly") {}
   };
 
-  struct VBuf_Render_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL VBuf_Render_Failure : public Error {
     VBuf_Render_Failure() : Error("Zeni Vertex Buffer Failed to Render") {}
   };
 

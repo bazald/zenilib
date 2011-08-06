@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Sound_Source_Pool
@@ -46,15 +35,42 @@
 #ifndef ZENI_SOUND_SOURCE_POOL_H
 #define ZENI_SOUND_SOURCE_POOL_H
 
+#include <Zeni/Singleton.h>
 #include <Zeni/Sound_Source.h>
+
+#include <vector>
+
+#include <Zeni/Define.h>
 
 namespace Zeni {
 
-  class Sound_Source_Pool {
-    // Get reference to only instance;
-    friend Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.
+  class Sound_Source_Pool;
 
+#ifdef _WINDOWS
+  ZENI_AUDIO_EXT template class ZENI_AUDIO_DLL Singleton<Sound_Source_Pool>;
+#endif
+
+  class ZENI_AUDIO_DLL Sound_Source_Pool : public Singleton<Sound_Source_Pool> {
+    friend class Singleton<Sound_Source_Pool>;
     friend class Sound_Source;
+    friend ZENI_AUDIO_DLL void play_sound(
+      const String &sound_name,
+      const float &pitch,
+      const float &gain,
+      const Point3f &position,
+      const Vector3f &velocity);
+
+    static Sound_Source_Pool * create();
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static Uninit g_uninit;
+    static Reinit g_reinit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     Sound_Source_Pool();
     ~Sound_Source_Pool();
@@ -64,7 +80,7 @@ namespace Zeni {
     Sound_Source_Pool & operator=(const Sound_Source_Pool &);
 
   public:
-    class Replacement_Policy {
+    class ZENI_AUDIO_DLL Replacement_Policy {
     public:
       virtual ~Replacement_Policy() {};
 
@@ -74,7 +90,7 @@ namespace Zeni {
       bool operator()(const Sound_Source * const &lhs, const Sound_Source * const &rhs) const;
     };
 
-    class Positional_Replacement_Policy : public Replacement_Policy {
+    class ZENI_AUDIO_DLL Positional_Replacement_Policy : public Replacement_Policy {
     public:
       Positional_Replacement_Policy(const Point3f &listener_position_);
 
@@ -94,27 +110,45 @@ namespace Zeni {
 
     void update(); ///< Redistribute hardware Sound_Sources according to the Replacement_Policy.  Newer Sound_Sources are implicitly prioritized over older Sound_Sources.  (Called automatically)
 
+  private:
     void play_and_destroy(Sound_Source * const &sound_source); ///< Play a Sound_Source and destroy it; Used by play_sound(...)
 
-  private:
     void set_Replacement_Policy(Replacement_Policy * const &replacement_policy); ///< Set the Replacement_Policy directly
     void insert_Sound_Source(Sound_Source &sound_source); // on Sound_Source construction
     void remove_Sound_Source(Sound_Source &sound_source); // on Sound_Source destruction
 
     void destroy_all_hw(); ///< Purge all Sound_Source_HW, but leave playing_and_destroying intact
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::vector<Sound_Source *> m_handles;
-
+    std::vector<Sound_Source *> m_playing_and_destroying;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    
     Replacement_Policy * m_replacement_policy;
     bool delete_m_replacement_policy;
-
-    std::vector<Sound_Source *> m_playing_and_destroying;
 
     bool m_muted;
   };
 
-  Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.
+  ZENI_AUDIO_DLL Sound_Source_Pool & get_Sound_Source_Pool(); ///< Get access to the singleton.
+
+  /**
+    * Play a sound effect.
+    */
+  ZENI_AUDIO_DLL void play_sound(
+    const String &sound_name,
+    const float &pitch = ZENI_DEFAULT_PITCH,
+    const float &gain = ZENI_DEFAULT_GAIN,
+    const Point3f &position = Point3f(),
+    const Vector3f &velocity = Vector3f());
 
 }
+
+#include <Zeni/Undefine.h>
 
 #endif

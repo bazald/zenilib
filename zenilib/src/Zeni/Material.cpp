@@ -1,53 +1,39 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Material.h>
-
-#include <Zeni/Textures.hxx>
-#include <Zeni/Video.hxx>
-#include <Zeni/Video_DX9.hxx>
-#include <Zeni/Video_GL.h>
+#include <zeni_graphics.h>
 
 #include <cmath>
 
 #ifndef DISABLE_GL
-#ifdef _MACOSX
+#if defined(REQUIRE_GL_ES)
+#include <GLES/gl.h>
+#elif defined(_MACOSX)
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
 #endif
 #endif
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
 
 namespace Zeni {
 
-  Material::Material(const Color &ambient_, const Color &diffuse_, const Color &specular_, const Color &emissive_, const float &power, const std::string &texture)
+  Material::Material(const Color &ambient_, const Color &diffuse_, const Color &specular_, const Color &emissive_, const float &power, const String &texture)
     : diffuse(diffuse_),
     ambient(ambient_),
     specular(specular_), 
@@ -60,7 +46,7 @@ namespace Zeni {
     set_texture(texture);
   }
 
-  Material::Material(const std::string &texture, const Color &ambient_and_diffuse)
+  Material::Material(const String &texture, const Color &ambient_and_diffuse)
     : diffuse(ambient_and_diffuse), 
     ambient(ambient_and_diffuse), 
     specular(ZENI_DIFFUSE_TO_SPECULAR(ambient_and_diffuse)), 
@@ -83,7 +69,7 @@ namespace Zeni {
       m_power = 128.0f;
   }
 
-  void Material::set_texture(const std::string &texture) {
+  void Material::set_texture(const String &texture) {
     m_texture = texture;
     if(texture.empty())
       m_texture_id = 0;
@@ -94,7 +80,11 @@ namespace Zeni {
 #ifndef DISABLE_GL
   void Material::set(Video_GL &vgl) const {
     if(vgl.get_lighting()) {
-      GLenum face = GLenum(vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK);
+#ifdef REQUIRE_GL_ES
+      const GLenum face = GL_FRONT_AND_BACK;
+#else
+      const GLenum face = GLenum(vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK);
+#endif
 
       if(!(m_optimization & (1 << 0)))
         glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
@@ -210,4 +200,4 @@ namespace Zeni {
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

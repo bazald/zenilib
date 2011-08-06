@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Net
@@ -106,9 +95,8 @@
 #ifndef ZENI_NET_H
 #define ZENI_NET_H
 
-#include "Net_Primitives.h"
-
-#include <Zeni/Core.h>
+#include <Zeni/Singleton.h>
+#include <Zeni/VLUID.h>
 
 #ifdef _MACOSX
 #include <SDL_net/SDL_net.h>
@@ -117,18 +105,36 @@
 #endif
 
 #include <cassert>
-#include <string>
+#include <Zeni/String.h>
 #include <list>
+#include <vector>
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
 
 struct SDL_Thread;
 
 namespace Zeni {
 
-  class Net {
-    // Get reference to only instance;
-    friend Net & get_Net(); ///< Get access to the singleton.
+  class ZENI_NET_DLL Net;
+
+#ifdef _WINDOWS
+  ZENI_NET_EXT template class ZENI_NET_DLL Singleton<Net>;
+#endif
+
+  class ZENI_NET_DLL Net : public Singleton<Net> {
+    friend class Singleton<Net>;
+
+    static Net * create();
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static Uninit g_uninit;
+    static Reinit g_reinit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     Net();
     ~Net();
@@ -139,14 +145,14 @@ namespace Zeni {
 
   public:
     /// Default port 0 indicates a pure lookup with no intention of connecting.
-    inline IPaddress resolve_host(const std::string &host, const Uint16 &port = 0);
+    inline IPaddress resolve_host(const String &host, const Uint16 &port = 0);
     /// If you want to find a URL associated with an IP address
-    inline std::string reverse_lookup(IPaddress ip);
+    inline String reverse_lookup(IPaddress ip);
   };
 
-  Net & get_Net(); ///< Get access to the singleton.
+  ZENI_NET_DLL Net & get_Net(); ///< Get access to the singleton.
 
-  class TCP_Socket {
+  class ZENI_NET_DLL TCP_Socket {
     TCP_Socket(const TCP_Socket &);
     TCP_Socket & operator=(const TCP_Socket &);
     
@@ -160,18 +166,39 @@ namespace Zeni {
     
     /// Send data
     void send(const void * const &data, const Uint16 &num_bytes);
-    void send(const std::string &data);
+    void send(const String &data);
 
     /// Receive up to num_bytes
     int receive(void * const &data, const Uint16 &num_bytes);
-    int receive(std::string &data, const Uint16 &num_bytes);
+    int receive(String &data, const Uint16 &num_bytes);
 
   private:
     TCPsocket sock;
     SDLNet_SocketSet sockset;
+
+    class ZENI_NET_DLL Uninit : public Event::Handler {
+      void operator()();
+
+      Uninit * duplicate() const {
+        return new Uninit(m_sock);
+      }
+
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+
+    public:
+      Uninit(TCP_Socket &sock_)
+        : m_sock(sock_)
+      {
+      }
+
+    private:
+      TCP_Socket &m_sock;
+    } m_uninit;
   };
 
-  class TCP_Listener {
+  class ZENI_NET_DLL TCP_Listener {
     TCP_Listener(const TCP_Listener &);
     TCP_Listener & operator=(const TCP_Listener &);
     
@@ -183,9 +210,30 @@ namespace Zeni {
 
   private:
     TCPsocket sock;
+
+    class ZENI_NET_DLL Uninit : public Event::Handler {
+      void operator()();
+
+      Uninit * duplicate() const {
+        return new Uninit(m_sock);
+      }
+
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+
+    public:
+      Uninit(TCP_Listener &sock_)
+        : m_sock(sock_)
+      {
+      }
+
+    private:
+      TCP_Listener &m_sock;
+    } m_uninit;
   };
 
-  class UDP_Socket {
+  class ZENI_NET_DLL UDP_Socket {
     UDP_Socket(const UDP_Socket &);
     UDP_Socket & operator=(const UDP_Socket &);
     
@@ -197,21 +245,42 @@ namespace Zeni {
 
     /// Send data to an IPaddress
     virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
-    virtual void send(const IPaddress &ip, const std::string &data);
+    virtual void send(const IPaddress &ip, const String &data);
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
     virtual int receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
-    virtual int receive(IPaddress &ip, std::string &data); ///<
+    virtual int receive(IPaddress &ip, String &data); ///<
     
   private:
     UDPsocket sock;
+
+    class ZENI_NET_DLL Uninit : public Event::Handler {
+      void operator()();
+
+      Uninit * duplicate() const {
+        return new Uninit(m_sock);
+      }
+
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+
+    public:
+      Uninit(UDP_Socket &sock_)
+        : m_sock(sock_)
+      {
+      }
+
+    private:
+      UDP_Socket &m_sock;
+    } m_uninit;
   };
   
-  class Split_UDP_Socket : public UDP_Socket {
+  class ZENI_NET_DLL Split_UDP_Socket : public UDP_Socket {
     Split_UDP_Socket(const Split_UDP_Socket &);
     Split_UDP_Socket & operator=(const Split_UDP_Socket &);
     
-    struct Chunk {
+    struct ZENI_NET_DLL Chunk {
       Chunk() : size(0), data(0) {}
       ~Chunk() {delete [] data;}
       
@@ -237,14 +306,22 @@ namespace Zeni {
       mutable char * data;
     };
     
-    class Chunk_Set {
+    class ZENI_NET_DLL Chunk_Set {
       Chunk_Set(const Chunk_Set &);
       Chunk_Set operator=(const Chunk_Set &);
     
     public:
       IPaddress ip;
       Nonce nonce;
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
       std::vector<Chunk> chunks;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
       
       Chunk_Set() {}
       
@@ -256,7 +333,7 @@ namespace Zeni {
       Chunk receive() const;
     };
     
-    class Chunk_Collector {
+    class ZENI_NET_DLL Chunk_Collector {
       Chunk_Collector(const Chunk_Collector &);
       Chunk_Collector operator=(const Chunk_Collector &);
       
@@ -275,7 +352,14 @@ namespace Zeni {
       const Chunk_Set * add_chunk(const IPaddress &sender, const Nonce &incoming, const Uint16 &num_chunks, const Uint16 &which, Chunk &chunk);
       
     private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
       std::list<Chunk_Set *> chunk_sets;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
       Uint16 m_size;
     };
     
@@ -284,11 +368,11 @@ namespace Zeni {
 
     /// Send data to an IPaddress
     virtual void send(const IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
-    virtual void send(const IPaddress &ip, const std::string &data);
+    virtual void send(const IPaddress &ip, const String &data);
     
     /// Receive data of up to data.size() from the returned IPaddress; Will error if num_bytes/data.size() is too low
     virtual int receive(IPaddress &ip, const void * const &data, const Uint16 &num_bytes);
-    virtual int receive(IPaddress &ip, std::string &data);
+    virtual int receive(IPaddress &ip, String &data);
     
   private:
     Uint16 m_chunk_size;
@@ -298,28 +382,28 @@ namespace Zeni {
     Nonce m_nonce_send;
   };
 
-  struct Net_Init_Failure : public Error {
+  struct ZENI_NET_DLL Net_Init_Failure : public Error {
     Net_Init_Failure() : Error("Zeni Net Failed to Initialize Correctly") {}
   };
 
-  struct TCP_Socket_Init_Failure : public Error {
+  struct ZENI_NET_DLL TCP_Socket_Init_Failure : public Error {
     TCP_Socket_Init_Failure() : Error("Zeni TCP Socket Failed to Initialize Correctly") {}
   };
 
-  struct UDP_Socket_Init_Failure : public Error {
+  struct ZENI_NET_DLL UDP_Socket_Init_Failure : public Error {
     UDP_Socket_Init_Failure() : Error("Zeni UDP Socket Failed to Initialize Correctly") {}
   };
 
-  struct UDP_Packet_Overflow : public Error {
+  struct ZENI_NET_DLL UDP_Packet_Overflow : public Error {
     UDP_Packet_Overflow() : Error("Zeni UDP Packet Too Large") {}
   };
 
-  struct Socket_Closed : public Error {
+  struct ZENI_NET_DLL Socket_Closed : public Error {
     Socket_Closed() : Error("Zeni Socket Unexpectedly Closed") {}
   };
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>
 
 #endif

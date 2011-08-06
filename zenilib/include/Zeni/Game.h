@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Game
@@ -45,24 +34,40 @@
 #ifndef ZENI_GAME_H
 #define ZENI_GAME_H
 
-#include <Zeni/Console_State.h>
 #include <Zeni/Gamestate.h>
 #include <Zeni/Hash_Map.h>
+#include <Zeni/Singleton.h>
+#include <Zeni/String.h>
 #include <Zeni/Timer.h>
 
 /* \cond */
 #include <stack>
-#include <string>
 #include <vector>
 /* \endcond */
 
 namespace Zeni {
 
-  class Game {
-    // Get reference to only instance;
-    friend Game & get_Game(const std::vector<std::string> * const &args = 0); ///< Get access to the singleton.
+  class ZENI_REST_DLL Console_State;
+  class ZENI_REST_DLL Game;
 
-    Game(const std::vector<std::string> * const args = 0);
+  class ZENI_REST_DLL Gamestate_Zero_Initializer {
+  public:
+    virtual Gamestate_Base * operator()() = 0;
+  };
+
+  ZENI_REST_DLL extern Gamestate_Zero_Initializer * g_gzi;
+  ZENI_REST_DLL extern int g_argc;
+  ZENI_REST_DLL extern const char * const * g_argv;
+#ifdef _WINDOWS
+  ZENI_REST_EXT template class ZENI_REST_DLL Singleton<Game>;
+#endif
+
+  class ZENI_REST_DLL Game : public Singleton<Game> {
+    friend class Singleton<Game>;
+
+    static Game * create();
+
+    Game();
 
     // Undefined
     Game(const Game &);
@@ -74,7 +79,7 @@ namespace Zeni {
 #ifndef NDEBUG
     inline Console_State & get_console(); ///< Get a reference to the Console_State
 #endif
-    inline void write_to_console(const std::string &text); ///< Write text to the console when in Debug mode
+    inline void write_to_console(const String &text); ///< Write text to the console when in Debug mode
 
     inline size_t size() const; ///< Get the current size of the Gamestate stack.
     inline void push_state(const Gamestate &state); ///< Push a new Gamestate onto the stack.
@@ -94,9 +99,16 @@ namespace Zeni {
   private:
     void calculate_fps();
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::stack<Gamestate> m_states;
     Unordered_Map<int, bool> m_keys;
     Unordered_Map<int, bool> m_mouse_buttons;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     Time time;
     Time::Tick_Type ticks_passed, fps, fps_next;
@@ -110,9 +122,9 @@ namespace Zeni {
 #endif
   };
 
-  Game & get_Game(const std::vector<std::string> * const &args); ///< Get access to the singleton.
+  ZENI_REST_DLL Game & get_Game(); ///< Get access to the singleton.
 
-  struct Zero_Gamestate : public Error {
+  struct ZENI_REST_DLL Zero_Gamestate : public Error {
     Zero_Gamestate() : Error("Zeni Gamestate State is Empty") {}
   };
 

@@ -1,43 +1,30 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Widget.hxx>
-
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Line_Segment.hxx>
-#include <Zeni/Texture.h>
-#include <Zeni/Quadrilateral.hxx>
-#include <Zeni/Vertex2f.hxx>
-#include <Zeni/Video.h>
+#include <zeni_rest.h>
 
 #include <list>
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
+
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
 
@@ -482,7 +469,7 @@ namespace Zeni {
   }
 
   Selector::Selector_Button::Selector_Button(Selector &selector,
-                                             const std::string &option,
+                                             const String &option,
                                              const Point2f &upper_left_,
                                              const Point2f &lower_right_)
     : Text_Button(upper_left_, lower_right_, selector.m_font, option),
@@ -528,7 +515,7 @@ namespace Zeni {
 
   Selector::Selector(const Point2f &upper_left_, const Point2f &lower_right_,
                      const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-                     const std::string &font_)
+                     const String &font_)
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
@@ -572,7 +559,7 @@ namespace Zeni {
     return m_options;
   }
 
-  void Selector::add_option(const std::string &option) {
+  void Selector::add_option(const String &option) {
     if(m_options.empty())
       m_option = 0u;
     m_options.push_back(option);
@@ -580,7 +567,7 @@ namespace Zeni {
     add_selector_button(option);
   }
 
-  void Selector::remove_option(const std::string &option) {
+  void Selector::remove_option(const String &option) {
     Options::iterator it = std::find(m_options.begin(), m_options.end(), option);
     if(it != m_options.end())
       m_options.erase(it);
@@ -588,13 +575,13 @@ namespace Zeni {
     build_selector_buttons();
   }
 
-  std::string Selector::get_selected() const {
+  String Selector::get_selected() const {
     if(!m_options.empty())
       return m_options[m_option];
     return "";
   }
 
-  void Selector::select_option(const std::string &option) {
+  void Selector::select_option(const String &option) {
     Options::iterator it = std::find(m_options.begin(), m_options.end(), option);
     if(it != m_options.end())
       m_option = size_t(it - m_options.begin());
@@ -652,7 +639,7 @@ namespace Zeni {
     }
   }
 
-  void Selector::on_accept(const std::string &option) {
+  void Selector::on_accept(const String &option) {
     select_option(option);
 
     set_busy(false);
@@ -747,7 +734,7 @@ namespace Zeni {
                      Point2f(lr.x + ex, ul.y + bh * (view_end - view_offset)));
   }
 
-  void Selector::add_selector_button(const std::string &option) {
+  void Selector::add_selector_button(const String &option) {
     const Point2f &ul = m_normal_button.get_upper_left();
     const Point2f &lr = m_normal_button.get_lower_right();
     const float vertical_offset = m_selector_buttons.size() * (lr.y - ul.y);
@@ -770,7 +757,7 @@ namespace Zeni {
   }
 
   Text_Box::Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-                     const std::string &font_name_, const std::string &text_, const Color &text_color_,
+                     const String &font_name_, const String &text_, const Color &text_color_,
                      const bool &editable_, const JUSTIFY &justify_, const int &tab_spaces_)
   : Widget_Button(upper_left_, lower_right_),
     m_bg_renderer(new Widget_Renderer_Color(get_Colors()["default_button_bg_normal"])),
@@ -781,14 +768,23 @@ namespace Zeni {
     m_tab_spaces(tab_spaces_),
     m_cursor_index(-1, -1)
   {
+    Fonts::remove_post_reinit(&g_reinit);
+
+    Fonts &fr = get_Fonts();
+
     set_editable(editable_);
     format();
 
     get_text_boxes().insert(this);
+
+    fr.lend_post_reinit(&g_reinit);
   }
 
   Text_Box::~Text_Box() {
     get_text_boxes().erase(this);
+
+    if(delete_m_bg_renderer)
+      delete m_bg_renderer;
   }
 
   void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
@@ -811,11 +807,11 @@ namespace Zeni {
         case SDLK_BACKSPACE:
           if(mod_none)
           {
-            const std::string &t = get_text();
+            const String &t = get_text();
 
             if(m_edit_pos > 0) {
-              std::string t0 = t.substr(0u, m_edit_pos - 1u);
-              std::string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
+              String t0 = t.substr(0u, m_edit_pos - 1u);
+              String t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
 
               m_text.text = t0 + t1;
               format();
@@ -828,11 +824,11 @@ namespace Zeni {
         case SDLK_DELETE:
           if(mod_none)
           {
-            const std::string &t = get_text();
+            const String &t = get_text();
 
             if(m_edit_pos < int(t.size())) {
-              std::string t0 = t.substr(0u, size_t(m_edit_pos));
-              std::string t1 = t.substr(m_edit_pos + 1u, t.size() - m_edit_pos - 1);
+              String t0 = t.substr(0u, size_t(m_edit_pos));
+              String t1 = t.substr(m_edit_pos + 1u, t.size() - m_edit_pos - 1);
 
               m_text.text = t0 + t1;
               format();
@@ -900,10 +896,10 @@ namespace Zeni {
           if(mod_none || mod_shift_only)
           {
             const char c = Gamestate_Base::to_char(keysym);
-            const std::string &t = get_text();
-            std::string t0 = t.substr(0u, size_t(m_edit_pos));
-            std::string t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
-            std::string next = clean_string(t0 + c + t1);
+            const String &t = get_text();
+            String t0 = t.substr(0u, size_t(m_edit_pos));
+            String t1 = t.substr(size_t(m_edit_pos), t.size() - m_edit_pos);
+            String next = clean_string(t0 + c + t1);
 
             if(next.size() != t.size()) {
               m_text.text = next;
@@ -1051,7 +1047,7 @@ namespace Zeni {
     m_lines.clear();
     m_lines.push_back(Line());
 
-    const std::string t = get_text();
+    const String t = get_text();
     const Font &f = get_font();
     const float mll = max_line_width();
 
@@ -1205,7 +1201,7 @@ namespace Zeni {
     if(!is_editable())
       return;
 
-    const std::string t = get_text();
+    const String t = get_text();
 
     if(edit_pos < 0 ||
       edit_pos > int(t.size()))
@@ -1279,19 +1275,19 @@ namespace Zeni {
     }
   }
 
-  std::string Text_Box::clean_string(const std::string &unclean_string) const {
-    std::string cleaned;
-    for(std::string::const_iterator it = unclean_string.begin(); it != unclean_string.end(); ++it)
+  String Text_Box::clean_string(const String &unclean_string) const {
+    String cleaned;
+    for(String::const_iterator it = unclean_string.begin(); it != unclean_string.end(); ++it)
       if(*it >= 0x20 ||
          *it == '\n' || *it == '\t')
         cleaned += *it;
     return cleaned;
   }
 
-  std::string Text_Box::untablinebreak(const std::string &tabbed_text) const {
-    std::string untabbed_text;
+  String Text_Box::untablinebreak(const String &tabbed_text) const {
+    String untabbed_text;
 
-    for(std::string::const_iterator it = tabbed_text.begin(); it != tabbed_text.end(); ++it) {
+    for(String::const_iterator it = tabbed_text.begin(); it != tabbed_text.end(); ++it) {
       if(*it != '\t') {
         if(*it > 0x1F)
           untabbed_text += *it;
@@ -1304,14 +1300,14 @@ namespace Zeni {
     return untabbed_text;
   }
 
-  float Text_Box::get_text_width(const Font &font, const std::string &text) {
-    const std::string untabbed_text = untablinebreak(text);
+  float Text_Box::get_text_width(const Font &font, const String &text) {
+    const String untabbed_text = untablinebreak(text);
 
     if(font.get_text_width(" "))
       return font.get_text_width(untabbed_text);
 
-    std::string fake_text;
-    for(std::string::const_iterator it = untabbed_text.begin(); it != untabbed_text.end(); ++it)
+    String fake_text;
+    for(String::const_iterator it = untabbed_text.begin(); it != untabbed_text.end(); ++it)
       if(*it != ' ')
         fake_text += *it;
       else
@@ -1489,5 +1485,7 @@ namespace Zeni {
     for(std::vector<Widget *>::const_reverse_iterator it = m_widgets.rbegin(), iend = m_widgets.rend(); it != iend; ++it)
       (*it)->render();
   }
+
+  Text_Box::Reinit Text_Box::g_reinit;
 
 }

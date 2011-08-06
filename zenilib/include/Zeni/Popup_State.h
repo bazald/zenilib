@@ -1,42 +1,35 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef POPUP_STATE_H
 #define POPUP_STATE_H
 
-#include <Zeni/Sound_NULL.h>
+#include <Zeni/Colors.h>
+#include <Zeni/Configurator_Video.h>
+#include <Zeni/Chronometer.hxx>
+#include <Zeni/Sound.hxx>
+#include <Zeni/Sound_Renderer_AL.h>
 #include <Zeni/Sound_Source_Pool.h>
 #include <Zeni/Widget_Gamestate.h>
-#include <Zeni/Line_Segment.hxx>
+#include <Zeni/Quit_Event.h>
 
 namespace Zeni {
 
-  class Popup_State : public Widget_Gamestate {
+  class ZENI_REST_DLL Popup_State : public Widget_Gamestate {
     Popup_State(const Popup_State &);
     Popup_State operator=(const Popup_State &);
 
@@ -127,11 +120,11 @@ namespace Zeni {
     Gamestate m_gamestate;
   };
 
-  class Popup_Menu_State : public Popup_State {
+  class ZENI_REST_DLL Popup_Menu_State : public Popup_State {
     Popup_Menu_State(const Popup_Menu_State &);
     Popup_Menu_State operator=(const Popup_Menu_State &);
 
-    class Continue_Button : public Text_Button {
+    class ZENI_REST_DLL Continue_Button : public Text_Button {
       Continue_Button(const Continue_Button &);
       Continue_Button operator=(const Continue_Button &);
 
@@ -152,7 +145,7 @@ namespace Zeni {
       Gamestate m_gamestate;
     } continue_button;
 
-    class Menu_Button : public Text_Button {
+    class ZENI_REST_DLL Menu_Button : public Text_Button {
       Menu_Button(const Menu_Button &);
       Menu_Button operator=(const Menu_Button &);
 
@@ -169,7 +162,7 @@ namespace Zeni {
     } menu_button;
 
   public:
-    class Configure_Video_Button : public Text_Button {
+    class ZENI_REST_DLL Configure_Video_Button : public Text_Button {
       Configure_Video_Button(const Configure_Video_Button &);
       Configure_Video_Button & operator=(const Configure_Video_Button &);
 
@@ -184,7 +177,7 @@ namespace Zeni {
       }
     } configure_video_button;
 
-    class Sound_Check_Box : public Check_Box {
+    class ZENI_REST_DLL Sound_Check_Box : public Check_Box {
       Sound_Check_Box(const Sound_Check_Box &);
       Sound_Check_Box operator=(const Sound_Check_Box &);
 
@@ -193,7 +186,7 @@ namespace Zeni {
         : Check_Box(upper_left, lower_right,
                     !get_Sound().is_listener_muted())
       {
-        if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
+        if(dynamic_cast<Sound_Renderer_NULL *>(&get_Sound().get_Renderer())) {
           set_checked(false);
           set_editable(false);
         }
@@ -231,7 +224,7 @@ namespace Zeni {
                                  0.5f * (get_lower_right().y + get_upper_left().y - font.get_text_height())),
                          fgc);
 
-        if(dynamic_cast<Sound_NULL *>(&get_Sound())) {
+        if(dynamic_cast<Sound_Renderer_NULL *>(&get_Sound().get_Renderer())) {
           const Line_Segment<Vertex2f_Color> ns(Vertex2f_Color(Point2f(get_lower_right().x + tl, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc),
                                                 Vertex2f_Color(Point2f(get_lower_right().x + tr, 0.5f * (get_lower_right().y + get_upper_left().y)), fgc));
           vr.render(ns);
@@ -239,7 +232,7 @@ namespace Zeni {
       }
     } sound_check_box;
 
-    class Quit_Button : public Text_Button {
+    class ZENI_REST_DLL Quit_Button : public Text_Button {
       Quit_Button(const Quit_Button &);
       Quit_Button & operator=(const Quit_Button &);
 
@@ -283,7 +276,7 @@ namespace Zeni {
     }
   };
 
-  class Popup_Pause_State : public Popup_State {
+  class ZENI_REST_DLL Popup_Pause_State : public Popup_State {
     Popup_Pause_State(const Popup_Pause_State &);
     Popup_Pause_State operator=(const Popup_Pause_State &);
 

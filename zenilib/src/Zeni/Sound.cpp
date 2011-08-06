@@ -1,39 +1,22 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Sound.hxx>
+#include <zeni_audio.h>
 
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Gamestate.hxx>
-#include <Zeni/Mutex.hxx>
-#include <Zeni/Vector3f.hxx>
-
-#include <SDL/SDL.h>
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -44,43 +27,88 @@
 #undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
+
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+#include <Zeni/Singleton.hxx>
 
 namespace Zeni {
 
-  Sound::Sound(const Sound_Base::SOUND_MODE &vtype_)
-    : Sound_Base::IV(vtype_),
+  template class ZENI_AUDIO_DLL Singleton<Sound>;
+
+  Sound * Sound::create() {
+    return new Sound;
+  }
+
+  Sound::Sound()
+    : m_hello_world_buffer(0),
     m_bgm(0),
     m_listener_gain(1.0f),
     m_listener_muted(false)
   {
-    // Ensure Core is initialized
-    get_Core();
+#ifndef DISABLE_AL
+    try {
+      m_sound_renderer = new Sound_Renderer_AL;
+    }
+    catch(Sound_Init_Failure &) {
+#endif
+      m_sound_renderer = new Sound_Renderer_NULL;
+#ifndef DISABLE_AL
+    }
+#endif
   }
 
   Sound::~Sound() {
-    get_BGM_Source().set_buffer(get_Hello_World_Buffer());
     delete m_bgm;
+    delete m_hello_world_buffer;
+    delete m_sound_renderer;
   }
 
-  Sound & get_Sound() {
-    if(!Sound::e_sound) {
-#ifndef DISABLE_AL
-      try {
-        Sound::e_sound = new Sound_AL;
-      }
-      catch(Sound_Init_Failure &) {
-#endif
-        Sound::e_sound = new Sound_NULL;
-#ifndef DISABLE_AL
-      }
-#endif
-    }
+  void Sound::set_listener_position(const Point3f &position) {
+    get_BGM_Source().set_position(position);
 
-    return *Sound::e_sound;
+    m_sound_renderer->set_listener_position(position);
   }
 
-  void Sound::set_BGM(const std::string &filename) {
+  void Sound::set_listener_velocity(const Vector3f &velocity) {
+    get_BGM_Source().set_velocity(velocity);
+
+    m_sound_renderer->set_listener_velocity(velocity);
+  }
+
+  void Sound::set_listener_forward_and_up(const Vector3f &forward, const Vector3f &up) {
+    m_sound_renderer->set_listener_forward_and_up(forward, up);
+  }
+
+  void Sound::set_listener_gain(const float &gain) {
+    m_listener_gain = gain;
+
+    m_sound_renderer->set_listener_gain(m_listener_muted ? 0.0f : m_listener_gain);
+  }
+
+  void Sound::set_listener_muted(const bool &muted) {
+    m_listener_muted = muted;
+
+    m_sound_renderer->set_listener_gain(m_listener_muted ? 0.0f : m_listener_gain);
+  }
+
+  Point3f Sound::get_listener_position() const {
+    return get_BGM_Source().get_position();
+  }
+
+  Vector3f Sound::get_listener_velocity() const {
+    return get_BGM_Source().get_velocity();
+  }
+
+  std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {
+    return m_sound_renderer->get_listener_forward_and_up();
+  }
+
+  void Sound::set_BGM(const String &filename) {
     Sound_Source &bgm_source = get_BGM_Source();
 
     bool playing = bgm_source.is_playing() ? true : false;
@@ -99,7 +127,14 @@ namespace Zeni {
       bgm_source.play();
   }
 
-  Sound_Source & Sound::get_BGM_Source() {
+  Sound_Buffer & Sound::get_Hello_World_Buffer() const {
+    if(!m_hello_world_buffer)
+      m_hello_world_buffer = new Sound_Buffer();
+
+    return *m_hello_world_buffer;
+  }
+
+  Sound_Source & Sound::get_BGM_Source() const {
     static Sound_Source bgm_source;
 
     if(!m_bgm) {
@@ -112,8 +147,10 @@ namespace Zeni {
     return bgm_source;
   }
 
-  Sound * Sound::e_sound = 0;
+  Sound & get_Sound() {
+    return Sound::get();
+  }
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

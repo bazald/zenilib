@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;def;odl;idl;hpj;bat;asm;asmx;hxx;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hm;hpp;xsd</Extensions>
+    </Filter>
+    <Filter Include="SCU File">
+      <UniqueIdentifier>{c8b44aa4-d853-4c7f-82d3-e847a788f0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{6af171a1-1ffb-4587-a5fd-8b7ee8c5c9a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Zeni\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\EZ2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Fog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Renderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex2f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vertex3f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video_DX9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Video_GL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zeni_graphics.cxx">
+      <Filter>SCU File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Projector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Zeni\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Projector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Font.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Projector.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Shader.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\EZ2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Fog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Light.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Line_Segment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Line_Segment.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Material.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Model.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quadrilateral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Renderable.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Texture.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Textures.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex_Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex_Buffer.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex2f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex2f.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex3f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vertex3f.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_DX9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_DX9.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_GL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Video_GL.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Image.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\zeni_graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Window.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Triangle.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quadrilateral.hxx">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\zeni_fragment_shaders.cg">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\shaders\zeni_vertex_shaders.cg">
+      <Filter>Shader Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Widget
@@ -235,23 +224,23 @@
 #include <Zeni/Font.h>
 #include <Zeni/Line_Segment.h>
 #include <Zeni/Projector.h>
+#include <Zeni/String.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Timer.h>
 #include <Zeni/Quadrilateral.h>
 #include <Zeni/Vertex2f.h>
 #include <Zeni/Video.h>
 
-#include <string>
 #include <vector>
 #include <set>
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
 
 namespace Zeni {
 
   class Widget_Render_Function;
 
-  class Widget {
+  class ZENI_REST_DLL Widget {
     Widget(const Widget &);
     Widget & operator=(const Widget &);
 
@@ -296,7 +285,7 @@ namespace Zeni {
     bool delete_m_renderer;
   };
 
-  class Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Render_Function {
   public:
     virtual ~Widget_Render_Function() {}
 
@@ -333,21 +322,21 @@ namespace Zeni {
   Widget_Renderer_Pair<T1, T2> * make_Widget_Renderer_Pair(const T1 * const &first_, const bool &delete_first_,
                                                            const T2 * const &second_, const bool &delete_second_);
 
-  class Widget_Renderer_Text : public Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Renderer_Text : public Widget_Render_Function {
   public:
-    inline Widget_Renderer_Text(const std::string &font_name_, const std::string &text_, const Color &color_);
+    inline Widget_Renderer_Text(const String &font_name_, const String &text_, const Color &color_);
 
     /// rect must be of type Widget_Rectangle
     virtual void render_to(const Widget &widget);
 
     virtual Widget_Renderer_Text * get_duplicate() const;
 
-    std::string font_name;
-    std::string text;
+    String font_name;
+    String text;
     Color color;
   };
 
-  class Widget_Renderer_Color : public Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Renderer_Color : public Widget_Render_Function {
   public:
     inline Widget_Renderer_Color(const Color &color_);
 
@@ -359,10 +348,10 @@ namespace Zeni {
     Color color;
   };
 
-  class Widget_Renderer_Texture : public Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Renderer_Texture : public Widget_Render_Function {
   public:
-    inline Widget_Renderer_Texture(const std::string &texture_);
-    inline Widget_Renderer_Texture(const std::string &texture_,
+    inline Widget_Renderer_Texture(const String &texture_);
+    inline Widget_Renderer_Texture(const String &texture_,
                                    const Point2f &tex_coord_ul_,
                                    const Point2f &tex_coord_ll_,
                                    const Point2f &tex_coord_lr_,
@@ -373,14 +362,14 @@ namespace Zeni {
 
     virtual Widget_Renderer_Texture * get_duplicate() const;
 
-    std::string texture;
+    String texture;
     Point2f tex_coord_ul;
     Point2f tex_coord_ll;
     Point2f tex_coord_lr;
     Point2f tex_coord_ur;
   };
 
-  class Widget_Renderer_Tricolor : public Widget_Renderer_Color {
+  class ZENI_REST_DLL Widget_Renderer_Tricolor : public Widget_Renderer_Color {
   public:
     inline Widget_Renderer_Tricolor();
     inline Widget_Renderer_Tricolor(const Color &bg_normal_, const Color &bg_clicked_, const Color &bg_hovered_strayed_,
@@ -399,7 +388,7 @@ namespace Zeni {
     Color text_hovered_strayed;
   };
 
-  class Widget_Renderer_Check_Box : public Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Renderer_Check_Box : public Widget_Render_Function {
   public:
     inline Widget_Renderer_Check_Box();
     inline Widget_Renderer_Check_Box(const Color &border_color_, const Color &check_color_);
@@ -413,7 +402,7 @@ namespace Zeni {
     Color check_color;
   };
 
-  class Widget_Renderer_Slider : public Widget_Render_Function {
+  class ZENI_REST_DLL Widget_Renderer_Slider : public Widget_Render_Function {
   public:
     inline Widget_Renderer_Slider();
     inline Widget_Renderer_Slider(const Color &line_color_, const Color &slider_color_);
@@ -427,7 +416,7 @@ namespace Zeni {
     Color slider_color;
   };
 
-  class Widget_Rectangle {
+  class ZENI_REST_DLL Widget_Rectangle {
   public:
     inline Widget_Rectangle(const Point2f &upper_left_, const Point2f &lower_right_);
     virtual ~Widget_Rectangle() {}
@@ -451,7 +440,7 @@ namespace Zeni {
     Point2f m_lower_right;
   };
 
-  class Widget_Button : public Widget, public Widget_Rectangle {
+  class ZENI_REST_DLL Widget_Button : public Widget, public Widget_Rectangle {
     Widget_Button(const Widget_Button &);
     Widget_Button & operator=(const Widget_Button &);
 
@@ -486,16 +475,16 @@ namespace Zeni {
     State m_state;
   };
 
-  class Text_Button : public Widget_Button, public Widget_Renderer_Text {
+  class ZENI_REST_DLL Text_Button : public Widget_Button, public Widget_Renderer_Text {
     Text_Button(const Text_Button &);
     Text_Button & operator=(const Text_Button &);
 
   public:
     inline Text_Button(const Point2f &upper_left_, const Point2f &lower_right_,
-                       const std::string &font_name_, const std::string &text_);
+                       const String &font_name_, const String &text_);
   };
 
-  class Check_Box : public Widget_Button {
+  class ZENI_REST_DLL Check_Box : public Widget_Button {
     Check_Box(const Check_Box &);
     Check_Box & operator=(const Check_Box &);
 
@@ -520,8 +509,8 @@ namespace Zeni {
     bool m_toggling;
   };
 
-  class Radio_Button;
-  class Radio_Button_Set : public Widget {
+  class ZENI_REST_DLL Radio_Button;
+  class ZENI_REST_DLL Radio_Button_Set : public Widget {
     Radio_Button_Set(const Radio_Button_Set &);
     Radio_Button_Set & operator=(const Radio_Button_Set &);
 
@@ -540,10 +529,17 @@ namespace Zeni {
     inline void lend_Radio_Button(Radio_Button &radio_button);
     inline void unlend_Radio_Button(Radio_Button &radio_button);
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::set<Radio_Button *> m_radio_buttons;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
   };
 
-  class Radio_Button : public Check_Box {
+  class ZENI_REST_DLL Radio_Button : public Check_Box {
     Radio_Button(const Radio_Button &);
     Radio_Button & operator=(const Radio_Button &);
 
@@ -561,14 +557,14 @@ namespace Zeni {
     Radio_Button_Set * m_radio_button_set;
   };
 
-  class Slider : public Widget {
+  class ZENI_REST_DLL Slider : public Widget {
     Slider(const Slider &);
     Slider & operator=(const Slider &);
 
   public:
     Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
-           const float &slider_radius_,
-           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+                            const float &slider_radius_,
+                            const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
@@ -597,7 +593,7 @@ namespace Zeni {
     bool m_down;
   };
 
-  class Slider_Int : public Slider {
+  class ZENI_REST_DLL Slider_Int : public Slider {
     Slider_Int(const Slider_Int &);
     Slider_Int & operator=(const Slider_Int &);
 
@@ -605,9 +601,9 @@ namespace Zeni {
     typedef std::pair<int, int> Range;
 
     Slider_Int(const Range &range,
-               const Point2f &end_point_a_, const Point2f &end_point_b_,
-               const float &slider_radius_,
-               const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+                                const Point2f &end_point_a_, const Point2f &end_point_b_,
+                                const float &slider_radius_,
+                                const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline const Range & get_range() const;
     inline void set_range(const Range &range_);
@@ -622,22 +618,29 @@ namespace Zeni {
     inline void invert_mouse_wheel(const bool &invert);
 
   private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Range m_range;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     bool m_mouse_wheel_inverted;
   };
 
-  class Selector : public Widget {
+  class ZENI_REST_DLL Selector : public Widget {
     Selector(const Selector &);
     Selector & operator=(const Selector &);
 
-    class Normal_Button : public Text_Button {
+    class ZENI_REST_DLL Normal_Button : public Text_Button {
       Normal_Button(const Normal_Button &);
       Normal_Button & operator=(const Normal_Button &);
 
     public:
       Normal_Button(Selector &selector,
-                    const Point2f &upper_left_,
-                    const Point2f &lower_right_);
+                                     const Point2f &upper_left_,
+                                     const Point2f &lower_right_);
 
       void on_accept();
 
@@ -645,15 +648,15 @@ namespace Zeni {
       Selector * m_selector;
     };
 
-    class Selector_Button : public Text_Button {
+    class ZENI_REST_DLL Selector_Button : public Text_Button {
       Selector_Button(const Selector_Button &);
       Selector_Button & operator=(const Selector_Button &);
 
     public:
       Selector_Button(Selector &selector,
-                      const std::string &option,
-                      const Point2f &upper_left_,
-                      const Point2f &lower_right_);
+                                       const String &option,
+                                       const Point2f &upper_left_,
+                                       const Point2f &lower_right_);
 
       void on_accept();
 
@@ -661,14 +664,14 @@ namespace Zeni {
       Selector * m_selector;
     };
 
-    class Selector_Slider : public Widget_Rectangle, public Slider_Int {
+    class ZENI_REST_DLL Selector_Slider : public Widget_Rectangle, public Slider_Int {
       Selector_Slider(const Selector_Slider &);
       Selector_Slider & operator=(const Selector_Slider &);
 
     public:
       Selector_Slider(Selector &selector,
-                      const float &slider_radius_,
-                      const std::pair<float, float> &bg_coordinates_);
+                                       const float &slider_radius_,
+                                       const std::pair<float, float> &bg_coordinates_);
 
       void set_end_points(const Point2f &end_point_a_, const Point2f &end_point_b_);
 
@@ -681,25 +684,25 @@ namespace Zeni {
     };
 
   public:
-    typedef std::vector<std::string> Options;
+    typedef std::vector<String> Options;
 
     Selector(const Point2f &upper_left_, const Point2f &lower_right_,
-             const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
-             const std::string &font_);
+                              const Point2f &expanded_upper_left_, const Point2f &expanded_lower_right_,
+                              const String &font_);
     ~Selector();
 
     const Options & get_options() const;
 
-    void add_option(const std::string &option);
-    void remove_option(const std::string &option);
+    void add_option(const String &option);
+    void remove_option(const String &option);
 
-    std::string get_selected() const;
-    void select_option(const std::string &option);
+    String get_selected() const;
+    void select_option(const String &option);
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
-    virtual void on_accept(const std::string &option);
+    virtual void on_accept(const String &option);
 
     virtual void render_impl() const;
 
@@ -718,8 +721,8 @@ namespace Zeni {
     inline void lend_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
     inline void fax_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
 
-    inline const std::string & get_font() const; ///< Get the current font
-    inline void set_font(const std::string &font_); ///< Set the current font
+    inline const String & get_font() const; ///< Get the current font
+    inline void set_font(const String &font_); ///< Set the current font
 
   private:
     const Widget_Render_Function * get_Renderer() const; ///< Disable
@@ -734,7 +737,7 @@ namespace Zeni {
 
     std::pair<Point2f, Point2f> visible_region() const;
 
-    void add_selector_button(const std::string &option);
+    void add_selector_button(const String &option);
 
     void build_selector_buttons();
 
@@ -746,17 +749,31 @@ namespace Zeni {
     bool delete_m_slider_renderer;
     Widget_Render_Function * m_slider_bg_renderer;
     bool delete_m_slider_bg_renderer;
-    std::string m_font;
+    String m_font;
 
     Widget_Rectangle m_expanded;
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Options m_options;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     size_t m_option;
 
     bool m_selected;
 
     Normal_Button m_normal_button;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::vector<Selector_Button *> m_selector_buttons;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     Selector_Slider m_selector_slider;
 
     size_t view_start;
@@ -765,16 +782,16 @@ namespace Zeni {
     size_t view_hidden;
   };
 
-  class Text_Box : public Widget_Button {
+  class ZENI_REST_DLL Text_Box : public Widget_Button {
     Text_Box(const Text_Box &);
     Text_Box & operator=(const Text_Box &);
 
   public:
     Text_Box(const Point2f &upper_left_, const Point2f &lower_right_,
-             const std::string &font_name_, const std::string &text_, const Color &text_color_,
-             const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
-             const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
-             const int &tab_spaces_ = ZENI_DEFAULT_TAB_SPACES);
+                              const String &font_name_, const String &text_, const Color &text_color_,
+                              const bool &editable_ = ZENI_DEFAULT_TEXTBOX_EDITABLE,
+                              const JUSTIFY &justify_ = ZENI_DEFAULT_JUSTIFY,
+                              const int &tab_spaces_ = ZENI_DEFAULT_TAB_SPACES);
     ~Text_Box();
 
     virtual void on_key(const SDL_keysym &keysym, const bool &down);
@@ -786,9 +803,9 @@ namespace Zeni {
     virtual void on_unfocus();
     virtual void on_change();
 
-    inline const std::string & get_font_name() const;
+    inline const String & get_font_name() const;
     inline const Font & get_font() const;
-    inline const std::string & get_text() const;
+    inline const String & get_text() const;
     inline const Color & get_text_color() const;
     inline const JUSTIFY & get_justify() const;
     inline int get_num_lines() const;
@@ -797,8 +814,8 @@ namespace Zeni {
     virtual void set_editable(const bool &editable_);
     virtual void set_upper_left(const Point2f &upper_left_);
     virtual void set_lower_right(const Point2f &lower_right_);
-    inline void set_font_name(const std::string &font_name_);
-    inline void set_text(const std::string &text_);
+    inline void set_font_name(const String &font_name_);
+    inline void set_text(const String &text_);
     inline void set_text_color(const Color &text_color_);
     inline void set_justify(const JUSTIFY &justify_);
     inline void erase_lines(const int &begin, const int &end);
@@ -825,22 +842,29 @@ namespace Zeni {
     void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
     void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
 
-    struct Word {
+    struct ZENI_REST_DLL Word {
       enum Type {NONSENSE = 0x0, WORD = 0x1, SPACE = 0x2};
 
       Word(const Type &type_ = NONSENSE) : unformatted_glyph_sides(1, 0), type(type_), splittable(false), fpsplit(false) {}
 
-      std::string unformatted;
+      String unformatted;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
       std::vector<float> unformatted_glyph_sides;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
       Type type;
       bool splittable;
       bool fpsplit; // indicates it has been split already and a '-' should be appended
     };
 
-    struct Line : public Word {
+    struct ZENI_REST_DLL Line : public Word {
       Line() : glyph_top(0), endled(false) {}
 
-      std::string formatted;
+      String formatted;
       float glyph_top;
       bool endled;
     };
@@ -852,14 +876,21 @@ namespace Zeni {
     bool delete_m_bg_renderer;
     Widget_Renderer_Text m_text;
 
-    std::string clean_string(const std::string &unclean_string) const;
-    std::string untablinebreak(const std::string &tabbed_text) const;
-    float get_text_width(const Font &font, const std::string &text); 
+    String clean_string(const String &unclean_string) const;
+    String untablinebreak(const String &tabbed_text) const;
+    float get_text_width(const Font &font, const String &text); 
     float max_line_width() const;
 
     inline void invalidate_edit_pos();
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::vector<Line> m_lines;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     int m_edit_pos;
     Time m_last_seek;
@@ -874,10 +905,35 @@ namespace Zeni {
     static void reformat_all(); ///< Reformat all Text_Box instances
 
   private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static class Reinit : public Event::Handler {
+      void operator()() {
+        Text_Box::reformat_all();
+      }
+
+      Reinit * duplicate() const {
+        return new Reinit;
+      }
+
+    public:
+      Reinit() {}
+
+    private:
+      // Undefined
+      Reinit(const Reinit &);
+      Reinit operator=(const Reinit &);
+    } g_reinit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+
     static std::set<Text_Box *> & get_text_boxes();
   };
 
-  class Widget_Input_Repeater : public Widget {
+  class ZENI_REST_DLL Widget_Input_Repeater : public Widget {
     Widget_Input_Repeater(const Widget_Input_Repeater &);
     Widget_Input_Repeater & operator=(const Widget_Input_Repeater &);
 
@@ -927,7 +983,7 @@ namespace Zeni {
     bool m_down;
   };
 
-  class Widgets : public Widget {
+  class ZENI_REST_DLL Widgets : public Widget {
     Widgets(const Widgets &);
     Widgets & operator=(const Widgets &);
 
@@ -952,17 +1008,24 @@ namespace Zeni {
     void lend_Renderer(const Widget_Render_Function * const &); ///< Disable
     void fax_Renderer(const Widget_Render_Function * const &); ///< Disable
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     mutable std::vector<Widget *> m_widgets;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     Widget * m_busy_one;
   };
 
-  class Widget_Renderer_Wrong_Type : public Error {
+  class ZENI_REST_DLL Widget_Renderer_Wrong_Type : public Error {
   public:
     Widget_Renderer_Wrong_Type() : Error("Widget_Renderer_Function received an unexpected type") {}
   };
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>
 
 #endif

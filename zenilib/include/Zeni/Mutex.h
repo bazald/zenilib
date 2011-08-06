@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Semaphore
@@ -86,6 +75,7 @@
 #define ZENI_MUTEX_H
 
 #include <Zeni/Core.h>
+#include <Zeni/Event.h>
 
 #include <SDL/SDL_mutex.h>
 //#ifdef _WINDOWS
@@ -96,18 +86,18 @@
 
 namespace Zeni {
 
-  class Mutex {
+  class ZENI_CORE_DLL Mutex {
     friend class Condition_Variable;
     
     Mutex(const Mutex &rhs);
     Mutex & operator=(const Mutex &rhs);
     
   public:
-    inline Mutex();
-    inline ~Mutex();
+    Mutex();
+    ~Mutex();
     
-    inline void lock();
-    inline void unlock();
+    void lock();
+    void unlock();
 
   private:
     SDL_mutex *m_impl;
@@ -116,10 +106,59 @@ namespace Zeni {
 //#else
 //    pthread_mutex_t m_impl;
 //#endif
-  
+
+    class ZENI_CORE_DLL Uninit : public Event::Handler {
+      void operator()() {
+        m_mutex.lock();
+
+        SDL_DestroyMutex(m_mutex.m_impl);
+        m_mutex.m_impl = 0;
+      }
+
+      Uninit * duplicate() const {
+        return new Uninit(m_mutex);
+      }
+
+      // Undefined
+      Uninit(const Uninit &);
+      Uninit operator=(const Uninit &);
+
+    public:
+      Uninit(Mutex &mutex_)
+        : m_mutex(mutex_)
+      {
+      }
+
+    private:
+      Mutex &m_mutex;
+    } m_uninit;
+
+    class ZENI_CORE_DLL Reinit : public Event::Handler {
+      void operator()() {
+        m_mutex.m_impl = SDL_CreateMutex();
+      }
+
+      Reinit * duplicate() const {
+        return new Reinit(m_mutex);
+      }
+
+      // Undefined
+      Reinit(const Reinit &);
+      Reinit operator=(const Reinit &);
+
+    public:
+      Reinit(Mutex &mutex_)
+        : m_mutex(mutex_)
+      {
+      }
+
+    private:
+      Mutex &m_mutex;
+    } m_reinit;
+
   public:
-    class Lock {
-      friend class Condition_Variable;
+    class ZENI_CORE_DLL Lock {
+      friend class ZENI_CORE_DLL Condition_Variable;
       
       Lock(const Lock &rhs);
       Lock & operator=(const Lock &rhs);
@@ -133,8 +172,8 @@ namespace Zeni {
     };
   };
 
-  class Recursive_Mutex {
-    friend class Condition_Variable;
+  class ZENI_CORE_DLL Recursive_Mutex {
+    friend class ZENI_CORE_DLL Condition_Variable;
     
     Recursive_Mutex(const Recursive_Mutex &rhs);
     Recursive_Mutex & operator=(const Recursive_Mutex &rhs);
@@ -153,8 +192,8 @@ namespace Zeni {
     unsigned int count;
   
   public:
-    class Lock {
-      friend class Condition_Variable;
+    class ZENI_CORE_DLL Lock {
+      friend class ZENI_CORE_DLL Condition_Variable;
       
       Lock(const Lock &rhs);
       Lock & operator=(const Lock &rhs);
@@ -168,19 +207,19 @@ namespace Zeni {
     };
   };
 
-  class Condition_Variable {
+  class ZENI_CORE_DLL Condition_Variable {
     Condition_Variable(const Condition_Variable &rhs);
     Condition_Variable & operator=(const Condition_Variable &rhs);
     
   public:
-    inline Condition_Variable();
-    inline ~Condition_Variable();
+    Condition_Variable();
+    ~Condition_Variable();
     
-    inline void signal();
-    inline void broadcast();
+    void signal();
+    void broadcast();
     
-    inline void wait(Mutex::Lock &mutex_lock);
-    inline void wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms);
+    void wait(Mutex::Lock &mutex_lock);
+    void wait_timeout(Mutex::Lock &mutex_lock, const unsigned int &ms);
     void wait(Recursive_Mutex::Lock &mutex_lock);
     void wait_timeout(Recursive_Mutex::Lock &mutex_lock, const unsigned int &ms);
 
@@ -193,7 +232,7 @@ namespace Zeni {
 //#endif
   };
 
-  class Semaphore {
+  class ZENI_CORE_DLL Semaphore {
     Semaphore(const Semaphore &rhs);
     Semaphore & operator=(const Semaphore &rhs);
     
@@ -213,7 +252,7 @@ namespace Zeni {
     unsigned int m_count;
   
   public:
-    class Down {
+    class ZENI_CORE_DLL Down {
       Down(const Down &rhs);
       Down & operator=(const Down &rhs);
       
@@ -226,35 +265,35 @@ namespace Zeni {
     };
   };
 
-  struct Mutex_Init_Failure : public Error {
+  struct ZENI_CORE_DLL Mutex_Init_Failure : public Error {
     Mutex_Init_Failure() : Error("Zeni Mutex Init Failure") {}
   };
 
-  struct Mutex_Destroy_Failure : public Error {
+  struct ZENI_CORE_DLL Mutex_Destroy_Failure : public Error {
     Mutex_Destroy_Failure() : Error("Zeni Mutex Destroy Failure") {}
   };
 
-  struct Mutex_Lock_Failure : public Error {
+  struct ZENI_CORE_DLL Mutex_Lock_Failure : public Error {
     Mutex_Lock_Failure() : Error("Zeni Mutex Lock Failure") {}
   };
 
-  struct Mutex_Unlock_Failure : public Error {
+  struct ZENI_CORE_DLL Mutex_Unlock_Failure : public Error {
     Mutex_Unlock_Failure() : Error("Zeni Mutex Unlock Failure") {}
   };
 
-  struct Semaphore_Down_Failure : public Error {
+  struct ZENI_CORE_DLL Semaphore_Down_Failure : public Error {
     Semaphore_Down_Failure() : Error("Zeni Semaphore Down Failure") {}
   };
 
-  struct Semaphore_Try_Down_Failure : public Error {
+  struct ZENI_CORE_DLL Semaphore_Try_Down_Failure : public Error {
     Semaphore_Try_Down_Failure() : Error("Zeni Semaphore Try Down Failure") {}
   };
 
-  struct Semaphore_Down_Timeout_Failure : public Error {
+  struct ZENI_CORE_DLL Semaphore_Down_Timeout_Failure : public Error {
     Semaphore_Down_Timeout_Failure() : Error("Zeni Semaphore Down Timeout Failure") {}
   };
 
-  struct Semaphore_Up_Failure : public Error {
+  struct ZENI_CORE_DLL Semaphore_Up_Failure : public Error {
     Semaphore_Up_Failure() : Error("Zeni Semaphore Up Failure") {}
   };
 

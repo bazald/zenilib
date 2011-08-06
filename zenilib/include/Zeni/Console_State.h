@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
 * \class Zeni::Console_State
@@ -46,21 +35,21 @@
 
 namespace Zeni {
 
-  class Console_State;
+  class ZENI_REST_DLL Console_State;
 
-  struct Console_Function {
+  struct ZENI_REST_DLL Console_Function {
     virtual ~Console_Function() {}
 
     virtual void operator()(Console_State &console,
-                            const std::string &name,
-                            const std::vector<std::string> &args);
+                                             const String &name,
+                                             const std::vector<String> &args);
   };
 
-  class Console_State : public Gamestate_Base {
+  class ZENI_REST_DLL Console_State : public Gamestate_Base {
     Console_State(const Console_State &);
     Console_State & operator=(const Console_State &);
 
-    friend class Game;
+    friend class ZENI_REST_DLL Game;
 
   private:
     Console_State();
@@ -71,13 +60,13 @@ namespace Zeni {
     void clear_child();
 
   public:
-    void write_to_log(const std::string &text);
+    void write_to_log(const String &text);
     void clear_log();
 
-    void give_function(const std::string &name, Console_Function * const &function);
+    void give_function(const String &name, Console_Function * const &function);
 
   private:
-    void fire_command(const std::string &text);
+    void fire_command(const String &text);
 
     void on_event(const SDL_Event &event);
 
@@ -89,15 +78,36 @@ namespace Zeni {
     void prerender();
     void render();
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     std::pair<Point2f, Point2f> m_virtual_screen;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     Projector2D m_projector;
 
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Quadrilateral<Vertex2f_Color> m_bg;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
     Text_Box m_log;
     Text_Box m_prompt;
 
-    std::map<std::string, Console_Function *> m_functions;
-    std::string m_text;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    std::map<String, Console_Function *> m_functions;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    String m_text;
     bool m_log_dirty;
 
     Gamestate * m_child;

@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Image
@@ -46,6 +35,7 @@
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
 #include <Zeni/Core.h>
+#include <Zeni/String.h>
 
 /* \cond */
 #ifdef _MACOSX
@@ -55,13 +45,11 @@
 #endif
 /* \endcond */
 
-#include <string>
-
 namespace Zeni {
 
-  class Image {
+  class ZENI_GRAPHICS_DLL Image {
   public:
-    inline Image(const std::string &filename, const bool &tileable_ = false);
+    inline Image(const String &filename, const bool &tileable_ = false);
     inline Image(SDL_Surface * surface_ptr, const bool &tileable_ = false); ///< Create an Image from surface_ptr, giving the Image ownership of surface_ptr
     inline ~Image();
     
@@ -95,11 +83,11 @@ namespace Zeni {
     Uint32 m_max_blue;
   };
 
-  struct Image_Init_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL Image_Init_Failure : public Error {
     Image_Init_Failure() : Error("Zeni Image Failed to Initialize Correctly") {}
   };
 
-  struct Image_Index_Error : public Error {
+  struct ZENI_GRAPHICS_DLL Image_Index_Error : public Error {
     Image_Index_Error() : Error("Zeni Image Indexed Out of Bounds") {}
   };
 

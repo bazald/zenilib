@@ -53,8 +53,8 @@
 			</Environment>
 		</Build>
 		<Unit filename="../include/zenilib.h" />
-		<Unit filename="../src/Gamestate_One.cpp" />
 		<Unit filename="../src/application.cxx" />
+		<Unit filename="../src/bootstrap.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

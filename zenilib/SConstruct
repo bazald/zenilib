@@ -37,7 +37,7 @@ noal = False
 nodx9 = not is_windows
 nogl = False
 nowgl = not is_windows
-nocg = False
+nocg = True
 pedantic = False
 profile = False
 scu = 'zeni'
@@ -74,7 +74,7 @@ if is_windows:
 vars.Add('nogl', 'Set to 1 to disable the use of OpenGL', nogl)
 if is_windows:
   vars.Add('nowgl', 'Set to 1 to disable the use of Windows GL Extensions', nowgl)
-vars.Add('nocg', 'Set to 1 to disable the use of Cg shaders', nocg)
+#vars.Add('nocg', 'Set to 1 to disable the use of Cg shaders', nocg)
 if not is_windows:
   vars.Add('pedantic', 'Set to 1 to add warnings for violations of ANSI standards', pedantic)
   vars.Add('profile', 'Set to 1 to enable profiling using gprof/kprof', profile)
@@ -113,7 +113,7 @@ if is_windows:
 nogl = arg_eval(ARGUMENTS.get('nogl', nogl))
 if is_windows:
   nowgl = arg_eval(ARGUMENTS.get('nowgl', nowgl))
-nocg = arg_eval(ARGUMENTS.get('nocg', nocg))
+#nocg = arg_eval(ARGUMENTS.get('nocg', nocg))
 if not is_windows:
   pedantic = arg_eval(ARGUMENTS.get('pedantic', pedantic))
   profile = arg_eval(ARGUMENTS.get('profile', profile))
@@ -178,9 +178,9 @@ else:
   program = [Glob('src/*.cpp')]
 
 if scu == 'scu' or scu == 'zeni':
-  library = 'src/zenilib.cxx'
+  library = ['src/zeni.cxx', 'src/zeni_audio.cxx', 'src/zeni_core.cxx', 'src/zeni_graphics.cxx', 'src/zeni_net.cxx', 'src/zeni_rest.cxx']
 else:
-  library = [Glob('src/TinyXML/*.cpp'), Glob('src/Zeni/*.cpp')]
+  library = [Glob('src/Zeni/*.cpp')]
 
 ### Decide defines / options
 
@@ -189,7 +189,7 @@ if is_windows:
   ccflags = ' /D "WIN32" /D "_WINDOWS" '
 else:
   define = ' -D'
-  ccflags = ' -D_CRT_SECURE_NO_DEPRECATE '
+  ccflags = ' -D_CRT_SECURE_NO_DEPRECATE -DZENI_DLL= -DZENI_EXT= -DZENI_AUDIO_DLL= -DZENI_AUDIO_EXT= -DZENI_CORE_DLL= -DZENI_CORE_EXT= -DZENI_GRAPHICS_DLL= -DZENI_GRAPHICS_EXT= -DZENI_NET_DLL= -DZENI_NET_EXT= -DZENI_REST_DLL= -DZENI_REST_EXT='
   if is_mac:
     ccflags += ' -D_MACOSX '
   elif is_linux:
@@ -238,24 +238,18 @@ if manual_vsync_delay:
 
 ### Decide libraries
 
-libs = ['SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
+libs = ['tinyxml', 'SDL', 'SDLmain', 'SDL_image', 'SDL_ttf', 'SDL_net']
 
 if is_windows:
   libs += ['lib3ds-2_0', 'Advapi32', 'SHFolder', 'Shell32', 'User32']
 else:
-  libs += ['lib3ds']
-
-if not noal:
-  if is_windows:
-    libs += ['OpenAL32', 'libvorbis', 'libvorbisfile']
-  else:
-    libs += ['openal', 'libvorbis', 'vorbisfile']
+  libs += ['lib3ds', 'dl']
 
 if not nocg:
   libs += ['Cg']
 
 if not nodx9:
-  libs += ['d3d9', 'd3dx9', 'gdi32']
+  libs += ['gdi32']
   if not nocg:
     libs += ['CgD3D9']
 
@@ -280,17 +274,11 @@ else:
 library_name = 'zenilib'
 
 if debug:
-  if x64:
-    suffix = '_x64d'
-  else:
-    suffix = '_d'
+  suffix = '_d'
   if is_windows:
     link_optimization = ' /DEBUG /ASSEMBLYDEBUG /MAP /MAPINFO:EXPORTS /NODEFAULTLIB:msvcrt '
 else:
-  if x64:
-    suffix = '_x64'
-  else:
-    suffix = ''
+  suffix = ''
   if is_windows:
     link_optimization = ' /INCREMENTAL:NO /OPT:REF /OPT:ICF /LTCG '
 

@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Textures
@@ -51,12 +40,60 @@
 #endif
 
 namespace Zeni {
+  
+  class ZENI_GRAPHICS_DLL Texture;
+  class ZENI_GRAPHICS_DLL Textures;
 
-  class Texture;
+#ifdef _WINDOWS
+  ZENI_GRAPHICS_EXT template class ZENI_GRAPHICS_DLL Singleton<Textures>;
+  ZENI_GRAPHICS_EXT template class ZENI_GRAPHICS_DLL Database<Texture>;
+#endif
 
-  class Textures : public Database<Texture> {
-    // Get reference to only instance;
-    friend Textures & get_Textures(); ///< Get access to the singleton.
+  class ZENI_GRAPHICS_DLL Textures : public Singleton<Textures>, public Database<Texture> {
+    friend class Singleton<Textures>;
+
+    static Textures * create();
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static class Lose : public Event::Handler {
+      void operator()() {
+        get().lose_resources();
+      }
+
+      Lose * duplicate() const {
+        return new Lose;
+      }
+
+    public:
+      Lose() {}
+
+      // Undefined
+      Lose(const Lose &);
+      Lose operator=(const Lose &);
+    } g_lose;
+
+    static class Unlose : public Event::Handler {
+      void operator()() {
+        get().unlose_resources();
+      }
+
+      Unlose * duplicate() const {
+        return new Unlose;
+      }
+
+    public:
+      Unlose() {}
+
+      // Undefined
+      Unlose(const Unlose &);
+      Unlose operator=(const Unlose &);
+    } g_unlose;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
     Textures();
     ~Textures();
@@ -75,12 +112,12 @@ namespace Zeni {
 
     // Loading Options
     static void set_texturing_mode(const int &anisotropic_filtering_,
-                                   const bool &bilinear_filtering_,
-                                   const bool &mipmapping_); ///< Set the texturing mode
+                                                    const bool &bilinear_filtering_,
+                                                    const bool &mipmapping_); ///< Set the texturing mode
     inline static void set_lazy_loading(const bool &lazy_loading = true); ///< Set whether Textures should use lazy loading if possible, or if it should always load Textures immediately.
 
     // Appliers
-    void apply_texture(const std::string &name); ///< Apply a texture for upcoming polygons (Called by Video::apply_texture)
+    void apply_texture(const String &name); ///< Apply a texture for upcoming polygons (Called by Video::apply_texture)
     void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
     // Sprite-specific
@@ -94,9 +131,11 @@ namespace Zeni {
     virtual void on_clear();
     virtual void on_lose();
 
-    virtual Texture * load(XML_Element_c &xml_element, const std::string &name, const std::string &filename);
+    virtual Texture * load(XML_Element_c &xml_element, const String &name, const String &filename);
 
-    static bool m_loaded, m_bilinear_filtering, m_mipmapping;
+    static bool m_loaded;
+    static bool m_bilinear_filtering;
+    static bool m_mipmapping;
     static int m_anisotropic_filtering;
     static bool m_lazy_loading;
 
@@ -107,9 +146,9 @@ namespace Zeni {
 #endif
   };
 
-  Textures & get_Textures(); ///< Get access to the singleton.
+  ZENI_GRAPHICS_DLL Textures & get_Textures(); ///< Get access to the singleton.
 
-  struct Sprite_Function_Misapplied : public Error {
+  struct ZENI_GRAPHICS_DLL Sprite_Function_Misapplied : public Error {
     Sprite_Function_Misapplied() : Error("Sprite Function Misapplied") {}
   };
 

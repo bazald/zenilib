@@ -1,58 +1,54 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Game.hxx>
+#include <zeni_rest.h>
 
-#include <Zeni/Chronometer.hxx>
-#include <Zeni/Console_State.h>
-#include <Zeni/Gamestate.hxx>
-#include <Zeni/Gamestate_One.h>
-#include <Zeni/Random.h>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Timer.hxx>
-#include <Zeni/Video.hxx>
+#include <Zeni/Define.h>
 
-#include <Zeni/Global.h>
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+#include <Zeni/Singleton.hxx>
 
 namespace Zeni {
 
-  Game::Game(const std::vector<std::string> * const args)
+  Gamestate_Zero_Initializer * g_gzi = 0;
+  int g_argc = 0;
+  const char * const * g_argv = 0;
+  template class ZENI_REST_DLL Singleton<Game>;
+
+  Game * Game::create() {
+    return new Game;
+  }
+
+  Game::Game()
     : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
 #ifndef NDEBUG
     , m_console_active(false)
 #endif
   {
-    m_states.push(Gamestate(new Gamestate_One(args)));
+    if(g_gzi)
+      m_states.push((*g_gzi)());
   }
 
-  Game & get_Game(const std::vector<std::string> * const &args) {
-    static Game e_game(args);
-    return e_game;
+  Game & get_Game() {
+    return Singleton<Game>::get();
   }
 
   void Game::run() {
@@ -128,8 +124,8 @@ namespace Zeni {
         else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
           on_event(event);
 
-          if(event.window.windowID == SDL_GetWindowID(get_Video().get_window())) {
-            get_Video().alert_window_destroyed();
+          if(event.window.windowID == SDL_GetWindowID(get_Window().get_window())) {
+            get_Window().alert_window_destroyed();
             throw Quit_Event();
           }
         }
@@ -160,8 +156,24 @@ namespace Zeni {
 
       sspr.update();
 
-      if(Video::is_enabled())
-        get_Video().render_all();
+      if(Window::is_enabled()) {
+        Video &vr = get_Video();
+        Gamestate gs = get_top();
+
+        if(vr.begin_prerender()) {
+          gs.prerender();
+
+          if(vr.begin_render()) {
+            struct End_Render {
+              ~End_Render() {
+                get_Video().end_render();
+              }
+            } end_render;
+
+            gs.render();
+          }
+        }
+      }
     }
   }
 
@@ -197,4 +209,4 @@ namespace Zeni {
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>

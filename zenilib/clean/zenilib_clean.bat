@@ -9,18 +9,18 @@ RMDIR /S /Q "%~dp0..\Visual Studio 2010\ipch"
 DEL /Q "%~dp0..\Visual Studio 2008\Application_Name.h"
 DEL /Q "%~dp0..\Visual Studio 2010\Application_Name.h"
 
+DEL /Q "%~dp0..\Visual Studio 2008\*.ncb"
+DEL /Q "%~dp0..\Visual Studio 2010\*.sdf"
+
 DEL /Q "%~dp0..\smltrace.txt"
 DEL /Q "%~dp0..\stderr.txt"
 DEL /Q "%~dp0..\stdout.txt"
-
-DEL /Q "%~dp0..\Visual Studio 2008\*.ncb"
-DEL /Q "%~dp0..\Visual Studio 2010\*.sdf"
 
 
 RMDIR /S /Q "%~dp0..\Xcode\build"
 
 
-DEL /Q "%~dp0..\*.dblite"
+DEL /Q "%~dp0..\.sconsign.dblite"
 
 DEL /Q "%~dp0..\src\TinyXML\*.o"
 DEL /Q "%~dp0..\src\Zeni\*.o"

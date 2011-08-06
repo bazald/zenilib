@@ -1,41 +1,28 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Configurator_Video.h>
+#include <zeni_rest.h>
 
-#include <Zeni/Colors.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Game.h>
-#include <Zeni/Net_Primitives.h>
-#include <Zeni/Video.hxx>
-#include <Zeni/Widget.hxx>
+#include <Zeni/Define.h>
 
-#include <Zeni/Global.h>
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
 
@@ -54,7 +41,7 @@ namespace Zeni {
   }
 
   Configurator_Video::Check_State::Check_State(const bool &failsafe)
-    : Widget_Gamestate(std::make_pair(Point2f(), Point2f(600.0f * get_Video().get_screen_width() / get_Video().get_screen_height(), 600.0f))),
+    : Widget_Gamestate(std::make_pair(Point2f(), Point2f(600.0f * get_Window().get_width() / get_Window().get_height(), 600.0f))),
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4355 )
@@ -63,6 +50,7 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
+    m_seconds_remaining(ZENI_REVERT_TIMEOUT),
     m_text(Point2f(), get_virtual_window().second, "system_36_x600",
            "Click 'Accept' to save current rendering options.\n"
            "Hit 'Escape' to reject current rendering options.\n"
@@ -88,18 +76,14 @@ namespace Zeni {
 
     if(m_accept)
       Video::save();
-    else if(m_failsafe) {
-      Video::destroy();
+    else {
+      Window::destroy();
 
-      Video::set_failsafe_defaults();
+      if(m_failsafe || !Video::revert())
+        Video::set_failsafe_defaults();
 
       get_Video();
-      get_Textures().unlose_resources();
-      get_Fonts().unlose_resources();
-      Text_Box::reformat_all();
     }
-    else
-      Video::reinit();
   }
 
   void Configurator_Video::Check_State::on_key(const SDL_KeyboardEvent &event) {
@@ -123,19 +107,25 @@ namespace Zeni {
     Widget_Gamestate::perform_logic();
 
     const Time current_time;
-    const float seconds_remaining = ZENI_REVERT_TIMEOUT - current_time.get_seconds_since(m_start_time);
+    const float seconds_remaining_f = ZENI_REVERT_TIMEOUT - current_time.get_seconds_since(m_start_time);
 
-    if(seconds_remaining < 0.0f) {
+    if(seconds_remaining_f < 0.0f) {
       get_Game().pop_state();
       return;
     }
 
-    m_text.set_text(
-      "Click 'Accept' to save current rendering options\n"
-      "Hit 'Escape' to reject current rendering options\n"
-      "Current rendering options will be rejected in " +
-      itoa(int(seconds_remaining + 0.999f)) +
-      " seconds.");
+    const int seconds_remaining(int(seconds_remaining_f + 0.999f));
+
+    if(seconds_remaining < m_seconds_remaining) {
+      m_seconds_remaining = seconds_remaining;
+
+      m_text.set_text(
+        "Click 'Accept' to save current rendering options.\n"
+        "Hit 'Escape' to reject current rendering options.\n"
+        "Current rendering options will be rejected in " +
+        itoa(m_seconds_remaining) +
+        " seconds.");
+    }
   }
 
   Configurator_Video::Check_Box_Element::Check_Box_Element(const XML_Element &element,
@@ -199,7 +189,7 @@ namespace Zeni {
   }
 
   Configurator_Video::Text_Element::Text_Element(const XML_Element &element,
-                                                 const std::string &text,
+                                                 const String &text,
                                                  const Point2f &upper_left,
                                                  const Point2f &lower_right)
     : Text_Box(upper_left,
@@ -240,12 +230,12 @@ namespace Zeni {
   {
   }
 
-  void Configurator_Video::Selector_Element::add_entry(const std::string &option, const std::string &save_as) {
+  void Configurator_Video::Selector_Element::add_entry(const String &option, const String &save_as) {
     add_option(option);
     m_save_as[option] = save_as;
   }
 
-  void Configurator_Video::Selector_Element::on_accept(const std::string &option) {
+  void Configurator_Video::Selector_Element::on_accept(const String &option) {
     Selector::on_accept(option);
     m_element.set_string(m_save_as[option]);
   }
@@ -258,7 +248,7 @@ namespace Zeni {
     : Selector(upper_left, lower_right, expanded_upper_left, expanded_lower_right, "system_36_500x600"),
     m_element(element)
   {
-    const std::vector<Point2i> &resolutions = get_Video().get_resolutions();
+    const std::vector<Point2i> &resolutions = get_Window().get_resolutions();
 
     for(std::vector<Point2i>::const_iterator it = resolutions.begin(); it != resolutions.end(); ++it)
       add_option(itoa(it->x) + "x" + itoa(it->y));
@@ -266,14 +256,14 @@ namespace Zeni {
     // This will be the fall back if the other options do not exist
     select_option(itoa(resolutions.begin()->x) + 'x' + itoa(resolutions.begin()->y));
 
-    // Prefer 800x600
-    select_option("800x600");
+    // Prefer 640x480
+    select_option("640x480");
 
     // Try the set the current resolution as the selection option
-    select_option(itoa(get_Video().get_screen_width()) + 'x' + itoa(get_Video().get_screen_height()));
+    select_option(itoa(get_Window().get_width()) + 'x' + itoa(get_Window().get_height()));
   }
 
-  void Configurator_Video::Resolution_Element::on_accept(const std::string &option) {
+  void Configurator_Video::Resolution_Element::on_accept(const String &option) {
     Selector::on_accept(option);
 
     const size_t x = option.find('x');
@@ -336,42 +326,34 @@ namespace Zeni {
   }
 
   void Configurator_Video::Apply_Button::on_accept() {
-    //Core &cr = get_Core();
-    //const std::string appdata_path = cr.get_appdata_path();
-
-    //if(cr.create_directory(appdata_path) &&
-    //   cr.create_directory(appdata_path + "config/"))
-    //{
-    //  m_file->try_save(appdata_path + "config/zenilib.xml");
-    //}
-
-    //m_file->try_save("config/zenilib.xml");
-
     XML_Element_c zenilib = (*m_file)["Zenilib"];
     XML_Element_c textures = zenilib["Textures"];
     XML_Element_c video = zenilib["Video"];
-    const std::string api = video["API"].to_string();
+    const String api = video["API"].to_string();
 
     Video::preinit_video_mode(
 #ifndef DISABLE_DX9
-                              api == "DX9" ? Video_Base::ZENI_VIDEO_DX9 :
+                              api == "DX9" ? Video::ZENI_VIDEO_DX9 :
 #endif
 #ifndef DISABLE_GL
-                              api == "OpenGL" ? Video_Base::ZENI_VIDEO_GL :
+                              api == "OpenGL" ? Video::ZENI_VIDEO_GL :
 #endif
-                              Video_Base::ZENI_VIDEO_ANY);
-    Video::preinit_screen_resolution(Point2i(video["Resolution"]["Width"].to_int(),
-                                             video["Resolution"]["Height"].to_int()));
-    Video::preinit_full_screen(video["Full_Screen"].to_bool());
+                              Video::ZENI_VIDEO_ANY);
+    Window::preinit_resolution(Point2i(video["Resolution"]["Width"].to_int(),
+                                       video["Resolution"]["Height"].to_int()));
+    Window::preinit_full_screen(video["Full_Screen"].to_bool());
     Video::preinit_multisampling(video["Multisampling"].to_int());
     Video::preinit_vertical_sync(video["Vertical_Sync"].to_bool());
-
-    Video::destroy();
 
     Textures::set_texturing_mode(textures["Anisotropy"].to_int(),
                                  textures["Bilinear_Filtering"].to_bool(),
                                  textures["Mipmapping"].to_bool());
 
+    Video::destroy();
+    Window::destroy();
+
+    get_Window();
+    get_Video();
     get_Textures().unlose_resources();
     get_Fonts().unlose_resources();
     Text_Box::reformat_all();
@@ -396,7 +378,7 @@ namespace Zeni {
 #pragma warning( disable : 4355 )
 #endif
     : Widget_Gamestate(std::make_pair(Point2f(0.0f, 0.0f), Point2f(500.0f, 600.0f))),
-    m_file(get_Core().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
+    m_file(get_File_Ops().get_appdata_path() + "config/zenilib.xml", "config/zenilib.xml"),
     m_zenilib(m_file["Zenilib"]),
 
     anisotropy(m_zenilib["Textures"]["Anisotropy"], Textures::get_anisotropic_filtering(), std::make_pair(0, get_Video().get_maximum_anisotropy()), Point2f(52.0f, 10.0f + 2 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 2 * 42.0f + 36.0f)),
@@ -404,19 +386,19 @@ namespace Zeni {
     mipmapping(m_zenilib["Textures"]["Mipmapping"], Textures::get_mipmapping(), Point2f(52.0f, 10.0f + 4 * 42.0f), 36.0f),
 
     api(m_zenilib["Video"]["API"], Point2f(52.0f, 10.0f + 6 * 42.0f), Point2f(375.0f, 10.0f + 6 * 42.0f + 36.0f), Point2f(10.0f, 0.0f), Point2f(395.0f, 600.0f)),
-    full_screen(m_zenilib["Video"]["Full_Screen"], Video::is_fullscreen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
+    full_screen(m_zenilib["Video"]["Full_Screen"], Window::is_full_screen(), Point2f(52.0f, 10.0f + 7 * 42.0f), 36.0f),
     multisampling(m_zenilib["Video"]["Multisampling"], Video::get_multisampling(), std::make_pair(0, 16), Point2f(52.0f, 10.0f + 8 * 42.0f), Point2f(52.0f + 100.0f, 10.0f + 8 * 42.0f + 36.0f)),
 
     resolution(m_zenilib["Video"]["Resolution"], Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f), Point2f(52.0f + 20.0f, 0.0f), Point2f(52.0f + 220.0f, 600.0f)),
     custom_resolution(*this, true, Point2f(294.0, 10.0f + 9 * 42.0f), 36.0f),
-    custom_width(m_zenilib["Video"]["Resolution"]["Width"], itoa(Video::get_screen_width()), Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
-    custom_height(m_zenilib["Video"]["Resolution"]["Height"], itoa(Video::get_screen_height()), Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    custom_width(m_zenilib["Video"]["Resolution"]["Width"], itoa(Window::get_width()), Point2f(52.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 80.0f, 10.0f + 9 * 42.0f + 36.0f)),
+    custom_height(m_zenilib["Video"]["Resolution"]["Height"], itoa(Window::get_height()), Point2f(52.0f + 120.0f, 10.0f + 9 * 42.0f), Point2f(52.0f + 200.0f, 10.0f + 9 * 42.0f + 36.0f)),
 
     vertical_sync(m_zenilib["Video"]["Vertical_Sync"], Video::get_vertical_sync(), Point2f(52.0f, 10.0f + 10 * 42.0f), 36.0f),
 
     save(m_file, Point2f(10.0f, 590.0f - 42.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f - 42.0f)),
     cancel(Point2f(10.0f, 590.0f - 36.0f), Point2f(10.0f + 200.0f, 590.0f)),
-    m_prev_title(get_Video().get_title())
+    m_prev_title(get_Window().get_title())
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
@@ -426,7 +408,7 @@ namespace Zeni {
 #if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
     api.add_entry("Direct3D 9", "DX9");
     api.add_entry("OpenGL", "OpenGL");
-    api.select_option(Video::get_video_mode() == Video_Base::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
+    api.select_option(dynamic_cast<Video_DX9 *>(&get_Video()) ? "DX9" : "OpenGL");
 #elif !defined(DISABLE_DX9)
     api.add_entry("Direct3D 9", "DX9");
     api.select_option("DX9");
@@ -449,7 +431,7 @@ namespace Zeni {
 
     m_widgets.lend_Widget(custom_resolution);
     {
-      const std::string selected = resolution.get_selected();
+      const String selected = resolution.get_selected();
       const size_t x = selected.find('x');
       if(selected.substr(0, x) == custom_width.get_text() &&
          selected.substr(x + 1) == custom_height.get_text())
@@ -469,11 +451,11 @@ namespace Zeni {
 
     /** Set Title **/
 
-    get_Video().set_title("zenilib Configurator");
+    get_Window().set_title("zenilib Configurator");
   }
 
   Configurator_Video::~Configurator_Video() {
-    get_Video().set_title(m_prev_title);
+    get_Window().set_title(m_prev_title);
   }
 
   void Configurator_Video::on_push() {

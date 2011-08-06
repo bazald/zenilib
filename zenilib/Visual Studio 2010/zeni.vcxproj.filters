@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;def;odl;idl;hpj;bat;asm;asmx;hxx;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hm;hpp;xsd</Extensions>
+    </Filter>
+    <Filter Include="SCU File">
+      <UniqueIdentifier>{c8b44aa4-d853-4c7f-82d3-e847a788f0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{3de19d94-75c1-49d3-92e9-5f0eb6b33df4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{df58be37-8efb-433e-92b3-5e1f8381f7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Define">
+      <UniqueIdentifier>{7577c199-9e1f-4474-ae7d-d7d628bcbe11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Time">
+      <UniqueIdentifier>{5b1a8f88-0777-481c-ad5d-15c280a5908b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Time">
+      <UniqueIdentifier>{328ca7c2-9c42-4c4b-87fc-ad7725cddb2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{6fa3440f-d48d-4b64-ba93-e15708da0d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{0a1e3d1f-6cea-44da-bf8f-ca83ea0b78ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{85b8d5c0-f160-4ff8-b46d-8e86feafd44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render">
+      <UniqueIdentifier>{80292033-8ea6-4c84-a833-b7f1d63930fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Databases">
+      <UniqueIdentifier>{0f41cbfe-ac14-4d11-bedc-6e8873b959ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Databases">
+      <UniqueIdentifier>{86736502-8297-402c-b5a3-cd6233511a1a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Zeni\Coordinate.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Matrix4f.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Quaternion.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vector2f.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Vector3f.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\File_Ops.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Color.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Collision.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Camera.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Colors.cpp">
+      <Filter>Source Files\Databases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Resource.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Quit_Event.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Timer_HQ.cpp">
+      <Filter>Source Files\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zeni.cxx">
+      <Filter>SCU File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Serialization.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\String.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\Random.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Zeni\XML.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Zeni\Coordinate.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Matrix4f.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quaternion.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector2f.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector3f.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Define.h">
+      <Filter>Header Files\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Undefine.h">
+      <Filter>Header Files\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Chronometer.h">
+      <Filter>Header Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Coordinate.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector2f.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Vector3f.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Matrix4f.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quaternion.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Chronometer.hxx">
+      <Filter>Source Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Hash_Map.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\File_Ops.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Error.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Color.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Collision.hxx">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Collision.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Camera.hxx">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Camera.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Database.h">
+      <Filter>Header Files\Databases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Database.hxx">
+      <Filter>Source Files\Databases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Colors.h">
+      <Filter>Header Files\Databases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\IV.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Random.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Resource.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Resource.hxx">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Quit_Event.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Timer_HQ.hxx">
+      <Filter>Source Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Timer_HQ.h">
+      <Filter>Header Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\zeni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\String.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Serialization.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Singleton.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Event.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Singleton.hxx">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\Color.hxx">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Zeni\XML.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

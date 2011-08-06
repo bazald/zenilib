@@ -1,30 +1,19 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \class Zeni::Shader_System
@@ -95,7 +84,9 @@
 #endif
 
 #ifndef DISABLE_GL
-#ifdef _MACOSX
+#if defined(REQUIRE_GL_ES)
+#include <GLES/gl.h>
+#elif defined(_MACOSX)
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
@@ -105,12 +96,12 @@
 
 namespace Zeni {
 
-  class Video_DX9;
-  class Video_GL;
+  class ZENI_GRAPHICS_DLL Video_DX9;
+  class ZENI_GRAPHICS_DLL Video_GL;
 
-  class Shader_System {
+  class ZENI_GRAPHICS_DLL Shader_System {
     // Get reference to only instance;
-    friend Shader_System & get_Shader_System(); ///< Get access to the singleton.
+    friend ZENI_GRAPHICS_DLL Shader_System & get_Shader_System(); ///< Get access to the singleton.
 
     Shader_System(const Shader_System &);
     Shader_System & operator=(const Shader_System &);
@@ -137,9 +128,9 @@ namespace Zeni {
     CGprofile m_cg_fragment_profile;
   };
 
-  Shader_System & get_Shader_System(); ///< Get access to the singleton.
+  ZENI_GRAPHICS_DLL Shader_System & get_Shader_System(); ///< Get access to the singleton.
 
-  class Shader {
+  class ZENI_GRAPHICS_DLL Shader {
     Shader(const Shader &);
     Shader & operator=(const Shader &);
 
@@ -148,16 +139,14 @@ namespace Zeni {
     ~Shader();
 
 #ifndef DISABLE_GL
-    void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_GL &screen);
+    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL &screen);
     void load(Video_GL &screen);
 #endif
 
 #ifndef DISABLE_DX9
-    void init(const std::string &filename, const std::string &entry_function, const CGprofile &profile, Video_DX9 &screen);
+    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_DX9 &screen);
     void load(Video_DX9 &screen);
 #endif
-
-
 
     void compile();
 
@@ -173,23 +162,30 @@ namespace Zeni {
 #endif
 
   private:
-    typedef Unordered_Map<std::string, std::pair<CGparameter, CGparameter> > Parameters;
+    typedef Unordered_Map<String, std::pair<CGparameter, CGparameter> > Parameters;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
     Parameters m_parameters;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
 
-    void initialize_parameter(const std::string &parameter_name);
-    CGparameter get_from_parameter(const std::string &parameter_name);
+    void initialize_parameter(const String &parameter_name);
+    CGparameter get_from_parameter(const String &parameter_name);
     // cgSetParameter*() routines
-    void connect_parameter(const std::string &parameter_name);
+    void connect_parameter(const String &parameter_name);
 
     CGprogram m_program;
   };
 
-  class Vertex_Shader : public Shader {
+  class ZENI_GRAPHICS_DLL Vertex_Shader : public Shader {
     Vertex_Shader(const Vertex_Shader &);
     Vertex_Shader & operator=(const Vertex_Shader &);
 
   public:
-    inline Vertex_Shader(const std::string &filename, const std::string &entry_function = "main");
+    inline Vertex_Shader(const String &filename, const String &entry_function = "main");
 
 #ifndef DISABLE_GL
     inline void set(Video_GL &screen) const;
@@ -202,12 +198,12 @@ namespace Zeni {
 #endif
   };
 
-  class Fragment_Shader : public Shader {
+  class ZENI_GRAPHICS_DLL Fragment_Shader : public Shader {
     Fragment_Shader(const Fragment_Shader &);
     Fragment_Shader & operator=(const Fragment_Shader &);
 
   public:
-    inline Fragment_Shader(const std::string &filename, const std::string &entry_function = "main");
+    inline Fragment_Shader(const String &filename, const String &entry_function = "main");
 
 #ifndef DISABLE_GL
     inline void set(Video_GL &screen) const;
@@ -220,19 +216,19 @@ namespace Zeni {
 #endif
   };
 
-  struct Shader_System_Init_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL Shader_System_Init_Failure : public Error {
     Shader_System_Init_Failure() : Error("Zeni Shader System Failed to Initialize Correctly") {}
   };
 
-  struct Shader_Init_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL Shader_Init_Failure : public Error {
     Shader_Init_Failure() : Error("Zeni Shader Failed to Initialize Correctly") {}
   };
 
-  struct Shader_Bind_Failure : public Error {
+  struct ZENI_GRAPHICS_DLL Shader_Bind_Failure : public Error {
     Shader_Bind_Failure() : Error("Zeni Shader Failed to Bind Correctly") {}
   };
 
-  struct Shader_Parameter_Error : public Error {
+  struct ZENI_GRAPHICS_DLL Shader_Parameter_Error : public Error {
     Shader_Parameter_Error() : Error("Zeni Shader Parameter Error") {}
   };
 

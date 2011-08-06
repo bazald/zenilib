@@ -1,4 +1,4 @@
-Zenipex Library           (Most Recently Updated at 0.3.3.1)
+Zenipex Library           (Most Recently Updated at 0.4.0.0)
 ============================================================
 
 Contents
@@ -13,10 +13,10 @@ Contents
 1. Introduction
 ===============
 
-The Zenipex Library is a game development framework, created 
-with the goal of allowing someone with some knowledge of C++ 
-to create 3D games for both Windows and Linux platforms (and 
-hopefully others) quickly.
+The Zenipex Library (zenilib) is a game development 
+framework, created with the goal of allowing someone with 
+some knowledge of C++ to create 3D games for both Windows 
+and Linux platforms (and hopefully others) quickly.
 
 The original focuses of the project were to abstract away 
 some basic differences between OpenGL and Direct3D 9 and to 
@@ -42,22 +42,15 @@ generally improved as well.
 2. License/Authors
 ==================
 
-The Zenipex Library is an open source  project.  For 
+The Zenipex Library is an open source project.  For 
 details please refer to the first comment in any given file 
-and refer to COPYING.txt and GPL.txt.
-
-The Runtime GPL allows the use of macros, templates, and
-static linkage without the requirement that your code be
-GPL'd should you choose to release your binaries into the
-wild.  You are free to keep your code closed source, 
-though I encourage you to keep it open if you are not 
-obliged to keep it closed.
+and refer to the included copies of the GPL and LGPL.
 
 Keep in mind that to fully comply with the GPL, you must 
-include a copy of the GPL with your your releases using the 
-Zenipex Library.  Additionally, you should state what parts 
-of your release are bound by the GPL.  Finally, you must 
-meet one of the following conditions.
+include a copy of the GPL with your your releases using 
+zenilib.  Additionally, you should state what parts of your 
+release are bound by the GPL.  Finally, you must meet one of 
+the following conditions.
 
  1) A copy of the GPL'd source code is included.
 
@@ -73,7 +66,7 @@ asks -- not just the people who download your library.
 If you have any questions about the GPL, feel free to shoot 
 me an e-mail.
 
-~bazald -at- zenipex -dot- com
+bazald -at- zenipex -dot- com
 
 
 

@@ -1,72 +1,72 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Video_GL.h>
+#include <zeni_graphics.h>
 
 #ifndef DISABLE_GL
 
-#include <Zeni/Font.h>
-
-#include <Zeni/Camera.hxx>
-#include <Zeni/Color.hxx>
-#include <Zeni/Game.hxx>
-#include <Zeni/Gamestate.hxx>
-#include <Zeni/Matrix4f.hxx>
-#include <Zeni/Vector3f.hxx>
-#include <Zeni/Video.hxx>
-
-#ifdef _MACOSX
+#if defined(REQUIRE_GL_ES)
+#include <GLES/gl.h>
+#elif defined(_MACOSX)
 #include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
 #endif
 
+#include <SDL/SDL.h>
+#ifdef REQUIRE_GL_ES
+#include <SDL/SDL_opengles.h>
+#else
+namespace SDLOPENGL {
+#include <SDL/SDL_opengl.h>
+}
+#endif
+
 #include <iostream>
 
-namespace SDL {
-  #include <SDL/SDL.h>
-  #include <SDL/SDL_opengl.h>
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+#ifdef REQUIRE_GL_ES
+extern "C" GL_API int GL_APIENTRY _dgles_load_library(void *, void *(*)(void *, const char *));
+
+static void * proc_loader(void *, const char * name) {
+	return SDL_GL_GetProcAddress(name);
 }
+#endif
 
 namespace Zeni {
 
   Video_GL::Video_GL()
-    : Video(Video_Base::ZENI_VIDEO_GL),
+    :
 #if SDL_VERSION_ATLEAST(1,3,0)
       m_context(0),
 #endif
 #ifdef _LINUX
       m_pglSwapIntervalEXT(0),
 #endif
+#ifndef REQUIRE_GL_ES
       m_pglBindBufferARB(0),
       m_pglDeleteBuffersARB(0),
       m_pglGenBuffersARB(0),
       m_pglBufferDataARB(0),
+#endif
       m_maximum_anisotropy(-1),
       m_vertex_buffers(false),
       m_zwrite(false),
@@ -85,7 +85,7 @@ namespace Zeni {
     uninit();
   }
 
-  void Video_GL::render_all() {
+  bool Video_GL::begin_prerender() {
     assert(!m_render_target);
 
 #ifdef _WINDOWS
@@ -97,19 +97,25 @@ namespace Zeni {
     get_Textures().unlose_resources();
     get_Fonts().unlose_resources();
 
-    get_Game().prerender();
+    return true;
+  }
 
-    glViewport(0, 0, get_screen_width(), get_screen_height());
+  bool Video_GL::begin_render() {
+    assert(!m_render_target);
+
+    glViewport(0, 0, get_Window().get_width(), get_Window().get_height());
 
     if(!is_zwrite_enabled())
       glDepthMask(GL_TRUE);
-    set_clear_color_impl(get_clear_color());
+    set_clear_color(get_clear_color());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if(!is_zwrite_enabled())
       glDepthMask(GL_FALSE);
 
-    get_Game().render();
+    return true;
+  }
 
+  void Video_GL::end_render() {
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
    Timer &tr = get_Timer();
@@ -128,7 +134,7 @@ namespace Zeni {
     
     /// Swap the buffers <-- NOT part of the CPU saver, but the reason it is "needed"
 #if SDL_VERSION_ATLEAST(1,3,0)
-   SDL_GL_SwapWindow(get_window());
+   SDL_GL_SwapWindow(get_Window().get_window());
 #else
    SDL_GL_SwapBuffers();
 #endif
@@ -141,6 +147,446 @@ namespace Zeni {
 #if SDL_VERSION_ATLEAST(1,3,0)
   void Video_GL::alert_window_destroyed() {
     m_context = 0;
+  }
+#endif
+
+  void Video_GL::render(const Renderable &renderable) {
+    class PrePostRenderActor {
+      PrePostRenderActor & operator=(const PrePostRenderActor &) {return *this;}
+
+    public:
+      PrePostRenderActor(const Renderable &renderable_)
+        : renderable(renderable_)
+      {
+        renderable.pre_render();
+      }
+
+      ~PrePostRenderActor() {
+        renderable.post_render();
+      }
+    private:
+      const Renderable &renderable;
+    } ppra(renderable);
+
+    renderable.render_to(*this);
+  }
+
+  int Video_GL::get_maximum_anisotropy() const {
+    return m_maximum_anisotropy;
+  }
+
+  bool Video_GL::has_vertex_buffers() const {
+    return m_vertex_buffers;
+  }
+
+  void Video_GL::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+    Video::set_2d_view(camera2d, viewport, fix_aspect_ratio);
+
+    if(m_render_target) {
+      select_world_matrix();
+      translate_scene(Vector3f(0.0f, camera2d.second.y, 0.0f));
+      scale_scene(Vector3f(1.0f, -1.0f, 1.0f));
+      translate_scene(Vector3f(0.0f, -camera2d.first.y, 0.0f));
+
+      if(get_backface_culling())
+        glCullFace(GL_FRONT);
+    }
+    else if(get_backface_culling())
+      glCullFace(GL_BACK);
+  }
+
+  void Video_GL::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_3d_view(camera, viewport);
+
+    if(m_render_target) {
+      if(get_backface_culling())
+        glCullFace(GL_FRONT);
+    }
+    else if(get_backface_culling())
+      glCullFace(GL_BACK);
+  }
+
+  void Video_GL::set_backface_culling(const bool &on) {
+    Video::set_backface_culling(on);
+
+    if(on) {
+      // Enable Backface Culling
+      glEnable(GL_CULL_FACE);
+
+      if(m_render_target)
+        glCullFace(GL_FRONT);
+      else
+        glCullFace(GL_BACK);
+    }
+    else
+      glDisable(GL_CULL_FACE);
+  }
+
+  void Video_GL::set_vertical_sync(const bool &on_) {
+    Video::set_vertical_sync(on_);
+
+#ifdef MANUAL_GL_VSYNC_DELAY
+    const bool on = false;
+#else
+    const bool on = on_;
+#endif
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_GL_SetSwapInterval(on);
+#elif !defined(DISABLE_WGL)
+    typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
+    PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT = 0;
+
+    const char *extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
+
+    if(strstr(extensions, "WGL_EXT_swap_control")) {
+      wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
+
+      if(wglSwapIntervalEXT)
+        wglSwapIntervalEXT(on);
+    }
+#elif defined(_LINUX)
+    if(m_pglSwapIntervalSGI)
+      m_pglSwapIntervalSGI(on);
+    else if(m_pglSwapIntervalEXT)
+      m_pglSwapIntervalEXT(0, 0, on);
+    else
+      SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
+#else
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
+#endif
+  }
+
+  void Video_GL::set_zwrite(const bool &enabled) {
+    Video::set_zwrite(enabled);
+
+    glDepthMask(GLboolean(enabled));
+  }
+
+  void Video_GL::set_ztest(const bool &enabled) {
+    Video::set_ztest(enabled);
+
+    if(enabled) {
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LEQUAL);
+    }
+    else
+      glDisable(GL_DEPTH_TEST);
+  }
+
+  void Video_GL::set_alpha_test(const bool &enabled,
+                                const TEST &test,
+                                const float &value)
+  {
+    Video::set_alpha_test(enabled, test, value);
+
+    GLenum func;
+
+    switch(test) {
+      case ZENI_NEVER:            func = GL_NEVER;    break;
+      case ZENI_LESS:             func = GL_LESS;     break;
+      case ZENI_EQUAL:            func = GL_EQUAL;    break;
+      case ZENI_GREATER:          func = GL_GREATER;  break;
+      case ZENI_NOT_EQUAL:        func = GL_NOTEQUAL; break;
+      case ZENI_LESS_OR_EQUAL:    func = GL_LEQUAL;   break;
+      case ZENI_GREATER_OR_EQUAL: func = GL_GEQUAL;   break;
+      case ZENI_ALWAYS:           func = GL_ALWAYS;   break;
+      default:
+        assert(false);
+        return;
+    }
+
+    if(enabled)
+      glEnable(GL_ALPHA_TEST);
+    else
+      glDisable(GL_ALPHA_TEST);
+
+    glAlphaFunc(func, value); 
+  }
+
+  void Video_GL::set_color(const Color &color) {
+    Video::set_color(color);
+
+    glColor4f(color.r, color.g, color.b, color.a);
+  }
+
+  void Video_GL::set_clear_color(const Color &color) {
+    Video::set_clear_color(color);
+
+    glClearColor(color.r, color.g, color.b, color.a);
+  }
+
+  void Video_GL::apply_texture(const unsigned long &id) {
+    get_Textures().apply_texture(id);
+  }
+
+  void Video_GL::apply_texture(const Texture &texture) {
+    texture.apply_texture();
+  }
+
+  void Video_GL::unapply_texture() {
+    glDisable(GL_TEXTURE_2D);
+  }
+
+  void Video_GL::set_lighting(const bool &on) {
+    Video::set_lighting(on);
+
+    if(on)
+      glEnable(GL_LIGHTING);
+    else
+      glDisable(GL_LIGHTING);
+  }
+
+  void Video_GL::set_ambient_lighting(const Color &color) {
+    Video::set_ambient_lighting(color);
+
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, reinterpret_cast<const GLfloat *>(&color));
+  }
+
+  void Video_GL::set_light(const int &number, const Light &light) {
+    GLenum ln;
+    switch(number) {
+    case 0: ln = GL_LIGHT0; break;
+    case 1: ln = GL_LIGHT1; break;
+    case 2: ln = GL_LIGHT2; break;
+    case 3: ln = GL_LIGHT3; break;
+    case 4: ln = GL_LIGHT4; break;
+    case 5: ln = GL_LIGHT5; break;
+    case 6: ln = GL_LIGHT6; break;
+    case 7: ln = GL_LIGHT7; break;
+    default:
+      throw Light_Out_of_Range();
+    }
+
+    light.set(ln, *this);
+  }
+
+  void Video_GL::unset_light(const int &number) {
+    GLenum ln;
+    switch(number) {
+    case 0: ln = GL_LIGHT0; break;
+    case 1: ln = GL_LIGHT1; break;
+    case 2: ln = GL_LIGHT2; break;
+    case 3: ln = GL_LIGHT3; break;
+    case 4: ln = GL_LIGHT4; break;
+    case 5: ln = GL_LIGHT5; break;
+    case 6: ln = GL_LIGHT6; break;
+    case 7: ln = GL_LIGHT7; break;
+    default:
+      throw Light_Out_of_Range();
+    }
+
+    glDisable(ln);
+  }
+
+  void Video_GL::set_material(const Material &material) {
+    material.set(*this);
+  }
+
+  void Video_GL::unset_material(const Material &material) {
+    material.unset(*this);
+  }
+
+  void Video_GL::set_fog(const Fog &fog) {
+    glEnable(GL_FOG);
+    fog.set(*this);
+  }
+
+  void Video_GL::unset_fog() {
+    glDisable(GL_FOG);
+  }
+
+#ifndef DISABLE_CG
+  void Video_GL::set_vertex_shader(const Vertex_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::set_fragment_shader(const Fragment_Shader &shader) {
+    shader.set(*this);
+  }
+
+  void Video_GL::unset_vertex_shader(const Vertex_Shader &shader) {
+    shader.unset(*this);
+  }
+
+  void Video_GL::unset_fragment_shader(const Fragment_Shader &shader) {
+    shader.unset(*this);
+  }
+#endif
+
+  void Video_GL::set_render_target(Texture &
+#if !defined(REQUIRE_GL_ES) || defined(GL_OES_VERSION_2_0)
+    texture
+#endif
+    )
+  {
+#if defined(REQUIRE_GL_ES) && !defined(GL_OES_VERSION_2_0)
+    throw Video_Render_To_Texture_Error();
+#else
+    if(m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    Texture_GL &tgl = dynamic_cast<Texture_GL &>(texture);
+
+    if(!tgl.m_frame_buffer_object) {
+      const Point2i &tex_size = tgl.get_size();
+
+      // Generate Depth Buffer
+      glGenRenderbuffersEXT(1, &tgl.m_render_buffer);
+      glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, tgl.m_render_buffer);
+      glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT16, tex_size.x, tex_size.y);
+      glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+      // Generate Framebuffer Object
+      glGenFramebuffersEXT(1, &tgl.m_frame_buffer_object);
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tgl.m_frame_buffer_object);
+
+      // Bind Both to the Texture
+      glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, tgl.m_render_buffer);
+      glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, tgl.m_texture_id, 0);
+    }
+    else
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, tgl.m_frame_buffer_object);
+
+    m_render_target = &tgl;
+#endif
+  }
+
+  void Video_GL::unset_render_target() {
+#if defined(REQUIRE_GL_ES) && !defined(GL_OES_VERSION_2_0)
+    throw Video_Render_To_Texture_Error();
+#else
+    if(!m_render_target)
+      throw Video_Render_To_Texture_Error();
+
+    // Unbind all
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+    // Prepare to Generate Mipmap
+    glBindTexture(GL_TEXTURE_2D, m_render_target->m_texture_id);
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST);
+
+    glGenerateMipmapEXT(GL_TEXTURE_2D);
+
+    // Cleanup after Mipmap Generation
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      Textures::get_mipmapping() ?
+      (Textures::get_bilinear_filtering() ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST) :
+      (Textures::get_bilinear_filtering() ? GL_LINEAR : GL_NEAREST));
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    m_render_target = 0;
+#endif
+  }
+
+  void Video_GL::clear_render_target(const Color &color) {
+    set_clear_color(color);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+
+  inline const Point2i & Video_GL::get_render_target_size() const {
+    if(m_render_target)
+      return m_render_target->get_size();
+    else
+      return get_Window().get_size();
+  }
+
+  void Video_GL::select_world_matrix() {
+    glMatrixMode(GL_MODELVIEW);
+  }
+
+  void Video_GL::push_world_stack() {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+  }
+
+  void Video_GL::pop_world_stack() {
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+  }
+
+  void Video_GL::translate_scene(const Vector3f &direction) {
+    glTranslatef(direction.i, direction.j, direction.k);
+  }
+
+  void Video_GL::rotate_scene(const Vector3f &about, const float &radians) {
+    glRotatef(radians * 180.0f / Global::pi, about.i, about.j, about.k);
+  }
+
+  void Video_GL::scale_scene(const Vector3f &factor) {
+    glScalef(factor.i, factor.j, factor.k);
+  }
+
+  void Video_GL::transform_scene(const Matrix4f &transformation) {
+    glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transformation));
+  }
+
+  Point2f Video_GL::get_pixel_offset() const {
+    return Point2f(0.0f, 0.0f);
+  }
+
+  void Video_GL::set_view_matrix(const Matrix4f &view) {
+    Video::set_view_matrix(view);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&view)));
+  }
+
+  void Video_GL::set_projection_matrix(const Matrix4f &projection) {
+    Video::set_projection_matrix(projection);
+
+    glMatrixMode(GL_PROJECTION);
+    if(m_render_target && is_3d()) {
+      const Matrix4f flipped = Matrix4f::Scale(Vector3f(1.0f, -1.0f, 1.0f)) * projection;
+      glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&flipped)));
+    }
+    else
+      glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&projection)));
+  }
+
+  void Video_GL::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
+    Video::set_viewport(viewport);
+
+    if(m_render_target)
+      glViewport(viewport.first.x, viewport.first.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
+    else
+      glViewport(viewport.first.x, get_Window().get_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
+  }
+
+  Texture * Video_GL::load_Texture(const String &filename, const bool &repeat, const bool &lazy_loading) {
+    return new Texture_GL(filename, repeat, lazy_loading);
+  }
+
+  Texture * Video_GL::create_Texture(SDL_Surface * const &surface, const bool &repeat) {
+    return new Texture_GL(surface, repeat);
+  }
+
+  Texture * Video_GL::create_Texture(const Point2i &size, const bool &repeat) {
+    return new Texture_GL(size, repeat);
+  }
+
+  Font * Video_GL::create_Font(const String &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {
+    return new Font_FT(filename, bold, italic, glyph_height, virtual_screen_height);
+  }
+
+  Vertex_Buffer_Renderer * Video_GL::create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer) {
+    return new Vertex_Buffer_Renderer_GL(vertex_buffer);
+  }
+
+#ifndef DISABLE_CG
+  void Video_GL::initialize(Shader_System &shader_system) {
+    shader_system.init(*this);
+  }
+
+  void Video_GL::initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
+  }
+
+  void Video_GL::initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) {
+    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
 #endif
 
@@ -165,13 +611,21 @@ namespace Zeni {
       SDL_GL_SetAttribute (SDL_GL_MULTISAMPLEBUFFERS, 1);
     }
 
-    set_opengl_flag(true);
-    Video::init();
-
-#if SDL_VERSION_ATLEAST(1,3,0)
-    m_context = SDL_GL_CreateContext(get_window());
+#ifdef REQUIRE_GL_ES
+    {
+      int err = _dgles_load_library(0, proc_loader);
+      if(err)
+        throw Video_Init_Failure();
+    }
 #endif
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_GL_SetSwapInterval(get_vertical_sync());
+
+    m_context = SDL_GL_CreateContext(get_Window().get_window());
+#endif
+
+#ifndef REQUIRE_GL_ES
     {
       const GLenum err = glewInit();
       if(GLEW_OK != err) {
@@ -179,10 +633,13 @@ namespace Zeni {
         throw Video_Init_Failure();
       }
     }
+#endif
 
     // Set Fill/Shade Mode
     glShadeModel(GL_SMOOTH);
+#ifndef REQUIRE_GL_ES
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
     glEnable(GL_NORMALIZE); //GL_RESCALE_NORMALIZE);
 
     // Enable Alpha Blitting
@@ -191,10 +648,12 @@ namespace Zeni {
     //glBlendEquation(GL_FUNC_ADD); // default // would require ARB ext
 
     // Set lighting variables
+#ifndef REQUIRE_GL_ES
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
     if(glGetError() == GL_INVALID_ENUM)
       std::cerr << "Quality Warning:  Your graphics card does not support separate specular lighting in OpenGL.\n";
+#endif
 
     // Initialize Assorted Variables
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -212,11 +671,12 @@ namespace Zeni {
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());
 
+#ifndef REQUIRE_GL_ES
     union {
       void * v;
 #ifdef _LINUX
-      PFNGLXSWAPINTERVALEXTPROC pglSwapIntervalEXT;
-      PFNGLXSWAPINTERVALSGIPROC pglSwapIntervalSGI;
+      GLXEW::PFNGLXSWAPINTERVALEXTPROC pglSwapIntervalEXT;
+      GLXEW::PFNGLXSWAPINTERVALSGIPROC pglSwapIntervalSGI;
 #endif
       PFNGLBINDBUFFERARBPROC pglBindBufferARB;
       PFNGLDELETEBUFFERSARBPROC pglDeleteBuffersARB;
@@ -235,9 +695,6 @@ namespace Zeni {
       ptr.v = SDL_GL_GetProcAddress("wglSwapIntervalSGI");
     m_pglSwapIntervalSGI = ptr.pglSwapIntervalSGI;
 #endif
-
-    // Has to be done after finding the function pointer
-    set_vertical_sync(get_vertical_sync());
 
     m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
     if(m_vertex_buffers) {
@@ -260,6 +717,19 @@ namespace Zeni {
       glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, reinterpret_cast<GLint *>(&m_maximum_anisotropy));
     else
       m_maximum_anisotropy = 0;
+#else
+    m_maximum_anisotropy = 0;
+#endif
+
+    // Has to be done after finding the function pointer
+    set_vertical_sync(get_vertical_sync());
+  }
+
+  void Video_GL::uninit() {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(m_context)
+      SDL_GL_DeleteContext(m_context);
+#endif
   }
 
 }

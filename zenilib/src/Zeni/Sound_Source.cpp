@@ -1,43 +1,22 @@
-/* This file is part of the Zenipex Library.
-* Copyleft (C) 2011 Mitchell Keith Bloch a.k.a. bazald
-*
-* The Zenipex Library is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License as 
-* published by the Free Software Foundation; either version 2 of the 
-* License, or (at your option) any later version.
-*
-* The Zenipex Library is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License 
-* along with the Zenipex Library; if not, write to the Free Software 
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
-* 02110-1301 USA.
-*
-* As a special exception, you may use this file as part of a free software
-* library without restriction.  Specifically, if other files instantiate
-* templates or use macros or inline functions from this file, or you compile
-* this file and link it with other files to produce an executable, this
-* file does not by itself cause the resulting executable to be covered by
-* the GNU General Public License.  This exception does not however
-* invalidate any other reasons why the executable file might be covered by
-* the GNU General Public License.
-*/
+/* This file is part of the Zenipex Library (zenilib).
+ * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
+ *
+ * zenilib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zenilib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <Zeni/Sound_Source.hxx>
+#include <zeni_audio.h>
 
-#include <Zeni/Coordinate.hxx>
-#include <Zeni/Gamestate.hxx>
-#include <Zeni/Mutex.hxx>
-#include <Zeni/Sound.hxx>
-#include <Zeni/Sound_Buffer.hxx>
-#include <Zeni/Sound_Source_Pool.h>
-#include <Zeni/Timer.hxx>
-#include <Zeni/Vector3f.hxx>
-
-#include <SDL/SDL.h>
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -48,46 +27,287 @@
 #undef OV_EXCLUDE_STATIC_CALLBACKS
 #endif
 
-#include <Zeni/Global.h>
+#include <Zeni/Define.h>
+
+#if defined(_DEBUG) && defined(_WINDOWS)
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 namespace Zeni {
-
-  const Sound_Buffer & get_Hello_World_Buffer() {
-    static Sound_Buffer hello_world_buffer;
-    return hello_world_buffer;
-  }
 
   Sound_Source_HW::Sound_Source_HW(const ALuint &source)
     : m_source(source),
     m_buffer(0)
   {
-    get_Sound();
+    Sound &sr = get_Sound();
 
-    init(get_Hello_World_Buffer());
+    init(sr.get_Hello_World_Buffer());
   }
 
   Sound_Source_HW::Sound_Source_HW(const Sound_Buffer &buffer, const float &pitch, const float &gain,
     const Point3f &position, const Vector3f &velocity, const bool &looping)
     : m_source(AL_NONE)
   {
+    get_Sound();
+
     init(buffer, pitch, gain, position, velocity, looping);
   }
 
   Sound_Source_HW::~Sound_Source_HW() {
-    stop(); ///< Bounds stall time on quit
+    stop();
 
 #ifndef DISABLE_AL
-    if(m_source != AL_NONE && !Quit_Event::has_fired())
-      alDeleteSources(1, &m_source);
+    if(m_source != AL_NONE)
+      Sound_Renderer_AL::alDeleteSources()(1, &m_source);
 #endif
   }
 
   Sound_Source_HW * Sound_Source_HW::Try_Construct() {
     ALuint source = AL_NONE;
 #ifndef DISABLE_AL
-    alGenSources(1, &source);
+    if(Sound_Renderer_AL::alGenSources())
+      Sound_Renderer_AL::alGenSources()(1, &source);
 #endif
     return source != AL_NONE ? new Sound_Source_HW(source) : 0;
+  }
+
+  void Sound_Source_HW::set_buffer(const Sound_Buffer &
+#ifndef DISABLE_AL
+    buffer
+#endif
+    ) {
+#ifndef DISABLE_AL
+    m_buffer = &buffer;
+    Sound_Renderer_AL::alSourcei()(m_source, AL_BUFFER, ALint(buffer.get_id()));
+#endif
+  }
+
+  void Sound_Source_HW::set_pitch(const float &
+#ifndef DISABLE_AL
+    pitch
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_PITCH, pitch);
+#endif
+  }
+
+  void Sound_Source_HW::set_gain(const float &
+#ifndef DISABLE_AL
+    gain
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_GAIN, gain);
+#endif
+  }
+
+  void Sound_Source_HW::set_position(const Point3f &
+#ifndef DISABLE_AL
+    position
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcefv()(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
+#endif
+  }
+
+  void Sound_Source_HW::set_velocity(const Vector3f &
+#ifndef DISABLE_AL
+    velocity
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcefv()(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
+#endif
+  }
+
+  void Sound_Source_HW::set_looping(const bool &
+#ifndef DISABLE_AL
+    looping
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcei()(m_source, AL_LOOPING, looping);
+#endif
+  }
+
+  void Sound_Source_HW::set_time(const float &
+#ifndef DISABLE_AL
+    time
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_SEC_OFFSET, time);
+#endif
+  }
+  
+  void Sound_Source_HW::set_reference_distance(const float &
+#ifndef DISABLE_AL
+    reference_distance
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_REFERENCE_DISTANCE, reference_distance);
+#endif
+  }
+
+  void Sound_Source_HW::set_max_distance(const float &
+#ifndef DISABLE_AL
+    max_distance
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_MAX_DISTANCE, max_distance);
+#endif
+  }
+
+  void Sound_Source_HW::set_rolloff(const float &
+#ifndef DISABLE_AL
+    rolloff
+#endif
+    ) {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcef()(m_source, AL_ROLLOFF_FACTOR, rolloff);
+#endif
+  }
+
+  const Sound_Buffer & Sound_Source_HW::get_buffer() const {
+    assert(m_buffer);
+    return *m_buffer;
+  }
+
+  float Sound_Source_HW::get_pitch() const {
+    float pitch = ZENI_DEFAULT_PITCH;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_PITCH, &pitch);
+#endif
+    return pitch;
+  }
+
+  float Sound_Source_HW::get_gain() const {
+    float gain = ZENI_DEFAULT_GAIN;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_GAIN, &gain);
+#endif
+    return gain;
+  }
+
+  Point3f Sound_Source_HW::get_position() const {
+    Point3f position;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcefv()(m_source, AL_POSITION, reinterpret_cast<ALfloat *>(&position));
+#endif
+    return position;
+  }
+
+  Vector3f Sound_Source_HW::get_velocity() const {
+    Vector3f velocity;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcefv()(m_source, AL_VELOCITY, reinterpret_cast<ALfloat *>(&velocity));
+#endif
+    return velocity;
+  }
+
+  bool Sound_Source_HW::is_looping() const {
+    ALint looping = AL_FALSE;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcei()(m_source, AL_LOOPING, &looping);
+#endif
+    return looping != AL_FALSE;
+  }
+
+  float Sound_Source_HW::get_time() const {
+    float time = 0.0f;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_SEC_OFFSET, &time);
+#endif
+    return time;
+  }
+  
+  float Sound_Source_HW::get_reference_distance() const {
+    float reference_distance = ZENI_DEFAULT_REFERENCE_DISTANCE;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_REFERENCE_DISTANCE, &reference_distance);
+#endif
+    return reference_distance;
+  }
+
+  float Sound_Source_HW::get_max_distance() const {
+    float max_distance = ZENI_DEFAULT_MAX_SOUND_DISTANCE;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_MAX_DISTANCE, &max_distance);
+#endif
+    return max_distance;
+  }
+
+  float Sound_Source_HW::get_rolloff() const {
+    float rolloff = ZENI_DEFAULT_ROLLOFF;
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alGetSourcef()(m_source, AL_ROLLOFF_FACTOR, &rolloff);
+#endif
+    return rolloff;
+  }
+
+  void Sound_Source_HW::play() {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcePlay()(m_source);
+#endif
+  }
+
+  void Sound_Source_HW::pause() {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourcePause()(m_source);
+#endif
+  }
+
+  void Sound_Source_HW::stop() {
+#ifndef DISABLE_AL
+    Sound_Renderer_AL::alSourceStop()(m_source);
+#endif
+  }
+
+  Sound_Source_HW::STATE Sound_Source_HW::get_state() const {
+#ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
+    Sound_Renderer_AL::alGetSourcei()(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING ? PLAYING :
+      state == AL_PAUSED ? PAUSED :
+      STOPPED;
+#else
+    return Sound_Source_HW::STATE();
+#endif
+  }
+
+  bool Sound_Source_HW::is_playing() const {
+#ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
+    Sound_Renderer_AL::alGetSourcei()(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING;
+#else
+    return false;
+#endif
+  }
+
+  bool Sound_Source_HW::is_paused() const {
+#ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
+    Sound_Renderer_AL::alGetSourcei()(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_PAUSED;
+#else
+    return false;
+#endif
+  }
+
+  bool Sound_Source_HW::is_stopped() const {
+#ifndef DISABLE_AL
+    ALenum state = AL_STOPPED;
+    Sound_Renderer_AL::alGetSourcei()(m_source, AL_SOURCE_STATE, &state);
+    return state == AL_STOPPED;
+#else
+    return true;
+#endif
   }
 
   void Sound_Source_HW::init(const Sound_Buffer &buffer, const float &
@@ -113,21 +333,24 @@ namespace Zeni {
     ) {
     m_buffer = &buffer;
 #ifndef DISABLE_AL
+    if(!Sound_Renderer_AL::alGenSources())
+      throw Sound_Source_HW_Init_Failure();
+
     if(m_source == AL_NONE) {
-      alGenSources(1, &m_source);
+      Sound_Renderer_AL::alGenSources()(1, &m_source);
 
       if(m_source == AL_NONE) {
-        std::cerr << "OpenAL error: " << alErrorString(alGetError()) << std::endl;
+        std::cerr << "OpenAL error: " << Sound_Renderer_AL::errorString() << std::endl;
         throw Sound_Source_HW_Init_Failure();
       }
     }
 
-    alSourcei(m_source, AL_BUFFER, ALint(buffer.get_id()));
-    alSourcef(m_source, AL_PITCH, pitch);
-    alSourcef(m_source, AL_GAIN, gain);
-    alSourcefv(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
-    alSourcefv(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
-    alSourcei(m_source, AL_LOOPING, looping);
+    Sound_Renderer_AL::alSourcei()(m_source, AL_BUFFER, ALint(buffer.get_id()));
+    Sound_Renderer_AL::alSourcef()(m_source, AL_PITCH, pitch);
+    Sound_Renderer_AL::alSourcef()(m_source, AL_GAIN, gain);
+    Sound_Renderer_AL::alSourcefv()(m_source, AL_POSITION, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&position)));
+    Sound_Renderer_AL::alSourcefv()(m_source, AL_VELOCITY, const_cast<ALfloat *>(reinterpret_cast<const ALfloat *>(&velocity)));
+    Sound_Renderer_AL::alSourcei()(m_source, AL_LOOPING, looping);
 #endif
 
     set_reference_distance();
@@ -137,7 +360,7 @@ namespace Zeni {
   Sound_Source::Sound_Source()
     : m_hw(0),
     m_priority(ZENI_DEFAULT_SOUND_PRIORITY),
-    m_buffer(&get_Hello_World_Buffer()),
+    m_buffer(&get_Sound().get_Hello_World_Buffer()),
     m_pitch(ZENI_DEFAULT_PITCH),
     m_gain(ZENI_DEFAULT_GAIN),
     m_looping(false),
@@ -183,14 +406,14 @@ namespace Zeni {
     if(m_remove_from_Pool_on_destruction)
       get_Sound_Source_Pool().remove_Sound_Source(*this);
   }
-
+  
   float Sound_Source::get_time() const {
     if(m_playing) {
-      const Time current_time;
+      const Time_HQ current_time;
       if(m_hw)
         m_play_position = m_hw->get_time();
       else {
-        float time_step = current_time.get_seconds_since(m_play_time);
+        float time_step = float(current_time.get_seconds_since(m_play_time));
         m_play_position += time_step;
       }
       m_play_time = current_time;
@@ -286,4 +509,4 @@ namespace Zeni {
 
 }
 
-#include <Zeni/Global_Undef.h>
+#include <Zeni/Undefine.h>
