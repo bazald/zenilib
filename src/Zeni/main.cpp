@@ -288,7 +288,7 @@ ZENI_REST_DLL int zenilib_main(int argc, char **argv) {
       std::cerr << "Loading working directory failed.\n";
       return -1;
     }
-    int length = strlen(application_path);
+    int length = int(strlen(application_path));
     
     for(int i = 0; i != 2; ++i)
       up_one_dir(application_path, length);

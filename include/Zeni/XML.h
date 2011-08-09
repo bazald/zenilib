@@ -46,7 +46,11 @@
 
 #include <Zeni/Error.h>
 
+#ifdef _MACOSX
+#include <TinyXML/tinyxml.h>
+#else
 #include <tinyxml.h>
+#endif
 
 namespace Zeni {
 

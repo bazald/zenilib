@@ -169,7 +169,7 @@ namespace Zeni {
 
             Texture * const texture = get_Video().load_Texture(filepath, tile, m_lazy_loading);
 
-            const unsigned int id = give(frame_name, texture, false, filename);
+            const unsigned long id = give(frame_name, texture, false, filename);
 
             s->append_frame(frame_name, id);
           }

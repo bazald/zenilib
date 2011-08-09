@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'zeni_rest' target in the 'zeni_rest' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

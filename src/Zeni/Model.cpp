@@ -18,7 +18,7 @@
 #include <zeni_graphics.h>
 
 #ifdef _MACOSX
-#include <lib3ds-2.0/lib3ds.h>
+#include <lib3ds/lib3ds.h>
 #else
 #include <lib3ds.h>
 #endif

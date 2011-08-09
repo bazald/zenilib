@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'zeni_core' target in the 'zeni_core' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

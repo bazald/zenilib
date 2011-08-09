@@ -53,6 +53,7 @@ namespace Zeni {
     m_bgm(0),
     m_bgm_source(0)
   {
+#ifndef _MACOSX
 #ifdef _WINDOWS
     m_openal32 = LoadLibrary("OpenAL32.dll");
 #else
@@ -133,6 +134,39 @@ namespace Zeni {
 
       throw Sound_Init_Failure();
     }
+#else
+    g_alBufferData = (alBufferData_fcn)alBufferData;
+    g_alcCloseDevice = (alcCloseDevice_fcn)alcCloseDevice;
+    g_alcCreateContext = (alcCreateContext_fcn)alcCreateContext;
+    g_alcDestroyContext = (alcDestroyContext_fcn)alcDestroyContext;
+    g_alIsExtensionPresent = (alIsExtensionPresent_fcn)alIsExtensionPresent;
+    g_alcMakeContextCurrent = (alcMakeContextCurrent_fcn)alcMakeContextCurrent;
+    g_alcOpenDevice = (alcOpenDevice_fcn)alcOpenDevice;
+    g_alDeleteBuffers = (alDeleteBuffers_fcn)alDeleteBuffers;
+    g_alDeleteSources = (alDeleteSources_fcn)alDeleteSources;
+    g_alGenBuffers = (alGenBuffers_fcn)alGenBuffers;
+    g_alGetError = (alGetError_fcn)alGetError;
+    g_alGetListenerf = (alGetListenerf_fcn)alGetListenerf;
+    g_alGetListenerfv = (alGetListenerfv_fcn)alGetListenerfv;
+    g_alGetSourcef = (alGetSourcef_fcn)alGetSourcef;
+    g_alGetSourcefv = (alGetSourcefv_fcn)alGetSourcefv;
+    g_alGetSourcei = (alGetSourcei_fcn)alGetSourcei;
+    g_alGenSources = (alGenSources_fcn)alGenSources;
+    g_alListenerf = (alListenerf_fcn)alListenerf;
+    g_alListenerfv = (alListenerfv_fcn)alListenerfv;
+    g_alSourcef = (alSourcef_fcn)alSourcef;
+    g_alSourcefv = (alSourcefv_fcn)alSourcefv;
+    g_alSourcei = (alSourcei_fcn)alSourcei;
+    g_alSourcePause = (alSourcePause_fcn)alSourcePause;
+    g_alSourcePlay = (alSourcePlay_fcn)alSourcePlay;
+    g_alSourceStop = (alSourceStop_fcn)alSourceStop;
+
+    g_ov_clear = (ov_clear_fcn)ov_clear;
+    g_ov_info = (ov_info_fcn)ov_info;
+    g_ov_fopen = (ov_fopen_fcn)ov_fopen;
+    g_ov_pcm_total = (ov_pcm_total_fcn)ov_pcm_total;
+    g_ov_read = (ov_read_fcn)ov_read;
+#endif
 
     m_device = alcOpenDevice()(0);
     if(!m_device) {
@@ -182,8 +216,10 @@ namespace Zeni {
     alcDestroyContext()(m_context);
     alcCloseDevice()(m_device);
 
+#ifndef _MACOSX
     FreeLibrary(m_libvorbisfile);
     FreeLibrary(m_openal32);
+#endif
 
     zero_handles();
   }

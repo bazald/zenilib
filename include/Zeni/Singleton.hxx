@@ -119,7 +119,7 @@ namespace Zeni {
     
   template <typename TYPE>
   typename Singleton<TYPE>::Reinit * Singleton<TYPE>::Reinit::duplicate() const {
-    return new Singleton<TYPE>::Reinit;
+    return new typename Singleton<TYPE>::Reinit;
   }
   
   template <typename TYPE>
