@@ -74,12 +74,10 @@ private:
 class Bootstrap {
   class Gamestate_One_Initializer : public Gamestate_Zero_Initializer {
     virtual Gamestate_Base * operator()() {
-      // Use Zeni::g_argc and Zeni::g_argv as needed
-
       Window::set_title("zenilib Application");
 
       get_Video();
-      //get_Textures();
+      get_Textures();
       get_Fonts();
       get_Sounds();
 
