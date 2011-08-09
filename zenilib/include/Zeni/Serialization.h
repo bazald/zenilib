@@ -44,7 +44,7 @@
 #include <SDL/SDL_net.h>
 #endif
 
-#include <iosfwd>
+#include <iostream>
 
 /*** IPaddress functions ***/
 

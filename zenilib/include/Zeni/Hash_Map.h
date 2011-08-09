@@ -36,6 +36,22 @@ namespace Zeni {
 
 }
 
+#elif (__GNUC__ > 3)
+
+#include <tr1/unordered_map>
+
+namespace Zeni {
+    
+  template <typename Key, typename Ty>
+  class Unordered_Map : public std::tr1::unordered_map<Key, Ty> {
+  };
+    
+  template <typename Ty>
+  class Unordered_Map<String, Ty> : public std::tr1::unordered_map<String, Ty, String::Hash> {
+  };
+    
+}
+
 #elif defined(__GNUC__)
 
 #include <ext/hash_map>

@@ -9,27 +9,22 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.zenilib.application</string>
+	<string>Zenipex.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Application</string>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.3.3.3</string>
-	<key>NSMainNibFile</key>
-	<string>SDLMain</string>
+	<string>0.4.0.0</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2011 Mitchell Keith Bloch a.k.a. bazald.  LGPL 3.0.</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>LSMinimumSystemVersionByArchitecture</key>
-	<dict>
-		<key>x86_64</key>
-		<string>10.6.0</string>
-		<key>i386</key>
-		<string>10.5.0</string>
-		<key>ppc</key>
-		<string>10.5.0</string>
-	</dict>
+	<string></string>
 </dict>
 </plist>

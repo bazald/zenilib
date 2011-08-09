@@ -109,7 +109,7 @@ namespace Zeni {
 
     vorbis_info *pInfo = Sound_Renderer_AL::ov_info()(&oggFile, -1);
     const ALenum format = pInfo->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
-    const ALsizei freq = pInfo->rate;
+    const ALsizei freq = ALsizei(pInfo->rate);
     const ALsizei bytes_per_sample = format == AL_FORMAT_STEREO16 ? 4 : 2;
     const ogg_int64_t num_samples = Sound_Renderer_AL::ov_pcm_total()(&oggFile, -1);
     const ogg_int64_t pcm_size = num_samples * bytes_per_sample;
@@ -122,7 +122,7 @@ namespace Zeni {
 
     /*** Load the Audio File ***/
 
-    int bytes = 0;
+    long bytes = 0;
     int buffer_size = int(pcm_size);
     std::vector<char> buffer( static_cast<size_t>(buffer_size) );
     for(char *begin = &buffer[0], *end = begin + pcm_size;

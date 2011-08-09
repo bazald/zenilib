@@ -1,0 +1,1806 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D34777CF13EFB45900212482 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D34777CD13EFB45900212482 /* InfoPlist.strings */; };
+		D34777D813EFB5DE00212482 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D34777D913EFB5E000212482 /* zeni.framework in Resources */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3822B6D13F0E99600208551 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3822B6B13F0E99600208551 /* InfoPlist.strings */; };
+		D3822B7F13F0E9A000208551 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3822B7D13F0E9A000208551 /* InfoPlist.strings */; };
+		D3822B9013F0E9A800208551 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3822B8E13F0E9A800208551 /* InfoPlist.strings */; };
+		D3822BA113F0E9AD00208551 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3822B9F13F0E9AD00208551 /* InfoPlist.strings */; };
+		D3822BB213F0E9B500208551 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3822BB013F0E9B500208551 /* InfoPlist.strings */; };
+		D3822BC113F0E9EC00208551 /* zeni_audio.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3822B6513F0E99600208551 /* zeni_audio.framework */; };
+		D3822BC213F0E9F000208551 /* zeni_core.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3822B7813F0E9A000208551 /* zeni_core.framework */; };
+		D3822BC313F0E9F000208551 /* zeni_graphics.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3822B8913F0E9A800208551 /* zeni_graphics.framework */; };
+		D3822BC413F0E9F000208551 /* zeni_net.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3822B9A13F0E9AD00208551 /* zeni_net.framework */; };
+		D3822BC513F0E9F000208551 /* zeni_rest.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3822BAB13F0E9B500208551 /* zeni_rest.framework */; };
+		D3822BC613F0E9FC00208551 /* zeni_audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B6513F0E99600208551 /* zeni_audio.framework */; };
+		D3822BC713F0E9FC00208551 /* zeni_core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B7813F0E9A000208551 /* zeni_core.framework */; };
+		D3822BC813F0E9FC00208551 /* zeni_graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B8913F0E9A800208551 /* zeni_graphics.framework */; };
+		D3822BC913F0E9FC00208551 /* zeni_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B9A13F0E9AD00208551 /* zeni_net.framework */; };
+		D3822BCA13F0E9FC00208551 /* zeni_rest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822BAB13F0E9B500208551 /* zeni_rest.framework */; };
+		D3822BCB13F0EA1E00208551 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3822BCD13F0EA2700208551 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3822BCE13F0EA2B00208551 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3822BCF13F0EA2E00208551 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3822BE513F0EA9900208551 /* zeni_audio.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BE413F0EA9900208551 /* zeni_audio.cxx */; };
+		D3822BE813F0EAA100208551 /* zeni_core.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BE613F0EAA100208551 /* zeni_core.cxx */; };
+		D3822BEA13F0EAAB00208551 /* zeni_graphics.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BE913F0EAAB00208551 /* zeni_graphics.cxx */; };
+		D3822BEC13F0EAB200208551 /* zeni_net.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BEB13F0EAB200208551 /* zeni_net.cxx */; };
+		D3822BEE13F0EAB900208551 /* zeni_rest.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BED13F0EAB900208551 /* zeni_rest.cxx */; };
+		D3837F6213F0F6630045EBC6 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
+		D3837F6313F0F7030045EBC6 /* zeni.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D34777DD13EFB6F900212482 /* zeni.cxx */; };
+		D398AB0E13EF98E7004A17A0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D398AB0C13EF98E7004A17A0 /* InfoPlist.strings */; };
+		D398AB1413EF98E7004A17A0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = D398AB1213EF98E7004A17A0 /* Credits.rtf */; };
+		D398AB1713EF98E7004A17A0 /* ApplicationAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D398AB1613EF98E7004A17A0 /* ApplicationAppDelegate.m */; };
+		D398AB1A13EF98E8004A17A0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D398AB1813EF98E8004A17A0 /* MainMenu.xib */; };
+		D398AB3813EF9AF7004A17A0 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = D398AB3713EF9AF7004A17A0 /* SDLMain.m */; };
+		D398AD2413EFA182004A17A0 /* icon_mac.png in Resources */ = {isa = PBXBuildFile; fileRef = D398AD2313EFA182004A17A0 /* icon_mac.png */; };
+		D3B920C113F0EEBA00F32F80 /* TinyXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920BE13F0EEB300F32F80 /* TinyXML.framework */; };
+		D3B920C313F0EED400F32F80 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C213F0EED400F32F80 /* SDL.framework */; };
+		D3B920C413F0EED400F32F80 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C213F0EED400F32F80 /* SDL.framework */; };
+		D3B920C513F0EED400F32F80 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C213F0EED400F32F80 /* SDL.framework */; };
+		D3B920C713F0EED400F32F80 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C213F0EED400F32F80 /* SDL.framework */; };
+		D3B920CC13F0EEFF00F32F80 /* GLEW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C813F0EEFF00F32F80 /* GLEW.framework */; };
+		D3B920CD13F0EEFF00F32F80 /* lib3ds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920C913F0EEFF00F32F80 /* lib3ds.framework */; };
+		D3B920CE13F0EEFF00F32F80 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920CA13F0EEFF00F32F80 /* SDL_image.framework */; };
+		D3B920CF13F0EEFF00F32F80 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920CB13F0EEFF00F32F80 /* SDL_ttf.framework */; };
+		D3B920D213F0EF1200F32F80 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920D013F0EF1200F32F80 /* Ogg.framework */; };
+		D3B920D313F0EF1200F32F80 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920D113F0EF1200F32F80 /* Vorbis.framework */; };
+		D3B920D513F0EF3800F32F80 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920D413F0EF3800F32F80 /* OpenAL.framework */; };
+		D3B920D713F0EF4400F32F80 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B920D613F0EF4400F32F80 /* OpenGL.framework */; };
+		D3B9210813F0F19700F32F80 /* zeni_core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B7813F0E9A000208551 /* zeni_core.framework */; };
+		D3B9210C13F0F1B400F32F80 /* zeni_core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B7813F0E9A000208551 /* zeni_core.framework */; };
+		D3B9210E13F0F1D200F32F80 /* SDL_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B9210D13F0F1D200F32F80 /* SDL_net.framework */; };
+		D3B9210F13F0F20300F32F80 /* zeni_audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B6513F0E99600208551 /* zeni_audio.framework */; };
+		D3B9211013F0F20400F32F80 /* zeni_core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B7813F0E9A000208551 /* zeni_core.framework */; };
+		D3B9211113F0F20400F32F80 /* zeni_graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B8913F0E9A800208551 /* zeni_graphics.framework */; };
+		D3B9211213F0F20400F32F80 /* zeni_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B9A13F0E9AD00208551 /* zeni_net.framework */; };
+		D3D77D8313F0FB1A00CF66FF /* SDL_net.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B9210D13F0F1D200F32F80 /* SDL_net.framework */; };
+		D3D77D8613F0FB1A00CF66FF /* Ogg.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920D013F0EF1200F32F80 /* Ogg.framework */; };
+		D3D77D8713F0FB1A00CF66FF /* Vorbis.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920D113F0EF1200F32F80 /* Vorbis.framework */; };
+		D3D77D8813F0FB1A00CF66FF /* GLEW.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920C813F0EEFF00F32F80 /* GLEW.framework */; };
+		D3D77D8913F0FB1A00CF66FF /* lib3ds.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920C913F0EEFF00F32F80 /* lib3ds.framework */; };
+		D3D77D8A13F0FB1A00CF66FF /* SDL_image.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920CA13F0EEFF00F32F80 /* SDL_image.framework */; };
+		D3D77D8B13F0FB1A00CF66FF /* SDL_ttf.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920CB13F0EEFF00F32F80 /* SDL_ttf.framework */; };
+		D3D77D8C13F0FB1A00CF66FF /* SDL.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920C213F0EED400F32F80 /* SDL.framework */; };
+		D3D77D8D13F0FB1A00CF66FF /* TinyXML.framework in Resources */ = {isa = PBXBuildFile; fileRef = D3B920BE13F0EEB300F32F80 /* TinyXML.framework */; };
+		D3D77D8E13F0FBB700CF66FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B6613F0E99600208551 /* Cocoa.framework */; };
+		D3D77D9C13F1010C00CF66FF /* bootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D77D9B13F1010C00CF66FF /* bootstrap.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D34777D613EFB5C800212482 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3822BB713F0E9C500208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B6413F0E99600208551;
+			remoteInfo = zeni_audio;
+		};
+		D3822BB913F0E9C600208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B7713F0E9A000208551;
+			remoteInfo = zeni_core;
+		};
+		D3822BBB13F0E9C800208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B8813F0E9A800208551;
+			remoteInfo = zeni_graphics;
+		};
+		D3822BBD13F0E9C900208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B9913F0E9AD00208551;
+			remoteInfo = zeni_net;
+		};
+		D3822BBF13F0E9CB00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822BAA13F0E9B500208551;
+			remoteInfo = zeni_rest;
+		};
+		D3822BD013F0EA3C00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3822BD213F0EA3D00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B6413F0E99600208551;
+			remoteInfo = zeni_audio;
+		};
+		D3822BD413F0EA3E00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B7713F0E9A000208551;
+			remoteInfo = zeni_core;
+		};
+		D3822BD613F0EA4100208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B8813F0E9A800208551;
+			remoteInfo = zeni_graphics;
+		};
+		D3822BD813F0EA4400208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B9913F0E9AD00208551;
+			remoteInfo = zeni_net;
+		};
+		D3822BDA13F0EA4D00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3822BDC13F0EA4E00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B7713F0E9A000208551;
+			remoteInfo = zeni_core;
+		};
+		D3822BDE13F0EA5500208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3822BE013F0EA5800208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3822BE213F0EA5A00208551 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34777C713EFB45900212482;
+			remoteInfo = zeni;
+		};
+		D3B9210A13F0F1A000F32F80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D398AAF613EF98E7004A17A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3822B7713F0E9A000208551;
+			remoteInfo = zeni_core;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D34777C813EFB45900212482 /* zeni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D34777CC13EFB45900212482 /* zeni-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni-Info.plist"; sourceTree = "<group>"; };
+		D34777CE13EFB45900212482 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D34777D013EFB45900212482 /* zeni-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni-Prefix.pch"; sourceTree = "<group>"; };
+		D34777DD13EFB6F900212482 /* zeni.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni.cxx; path = ../../src/zeni.cxx; sourceTree = "<group>"; };
+		D3822B6513F0E99600208551 /* zeni_audio.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni_audio.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3822B6613F0E99600208551 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		D3822B6A13F0E99600208551 /* zeni_audio-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni_audio-Info.plist"; sourceTree = "<group>"; };
+		D3822B6C13F0E99600208551 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3822B6E13F0E99600208551 /* zeni_audio-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni_audio-Prefix.pch"; sourceTree = "<group>"; };
+		D3822B7813F0E9A000208551 /* zeni_core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni_core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3822B7C13F0E9A000208551 /* zeni_core-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni_core-Info.plist"; sourceTree = "<group>"; };
+		D3822B7E13F0E9A000208551 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3822B8013F0E9A000208551 /* zeni_core-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni_core-Prefix.pch"; sourceTree = "<group>"; };
+		D3822B8913F0E9A800208551 /* zeni_graphics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni_graphics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3822B8D13F0E9A800208551 /* zeni_graphics-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni_graphics-Info.plist"; sourceTree = "<group>"; };
+		D3822B8F13F0E9A800208551 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3822B9113F0E9A800208551 /* zeni_graphics-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni_graphics-Prefix.pch"; sourceTree = "<group>"; };
+		D3822B9A13F0E9AD00208551 /* zeni_net.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni_net.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3822B9E13F0E9AD00208551 /* zeni_net-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni_net-Info.plist"; sourceTree = "<group>"; };
+		D3822BA013F0E9AD00208551 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3822BA213F0E9AD00208551 /* zeni_net-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni_net-Prefix.pch"; sourceTree = "<group>"; };
+		D3822BAB13F0E9B500208551 /* zeni_rest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = zeni_rest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3822BAF13F0E9B500208551 /* zeni_rest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "zeni_rest-Info.plist"; sourceTree = "<group>"; };
+		D3822BB113F0E9B500208551 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3822BB313F0E9B500208551 /* zeni_rest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zeni_rest-Prefix.pch"; sourceTree = "<group>"; };
+		D3822BE413F0EA9900208551 /* zeni_audio.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_audio.cxx; path = ../../src/zeni_audio.cxx; sourceTree = "<group>"; };
+		D3822BE613F0EAA100208551 /* zeni_core.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_core.cxx; path = ../../src/zeni_core.cxx; sourceTree = "<group>"; };
+		D3822BE913F0EAAB00208551 /* zeni_graphics.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_graphics.cxx; path = ../../src/zeni_graphics.cxx; sourceTree = "<group>"; };
+		D3822BEB13F0EAB200208551 /* zeni_net.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_net.cxx; path = ../../src/zeni_net.cxx; sourceTree = "<group>"; };
+		D3822BED13F0EAB900208551 /* zeni_rest.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_rest.cxx; path = ../../src/zeni_rest.cxx; sourceTree = "<group>"; };
+		D398AAFF13EF98E7004A17A0 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D398AB0613EF98E7004A17A0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		D398AB0713EF98E7004A17A0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D398AB0813EF98E7004A17A0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D398AB0B13EF98E7004A17A0 /* Application-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Application-Info.plist"; sourceTree = "<group>"; };
+		D398AB0D13EF98E7004A17A0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D398AB0F13EF98E7004A17A0 /* Application-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Application-Prefix.pch"; sourceTree = "<group>"; };
+		D398AB1313EF98E7004A17A0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		D398AB1513EF98E7004A17A0 /* ApplicationAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplicationAppDelegate.h; sourceTree = "<group>"; };
+		D398AB1613EF98E7004A17A0 /* ApplicationAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationAppDelegate.m; sourceTree = "<group>"; };
+		D398AB1913EF98E8004A17A0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		D398AB3613EF9AF7004A17A0 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
+		D398AB3713EF9AF7004A17A0 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
+		D398AD2313EFA182004A17A0 /* icon_mac.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mac.png; sourceTree = "<group>"; };
+		D3B920BE13F0EEB300F32F80 /* TinyXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TinyXML.framework; path = Frameworks/TinyXML.framework; sourceTree = "<group>"; };
+		D3B920C213F0EED400F32F80 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = Frameworks/SDL.framework; sourceTree = "<group>"; };
+		D3B920C813F0EEFF00F32F80 /* GLEW.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLEW.framework; path = Frameworks/GLEW.framework; sourceTree = "<group>"; };
+		D3B920C913F0EEFF00F32F80 /* lib3ds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = lib3ds.framework; path = Frameworks/lib3ds.framework; sourceTree = "<group>"; };
+		D3B920CA13F0EEFF00F32F80 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = Frameworks/SDL_image.framework; sourceTree = "<group>"; };
+		D3B920CB13F0EEFF00F32F80 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = Frameworks/SDL_ttf.framework; sourceTree = "<group>"; };
+		D3B920D013F0EF1200F32F80 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
+		D3B920D113F0EF1200F32F80 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
+		D3B920D413F0EF3800F32F80 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../../../../../System/Library/Frameworks/OpenAL.framework; sourceTree = "<group>"; };
+		D3B920D613F0EF4400F32F80 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
+		D3B9210D13F0F1D200F32F80 /* SDL_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_net.framework; path = Frameworks/SDL_net.framework; sourceTree = "<group>"; };
+		D3D77D9B13F1010C00CF66FF /* bootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bootstrap.cpp; path = ../../src/bootstrap.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D34777C413EFB45900212482 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3B920C113F0EEBA00F32F80 /* TinyXML.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B6113F0E99600208551 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BCB13F0EA1E00208551 /* zeni.framework in Frameworks */,
+				D3B920D213F0EF1200F32F80 /* Ogg.framework in Frameworks */,
+				D3B920D313F0EF1200F32F80 /* Vorbis.framework in Frameworks */,
+				D3B920D513F0EF3800F32F80 /* OpenAL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B7413F0E9A000208551 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3837F6213F0F6630045EBC6 /* zeni.framework in Frameworks */,
+				D3B920C413F0EED400F32F80 /* SDL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B8513F0E9A800208551 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BCD13F0EA2700208551 /* zeni.framework in Frameworks */,
+				D3B9210813F0F19700F32F80 /* zeni_core.framework in Frameworks */,
+				D3B920C513F0EED400F32F80 /* SDL.framework in Frameworks */,
+				D3B920CC13F0EEFF00F32F80 /* GLEW.framework in Frameworks */,
+				D3B920CD13F0EEFF00F32F80 /* lib3ds.framework in Frameworks */,
+				D3B920CE13F0EEFF00F32F80 /* SDL_image.framework in Frameworks */,
+				D3B920CF13F0EEFF00F32F80 /* SDL_ttf.framework in Frameworks */,
+				D3B920D713F0EF4400F32F80 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B9613F0E9AD00208551 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BCE13F0EA2B00208551 /* zeni.framework in Frameworks */,
+				D3B9210C13F0F1B400F32F80 /* zeni_core.framework in Frameworks */,
+				D3B9210E13F0F1D200F32F80 /* SDL_net.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822BA713F0E9B500208551 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BCF13F0EA2E00208551 /* zeni.framework in Frameworks */,
+				D3B9210F13F0F20300F32F80 /* zeni_audio.framework in Frameworks */,
+				D3B9211013F0F20400F32F80 /* zeni_core.framework in Frameworks */,
+				D3B9211113F0F20400F32F80 /* zeni_graphics.framework in Frameworks */,
+				D3B9211213F0F20400F32F80 /* zeni_net.framework in Frameworks */,
+				D3B920C713F0EED400F32F80 /* SDL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D398AAFC13EF98E7004A17A0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3D77D8E13F0FBB700CF66FF /* Cocoa.framework in Frameworks */,
+				D34777D813EFB5DE00212482 /* zeni.framework in Frameworks */,
+				D3822BC613F0E9FC00208551 /* zeni_audio.framework in Frameworks */,
+				D3822BC713F0E9FC00208551 /* zeni_core.framework in Frameworks */,
+				D3822BC813F0E9FC00208551 /* zeni_graphics.framework in Frameworks */,
+				D3822BC913F0E9FC00208551 /* zeni_net.framework in Frameworks */,
+				D3822BCA13F0E9FC00208551 /* zeni_rest.framework in Frameworks */,
+				D3B920C313F0EED400F32F80 /* SDL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D34777CA13EFB45900212482 /* zeni */ = {
+			isa = PBXGroup;
+			children = (
+				D34777DD13EFB6F900212482 /* zeni.cxx */,
+				D34777CB13EFB45900212482 /* Supporting Files */,
+			);
+			path = zeni;
+			sourceTree = "<group>";
+		};
+		D34777CB13EFB45900212482 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D34777CC13EFB45900212482 /* zeni-Info.plist */,
+				D34777CD13EFB45900212482 /* InfoPlist.strings */,
+				D34777D013EFB45900212482 /* zeni-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3822B6813F0E99600208551 /* zeni_audio */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BE413F0EA9900208551 /* zeni_audio.cxx */,
+				D3822B6913F0E99600208551 /* Supporting Files */,
+			);
+			path = zeni_audio;
+			sourceTree = "<group>";
+		};
+		D3822B6913F0E99600208551 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3822B6A13F0E99600208551 /* zeni_audio-Info.plist */,
+				D3822B6B13F0E99600208551 /* InfoPlist.strings */,
+				D3822B6E13F0E99600208551 /* zeni_audio-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3822B7A13F0E9A000208551 /* zeni_core */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BE613F0EAA100208551 /* zeni_core.cxx */,
+				D3822B7B13F0E9A000208551 /* Supporting Files */,
+			);
+			path = zeni_core;
+			sourceTree = "<group>";
+		};
+		D3822B7B13F0E9A000208551 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3822B7C13F0E9A000208551 /* zeni_core-Info.plist */,
+				D3822B7D13F0E9A000208551 /* InfoPlist.strings */,
+				D3822B8013F0E9A000208551 /* zeni_core-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3822B8B13F0E9A800208551 /* zeni_graphics */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BE913F0EAAB00208551 /* zeni_graphics.cxx */,
+				D3822B8C13F0E9A800208551 /* Supporting Files */,
+			);
+			path = zeni_graphics;
+			sourceTree = "<group>";
+		};
+		D3822B8C13F0E9A800208551 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3822B8D13F0E9A800208551 /* zeni_graphics-Info.plist */,
+				D3822B8E13F0E9A800208551 /* InfoPlist.strings */,
+				D3822B9113F0E9A800208551 /* zeni_graphics-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3822B9C13F0E9AD00208551 /* zeni_net */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BEB13F0EAB200208551 /* zeni_net.cxx */,
+				D3822B9D13F0E9AD00208551 /* Supporting Files */,
+			);
+			path = zeni_net;
+			sourceTree = "<group>";
+		};
+		D3822B9D13F0E9AD00208551 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3822B9E13F0E9AD00208551 /* zeni_net-Info.plist */,
+				D3822B9F13F0E9AD00208551 /* InfoPlist.strings */,
+				D3822BA213F0E9AD00208551 /* zeni_net-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3822BAD13F0E9B500208551 /* zeni_rest */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BED13F0EAB900208551 /* zeni_rest.cxx */,
+				D3822BAE13F0E9B500208551 /* Supporting Files */,
+			);
+			path = zeni_rest;
+			sourceTree = "<group>";
+		};
+		D3822BAE13F0E9B500208551 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3822BAF13F0E9B500208551 /* zeni_rest-Info.plist */,
+				D3822BB013F0E9B500208551 /* InfoPlist.strings */,
+				D3822BB313F0E9B500208551 /* zeni_rest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D398AAF413EF98E7004A17A0 = {
+			isa = PBXGroup;
+			children = (
+				D398AD2313EFA182004A17A0 /* icon_mac.png */,
+				D398AB0913EF98E7004A17A0 /* Application */,
+				D34777CA13EFB45900212482 /* zeni */,
+				D3822B6813F0E99600208551 /* zeni_audio */,
+				D3822B7A13F0E9A000208551 /* zeni_core */,
+				D3822B8B13F0E9A800208551 /* zeni_graphics */,
+				D3822B9C13F0E9AD00208551 /* zeni_net */,
+				D3822BAD13F0E9B500208551 /* zeni_rest */,
+				D398AB0213EF98E7004A17A0 /* Frameworks */,
+				D398AB0013EF98E7004A17A0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D398AB0013EF98E7004A17A0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D398AAFF13EF98E7004A17A0 /* Application.app */,
+				D34777C813EFB45900212482 /* zeni.framework */,
+				D3822B6513F0E99600208551 /* zeni_audio.framework */,
+				D3822B7813F0E9A000208551 /* zeni_core.framework */,
+				D3822B8913F0E9A800208551 /* zeni_graphics.framework */,
+				D3822B9A13F0E9AD00208551 /* zeni_net.framework */,
+				D3822BAB13F0E9B500208551 /* zeni_rest.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D398AB0213EF98E7004A17A0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D3822B6613F0E99600208551 /* Cocoa.framework */,
+				D3B920C813F0EEFF00F32F80 /* GLEW.framework */,
+				D3B920C913F0EEFF00F32F80 /* lib3ds.framework */,
+				D3B920D013F0EF1200F32F80 /* Ogg.framework */,
+				D3B920D413F0EF3800F32F80 /* OpenAL.framework */,
+				D3B920D613F0EF4400F32F80 /* OpenGL.framework */,
+				D3B920C213F0EED400F32F80 /* SDL.framework */,
+				D3B920CA13F0EEFF00F32F80 /* SDL_image.framework */,
+				D3B9210D13F0F1D200F32F80 /* SDL_net.framework */,
+				D3B920CB13F0EEFF00F32F80 /* SDL_ttf.framework */,
+				D3B920BE13F0EEB300F32F80 /* TinyXML.framework */,
+				D3B920D113F0EF1200F32F80 /* Vorbis.framework */,
+				D398AB0513EF98E7004A17A0 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D398AB0513EF98E7004A17A0 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D398AB0613EF98E7004A17A0 /* AppKit.framework */,
+				D398AB0713EF98E7004A17A0 /* CoreData.framework */,
+				D398AB0813EF98E7004A17A0 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		D398AB0913EF98E7004A17A0 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				D3D77D9B13F1010C00CF66FF /* bootstrap.cpp */,
+				D398AB0A13EF98E7004A17A0 /* Supporting Files */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		D398AB0A13EF98E7004A17A0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D398AB1513EF98E7004A17A0 /* ApplicationAppDelegate.h */,
+				D398AB1613EF98E7004A17A0 /* ApplicationAppDelegate.m */,
+				D398AB1813EF98E8004A17A0 /* MainMenu.xib */,
+				D398AB3613EF9AF7004A17A0 /* SDLMain.h */,
+				D398AB3713EF9AF7004A17A0 /* SDLMain.m */,
+				D398AB0B13EF98E7004A17A0 /* Application-Info.plist */,
+				D398AB0C13EF98E7004A17A0 /* InfoPlist.strings */,
+				D398AB0F13EF98E7004A17A0 /* Application-Prefix.pch */,
+				D398AB1213EF98E7004A17A0 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D34777C513EFB45900212482 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B6213F0E99600208551 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B7513F0E9A000208551 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B8613F0E9A800208551 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B9713F0E9AD00208551 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822BA813F0E9B500208551 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D34777C713EFB45900212482 /* zeni */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D34777D113EFB45900212482 /* Build configuration list for PBXNativeTarget "zeni" */;
+			buildPhases = (
+				D3D77DBE13F1060300CF66FF /* Install Frameworks */,
+				D34777C313EFB45900212482 /* Sources */,
+				D34777C413EFB45900212482 /* Frameworks */,
+				D34777C513EFB45900212482 /* Headers */,
+				D34777C613EFB45900212482 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zeni;
+			productName = zeni;
+			productReference = D34777C813EFB45900212482 /* zeni.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3822B6413F0E99600208551 /* zeni_audio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3822B7113F0E99600208551 /* Build configuration list for PBXNativeTarget "zeni_audio" */;
+			buildPhases = (
+				D3822B6013F0E99600208551 /* Sources */,
+				D3822B6113F0E99600208551 /* Frameworks */,
+				D3822B6213F0E99600208551 /* Headers */,
+				D3822B6313F0E99600208551 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3822BE313F0EA5A00208551 /* PBXTargetDependency */,
+			);
+			name = zeni_audio;
+			productName = zeni_audio;
+			productReference = D3822B6513F0E99600208551 /* zeni_audio.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3822B7713F0E9A000208551 /* zeni_core */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3822B8113F0E9A000208551 /* Build configuration list for PBXNativeTarget "zeni_core" */;
+			buildPhases = (
+				D3822B7313F0E9A000208551 /* Sources */,
+				D3822B7413F0E9A000208551 /* Frameworks */,
+				D3822B7513F0E9A000208551 /* Headers */,
+				D3822B7613F0E9A000208551 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3822BE113F0EA5800208551 /* PBXTargetDependency */,
+			);
+			name = zeni_core;
+			productName = zeni_core;
+			productReference = D3822B7813F0E9A000208551 /* zeni_core.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3822B8813F0E9A800208551 /* zeni_graphics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3822B9213F0E9A800208551 /* Build configuration list for PBXNativeTarget "zeni_graphics" */;
+			buildPhases = (
+				D3822B8413F0E9A800208551 /* Sources */,
+				D3822B8513F0E9A800208551 /* Frameworks */,
+				D3822B8613F0E9A800208551 /* Headers */,
+				D3822B8713F0E9A800208551 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3822BDF13F0EA5500208551 /* PBXTargetDependency */,
+				D3B9210B13F0F1A000F32F80 /* PBXTargetDependency */,
+			);
+			name = zeni_graphics;
+			productName = zeni_graphics;
+			productReference = D3822B8913F0E9A800208551 /* zeni_graphics.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3822B9913F0E9AD00208551 /* zeni_net */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3822BA313F0E9AD00208551 /* Build configuration list for PBXNativeTarget "zeni_net" */;
+			buildPhases = (
+				D3822B9513F0E9AD00208551 /* Sources */,
+				D3822B9613F0E9AD00208551 /* Frameworks */,
+				D3822B9713F0E9AD00208551 /* Headers */,
+				D3822B9813F0E9AD00208551 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3822BDB13F0EA4D00208551 /* PBXTargetDependency */,
+				D3822BDD13F0EA4E00208551 /* PBXTargetDependency */,
+			);
+			name = zeni_net;
+			productName = zeni_net;
+			productReference = D3822B9A13F0E9AD00208551 /* zeni_net.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3822BAA13F0E9B500208551 /* zeni_rest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3822BB413F0E9B500208551 /* Build configuration list for PBXNativeTarget "zeni_rest" */;
+			buildPhases = (
+				D3822BA613F0E9B500208551 /* Sources */,
+				D3822BA713F0E9B500208551 /* Frameworks */,
+				D3822BA813F0E9B500208551 /* Headers */,
+				D3822BA913F0E9B500208551 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3822BD113F0EA3C00208551 /* PBXTargetDependency */,
+				D3822BD313F0EA3D00208551 /* PBXTargetDependency */,
+				D3822BD513F0EA3E00208551 /* PBXTargetDependency */,
+				D3822BD713F0EA4100208551 /* PBXTargetDependency */,
+				D3822BD913F0EA4400208551 /* PBXTargetDependency */,
+			);
+			name = zeni_rest;
+			productName = zeni_rest;
+			productReference = D3822BAB13F0E9B500208551 /* zeni_rest.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D398AAFE13EF98E7004A17A0 /* Application */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D398AB1D13EF98E8004A17A0 /* Build configuration list for PBXNativeTarget "Application" */;
+			buildPhases = (
+				D398AAFB13EF98E7004A17A0 /* Sources */,
+				D398AAFC13EF98E7004A17A0 /* Frameworks */,
+				D398AAFD13EF98E7004A17A0 /* Resources */,
+				D3D77D9113F0FE4E00CF66FF /* Copy Game Files Into App Bundles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D34777D713EFB5C800212482 /* PBXTargetDependency */,
+				D3822BB813F0E9C500208551 /* PBXTargetDependency */,
+				D3822BBA13F0E9C600208551 /* PBXTargetDependency */,
+				D3822BBC13F0E9C800208551 /* PBXTargetDependency */,
+				D3822BBE13F0E9C900208551 /* PBXTargetDependency */,
+				D3822BC013F0E9CB00208551 /* PBXTargetDependency */,
+			);
+			name = Application;
+			productName = Application;
+			productReference = D398AAFF13EF98E7004A17A0 /* Application.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D398AAF613EF98E7004A17A0 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = D398AAF913EF98E7004A17A0 /* Build configuration list for PBXProject "Application" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D398AAF413EF98E7004A17A0;
+			productRefGroup = D398AB0013EF98E7004A17A0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D398AAFE13EF98E7004A17A0 /* Application */,
+				D34777C713EFB45900212482 /* zeni */,
+				D3822B6413F0E99600208551 /* zeni_audio */,
+				D3822B7713F0E9A000208551 /* zeni_core */,
+				D3822B8813F0E9A800208551 /* zeni_graphics */,
+				D3822B9913F0E9AD00208551 /* zeni_net */,
+				D3822BAA13F0E9B500208551 /* zeni_rest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D34777C613EFB45900212482 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D34777CF13EFB45900212482 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B6313F0E99600208551 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822B6D13F0E99600208551 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B7613F0E9A000208551 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822B7F13F0E9A000208551 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B8713F0E9A800208551 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822B9013F0E9A800208551 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B9813F0E9AD00208551 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BA113F0E9AD00208551 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822BA913F0E9B500208551 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BB213F0E9B500208551 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D398AAFD13EF98E7004A17A0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D398AB0E13EF98E7004A17A0 /* InfoPlist.strings in Resources */,
+				D398AB1413EF98E7004A17A0 /* Credits.rtf in Resources */,
+				D398AB1A13EF98E8004A17A0 /* MainMenu.xib in Resources */,
+				D3D77D8813F0FB1A00CF66FF /* GLEW.framework in Resources */,
+				D3D77D8913F0FB1A00CF66FF /* lib3ds.framework in Resources */,
+				D3D77D8613F0FB1A00CF66FF /* Ogg.framework in Resources */,
+				D3D77D8A13F0FB1A00CF66FF /* SDL_image.framework in Resources */,
+				D3D77D8313F0FB1A00CF66FF /* SDL_net.framework in Resources */,
+				D3D77D8B13F0FB1A00CF66FF /* SDL_ttf.framework in Resources */,
+				D3D77D8C13F0FB1A00CF66FF /* SDL.framework in Resources */,
+				D3D77D8D13F0FB1A00CF66FF /* TinyXML.framework in Resources */,
+				D3D77D8713F0FB1A00CF66FF /* Vorbis.framework in Resources */,
+				D34777D913EFB5E000212482 /* zeni.framework in Resources */,
+				D3822BC113F0E9EC00208551 /* zeni_audio.framework in Resources */,
+				D3822BC213F0E9F000208551 /* zeni_core.framework in Resources */,
+				D3822BC313F0E9F000208551 /* zeni_graphics.framework in Resources */,
+				D3822BC413F0E9F000208551 /* zeni_net.framework in Resources */,
+				D3822BC513F0E9F000208551 /* zeni_rest.framework in Resources */,
+				D398AD2413EFA182004A17A0 /* icon_mac.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D3D77D9113F0FE4E00CF66FF /* Copy Game Files Into App Bundles */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Game Files Into App Bundles";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "for App in build/*/*.app; do\n  rsync -rlt --delete \\\n  --exclude \"*.app\" \\\n  --exclude clean/ \\\n  --exclude \"Code Blocks/\" \\\n  --exclude Doxyfile \\\n  --exclude Frameworks/ \\\n  --exclude include/ \\\n  --exclude SConstruct \\\n  --exclude src/ \\\n  --exclude \"Visual Studio 2008/\" \\\n  --exclude \"Visual Studio 2010/\" \\\n  --exclude Xcode/ \\\n  ../ \"$App/Contents/zenilib/\"\ndone";
+		};
+		D3D77DBE13F1060300CF66FF /* Install Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d Frameworks ]\nthen\necho \"You have the Frameworks installed\"\nelse\ncurl -C - --retry 42 -O http://www-personal.umich.edu/~bazald/l/support/zenilib_0.4.0.0_frameworks.zip\nunzip -q zenilib_0.4.0.0_frameworks.zip\nrm -d -f -R __MACOSX\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D34777C313EFB45900212482 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3837F6313F0F7030045EBC6 /* zeni.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B6013F0E99600208551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BE513F0EA9900208551 /* zeni_audio.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B7313F0E9A000208551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BE813F0EAA100208551 /* zeni_core.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B8413F0E9A800208551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BEA13F0EAAB00208551 /* zeni_graphics.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822B9513F0E9AD00208551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BEC13F0EAB200208551 /* zeni_net.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3822BA613F0E9B500208551 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3822BEE13F0EAB900208551 /* zeni_rest.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D398AAFB13EF98E7004A17A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D398AB1713EF98E7004A17A0 /* ApplicationAppDelegate.m in Sources */,
+				D398AB3813EF9AF7004A17A0 /* SDLMain.m in Sources */,
+				D3D77D9C13F1010C00CF66FF /* bootstrap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D34777D713EFB5C800212482 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D34777D613EFB5C800212482 /* PBXContainerItemProxy */;
+		};
+		D3822BB813F0E9C500208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B6413F0E99600208551 /* zeni_audio */;
+			targetProxy = D3822BB713F0E9C500208551 /* PBXContainerItemProxy */;
+		};
+		D3822BBA13F0E9C600208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B7713F0E9A000208551 /* zeni_core */;
+			targetProxy = D3822BB913F0E9C600208551 /* PBXContainerItemProxy */;
+		};
+		D3822BBC13F0E9C800208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B8813F0E9A800208551 /* zeni_graphics */;
+			targetProxy = D3822BBB13F0E9C800208551 /* PBXContainerItemProxy */;
+		};
+		D3822BBE13F0E9C900208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B9913F0E9AD00208551 /* zeni_net */;
+			targetProxy = D3822BBD13F0E9C900208551 /* PBXContainerItemProxy */;
+		};
+		D3822BC013F0E9CB00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822BAA13F0E9B500208551 /* zeni_rest */;
+			targetProxy = D3822BBF13F0E9CB00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BD113F0EA3C00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D3822BD013F0EA3C00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BD313F0EA3D00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B6413F0E99600208551 /* zeni_audio */;
+			targetProxy = D3822BD213F0EA3D00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BD513F0EA3E00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B7713F0E9A000208551 /* zeni_core */;
+			targetProxy = D3822BD413F0EA3E00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BD713F0EA4100208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B8813F0E9A800208551 /* zeni_graphics */;
+			targetProxy = D3822BD613F0EA4100208551 /* PBXContainerItemProxy */;
+		};
+		D3822BD913F0EA4400208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B9913F0E9AD00208551 /* zeni_net */;
+			targetProxy = D3822BD813F0EA4400208551 /* PBXContainerItemProxy */;
+		};
+		D3822BDB13F0EA4D00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D3822BDA13F0EA4D00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BDD13F0EA4E00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B7713F0E9A000208551 /* zeni_core */;
+			targetProxy = D3822BDC13F0EA4E00208551 /* PBXContainerItemProxy */;
+		};
+		D3822BDF13F0EA5500208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D3822BDE13F0EA5500208551 /* PBXContainerItemProxy */;
+		};
+		D3822BE113F0EA5800208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D3822BE013F0EA5800208551 /* PBXContainerItemProxy */;
+		};
+		D3822BE313F0EA5A00208551 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34777C713EFB45900212482 /* zeni */;
+			targetProxy = D3822BE213F0EA5A00208551 /* PBXContainerItemProxy */;
+		};
+		D3B9210B13F0F1A000F32F80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3822B7713F0E9A000208551 /* zeni_core */;
+			targetProxy = D3B9210A13F0F1A000F32F80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D34777CD13EFB45900212482 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D34777CE13EFB45900212482 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3822B6B13F0E99600208551 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3822B6C13F0E99600208551 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3822B7D13F0E9A000208551 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3822B7E13F0E9A000208551 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3822B8E13F0E9A800208551 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3822B8F13F0E9A800208551 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3822B9F13F0E9AD00208551 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3822BA013F0E9AD00208551 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3822BB013F0E9B500208551 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3822BB113F0E9B500208551 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D398AB0C13EF98E7004A17A0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D398AB0D13EF98E7004A17A0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D398AB1213EF98E7004A17A0 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D398AB1313EF98E7004A17A0 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		D398AB1813EF98E8004A17A0 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D398AB1913EF98E8004A17A0 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D34777D213EFB45900212482 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni/zeni-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni/zeni-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni.framework/zeni";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D34777D313EFB45900212482 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_LOCATION = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni/zeni-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni/zeni-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni.framework/zeni";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D3822B6F13F0E99600208551 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_audio/zeni_audio-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_audio/zeni_audio-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_audio.framework/zeni_audio";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D3822B7013F0E99600208551 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_audio/zeni_audio-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_audio/zeni_audio-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_audio.framework/zeni_audio";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D3822B8213F0E9A000208551 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_core/zeni_core-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_core/zeni_core-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_core.framework/zeni_core";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D3822B8313F0E9A000208551 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_core/zeni_core-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_core/zeni_core-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_core.framework/zeni_core";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D3822B9313F0E9A800208551 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_graphics/zeni_graphics-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_graphics/zeni_graphics-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_graphics.framework/zeni_graphics";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D3822B9413F0E9A800208551 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_graphics/zeni_graphics-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_graphics/zeni_graphics-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_graphics.framework/zeni_graphics";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D3822BA413F0E9AD00208551 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_net/zeni_net-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_net/zeni_net-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_net.framework/zeni_net";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D3822BA513F0E9AD00208551 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_net/zeni_net-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_net/zeni_net-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_net.framework/zeni_net";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D3822BB513F0E9B500208551 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_rest/zeni_rest-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_rest/zeni_rest-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_rest.framework/zeni_rest";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		D3822BB613F0E9B500208551 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "zeni_rest/zeni_rest-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "zeni_rest/zeni_rest-Info.plist";
+				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_rest.framework/zeni_rest";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		D398AB1B13EF98E8004A17A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D398AB1C13EF98E8004A17A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D398AB1E13EF98E8004A17A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Application/Application-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "Application/Application-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D398AB1F13EF98E8004A17A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Application/Application-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MACOSX,
+					DISABLE_CG,
+					DISABLE_DX9,
+					DISABLE_WGL,
+					"ZENI_DLL=\"\"",
+					"ZENI_EXT=\"\"",
+					"ZENI_AUDIO_DLL=\"\"",
+					"ZENI_AUDIO_EXT=\"\"",
+					"ZENI_CORE_DLL=\"\"",
+					"ZENI_CORE_EXT=\"\"",
+					"ZENI_GRAPHICS_DLL=\"\"",
+					"ZENI_GRAPHICS_EXT=\"\"",
+					"ZENI_NET_DLL=\"\"",
+					"ZENI_NET_EXT=\"\"",
+					"ZENI_REST_DLL=\"\"",
+					"ZENI_REST_EXT=\"\"",
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
+				INFOPLIST_FILE = "Application/Application-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D34777D113EFB45900212482 /* Build configuration list for PBXNativeTarget "zeni" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D34777D213EFB45900212482 /* Debug */,
+				D34777D313EFB45900212482 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3822B7113F0E99600208551 /* Build configuration list for PBXNativeTarget "zeni_audio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3822B6F13F0E99600208551 /* Debug */,
+				D3822B7013F0E99600208551 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3822B8113F0E9A000208551 /* Build configuration list for PBXNativeTarget "zeni_core" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3822B8213F0E9A000208551 /* Debug */,
+				D3822B8313F0E9A000208551 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3822B9213F0E9A800208551 /* Build configuration list for PBXNativeTarget "zeni_graphics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3822B9313F0E9A800208551 /* Debug */,
+				D3822B9413F0E9A800208551 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3822BA313F0E9AD00208551 /* Build configuration list for PBXNativeTarget "zeni_net" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3822BA413F0E9AD00208551 /* Debug */,
+				D3822BA513F0E9AD00208551 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3822BB413F0E9B500208551 /* Build configuration list for PBXNativeTarget "zeni_rest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3822BB513F0E9B500208551 /* Debug */,
+				D3822BB613F0E9B500208551 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D398AAF913EF98E7004A17A0 /* Build configuration list for PBXProject "Application" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D398AB1B13EF98E8004A17A0 /* Debug */,
+				D398AB1C13EF98E8004A17A0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D398AB1D13EF98E8004A17A0 /* Build configuration list for PBXNativeTarget "Application" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D398AB1E13EF98E8004A17A0 /* Debug */,
+				D398AB1F13EF98E8004A17A0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D398AAF613EF98E7004A17A0 /* Project object */;
+}
