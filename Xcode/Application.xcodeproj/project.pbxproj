@@ -851,7 +851,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "for App in build/*/*.app; do\n  rsync -rlt --delete \\\n  --exclude \"*.app\" \\\n  --exclude clean/ \\\n  --exclude \"Code Blocks/\" \\\n  --exclude Doxyfile \\\n  --exclude Frameworks/ \\\n  --exclude include/ \\\n  --exclude SConstruct \\\n  --exclude src/ \\\n  --exclude \"Visual Studio 2008/\" \\\n  --exclude \"Visual Studio 2010/\" \\\n  --exclude Xcode/ \\\n  ../ \"$App/Contents/zenilib/\"\ndone";
+			shellScript = "for App in build/*/*.app; do\n  rsync -rlt --delete \\\n  --exclude \"*.app\" \\\n  --exclude clean/ \\\n  --exclude \"Code Blocks/\" \\\n  --exclude Doxyfile \\\n  --exclude Frameworks/ \\\n  --exclude include/ \\\n  --exclude SConstruct \\\n  --exclude src/ \\\n  --exclude \"Visual Studio 2008/\" \\\n  --exclude \"Visual Studio 2010/\" \\\n  --exclude Xcode/ \\\n  ../ \"$BUILD_DIR/Contents/zenilib/\"\ndone";
 		};
 		D3D77DBE13F1060300CF66FF /* Install Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
