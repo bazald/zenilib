@@ -79,11 +79,15 @@ namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Vertex_Buffer_Microrenderer {
   public:
+    virtual ~Vertex_Buffer_Microrenderer() {}
+
     virtual void operator()() const = 0;
   };
 
   class ZENI_GRAPHICS_DLL Vertex_Buffer_Macrorenderer {
   public:
+    virtual ~Vertex_Buffer_Macrorenderer() {}
+
     virtual void operator()(const Vertex_Buffer_Microrenderer &microrenderer) const;
   };
 
