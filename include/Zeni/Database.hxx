@@ -84,6 +84,7 @@ namespace Zeni {
 
   template <class TYPE>
   Database<TYPE>::~Database() {
+    uninit();
   }
   
   template <class TYPE>
