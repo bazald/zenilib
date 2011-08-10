@@ -52,6 +52,8 @@ namespace Zeni {
 
   class ZENI_REST_DLL Gamestate_Zero_Initializer {
   public:
+	virtual ~Gamestate_Zero_Initializer() {}
+
     virtual Gamestate_Base * operator()() = 0;
   };
 

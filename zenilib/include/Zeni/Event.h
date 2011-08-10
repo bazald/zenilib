@@ -26,6 +26,8 @@ namespace Zeni {
   public:
     class ZENI_DLL Handler {
     public:
+      virtual ~Handler() {}
+
       virtual void operator()() = 0;
 
       virtual Handler * duplicate() const = 0;
