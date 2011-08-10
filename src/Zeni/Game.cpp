@@ -164,13 +164,15 @@ namespace Zeni {
           gs.prerender();
 
           if(vr.begin_render()) {
-            struct End_Render {
-              ~End_Render() {
-                get_Video().end_render();
-              }
-            } end_render;
+            try {
+              gs.render();
+            }
+            catch(...) {
+              vr.end_render();
+              throw;
+            }
 
-            gs.render();
+            vr.end_render();
           }
         }
       }
