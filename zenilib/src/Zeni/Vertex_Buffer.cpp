@@ -64,15 +64,19 @@ namespace Zeni {
   }
 
   template <typename VERTEX>
-  static void clear_triangles(std::vector<Triangle<VERTEX> *> &triangles) {
-    for(unsigned int i = 0; i < triangles.size(); ++i)
-      delete triangles[i];
+  static void clear_triangles(std::vector<Triangle<VERTEX> *> &triangles, std::vector<Vertex_Buffer::Vertex_Buffer_Range *> &descriptors) {
+    for(typename std::vector<Triangle<VERTEX> *>::iterator it = triangles.begin(), iend = triangles.end(); it != iend; ++it)
+      delete *it;
     triangles.clear();
+
+    for(std::vector<Vertex_Buffer::Vertex_Buffer_Range *>::iterator it = descriptors.begin(), iend = descriptors.end(); it != iend; ++it)
+      delete *it;
+    descriptors.clear();
   }
 
   Vertex_Buffer::~Vertex_Buffer() {
-    clear_triangles(m_triangles_cm);
-    clear_triangles(m_triangles_t);
+    clear_triangles(m_triangles_cm, m_descriptors_cm);
+    clear_triangles(m_triangles_t, m_descriptors_t);
 
     delete m_renderer;
     delete m_macrorenderer;
@@ -284,12 +288,12 @@ namespace Zeni {
         if(material_ptr)
           material_ptr->clear_optimization();
         for(size_t i = 1; i < triangles.size(); ++i) {
-          Material * material_ptr2 = new Material(*triangles[i]->get_Material());
+          Material material2(*triangles[i]->get_Material());
 
-          if(material_ptr ? *material_ptr == *material_ptr2 : !material_ptr2)
+          if(material_ptr && *material_ptr == material2)
             ++descriptors[last]->num_elements;
           else {
-            material_ptr2 = new Material(*material_ptr2);
+            Material * const material_ptr2 = new Material(material2);
             descriptors.push_back(new Vertex_Buffer::Vertex_Buffer_Range(material_ptr2, triangles_done+i, 1u));
             ++last;
             material_ptr2->clear_optimization();
@@ -427,8 +431,8 @@ namespace Zeni {
   }
 
   std::set<Vertex_Buffer *> & Vertex_Buffer::get_vbos() {
-    static std::set<Vertex_Buffer *> * vbos = new std::set<Vertex_Buffer *>;
-    return *vbos;
+    static std::set<Vertex_Buffer *> vbos;
+    return vbos;
   }
 
 #ifndef DISABLE_GL

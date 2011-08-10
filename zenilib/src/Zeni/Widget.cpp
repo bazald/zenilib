@@ -1330,8 +1330,8 @@ namespace Zeni {
   }
 
   std::set<Text_Box *> & Text_Box::get_text_boxes() {
-    static std::set<Text_Box *> * text_boxes = new std::set<Text_Box *>;
-    return *text_boxes;
+    static std::set<Text_Box *> text_boxes;
+    return text_boxes;
   }
 
   void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {

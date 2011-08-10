@@ -178,8 +178,8 @@ namespace Zeni {
   }
 
   String & File_Ops::get_unique_app_identifier() {
-    static String * unique_app_identifier = new String;
-    return *unique_app_identifier;
+    static String unique_app_identifier;
+    return unique_app_identifier;
   }
 
 }
