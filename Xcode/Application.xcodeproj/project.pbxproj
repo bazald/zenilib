@@ -1132,6 +1132,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni.framework/zeni";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1174,6 +1175,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni.framework/zeni";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1215,6 +1217,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_audio.framework/zeni_audio";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1256,6 +1259,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_audio.framework/zeni_audio";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1297,6 +1301,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_core.framework/zeni_core";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1338,6 +1343,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_core.framework/zeni_core";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1379,6 +1385,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_graphics.framework/zeni_graphics";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1420,6 +1427,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_graphics.framework/zeni_graphics";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1461,6 +1469,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_net.framework/zeni_net";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1502,6 +1511,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_net.framework/zeni_net";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1543,6 +1553,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_rest.framework/zeni_rest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1584,6 +1595,7 @@
 				INSTALL_PATH = "\"$(SRCROOT)/Frameworks\"";
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Resources/zeni_rest.framework/zeni_rest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1649,7 +1661,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
@@ -1685,6 +1697,7 @@
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
 				INFOPLIST_FILE = "Application/Application-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1721,6 +1734,7 @@
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../include\"";
 				INFOPLIST_FILE = "Application/Application-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
