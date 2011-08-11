@@ -132,7 +132,7 @@ namespace Zeni {
     m_camera_to_world = m_world_to_camera.inverted();
 
     const float aspect = size().i / size().j;
-    const float top = tan(0.5f * camera3d.fov_rad) * camera3d.near_clip;
+    const float top = float(tan(0.5f * camera3d.fov_rad)) * camera3d.near_clip;
     const float bottom = -top;
     const float left = aspect * bottom;
     const float right = aspect * top;

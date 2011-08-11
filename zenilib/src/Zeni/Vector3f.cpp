@@ -24,12 +24,12 @@
 namespace Zeni {
 
   namespace Global {
-    const float pi = acos(-1.0f);
-    const float pi_over_two = acos(-1.0f) / 2.0f;
-    const float three_pi_over_two = 3.0f * acos(-1.0f) / 2.0f;
+    const float pi = float(acos(-1.0f));
+    const float pi_over_two = float(acos(-1.0f)) / 2.0f;
+    const float three_pi_over_two = 3.0f * float(acos(-1.0f)) / 2.0f;
     const float over_three = 1.0f / 3.0f;
-    const float sqrt_two = sqrt(2.0f);
-    const float sqrt_three = sqrt(3.0f);
+    const float sqrt_two = float(sqrt(2.0f));
+    const float sqrt_three = float(sqrt(3.0f));
 
     const Vector3f vector_i(1, 0, 0);
     const Vector3f vector_j(0, 1, 0);
@@ -68,9 +68,9 @@ namespace Zeni {
 
   float Vector3f::theta() const {
     if(i > 0)
-      return atan(j/i);
+      return float(atan(j/i));
     else if(i < 0)
-      return atan(j/i) + Global::pi;
+      return float(atan(j/i)) + Global::pi;
     else if(j > 0)
       return Global::pi_over_two;
     else if(j < 0)
@@ -79,10 +79,10 @@ namespace Zeni {
   }
 
   float Vector3f::phi() const {
-    const float xy_mag = sqrt(pow(i, 2) + pow(j, 2));
+    const float xy_mag = float(sqrt(pow(i, 2) + pow(j, 2)));
 
     if(xy_mag > 0.0f)
-      return Global::pi_over_two + atan(-k / xy_mag);
+      return Global::pi_over_two + float(atan(-k / xy_mag));
 
     if(k < 0.0f)
       return Global::pi;
@@ -91,10 +91,10 @@ namespace Zeni {
   }
 
   void Vector3f::set_spherical(const float &theta, const float &phi, const float &magnitude) {
-    i = sin(phi) * magnitude;
-    j = sin(theta) * i;
-    i *= cos(theta);
-    k = cos(phi) * magnitude;
+    i = float(sin(phi)) * magnitude;
+    j = float(sin(theta)) * i;
+    i *= float(cos(theta));
+    k = float(cos(phi)) * magnitude;
     degenerate = false;
   }
   

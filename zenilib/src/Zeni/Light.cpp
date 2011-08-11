@@ -40,7 +40,7 @@ namespace Zeni {
     ambient(ambient_),
     position(position_),
     spot_direction(spot_direction_),
-    range(pow(2.0f, 100.0f)), 
+    range(float(pow(2.0f, 100.0f))),
     spot_exponent(1.0f), 
     constant_attenuation(1.0f), 
     linear_attenuation(0.0f), 

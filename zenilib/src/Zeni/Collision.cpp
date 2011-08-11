@@ -40,7 +40,7 @@ namespace Zeni {
     }
 
     inline void absolute_float_unclamp(float &value, const float &new_value) {
-      const float abs_value = fabs(new_value);
+      const float abs_value = float(fabs(new_value));
       if(value < abs_value)
         value = abs_value;
     }
@@ -244,7 +244,7 @@ namespace Zeni {
 
       const Vector3f valid_axes_distance = lhs.get_end_point_a() + min_max * lhs.get_direction() - closest_point;
       const float valid_axes_distance2 = valid_axes_distance * valid_axes_distance;
-      const float total_distance = sqrt(invalid_axes_distance2 + valid_axes_distance2);
+      const float total_distance = float(sqrt(invalid_axes_distance2 + valid_axes_distance2));
 
       return std::make_pair(total_distance, min_max);
     }
@@ -280,7 +280,7 @@ namespace Zeni {
     }
 
     float Plane::shortest_distance(const Point3f &rhs) const {
-      return fabs((point - rhs) * normal);
+      return float(fabs((point - rhs) * normal));
     }
 
     float Plane::shortest_distance(const Sphere &rhs) const {
@@ -527,7 +527,7 @@ namespace Zeni {
         {
           const float &ra = a[i];
           const float rb = b[0] * abs_R[i][0] + b[1] * abs_R[i][1] + b[2] * abs_R[i][2];
-          const float t = fabs(T[i]);
+          const float t = float(fabs(T[i]));
 
           if(t > ra + rb)
             return t - (ra + rb);
@@ -536,7 +536,7 @@ namespace Zeni {
         {
           const float ra = a[0] * abs_R[0][i] + a[1] * abs_R[1][i] + a[2] * abs_R[2][i];
           const float &rb = b[i];
-          const float t = fabs(T[0] * R[0][i] + T[1] * R[1][i] + T[2] * R[2][i]);
+          const float t = float(fabs(T[0] * R[0][i] + T[1] * R[1][i] + T[2] * R[2][i]));
 
           if(t > ra + rb)
             return t - (ra + rb);
@@ -556,7 +556,7 @@ namespace Zeni {
         for(int i = 0, m = 1, n = 2; i < 3; ++i) {
           const float ra = a[u] * abs_R[v][i] + a[v] * abs_R[u][i];
           const float rb = b[m] * abs_R[j][n] + b[n] * abs_R[j][m];
-          const float t = fabs(T[u] * R[v][i] - T[v] * R[u][i]);
+          const float t = float(fabs(T[u] * R[v][i] - T[v] * R[u][i]));
 
           if(t > ra + rb)
             return t - (ra + rb);

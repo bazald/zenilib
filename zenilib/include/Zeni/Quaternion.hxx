@@ -121,7 +121,7 @@ namespace Zeni {
   }
 
   float Quaternion::magnitude() const {
-    return sqrt(magnitude2());
+    return float(sqrt(magnitude2()));
   }
 
   Quaternion Quaternion::conjugate() const {
@@ -187,8 +187,8 @@ namespace Zeni {
     else if(q.time > 1.0f)
       q.time = 1.0f;
 
-    const float angle = 2.0f * acos(q.time);
-    float s = sqrt(1.0f - q.time * q.time);
+    const float angle = 2.0f * float(acos(q.time));
+    float s = float(sqrt(1.0f - q.time * q.time));
 
     if(fabs(s) < 0.001f)
       return std::make_pair(q.space, angle);

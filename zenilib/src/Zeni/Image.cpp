@@ -101,8 +101,8 @@ namespace Zeni {
     const Color lrc = extract_Color(lr);
     const Color urc = extract_Color(Point2i(lr.x, ul.y));
 
-    const float x_rhs_part = scaled.x - floor(scaled.x);
-    const float y_rhs_part = scaled.y - floor(scaled.y);
+    const float x_rhs_part = scaled.x - float(floor(scaled.x));
+    const float y_rhs_part = scaled.y - float(floor(scaled.y));
 
     const Color uc = ulc.interpolate_to(x_rhs_part, urc);
     const Color lc = llc.interpolate_to(x_rhs_part, lrc);
