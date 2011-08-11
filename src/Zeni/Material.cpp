@@ -64,11 +64,11 @@ namespace Zeni {
   }
 
   float Material::get_shininess() const {
-    return 0.1f * log(m_power)/log(2.0f);
+    return 0.1f * float(log(m_power)/log(2.0f));
   }
 
   void Material::set_shininess(const float &shininess) {
-    m_power = pow(2.0f, 10.0f * shininess);
+    m_power = float(pow(2.0f, 10.0f * shininess));
     if(m_power > 128.0f)
       m_power = 128.0f;
   }

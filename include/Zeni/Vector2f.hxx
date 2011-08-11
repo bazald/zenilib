@@ -121,7 +121,7 @@ namespace Zeni {
   }
 
   float Vector2f::magnitude() const {
-    return sqrt(magnitude2());
+    return float(sqrt(magnitude2()));
   }
 
   Vector2f Vector2f::get_i() const {
@@ -145,7 +145,7 @@ namespace Zeni {
     const float b = rhs.magnitude();
     const float c = (rhs - *this).magnitude();
 
-    return acos((a * a + b * b - c * c) / (2 * a * b));
+    return float(acos((a * a + b * b - c * c) / (2 * a * b)));
   }
   
   const float & Vector2f::operator[](const int &index) const {

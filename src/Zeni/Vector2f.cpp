@@ -54,9 +54,9 @@ namespace Zeni {
 
   float Vector2f::theta() const {
     if(i > 0)
-      return atan(j/i);
+      return float(atan(j/i));
     else if(i < 0)
-      return atan(j/i) + Global::pi;
+      return float(atan(j/i)) + Global::pi;
     else if(j > 0)
       return Global::pi_over_two;
     else if(j < 0)
@@ -66,8 +66,8 @@ namespace Zeni {
 
   void Vector2f::set_spherical(const float &theta, const float &magnitude) {
     i = magnitude;
-    j = sin(theta) * i;
-    i *= cos(theta);
+    j = float(sin(theta)) * i;
+    i *= float(cos(theta));
     degenerate = false;
   }
 

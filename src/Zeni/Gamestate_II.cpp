@@ -58,7 +58,7 @@ namespace Zeni {
     case SDL_JOYAXISMOTION:
       {
         float confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
-        const float ac = fabs(confidence);
+        const float ac = float(fabs(confidence));
         const float nm = confidence < 0.0f ? -1.0f : 1.0f;
         confidence = nm * std::min(std::max(ac - m_joystick_min, 0.0f) / (m_joystick_max - m_joystick_min), 1.0f);
 

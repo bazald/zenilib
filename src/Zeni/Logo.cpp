@@ -240,7 +240,7 @@ namespace Zeni {
   }
 
   void Logo::create_circle(const Point2f &p, const float &radius, const Color &color, const size_t &segments, const size_t &begin, const size_t &end) {
-    const float arc = 2.0f * Global::pi / segments;
+    const float arc = 2.0f * Global::pi / float(segments);
     Triangle<Vertex2f_Color> t(Vertex2f_Color(p, color),
                                Vertex2f_Color(Point2f(), color),
                                Vertex2f_Color(Point2f(), color));
@@ -248,16 +248,17 @@ namespace Zeni {
     t.fax_Material(&m);
 
     for(size_t i = begin; i != segments && i != end; ++i) {
-      t.b.position.x = p.x - radius * sin(arc * i);
-      t.b.position.y = p.y - radius * cos(arc * i);
-      t.c.position.x = p.x - radius * sin(arc * (i + 1));
-      t.c.position.y = p.y - radius * cos(arc * (i + 1));
+      const float float_i = float(i);
+      t.b.position.x = p.x - radius * float(sin(arc * float_i));
+      t.b.position.y = p.y - radius * float(cos(arc * float_i));
+      t.c.position.x = p.x - radius * float(sin(arc * (float_i + 1)));
+      t.c.position.y = p.y - radius * float(cos(arc * (float_i + 1)));
       m_vbo->fax_triangle(&t);
     }
   }
 
   void Logo::create_hollow_ellipse(const Point2f &p, const Point2f &inner_radius, const Point2f &outer_radius, const Color &color, const size_t &segments, const size_t &begin, const size_t &end) {
-    const float arc = 2.0f * Global::pi / segments;
+    const float arc = 2.0f * Global::pi / float(segments);
     Quadrilateral<Vertex2f_Color> q(Vertex2f_Color(p, color),
                                     Vertex2f_Color(p, color),
                                     Vertex2f_Color(p, color),
@@ -266,14 +267,15 @@ namespace Zeni {
     q.fax_Material(&m);
 
     for(size_t i = begin; i != segments && i != end; ++i) {
-      q.a.position.x = p.x - inner_radius.x * sin(arc * i);
-      q.a.position.y = p.y - inner_radius.y * cos(arc * i);
-      q.b.position.x = p.x - outer_radius.x * sin(arc * i);
-      q.b.position.y = p.y - outer_radius.y * cos(arc * i);
-      q.c.position.x = p.x - outer_radius.x * sin(arc * (i + 1));
-      q.c.position.y = p.y - outer_radius.y * cos(arc * (i + 1));
-      q.d.position.x = p.x - inner_radius.x * sin(arc * (i + 1));
-      q.d.position.y = p.y - inner_radius.y * cos(arc * (i + 1));
+      const float float_i = float(i);
+      q.a.position.x = p.x - inner_radius.x * float(sin(arc * float_i));
+      q.a.position.y = p.y - inner_radius.y * float(cos(arc * float_i));
+      q.b.position.x = p.x - outer_radius.x * float(sin(arc * float_i));
+      q.b.position.y = p.y - outer_radius.y * float(cos(arc * float_i));
+      q.c.position.x = p.x - outer_radius.x * float(sin(arc * (float_i + 1)));
+      q.c.position.y = p.y - outer_radius.y * float(cos(arc * (float_i + 1)));
+      q.d.position.x = p.x - inner_radius.x * float(sin(arc * (float_i + 1)));
+      q.d.position.y = p.y - inner_radius.y * float(cos(arc * (float_i + 1)));
       m_vbo->fax_quadrilateral(&q);
     }
   }

@@ -671,7 +671,7 @@ namespace Zeni {
   }
 
   float Selector::vertical_offset() const {
-    return view_offset * button_height();
+    return float(view_offset) * button_height();
   }
 
   void Selector::decide_visible(const size_t &centered) {
@@ -730,14 +730,14 @@ namespace Zeni {
     const Point2f &lr = m_normal_button.get_lower_right();
     const float bh = button_height();
     const float ex = view_hidden ? 2.0f * m_selector_slider.get_slider_radius() : 0.0f;
-    return std::make_pair(Point2f(ul.x, ul.y - bh * (view_offset - view_start)),
-                     Point2f(lr.x + ex, ul.y + bh * (view_end - view_offset)));
+    return std::make_pair(Point2f(ul.x, ul.y - bh * float(view_offset - view_start)),
+                     Point2f(lr.x + ex, ul.y + bh * float(view_end - view_offset)));
   }
 
   void Selector::add_selector_button(const String &option) {
     const Point2f &ul = m_normal_button.get_upper_left();
     const Point2f &lr = m_normal_button.get_lower_right();
-    const float vertical_offset = m_selector_buttons.size() * (lr.y - ul.y);
+    const float vertical_offset = float(m_selector_buttons.size()) * (lr.y - ul.y);
     m_selector_buttons.push_back(new Selector_Button(*this, option,
                                                      Point2f(ul.x, ul.y + vertical_offset),
                                                      Point2f(lr.x, lr.y + vertical_offset)));

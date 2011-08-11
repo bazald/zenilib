@@ -122,13 +122,13 @@ namespace Zeni {
 
     /*** Load the Audio File ***/
 
-    long bytes = 0;
+    int bytes = 0;
     int buffer_size = int(pcm_size);
     std::vector<char> buffer( static_cast<size_t>(buffer_size) );
     for(char *begin = &buffer[0], *end = begin + pcm_size;
         begin != end;
         begin += bytes, buffer_size -= bytes) {
-      bytes = Sound_Renderer_AL::ov_read()(&oggFile, begin, buffer_size, 0, 2, 1, 0);
+      bytes = int(Sound_Renderer_AL::ov_read()(&oggFile, begin, buffer_size, 0, 2, 1, 0));
 
       if(!bytes) {
         Sound_Renderer_AL::ov_clear()(&oggFile);

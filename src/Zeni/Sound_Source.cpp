@@ -420,7 +420,7 @@ namespace Zeni {
 
       if(m_play_position > m_buffer->get_duration()) {
         if(m_looping)
-          m_play_position = fmod(m_play_position, m_buffer->get_duration());
+          m_play_position = float(fmod(m_play_position, m_buffer->get_duration()));
         else {
           m_playing = false;
           m_stopped = true;

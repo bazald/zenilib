@@ -33,8 +33,8 @@ namespace Zeni {
   Quaternion Quaternion::Axis_Angle(const Vector3f &v, const float &theta) {
     const float half_theta = 0.5f * theta;
 
-    const float time = cos(half_theta);
-    const float space_coeff = sin(half_theta);
+    const float time = float(cos(half_theta));
+    const float space_coeff = float(sin(half_theta));
     const Vector3f space_vec = v.normalized();
 
     return Quaternion(time, space_coeff * space_vec, space_vec.degenerate).normalized();
@@ -78,12 +78,12 @@ namespace Zeni {
     const float half_pitch = 0.5f * pitch;
     const float half_roll = 0.5f * roll;
    
-	  const float shy = sin(half_yaw);
-	  const float shp = sin(half_pitch);
-	  const float shr = sin(half_roll);
-	  const float chy = cos(half_yaw);
-	  const float chp = cos(half_pitch);
-	  const float chr = cos(half_roll);
+	  const float shy = float(sin(half_yaw));
+	  const float shp = float(sin(half_pitch));
+	  const float shr = float(sin(half_roll));
+	  const float chy = float(cos(half_yaw));
+	  const float chp = float(cos(half_pitch));
+	  const float chr = float(cos(half_roll));
    
 	  time = chr * chp * chy + shr * shp * shy;
 	  space.i = shr * chp * chy - chr * shp * shy;

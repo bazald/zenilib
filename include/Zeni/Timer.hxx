@@ -34,7 +34,7 @@ namespace Zeni {
   }
 
   float Time::get_seconds_passed() const {
-    return get_ticks_passed() * 0.001f;
+    return float(get_ticks_passed()) * 0.001f;
   }
 
   Time::Tick_Type Time::get_ticks_since(const Time &time) const {
@@ -42,7 +42,7 @@ namespace Zeni {
   }
 
   float Time::get_seconds_since(const Time &time) const {
-    return get_ticks_since(time) * 0.001f;
+    return float(get_ticks_since(time)) * 0.001f;
   }
 
   void Time::update() {
@@ -63,7 +63,7 @@ namespace Zeni {
   }
 
   float Timer::get_seconds() {
-    return get_ticks() * 0.001f;
+    return float(get_ticks()) * 0.001f;
   }
 
   Time Timer::get_time() {
