@@ -263,6 +263,7 @@ namespace Zeni {
   Window::~Window() {
 #if SDL_VERSION_ATLEAST(1,3,0)
     Core::assert_no_error();
+    Core::remove_pre_uninit(&g_uninit);
 
     if(m_window)
       SDL_DestroyWindow(m_window);

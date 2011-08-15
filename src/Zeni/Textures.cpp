@@ -61,6 +61,8 @@ namespace Zeni {
   }
 
   Textures::~Textures() {
+    Video::remove_pre_uninit(&g_lose);
+
     Database<Texture>::uninit();
 
 #if defined(_WINDOWS)

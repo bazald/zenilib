@@ -206,7 +206,7 @@ namespace Zeni {
     TCP_Listener(const Uint16 &port);
     ~TCP_Listener();
 
-    TCPsocket accept(); ///< Will cause an error to be thrown if there exists nothing to listen to; Expect to catch it
+    TCPsocket accept(); ///< Returns 0 if no listener
 
   private:
     TCPsocket sock;

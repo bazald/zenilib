@@ -106,8 +106,9 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-
+    
     Timer();
+    ~Timer();
 
     // Undefined
     Timer(const Timer &);

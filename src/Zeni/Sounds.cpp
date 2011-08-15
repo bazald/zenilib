@@ -54,6 +54,8 @@ namespace Zeni {
   }
 
   Sounds::~Sounds() {
+    Sound::remove_pre_uninit(&g_uninit);
+
     Database<Sound_Buffer>::uninit();
   }
 

@@ -54,6 +54,8 @@ namespace Zeni {
   }
 
   Fonts::~Fonts() {
+    Video::remove_pre_uninit(&g_lose);
+
     Database<Font>::uninit();
 
     TTF_Quit();
