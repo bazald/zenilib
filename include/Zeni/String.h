@@ -18,6 +18,7 @@
 #ifndef ZENI_STRING_H
 #define ZENI_STRING_H
 
+#include <string>
 #include <cctype>
 #include <cstring>
 #include <iosfwd>
@@ -30,6 +31,30 @@ namespace Zeni {
     String(const char * const &c_str_);
     String(const String &rhs);
     ~String();
+
+    explicit inline String(const std::string &rhs)
+      : m_c_str(0)
+    {
+      String lhs;
+      lhs.resize(rhs.size());
+      memcpy(lhs.m_c_str, rhs.c_str(), m_size);
+
+      std::swap(m_size, lhs.m_size);
+      std::swap(m_cap, lhs.m_cap);
+      std::swap(m_c_str, lhs.m_c_str);
+    }
+
+    inline String & operator=(const std::string &rhs) {
+      String lhs;
+      lhs.resize(rhs.size());
+      memcpy(lhs.m_c_str, rhs.c_str(), m_size);
+
+      std::swap(m_size, lhs.m_size);
+      std::swap(m_cap, lhs.m_cap);
+      std::swap(m_c_str, lhs.m_c_str);
+
+      return *this;
+    }
 
     void resize(const size_t &size);
     void clear();
@@ -66,7 +91,19 @@ namespace Zeni {
 
     bool empty() const;
     size_t size() const;
+
+    inline std::string cpp_str() const {
+      std::string rv;
+      rv.resize(m_size);
+      memcpy(const_cast<char *>(rv.c_str()), m_c_str, m_size);
+      return rv;
+    }
+
     const char * const c_str() const;
+
+    inline operator std::string() const {
+      return cpp_str();
+    }
 
     inline operator const char * const () const {
       return c_str();
