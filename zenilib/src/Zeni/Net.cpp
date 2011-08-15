@@ -54,6 +54,8 @@ namespace Zeni {
   }
 
   Net::~Net() {
+    Core::remove_pre_uninit(&g_uninit);
+
     SDLNet_Quit();
   }
 
@@ -121,12 +123,12 @@ namespace Zeni {
   }
 
   TCP_Socket::~TCP_Socket() {
+    Net::remove_pre_uninit(&m_uninit);
+
     if(sock && sockset) {
       SDLNet_TCP_DelSocket(sockset, sock);
       SDLNet_FreeSocketSet(sockset);
       SDLNet_TCP_Close(sock);
-
-      get_Net().remove_pre_uninit(&m_uninit);
     }
   }
 
@@ -204,11 +206,10 @@ namespace Zeni {
   }
 
   TCP_Listener::~TCP_Listener() {
-    if(sock) {
-      SDLNet_TCP_Close(sock);
+    get_Net().remove_pre_uninit(&m_uninit);
 
-      get_Net().remove_pre_uninit(&m_uninit);
-    }
+    if(sock)
+      SDLNet_TCP_Close(sock);
   }
 
   void TCP_Listener::Uninit::operator()() {
@@ -244,11 +245,10 @@ namespace Zeni {
   }
 
   UDP_Socket::~UDP_Socket() {
-    if(sock) {
-      SDLNet_UDP_Close(sock);
+    Net::remove_pre_uninit(&m_uninit);
 
-      get_Net().remove_pre_uninit(&m_uninit);
-    }
+    if(sock)
+      SDLNet_UDP_Close(sock);
   }
   
   IPaddress UDP_Socket::peer_address() const {

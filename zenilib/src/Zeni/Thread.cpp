@@ -167,6 +167,8 @@ namespace Zeni {
   }
   
   Thread::~Thread() {
+    Core::remove_pre_uninit(&m_uninit);
+
     if(m_impl) {
       SDL_WaitThread(m_impl, m_status);
 

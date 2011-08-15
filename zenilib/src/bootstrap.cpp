@@ -76,6 +76,7 @@ class Bootstrap {
     virtual Gamestate_Base * operator()() {
       Window::set_title("zenilib Application");
 
+      get_Joysticks();
       get_Video();
       get_Textures();
       get_Fonts();

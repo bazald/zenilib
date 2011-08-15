@@ -75,6 +75,8 @@ namespace Zeni {
   }
 
   Vertex_Buffer::~Vertex_Buffer() {
+    Video::remove_pre_uninit(&g_uninit);
+
     clear_triangles(m_triangles_cm, m_descriptors_cm);
     clear_triangles(m_triangles_t, m_descriptors_t);
 

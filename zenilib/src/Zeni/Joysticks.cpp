@@ -53,6 +53,8 @@ namespace Zeni {
   }
 
   Joysticks::~Joysticks() {
+    Core::remove_pre_uninit(&g_uninit);
+
     uninit();
   }
 

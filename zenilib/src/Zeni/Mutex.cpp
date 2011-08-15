@@ -48,6 +48,8 @@ namespace Zeni {
   }
   
   Mutex::~Mutex() {
+    Core::remove_pre_uninit(&m_uninit);
+
     if(m_impl)
       SDL_DestroyMutex(m_impl);
 

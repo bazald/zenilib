@@ -124,6 +124,7 @@ namespace Zeni {
   }
 
   Video::~Video() {
+    Window::remove_pre_uninit(&g_uninit);
   }
 
   Video & get_Video() {

@@ -59,6 +59,10 @@ namespace Zeni {
     cr.lend_post_reinit(&g_reinit);
   }
 
+  Timer::~Timer() {
+    Core::remove_pre_uninit(&g_uninit);
+  }
+
   Timer & get_Timer() {
     return Timer::get();
   }

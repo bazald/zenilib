@@ -55,6 +55,8 @@ namespace Zeni {
   }
 
   Sound_Source_Pool::~Sound_Source_Pool() {
+    Sound::remove_pre_uninit(&g_uninit);
+
     purge();
 
     for(std::vector<Sound_Source *>::iterator it = m_handles.begin();
