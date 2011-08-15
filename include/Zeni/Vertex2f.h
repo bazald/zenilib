@@ -86,9 +86,9 @@ namespace Zeni {
 
     Vertex2f_Color * interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const; ///< Get a Vertex2f_Color between two vertices; rhs must be a Vertex2f_Color
 
-    inline const Uint32 & get_color() const; ///< Get the current Color
-    inline void set_color(const Color &color); ///< Set the current Color
-    inline void set_color(const Uint32 &argb); ///< Set the current Color
+    inline const Uint32 & get_Color() const; ///< Get the current Color
+    inline void set_Color(const Color &color); ///< Set the current Color
+    inline void set_Color(const Uint32 &argb); ///< Set the current Color
 
     // Begin rendering functions
 

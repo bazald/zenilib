@@ -26,7 +26,7 @@ namespace Zeni {
     return m_bold;
   }
   
-  const String & Font::get_font_name() const {
+  const String & Font::get_name() const {
     return m_font_name;
   }
 

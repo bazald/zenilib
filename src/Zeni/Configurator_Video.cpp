@@ -461,7 +461,7 @@ namespace Zeni {
   void Configurator_Video::on_push() {
     Widget_Gamestate::on_push();
 
-    get_Video().set_clear_color(get_Colors()["configurator_bg"]);
+    get_Video().set_clear_Color(get_Colors()["configurator_bg"]);
   }
 
   void Configurator_Video::on_key(const SDL_KeyboardEvent &event) {

@@ -84,12 +84,12 @@ namespace Zeni {
     get_vbos().erase(this);
   }
 
-  void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Color> * const &triangle) {
+  void Vertex_Buffer::give_Triangle(Triangle<Vertex2f_Color> * const &triangle) {
     safe_ptr<Renderable> to_delete(triangle);
-    fax_triangle(triangle);
+    fax_Triangle(triangle);
   }
 
-  void Vertex_Buffer::fax_triangle(const Triangle<Vertex2f_Color> * const &triangle) {
+  void Vertex_Buffer::fax_Triangle(const Triangle<Vertex2f_Color> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
@@ -97,20 +97,20 @@ namespace Zeni {
     const Vertex2f_Color &v1 = triangle->b;
     const Vertex2f_Color &v2 = triangle->c;
 
-    Triangle<Vertex3f_Color> facsimile(Vertex3f_Color(v0.position, v0.get_color()),
-                                       Vertex3f_Color(v1.position, v1.get_color()),
-                                       Vertex3f_Color(v2.position, v2.get_color()));
+    Triangle<Vertex3f_Color> facsimile(Vertex3f_Color(v0.position, v0.get_Color()),
+                                       Vertex3f_Color(v1.position, v1.get_Color()),
+                                       Vertex3f_Color(v2.position, v2.get_Color()));
     facsimile.fax_Material(triangle->get_Material());
 
-    fax_triangle(&facsimile);
+    fax_Triangle(&facsimile);
   }
 
-  void Vertex_Buffer::give_triangle(Triangle<Vertex2f_Texture> * const &triangle) {
+  void Vertex_Buffer::give_Triangle(Triangle<Vertex2f_Texture> * const &triangle) {
     safe_ptr<Renderable> to_delete(triangle);
-    fax_triangle(triangle);
+    fax_Triangle(triangle);
   }
 
-  void Vertex_Buffer::fax_triangle(const Triangle<Vertex2f_Texture> * const &triangle) {
+  void Vertex_Buffer::fax_Triangle(const Triangle<Vertex2f_Texture> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
@@ -123,41 +123,41 @@ namespace Zeni {
                                          Vertex3f_Texture(v2.position, v2.texture_coordinate));
     facsimile.fax_Material(triangle->get_Material());
 
-    fax_triangle(&facsimile);
+    fax_Triangle(&facsimile);
   }
 
-  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Color> * const &quad) {
+  void Vertex_Buffer::give_Quadrilateral(Quadrilateral<Vertex2f_Color> * const &quad) {
     safe_ptr<Renderable> to_delete(quad);
-    fax_quadrilateral(quad);
+    fax_Quadrilateral(quad);
   }
   
-  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quad) {
+  void Vertex_Buffer::fax_Quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    give_triangle(quad->get_duplicate_t0());
-    give_triangle(quad->get_duplicate_t1());
+    give_Triangle(quad->get_duplicate_t0());
+    give_Triangle(quad->get_duplicate_t1());
   }
 
-  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quad) {
+  void Vertex_Buffer::give_Quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quad) {
     safe_ptr<Renderable> to_delete(quad);
-    fax_quadrilateral(quad);
+    fax_Quadrilateral(quad);
   }
   
-  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quad) {
+  void Vertex_Buffer::fax_Quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    give_triangle(quad->get_duplicate_t0());
-    give_triangle(quad->get_duplicate_t1());
+    give_Triangle(quad->get_duplicate_t0());
+    give_Triangle(quad->get_duplicate_t1());
   }
 
-  void Vertex_Buffer::give_triangle(Triangle<Vertex3f_Color> * const &triangle) {
+  void Vertex_Buffer::give_Triangle(Triangle<Vertex3f_Color> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
     if(!triangle->get_Material() ||
-       triangle->get_Material()->get_texture().empty())
+       triangle->get_Material()->get_Texture().empty())
     {
       m_triangles_cm.push_back(triangle);
       unprerender();
@@ -168,19 +168,19 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer::fax_triangle(const Triangle<Vertex3f_Color> * const &triangle) {
+  void Vertex_Buffer::fax_Triangle(const Triangle<Vertex3f_Color> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    give_triangle(triangle->get_duplicate());
+    give_Triangle(triangle->get_duplicate());
   }
 
-  void Vertex_Buffer::give_triangle(Triangle<Vertex3f_Texture> * const &triangle) {
+  void Vertex_Buffer::give_Triangle(Triangle<Vertex3f_Texture> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
     if(triangle->get_Material() &&
-       !triangle->get_Material()->get_texture().empty())
+       !triangle->get_Material()->get_Texture().empty())
     {
       m_triangles_t.push_back(triangle);
       unprerender();
@@ -191,37 +191,37 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer::fax_triangle(const Triangle<Vertex3f_Texture> * const &triangle) {
+  void Vertex_Buffer::fax_Triangle(const Triangle<Vertex3f_Texture> * const &triangle) {
     if(!triangle)
       throw VBuf_Init_Failure();
 
-    give_triangle(triangle->get_duplicate());
+    give_Triangle(triangle->get_duplicate());
   }
 
-  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Color> * const &quad) {
+  void Vertex_Buffer::give_Quadrilateral(Quadrilateral<Vertex3f_Color> * const &quad) {
     safe_ptr<Renderable> to_delete(quad);
-    fax_quadrilateral(quad);
+    fax_Quadrilateral(quad);
   }
   
-  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quad) {
+  void Vertex_Buffer::fax_Quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    give_triangle(quad->get_duplicate_t0());
-    give_triangle(quad->get_duplicate_t1());
+    give_Triangle(quad->get_duplicate_t0());
+    give_Triangle(quad->get_duplicate_t1());
   }
 
-  void Vertex_Buffer::give_quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quad) {
+  void Vertex_Buffer::give_Quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quad) {
     safe_ptr<Renderable> to_delete(quad);
-    fax_quadrilateral(quad);
+    fax_Quadrilateral(quad);
   }
   
-  void Vertex_Buffer::fax_quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quad) {
+  void Vertex_Buffer::fax_Quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quad) {
     if(!quad)
       throw VBuf_Init_Failure();
 
-    give_triangle(quad->get_duplicate_t0());
-    give_triangle(quad->get_duplicate_t1());
+    give_Triangle(quad->get_duplicate_t0());
+    give_Triangle(quad->get_duplicate_t1());
   }
 
   void Vertex_Buffer::debug_render() {
@@ -580,13 +580,13 @@ namespace Zeni {
 
     for(size_t i = 0u; i < descriptors.size(); ++i) {
       if(descriptors[i]->material.get())
-        vr.set_material(*descriptors[i]->material);
+        vr.set_Material(*descriptors[i]->material);
 
       VB_Renderer_GL microrenderer(int(3u*descriptors[i]->start), int(3u*descriptors[i]->num_elements));
       macrorenderer(microrenderer);
 
       if(descriptors[i]->material.get())
-        vr.unset_material(*descriptors[i]->material);
+        vr.unset_Material(*descriptors[i]->material);
     }
   }
 
@@ -810,7 +810,7 @@ namespace Zeni {
 
       for(unsigned int i = 0; i < descriptors.size(); ++i) {
         if(descriptors[i]->material.get())
-          vdx.set_material(*descriptors[i]->material);
+          vdx.set_Material(*descriptors[i]->material);
 
         if(vbo_dx9.is_vbo) {
           VB_Renderer_DX9VBO microrenderer(vdx, 3u * descriptors[i]->start, descriptors[i]->num_elements);
@@ -822,7 +822,7 @@ namespace Zeni {
         }
 
         if(descriptors[i]->material.get())
-          vdx.unset_material(*descriptors[i]->material);
+          vdx.unset_Material(*descriptors[i]->material);
       }
   }
 

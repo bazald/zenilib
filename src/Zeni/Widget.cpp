@@ -177,10 +177,10 @@ namespace Zeni {
           cc.a *= 2.0f / 3.0f;
       }
 
-      ul.set_color(cc);
-      ll.set_color(cc);
-      lr.set_color(cc);
-      ur.set_color(cc);
+      ul.set_Color(cc);
+      ll.set_Color(cc);
+      lr.set_Color(cc);
+      ur.set_Color(cc);
 
       line_seg.a = ul;
       line_seg.b = lr;
@@ -218,9 +218,9 @@ namespace Zeni {
     vr.render(line_seg);
 
     line_seg.a.position = Point3f(p0);
-    line_seg.a.set_color(line_color);
+    line_seg.a.set_Color(line_color);
     line_seg.b.position = Point3f(p1);
-    line_seg.b.set_color(line_color);
+    line_seg.b.set_Color(line_color);
 
     vr.render(line_seg);
   }
@@ -943,7 +943,7 @@ namespace Zeni {
 
     /// BEGIN JUSTIFICATION FIX
 
-    const Font &f = get_font();
+    const Font &f = get_Font();
 
     float x_pos;
     if(m_justify == ZENI_LEFT)
@@ -1004,7 +1004,7 @@ namespace Zeni {
 
     Video &vr = get_Video();
 
-    const Font &f = get_font();
+    const Font &f = get_Font();
     const Color &c = m_text.color;
 
     float x_pos;
@@ -1048,7 +1048,7 @@ namespace Zeni {
     m_lines.push_back(Line());
 
     const String t = get_text();
-    const Font &f = get_font();
+    const Font &f = get_Font();
     const float mll = max_line_width();
 
     if(t.empty())
@@ -1096,7 +1096,7 @@ namespace Zeni {
   }
 
   void Text_Box::append_word(const Word &word) {
-    const Font &f = get_font();
+    const Font &f = get_Font();
     const float mll = max_line_width();
 
     if(!word.unformatted.empty() && word.unformatted[0] == '\n')

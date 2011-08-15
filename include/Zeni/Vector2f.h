@@ -98,8 +98,8 @@ namespace Zeni {
   // Vector Scalar Multiplication Part II of II
   inline Vector2f operator*(const float &lhs, const Vector2f &rhs); ///< Get the scalar multiple
 
-  std::ostream & serialize(std::ostream &os, const Vector2f &value);
-  std::istream & unserialize(std::istream &is, Vector2f &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Vector2f &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Vector2f &value);
 }
 
 #endif

@@ -120,8 +120,8 @@ namespace Zeni {
 	  float m_matrix[4][4];
   };
 
-  std::ostream & serialize(std::ostream &os, const Matrix4f &value);
-  std::istream & unserialize(std::istream &is, Matrix4f &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Matrix4f &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Matrix4f &value);
 
 }
 

@@ -143,26 +143,26 @@ namespace Zeni {
     virtual void set_alpha_test(const bool &enabled, const TEST &test = ZENI_ALWAYS, const float &value = 0.0f) = 0; ///< Set the alpha test
 
     // Color and Texturing
-    inline const Color & get_color() const; ///< Get the current color
-    inline const Color & get_clear_color() const; ///< Get the blank background color
-    virtual void set_color(const Color &color) = 0; ///< Set the current color
-    virtual void set_clear_color(const Color &color) = 0; ///< Set the blank background color
-    inline void apply_texture(const String &name); ///< Apply a texture by name
-    virtual void apply_texture(const unsigned long &id) = 0; ///< Apply a texture by id
-    virtual void apply_texture(const Texture &texture) = 0; ///< Apply a texture by id
-    virtual void unapply_texture() = 0; ///< Unapply a texture
+    inline const Color & get_Color() const; ///< Get the current color
+    inline const Color & get_clear_Color() const; ///< Get the blank background color
+    virtual void set_Color(const Color &color) = 0; ///< Set the current color
+    virtual void set_clear_Color(const Color &color) = 0; ///< Set the blank background color
+    inline void apply_Texture(const String &name); ///< Apply a texture by name
+    virtual void apply_Texture(const unsigned long &id) = 0; ///< Apply a texture by id
+    virtual void apply_Texture(const Texture &texture) = 0; ///< Apply a texture by id
+    virtual void unapply_Texture() = 0; ///< Unapply a texture
 
     // Lighting and Materials
     virtual void set_lighting(const bool &on = true) = 0; ///< Set lighting on/off
     virtual void set_ambient_lighting(const Color &color) = 0; ///< Set ambient lighting on/off
-    virtual void set_light(const int &number, const Light &light) = 0; ///< Set a particular Light
-    virtual void unset_light(const int &number) = 0; ///< Unset a particular Light
-    virtual void set_material(const Material &material) = 0; ///< Set a Material
-    virtual void unset_material(const Material &material) = 0; ///< Unset a Material
+    virtual void set_Light(const int &number, const Light &light) = 0; ///< Set a particular Light
+    virtual void unset_Light(const int &number) = 0; ///< Unset a particular Light
+    virtual void set_Material(const Material &material) = 0; ///< Set a Material
+    virtual void unset_Material(const Material &material) = 0; ///< Unset a Material
 
     // Fog
-    virtual void set_fog(const Fog &fog) = 0; ///< Set Fog
-    virtual void unset_fog() = 0; ///< Unset Fog
+    virtual void set_Fog(const Fog &fog) = 0; ///< Set Fog
+    virtual void unset_Fog() = 0; ///< Unset Fog
 
 #ifndef DISABLE_CG
     // Shaders

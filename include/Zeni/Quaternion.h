@@ -113,8 +113,8 @@ namespace Zeni {
     return rhs * lhs;
   }
 
-  std::ostream & serialize(std::ostream &os, const Quaternion &value);
-  std::istream & unserialize(std::istream &is, Quaternion &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Quaternion &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Quaternion &value);
 
 }
 

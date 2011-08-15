@@ -88,7 +88,7 @@ namespace Zeni {
         if(textured) {
           mat.ambient.a = opacity;
           mat.diffuse.a = opacity;
-          mat.set_texture(material->texture1_map.name);
+          mat.set_Texture(material->texture1_map.name);
         }
         else {
           mat.ambient = Color(opacity, material->ambient[0], material->ambient[1], material->ambient[2]);
@@ -135,7 +135,7 @@ namespace Zeni {
                                             Vertex3f_Texture(pc, nc, tc));
         triangle.fax_Material(&mat);
 
-        user_p->fax_triangle(&triangle);
+        user_p->fax_Triangle(&triangle);
       }
       else {
         const Uint32 argb = mat.diffuse.get_argb();
@@ -145,7 +145,7 @@ namespace Zeni {
                                           Vertex3f_Color(pc, nc, argb));
         triangle.fax_Material(&mat);
 
-        user_p->fax_triangle(&triangle);
+        user_p->fax_Triangle(&triangle);
       }
 
       normal+=3;

@@ -69,8 +69,8 @@ namespace Zeni {
     float a;
   };
 
-  std::ostream & serialize(std::ostream &os, const Color &value);
-  std::istream & unserialize(std::istream &is, Color &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Color &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Color &value);
 
 }
 

@@ -81,6 +81,30 @@ namespace Zeni {
   {
   }
 
+  Vector2f Point2f::operator-(const Point2f &rhs) const {
+    return Vector2f(x - rhs.x, y - rhs.y);
+  }
+
+  Point2f Point2f::operator+(const Vector2f &rhs) const {
+    return Point2f(x + rhs.i, y + rhs.j);
+  }
+
+  Point2f Point2f::operator-(const Vector2f &rhs) const {
+    return Point2f(x - rhs.i, y - rhs.j);
+  }
+
+  Point2f & Point2f::operator+=(const Vector2f &rhs) {
+    x += rhs.i;
+    y += rhs.j;
+    return *this;
+  }
+
+  Point2f & Point2f::operator-=(const Vector2f &rhs) {
+    x -= rhs.i;
+    y -= rhs.j;
+    return *this;
+  }
+
   Point3i::Point3i()
     : x(0), y(0), z(0)
   {

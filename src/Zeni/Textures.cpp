@@ -74,15 +74,15 @@ namespace Zeni {
     return Singleton<Textures>::get();
   }
 
-  void Textures::apply_texture(const String &name) {
-    (*this)[name].apply_texture();
+  void Textures::apply_Texture(const String &name) {
+    (*this)[name].apply_Texture();
   }
 
-  void Textures::apply_texture(const unsigned long &id) {
-    (*this)[id].apply_texture();
+  void Textures::apply_Texture(const unsigned long &id) {
+    (*this)[id].apply_Texture();
   }
 
-  bool Textures::is_sprite(const unsigned long &id) {
+  bool Textures::is_Sprite(const unsigned long &id) {
     return dynamic_cast<const Sprite *>(&(*this)[id]) != 0;
   }
   

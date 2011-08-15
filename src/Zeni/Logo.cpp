@@ -236,7 +236,7 @@ namespace Zeni {
                                      (Vertex2f_Color(Point2f(p1.x - n.x, p1.y - n.y), color)) );
     Material m("", color);
     q.fax_Material(&m);
-    m_vbo->fax_quadrilateral(&q);
+    m_vbo->fax_Quadrilateral(&q);
   }
 
   void Logo::create_circle(const Point2f &p, const float &radius, const Color &color, const size_t &segments, const size_t &begin, const size_t &end) {
@@ -253,7 +253,7 @@ namespace Zeni {
       t.b.position.y = p.y - radius * float(cos(arc * float_i));
       t.c.position.x = p.x - radius * float(sin(arc * (float_i + 1)));
       t.c.position.y = p.y - radius * float(cos(arc * (float_i + 1)));
-      m_vbo->fax_triangle(&t);
+      m_vbo->fax_Triangle(&t);
     }
   }
 
@@ -276,7 +276,7 @@ namespace Zeni {
       q.c.position.y = p.y - outer_radius.y * float(cos(arc * (float_i + 1)));
       q.d.position.x = p.x - inner_radius.x * float(sin(arc * (float_i + 1)));
       q.d.position.y = p.y - inner_radius.y * float(cos(arc * (float_i + 1)));
-      m_vbo->fax_quadrilateral(&q);
+      m_vbo->fax_Quadrilateral(&q);
     }
   }
 

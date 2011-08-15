@@ -55,12 +55,12 @@ namespace Zeni {
 
   void Renderable::pre_render() const {
     if(m_material)
-      get_Video().set_material(*m_material);
+      get_Video().set_Material(*m_material);
   }
 
   void Renderable::post_render() const {
     if(m_material)
-      get_Video().unset_material(*m_material);
+      get_Video().unset_Material(*m_material);
   }
 
 }

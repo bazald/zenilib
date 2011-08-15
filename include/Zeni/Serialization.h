@@ -45,6 +45,8 @@
 #endif
 
 #include <iostream>
+#include <list>
+#include <vector>
 
 /*** IPaddress functions ***/
 
@@ -125,21 +127,42 @@ namespace Zeni {
   ZENI_DLL std::istream & unserialize(std::istream &is, bool &value);
   ZENI_DLL std::istream & unserialize(std::istream &is, IPaddress &address);
 
-  template <typename LISTTYPE>
-  std::ostream & serialize(std::ostream &os, const LISTTYPE &list_) {
+  template <typename TYPE>
+  std::ostream & serialize(std::ostream &os, const std::list<TYPE> &list_) {
     Zeni::serialize(os, static_cast<Uint16>(list_.size()));
-    for(typename LISTTYPE::const_iterator it = list_.begin(); it != list_.end(); ++it)
+    for(typename std::list<TYPE>::const_iterator it = list_.begin(); it != list_.end(); ++it)
       if(!serialize(os, *it))
         break;
     return os;
   }
     
-  template <typename LISTTYPE>
-  std::istream & unserialize(std::istream &is, LISTTYPE &list_) {
+  template <typename TYPE>
+  std::istream & unserialize(std::istream &is, std::list<TYPE> &list_) {
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
-      list_.resize(size, typename LISTTYPE::value_type());
-      for(typename LISTTYPE::iterator it = list_.begin(); it != list_.end(); ++it)
+      list_.resize(size, typename std::list<TYPE>::value_type());
+      for(typename std::list<TYPE>::iterator it = list_.begin(); it != list_.end(); ++it)
+        if(!unserialize(is, *it))
+          break;
+    }
+    return is;
+  }
+
+  template <typename TYPE>
+  std::ostream & serialize(std::ostream &os, const std::vector<TYPE> &list_) {
+    Zeni::serialize(os, static_cast<Uint16>(list_.size()));
+    for(typename std::vector<TYPE>::const_iterator it = list_.begin(); it != list_.end(); ++it)
+      if(!serialize(os, *it))
+        break;
+    return os;
+  }
+    
+  template <typename TYPE>
+  std::istream & unserialize(std::istream &is, std::vector<TYPE> &list_) {
+    Uint16 size;
+    if(Zeni::unserialize(is, size)) {
+      list_.resize(size, typename std::vector<TYPE>::value_type());
+      for(typename std::vector<TYPE>::iterator it = list_.begin(); it != list_.end(); ++it)
         if(!unserialize(is, *it))
           break;
     }

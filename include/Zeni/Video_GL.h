@@ -99,24 +99,24 @@ namespace Zeni {
     void set_alpha_test(const bool &enabled, const TEST &test, const float &value); ///< Set the alpha test
 
     // Color and Texturing
-    void set_color(const Color &color); ///< Set the current color
-    void set_clear_color(const Color &color); ///< Set the blank background color
-    inline void apply_texture(const String &name) {return Video::apply_texture(name);} ///< Apply a texture by name
-    void apply_texture(const unsigned long &id); ///< Apply a texture by id
-    void apply_texture(const Texture &texture); ///< Apply a texture by id
-    void unapply_texture(); ///< Unapply a texture
+    void set_Color(const Color &color); ///< Set the current color
+    void set_clear_Color(const Color &color); ///< Set the blank background color
+    inline void apply_Texture(const String &name) {return Video::apply_Texture(name);} ///< Apply a texture by name
+    void apply_Texture(const unsigned long &id); ///< Apply a texture by id
+    void apply_Texture(const Texture &texture); ///< Apply a texture by id
+    void unapply_Texture(); ///< Unapply a texture
 
     // Lighting and Materials
     void set_lighting(const bool &on = true); ///< Set lighting on/off
     void set_ambient_lighting(const Color &color); ///< Set ambient lighting on/off
-    void set_light(const int &number, const Light &light); ///< Set a particular Light
-    void unset_light(const int &number); ///< Unset a particular Light
-    void set_material(const Material &material); ///< Set a Material
-    void unset_material(const Material &material); ///< Unset a Material
+    void set_Light(const int &number, const Light &light); ///< Set a particular Light
+    void unset_Light(const int &number); ///< Unset a particular Light
+    void set_Material(const Material &material); ///< Set a Material
+    void unset_Material(const Material &material); ///< Unset a Material
 
     // Fog
-    void set_fog(const Fog &fog); ///< Set Fog
-    void unset_fog(); ///< Unset Fog
+    void set_Fog(const Fog &fog); ///< Set Fog
+    void unset_Fog(); ///< Unset Fog
 
 #ifndef DISABLE_CG
     // Shaders
