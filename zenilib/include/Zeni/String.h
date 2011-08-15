@@ -37,7 +37,7 @@ namespace Zeni {
     {
       String lhs;
       lhs.resize(rhs.size());
-      memcpy(lhs.m_c_str, rhs.c_str(), m_size);
+      memcpy(lhs.m_c_str, rhs.c_str(), lhs.m_size);
 
       std::swap(m_size, lhs.m_size);
       std::swap(m_cap, lhs.m_cap);
@@ -47,7 +47,7 @@ namespace Zeni {
     inline String & operator=(const std::string &rhs) {
       String lhs;
       lhs.resize(rhs.size());
-      memcpy(lhs.m_c_str, rhs.c_str(), m_size);
+      memcpy(lhs.m_c_str, rhs.c_str(), lhs.m_size);
 
       std::swap(m_size, lhs.m_size);
       std::swap(m_cap, lhs.m_cap);

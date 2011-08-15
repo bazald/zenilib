@@ -434,7 +434,7 @@ namespace Zeni {
       {
         std::ostringstream os;
         serialize(serialize(m_nonce_send.serialize(os), num_chunks), chunk);
-        s = os.str().c_str();
+        s = os.str();
       }
       
       s.resize(m_chunk_size);
@@ -449,7 +449,7 @@ namespace Zeni {
       {
         std::ostringstream os;
         serialize(serialize(m_nonce_send.serialize(os), num_chunks), num_full_chunks);
-        s = os.str().c_str();
+        s = os.str();
       }
       
       s.resize(size_t(offset + partial_chunk));
@@ -476,7 +476,7 @@ namespace Zeni {
         Chunk chunk;
         
         {
-          std::istringstream is(s.c_str());
+          std::istringstream is(s);
           unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
           
           const Uint16 offset = static_cast<Uint16>(nonce.size()) + 2u * sizeof(Uint16);
