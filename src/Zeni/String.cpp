@@ -65,6 +65,7 @@ namespace Zeni {
       std::memcpy(new_str, m_c_str, m_cap);
       delete [] m_c_str;
 
+      m_size = size;
       m_cap = req_cap;
       m_c_str = new_str;
     }
