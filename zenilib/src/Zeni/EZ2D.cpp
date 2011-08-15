@@ -84,7 +84,7 @@ namespace Zeni {
   bool is_sprite(
     const String &sprite) {
 
-      return get_Textures().is_sprite(
+      return get_Textures().is_Sprite(
         get_Textures().get_id(sprite));
   }
 

@@ -105,6 +105,15 @@ namespace Zeni {
 
     Point2f interpolate_to(const float &rhs_part, const Point2f &rhs) const; ///< Get a point inbetween this point and another point of the same type.
 
+    // Subtraction
+    inline Vector2f operator-(const Point2f &rhs) const;
+
+    // Vector3f addition
+    inline Point2f operator+(const Vector2f &rhs) const;
+    inline Point2f operator-(const Vector2f &rhs) const;
+    inline Point2f & operator+=(const Vector2f &rhs);
+    inline Point2f & operator-=(const Vector2f &rhs);
+
     float x, y;
     static const float z;
   };
@@ -143,14 +152,14 @@ namespace Zeni {
     float x, y, z;
   };
 
-  std::ostream & serialize(std::ostream &os, const Point2i &value);
-  std::ostream & serialize(std::ostream &os, const Point2f &value);
-  std::ostream & serialize(std::ostream &os, const Point3i &value);
-  std::ostream & serialize(std::ostream &os, const Point3f &value);
-  std::istream & unserialize(std::istream &is, Point2i &value);
-  std::istream & unserialize(std::istream &is, Point2f &value);
-  std::istream & unserialize(std::istream &is, Point3i &value);
-  std::istream & unserialize(std::istream &is, Point3f &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Point2i &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Point2f &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Point3i &value);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const Point3f &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Point2i &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Point2f &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Point3i &value);
+  ZENI_DLL std::istream & unserialize(std::istream &is, Point3f &value);
 
 }
 

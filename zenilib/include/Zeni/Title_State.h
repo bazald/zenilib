@@ -107,11 +107,11 @@ namespace Zeni {
 
       title.set_justify(ZENI_CENTER);
 
-      get_Video().set_clear_color(get_Colors()["title_bg"]);
+      get_Video().set_clear_Color(get_Colors()["title_bg"]);
     }
 
     ~Title_State() {
-      get_Video().set_clear_color(Color(1.0f, 0.0f, 0.0f, 0.0f));
+      get_Video().set_clear_Color(Color(1.0f, 0.0f, 0.0f, 0.0f));
     }
 
     void on_key(const SDL_KeyboardEvent &/*event*/)
@@ -120,7 +120,7 @@ namespace Zeni {
 
     void perform_logic() {
       Widget_Gamestate::perform_logic();
-      get_Video().set_clear_color(get_Colors()["title_bg"]);
+      get_Video().set_clear_Color(get_Colors()["title_bg"]);
     }
 
   };

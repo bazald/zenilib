@@ -47,7 +47,7 @@ namespace Zeni {
     m_texture_id(0),
     m_optimization(0)
   {
-    set_texture(texture);
+    set_Texture(texture);
   }
 
   Material::Material(const String &texture, const Color &ambient_and_diffuse)
@@ -60,7 +60,7 @@ namespace Zeni {
     m_texture_id(0),
     m_optimization(0)
   {
-    set_texture(texture);
+    set_Texture(texture);
   }
 
   float Material::get_shininess() const {
@@ -73,7 +73,7 @@ namespace Zeni {
       m_power = 128.0f;
   }
 
-  void Material::set_texture(const String &texture) {
+  void Material::set_Texture(const String &texture) {
     m_texture = texture;
     if(texture.empty())
       m_texture_id = 0;
@@ -102,18 +102,18 @@ namespace Zeni {
         glMaterialfv(face, GL_SHININESS, &m_power);
     }
     else
-      vgl.set_color(diffuse);
+      vgl.set_Color(diffuse);
 
     if(!(m_optimization & (1 << 5)) &&
        !m_texture.empty()) {
       try {
-        vgl.apply_texture(m_texture_id);
+        vgl.apply_Texture(m_texture_id);
       }
       catch(Database_Entry_Not_Found &) {
         m_texture_id = get_Textures().get_id(m_texture);
         if(!m_texture_id)
           throw;
-        vgl.apply_texture(m_texture_id);
+        vgl.apply_Texture(m_texture_id);
       }
     }
   }
@@ -121,7 +121,7 @@ namespace Zeni {
   void Material::unset(Video_GL &vgl) const {
     if(!(m_optimization & (1 << 11)) &&
        !m_texture.empty())
-      vgl.unapply_texture();
+      vgl.unapply_Texture();
   }
 #endif
 
@@ -132,17 +132,17 @@ namespace Zeni {
         vdx.get_d3d_device()->SetMaterial(reinterpret_cast<const D3DMATERIAL9 *>(this));
     }
     else
-      vdx.set_color(diffuse);
+      vdx.set_Color(diffuse);
 
     if(!(m_optimization & (1 << 5)) &&
        !m_texture.empty())
-      vdx.apply_texture(m_texture);
+      vdx.apply_Texture(m_texture);
   }
 
   void Material::unset(Video_DX9 &vdx) const {
     if(!(m_optimization & (1 << 11)) &&
        !m_texture.empty())
-      vdx.unapply_texture();
+      vdx.unapply_Texture();
   }
 #endif
 

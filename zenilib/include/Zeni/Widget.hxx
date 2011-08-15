@@ -496,7 +496,7 @@ namespace Zeni {
     give_Slider_BG_Renderer(renderer->get_duplicate());
   }
 
-  const String & Selector::get_font() const {
+  const String & Selector::get_Font() const {
     return m_font;
   }
 
@@ -512,7 +512,7 @@ namespace Zeni {
     return m_text.font_name;
   }
 
-  const Font & Text_Box::get_font() const {
+  const Font & Text_Box::get_Font() const {
     return get_Fonts()[m_text.font_name];
   }
 
@@ -533,7 +533,7 @@ namespace Zeni {
   }
 
   int Text_Box::get_max_lines() const {
-    return int(get_height() / get_font().get_text_height());
+    return int(get_height() / get_Font().get_text_height());
   }
 
   void Text_Box::set_font_name(const String &font_name_) {

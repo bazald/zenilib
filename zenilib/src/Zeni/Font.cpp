@@ -160,10 +160,10 @@ namespace Zeni {
     const float &x = position.x;
     const float &y = position.y;
 
-    const Color previous_color = vr.get_color();
+    const Color previous_color = vr.get_Color();
 
-    vr.set_color(color);
-    vr.apply_texture(*m_texture);
+    vr.set_Color(color);
+    vr.apply_Texture(*m_texture);
 
     float cx, x_diff, cy = y;
     size_t i = 0u;
@@ -203,18 +203,18 @@ NEXT_LINE:
       }
     }
 
-    vr.unapply_texture();
+    vr.unapply_Texture();
 
-    vr.set_color(previous_color);
+    vr.set_Color(previous_color);
   }
 
   void Font_FT::render_text(const String &text, const Point3f &position, const Vector3f &right, const Vector3f &down, const Color &color, const JUSTIFY &justify) const {
     Video &vr = get_Video();
 
-    const Color previous_color = vr.get_color();
+    const Color previous_color = vr.get_Color();
 
-    vr.set_color(color);
-    vr.apply_texture(*m_texture);
+    vr.set_Color(color);
+    vr.apply_Texture(*m_texture);
 
     Point3f pos, vertical_pos = position;
     float x_diff;
@@ -255,9 +255,9 @@ NEXT_LINE_2:
       }
     }
 
-    vr.unapply_texture();
+    vr.unapply_Texture();
 
-    vr.set_color(previous_color);
+    vr.set_Color(previous_color);
   }
 
   void Font_FT::init(const String &filepath) {

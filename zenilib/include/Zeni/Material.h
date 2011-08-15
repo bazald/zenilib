@@ -69,12 +69,12 @@ namespace Zeni {
     // Accessors
     inline float get_power() const; ///< Get the power of the Material (indicates the focus of the specular highlights)
     float get_shininess() const; ///< Get the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
-    inline const String & get_texture() const; ///< Get the texture identifier
+    inline const String & get_Texture() const; ///< Get the texture identifier
 
     // Modifiers
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
-    void set_texture(const String &texture); ///< Set the texture identifier
+    void set_Texture(const String &texture); ///< Set the texture identifier
 
 #ifndef DISABLE_GL
     void set(Video_GL &screen) const;

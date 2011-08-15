@@ -36,15 +36,15 @@ namespace Zeni {
   }
 #endif
 
-  const Uint32 & Vertex3f_Color::get_color() const {
+  const Uint32 & Vertex3f_Color::get_Color() const {
     return m_argb;
   }
 
-  void Vertex3f_Color::set_color(const Color &color) {
+  void Vertex3f_Color::set_Color(const Color &color) {
     m_argb = color.get_argb();
   }
 
-  void Vertex3f_Color::set_color(const Uint32 &argb) {
+  void Vertex3f_Color::set_Color(const Uint32 &argb) {
     m_argb = argb;
   }
 

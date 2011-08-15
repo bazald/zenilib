@@ -17,6 +17,8 @@
 
 #include <zeni_graphics.h>
 
+#include <SDL/SDL_syswm.h>
+
 #ifdef _MACOSX
 #include <SDL_image/SDL_image.h>
 #else
@@ -236,6 +238,22 @@ namespace Zeni {
 #else
     g_screen_size.x = m_display_surface->w;
     g_screen_size.y = m_display_surface->h;
+#endif
+
+    // Force the window to be active and in the foreground, if possible (Windows only)
+#ifdef _WINDOWS
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_GetWindowWMInfo(m_window, &wmInfo);
+    HWND hWnd = wmInfo.win.window;
+#else
+    SDL_GetWMInfo(&wmInfo);
+    HWND hWnd = wmInfo.window;
+#endif
+
+    if(FAILED(SetForegroundWindow(hWnd)))
+      SetActiveWindow(hWnd);
 #endif
 
     cr.lend_pre_uninit(&g_uninit);

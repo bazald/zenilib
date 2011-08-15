@@ -187,7 +187,7 @@ namespace Zeni {
     m_frame = frame_number;
   }
 
-  void Sprite::apply_texture() const {
+  void Sprite::apply_Texture() const {
     static bool no_recurse = true;
 
     if(no_recurse)
@@ -199,12 +199,12 @@ namespace Zeni {
       throw Frame_Out_of_Range();
 
     try {
-      get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
+      get_Textures().apply_Texture(m_frames[size_t(m_frame)].second);
     }
     catch(Database_Entry_Not_Found &) {
       try {
         m_frames[size_t(m_frame)].second = get_Textures().get_id(m_frames[size_t(m_frame)].first);
-        get_Textures().apply_texture(m_frames[size_t(m_frame)].second);
+        get_Textures().apply_Texture(m_frames[size_t(m_frame)].second);
       }
       catch(...) {
         no_recurse = true;
@@ -266,7 +266,7 @@ namespace Zeni {
       glDeleteTextures(1, &m_texture_id);
   }
 
-  void Texture_GL::apply_texture() const {
+  void Texture_GL::apply_Texture() const {
     if(!m_texture_id)
       load(m_filename, m_repeat);
     
@@ -436,7 +436,7 @@ namespace Zeni {
       m_texture->Release();
   }
 
-  void Texture_DX9::apply_texture() const {
+  void Texture_DX9::apply_Texture() const {
     Video_DX9 &vdx = static_cast<Video_DX9 &>(get_Video());
     
     vdx.get_d3d_device()->SetSamplerState(0, D3DSAMP_ADDRESSU, m_repeat ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);

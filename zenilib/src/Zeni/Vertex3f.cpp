@@ -109,8 +109,8 @@ namespace Zeni {
 #ifdef REQUIRE_GL_ES
   template <>
   void Line_Segment<Vertex3f_Color>::render_to(Video_GL &) const {
-    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
-                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24)};
+    Uint32 c4ub[] = {((a.get_Color() & 0x00FFFFFF) << 8) | ((a.get_Color() & 0xFF000000) >> 24),
+                     ((b.get_Color() & 0x00FFFFFF) << 8) | ((b.get_Color() & 0xFF000000) >> 24)};
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex3f_Color), a.get_address());
@@ -125,9 +125,9 @@ namespace Zeni {
 
   template <>
   void Triangle<Vertex3f_Color>::render_to(Video_GL &) const {
-    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
-                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24),
-                     ((c.get_color() & 0x00FFFFFF) << 8) | ((c.get_color() & 0xFF000000) >> 24)};
+    Uint32 c4ub[] = {((a.get_Color() & 0x00FFFFFF) << 8) | ((a.get_Color() & 0xFF000000) >> 24),
+                     ((b.get_Color() & 0x00FFFFFF) << 8) | ((b.get_Color() & 0xFF000000) >> 24),
+                     ((c.get_Color() & 0x00FFFFFF) << 8) | ((c.get_Color() & 0xFF000000) >> 24)};
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex3f_Color), a.get_address());
@@ -142,10 +142,10 @@ namespace Zeni {
 
   template <>
   void Quadrilateral<Vertex3f_Color>::render_to(Video_GL &) const {
-    Uint32 c4ub[] = {((a.get_color() & 0x00FFFFFF) << 8) | ((a.get_color() & 0xFF000000) >> 24),
-                     ((b.get_color() & 0x00FFFFFF) << 8) | ((b.get_color() & 0xFF000000) >> 24),
-                     ((c.get_color() & 0x00FFFFFF) << 8) | ((c.get_color() & 0xFF000000) >> 24),
-                     ((d.get_color() & 0x00FFFFFF) << 8) | ((d.get_color() & 0xFF000000) >> 24)};
+    Uint32 c4ub[] = {((a.get_Color() & 0x00FFFFFF) << 8) | ((a.get_Color() & 0xFF000000) >> 24),
+                     ((b.get_Color() & 0x00FFFFFF) << 8) | ((b.get_Color() & 0xFF000000) >> 24),
+                     ((c.get_Color() & 0x00FFFFFF) << 8) | ((c.get_Color() & 0xFF000000) >> 24),
+                     ((d.get_Color() & 0x00FFFFFF) << 8) | ((d.get_Color() & 0xFF000000) >> 24)};
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex3f_Color), a.get_address());

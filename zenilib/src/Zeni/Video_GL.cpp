@@ -107,7 +107,7 @@ namespace Zeni {
 
     if(!is_zwrite_enabled())
       glDepthMask(GL_TRUE);
-    set_clear_color(get_clear_color());
+    set_clear_Color(get_clear_Color());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if(!is_zwrite_enabled())
       glDepthMask(GL_FALSE);
@@ -304,27 +304,27 @@ namespace Zeni {
     glAlphaFunc(func, value); 
   }
 
-  void Video_GL::set_color(const Color &color) {
-    Video::set_color(color);
+  void Video_GL::set_Color(const Color &color) {
+    Video::set_Color(color);
 
     glColor4f(color.r, color.g, color.b, color.a);
   }
 
-  void Video_GL::set_clear_color(const Color &color) {
-    Video::set_clear_color(color);
+  void Video_GL::set_clear_Color(const Color &color) {
+    Video::set_clear_Color(color);
 
     glClearColor(color.r, color.g, color.b, color.a);
   }
 
-  void Video_GL::apply_texture(const unsigned long &id) {
-    get_Textures().apply_texture(id);
+  void Video_GL::apply_Texture(const unsigned long &id) {
+    get_Textures().apply_Texture(id);
   }
 
-  void Video_GL::apply_texture(const Texture &texture) {
-    texture.apply_texture();
+  void Video_GL::apply_Texture(const Texture &texture) {
+    texture.apply_Texture();
   }
 
-  void Video_GL::unapply_texture() {
+  void Video_GL::unapply_Texture() {
     glDisable(GL_TEXTURE_2D);
   }
 
@@ -343,7 +343,7 @@ namespace Zeni {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, reinterpret_cast<const GLfloat *>(&color));
   }
 
-  void Video_GL::set_light(const int &number, const Light &light) {
+  void Video_GL::set_Light(const int &number, const Light &light) {
     GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
@@ -361,7 +361,7 @@ namespace Zeni {
     light.set(ln, *this);
   }
 
-  void Video_GL::unset_light(const int &number) {
+  void Video_GL::unset_Light(const int &number) {
     GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
@@ -379,20 +379,20 @@ namespace Zeni {
     glDisable(ln);
   }
 
-  void Video_GL::set_material(const Material &material) {
+  void Video_GL::set_Material(const Material &material) {
     material.set(*this);
   }
 
-  void Video_GL::unset_material(const Material &material) {
+  void Video_GL::unset_Material(const Material &material) {
     material.unset(*this);
   }
 
-  void Video_GL::set_fog(const Fog &fog) {
+  void Video_GL::set_Fog(const Fog &fog) {
     glEnable(GL_FOG);
     fog.set(*this);
   }
 
-  void Video_GL::unset_fog() {
+  void Video_GL::unset_Fog() {
     glDisable(GL_FOG);
   }
 
@@ -483,7 +483,7 @@ namespace Zeni {
   }
 
   void Video_GL::clear_render_target(const Color &color) {
-    set_clear_color(color);
+    set_clear_Color(color);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
@@ -662,8 +662,8 @@ namespace Zeni {
 
     // Finish with a few function calls
     set_2d();
-    set_color(get_color());
-    set_clear_color(get_clear_color());
+    set_Color(get_Color());
+    set_clear_Color(get_clear_Color());
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());

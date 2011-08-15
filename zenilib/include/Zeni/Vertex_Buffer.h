@@ -134,25 +134,25 @@ namespace Zeni {
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Vertex_Buffer should try to fix broken normals in the prerender phase;
     inline bool will_do_normal_alignment() const; // Find out whether Vertex_Buffer is set to try to fix broken normals in the prerender phase;
 
-    void give_triangle(Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
-    void fax_triangle(const Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
-    void give_quadrilateral(Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
-    void fax_quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+    void give_Triangle(Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_Triangle(const Triangle<Vertex2f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_Quadrilateral(Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_Quadrilateral(const Quadrilateral<Vertex2f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
-    void give_triangle(Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
-    void fax_triangle(const Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
-    void give_quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
-    void fax_quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+    void give_Triangle(Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_Triangle(const Triangle<Vertex2f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_Quadrilateral(Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_Quadrilateral(const Quadrilateral<Vertex2f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
-    void give_triangle(Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
-    void fax_triangle(const Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
-    void give_quadrilateral(Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
-    void fax_quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+    void give_Triangle(Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_Triangle(const Triangle<Vertex3f_Color> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_Quadrilateral(Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_Quadrilateral(const Quadrilateral<Vertex3f_Color> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
-    void give_triangle(Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
-    void fax_triangle(const Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
-    void give_quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
-    void fax_quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
+    void give_Triangle(Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a Triangle (which it will delete later)
+    void fax_Triangle(const Triangle<Vertex3f_Texture> * const &triangle); ///< Give the Vertex_Buffer a copy of a Triangle
+    void give_Quadrilateral(Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a Quadrilateral (which it will delete later)
+    void fax_Quadrilateral(const Quadrilateral<Vertex3f_Texture> * const &quadrilateral); ///< Give the Vertex_Buffer a copy of a Quadrilateral
 
     void debug_render(); ///< Render all Triangles in the Vertex_Buffer individually; Will fail if prerender has been called
     void give_Macrorenderer(Vertex_Buffer_Macrorenderer * const &macrorenderer); ///< Wraps the final render call

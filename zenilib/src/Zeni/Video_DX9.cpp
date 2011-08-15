@@ -189,7 +189,7 @@ namespace Zeni {
     if(result == S_OK) {
       D3DVIEWPORT9 vp = {0, 0, DWORD(get_Window().get_width()), DWORD(get_Window().get_height()), 0, 1};
       m_d3d_device->SetViewport(&vp);
-      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_color().r_ub(), get_clear_color().g_ub(), get_clear_color().b_ub()), 1.0f, 0);
+      m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_Color().r_ub(), get_clear_Color().g_ub(), get_clear_Color().b_ub()), 1.0f, 0);
       m_d3d_device->BeginScene();
 
       return true;
@@ -327,29 +327,29 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, func);
   }
 
-  void Video_DX9::set_color(const Color &color) {
-    Video::set_color(color);
+  void Video_DX9::set_Color(const Color &color) {
+    Video::set_Color(color);
 
     m_d3d_device->SetRenderState(D3DRS_TEXTUREFACTOR, color.get_argb());
   }
 
-  void Video_DX9::apply_texture(const unsigned long &id) {
-    get_Textures().apply_texture(id);
+  void Video_DX9::apply_Texture(const unsigned long &id) {
+    get_Textures().apply_Texture(id);
 
     m_textured = true;
 
     set_fvf();
   }
 
-  void Video_DX9::apply_texture(const Texture &texture) {
-    texture.apply_texture();
+  void Video_DX9::apply_Texture(const Texture &texture) {
+    texture.apply_Texture();
 
     m_textured = true;
 
     set_fvf();
   }
 
-  void Video_DX9::unapply_texture() {
+  void Video_DX9::unapply_Texture() {
     m_textured = false;
 
     m_d3d_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
@@ -373,34 +373,34 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_AMBIENT, color.get_argb());
   }
 
-  void Video_DX9::set_light(const int &number, const Light &light) {
+  void Video_DX9::set_Light(const int &number, const Light &light) {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
     light.set(DWORD(number), *this);
   }
 
-  void Video_DX9::unset_light(const int &number) {
+  void Video_DX9::unset_Light(const int &number) {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
     m_d3d_device->LightEnable(DWORD(number), FALSE);
   }
 
-  void Video_DX9::set_material(const Material &material) {
+  void Video_DX9::set_Material(const Material &material) {
     material.set(*this);
   }
 
-  void Video_DX9::unset_material(const Material &material) {
+  void Video_DX9::unset_Material(const Material &material) {
     material.unset(*this);
   }
 
-  void Video_DX9::set_fog(const Fog &fog) {
+  void Video_DX9::set_Fog(const Fog &fog) {
     m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
     fog.set(*this);
   }
 
-  void Video_DX9::unset_fog() {
+  void Video_DX9::unset_Fog() {
     m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
     m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
   }
@@ -560,14 +560,12 @@ namespace Zeni {
   }
 
   void Video_DX9::init() {
-#if SDL_VERSION_ATLEAST(1,3,0)
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
+#if SDL_VERSION_ATLEAST(1,3,0)
     SDL_GetWindowWMInfo(get_Window().get_window(), &wmInfo);
     HWND hWnd = wmInfo.win.window;
 #else
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
     SDL_GetWMInfo(&wmInfo);
     HWND hWnd = wmInfo.window;
 #endif
@@ -701,8 +699,8 @@ namespace Zeni {
 
     // More basic stuff
     set_2d();
-    set_color(get_color());
-    set_clear_color(get_clear_color());
+    set_Color(get_Color());
+    set_clear_Color(get_clear_Color());
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());

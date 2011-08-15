@@ -78,7 +78,7 @@ namespace Zeni {
 
     inline bool is_bold() const; ///< Check if a font has been artifically bolded (a bad thing).  You want to use bold versions of TrueType fonts whenever possible rather than bolding a regular TrueType font.
     inline bool is_italic() const; ///< Check if a font has been italicized.
-    inline const String & get_font_name() const; ///< Get the name of the font.
+    inline const String & get_name() const; ///< Get the name of the font.
     inline float get_text_height() const; ///< Get the height of the font.  The width is usually half the height, by default.
     virtual float get_text_width(const String &text) const = 0; ///< Get the width of text rendering using this font.  Approximately text_height * text.length() / 2.0f
     inline float get_virtual_screen_height() const; ///< Get the intended virtual screen height for the rendering of this Font

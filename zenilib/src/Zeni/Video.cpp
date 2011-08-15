@@ -190,11 +190,11 @@ namespace Zeni {
     m_alpha_value = value;
   }
 
-  void Video::set_color(const Color &color) {
+  void Video::set_Color(const Color &color) {
     m_color = color;
   }
 
-  void Video::set_clear_color(const Color &color) {
+  void Video::set_clear_Color(const Color &color) {
     g_clear_color = color;
   }
 

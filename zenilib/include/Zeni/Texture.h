@@ -73,7 +73,7 @@ namespace Zeni {
     Texture(const bool &repeat_) : m_repeat(repeat_) {}
     virtual ~Texture() {}
 
-    virtual void apply_texture() const = 0; ///< Apply a Texture to upcoming polygons
+    virtual void apply_Texture() const = 0; ///< Apply a Texture to upcoming polygons
 
     virtual const Point2i & get_size() const = 0; ///< Get the resolution of the Texture on the GPU
 
@@ -101,7 +101,7 @@ namespace Zeni {
     int get_current_frame() const; ///< Get the currently selected frame number
     void set_current_frame(const int &frame_number); ///< Set this frame
 
-    virtual void apply_texture() const; ///< Apply the current Texture frame to upcoming polygons
+    virtual void apply_Texture() const; ///< Apply the current Texture frame to upcoming polygons
 
     inline const Point2i & get_size() const; ///< Get the resolution of the current Texture on the GPU
 
@@ -131,7 +131,7 @@ namespace Zeni {
     Texture_GL(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_GL();
 
-    virtual void apply_texture() const;
+    virtual void apply_Texture() const;
 
     inline const Point2i & get_size() const;
 
@@ -162,7 +162,7 @@ namespace Zeni {
     Texture_DX9(const Point2i &size, const bool &repeat /* otherwise clamp */); ///< For render-to-texture
     virtual ~Texture_DX9();
 
-    virtual void apply_texture() const;
+    virtual void apply_Texture() const;
 
     inline const Point2i & get_size() const;
     inline ID3DXRenderToSurface * render_to_surface() const;

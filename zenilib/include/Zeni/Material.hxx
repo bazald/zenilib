@@ -26,7 +26,7 @@ namespace Zeni {
     return m_power;
   }
 
-  const String & Material::get_texture() const {
+  const String & Material::get_Texture() const {
     return m_texture;
   }
 

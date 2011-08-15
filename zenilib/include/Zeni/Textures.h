@@ -117,11 +117,11 @@ namespace Zeni {
     inline static void set_lazy_loading(const bool &lazy_loading = true); ///< Set whether Textures should use lazy loading if possible, or if it should always load Textures immediately.
 
     // Appliers
-    void apply_texture(const String &name); ///< Apply a texture for upcoming polygons (Called by Video::apply_texture)
-    void apply_texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
+    void apply_Texture(const String &name); ///< Apply a texture for upcoming polygons (Called by Video::apply_Texture)
+    void apply_Texture(const unsigned long &id); ///< Apply a texture for upcoming polygons
 
     // Sprite-specific
-    bool is_sprite(const unsigned long &id); ///< Does this id point to a Sprite
+    bool is_Sprite(const unsigned long &id); ///< Does this id point to a Sprite
     int get_num_frames(const unsigned long &id); ///< Get the number of frames; returns 0 if it is not a Sprite
     int get_current_frame(const unsigned long &id); ///< Get the currently selected frame number for a Sprite
     void set_current_frame(const unsigned long &id, const int &frame_number); ///< Set the frame number for a Sprite

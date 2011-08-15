@@ -35,17 +35,11 @@ namespace Zeni {
     : m_material(0),
     delete_m_material(false)
   {
-    if(rhs.delete_m_material)
-      fax_Material(rhs.m_material);
-    else
-      lend_Material(rhs.m_material);
+    fax_Material(rhs.m_material);
   }
 
   Renderable & Renderable::operator=(const Renderable &rhs) {
-    if(rhs.delete_m_material)
-      fax_Material(rhs.m_material);
-    else
-      lend_Material(rhs.m_material);
+    fax_Material(rhs.m_material);
 
     return *this;
   }

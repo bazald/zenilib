@@ -721,7 +721,7 @@ namespace Zeni {
     inline void lend_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget no ownership
     inline void fax_Slider_BG_Renderer(const Widget_Render_Function * const &renderer); ///< Set the current Widget_Render_Function, giving the Widget a copy
 
-    inline const String & get_font() const; ///< Get the current font
+    inline const String & get_Font() const; ///< Get the current font
     inline void set_font(const String &font_); ///< Set the current font
 
   private:
@@ -804,7 +804,7 @@ namespace Zeni {
     virtual void on_change();
 
     inline const String & get_font_name() const;
-    inline const Font & get_font() const;
+    inline const Font & get_Font() const;
     inline const String & get_text() const;
     inline const Color & get_text_color() const;
     inline const JUSTIFY & get_justify() const;

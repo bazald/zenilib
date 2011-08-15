@@ -99,16 +99,16 @@ namespace Zeni {
                 std::make_pair(Point2i(), get_render_target_size()));
   }
 
-  const Color & Video::get_color() const {
+  const Color & Video::get_Color() const {
     return m_color;
   }
 
-  const Color & Video::get_clear_color() const {
+  const Color & Video::get_clear_Color() const {
     return g_clear_color;
   }
 
-  void Video::apply_texture(const String &name) {
-    apply_texture(get_Textures().get_id(name));
+  void Video::apply_Texture(const String &name) {
+    apply_Texture(get_Textures().get_id(name));
   }
 
   void Video::rotate_scene(const Quaternion &rotation) {

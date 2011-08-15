@@ -44,13 +44,13 @@ namespace Zeni {
     if(m_grab_input)
       wr.mouse_grab(false);
 
-    m_clear_color = get_Video().get_clear_color();
+    m_clear_color = get_Video().get_clear_Color();
   }
 
   void Widget_Gamestate::on_pop() {
     Window &wr = get_Window();
 
-    get_Video().set_clear_color(m_clear_color);
+    get_Video().set_clear_Color(m_clear_color);
 
     if(m_hide_cursor)
       wr.mouse_hide(true);
