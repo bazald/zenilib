@@ -145,7 +145,7 @@ namespace Zeni {
     if(Zeni::unserialize(is, size)) {
       TYPE el;
       for(Uint16 i = 0u; i != size; ++i) {
-        if(!unserialize(is, el)
+        if(!unserialize(is, el))
           break;
         list_.push_back(el);
       }
@@ -168,7 +168,7 @@ namespace Zeni {
     if(Zeni::unserialize(is, size)) {
       TYPE el;
       for(Uint16 i = 0u; i != size; ++i) {
-        if(!unserialize(is, el)
+        if(!unserialize(is, el))
           break;
         list_.insert(el);
       }
@@ -192,7 +192,7 @@ namespace Zeni {
       TYPE el;
       list_.reserve(size);
       for(Uint16 i = 0u; i != size; ++i) {
-        if(!unserialize(is, el)
+        if(!unserialize(is, el))
           break;
         list_.push_back(el);
       }
