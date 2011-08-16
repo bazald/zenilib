@@ -322,8 +322,9 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
+      Uint16 chunks_arrived;
       
-      Chunk_Set() {}
+      Chunk_Set() : chunks_arrived(0u) {}
       
       Chunk_Set(const IPaddress &sender, const Nonce &incoming, const Uint16 &num_chunks, const Uint16 &which, Chunk &chunk);
       
