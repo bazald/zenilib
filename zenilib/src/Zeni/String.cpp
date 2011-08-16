@@ -81,8 +81,9 @@ namespace Zeni {
       }
 
       m_size = size;
-      m_c_str[m_size] = '\0';
     }
+
+    m_c_str[m_size] = '\0';
   }
 
   void String::clear() {
