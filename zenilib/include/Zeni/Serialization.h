@@ -110,8 +110,9 @@ namespace Zeni {
   ZENI_DLL std::ostream & serialize(std::ostream &os, const unsigned char &value);
   ZENI_DLL std::ostream & serialize(std::ostream &os, const float &value);
   ZENI_DLL std::ostream & serialize(std::ostream &os, const double &value);
-  ZENI_DLL std::ostream & serialize(std::ostream &os, const bool &value);
+  //ZENI_DLL std::ostream & serialize(std::ostream &os, const bool &value);
   ZENI_DLL std::ostream & serialize(std::ostream &os, const IPaddress &address);
+  ZENI_DLL std::ostream & serialize(std::ostream &os, const String &string);
   
   inline std::istream & unserialize(std::istream &is, Serializable &value) {return value.unserialize(is);}
 
@@ -124,8 +125,9 @@ namespace Zeni {
   ZENI_DLL std::istream & unserialize(std::istream &is, unsigned char &value);
   ZENI_DLL std::istream & unserialize(std::istream &is, float &value);
   ZENI_DLL std::istream & unserialize(std::istream &is, double &value);
-  ZENI_DLL std::istream & unserialize(std::istream &is, bool &value);
+  //ZENI_DLL std::istream & unserialize(std::istream &is, bool &value);
   ZENI_DLL std::istream & unserialize(std::istream &is, IPaddress &address);
+  ZENI_DLL std::istream & unserialize(std::istream &is, String &string);
 
   template <typename TYPE>
   std::ostream & serialize(std::ostream &os, const std::list<TYPE> &list_) {

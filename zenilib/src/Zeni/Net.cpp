@@ -478,7 +478,10 @@ namespace Zeni {
         {
           std::istringstream is(s);
           unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
-          
+
+          if(!is)
+            return 0;
+
           const Uint16 offset = static_cast<Uint16>(nonce.size()) + 2u * sizeof(Uint16);
           
           chunk.size = s.size() - offset;
