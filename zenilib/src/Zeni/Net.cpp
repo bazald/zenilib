@@ -332,7 +332,8 @@ namespace Zeni {
                                          Chunk &chunk)
     : ip(sender),
       nonce(incoming),
-      chunks(num_chunks)
+      chunks(num_chunks),
+      chunks_arrived(1u)
   {
     assert(num_chunks > which);
     
@@ -348,9 +349,11 @@ namespace Zeni {
     if(ip == sender &&
        nonce == incoming &&
        chunks.size() == num_chunks &&
-       chunks.size() > which) {
+       chunks.size() > which)
+    {
       if(!chunks[which].data)
         chunks[which] = chunk;
+      ++chunks_arrived;
       return true;
     }
     
@@ -358,11 +361,13 @@ namespace Zeni {
   }
   
   bool Split_UDP_Socket::Chunk_Set::complete() const {
-    for(std::vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
-      if(!it->data)
-        return false;
-    
-    return true;
+    return chunks_arrived == chunks.size();
+
+    //for(std::vector<Chunk>::const_iterator it = chunks.begin(); it != chunks.end(); ++it)
+    //  if(!it->data)
+    //    return false;
+    //
+    //return true;
   }
   
   Split_UDP_Socket::Chunk Split_UDP_Socket::Chunk_Set::receive() const {
@@ -480,7 +485,7 @@ namespace Zeni {
           unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
 
           if(!is)
-            return 0;
+            continue;
 
           const Uint16 offset = static_cast<Uint16>(nonce.size()) + 2u * sizeof(Uint16);
           

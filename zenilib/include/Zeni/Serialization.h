@@ -46,6 +46,7 @@
 
 #include <iostream>
 #include <list>
+#include <set>
 #include <vector>
 
 /*** IPaddress functions ***/
@@ -142,10 +143,35 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, std::list<TYPE> &list_) {
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
-      list_.resize(size, typename std::list<TYPE>::value_type());
-      for(typename std::list<TYPE>::iterator it = list_.begin(); it != list_.end(); ++it)
-        if(!unserialize(is, *it))
+      TYPE el;
+      for(Uint16 i = 0u; i != size; ++i) {
+        if(!unserialize(is, el)
           break;
+        list_.push_back(el);
+      }
+    }
+    return is;
+  }
+
+  template <typename TYPE>
+  std::ostream & serialize(std::ostream &os, const std::set<TYPE> &list_) {
+    Zeni::serialize(os, static_cast<Uint16>(list_.size()));
+    for(typename std::set<TYPE>::const_iterator it = list_.begin(); it != list_.end(); ++it)
+      if(!serialize(os, *it))
+        break;
+    return os;
+  }
+    
+  template <typename TYPE>
+  std::istream & unserialize(std::istream &is, std::set<TYPE> &list_) {
+    Uint16 size;
+    if(Zeni::unserialize(is, size)) {
+      TYPE el;
+      for(Uint16 i = 0u; i != size; ++i) {
+        if(!unserialize(is, el)
+          break;
+        list_.insert(el);
+      }
     }
     return is;
   }
@@ -163,10 +189,13 @@ namespace Zeni {
   std::istream & unserialize(std::istream &is, std::vector<TYPE> &list_) {
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
-      list_.resize(size, typename std::vector<TYPE>::value_type());
-      for(typename std::vector<TYPE>::iterator it = list_.begin(); it != list_.end(); ++it)
-        if(!unserialize(is, *it))
+      TYPE el;
+      list_.reserve(size);
+      for(Uint16 i = 0u; i != size; ++i) {
+        if(!unserialize(is, el)
           break;
+        list_.push_back(el);
+      }
     }
     return is;
   }
