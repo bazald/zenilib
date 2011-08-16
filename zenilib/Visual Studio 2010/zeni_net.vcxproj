@@ -202,6 +202,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4312;4505;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
@@ -247,6 +248,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4121;4312;4505;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>
@@ -294,6 +296,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4297;4312;4505;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
@@ -341,6 +344,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4121;4297;4312;4505;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>

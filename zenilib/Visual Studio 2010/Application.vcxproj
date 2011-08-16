@@ -214,6 +214,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
@@ -267,6 +268,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4121;4312;4505;4311;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt %(AdditionalOptions)</AdditionalOptions>
@@ -321,6 +323,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
@@ -378,6 +381,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4005;4986;4121;4297;4312;4505;4311;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4239</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDLmain.lib;SDL.lib</AdditionalDependencies>
