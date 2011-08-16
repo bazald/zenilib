@@ -296,15 +296,20 @@ namespace Zeni {
     return os.write(reinterpret_cast<const char * const>(&value), sizeof(double));
   }
   
-  std::ostream & serialize(std::ostream &os, const bool &value) {
-    const char c(value ? 1 : 0);
-    return os.put(c);
-  }
+  //std::ostream & serialize(std::ostream &os, const bool &value) {
+  //  const char c(value ? 1 : 0);
+  //  return os.put(c);
+  //}
 
   std::ostream & serialize(std::ostream &os, const IPaddress &address) {
     const char *buf = reinterpret_cast<const char *>(&address);
     
     return os.write(buf, sizeof(IPaddress));
+  }
+
+  std::ostream & serialize(std::ostream &os, const String &string) {
+    const Uint16 sz = Uint16(string.size());
+    return serialize(os, sz).write(string.c_str(), sz);
   }
   
   std::istream & unserialize(std::istream &is, Sint32 &value) {
@@ -374,14 +379,14 @@ namespace Zeni {
     return is.read(reinterpret_cast<char * const>(&value), sizeof(double));
   }
   
-  std::istream & unserialize(std::istream &is, bool &value) {
-    char c;
-    
-    if(is.get(c))
-      value = c ? true : false;
-    
-    return is;
-  }
+  //std::istream & unserialize(std::istream &is, bool &value) {
+  //  char c;
+  //  
+  //  if(is.get(c))
+  //    value = c ? true : false;
+  //  
+  //  return is;
+  //}
 
   std::istream & unserialize(std::istream &is, IPaddress &address) {
     char buf[sizeof(IPaddress)];
@@ -389,6 +394,18 @@ namespace Zeni {
     if(is.read(buf, sizeof(IPaddress)))
       memcpy(&address, buf, sizeof(IPaddress));
     
+    return is;
+  }
+
+  std::istream & unserialize(std::istream &is, String &string) {
+    Uint16 sz;
+    unserialize(is, sz);
+
+    if(is) {
+      string.resize(sz);
+      is.read(const_cast<char *>(string.c_str()), sz);
+    }
+
     return is;
   }
 

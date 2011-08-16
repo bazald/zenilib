@@ -69,7 +69,7 @@ namespace Zeni {
       m_cap = req_cap;
       m_c_str = new_str;
     }
-    else if(req_cap < m_cap) {
+    else {
       if(2u * req_cap < m_size) {
         char * const new_str = new char [req_cap];
 
