@@ -292,7 +292,7 @@ namespace Zeni {
         rhs.data = 0;
       }
       
-      Chunk & operator=(Chunk &rhs) {
+      Chunk & operator=(const Chunk &rhs) {
         size = rhs.size;
         data = rhs.data;
         

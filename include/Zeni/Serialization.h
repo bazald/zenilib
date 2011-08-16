@@ -141,6 +141,8 @@ namespace Zeni {
     
   template <typename TYPE>
   std::istream & unserialize(std::istream &is, std::list<TYPE> &list_) {
+    list_.clear();
+
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
       TYPE el;
@@ -164,6 +166,8 @@ namespace Zeni {
     
   template <typename TYPE>
   std::istream & unserialize(std::istream &is, std::set<TYPE> &list_) {
+    list_.clear();
+
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
       TYPE el;
@@ -178,15 +182,17 @@ namespace Zeni {
 
   template <typename TYPE>
   std::ostream & serialize(std::ostream &os, const std::vector<TYPE> &list_) {
-    Zeni::serialize(os, static_cast<Uint16>(list_.size()));
-    for(typename std::vector<TYPE>::const_iterator it = list_.begin(); it != list_.end(); ++it)
-      if(!serialize(os, *it))
-        break;
+    if(Zeni::serialize(os, static_cast<Uint16>(list_.size())))
+      for(typename std::vector<TYPE>::const_iterator it = list_.begin(); it != list_.end(); ++it)
+        if(!serialize(os, *it))
+          break;
     return os;
   }
     
   template <typename TYPE>
   std::istream & unserialize(std::istream &is, std::vector<TYPE> &list_) {
+    list_.clear();
+
     Uint16 size;
     if(Zeni::unserialize(is, size)) {
       TYPE el;

@@ -17,8 +17,6 @@
 
 #include <zeni_graphics.h>
 
-#include <SDL/SDL_syswm.h>
-
 #ifdef _MACOSX
 #include <SDL_image/SDL_image.h>
 #else
@@ -26,6 +24,7 @@
 #endif
 
 #ifdef _WINDOWS
+#include <SDL/SDL_syswm.h>
 #include <Windows.h>
 #include <WinUser.h>
 #endif
