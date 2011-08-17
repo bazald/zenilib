@@ -251,6 +251,13 @@ namespace Zeni {
     return m_translate + m_scale.multiply_by(Quaternion::Axis_Angle(m_rotate, m_rotate_angle) * Vector3f(m_position));
     GUARANTEED_FINISHED_END();
   }
+  
+  void Model::set_keyframe(const float &keyframe) {
+    GUARANTEED_FINISHED_BEGIN(m_loader);
+    m_keyframe = keyframe;
+    lib3ds_file_eval(m_file, keyframe);
+    GUARANTEED_FINISHED_END();
+  }
 
   void Model::visit_nodes(Model_Visitor &mv, Lib3dsNode *node) const {
     if(!node) {

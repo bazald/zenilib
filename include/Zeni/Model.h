@@ -128,7 +128,7 @@ namespace Zeni {
     inline void set_rotate(const float &angle, const Vector3f &ray); ///< Rotate the Model
     inline void set_rotate(const Quaternion &quaternion); ///< Rotate the Model
     inline void set_translate(const Point3f &vector); ///< Translate the Model
-    inline void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
+    void set_keyframe(const float &keyframe); ///< Set the current (key)frame; interpolation is automatic
     inline void do_normal_alignment(const bool align_normals_ = true); // Set whether Model should try to fix broken normals before rendering
 
     // Post-Order Traversal
