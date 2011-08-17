@@ -16,7 +16,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Sphere
+ * \class Zeni::Collision::Sphere
  *
  * \ingroup zenilib
  *
@@ -34,7 +34,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Plane
+ * \class Zeni::Collision::Plane
  *
  * \ingroup zenilib
  *
@@ -51,7 +51,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Line_Segment
+ * \class Zeni::Collision::Line_Segment
  *
  * \ingroup zenilib
  *
@@ -69,7 +69,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Ray
+ * \class Zeni::Collision::Ray
  *
  * \ingroup zenilib
  *
@@ -87,7 +87,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Line
+ * \class Zeni::Collision::Line
  *
  * \ingroup zenilib
  *
@@ -104,7 +104,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Infinite_Cylinder
+ * \class Zeni::Collision::Infinite_Cylinder
  *
  * \ingroup zenilib
  *
@@ -122,7 +122,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Capsule
+ * \class Zeni::Collision::Capsule
  *
  * \ingroup zenilib
  *
@@ -141,7 +141,7 @@
  */
 
 /**
- * \class ZENI_DLL Zeni::Collision::Parallelepiped
+ * \class Zeni::Collision::Parallelepiped
  *
  * \ingroup zenilib
  *

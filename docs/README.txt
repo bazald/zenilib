@@ -76,30 +76,28 @@ bazald -at- zenipex -dot- com
 This software is known to compile and run on:
  
 - Windows: XP, Vista, 7
-- MacOS X: 10.5 and up
-- Linux: Ubuntu (and derivatives)
+- MacOS X: 10.6 and up
+- Linux: Ubuntu (and derivatives), Red Hat Enterprise Linux
 
 It should be possible to build it on any platform supported by:
 
-DirectX    9.0c March 2009   (Proprietary)           http://msdn.microsoft.com/directx/sdk/
-OpenAL     1.1               (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
-OpenGL                       (Proprietary)
+DirectX    9.0c      (Proprietary)           http://msdn.microsoft.com/directx/sdk/
+OpenAL     1.1       (Proprietary)           http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx
+OpenGL               (Proprietary)
 
-Cg Toolkit 2.2 April 2009    (Proprietary)           http://developer.nvidia.com/object/cg_toolkit.html
-FreeType2  2.3.7             (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
-GLEW       1.5.1             (BSD License)           http://glew.sourceforge.net/
-lib3ds     2.0 RC 1          (GNU LGPL)              http://lib3ds.sourceforge.net/
-libjpeg    6b4               (BSD License)           http://gnuwin32.sourceforge.net/packages/jpeg.htm
-libogg     1.1.3             (Xiph BSD-like License) http://xiph.org/downloads/
-libpng     1.2.33            (zlib/libpng License)   http://www.libpng.org/pub/png/libpng.html
-libtiff    3.8.2             (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
-libvorbis  1.2.0             (Xiph BSD-like License) http://xiph.org/downloads/
-SDL        1.2.13            (GNU LGPL)              http://www.libsdl.org/download-1.2.php
-SDL_image  1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
-SDL_net    1.2.7             (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
-SDL_ttf    2.0.9             (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/
-TinyXML    2.5.3             (zlib/libpng License)   http://sourceforge.net/project/showfiles.php?group_id=13559
-zlib       1.2.3             (zlib/libpng License)   http://www.zlib.net/
+FreeType2  2.4.6     (BSD License)           http://sourceforge.net/project/showfiles.php?group_id=3157
+GLEW       1.6.0     (BSD License)           http://glew.sourceforge.net/
+lib3ds     2.0 RC 1  (GNU LGPL)              http://lib3ds.sourceforge.net/
+libogg     1.2.2     (Xiph BSD-like License) http://xiph.org/downloads/
+libpng     1.2.46    (zlib/libpng License)   http://www.libpng.org/pub/png/libpng.html
+libtiff    3.9.5     (BSD License)           http://gnuwin32.sourceforge.net/packages/tiff.htm
+libvorbis  1.3.2     (Xiph BSD-like License) http://xiph.org/downloads/
+SDL        1.2.14    (GNU LGPL)              http://www.libsdl.org/download-1.2.php
+SDL_image  1.2.10    (GNU LGPL)              http://www.libsdl.org/projects/SDL_image/
+SDL_net    1.2.7     (GNU LGPL)              http://www.libsdl.org/projects/SDL_net/
+SDL_ttf    2.0.10    (GNU LGPL)              http://www.libsdl.org/projects/SDL_ttf/
+TinyXML    2.6.2     (zlib/libpng License)   http://sourceforge.net/project/showfiles.php?group_id=13559
+zlib       1.2.5     (zlib/libpng License)   http://www.zlib.net/
 
 4. Documentation
 ================

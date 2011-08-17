@@ -15,6 +15,18 @@
  * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+* \class Zeni::Chronometer
+*
+* \ingroup zenilib
+*
+* \brief A stoppable running timer.
+*
+* \author bazald
+*
+* Contact: bazald@zenipex.com
+*/
+
 #ifndef ZENI_CHRONOMETER_H
 #define ZENI_CHRONOMETER_H
 
@@ -25,16 +37,6 @@
 /* \endcond */
 
 namespace Zeni {
-
-  /**
-   * \ingroup zenilib
-   *
-   * \brief A stoppable running timer.
-   *
-   * \author bazald
-   *
-   * Contact: bazald@zenipex.com
-   */
   
   template <class TIME>
   class Chronometer {
@@ -42,8 +44,8 @@ namespace Zeni {
     Chronometer();
     ~Chronometer();
 
-    Chronometer(const Chronometer &rhs);
-    Chronometer & operator =(const Chronometer &rhs);
+    Chronometer(const Chronometer<TIME> &rhs);
+    Chronometer & operator =(const Chronometer<TIME> &rhs);
 
     // Starting and Stopping
     const bool & is_running() const; ///< Get whether the Chronometer is currently counting or stopped.
