@@ -98,13 +98,6 @@ namespace Zeni {
     GUARANTEED_FINISHED_END();
   }
 
-  void Model::set_keyframe(const float &keyframe) {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
-    m_keyframe = keyframe;
-    lib3ds_file_eval(m_file, keyframe);
-    GUARANTEED_FINISHED_END();
-  }
-
   void Model::do_normal_alignment(const bool align_normals_) {
     m_align_normals = align_normals_;
   }
