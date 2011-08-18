@@ -345,7 +345,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -391,7 +391,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -437,7 +437,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -482,7 +482,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -532,7 +532,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -580,7 +580,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -628,7 +628,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -675,7 +675,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -717,7 +717,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -763,7 +763,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -809,7 +809,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -855,7 +855,7 @@
     <ClCompile>
       <AdditionalOptions>/Wall /wd4548 /wd4820 /wd4668 /wd4619 /wd4571 /wd4710 /wd4555 /wd4061 /wd4640 /wd4264 /wd4266 /wd4917 /wd4191 /wd4514 /wd4365 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;_DEBUG;_WINDOWS;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
@@ -906,7 +906,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -954,7 +954,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -1002,7 +1002,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -1050,7 +1050,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\include_win;$(DXSDK_Dir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllexport);ZENI_GRAPHICS_EXT=;DISABLE_CG;REQUIRE_GL_ES;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
