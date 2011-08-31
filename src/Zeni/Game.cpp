@@ -158,14 +158,13 @@ namespace Zeni {
 
       if(Window::is_enabled()) {
         Video &vr = get_Video();
-        Gamestate gs = get_top();
 
         if(vr.begin_prerender()) {
-          gs.prerender();
+          prerender();
 
           if(vr.begin_render()) {
             try {
-              gs.render();
+              render();
             }
             catch(...) {
               vr.end_render();
@@ -181,9 +180,10 @@ namespace Zeni {
 
   void Game::calculate_fps() {
     ++fps_next;
-    if(time.get_ticks_passed() < ticks_passed)
+    const Time::Tick_Type tp = time.get_ticks_passed();
+    if(tp < ticks_passed)
       return;
-    ticks_passed = time.get_ticks_passed() + 1000;
+    ticks_passed = tp + 1000;
     fps = fps_next;
     fps_next = 0;
   }
