@@ -326,11 +326,12 @@ namespace Zeni {
 
   void Radio_Button::on_accept() {
     if(is_checked())
-      return;
+      Check_Box::on_reject();
+    else {
+      Check_Box::on_accept();
 
-    Check_Box::on_accept();
-
-    m_radio_button_set->accept(*this);
+      m_radio_button_set->accept(*this);
+    }
   }
 
   void Radio_Button_Set::on_mouse_button(const Point2i &pos, const bool &down, const int &button) {
