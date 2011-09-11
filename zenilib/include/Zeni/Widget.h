@@ -517,6 +517,8 @@ namespace Zeni {
     friend class Radio_Button;
 
   public:
+    Radio_Button_Set() {}
+
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
 
