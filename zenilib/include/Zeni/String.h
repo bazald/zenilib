@@ -101,14 +101,6 @@ namespace Zeni {
 
     const char * const c_str() const;
 
-    inline operator std::string() const {
-      return std_str();
-    }
-
-    inline operator const char * const () const {
-      return c_str();
-    }
-
     void swap(String &rhs);
 
     struct ZENI_DLL Hash {
