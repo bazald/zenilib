@@ -283,6 +283,11 @@ namespace Zeni {
   }
 
   void Video::change_resolution(const Point2i &resolution) {
+    Window &wr = get_Window();
+
+    if(wr.get_width() == resolution.x && wr.get_height() == resolution.y)
+      return;
+
     destroy();
 
     try {
@@ -292,7 +297,7 @@ namespace Zeni {
       preinit_from_file("config/zenilib.xml");
     }
 
-    get_Window().alert_window_resized(resolution);
+    wr.alert_window_resized(resolution);
 
     get();
   }
