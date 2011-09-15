@@ -481,7 +481,7 @@ namespace Zeni {
         Chunk chunk;
         
         {
-          std::istringstream is(s);
+          std::istringstream is(s.std_str());
           unserialize(unserialize(nonce.unserialize(is), num_chunks), which);
 
           if(!is)
