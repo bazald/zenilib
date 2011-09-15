@@ -67,9 +67,9 @@ namespace Zeni {
     String & operator+=(const char * const &str);
     String & operator+=(const String &str);
 
-    String operator+(const char &c);
-    String operator+(const char * const &str);
-    String operator+(const String &str);
+    String operator+(const char &c) const;
+    String operator+(const char * const &str) const;
+    String operator+(const String &str) const;
     
     bool operator==(const char * const &str) const;
     bool operator==(const String &str) const;
