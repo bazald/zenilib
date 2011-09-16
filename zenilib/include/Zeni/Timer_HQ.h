@@ -51,6 +51,7 @@
 
 #include <Zeni/Error.h>
 #include <Zeni/Singleton.h>
+#include <Zeni/Timer_HQ.h>
 
 #ifdef _WINDOWS
 #include <Windows.h>
@@ -105,6 +106,7 @@ namespace Zeni {
 
 #ifdef _WINDOWS
   ZENI_EXT template class ZENI_DLL Singleton<Timer_HQ>;
+  ZENI_EXT template class ZENI_DLL Chronometer<Time_HQ>;
 #endif
 
   class ZENI_DLL Timer_HQ : public Singleton<Timer_HQ> {
@@ -141,7 +143,6 @@ namespace Zeni {
   struct ZENI_DLL Timer_HQ_Init_Failure : public Error {
     Timer_HQ_Init_Failure() : Error("Zeni Timer_HQ Failed to Initialize Correctly") {}
   };
-
 }
 
 #endif

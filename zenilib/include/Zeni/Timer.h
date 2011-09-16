@@ -50,6 +50,7 @@
 #define ZENI_TIMER_H
 
 #include <Zeni/Singleton.h>
+#include <Zeni/Timer.h>
 
 #ifdef _WINDOWS
 #include <Windows.h>
@@ -90,6 +91,7 @@ namespace Zeni {
 
 #ifdef _WINDOWS
   ZENI_CORE_EXT template class ZENI_CORE_DLL Singleton<Timer>;
+  ZENI_CORE_EXT template class ZENI_CORE_DLL Chronometer<Time>;
 #endif
 
   class ZENI_CORE_DLL Timer : public Singleton<Timer> {
