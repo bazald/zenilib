@@ -41,6 +41,7 @@ namespace Zeni {
   }
 
   template class ZENI_CORE_DLL Singleton<Timer>;
+  template class ZENI_CORE_DLL Chronometer<Time>;
 
   Timer * Timer::create() {
     return new Timer;
