@@ -32,7 +32,7 @@ PROJECT_NAME           = "Zenipex Library"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 0.4.0.1
+PROJECT_NUMBER         = 0.4.0.x
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description 
 # for a project that appears at the top of each page and should give viewer 
@@ -639,6 +639,13 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = ./include/Zeni \
+                         ./include \
+                         ./include_win/AL \
+                         ./include_win/GL \
+                         ./include_win/ogg \
+                         ./include_win/SDL \
+                         ./include_win/vorbis \
+                         ./include_win \
                          ./src/Zeni \
                          ./src
 
@@ -697,7 +704,20 @@ RECURSIVE              = NO
 # subdirectory from a directory tree whose root is specified with the INPUT tag. 
 # Note that relative paths are relative to directory from which doxygen is run.
 
-EXCLUDE                = 
+EXCLUDE                = ./include_win/d3d9.h \
+                         ./include_win/d3d9caps.h \
+                         ./include_win/d3d9types.h \
+                         ./include_win/d3dx9.h \
+                         ./include_win/d3dx9anim.h \
+                         ./include_win/d3dx9core.h \
+                         ./include_win/d3dx9effect.h \
+                         ./include_win/d3dx9math.h \
+                         ./include_win/d3dx9math.inl \
+                         ./include_win/d3dx9mesh.h \
+                         ./include_win/d3dx9shader.h \
+                         ./include_win/d3dx9shape.h \
+                         ./include_win/d3dx9tex.h \
+                         ./include_win/d3dx9xof.h
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix file system feature) are excluded 
