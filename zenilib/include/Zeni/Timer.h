@@ -49,8 +49,8 @@
 #ifndef ZENI_TIMER_H
 #define ZENI_TIMER_H
 
+#include <Zeni/Chronometer.h>
 #include <Zeni/Singleton.h>
-#include <Zeni/Timer.h>
 
 #ifdef _WINDOWS
 #include <Windows.h>
