@@ -30,8 +30,6 @@
 #ifndef ZENI_CHRONOMETER_H
 #define ZENI_CHRONOMETER_H
 
-#include <Zeni/Timer_HQ.h>
-
 /* \cond */
 #include <set>
 /* \endcond */

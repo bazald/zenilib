@@ -70,6 +70,7 @@ namespace Zeni {
   }
 
   template class ZENI_DLL Singleton<Timer_HQ>;
+  template class ZENI_DLL Chronometer<Time_HQ>;
 
   Timer_HQ * Timer_HQ::create() {
     return new Timer_HQ;

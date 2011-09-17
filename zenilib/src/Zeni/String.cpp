@@ -151,13 +151,31 @@ namespace Zeni {
     return *this;
   }
 
+  String String::operator+(const char &c) const {
+    String temp(*this);
+    temp += c;
+    return temp;
+  }
+
   String String::operator+(const char &c) {
     String temp(*this);
     temp += c;
     return temp;
   }
 
+  String String::operator+(const char * const &str) const {
+    String temp(*this);
+    temp += str;
+    return temp;
+  }
+
   String String::operator+(const char * const &str) {
+    String temp(*this);
+    temp += str;
+    return temp;
+  }
+
+  String String::operator+(const String &str) const {
     String temp(*this);
     temp += str;
     return temp;

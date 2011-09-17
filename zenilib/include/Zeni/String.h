@@ -67,10 +67,13 @@ namespace Zeni {
     String & operator+=(const char * const &str);
     String & operator+=(const String &str);
 
+    String operator+(const char &c) const;
     String operator+(const char &c);
+    String operator+(const char * const &str) const;
     String operator+(const char * const &str);
+    String operator+(const String &str) const;
     String operator+(const String &str);
-    
+
     bool operator==(const char * const &str) const;
     bool operator==(const String &str) const;
     bool operator!=(const char * const &str) const;
@@ -100,14 +103,6 @@ namespace Zeni {
     }
 
     const char * const c_str() const;
-
-    inline operator std::string() const {
-      return std_str();
-    }
-
-    inline operator const char * const () const {
-      return c_str();
-    }
 
     void swap(String &rhs);
 

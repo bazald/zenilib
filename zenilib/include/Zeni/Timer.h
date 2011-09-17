@@ -1,4 +1,4 @@
-/* This file is part of the Zenipex Library (zenilib).
+  /* This file is part of the Zenipex Library (zenilib).
  * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
  *
  * zenilib is free software: you can redistribute it and/or modify
@@ -49,6 +49,7 @@
 #ifndef ZENI_TIMER_H
 #define ZENI_TIMER_H
 
+#include <Zeni/Chronometer.h>
 #include <Zeni/Singleton.h>
 
 #ifdef _WINDOWS
@@ -90,6 +91,7 @@ namespace Zeni {
 
 #ifdef _WINDOWS
   ZENI_CORE_EXT template class ZENI_CORE_DLL Singleton<Timer>;
+  ZENI_CORE_EXT template class ZENI_CORE_DLL Chronometer<Time>;
 #endif
 
   class ZENI_CORE_DLL Timer : public Singleton<Timer> {
