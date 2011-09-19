@@ -359,6 +359,51 @@ namespace Zeni {
 
   void Window::alert_window_resized(const Point2i &resolution) {
     g_screen_size = resolution;
+
+#if !defined(_WINDOWS)
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(m_window)
+      SDL_DestroyWindow(m_window);
+    m_window = 0;
+#endif
+    
+    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+
+    // Initialize Window
+#if SDL_VERSION_ATLEAST(1,3,0)
+    m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
+      SDL_WINDOW_OPENGL |
+      (g_screen_full ? SDL_WINDOW_FULLSCREEN
+                     : ((g_screen_show_frame ? 0u : SDL_WINDOW_BORDERLESS) |
+                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0u))));
+#else
+    m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
+      SDL_OPENGL |
+      (g_screen_full ? SDL_FULLSCREEN
+                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? 0 : SDL_NOFRAME) |
+                                                   (g_screen_resizable ? SDL_RESIZABLE : 0))
+                                                : 0)));
+#endif
+    Core::assert_no_error();
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+    if(!m_window) {
+#else
+    if(!m_display_surface) {
+#endif
+      throw Window_Init_Failure();
+    }
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+    set_tt();
+    set_icon();
+
+    SDL_ShowWindow(m_window);
+#else
+    g_screen_size.x = m_display_surface->w;
+    g_screen_size.y = m_display_surface->h;
+#endif
+#endif
   }
 
   void Window::set_tt() {
