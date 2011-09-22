@@ -1,4 +1,4 @@
-  /* This file is part of the Zenipex Library (zenilib).
+/* This file is part of the Zenipex Library (zenilib).
  * Copyright (C) 2011 Mitchell Keith Bloch (bazald).
  *
  * zenilib is free software: you can redistribute it and/or modify

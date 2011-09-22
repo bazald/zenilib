@@ -89,10 +89,10 @@ namespace Zeni {
     static bool set_icon(const String &filename); ///< Set the window icon
 
     // Mouse Functions
-    inline bool is_mouse_grabbed() const; ///< Find out if the (primary) Window has grabbed the mouse
-    inline bool is_mouse_hidden() const; ///< Find out if the mouse cursor is hidden
-    inline void mouse_grab(const bool &grab); ///< Tell the (primary) Window to grab/ungrab the mouse
-    inline void mouse_hide(const bool &hide); ///< Hide/Unhide the mouse
+    bool is_mouse_grabbed() const; ///< Find out if the (primary) Window has grabbed the mouse
+    bool is_mouse_hidden() const; ///< Find out if the mouse cursor is hidden
+    void mouse_grab(const bool &grab); ///< Tell the (primary) Window to grab/ungrab the mouse
+    void mouse_hide(const bool &hide); ///< Hide/Unhide the mouse
 
     // Call before any other Window functions; May throw Window_Initialized
     static void preinit_resolution(const Point2i &resolution = Point2i(800, 600)); ///< Set the rendering window to have a given resolution

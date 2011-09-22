@@ -263,7 +263,6 @@ namespace Zeni {
 
   void Video::preinit_from_file(const XML_Document &file) {
     XML_Element_c zenilib = file["Zenilib"];
-    XML_Element_c textures = zenilib["Textures"];
     XML_Element_c video = zenilib["Video"];
 
     Window::preinit_from_xml(video);

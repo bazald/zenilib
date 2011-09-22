@@ -351,6 +351,33 @@ namespace Zeni {
 		return !is_initialized() || get().set_icon();
   }
 
+  bool Window::is_mouse_grabbed() const {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_Window * const window = get_Window().get_window();
+    return window && SDL_GetWindowGrab(window) == SDL_GRAB_ON;
+#else
+    return SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
+#endif
+  }
+
+  bool Window::is_mouse_hidden() const {
+    return SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE;
+  }
+
+  void Window::mouse_grab(const bool &grab) {
+#if SDL_VERSION_ATLEAST(1,3,0)
+    SDL_Window * const window = get_Window().get_window();
+    if(window)
+      SDL_SetWindowGrab(window, grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
+    SDL_WM_GrabInput(grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#endif
+  }
+
+  void Window::mouse_hide(const bool &hide) {
+    SDL_ShowCursor(hide ? SDL_DISABLE : SDL_ENABLE);
+  }
+
 #if SDL_VERSION_ATLEAST(1,3,0)
   void Window::alert_window_destroyed() {
     m_window = 0;
