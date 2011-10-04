@@ -91,6 +91,10 @@ namespace Zeni {
 
     /// Called when the Gamestate is pushed onto the stack in Game
     virtual void on_push();
+    /// Called when a Gamestate is pushed on top of this Gamestate in Game
+    virtual void on_cover();
+    /// Called when a Gamestate is popped off Game, making this Gamestate on top
+    virtual void on_uncover();
     /// Called when the Gamestate is popped off the stack in Game
     virtual void on_pop();
 
@@ -157,6 +161,8 @@ namespace Zeni {
     inline void render();
 
     inline void on_push();
+    inline void on_cover();
+    inline void on_uncover();
     inline void on_pop();
 
     inline const bool & is_pausable() const;

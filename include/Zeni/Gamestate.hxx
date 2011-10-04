@@ -92,6 +92,14 @@ namespace Zeni {
     m_state->on_push();
   }
 
+  void Gamestate::on_cover() {
+    m_state->on_cover();
+  }
+
+  void Gamestate::on_uncover() {
+    m_state->on_uncover();
+  }
+
   void Gamestate::on_pop() {
     m_state->on_pop();
   }

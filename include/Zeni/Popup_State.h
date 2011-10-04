@@ -34,16 +34,14 @@ namespace Zeni {
     Popup_State operator=(const Popup_State &);
 
   public:
-    Popup_State(const Gamestate &gamestate)
+    Popup_State()
       : Widget_Gamestate(std::make_pair(Point2f(), Point2f(800.0f, 600.0f))),
-      m_gamestate(gamestate)
+      m_gamestate(get_Game().get_top())
     {
     }
 
   protected:
     void on_push() {
-      m_gamestate.on_push();
-
       if(m_gamestate.is_pausable()) {
         Chronometer<Time_HQ>::pause_all();
         Chronometer<Time>::pause_all();
@@ -63,15 +61,11 @@ namespace Zeni {
         get_Sound_Source_Pool().unpause_all();
         get_Core().set_screen_saver(false);
       }
-
-      m_gamestate.on_pop();
     }
 
     void on_key(const SDL_KeyboardEvent &event) {
-      if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED) {
+      if(event.keysym.sym == SDLK_ESCAPE && event.state == SDL_PRESSED)
         get_Game().pop_state();
-        get_Game().push_state(m_gamestate);
-      }
       else
         m_widgets.on_event(event);
     }
@@ -138,7 +132,6 @@ namespace Zeni {
 
       void on_accept() {
         get_Game().pop_state();
-        get_Game().push_state(m_gamestate);
       }
 
     private:
@@ -157,6 +150,7 @@ namespace Zeni {
       }
 
       void on_accept() {
+        get_Game().pop_state();
         get_Game().pop_state();
       }
     } menu_button;
@@ -247,9 +241,8 @@ namespace Zeni {
       }
     } quit_button;
 
-    Popup_Menu_State(const Gamestate &gamestate)
-      : Popup_State(gamestate),
-      continue_button(gamestate),
+    Popup_Menu_State()
+      : continue_button(m_gamestate),
       configure_video_button(Point2f(200.0f, 310.0f), Point2f(600.0f, 370.0f)),
       sound_check_box(Point2f(200.0f, 390.0f), Point2f(260.0f, 450.0f)),
       quit_button(Point2f(400.0f, 390.0f), Point2f(600.0f, 450.0f))
@@ -281,8 +274,7 @@ namespace Zeni {
     Popup_Pause_State operator=(const Popup_Pause_State &);
 
   public:
-    Popup_Pause_State(const Gamestate &gamestate)
-      : Popup_State(gamestate)
+    Popup_Pause_State()
     {
     }
 

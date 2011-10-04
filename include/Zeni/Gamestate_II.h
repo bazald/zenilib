@@ -65,6 +65,8 @@ namespace Zeni {
     /// First check for events. Called by Game as part of the main gameloop.
     virtual void on_event(const SDL_Event &event);
     virtual void on_event(const Zeni_Input_ID &id, const float &confidence, const int &action);
+    virtual void on_push();
+    virtual void on_uncover();
 
     inline const int & get_joyball_min() const;
     inline const int & get_joyball_max() const;
@@ -72,6 +74,7 @@ namespace Zeni {
     inline const float & get_joystick_max() const;
     inline const int & get_mouse_min() const;
     inline const int & get_mouse_max() const;
+    inline const bool & is_firing_missed_events() const;
 
     inline void set_joyball_min(const int &min); ///< Should be (0, inf) and less than max
     inline void set_joyball_max(const int &max); ///< Should be (1, inf) and greater than min
@@ -79,10 +82,13 @@ namespace Zeni {
     inline void set_joystick_max(const float &max); ///< Should be (0.0, 1.0] and greater than min
     inline void set_mouse_min(const int &min); ///< Should be (0, inf) and less than max
     inline void set_mouse_max(const int &max); ///< Should be (1, inf) and greater than min
+    inline void set_firing_missed_events(const bool &firing); ///< true if missed events should be handled normally; false if they should be discarded
 
     virtual int get_action(const Zeni_Input_ID &event);
     virtual Zeni_Input_ID get_event(const int &action);
     virtual void set_action(const Zeni_Input_ID &event, const int &action);
+
+    void fire_missed_events();
 
   private:
     void fire_event(const Zeni_Input_ID &id, const float &confidence);
@@ -103,6 +109,8 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
+
+    bool m_firing_missed_events;
   };
 
 }

@@ -53,6 +53,9 @@ namespace Zeni {
   }
 
   void Game::push_state(const Gamestate &state) {
+    if(!m_states.empty())
+      m_states.top().on_cover();
+
     m_states.push(state);
 
 #ifndef NDEBUG
@@ -87,6 +90,9 @@ namespace Zeni {
 
     gs.on_pop();
 
+    if(!m_states.empty())
+      m_states.top().on_uncover();
+
     return gs;
   }
 
@@ -106,6 +112,14 @@ namespace Zeni {
 
       case SDL_MOUSEBUTTONUP:
         m_mouse_buttons[event.button.button] = false;
+        break;
+
+      case SDL_JOYBUTTONDOWN:
+        m_joy_buttons[event.jbutton.which][event.jbutton.button] = true;
+        break;
+
+      case SDL_JOYBUTTONUP:
+        m_joy_buttons[event.jbutton.which][event.jbutton.button] = false;
         break;
 
       default:
@@ -228,6 +242,18 @@ namespace Zeni {
     const Unordered_Map<int, bool>::const_iterator it = m_mouse_buttons.find(button);
     if(it != m_mouse_buttons.end())
       return it->second;
+    return false;
+  }
+
+  bool Game::get_joy_button_state(const int &which, const int &button) const {
+    const Unordered_Map<int, Unordered_Map<int, bool> >::const_iterator jt = m_joy_buttons.find(which);
+
+    if(jt != m_joy_buttons.end()) {
+      const Unordered_Map<int, bool>::const_iterator it = jt->second.find(button);
+      if(it != jt->second.end())
+        return it->second;
+    }
+
     return false;
   }
 

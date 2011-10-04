@@ -49,7 +49,8 @@ namespace Zeni {
     m_joystick_min(ZENI_DEFAULT_II_JOYSTICK_MIN),
     m_joystick_max(ZENI_DEFAULT_II_JOYSTICK_MAX),
     m_mouse_min(ZENI_DEFAULT_II_MOUSE_MIN),
-    m_mouse_max(ZENI_DEFAULT_II_MOUSE_MAX)
+    m_mouse_max(ZENI_DEFAULT_II_MOUSE_MAX),
+    m_firing_missed_events(false)
   {
   }
 
@@ -183,7 +184,15 @@ namespace Zeni {
 
   void Gamestate_II::on_event(const Zeni_Input_ID &id, const float &confidence, const int &) {
     if(id.type == SDL_KEYDOWN && id.subid == SDLK_ESCAPE && confidence == 1.0f)
-      get_Game().push_state(new Popup_Menu_State(get_Game().pop_state()));
+      get_Game().push_state(new Popup_Menu_State);
+  }
+
+  void Gamestate_II::on_push() {
+    fire_missed_events();
+  }
+
+  void Gamestate_II::on_uncover() {
+    fire_missed_events();
   }
 
   int Gamestate_II::get_action(const Zeni_Input_ID &event) {
@@ -203,6 +212,50 @@ namespace Zeni {
   void Gamestate_II::set_action(const Zeni_Input_ID &event, const int &action) {
     m_ii[event] = action;
     m_rii[action] = event;
+  }
+
+  void Gamestate_II::fire_missed_events() {
+    Game &gr = get_Game();
+
+    for(std::map<Zeni_Input_ID, int>::iterator it = m_ii.begin(), iend = m_ii.end(); it != iend; ++it) {
+      switch(it->first.type) {
+      case SDL_KEYDOWN:
+        {
+          const float confidence = gr.get_key_state(it->first.subid) ? 1.0f : 0.0f;
+
+          if(m_firing_missed_events && it->first.previous_confidence != confidence)
+            on_event(it->first, confidence, it->second);
+
+          it->first.previous_confidence = confidence;
+        }
+        break;
+
+      case SDL_MOUSEBUTTONDOWN:
+        {
+          const float confidence = gr.get_mouse_button_state(it->first.subid) ? 1.0f : 0.0f;
+
+          if(m_firing_missed_events && it->first.previous_confidence != confidence)
+            on_event(it->first, confidence, it->second);
+
+          it->first.previous_confidence = confidence;
+        }
+        break;
+
+      case SDL_JOYBUTTONDOWN:
+        {
+          const float confidence = gr.get_joy_button_state(it->first.which, it->first.subid) ? 1.0f : 0.0f;
+
+          if(m_firing_missed_events && it->first.previous_confidence != confidence)
+            on_event(it->first, confidence, it->second);
+
+          it->first.previous_confidence = confidence;
+        }
+        break;
+
+      default:
+        break;
+      }
+    }
   }
 
   void Gamestate_II::fire_event(const Zeni_Input_ID &id, const float &confidence) {

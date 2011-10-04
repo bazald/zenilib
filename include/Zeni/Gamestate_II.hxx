@@ -46,6 +46,10 @@ namespace Zeni {
     return m_mouse_max;
   }
 
+  const bool & Gamestate_II::is_firing_missed_events() const {
+    return m_firing_missed_events;
+  }
+
   void Gamestate_II::set_joyball_min(const int &min) {
     if(min < 0)
       m_joyball_min = 0;
@@ -86,6 +90,10 @@ namespace Zeni {
       m_mouse_max = 1;
     else
       m_mouse_max = max;
+  }
+
+  void Gamestate_II::set_firing_missed_events(const bool &firing) {
+    m_firing_missed_events = firing;
   }
 
 }
