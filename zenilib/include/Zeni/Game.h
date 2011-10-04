@@ -95,6 +95,7 @@ namespace Zeni {
     inline size_t get_fps() const; ///< Get the current approximation of the frames displayed per second.
     inline bool get_key_state(const int &key) const; ///< Get the state of a key.
     inline bool get_mouse_button_state(const int &button) const; ///< Get the state of a mouse button.
+    inline bool get_joy_button_state(const int &which, const int &button) const; ///< Get the state of a joystick button.
 
     void run();
 
@@ -108,6 +109,7 @@ namespace Zeni {
     std::stack<Gamestate> m_states;
     Unordered_Map<int, bool> m_keys;
     Unordered_Map<int, bool> m_mouse_buttons;
+    Unordered_Map<int, Unordered_Map<int, bool> > m_joy_buttons;
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
