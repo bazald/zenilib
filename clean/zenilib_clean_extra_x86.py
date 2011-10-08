@@ -13,6 +13,7 @@ def main():
   zenilib.destroy("bin/x64/*.so")
   
   zenilib.destroy("Xcode/Frameworks")
+  zenilib.destroy("Xcode/zenilib_*_frameworks.zip")
 
 if __name__ == '__main__':
   main(*sys.argv[1:])
