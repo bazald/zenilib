@@ -12,9 +12,10 @@ def yes_no_prompt(prompt):
   if auto_accept:
     return True
   
-  print prompt + " [y/N] " ,
+  print(prompt, "[y/N]", sep=" ", end=" ")
+  sys.stdout.flush()
   line = sys.stdin.readline()
-  print ""
+  print("")
   while len(line) is not 0 and isspace(line[0]):
     line = line[1:]
   while len(line) is not 0 and isspace(line[len(line)-1]):
