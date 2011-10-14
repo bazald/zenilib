@@ -526,6 +526,10 @@ if is_windows:
     source = launcher_src)
   env.Alias('launcher', launcher)
 
+# Build zenilib
+
+env.Alias('zenilib', ['zeni', 'zeni_audio', 'zeni_core', 'zeni_graphics', 'zeni_net', 'zeni_rest'])
+
 ### Provide help
 
 vars.Update(env)
