@@ -30,6 +30,29 @@ namespace Zeni {
   {
   }
 
+  Quaternion Quaternion::Vector3f_to_Vector3f(const Vector3f &destination, const Vector3f &source) {
+    const Vector3f axis = source % destination;
+    const float angle = source.angle_between(destination);
+    Quaternion rotation = Quaternion::Axis_Angle(axis, angle);
+
+    if(rotation.degenerate) {
+      if(INFINTESSIMAL(angle))
+        return Quaternion();
+      else {
+        const Vector3f pos(fabs(source.i), fabs(source.j), fabs(source.k));
+
+        if(pos.i < pos.j && pos.i < pos.k)
+          rotation = Quaternion::Axis_Angle(source % Vector3f(1.0f, 0.0f, 0.0f), Global::pi);
+        else if(pos.j < pos.k)
+          rotation = Quaternion::Axis_Angle(source % Vector3f(0.0f, 1.0f, 0.0f), Global::pi);
+        else
+          rotation = Quaternion::Axis_Angle(source % Vector3f(0.0f, 0.0f, 1.0f), Global::pi);
+      }
+    }
+
+    return rotation.normalized();
+  }
+
   Quaternion Quaternion::Axis_Angle(const Vector3f &v, const float &theta) {
     const float half_theta = 0.5f * theta;
 

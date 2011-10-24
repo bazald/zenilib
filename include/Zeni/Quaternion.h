@@ -49,11 +49,13 @@ namespace Zeni {
 
     /// Create a Quaternion from an Axis/Angle pair
     static Quaternion Axis_Angle(const Vector3f &v, const float &theta);
+    /// Create a Quaternion rotating to one Vector3f from another
+    static Quaternion Vector3f_to_Vector3f(const Vector3f &destination, const Vector3f &source);
     /// Create a Quaternion from a Forward/Up Vector3f pair
     static Quaternion Forward_Up(const Vector3f &destination_forward,
-                                                       const Vector3f &destination_up,
-                                                       const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
-                                                       const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
+                                 const Vector3f &destination_up,
+                                 const Vector3f &default_forward = ZENI_DEFAULT_FORWARD_VECTOR,
+                                 const Vector3f &default_up = ZENI_DEFAULT_UP_VECTOR);
 
     // Vector addition/subtraction
     inline Quaternion operator+(const Quaternion &rhs) const; ///< Get the sum
