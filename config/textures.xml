@@ -8,7 +8,7 @@ For each Texture entry in Textures:
   2. 'is_sprite' should be 0 (or absent [deprecated])
   3. 'filepath' should be the path from within 'zenilib/'
   4. 'tile' should be 0 for best quality if tiling is unnecessary
-     'tile' should be 1 to enable tiling
+     'tile' should be 1 to enable tiling (for *ALL* textures for .3ds 'Model's)
        
      If 'tile' is 1 and tiling is not desired, floating point
      error can make things look worse at the edges of tiles.
