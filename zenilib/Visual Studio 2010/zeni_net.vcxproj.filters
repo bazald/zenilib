@@ -34,8 +34,5 @@
     <ClInclude Include="..\include\zeni_net.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Zeni\Net.hxx">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

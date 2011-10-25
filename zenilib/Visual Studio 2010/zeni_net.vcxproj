@@ -581,7 +581,6 @@
   <ItemGroup>
     <ClInclude Include="..\include\zeni_net.h" />
     <ClInclude Include="..\include\Zeni\Net.h" />
-    <ClInclude Include="..\include\Zeni\Net.hxx" />
     <ClInclude Include="..\include\Zeni\VLUID.h" />
   </ItemGroup>
   <ItemGroup>
