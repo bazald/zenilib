@@ -403,6 +403,8 @@ namespace Zeni {
   {
     Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
 
+    set_sampler_states(true);
+
     if(FAILED(Video_DX9::D3DXCreateTexture()(vr.get_d3d_device(),
                                              UINT(size.x), UINT(size.y),
                                              D3DX_DEFAULT,
@@ -457,7 +459,7 @@ namespace Zeni {
     vdx.get_d3d_device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
   }
 
-  void Texture_DX9::set_sampler_states() {
+  void Texture_DX9::set_sampler_states(const bool &disable_mipmapping) {
     Video_DX9 &vr = static_cast<Video_DX9 &>(get_Video());
     
     if(Textures::get_anisotropic_filtering()) {
@@ -477,7 +479,7 @@ namespace Zeni {
       vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     }
 
-    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
+    vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (!disable_mipmapping && Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
   }
 
   IDirect3DTexture9 * Texture_DX9::build_from_surface(SDL_Surface *surface, Point2i &built_size, const String * const &name) {

@@ -436,8 +436,13 @@ namespace Zeni {
 
     m_render_to_surface = tdx.render_to_surface();
 
-    if(!m_render_to_surface || FAILED(m_render_to_surface->BeginScene(render_surface, 0)))
+    if(!m_render_to_surface || FAILED(m_d3d_device->SetRenderTarget(0, render_surface)))
       throw Video_Render_To_Texture_Error();
+
+    if(FAILED(m_d3d_device->BeginScene())) {
+      m_d3d_device->SetRenderTarget(0, m_back_buffer);
+      throw Video_Render_To_Texture_Error();
+    }
 
     m_render_target = &tdx;
   }
@@ -448,8 +453,11 @@ namespace Zeni {
 
     m_render_target = 0;
 
-    m_render_to_surface->EndScene(D3DX_FILTER_NONE);
+    m_d3d_device->EndScene();
     m_render_to_surface = 0;
+
+    if(FAILED(m_d3d_device->SetRenderTarget(0, m_back_buffer)))
+      throw Video_Render_To_Texture_Error();
   }
 
   void Video_DX9::clear_render_target(const Color &color) {
@@ -633,6 +641,8 @@ namespace Zeni {
 
     // Initialize the rendering context
     init_context();
+
+    m_d3d_device->GetRenderTarget(0, &m_back_buffer);
   }
   
   bool Video_DX9::init_device() {
