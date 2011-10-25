@@ -59,6 +59,16 @@ namespace Zeni {
     SDLNet_Quit();
   }
 
+  IPaddress Net::resolve_host(const String &host, const Uint16 &port) {
+    IPaddress ip;
+    SDLNet_ResolveHost(&ip, host.c_str(), port);
+    return ip;
+  }
+
+  String Net::reverse_lookup(IPaddress ip) {
+    return SDLNet_ResolveIP(&ip);
+  }
+
   Net & get_Net() {
     return Net::get();
   }
