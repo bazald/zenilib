@@ -30,6 +30,4 @@
 #include <Zeni/Net.h>
 #include <Zeni/VLUID.h>
 
-#include <Zeni/Net.hxx>
-
 #endif

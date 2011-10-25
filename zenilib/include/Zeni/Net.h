@@ -145,9 +145,9 @@ namespace Zeni {
 
   public:
     /// Default port 0 indicates a pure lookup with no intention of connecting.
-    inline IPaddress resolve_host(const String &host, const Uint16 &port = 0);
+    IPaddress resolve_host(const String &host, const Uint16 &port = 0);
     /// If you want to find a URL associated with an IP address
-    inline String reverse_lookup(IPaddress ip);
+    String reverse_lookup(IPaddress ip);
   };
 
   ZENI_NET_DLL Net & get_Net(); ///< Get access to the singleton.
