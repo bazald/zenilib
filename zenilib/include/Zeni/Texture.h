@@ -168,7 +168,7 @@ namespace Zeni {
     inline ID3DXRenderToSurface * render_to_surface() const;
 
   private:
-    static void set_sampler_states();
+    static void set_sampler_states(const bool &disable_mipmapping = false);
     static IDirect3DTexture9 * build_from_surface(SDL_Surface *surface, Point2i &built_size, const String * const &name = 0);
 
     Point2i m_size;
