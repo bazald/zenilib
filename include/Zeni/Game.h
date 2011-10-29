@@ -103,6 +103,7 @@ namespace Zeni {
       Joy_Mouse()
         : enabled(false),
         joy_axes(0, 1),
+        noise_zone(8192, 4096),
         pixels_per_second(1000.0f, 1000.0f),
         left_click(0),
         escape(7),
@@ -113,6 +114,7 @@ namespace Zeni {
       bool enabled;
 
       Point2i joy_axes;
+      Point2i noise_zone;
       Point2i velocity;
       Point2f pixels_per_second;
 

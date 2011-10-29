@@ -27,11 +27,13 @@ private:
   void on_push() {
     //get_Window().mouse_grab(true);
     get_Window().mouse_hide(true);
+    //get_Game().joy_mouse.enabled = false;
   }
 
   void on_pop() {
     //get_Window().mouse_grab(false);
     get_Window().mouse_hide(false);
+    //get_Game().joy_mouse.enabled = true;
   }
 };
 
@@ -81,7 +83,7 @@ class Bootstrap {
       get_Textures();
       get_Fonts();
       get_Sounds();
-      get_Game().joy_mouse.enabled = false;
+      get_Game().joy_mouse.enabled = true;
 
       return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
     }
