@@ -99,6 +99,29 @@ namespace Zeni {
 
     void run();
 
+    struct ZENI_REST_DLL Joy_Mouse {
+      Joy_Mouse()
+        : enabled(false),
+        joy_axes(0, 1),
+        pixels_per_second(1000.0f, 1000.0f),
+        left_click(0),
+        escape(7),
+        scroll_hat(0)
+      {
+      }
+
+      bool enabled;
+
+      Point2i joy_axes;
+      Point2i velocity;
+      Point2f pixels_per_second;
+
+      int left_click;
+      int escape;
+
+      int scroll_hat;
+    } joy_mouse;
+
   private:
     void calculate_fps();
 

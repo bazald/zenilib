@@ -43,8 +43,6 @@ namespace Zeni {
     , m_console_active(false)
 #endif
   {
-    if(g_gzi)
-      m_states.push((*g_gzi)());
   }
 
   Game & get_Game() {
@@ -60,8 +58,36 @@ namespace Zeni {
 #endif
 
     Sound_Source_Pool &sspr = get_Sound_Source_Pool();
-    
+    Time time_processed;
+
     for(;;) {
+      const Time time_passed;
+      float time_step = time_passed.get_seconds_since(time_processed);
+      time_processed = time_passed;
+
+      if(joy_mouse.enabled && (joy_mouse.velocity.x != 0 || joy_mouse.velocity.y != 0)) {
+        int xrel = int((joy_mouse.velocity.x + 0.5f) / 32767.5f * joy_mouse.pixels_per_second.x * time_step);
+        int yrel = int((joy_mouse.velocity.y + 0.5f) / 32767.5f * joy_mouse.pixels_per_second.y * time_step);
+
+        if(xrel || yrel) {
+          int x, y;
+          SDL_GetMouseState(&x, &y);
+
+          x += xrel;
+          y += yrel;
+          if(x < 0)
+            x = 0;
+          else if(x >= get_Window().get_width())
+            x = get_Window().get_width() - 1;
+          if(y < 0)
+            y = 0;
+          else if(y >= get_Window().get_width())
+            y = get_Window().get_height() - 1;
+
+          SDL_WarpMouse(Uint16(x), Uint16(y));
+        }
+      }
+
       for(SDL_Event event; SDL_PollEvent(&event);) {
         if(event.type == SDL_KEYDOWN ||
            event.type == SDL_KEYUP)
@@ -130,6 +156,72 @@ namespace Zeni {
           }
         }
 #endif
+        else if(event.type == SDL_JOYAXISMOTION) {
+          if(joy_mouse.enabled && (joy_mouse.joy_axes.x == event.jaxis.axis || joy_mouse.joy_axes.y == event.jaxis.axis)) {
+            if(joy_mouse.joy_axes.x == event.jaxis.axis)
+              joy_mouse.velocity.x = event.jaxis.value;
+            else
+              joy_mouse.velocity.y = event.jaxis.value;
+          }
+          else
+            on_event(event);
+        }
+        else if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP) {
+          if(joy_mouse.enabled && joy_mouse.left_click == event.jbutton.button) {
+            SDL_Event e;
+
+            e.type = Uint8(event.type == SDL_JOYBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP);
+            e.button.which = Uint8(event.jbutton.which + 1);
+            e.button.state = event.jbutton.state;
+            e.button.button = SDL_BUTTON_LEFT;
+
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            e.button.x = Uint16(x);
+            e.button.y = Uint16(y);
+
+            on_event(e);
+          }
+          else if(joy_mouse.enabled && joy_mouse.escape == event.jbutton.button) {
+            SDL_Event e;
+
+            e.type = Uint8(event.type == SDL_JOYBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP);
+            e.key.which = Uint8(event.jbutton.which + 1);
+            e.key.state = event.jbutton.state;
+            e.key.keysym.mod = SDL_GetModState();
+            e.key.keysym.scancode = 0;
+            e.key.keysym.sym = SDLK_ESCAPE;
+            e.key.keysym.unicode = 0;
+
+            on_event(e);
+          }
+          else
+            on_event(event);
+        }
+        else if(event.type == SDL_JOYHATMOTION) {
+          if(joy_mouse.enabled && joy_mouse.scroll_hat == event.jhat.hat && (event.jhat.value == SDL_HAT_DOWN || event.jhat.value == SDL_HAT_UP)) {
+            SDL_Event e;
+
+            e.type = SDL_MOUSEBUTTONDOWN;
+            e.button.which = Uint8(event.jhat.which + 1);
+            e.button.state = SDL_PRESSED;
+            e.button.button = Uint8(event.jhat.value == SDL_HAT_DOWN ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP);
+
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            e.button.x = Uint16(x);
+            e.button.y = Uint16(y);
+
+            on_event(e);
+
+            e.type = SDL_MOUSEBUTTONUP;
+            e.button.state = SDL_RELEASED;
+
+            on_event(e);
+          }
+          else
+            on_event(event);
+        }
         else {
           on_event(event);
 
@@ -139,17 +231,19 @@ namespace Zeni {
       }
 
 #ifdef TEST_NASTY_CONDITIONS
-      const Time current_time;
-      const Time::Second_Type time_passed = time_scale * current_time.get_seconds_since(start_time);
-      size_t step_count = 0u;
-      while(time_used + (1 / 60.0f) < time_passed) {
-        time_used += (1 / 60.0f);
-        perform_logic();
-        if(++step_count == NASTY_RATE_CUTOFF)
-          time_used = time_passed;
+      {
+        const Time current_time;
+        const Time::Second_Type time_passed = time_scale * current_time.get_seconds_since(start_time);
+        size_t step_count = 0u;
+        while(time_used + (1 / 60.0f) < time_passed) {
+          time_used += (1 / 60.0f);
+          perform_logic();
+          if(++step_count == NASTY_RATE_CUTOFF)
+            time_used = time_passed;
+        }
+        if(!random.rand_lt(NASTY_ZERO_STEP_FREQUENCY))
+          perform_logic();
       }
-      if(!random.rand_lt(NASTY_ZERO_STEP_FREQUENCY))
-        perform_logic();
 #else
       perform_logic();
 #endif
