@@ -21,6 +21,12 @@
 
 #include "Application_Name.h"
 
+#ifdef NDEBUG
+#define EXECUTABLE_NAME APPLICATION_NAME ".exe"
+#else
+#define EXECUTABLE_NAME APPLICATION_NAME "_d.exe"
+#endif
+
 using namespace std;
 
 // See http://msdn.microsoft.com/en-us/library/ms682425.aspx
@@ -32,19 +38,7 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/,
                    LPSTR lpCmdLine,
                    int /*nCmdShow*/)
 {
-#ifdef X64
-#ifdef NDEBUG
-  return launch(APPLICATION_NAME ".exe", lpCmdLine);
-#else
-  return launch(APPLICATION_NAME "_d.exe", lpCmdLine);
-#endif
-#else
-#ifdef NDEBUG
-  return launch(APPLICATION_NAME ".exe", lpCmdLine);
-#else
-  return launch(APPLICATION_NAME "_d.exe", lpCmdLine);
-#endif
-#endif
+  return launch(EXECUTABLE_NAME, lpCmdLine);
 }
 
 int launch(const std::string &local_exe, const std::string &arguments) {
@@ -89,8 +83,15 @@ int launch(const std::string &local_exe, const std::string &arguments) {
 
   bool result = SetCurrentDirectoryA(dir) != 0;
 
-  if(!result)
+  if(!result) {
+#ifdef X64
+    MessageBoxA(0, "Failed to set the current working directory to bin\\x64\\", 0, MB_OK);
+#else
+    MessageBoxA(0, "Failed to set the current working directory to bin\\", 0, MB_OK);
+#endif
+
     return 1;
+  }
 
   result = CreateProcessA(full_exe,
                           full_exe_with_args,
@@ -103,8 +104,11 @@ int launch(const std::string &local_exe, const std::string &arguments) {
                           &siStartupInfo,
                           &piProcessInfo) != 0;
 
-  if(!result)
+  if(!result) {
+    MessageBoxA(0, "Failed to launch \"" EXECUTABLE_NAME "\"", 0, MB_OK);
+
     return 2;
+  }
 
   if(WaitForSingleObject(piProcessInfo.hProcess, INFINITE) == WAIT_FAILED)
     return int(GetLastError());

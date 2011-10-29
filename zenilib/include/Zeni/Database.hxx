@@ -234,7 +234,7 @@ namespace Zeni {
 
     try {
       for(XML_Element_c it = types.first(); it.good(); it = it.next()) {
-        const String name = it.value();
+        name = it.value();
 
         if(!give_priority(name, false, false, filename)) {
           TYPE * const type = load(it, name, filename);
@@ -245,9 +245,15 @@ namespace Zeni {
         }
       }
     }
-    catch(Database_Load_Entry_Failed &)
+    catch(...)
     {
+#ifdef _WINDOWS
+      const String error = "Error loading '" + m_xml_identifier + "' entry '" + name + "'";
+      std::cerr << error.c_str() << std::endl;
+      MessageBoxA(0, error.c_str(), 0, MB_OK);
+#else
       std::cerr << "Error loading '" << m_xml_identifier << "' entry '" << name << "'\n";
+#endif
       throw;
     }
 

@@ -206,7 +206,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -252,7 +252,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -300,7 +300,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -348,7 +348,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -394,7 +394,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -440,7 +440,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -488,7 +488,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
@@ -536,7 +536,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\lib_win\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;tinyxml.lib</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <Version>0.3.9.9</Version>
