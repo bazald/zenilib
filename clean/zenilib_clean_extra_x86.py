@@ -12,6 +12,7 @@ def main():
   zenilib.destroy("bin/*.so")
   zenilib.destroy("bin/x64/*.so")
   
+  zenilib.destroy("Xcode/build")
   zenilib.destroy("Xcode/Frameworks")
   zenilib.destroy("Xcode/zenilib_*_frameworks.zip")
 

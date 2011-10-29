@@ -81,6 +81,7 @@ class Bootstrap {
       get_Textures();
       get_Fonts();
       get_Sounds();
+      get_Game().joy_mouse.enabled = false;
 
       return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
     }
