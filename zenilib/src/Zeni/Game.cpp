@@ -66,8 +66,20 @@ namespace Zeni {
       time_processed = time_passed;
 
       if(joy_mouse.enabled && (joy_mouse.velocity.x != 0 || joy_mouse.velocity.y != 0)) {
-        int xrel = int((joy_mouse.velocity.x + 0.5f) / 32767.5f * joy_mouse.pixels_per_second.x * time_step);
-        int yrel = int((joy_mouse.velocity.y + 0.5f) / 32767.5f * joy_mouse.pixels_per_second.y * time_step);
+        Point2f adjusted_vel(joy_mouse.velocity.x + 0.5f, joy_mouse.velocity.y + 0.5f);
+        if(adjusted_vel.x < 0.0f)
+          adjusted_vel.x = std::min(0.0f, adjusted_vel.x + joy_mouse.noise_zone.x);
+        else
+          adjusted_vel.x = std::max(0.0f, adjusted_vel.x - joy_mouse.noise_zone.x);
+        if(adjusted_vel.y < 0.0f)
+          adjusted_vel.y = std::min(0.0f, adjusted_vel.y + joy_mouse.noise_zone.y);
+        else
+          adjusted_vel.y = std::max(0.0f, adjusted_vel.y - joy_mouse.noise_zone.y);
+        adjusted_vel.x /= 32767.5f - joy_mouse.noise_zone.x;
+        adjusted_vel.y /= 32767.5f - joy_mouse.noise_zone.y;
+
+        int xrel = int(adjusted_vel.x * joy_mouse.pixels_per_second.x * time_step);
+        int yrel = int(adjusted_vel.y * joy_mouse.pixels_per_second.y * time_step);
 
         if(xrel || yrel) {
           int x, y;
