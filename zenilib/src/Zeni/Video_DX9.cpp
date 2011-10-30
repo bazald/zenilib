@@ -40,6 +40,7 @@ namespace Zeni {
     m_d3d(0),
     m_d3d_device(0),
     m_matrix_stack(0),
+    m_begun_render(false),
     m_textured(false),
     m_fvf_3d(false),
     m_render_target(0),
@@ -184,9 +185,11 @@ namespace Zeni {
   bool Video_DX9::begin_render() {
     assert(!m_render_target && !m_render_to_surface);
 
-    HRESULT result = m_d3d_device->Present(0, 0, 0, 0);
+    HRESULT result = m_begun_render ? m_d3d_device->Present(0, 0, 0, 0) : S_OK;
 
     if(result == S_OK) {
+      m_begun_render = true;
+
       D3DVIEWPORT9 vp = {0, 0, DWORD(get_Window().get_width()), DWORD(get_Window().get_height()), 0, 1};
       m_d3d_device->SetViewport(&vp);
       m_d3d_device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(get_clear_Color().r_ub(), get_clear_Color().g_ub(), get_clear_Color().b_ub()), 1.0f, 0);

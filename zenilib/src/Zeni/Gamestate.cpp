@@ -146,8 +146,12 @@ namespace Zeni {
 
         if(grab_input)
           wr.mouse_grab(true);
+
+        get_Joysticks().enable(true);
       }
       else {
+        get_Joysticks().enable(false);
+
         hide_cursor = wr.is_mouse_hidden();
         if(hide_cursor)
           wr.mouse_hide(false);

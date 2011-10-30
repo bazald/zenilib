@@ -38,15 +38,46 @@ namespace Zeni {
   Singleton<Joysticks>::Reinit Joysticks::g_reinit;
 
   Joysticks::Joysticks()
-    : m_joystick(0)
+    : m_joystick(0),
+    m_using_xinput(true)
   {
     Core::remove_post_reinit(&g_reinit);
 
     /** Initialize SDL itself **/
     Core &cr = get_Core();
 
+#ifdef ENABLE_XINPUT
+    /** Initialize Xinput **/
+
+    m_xinput = LoadLibrary("xinput1_3.dll");
+    if(!m_xinput) m_xinput = LoadLibrary("xinput1_2.dll");
+    if(!m_xinput) m_xinput = LoadLibrary("xinput1_1.dll");
+    if(!m_xinput) {
+      std::cerr << "Loading xinput1.dll failed." << std::endl;
+
+      zero_handles();
+    }
+    else {
+      g_XInputEnable = (XInputEnable_fcn)GetProcAddress(m_xinput, "XInputEnable");
+      g_XInputGetCapabilities = (XInputGetCapabilities_fcn)GetProcAddress(m_xinput, "XInputGetCapabilities");
+      g_XInputGetState = (XInputGetState_fcn)GetProcAddress(m_xinput, "XInputGetState");
+      g_XInputSetState = (XInputSetState_fcn)GetProcAddress(m_xinput, "XInputSetState");
+      if(!g_XInputEnable || !g_XInputGetCapabilities || !g_XInputGetState || !g_XInputSetState) {
+        std::cerr << "Loading xinput1.dll failed." << std::endl;
+
+        FreeLibrary(m_xinput);
+
+        zero_handles();
+      }
+      else {
+        for(int i = 0; i != 4; ++i)
+          m_xinput_controller[i].index = i;
+      }
+    }
+#endif
+
     /** Initialize Joysticks **/
-    init();
+    init(m_using_xinput);
 
     cr.lend_pre_uninit(&g_uninit);
     cr.lend_post_reinit(&g_reinit);
@@ -56,6 +87,12 @@ namespace Zeni {
     Core::remove_pre_uninit(&g_uninit);
 
     uninit();
+    
+#ifdef ENABLE_XINPUT
+    FreeLibrary(m_xinput);
+
+    zero_handles();
+#endif
   }
 
   Joysticks & get_Joysticks() {
@@ -63,67 +100,414 @@ namespace Zeni {
   }
 
   size_t Joysticks::get_num_joysticks() const {
-    return m_joystick.size();
+    if(m_using_xinput)
+      return 4;
+    else
+      return m_joystick.size();
   }
 
-  const String & Joysticks::get_joystick_name(const size_t &index) const {
-    assert(index < m_joystick.size());
-    return m_joystick[index].second;
+  const char * const Joysticks::get_joystick_name(const size_t &index) const {
+    if(m_using_xinput) {
+      assert(index < 4);
+      return "Controller (XBOX 360 For Windows)";
+    }
+    else {
+      assert(index < m_joystick.size());
+      return m_joystick[index].second.c_str();
+    }
   }
   
   int Joysticks::get_joystick_num_axes(const size_t &index) const {
-    assert(index < m_joystick.size());
-    return SDL_JoystickNumAxes(m_joystick[index].first);
+    if(m_using_xinput) {
+      assert(index < 4);
+      return 6;
+    }
+    else {
+      assert(index < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index].first);
+    }
   }
 
   int Joysticks::get_joystick_num_balls(const size_t &index) const {
-    assert(index < m_joystick.size());
-    return SDL_JoystickNumBalls(m_joystick[index].first);
+    if(m_using_xinput) {
+      assert(index < 4);
+      return 0;
+    }
+    else {
+      assert(index < m_joystick.size());
+      return SDL_JoystickNumBalls(m_joystick[index].first);
+    }
   }
 
   int Joysticks::get_joystick_num_hats(const size_t &index) const {
-    assert(index < m_joystick.size());
-    return SDL_JoystickNumAxes(m_joystick[index].first);
+    if(m_using_xinput) {
+      assert(index < 4);
+      return 1;
+    }
+    else {
+      assert(index < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index].first);
+    }
   }
 
   int Joysticks::get_joystick_num_buttons(const size_t &index) const {
-    assert(index < m_joystick.size());
-    return SDL_JoystickNumAxes(m_joystick[index].first);
+    if(m_using_xinput) {
+      assert(index < 4);
+      return 10;
+    }
+    else {
+      assert(index < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index].first);
+    }
   }
 
   void Joysticks::reinit() {
     uninit();
-    init();
+    init(m_using_xinput);
   }
 
-  void Joysticks::init() {
-    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
-      throw Joystick_Init_Failure();
+  void Joysticks::reinit(const bool &try_xinput) {
+    uninit();
+    init(try_xinput);
+  }
 
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
-      m_joystick.push_back(std::make_pair(SDL_JoystickOpen(i),
-                                          SDL_JoystickName(i)));
+  void Joysticks::enable(const bool &enable_) {
+#ifdef ENABLE_XINPUT
+    if(m_using_xinput)
+      XInputEnable()(enable_);
+    else
+#endif
+      SDL_JoystickEventState(enable_ ? SDL_ENABLE : SDL_DISABLE);
+  }
 
-      if(!m_joystick[size_t(i)].first) {
-        m_joystick.pop_back();
-        uninit();
+#ifdef ENABLE_XINPUT
+  void Joysticks::zero_handles() {
+    g_XInputEnable = 0;
+    g_XInputGetCapabilities = 0;
+    g_XInputGetState = 0;
+    g_XInputSetState = 0;
+  }
 
-        throw Joystick_Init_Failure();
+  void Joysticks::poll() {
+    if(!m_using_xinput)
+      return;
+
+    for(int i = 0; i != 4; ++i)
+      m_xinput_controller[i].poll();
+  }
+
+  bool Joysticks::is_xinput_connected(const size_t &index) const {
+    assert(index < 4lu);
+    return m_xinput_controller[index].connected;
+  }
+
+  const XINPUT_CAPABILITIES & Joysticks::get_xinput_capabilities(const size_t &index) const {
+    assert(index < 4lu);
+    return m_xinput_controller[index].capabilities;
+  }
+
+  const XINPUT_STATE & Joysticks::get_xinput_state(const size_t &index) const {
+    assert(index < 4lu);
+    return m_xinput_controller[index].state;
+  }
+
+  void Joysticks::set_xinput_vibration(const size_t &index, const float &left, const float &right) {
+    assert(index < 4lu);
+    m_xinput_controller[index].vibration.wLeftMotorSpeed = WORD(left * 65535);
+    m_xinput_controller[index].vibration.wRightMotorSpeed = WORD(right * 65535);
+  }
+
+  void Joysticks::XInput::poll() {
+    ZeroMemory(&capabilities, sizeof(XINPUT_CAPABILITIES));
+
+    DWORD rv = XInputGetCapabilities()(DWORD(index), XINPUT_FLAG_GAMEPAD, &capabilities);
+    if(rv == ERROR_DEVICE_NOT_CONNECTED || FAILED(rv))
+      connected = false;
+    else {
+      rv = XInputSetState()(DWORD(index), &vibration);
+      if(rv == ERROR_DEVICE_NOT_CONNECTED || FAILED(rv))
+        connected = false;
+      else {
+        if(connected)
+          memcpy(&state_prev, &state, sizeof(XINPUT_STATE));
+
+        rv = XInputGetState()(DWORD(index), &state);
+        connected = rv != ERROR_DEVICE_NOT_CONNECTED && !FAILED(rv);
+
+        if(connected && state.dwPacketNumber != state_prev.dwPacketNumber) {
+          if(state.Gamepad.sThumbLX != state_prev.Gamepad.sThumbLX) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 0;
+            e.jaxis.value = state.Gamepad.sThumbLX;
+
+            SDL_PushEvent(&e);
+          }
+          if(state.Gamepad.sThumbLY != state_prev.Gamepad.sThumbLY) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 1;
+            e.jaxis.value = -state.Gamepad.sThumbLY - 1;
+
+            SDL_PushEvent(&e);
+          }
+          if(state.Gamepad.sThumbRX != state_prev.Gamepad.sThumbRX) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 2;
+            e.jaxis.value = state.Gamepad.sThumbRX;
+
+            SDL_PushEvent(&e);
+          }
+          if(state.Gamepad.sThumbRY != state_prev.Gamepad.sThumbRY) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 3;
+            e.jaxis.value = -state.Gamepad.sThumbRY - 1;
+
+            SDL_PushEvent(&e);
+          }
+          if(state.Gamepad.bLeftTrigger != state_prev.Gamepad.bLeftTrigger) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 4;
+            e.jaxis.value = state.Gamepad.bLeftTrigger * 128;
+
+            SDL_PushEvent(&e);
+          }
+          if(state.Gamepad.bRightTrigger != state_prev.Gamepad.bRightTrigger) {
+            SDL_Event e;
+
+            e.type = SDL_JOYAXISMOTION;
+            e.jaxis.which = Uint8(index);
+            e.jaxis.axis = 5;
+            e.jaxis.value = state.Gamepad.bRightTrigger * 128;
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & 0xF) != (state_prev.Gamepad.wButtons & 0xF)) {
+            SDL_Event e;
+
+            e.type = SDL_JOYHATMOTION;
+            e.jhat.which = Uint8(index);
+            e.jhat.hat = 0;
+
+            switch(state.Gamepad.wButtons & 0xF) {
+            case 0x1:
+              e.jhat.value = SDL_HAT_UP;
+              break;
+
+            case 0x2:
+              e.jhat.value = SDL_HAT_DOWN;
+              break;
+
+            case 0x4:
+              e.jhat.value = SDL_HAT_LEFT;
+              break;
+
+            case 0x5:
+              e.jhat.value = SDL_HAT_LEFTUP;
+              break;
+
+            case 0x6:
+              e.jhat.value = SDL_HAT_LEFTDOWN;
+              break;
+
+            case 0x8:
+              e.jhat.value = SDL_HAT_RIGHT;
+              break;
+
+            case 0x9:
+              e.jhat.value = SDL_HAT_RIGHTUP;
+              break;
+
+            case 0xA:
+              e.jhat.value = SDL_HAT_RIGHTDOWN;
+              break;
+
+            default:
+              e.jhat.value = SDL_HAT_CENTERED;
+              break;
+            }
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_A)) {
+            SDL_Event e;
+
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_A) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 0;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_B) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 1;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_X) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_X) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 2;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_Y)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 3;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 4;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 5;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_BACK)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 6;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_START) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_START)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_START) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 7;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 8;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+          if((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) != (state_prev.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)) {
+            SDL_Event e;
+            
+            e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
+            e.jbutton.which = Uint8(index);
+            e.jbutton.button = 9;
+            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+
+            SDL_PushEvent(&e);
+          }
+        }
       }
     }
+  }
+#endif
 
-    SDL_JoystickEventState(SDL_ENABLE);
+  void Joysticks::init(const bool &
+#ifdef ENABLE_XINPUT
+    try_xinput
+#endif
+    ) {
+#ifdef ENABLE_XINPUT
+    if(try_xinput && g_XInputEnable) {
+      m_using_xinput = true;
+
+      XInputEnable()(true);
+
+      poll();
+    }
+    else
+#endif
+    {
+      m_using_xinput = false;
+
+      if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
+        throw Joystick_Init_Failure();
+
+      for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
+        m_joystick.push_back(std::make_pair(SDL_JoystickOpen(i),
+                                            SDL_JoystickName(i)));
+
+        if(!m_joystick[size_t(i)].first) {
+          m_joystick.pop_back();
+          uninit();
+
+          throw Joystick_Init_Failure();
+        }
+      }
+
+      SDL_JoystickEventState(SDL_ENABLE);
+    }
   }
 
   void Joysticks::uninit() {
-    SDL_JoystickEventState(SDL_DISABLE);
+    if(m_using_xinput) {
+#ifdef ENABLE_XINPUT
+      XInputEnable()(false);
+#endif
+    }
+    else {
+      SDL_JoystickEventState(SDL_DISABLE);
 
-    for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
-      SDL_JoystickClose(m_joystick[size_t(i)].first);
+      for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+        SDL_JoystickClose(m_joystick[size_t(i)].first);
 
-    m_joystick.clear();
+      m_joystick.clear();
 
-    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+      SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+    }
   }
+
+#ifdef ENABLE_XINPUT
+  Joysticks::XInputEnable_fcn Joysticks::g_XInputEnable = 0;
+  Joysticks::XInputGetCapabilities_fcn Joysticks::g_XInputGetCapabilities = 0;
+  Joysticks::XInputGetState_fcn Joysticks::g_XInputGetState = 0;
+  Joysticks::XInputSetState_fcn Joysticks::g_XInputSetState = 0;
+#endif
 
 }
