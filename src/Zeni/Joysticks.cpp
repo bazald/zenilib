@@ -255,13 +255,13 @@ namespace Zeni {
 
             SDL_PushEvent(&e);
           }
-          if(state.Gamepad.sThumbRX != state_prev.Gamepad.sThumbRX) {
+          if(state.Gamepad.bRightTrigger != state_prev.Gamepad.bRightTrigger) {
             SDL_Event e;
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
             e.jaxis.axis = 2;
-            e.jaxis.value = state.Gamepad.sThumbRX;
+            e.jaxis.value = state.Gamepad.bRightTrigger * 128;
 
             SDL_PushEvent(&e);
           }
@@ -275,23 +275,23 @@ namespace Zeni {
 
             SDL_PushEvent(&e);
           }
-          if(state.Gamepad.bLeftTrigger != state_prev.Gamepad.bLeftTrigger) {
+          if(state.Gamepad.sThumbRX != state_prev.Gamepad.sThumbRX) {
             SDL_Event e;
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
             e.jaxis.axis = 4;
-            e.jaxis.value = state.Gamepad.bLeftTrigger * 128;
+            e.jaxis.value = state.Gamepad.sThumbRX;
 
             SDL_PushEvent(&e);
           }
-          if(state.Gamepad.bRightTrigger != state_prev.Gamepad.bRightTrigger) {
+          if(state.Gamepad.bLeftTrigger != state_prev.Gamepad.bLeftTrigger) {
             SDL_Event e;
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
             e.jaxis.axis = 5;
-            e.jaxis.value = state.Gamepad.bRightTrigger * 128;
+            e.jaxis.value = state.Gamepad.bLeftTrigger * 128;
 
             SDL_PushEvent(&e);
           }
