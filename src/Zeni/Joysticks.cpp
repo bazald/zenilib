@@ -240,7 +240,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 0;
+            e.jaxis.axis = AXIS_LEFT_THUMB_X;
             e.jaxis.value = state.Gamepad.sThumbLX;
 
             SDL_PushEvent(&e);
@@ -250,7 +250,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 1;
+            e.jaxis.axis = AXIS_LEFT_THUMB_Y;
             e.jaxis.value = -state.Gamepad.sThumbLY - 1;
 
             SDL_PushEvent(&e);
@@ -260,7 +260,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 2;
+            e.jaxis.axis = AXIS_RIGHT_TRIGGER;
             e.jaxis.value = state.Gamepad.bRightTrigger * 128;
 
             SDL_PushEvent(&e);
@@ -270,7 +270,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 3;
+            e.jaxis.axis = AXIS_RIGHT_THUMB_Y;
             e.jaxis.value = -state.Gamepad.sThumbRY - 1;
 
             SDL_PushEvent(&e);
@@ -280,7 +280,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 4;
+            e.jaxis.axis = AXIS_RIGHT_THUMB_X;
             e.jaxis.value = state.Gamepad.sThumbRX;
 
             SDL_PushEvent(&e);
@@ -290,7 +290,7 @@ namespace Zeni {
 
             e.type = SDL_JOYAXISMOTION;
             e.jaxis.which = Uint8(index);
-            e.jaxis.axis = 5;
+            e.jaxis.axis = AXIS_LEFT_TRIGGER;
             e.jaxis.value = state.Gamepad.bLeftTrigger * 128;
 
             SDL_PushEvent(&e);
@@ -347,7 +347,7 @@ namespace Zeni {
 
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_A) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 0;
+            e.jbutton.button = BUTTON_A;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -357,7 +357,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_B) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 1;
+            e.jbutton.button = BUTTON_B;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -367,7 +367,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_X) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 2;
+            e.jbutton.button = BUTTON_X;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -377,7 +377,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 3;
+            e.jbutton.button = BUTTON_Y;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -387,7 +387,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 4;
+            e.jbutton.button = BUTTON_LEFT_SHOULDER;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -397,7 +397,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 5;
+            e.jbutton.button = BUTTON_RIGHT_SHOULDER;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -407,7 +407,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 6;
+            e.jbutton.button = BUTTON_BACK;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -417,7 +417,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_START) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 7;
+            e.jbutton.button = BUTTON_START;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -427,7 +427,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 8;
+            e.jbutton.button = BUTTON_LEFT_THUMB;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
@@ -437,7 +437,7 @@ namespace Zeni {
             
             e.type = Uint8((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
             e.jbutton.which = Uint8(index);
-            e.jbutton.button = 9;
+            e.jbutton.button = BUTTON_RIGHT_THUMB;
             e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
 
             SDL_PushEvent(&e);
