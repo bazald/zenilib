@@ -73,7 +73,6 @@ namespace Zeni {
     Joysticks(const Joysticks &);
     Joysticks & operator=(const Joysticks &);
 
-  public:
 #ifdef ENABLE_XINPUT
     typedef void (WINAPI *XInputEnable_fcn)(BOOL enable);
     typedef DWORD (WINAPI *XInputGetCapabilities_fcn)(DWORD dwUserIndex, DWORD dwFlags, XINPUT_CAPABILITIES* pCapabilities);
@@ -86,6 +85,28 @@ namespace Zeni {
     static XInputGetState_fcn XInputGetState() {return g_XInputGetState;}
     static XInputSetState_fcn XInputSetState() {return g_XInputSetState;}
 #endif
+  public:
+    enum {
+      AXIS_LEFT_THUMB_X = 0,
+      AXIS_LEFT_THUMB_Y = 1,
+      AXIS_RIGHT_TRIGGER = 2,
+      AXIS_RIGHT_THUMB_Y = 3,
+      AXIS_RIGHT_THUMB_X = 4,
+      AXIS_LEFT_TRIGGER = 5
+    } Xbox_360_Axis;
+
+    enum {
+      BUTTON_A = 0,
+      BUTTON_B = 1,
+      BUTTON_X = 2,
+      BUTTON_Y = 3,
+      BUTTON_LEFT_SHOULDER = 4,
+      BUTTON_RIGHT_SHOULDER = 5,
+      BUTTON_BACK = 6,
+      BUTTON_START = 7,
+      BUTTON_LEFT_THUMB = 8,
+      BUTTON_RIGHT_THUMB = 9
+    } Xbox_360_Button;
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 

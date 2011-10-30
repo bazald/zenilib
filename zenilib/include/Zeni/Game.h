@@ -102,11 +102,11 @@ namespace Zeni {
     struct ZENI_REST_DLL Joy_Mouse {
       Joy_Mouse()
         : enabled(false),
-        joy_axes(0, 1),
+        joy_axes(Joysticks::AXIS_LEFT_THUMB_X, Joysticks::AXIS_LEFT_THUMB_Y),
         noise_zone(8192, 4096),
         pixels_per_second(1000.0f, 1000.0f),
-        left_click(0),
-        escape(7),
+        left_click(Joysticks::BUTTON_A),
+        escape(Joysticks::BUTTON_START),
         scroll_hat(0)
       {
       }
