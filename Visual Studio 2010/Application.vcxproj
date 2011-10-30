@@ -198,7 +198,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -252,7 +252,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -310,7 +310,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -368,7 +368,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -420,7 +420,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -474,7 +474,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;TEST_NASTY_CONDITIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -532,7 +532,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -590,7 +590,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\include;..\include_win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;WIN32_LEAN_AND_MEAN;ENABLE_XINPUT;X64;ZENI_DLL=__declspec(dllimport);ZENI_EXT=extern;ZENI_AUDIO_DLL=__declspec(dllimport);ZENI_AUDIO_EXT=extern;ZENI_CORE_DLL=__declspec(dllimport);ZENI_CORE_EXT=extern;ZENI_GRAPHICS_DLL=__declspec(dllimport);ZENI_GRAPHICS_EXT=extern;DISABLE_CG;ZENI_NET_DLL=__declspec(dllimport);ZENI_NET_EXT=extern;ZENI_REST_DLL=__declspec(dllimport);ZENI_REST_EXT=extern;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>

@@ -229,6 +229,7 @@ namespace Zeni {
     LPDIRECT3DDEVICE9 m_d3d_device;
     LPD3DXMATRIXSTACK m_matrix_stack;
     int m_dpi;
+    bool m_begun_render;
 
     bool m_textured, m_fvf_3d;
 

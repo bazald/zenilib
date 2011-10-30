@@ -65,6 +65,10 @@ namespace Zeni {
       float time_step = time_passed.get_seconds_since(time_processed);
       time_processed = time_passed;
 
+#ifdef ENABLE_XINPUT
+      get_Joysticks().poll();
+#endif
+
       if(joy_mouse.enabled && (joy_mouse.velocity.x != 0 || joy_mouse.velocity.y != 0)) {
         Point2f adjusted_vel(joy_mouse.velocity.x + 0.5f, joy_mouse.velocity.y + 0.5f);
         if(adjusted_vel.x < 0.0f)

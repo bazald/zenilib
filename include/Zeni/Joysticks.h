@@ -39,6 +39,10 @@
 
 #include <vector>
 
+#ifdef ENABLE_XINPUT
+#include <XInput.h>
+#endif
+
 namespace Zeni {
 
   class ZENI_CORE_DLL Joysticks;
@@ -70,19 +74,77 @@ namespace Zeni {
     Joysticks & operator=(const Joysticks &);
 
   public:
+#ifdef ENABLE_XINPUT
+    typedef void (WINAPI *XInputEnable_fcn)(BOOL enable);
+    typedef DWORD (WINAPI *XInputGetCapabilities_fcn)(DWORD dwUserIndex, DWORD dwFlags, XINPUT_CAPABILITIES* pCapabilities);
+    typedef DWORD (WINAPI *XInputGetState_fcn)(DWORD dwUserIndex, XINPUT_STATE* pState);
+    typedef DWORD (WINAPI *XInputSetState_fcn)(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
+
+    // DLL Functions
+    static XInputEnable_fcn XInputEnable() {return g_XInputEnable;}
+    static XInputGetCapabilities_fcn XInputGetCapabilities() {return g_XInputGetCapabilities;}
+    static XInputGetState_fcn XInputGetState() {return g_XInputGetState;}
+    static XInputSetState_fcn XInputSetState() {return g_XInputSetState;}
+#endif
+
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 
-    const String & get_joystick_name(const size_t &index) const; ///< Get the name of a given joystick
+    const char * const get_joystick_name(const size_t &index) const; ///< Get the name of a given joystick
     int get_joystick_num_axes(const size_t &index) const; ///< Get the number of axes for a joystick
     int get_joystick_num_balls(const size_t &index) const; ///< Get the number of balls for a joystick
     int get_joystick_num_hats(const size_t &index) const; ///< Get the number of hats for a joystick
     int get_joystick_num_buttons(const size_t &index) const; ///< Get the number of buttons for a joystick
 
-    void reinit(); ///< Reload all joysticks, flusing *all* SDL events and possibly changing 'which' values for joysticks
+    void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
+    void reinit(const bool &try_xinput = true); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
+    void enable(const bool &enable_); ///< Temporarily turn joystick input on/off
+
+#ifdef ENABLE_XINPUT
+    void poll(); ///< Poll for new input
+
+    bool is_xinput_connected(const size_t &index) const;
+    const XINPUT_CAPABILITIES & get_xinput_capabilities(const size_t &index) const;
+    const XINPUT_STATE & get_xinput_state(const size_t &index) const;
+    void set_xinput_vibration(const size_t &index, const float &left, const float &right);
+#endif
 
   private:
-    void init();
+#ifdef ENABLE_XINPUT
+    void zero_handles();
+
+    HMODULE m_xinput;
+    static XInputEnable_fcn g_XInputEnable;
+    static XInputGetCapabilities_fcn g_XInputGetCapabilities;
+    static XInputGetState_fcn g_XInputGetState;
+    static XInputSetState_fcn g_XInputSetState;
+
+    struct ZENI_CORE_DLL XInput {
+      XInput()
+        : index(-1),
+        connected(false)
+      {
+        ZeroMemory(&state, sizeof(XINPUT_STATE));
+        ZeroMemory(&state_prev, sizeof(XINPUT_STATE));
+
+        vibration.wLeftMotorSpeed = 0;
+        vibration.wRightMotorSpeed = 0;
+      }
+
+      void poll();
+
+      int index;
+      bool connected;
+      XINPUT_CAPABILITIES capabilities;
+      XINPUT_STATE state;
+      XINPUT_STATE state_prev;
+      XINPUT_VIBRATION vibration;
+    } m_xinput_controller[4];
+#endif
+
+    void init(const bool &try_xinput);
     void uninit();
+
+    bool m_using_xinput;
 
 #ifdef _WINDOWS
 #pragma warning( push )
