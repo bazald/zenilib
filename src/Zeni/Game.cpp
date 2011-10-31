@@ -183,6 +183,50 @@ namespace Zeni {
             on_event(event);
         }
         else if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP) {
+#ifdef _MACOSX
+          if(event.jbutton.which < 4 && event.jbutton.button < 4) {
+            static bool values[4][4] = {{false, false, false, false},
+                                        {false, false, false, false},
+                                        {false, false, false, false},
+                                        {false, false, false, false}};
+            values[event.jbutton.which][event.jbutton.button] = event.jbutton.state == SDL_PRESSED;
+
+            SDL_Event e;
+
+            e.type = Uint8(SDL_JOYHATMOTION);
+            e.jhat.which = event.jbutton.which;
+            e.jhat.hat = 0;
+
+            if(values[event.jbutton.which][0]) {
+              if(values[event.jbutton.which][2])
+                e.jhat.value = SDL_HAT_LEFTUP;
+              else if(values[event.jbutton.which][3])
+                e.jhat.value = SDL_HAT_RIGHTUP;
+              else
+                e.jhat.value = SDL_HAT_UP;
+            }
+            else if(values[event.jbutton.which][1]) {
+              if(values[event.jbutton.which][2])
+                e.jhat.value = SDL_HAT_LEFTDOWN;
+              else if(values[event.jbutton.which][3])
+                e.jhat.value = SDL_HAT_RIGHTDOWN;
+              else
+                e.jhat.value = SDL_HAT_DOWN;
+            }
+            else {
+              if(values[event.jbutton.which][2])
+                e.jhat.value = SDL_HAT_LEFT;
+              else if(values[event.jbutton.which][3])
+                e.jhat.value = SDL_HAT_RIGHT;
+              else
+                e.jhat.value = SDL_HAT_CENTERED;
+            }
+
+            SDL_PushEvent(&e);
+          }
+          else
+#endif
+
           if(joy_mouse.enabled && joy_mouse.left_click == event.jbutton.button) {
             SDL_Event e;
 
