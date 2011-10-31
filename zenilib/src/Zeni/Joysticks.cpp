@@ -38,8 +38,8 @@ namespace Zeni {
   Singleton<Joysticks>::Reinit Joysticks::g_reinit;
 
   Joysticks::Joysticks()
-    : m_joystick(0),
-    m_using_xinput(true)
+    : m_using_xinput(true),
+    m_joystick(0)
   {
     Core::remove_post_reinit(&g_reinit);
 

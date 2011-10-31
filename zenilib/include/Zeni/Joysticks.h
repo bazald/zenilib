@@ -87,12 +87,21 @@ namespace Zeni {
 #endif
   public:
     enum {
+#ifdef _WINDOWS
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
       AXIS_RIGHT_TRIGGER = 2,
       AXIS_RIGHT_THUMB_Y = 3,
       AXIS_RIGHT_THUMB_X = 4,
       AXIS_LEFT_TRIGGER = 5
+#else
+      AXIS_LEFT_THUMB_X = 0,
+      AXIS_LEFT_THUMB_Y = 1,
+      AXIS_LEFT_TRIGGER = 2,
+      AXIS_RIGHT_THUMB_X = 3,
+      AXIS_RIGHT_THUMB_Y = 4,
+      AXIS_RIGHT_TRIGGER = 5
+#endif
     } Xbox_360_Axis;
 
     enum {
@@ -104,8 +113,14 @@ namespace Zeni {
       BUTTON_RIGHT_SHOULDER = 5,
       BUTTON_BACK = 6,
       BUTTON_START = 7,
+#ifdef _WINDOWS
       BUTTON_LEFT_THUMB = 8,
       BUTTON_RIGHT_THUMB = 9
+#else
+      //BUTTON_RESERVED = 8,
+      BUTTON_LEFT_THUMB = 9,
+      BUTTON_RIGHT_THUMB = 10
+#endif
     } Xbox_360_Button;
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
