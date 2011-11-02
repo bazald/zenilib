@@ -109,8 +109,8 @@ namespace Zeni {
            event.type == SDL_KEYUP)
         {
           const SDL_keysym &s = event.key.keysym;
-          const bool alt = get_key_state(SDLK_LALT) || get_key_state(SDLK_LALT);
-          const bool ctrl = get_key_state(SDLK_LCTRL) || get_key_state(SDLK_LCTRL);
+          const bool alt = get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT);
+          const bool ctrl = get_key_state(SDLK_LCTRL) || get_key_state(SDLK_RCTRL);
           const bool shift = get_key_state(SDLK_LSHIFT) || get_key_state(SDLK_RSHIFT);
           const bool gui = 
 #if SDL_VERSION_ATLEAST(1,3,0)
