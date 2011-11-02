@@ -1,0 +1,30 @@
+zenilib/bin/x64/zeni*
+zenilib/bin/zeni*
+zenilib/lib_win/x64/zeni*
+zenilib/lib_win/zeni*
+zenilib/Visual Studio 2010/Application_Name.h
+zenilib/Visual Studio 2010/ipch
+zenilib/Visual Studio 2010/Win32
+zenilib/Visual Studio 2010/x64
+zenilib/Xcode/build
+zenilib/Xcode/zenilib_*_frameworks.zip
+zenilib/application
+zenilib/application_d
+zenilib/stdout.txt
+zenilib/stderr.txt
+*~
+*.bak
+*.dblite
+*.DS_Store
+*.exe
+*.idb
+*.ilk
+*.layout
+*.o
+*.opensdf
+*.os
+*.pdb
+*.save
+*.sdf
+*.so
+*.suo
