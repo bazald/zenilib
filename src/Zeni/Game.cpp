@@ -109,36 +109,18 @@ namespace Zeni {
            event.type == SDL_KEYUP)
         {
           const SDL_keysym &s = event.key.keysym;
-          const bool modifiers = 
-#if defined(_MACOSX)
+          const bool alt = get_key_state(SDLK_LALT) || get_key_state(SDLK_LALT);
+          const bool ctrl = get_key_state(SDLK_LCTRL) || get_key_state(SDLK_LCTRL);
+          const bool shift = get_key_state(SDLK_LSHIFT) || get_key_state(SDLK_RSHIFT);
+          const bool gui = 
 #if SDL_VERSION_ATLEAST(1,3,0)
-                                (get_key_state(SDLK_LGUI) || get_key_state(SDLK_RGUI)) &&
+                           get_key_state(SDLK_LGUI) || get_key_state(SDLK_RGUI);
 #else
-                                (get_key_state(SDLK_LMETA) || get_key_state(SDLK_RMETA) || get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER)) &&
+                           get_key_state(SDLK_LMETA) || get_key_state(SDLK_RMETA) || get_key_state(SDLK_LSUPER) || get_key_state(SDLK_RSUPER);
 #endif
-                                !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
-                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
-#elif defined(_WINDOWS)
-                                (get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT)) &&
-                                !get_key_state(SDLK_LCTRL) && !get_key_state(SDLK_RCTRL) &&
-#if SDL_VERSION_ATLEAST(1,3,0)
-                                !get_key_state(SDLK_LGUI) && !get_key_state(SDLK_RGUI) &&
-#else
-                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) && !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
-#endif
-#else
-                                (get_key_state(SDLK_LCTRL) || get_key_state(SDLK_RCTRL)) &&
-                                !get_key_state(SDLK_LALT) && !get_key_state(SDLK_LALT) &&
-#if SDL_VERSION_ATLEAST(1,3,0)
-                                !get_key_state(SDLK_LGUI) && !get_key_state(SDLK_RGUI) &&
-#else
-                                !get_key_state(SDLK_LMETA) && !get_key_state(SDLK_RMETA) && !get_key_state(SDLK_LSUPER) && !get_key_state(SDLK_RSUPER) &&
-#endif
-#endif
-                                !get_key_state(SDLK_LSHIFT) && !get_key_state(SDLK_RSHIFT);
 
 #ifndef NDEBUG
-          if(s.sym == SDLK_BACKQUOTE && modifiers) {
+          if(s.sym == SDLK_BACKQUOTE && alt && !ctrl && !gui && !shift) {
             if(event.type == SDL_KEYDOWN) {
               if(m_console_active)
                 deactivate_console();
@@ -152,12 +134,12 @@ namespace Zeni {
 
           on_event(event);
 
-          if(event.type == SDL_KEYDOWN && modifiers &&
-#ifdef _WINDOWS
-             s.sym == SDLK_F4)
-#else
-             s.sym == SDLK_q)
+          if(event.type == SDL_KEYDOWN && (
+#if defined(_MACOSX)
+              (!alt && !ctrl &&  gui && !shift && s.sym == SDLK_q) ||
 #endif
+              (!alt &&  ctrl && !gui && !shift && s.sym == SDLK_q) ||
+              ( alt && !ctrl && !gui && !shift && s.sym == SDLK_F4)))
           {
             throw Quit_Event();
           }
