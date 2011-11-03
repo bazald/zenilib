@@ -39,6 +39,10 @@
 #include <cassert>
 #include <stdexcept>
 
+#ifdef _WINDOWS
+#include <Windows.h>
+#endif
+
 namespace Zeni {
 
   struct ZENI_DLL Error : public std::exception {
@@ -52,6 +56,27 @@ namespace Zeni {
 
     String msg;
   };
+
+  inline void message_box(const char * const &msg) {
+#if defined(_MACOSX)
+#elif defined(_WINDOWS)
+    MessageBoxA(0, error.c_str(), 0, MB_OK);
+#else
+    String cmd("xmessage -center '");
+    for(const char * cc = msg; *cc; ++cc) {
+      if(*cc != '\'')
+        cmd += *cc;
+      else
+        cmd += "'\"'\"'";
+    }
+    cmd += '\'';
+    system(cmd.c_str());
+#endif
+  }
+
+  inline void message_box(const String &msg) {
+    message_box(msg.c_str());
+  }
 
 }
 
