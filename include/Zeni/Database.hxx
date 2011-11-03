@@ -247,13 +247,9 @@ namespace Zeni {
     }
     catch(...)
     {
-#ifdef _WINDOWS
       const String error = "Error loading '" + m_xml_identifier + "' entry '" + name + "'";
       std::cerr << error.c_str() << std::endl;
-      MessageBoxA(0, error.c_str(), 0, MB_OK);
-#else
-      std::cerr << "Error loading '" << m_xml_identifier << "' entry '" << name << "'\n";
-#endif
+      message_box(error);
       throw;
     }
 

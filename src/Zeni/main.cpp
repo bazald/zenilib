@@ -225,11 +225,7 @@ inline int main2(const int argc, const char * const * const argv) {
 
     print_errors();
 
-#ifdef _WINDOWS
-    MessageBoxA(0, error.msg.c_str(), 0, MB_OK);
-#else
-    assert("Zeni::Error caught in main - Please see stderr.txt" == 0);
-#endif
+    Zeni::message_box(error.msg);
 
     return 1;
   }
@@ -238,11 +234,7 @@ inline int main2(const int argc, const char * const * const argv) {
 
     print_errors();
 
-#ifdef _WINDOWS
-    MessageBoxA(0, except.what(), 0, MB_OK);
-#else
-    assert("std::exception caught in main - Please see stderr.txt" == 0);
-#endif
+    Zeni::message_box(except.what());
 
     return 1;
   }
@@ -251,11 +243,7 @@ inline int main2(const int argc, const char * const * const argv) {
 
     print_errors();
 
-#ifdef _WINDOWS
-    MessageBoxA(0, "Unknown Error caught in main", 0, MB_OK);
-#else
-    assert("Unknown Error caught in main" == 0);
-#endif
+    Zeni::message_box("Unknown Error caught in main");
 
     throw;
   }
