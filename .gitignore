@@ -6,6 +6,8 @@ zenilib/Visual Studio 2010/Application_Name.h
 zenilib/Visual Studio 2010/ipch
 zenilib/Visual Studio 2010/Win32
 zenilib/Visual Studio 2010/x64
+zenilib/Xcode/Application.xcodeproj/project.xcworkspace
+zenilib/Xcode/Application.xcodeproj/xcuserdata
 zenilib/Xcode/build
 zenilib/Xcode/zenilib_*_frameworks.zip
 zenilib/application

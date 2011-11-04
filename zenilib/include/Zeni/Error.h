@@ -39,7 +39,9 @@
 #include <cassert>
 #include <stdexcept>
 
-#ifdef _WINDOWS
+#if defined(_MACOSX)
+#include <Zeni/macosx_zeni.h>
+#elif defined(_WINDOWS)
 #include <Windows.h>
 #endif
 
@@ -59,8 +61,9 @@ namespace Zeni {
 
   inline void message_box(const char * const &msg) {
 #if defined(_MACOSX)
+    mac_message_box(msg);
 #elif defined(_WINDOWS)
-    MessageBoxA(0, error.c_str(), 0, MB_OK);
+    MessageBoxA(0, msg, 0, MB_OK);
 #else
     String cmd("xmessage -center '");
     for(const char * cc = msg; *cc; ++cc) {
