@@ -34,6 +34,8 @@
 		D3822BEA13F0EAAB00208551 /* zeni_graphics.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BE913F0EAAB00208551 /* zeni_graphics.cxx */; };
 		D3822BEC13F0EAB200208551 /* zeni_net.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BEB13F0EAB200208551 /* zeni_net.cxx */; };
 		D3822BEE13F0EAB900208551 /* zeni_rest.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D3822BED13F0EAB900208551 /* zeni_rest.cxx */; };
+		D38253A01463A8C10057FF94 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3822B6613F0E99600208551 /* Cocoa.framework */; };
+		D38253A21463AA210057FF94 /* macosx_zeni.m in Sources */ = {isa = PBXBuildFile; fileRef = D38253A11463AA210057FF94 /* macosx_zeni.m */; };
 		D3837F6213F0F6630045EBC6 /* zeni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34777C813EFB45900212482 /* zeni.framework */; };
 		D3837F6313F0F7030045EBC6 /* zeni.cxx in Sources */ = {isa = PBXBuildFile; fileRef = D34777DD13EFB6F900212482 /* zeni.cxx */; };
 		D398AB0E13EF98E7004A17A0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D398AB0C13EF98E7004A17A0 /* InfoPlist.strings */; };
@@ -229,6 +231,13 @@
 		D3822BE913F0EAAB00208551 /* zeni_graphics.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_graphics.cxx; path = ../../src/zeni_graphics.cxx; sourceTree = "<group>"; };
 		D3822BEB13F0EAB200208551 /* zeni_net.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_net.cxx; path = ../../src/zeni_net.cxx; sourceTree = "<group>"; };
 		D3822BED13F0EAB900208551 /* zeni_rest.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zeni_rest.cxx; path = ../../src/zeni_rest.cxx; sourceTree = "<group>"; };
+		D38253A11463AA210057FF94 /* macosx_zeni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = macosx_zeni.m; sourceTree = "<group>"; };
+		D38253A31463AA340057FF94 /* macosx_zeni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macosx_zeni.h; sourceTree = "<group>"; };
+		D38253A51463AD480057FF94 /* colors.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = colors.xml; path = ../../config/colors.xml; sourceTree = "<group>"; };
+		D38253A61463AD480057FF94 /* fonts.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = fonts.xml; path = ../../config/fonts.xml; sourceTree = "<group>"; };
+		D38253A71463AD480057FF94 /* sounds.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = sounds.xml; path = ../../config/sounds.xml; sourceTree = "<group>"; };
+		D38253A81463AD480057FF94 /* textures.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = textures.xml; path = ../../config/textures.xml; sourceTree = "<group>"; };
+		D38253A91463AD480057FF94 /* zenilib.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zenilib.xml; path = ../../config/zenilib.xml; sourceTree = "<group>"; };
 		D398AAFF13EF98E7004A17A0 /* Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D398AB0613EF98E7004A17A0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		D398AB0713EF98E7004A17A0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -293,7 +302,6 @@
 		D3B6747513FB726400E03DB8 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
 		D3B6747613FB726500E03DB8 /* Mutex.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Mutex.hxx; sourceTree = "<group>"; };
 		D3B6747713FB726500E03DB8 /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Net.h; sourceTree = "<group>"; };
-		D3B6747813FB726500E03DB8 /* Net.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Net.hxx; sourceTree = "<group>"; };
 		D3B6747913FB726500E03DB8 /* Popup_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Popup_State.h; sourceTree = "<group>"; };
 		D3B6747A13FB726500E03DB8 /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Projector.h; sourceTree = "<group>"; };
 		D3B6747B13FB726500E03DB8 /* Projector.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Projector.hxx; sourceTree = "<group>"; };
@@ -385,6 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3B920C113F0EEBA00F32F80 /* TinyXML.framework in Frameworks */,
+				D38253A01463A8C10057FF94 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +476,7 @@
 		D34777CA13EFB45900212482 /* zeni */ = {
 			isa = PBXGroup;
 			children = (
+				D38253A11463AA210057FF94 /* macosx_zeni.m */,
 				D34777DD13EFB6F900212482 /* zeni.cxx */,
 				D34777CB13EFB45900212482 /* Supporting Files */,
 			);
@@ -578,6 +588,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D38253A41463AD290057FF94 /* Configuration Files */ = {
+			isa = PBXGroup;
+			children = (
+				D38253A51463AD480057FF94 /* colors.xml */,
+				D38253A61463AD480057FF94 /* fonts.xml */,
+				D38253A71463AD480057FF94 /* sounds.xml */,
+				D38253A81463AD480057FF94 /* textures.xml */,
+				D38253A91463AD480057FF94 /* zenilib.xml */,
+			);
+			name = "Configuration Files";
+			sourceTree = "<group>";
+		};
 		D398AAF413EF98E7004A17A0 = {
 			isa = PBXGroup;
 			children = (
@@ -641,6 +663,7 @@
 		D398AB0913EF98E7004A17A0 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				D38253A41463AD290057FF94 /* Configuration Files */,
 				D3B6744313FB724300E03DB8 /* Header Files */,
 				D3B6744413FB724A00E03DB8 /* Source Files */,
 				D398AB0A13EF98E7004A17A0 /* Supporting Files */,
@@ -731,6 +754,7 @@
 				D3B6746C13FB726400E03DB8 /* Line_Segment.h */,
 				D3B6746D13FB726400E03DB8 /* Line_Segment.hxx */,
 				D3B6746E13FB726400E03DB8 /* Logo.h */,
+				D38253A31463AA340057FF94 /* macosx_zeni.h */,
 				D3B6746F13FB726400E03DB8 /* Material.h */,
 				D3B6747013FB726400E03DB8 /* Material.hxx */,
 				D3B6747113FB726400E03DB8 /* Matrix4f.h */,
@@ -740,7 +764,6 @@
 				D3B6747513FB726400E03DB8 /* Mutex.h */,
 				D3B6747613FB726500E03DB8 /* Mutex.hxx */,
 				D3B6747713FB726500E03DB8 /* Net.h */,
-				D3B6747813FB726500E03DB8 /* Net.hxx */,
 				D3B6747913FB726500E03DB8 /* Popup_State.h */,
 				D3B6747A13FB726500E03DB8 /* Projector.h */,
 				D3B6747B13FB726500E03DB8 /* Projector.hxx */,
@@ -1144,6 +1167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3837F6313F0F7030045EBC6 /* zeni.cxx in Sources */,
+				D38253A21463AA210057FF94 /* macosx_zeni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
