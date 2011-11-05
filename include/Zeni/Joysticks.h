@@ -39,9 +39,9 @@
 
 #include <vector>
 
-#ifdef ENABLE_XINPUT
-#include <XInput.h>
-#endif
+typedef struct _XINPUT_CAPABILITIES XINPUT_CAPABILITIES;
+typedef struct _XINPUT_STATE XINPUT_STATE;
+typedef struct _XINPUT_VIBRATION XINPUT_VIBRATION;
 
 namespace Zeni {
 
@@ -172,25 +172,17 @@ namespace Zeni {
     static XInputSetState_fcn g_XInputSetState;
 
     struct ZENI_CORE_DLL XInput {
-      XInput()
-        : index(-1),
-        connected(false)
-      {
-        ZeroMemory(&state, sizeof(XINPUT_STATE));
-        ZeroMemory(&state_prev, sizeof(XINPUT_STATE));
-
-        vibration.wLeftMotorSpeed = 0;
-        vibration.wRightMotorSpeed = 0;
-      }
+      XInput();
+      ~XInput();
 
       void poll();
 
       int index;
       bool connected;
-      XINPUT_CAPABILITIES capabilities;
-      XINPUT_STATE state;
-      XINPUT_STATE state_prev;
-      XINPUT_VIBRATION vibration;
+      XINPUT_CAPABILITIES *capabilities;
+      XINPUT_STATE *state;
+      XINPUT_STATE *state_prev;
+      XINPUT_VIBRATION *vibration;
     } m_xinput_controller[4];
 #endif
 
