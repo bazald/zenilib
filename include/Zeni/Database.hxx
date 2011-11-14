@@ -248,7 +248,7 @@ namespace Zeni {
     catch(...)
     {
       const String error = "Error loading '" + m_xml_identifier + "' entry '" + name + "'";
-      std::cerr << error.c_str() << std::endl;
+      std::cerr << error << std::endl;
       message_box(error);
       throw;
     }

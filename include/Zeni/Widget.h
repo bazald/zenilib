@@ -810,8 +810,8 @@ namespace Zeni {
     inline const String & get_text() const;
     inline const Color & get_text_color() const;
     inline const JUSTIFY & get_justify() const;
-    inline int get_num_lines() const;
-    inline int get_max_lines() const;
+    inline size_t get_num_lines() const;
+    inline size_t get_max_lines() const;
 
     virtual void set_editable(const bool &editable_);
     virtual void set_upper_left(const Point2f &upper_left_);
@@ -820,7 +820,7 @@ namespace Zeni {
     inline void set_text(const String &text_);
     inline void set_text_color(const Color &text_color_);
     inline void set_justify(const JUSTIFY &justify_);
-    inline void erase_lines(const int &begin, const int &end);
+    inline void erase_lines(const unsigned int &begin, const unsigned int &end);
 
     const int & get_edit_pos() const;
     int get_cursor_pos() const;

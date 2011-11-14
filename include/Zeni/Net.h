@@ -162,15 +162,20 @@ namespace Zeni {
     ~TCP_Socket();
 
     IPaddress peer_address() const;
-    int check_socket();
+    int try_check_socket(); // return 0 if open, -1 on socket closed
+    int check_socket(); // return 0 if open, throw Socket_Closed() on socket closed
     
     /// Send data
-    void send(const void * const &data, const Uint16 &num_bytes);
-    void send(const String &data);
+    int try_send(const void * const &data, const Uint16 &num_bytes); // send, returning 0 on success, -1 on socket closed
+    int try_send(const String &data); // send, returning 0 on success, -1 on socket closed
+    void send(const void * const &data, const Uint16 &num_bytes); // send, returning 0 on success, throw Socket_Closed() on socket closed
+    void send(const String &data); // send, returning 0 on success, throw Socket_Closed() on socket closed
 
     /// Receive up to num_bytes
-    int receive(void * const &data, const Uint16 &num_bytes);
-    int receive(String &data, const Uint16 &num_bytes);
+    int try_receive(void * const &data, const Uint16 &num_bytes); // receive, returning 0 on success, -1 on socket closed
+    int try_receive(String &data, const Uint16 &num_bytes); // receive, returning 0 on success, -1 on socket closed
+    int receive(void * const &data, const Uint16 &num_bytes); // receive, returning 0 on success, throw Socket_Closed() on socket closed
+    int receive(String &data, const Uint16 &num_bytes); // receive, returning 0 on success, throw Socket_Closed() on socket closed
 
   private:
     TCPsocket sock;

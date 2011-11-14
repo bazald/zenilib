@@ -528,12 +528,12 @@ namespace Zeni {
     return m_justify;
   }
 
-  int Text_Box::get_num_lines() const {
-    return int(m_lines.size());
+  size_t Text_Box::get_num_lines() const {
+    return size_t(m_lines.size());
   }
 
-  int Text_Box::get_max_lines() const {
-    return int(get_height() / get_Font().get_text_height());
+  size_t Text_Box::get_max_lines() const {
+    return size_t(get_height() / get_Font().get_text_height());
   }
 
   void Text_Box::set_font_name(const String &font_name_) {
@@ -556,23 +556,22 @@ namespace Zeni {
     m_justify = justify_;
   }
 
-  void Text_Box::erase_lines(const int &begin, const int &end) {
+  void Text_Box::erase_lines(const unsigned int &begin, const unsigned int &end) {
     String new_text;
 
-    assert(-1 < begin);
     assert(begin <= end);
     assert(end <= get_num_lines());
 
-    for(int i = 0; i != begin; ++i)
-      new_text += m_lines[size_t(i)].unformatted;
+    for(unsigned int i = 0; i != begin; ++i)
+      new_text += m_lines[i].unformatted;
     if(end != get_num_lines()) {
-      if(m_lines[size_t(end)].endled)
-        new_text += m_lines[size_t(end)].unformatted.substr(1u);
+      if(m_lines[end].endled)
+        new_text += m_lines[end].unformatted.substr(1u);
       else
-        new_text += m_lines[size_t(end)].unformatted;
+        new_text += m_lines[end].unformatted;
 
-      for(int i = end + 1; i != get_num_lines(); ++i)
-        new_text += m_lines[size_t(i)].unformatted;
+      for(unsigned int i = end + 1; i != get_num_lines(); ++i)
+        new_text += m_lines[i].unformatted;
     }
 
     m_text.text = new_text;

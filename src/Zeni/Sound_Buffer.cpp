@@ -46,7 +46,7 @@ namespace Zeni {
       Sound_Renderer_AL::alGenBuffers()(1, &m_buffer);
 
       if(m_buffer == AL_NONE) {
-        std::cerr << "OpenAL error on alGenBuffers: " << Sound_Renderer_AL::errorString().c_str() << std::endl;
+        std::cerr << "OpenAL error on alGenBuffers: " << Sound_Renderer_AL::errorString() << std::endl;
         throw Sound_Buffer_Init_Failure();
       }
 
@@ -72,7 +72,7 @@ namespace Zeni {
       std::pair<ALuint, float> loaded_ogg = load_ogg_vorbis(filename);
 
       if(loaded_ogg.first == AL_NONE) {
-        std::cerr << "OpenAL error on '" << filename.c_str() << "': " << Sound_Renderer_AL::errorString().c_str() << std::endl;
+        std::cerr << "OpenAL error on '" << filename << "': " << Sound_Renderer_AL::errorString() << std::endl;
         throw Sound_Buffer_Init_Failure();
       }
 
@@ -117,7 +117,7 @@ namespace Zeni {
 
 #ifndef NDEBUG
     if(format == AL_FORMAT_STEREO16)
-      std::cerr << "WARNING: '" << filename.c_str() << "' is stereo and will be unaffected by the OpenAL positional audio system." << std::endl;
+      std::cerr << "WARNING: '" << filename << "' is stereo and will be unaffected by the OpenAL positional audio system." << std::endl;
 #endif
 
     /*** Load the Audio File ***/

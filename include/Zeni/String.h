@@ -475,4 +475,7 @@ ZENI_DLL bool operator>=(const char *lhs, const Zeni::String &rhs);
 
 ZENI_DLL void swap(Zeni::String &lhs, Zeni::String &rhs);
 
+ZENI_DLL std::istream & operator>>(std::istream &is, const Zeni::String &str);
+ZENI_DLL std::ostream & operator<<(std::ostream &os, const Zeni::String &str);
+
 #endif

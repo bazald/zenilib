@@ -1058,7 +1058,7 @@ namespace Zeni {
     std::list<Word> words;
     Word next_word;
 
-    for(size_t i = 0, iend = t.size(); i != iend; ++i) {
+    for(unsigned int i = 0, iend = static_cast<unsigned int>(t.size()); i != iend; ++i) {
       const Word::Type type = isspace(t[i]) ? Word::SPACE : Word::WORD;
 
       if(next_word.type) {
@@ -1145,7 +1145,7 @@ namespace Zeni {
       }
     }
     else {
-      for(size_t i = 0u, iend = word.unformatted.size(); i != iend; ++i) {
+      for(unsigned int i = 0u, iend = static_cast<unsigned int>(word.unformatted.size()); i != iend; ++i) {
         l.unformatted += word.unformatted[i];
         l.unformatted_glyph_sides.push_back(get_text_width(f, l.unformatted));
       }

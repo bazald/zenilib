@@ -340,7 +340,7 @@ namespace Zeni {
       Sound_Renderer_AL::alGenSources()(1, &m_source);
 
       if(m_source == AL_NONE) {
-        std::cerr << "OpenAL error: " << Sound_Renderer_AL::errorString().c_str() << std::endl;
+        std::cerr << "OpenAL error: " << Sound_Renderer_AL::errorString() << std::endl;
         throw Sound_Source_HW_Init_Failure();
       }
     }

@@ -76,12 +76,12 @@ namespace Zeni {
     }
     catch(Video_Init_Failure &) {
       if(fo.copy_file(user_backup, user_normal) && fo.delete_file(user_backup)) {
-        std::cerr << '\'' << user_normal.c_str() << "' backup restored due to initialization failure.\n";
+        std::cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
         Video::preinit_from_file(user_normal);
         get_Video();
       }
       else if(fo.copy_file(local_backup, local_normal) && fo.delete_file(local_backup)) {
-        std::cerr << '\'' << local_normal.c_str() << "' backup restored due to initialization failure.\n";
+        std::cerr << '\'' << local_normal << "' backup restored due to initialization failure.\n";
         Video::preinit_from_file(local_normal);
         get_Video();
       }
