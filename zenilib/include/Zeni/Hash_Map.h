@@ -20,7 +20,7 @@
 
 #include <Zeni/String.h>
 
-#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#if ((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)) || (__clang_major__ > 2)
 
 #include <unordered_map>
 

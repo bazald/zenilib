@@ -357,7 +357,7 @@ namespace Zeni {
     int retval = UDP_Socket::receive(ip, data.c_str(), Uint16(data.size()));
     
     if(int(data.size()) > retval) {
-      data[size_t(retval)] = '\0';
+      data[static_cast<unsigned int>(retval)] = '\0';
       data.resize(size_t(retval));
     }
     
@@ -562,7 +562,7 @@ namespace Zeni {
     int retval = receive(ip, data.c_str(), Uint16(data.size()));
     
     if(int(data.size()) > retval) {
-      data[size_t(retval)] = '\0';
+      data[static_cast<unsigned int>(retval)] = '\0';
       data.resize(size_t(retval));
     }
     

@@ -590,7 +590,7 @@ namespace Zeni {
   size_t String::Hash::operator()(const String &str) const {
     size_t val = 42u;
     for(const_iterator it = str.begin(), iend = str.end(); it != iend; ++it)
-      val = ((val << 5) | (val >> (8u * sizeof(size_t) - 5))) + *it;
+      val = ((val << 5) | (val >> (8u * sizeof(size_t) - 5))) + static_cast<unsigned int>(*it);
     return val;
   }
 

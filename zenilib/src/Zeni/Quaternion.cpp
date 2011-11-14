@@ -39,7 +39,7 @@ namespace Zeni {
       if(INFINTESSIMAL(angle))
         return Quaternion();
       else {
-        const Vector3f pos(fabs(source.i), fabs(source.j), fabs(source.k));
+        const Vector3f pos(fabsf(source.i), fabsf(source.j), fabsf(source.k));
 
         if(pos.i < pos.j && pos.i < pos.k)
           rotation = Quaternion::Axis_Angle(source % Vector3f(1.0f, 0.0f, 0.0f), Global::pi);
