@@ -140,8 +140,8 @@ namespace Zeni {
   
   float Font_FT::get_text_width(const String &text) const {
     float max_width = 0.0f, width = 0.0f;
-    int pos = 0;
-    const int size = int(text.size());
+    unsigned int pos = 0;
+    const unsigned int size = static_cast<unsigned int>(text.size());
 
     for(; pos < size; ++pos)
       if(text[pos] != '\r' && text[pos] != '\n' &&
@@ -166,7 +166,7 @@ namespace Zeni {
     vr.apply_Texture(*m_texture);
 
     float cx, x_diff, cy = y;
-    size_t i = 0u;
+    unsigned int i = 0u;
 
 NEXT_LINE:
 
@@ -174,7 +174,7 @@ NEXT_LINE:
     x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
-      for(size_t j = i; j < text.size(); ++j) {
+      for(unsigned int j = i; j < text.size(); ++j) {
         if(text[j] == '\r' || text[j] == '\n' ||
           !m_glyph[int(text[j])])
           break;
@@ -218,7 +218,7 @@ NEXT_LINE:
 
     Point3f pos, vertical_pos = position;
     float x_diff;
-    size_t i = 0u;
+    unsigned int i = 0u;
 
 NEXT_LINE_2:
 
@@ -226,7 +226,7 @@ NEXT_LINE_2:
     x_diff = 0.0f;
 
     if(justify != ZENI_LEFT) {
-      for(size_t j = i; j < text.size(); ++j) {
+      for(unsigned int j = i; j < text.size(); ++j) {
         if(text[j] == '\r' || text[j] == '\n' ||
           !m_glyph[int(text[j])])
           break;

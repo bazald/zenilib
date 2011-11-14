@@ -47,7 +47,7 @@ static bool load_config() {
 
     if(config_xml.try_load(fo.get_appdata_path() + "config/zenilib.xml"))
       std::cerr << "User-specific config file loaded from '"
-                << fo.get_appdata_path() + "config/zenilib.xml"
+                << fo.get_appdata_path().std_str() + "config/zenilib.xml"
                 << "'." << std::endl;
     else {
       std::cerr << "User-specific config file not found." << std::endl;
@@ -164,7 +164,7 @@ static void print_errors() {
   Zeni::Video::print_errors();
 
 #ifndef DISABLE_AL
-  std::cerr << "OpenAL    : " << Zeni::Sound_Renderer_AL::errorString() << std::endl;
+  std::cerr << "OpenAL    : " << Zeni::Sound_Renderer_AL::errorString().c_str() << std::endl;
 #endif
 }
 
@@ -221,7 +221,7 @@ inline int main2(const int argc, const char * const * const argv) {
 #pragma warning( disable : 4130 )
 #endif
   catch(Zeni::Error &error) {
-    std::cerr << error.msg << std::endl;
+    std::cerr << error.msg.c_str() << std::endl;
 
     print_errors();
 

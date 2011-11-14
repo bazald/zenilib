@@ -74,7 +74,7 @@ namespace Zeni {
     if(scale) {
       std::cerr << "Performance Warning: Texture ";
       if(name)
-        std::cerr << '\'' << *name << "' ";
+        std::cerr << '\'' << name->c_str() << "' ";
       std::cerr << "width or height not a power of two.  Scaling up now.\n";
 
       simplify_surface(surface);

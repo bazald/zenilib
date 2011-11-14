@@ -22,128 +22,476 @@
 #include <cctype>
 #include <cstring>
 #include <iosfwd>
+#include <hash_map>
 
 namespace Zeni {
 
-  class ZENI_DLL String {
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+  class ZENI_DLL String : private std::string {
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    friend stdext::hash_compare<Zeni::String, std::less<Zeni::String> >;
+
   public:
+    typedef std::string::difference_type difference_type;
+    typedef std::string::pointer pointer;
+    typedef std::string::reference reference;
+    typedef std::string::size_type size_type;
+    typedef std::string::value_type value_type;
+
+    static const size_type npos = size_type(-1);
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4275 )
+#endif
+    class ZENI_DLL iterator : private std::string::iterator {
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+      friend String;
+
+    public:
+      typedef std::string::iterator::difference_type difference_type;
+      typedef std::string::iterator::distance_type distance_type;
+      typedef std::string::iterator::iterator_category iterator_category;
+      typedef std::string::iterator::pointer pointer;
+      typedef std::string::iterator::reference reference;
+      typedef std::string::iterator::value_type value_type;
+
+      iterator();
+
+      iterator(const iterator &rhs);
+      iterator(iterator &&rhs);
+      iterator & operator=(const iterator &rhs);
+      iterator & operator=(iterator &&rhs);
+
+      bool operator==(const iterator &rhs) const;
+      bool operator!=(const iterator &rhs) const;
+
+      value_type operator*() const;
+      value_type & operator*();
+      value_type operator->() const;
+      value_type & operator->();
+      
+      iterator operator++();
+      iterator operator--();
+      iterator operator++(int);
+      iterator operator--(int);
+
+      iterator operator+(const difference_type &n) const;
+      iterator operator-(const difference_type &n) const;
+      difference_type operator-(const iterator &rhs) const;
+
+      bool operator<(const iterator &rhs) const;
+      bool operator>(const iterator &rhs) const;
+      bool operator<=(const iterator &rhs) const;
+      bool operator>=(const iterator &rhs) const;
+
+      iterator operator+=(const difference_type &n);
+      iterator operator-=(const difference_type &n);
+      
+      value_type operator[](const difference_type &n) const;
+      value_type & operator[](const difference_type &n);
+
+    private:
+      iterator(const std::string::iterator &iter);
+      iterator(std::string::iterator &&iter);
+      iterator & operator=(const std::string::iterator &iter);
+      iterator & operator=(std::string::iterator &&iter);
+    };
+    class ZENI_DLL const_iterator : private std::string::const_iterator {
+      friend String;
+
+    public:
+      typedef std::string::const_iterator::difference_type difference_type;
+      typedef std::string::const_iterator::distance_type distance_type;
+      typedef std::string::const_iterator::iterator_category iterator_category;
+      typedef std::string::const_iterator::pointer pointer;
+      typedef std::string::const_iterator::reference reference;
+      typedef std::string::const_iterator::value_type value_type;
+
+      const_iterator();
+
+      const_iterator(const const_iterator &rhs);
+      const_iterator(const_iterator &&rhs);
+      const_iterator & operator=(const const_iterator &rhs);
+      const_iterator & operator=(const_iterator &&rhs);
+
+      const_iterator(const String::iterator &rhs);
+      const_iterator(String::iterator &&rhs);
+      const_iterator & operator=(const String::iterator &rhs);
+      const_iterator & operator=(String::iterator &&rhs);
+
+      bool operator==(const const_iterator &rhs) const;
+      bool operator!=(const const_iterator &rhs) const;
+
+      value_type operator*() const;
+      value_type operator->() const;
+
+      const_iterator operator++();
+      const_iterator operator--();
+      const_iterator operator++(int);
+      const_iterator operator--(int);
+
+      const_iterator operator+(const difference_type &n) const;
+      const_iterator operator-(const difference_type &n) const;
+      difference_type operator-(const const_iterator &rhs) const;
+
+      bool operator<(const const_iterator &rhs) const;
+      bool operator>(const const_iterator &rhs) const;
+      bool operator<=(const const_iterator &rhs) const;
+      bool operator>=(const const_iterator &rhs) const;
+
+      const_iterator operator+=(const difference_type &n);
+      const_iterator operator-=(const difference_type &n);
+      
+      value_type operator[](const difference_type &n) const;
+
+    private:
+      const_iterator(const std::string::const_iterator &iter);
+      const_iterator(std::string::iterator &&iter);
+      const_iterator & operator=(const std::string::const_iterator &iter);
+      const_iterator & operator=(std::string::const_iterator &&iter);
+    };
+    class ZENI_DLL reverse_iterator : private std::string::reverse_iterator {
+      friend String;
+
+    public:
+      typedef std::string::reverse_iterator::difference_type difference_type;
+      typedef std::string::reverse_iterator::distance_type distance_type;
+      typedef std::string::reverse_iterator::iterator_category iterator_category;
+      typedef std::string::reverse_iterator::pointer pointer;
+      typedef std::string::reverse_iterator::reference reference;
+      typedef std::string::reverse_iterator::value_type value_type;
+
+      reverse_iterator();
+
+      reverse_iterator(const reverse_iterator &rhs);
+      reverse_iterator(reverse_iterator &&rhs);
+      reverse_iterator & operator=(const reverse_iterator &rhs);
+      reverse_iterator & operator=(reverse_iterator &&rhs);
+
+      bool operator==(const reverse_iterator &rhs) const;
+      bool operator!=(const reverse_iterator &rhs) const;
+
+      value_type operator*() const;
+      value_type & operator*();
+      value_type operator->() const;
+      value_type & operator->();
+
+      reverse_iterator operator++();
+      reverse_iterator operator--();
+      reverse_iterator operator++(int);
+      reverse_iterator operator--(int);
+
+      reverse_iterator operator+(const difference_type &n) const;
+      reverse_iterator operator-(const difference_type &n) const;
+      difference_type operator-(const reverse_iterator &rhs) const;
+
+      bool operator<(const reverse_iterator &rhs) const;
+      bool operator>(const reverse_iterator &rhs) const;
+      bool operator<=(const reverse_iterator &rhs) const;
+      bool operator>=(const reverse_iterator &rhs) const;
+
+      reverse_iterator operator+=(const difference_type &n);
+      reverse_iterator operator-=(const difference_type &n);
+
+      value_type operator[](const difference_type &n) const;
+      value_type & operator[](const difference_type &n);
+
+    private:
+      reverse_iterator(const std::string::reverse_iterator &iter);
+      reverse_iterator(std::string::reverse_iterator &&iter);
+      reverse_iterator & operator=(const std::string::reverse_iterator &iter);
+      reverse_iterator & operator=(std::string::reverse_iterator &&iter);
+    };
+    class ZENI_DLL const_reverse_iterator : private std::string::const_reverse_iterator {
+      friend String;
+
+    public:
+      typedef std::string::const_reverse_iterator::difference_type difference_type;
+      typedef std::string::const_reverse_iterator::distance_type distance_type;
+      typedef std::string::const_reverse_iterator::iterator_category iterator_category;
+      typedef std::string::const_reverse_iterator::pointer pointer;
+      typedef std::string::const_reverse_iterator::reference reference;
+      typedef std::string::const_reverse_iterator::value_type value_type;
+
+      const_reverse_iterator();
+
+      const_reverse_iterator(const const_reverse_iterator &rhs);
+      const_reverse_iterator(const_reverse_iterator &&rhs);
+      const_reverse_iterator & operator=(const const_reverse_iterator &rhs);
+      const_reverse_iterator & operator=(const_reverse_iterator &&rhs);
+
+      const_reverse_iterator(const String::reverse_iterator &rhs);
+      const_reverse_iterator(String::reverse_iterator &&rhs);
+      const_reverse_iterator & operator=(const String::reverse_iterator &rhs);
+      const_reverse_iterator & operator=(String::reverse_iterator &&rhs);
+      
+      bool operator==(const const_reverse_iterator &rhs) const;
+      bool operator!=(const const_reverse_iterator &rhs) const;
+      
+      value_type operator*() const;
+      value_type operator->() const;
+      
+      const_reverse_iterator operator++();
+      const_reverse_iterator operator--();
+      const_reverse_iterator operator++(int);
+      const_reverse_iterator operator--(int);
+
+      const_reverse_iterator operator+(const difference_type &n) const;
+      const_reverse_iterator operator-(const difference_type &n) const;
+      difference_type operator-(const const_reverse_iterator &rhs) const;
+
+      bool operator<(const const_reverse_iterator &rhs) const;
+      bool operator>(const const_reverse_iterator &rhs) const;
+      bool operator<=(const const_reverse_iterator &rhs) const;
+      bool operator>=(const const_reverse_iterator &rhs) const;
+
+      const_reverse_iterator operator+=(const difference_type &n);
+      const_reverse_iterator operator-=(const difference_type &n);
+
+      value_type operator[](const difference_type &n) const;
+
+    private:
+      const_reverse_iterator(const std::string::const_reverse_iterator &iter);
+      const_reverse_iterator(std::string::const_reverse_iterator &&iter);
+      const_reverse_iterator & operator=(const std::string::const_reverse_iterator &iter);
+      const_reverse_iterator & operator=(std::string::const_reverse_iterator &&iter);
+    };
+
     String();
-    String(const char * const &c_str_);
-    String(const String &rhs);
-    ~String();
+    String(const String &str);
+    String(String &&str);
+    String(const String &str, size_t pos, size_t n = npos);
+    String(const char * s, size_t n);
+    String(const char * s);
+    String(size_t n, char c);
+    //template<class InputIterator> String(InputIterator begin, InputIterator end) : std::string(begin, end) {}
+    
+    String & operator=(const String &str);
+    String & operator=(String &&str);
+    String & operator=(const char *s);
+    String & operator=(char c);
 
-    explicit inline String(const std::string &rhs)
-      : m_c_str(0)
-    {
-      String lhs;
-      lhs.resize(rhs.size());
-      memcpy(lhs.m_c_str, rhs.c_str(), lhs.m_size);
+    iterator begin();
+    const_iterator begin() const;
 
-      std::swap(m_size, lhs.m_size);
-      std::swap(m_cap, lhs.m_cap);
-      std::swap(m_c_str, lhs.m_c_str);
+    iterator end();
+    const_iterator end() const;
+
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
+
+    size_t size() const;
+
+    size_t length() const;
+
+    size_t max_size() const;
+
+    void resize(size_t n, char c);
+    void resize(size_t n);
+
+    size_t capacity() const;
+
+    void reserve(size_t res_arg = 0);
+
+    void clear();
+
+    bool empty() const;
+
+    value_type operator[](const unsigned int &pos) const;
+    value_type & operator[](const unsigned int &pos);
+
+    value_type at(size_t pos) const;
+    value_type & at(size_t pos);
+
+    String & operator+=(const String & str);
+    String & operator+=(const char *s);
+    String & operator+=(char c);
+    
+    String & append(const String &str);
+    String & append(const String &str, size_t pos, size_t n);
+    String & append(const char *s, size_t n);
+    String & append(const char *s);
+    String & append(size_t n, char c);
+    //template <class InputIterator>
+    //String & append(InputIterator first, InputIterator last) {
+    //  std::string::append(first, last);
+    //  return *this;
+    //}
+
+    void push_back(char c);
+    
+    String & assign(const String &str);
+    String & assign(String &&str);
+    String & assign(const String &str, size_t pos, size_t n);
+    String & assign(const char *s, size_t n);
+    String & assign(const char *s);
+    String & assign(size_t n, char c);
+    //template <class InputIterator>
+    //String & assign(InputIterator first, InputIterator last) {
+    //  std::string::assign(first, last);
+    //  return *this;
+    //}
+    
+    String & insert(size_t pos1, const String &str);
+    String & insert(size_t pos1, const String &str, size_t pos2, size_t n);
+    String & insert(size_t pos1, const char *s, size_t n);
+    String & insert(size_t pos1, const char *s);
+    String & insert(size_t pos1, size_t n, char c);
+    iterator insert(iterator p, char c);
+    void insert(iterator p, size_t n, char c);
+    //template<class InputIterator>
+    //void insert(iterator p, InputIterator first, InputIterator last) {
+    //  std::string::insert(p, first, last);
+    //}
+
+    String & erase(size_t pos = 0, size_t n = npos);
+    iterator erase(iterator position);
+    iterator erase(iterator first, iterator last);
+
+    String & replace(size_t pos1, size_t n1, const String &str);
+    String & replace(iterator i1, iterator i2, const String &str);
+    String & replace(size_t pos1, size_t n1, const String &str, size_t pos2, size_t n2);
+    String & replace(size_t pos1, size_t n1, const char *s, size_t n2);
+    String & replace(iterator i1, iterator i2, const char *s, size_t n2);
+    String & replace(size_t pos1, size_t n1, const char *s);
+    String & replace(iterator i1, iterator i2, const char *s);
+    String & replace(size_t pos1, size_t n1, size_t n2, char c);
+    String & replace(iterator i1, iterator i2, size_t n2, char c);
+    //template<class InputIterator>
+    //String & replace(iterator i1, iterator i2, InputIterator j1, InputIterator j2) {
+    //  std::string::replace(i1, i2, j1, j2);
+    //  return *this;
+    //}
+
+    void swap(String &str);
+
+    const char * c_str() const;
+
+    const char * data() const;
+
+    size_t copy(char *s, size_t n, size_t pos = 0) const;
+
+    size_t find(const String &str, size_t pos = 0) const;
+    size_t find(const char *s, size_t pos, size_t n) const;
+    size_t find(const char *s, size_t pos = 0) const;
+    size_t find(char c, size_t pos = 0) const;
+
+    size_t rfind(const String &str, size_t pos = npos) const;
+    size_t rfind(const char *s, size_t pos, size_t n) const;
+    size_t rfind(const char *s, size_t pos = npos) const;
+    size_t rfind(char c, size_t pos = npos) const;
+
+    size_t find_first_of(const String &str, size_t pos = 0) const;
+    size_t find_first_of(const char *s, size_t pos, size_t n) const;
+    size_t find_first_of(const char *s, size_t pos = 0) const;
+    size_t find_first_of(char c, size_t pos = 0) const;
+
+    size_t find_last_of(const String &str, size_t pos = npos) const;
+    size_t find_last_of(const char *s, size_t pos, size_t n) const;
+    size_t find_last_of(const char *s, size_t pos = npos) const;
+    size_t find_last_of(char c, size_t pos = npos) const;
+
+    size_t find_first_not_of(const String &str, size_t pos = 0) const;
+    size_t find_first_not_of(const char *s, size_t pos, size_t n) const;
+    size_t find_first_not_of(const char *s, size_t pos = 0) const;
+    size_t find_first_not_of(char c, size_t pos = 0) const;
+
+    size_t find_last_not_of(const String &str, size_t pos = npos) const;
+    size_t find_last_not_of(const char *s, size_t pos, size_t n) const;
+    size_t find_last_not_of(const char *s, size_t pos = npos) const;
+    size_t find_last_not_of(char c, size_t pos = npos) const;
+
+    String substr(size_t pos = 0, size_t n = npos) const;
+
+    int compare(const String &str) const;
+    int compare(const char *s) const;
+    int compare(size_t pos1, size_t n1, const String &str) const;
+    int compare(size_t pos1, size_t n1, const char *s) const;
+    int compare(size_t pos1, size_t n1, const String &str, size_t pos2, size_t n2) const;
+    int compare(size_t pos1, size_t n1, const char *s, size_t n2) const;
+
+    bool operator==(const Zeni::String &rhs) const;
+    bool operator==(const char *rhs) const;
+    bool operator!=(const Zeni::String &rhs) const;
+    bool operator!=(const char *rhs) const;
+    bool operator<(const Zeni::String &rhs) const;
+    bool operator<(const char *rhs) const;
+    bool operator>(const Zeni::String &rhs) const;
+    bool operator>(const char *rhs) const;
+    bool operator<=(const Zeni::String &rhs) const;
+    bool operator<=(const char *rhs) const;
+    bool operator>=(const Zeni::String &rhs) const;
+    bool operator>=(const char *rhs) const;
+
+    explicit inline String(const std::string &rhs) {
+      String lhs(rhs.data(), rhs.size());
+      swap(lhs);
     }
 
     inline String & operator=(const std::string &rhs) {
-      String lhs;
-      lhs.resize(rhs.size());
-      memcpy(lhs.m_c_str, rhs.c_str(), lhs.m_size);
-
-      std::swap(m_size, lhs.m_size);
-      std::swap(m_cap, lhs.m_cap);
-      std::swap(m_c_str, lhs.m_c_str);
-
+      String lhs(rhs);
+      swap(lhs);
       return *this;
     }
 
-    void resize(const size_t &size);
-    void clear();
-    
-    String & operator=(const char &c);
-    String & operator=(const char * const &rhs);
-    String & operator=(const String &rhs);
-
-    String & operator+=(const char &c);
-    String & operator+=(const char * const &str);
-    String & operator+=(const String &str);
-
-    String operator+(const char &c) const;
-    String operator+(const char * const &str) const;
-    String operator+(const String &str) const;
-    
-    bool operator==(const char * const &str) const;
-    bool operator==(const String &str) const;
-    bool operator!=(const char * const &str) const;
-    bool operator!=(const String &str) const;
-    bool operator<(const char * const &str) const;
-    bool operator<(const String &str) const;
-    bool operator>(const char * const &str) const;
-    bool operator>(const String &str) const;
-    bool operator<=(const char * const &str) const;
-    bool operator<=(const String &str) const;
-    bool operator>=(const char * const &str) const;
-    bool operator>=(const String &str) const;
-
-    char operator[](const size_t &index) const;
-    char & operator[](const size_t &index);
-    char operator[](const int &index) const;
-    char & operator[](const int &index);
-
-    bool empty() const;
-    size_t size() const;
-
     inline std::string std_str() const {
-      std::string rv;
-      rv.resize(m_size);
-      memcpy(const_cast<char *>(rv.c_str()), m_c_str, m_size);
+      std::string rv(data(), size());
       return rv;
     }
-
-    const char * const c_str() const;
-
-    void swap(String &rhs);
-
-    struct ZENI_DLL Hash {
-      enum {bucket_size = 4, min_buckets = 8};
-
-      size_t operator()(const String &str) const;
-
-      bool operator()(const String &lhs, const String &rhs) const;
-    };
-
-    typedef char * iterator;
-    typedef const char * const_iterator;
-    
-    const_iterator begin() const;
-    iterator begin();
-    const_iterator end() const;
-    iterator end();
-
-    size_t find(const String &str, const size_t &pos = 0) const;
-    //size_t find(const char *str, const size_t& pos, const size_t &n) const;
-    size_t find(const char *str, const size_t &pos = 0) const;
-    size_t find(const char &c, const size_t &pos = 0) const;
-
-    String substr(size_t pos = 0, size_t n = size_t(-1)) const;
-
-  private:
-    size_t m_size;
-    size_t m_cap;
-    char * m_c_str;
   };
+
 }
 
-ZENI_DLL Zeni::String operator+(const char &c, const Zeni::String &str);
-ZENI_DLL Zeni::String operator+(const char * const &strl, const Zeni::String &strr);
+ZENI_DLL Zeni::String::iterator operator+(const Zeni::String::iterator::difference_type &lhs, const Zeni::String::iterator &rhs);
+ZENI_DLL Zeni::String::const_iterator operator+(const Zeni::String::const_iterator::difference_type &lhs, const Zeni::String::const_iterator &rhs);
+ZENI_DLL Zeni::String::reverse_iterator operator+(const Zeni::String::reverse_iterator::difference_type &lhs, const Zeni::String::reverse_iterator &rhs);
+ZENI_DLL Zeni::String::const_reverse_iterator operator+(const Zeni::String::const_reverse_iterator::difference_type &lhs, const Zeni::String::const_reverse_iterator &rhs);
 
-ZENI_DLL bool operator==(const char * const &strl, const Zeni::String &strr);
-ZENI_DLL bool operator!=(const char * const &strl, const Zeni::String &strr);
-ZENI_DLL bool operator<(const char * const &strl, const Zeni::String &strr);
-ZENI_DLL bool operator>(const char * const &strl, const Zeni::String &strr);
-ZENI_DLL bool operator<=(const char * const &strl, const Zeni::String &strr);
-ZENI_DLL bool operator>=(const char * const &strl, const Zeni::String &strr);
+ZENI_DLL Zeni::String operator+(const Zeni::String &lhs, const Zeni::String &rhs);
+ZENI_DLL Zeni::String operator+(const Zeni::String &lhs, const char *rhs);
+ZENI_DLL Zeni::String operator+(const Zeni::String &lhs, char rhs);
+ZENI_DLL Zeni::String operator+(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL Zeni::String operator+(char lhs, const Zeni::String &rhs);
 
-ZENI_DLL std::istream & operator>>(std::istream &is, Zeni::String &str);
-ZENI_DLL std::ostream & operator<<(std::ostream &os, const Zeni::String &str);
+ZENI_DLL bool operator==(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL bool operator!=(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL bool operator<(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL bool operator>(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL bool operator<=(const char *lhs, const Zeni::String &rhs);
+ZENI_DLL bool operator>=(const char *lhs, const Zeni::String &rhs);
+
+ZENI_DLL void swap(Zeni::String &lhs, Zeni::String &rhs);
+
+namespace stdext {
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+  template<>
+  class ZENI_DLL hash_compare<Zeni::String, std::less<Zeni::String> > : private stdext::hash_compare<std::string, std::less<std::string> > {
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+  public:
+    static const size_t bucket_size = 4;
+    static const size_t min_buckets = 8;
+    hash_compare();
+    size_t operator()(const Zeni::String &_Key) const;
+    bool operator()(const Zeni::String& _Key1, const Zeni::String& _Key2) const;
+  };
+
+}
 
 #endif
