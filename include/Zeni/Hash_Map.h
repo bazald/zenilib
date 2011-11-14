@@ -79,7 +79,7 @@ namespace Zeni {
   };
 
   template <typename Ty>
-  class Unordered_Map<String, Ty> : public stdext::hash_map<String, Ty> {
+  class Unordered_Map<String, Ty> : public stdext::hash_map<String, Ty, String::Hash> {
   };
 
 }
