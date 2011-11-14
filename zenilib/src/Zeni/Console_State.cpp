@@ -81,7 +81,7 @@ namespace Zeni {
     m_text += text;
 
     const unsigned int max_lines = static_cast<unsigned int>(m_log.get_max_lines());
-    for(unsigned int endl_count = 0u, pos = static_cast<unsigned int>(m_text.size() - 1u); pos != size_t(-1); --pos)
+    for(unsigned int endl_count = 0u, pos = static_cast<unsigned int>(m_text.size() - 1u); pos != static_cast<unsigned int>(-1); --pos)
       if(m_text[pos] == '\n' && ++endl_count == max_lines) {
         m_text = m_text.substr(pos + 1);
         break;
