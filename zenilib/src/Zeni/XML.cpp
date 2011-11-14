@@ -33,7 +33,7 @@ namespace Zeni {
 
   XML_Element_c XML_Element_c::operator[](const String &field) const {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element_c attempted to access field '" << field.c_str() << "'\n";
+      std::cerr << "Bad XML_Element_c attempted to access field '" << field << "'\n";
       throw XML_Element_Ungood();
     }
 
@@ -144,7 +144,7 @@ namespace Zeni {
 
   XML_Element XML_Element::operator[](const String &field) {
     if(!m_handle.ToNode()) {
-      std::cerr << "Bad XML_Element_c attempted to access field '" << field.c_str() << "'\n";
+      std::cerr << "Bad XML_Element_c attempted to access field '" << field << "'\n";
       throw XML_Element_Ungood();
     }
 
@@ -261,7 +261,7 @@ namespace Zeni {
 
   void XML_Document::load(const String &filename) {
     if(!try_load(filename)) {
-      std::cerr << "Failed to load XML_Document '" << filename.c_str() << "'\n"
+      std::cerr << "Failed to load XML_Document '" << filename << "'\n"
                 << m_xml_file.ErrorDesc() << std::endl;
       throw XML_Load_Failure();
     }
@@ -276,8 +276,8 @@ namespace Zeni {
   }
 
   void XML_Document::save(const String &filename) {
-    if(!try_save(filename.c_str())) {
-      std::cerr << "Failed to save XML_Document '" << filename.c_str() << "'\n"
+    if(!try_save(filename)) {
+      std::cerr << "Failed to save XML_Document '" << filename << "'\n"
                 << m_xml_file.ErrorDesc() << std::endl;
       throw XML_Save_Failure();
     }
@@ -312,7 +312,7 @@ namespace Zeni {
 
   bool XML_Document::try_save(const String &filename) {
     if(!good()) {
-      std::cerr << "Bad XML_Document attempted to save to '" << filename.c_str() << "'\n";
+      std::cerr << "Bad XML_Document attempted to save to '" << filename << "'\n";
       throw XML_Document_Ungood();
     }
 
@@ -321,7 +321,7 @@ namespace Zeni {
 
   XML_Element_c XML_Document::operator[](const String &field) const {
     if(!good()) {
-      std::cerr << "Bad XML_Document attempted to access field '" << field.c_str() << "'\n";
+      std::cerr << "Bad XML_Document attempted to access field '" << field << "'\n";
       throw XML_Document_Ungood();
     }
 
@@ -330,7 +330,7 @@ namespace Zeni {
 
   XML_Element XML_Document::operator[](const String &field) {
     if(!good()) {
-      std::cerr << "Bad XML_Document attempted to access field '" << field.c_str() << "'\n";
+      std::cerr << "Bad XML_Document attempted to access field '" << field << "'\n";
       throw XML_Document_Ungood();
     }
 

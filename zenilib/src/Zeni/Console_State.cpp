@@ -80,8 +80,8 @@ namespace Zeni {
       m_text += '\n';
     m_text += text;
 
-    const size_t max_lines = size_t(m_log.get_max_lines());
-    for(size_t endl_count = 0u, pos = m_text.size() - 1u; pos != size_t(-1); --pos)
+    const unsigned int max_lines = static_cast<unsigned int>(m_log.get_max_lines());
+    for(unsigned int endl_count = 0u, pos = static_cast<unsigned int>(m_text.size() - 1u); pos != size_t(-1); --pos)
       if(m_text[pos] == '\n' && ++endl_count == max_lines) {
         m_text = m_text.substr(pos + 1);
         break;
@@ -255,9 +255,10 @@ namespace Zeni {
     if(m_log_dirty) {
       m_log.set_text(m_text);
 
-      const int max_lines = m_log.get_max_lines();
-      if(m_log.get_num_lines() > max_lines)
-        m_log.erase_lines(0, m_log.get_num_lines() - max_lines);
+      const size_t num_lines = m_log.get_num_lines();
+      const size_t max_lines = m_log.get_max_lines();
+      if(num_lines > max_lines)
+        m_log.erase_lines(0, static_cast<unsigned int>(num_lines - max_lines));
 
       m_text = m_log.get_text();
       m_log_dirty = false;

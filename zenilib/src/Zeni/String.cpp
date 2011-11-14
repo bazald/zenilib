@@ -589,8 +589,8 @@ namespace Zeni {
 
   size_t String::Hash::operator()(const String &str) const {
     size_t val = 42u;
-    for(const_iterator ii = str.begin(), iend = str.end(); ii != iend; ++ii)
-      val = ((val << 5) | (val >> (8u * sizeof(size_t) - 5))) + *ii;
+    for(const_iterator it = str.begin(), iend = str.end(); it != iend; ++it)
+      val = ((val << 5) | (val >> (8u * sizeof(size_t) - 5))) + *it;
     return val;
   }
 
@@ -635,4 +635,23 @@ ZENI_DLL bool operator>=(const char *lhs, const Zeni::String &rhs) {return rhs <
 
 ZENI_DLL void swap(Zeni::String &lhs, Zeni::String &rhs) {
   lhs.swap(rhs);
+}
+
+std::istream & operator>>(std::istream &is, Zeni::String &str) {
+  Zeni::String temp;
+
+  if(is >> std::ws)
+    while(is && !std::isspace(is.peek()))
+      temp += (char)is.get();
+
+  str.swap(temp);
+
+  return is;
+}
+
+std::ostream & operator<<(std::ostream &os, const Zeni::String &str) {
+  for(Zeni::String::const_iterator it = str.begin(), iend = str.end(); os && it != iend; ++it)
+    os.put(*it);
+
+  return os;
 }

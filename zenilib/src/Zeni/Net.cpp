@@ -146,39 +146,76 @@ namespace Zeni {
     return *SDLNet_TCP_GetPeerAddress(sock);
   }
   
+  int TCP_Socket::try_check_socket() {
+    return SDLNet_CheckSockets(sockset, 0);
+  }
+  
   int TCP_Socket::check_socket() {
-    int retval = SDLNet_CheckSockets(sockset, 0);
-    if(retval == -1)
+    int rv = try_check_socket();
+
+    if(rv == -1)
       throw Socket_Closed();
-    return retval;
+
+    return rv;
+  }
+
+  int TCP_Socket::try_send(const void * const &data, const Uint16 &num_bytes) {
+    return SDLNet_TCP_Send(sock, const_cast<void *>(data), num_bytes) < num_bytes ? -1 : 0;
+  }
+
+  int TCP_Socket::try_send(const String &data) {
+    return try_send(data.c_str(), Uint16(data.size()));
   }
 
   void TCP_Socket::send(const void * const &data, const Uint16 &num_bytes) {
-    if(SDLNet_TCP_Send(sock, const_cast<void *>(data), num_bytes) < num_bytes)
+    if(try_send(data, num_bytes) == -1)
       throw Socket_Closed();
   }
 
   void TCP_Socket::send(const String &data) {
-    send(data.c_str(), Uint16(data.size()));
+    if(try_send(data) == -1)
+      throw Socket_Closed();
   }
 
-  int TCP_Socket::receive(void * const &data, const Uint16 &num_bytes) {
+  int TCP_Socket::try_receive(void * const &data, const Uint16 &num_bytes) {
     int retval = check_socket();
     
     if(retval) {
       retval = SDLNet_TCP_Recv(sock, data, num_bytes);
       if(retval <= 0)
-        throw Socket_Closed();
+        return -1;
     }
 
     return retval;
   }
 
-  int TCP_Socket::receive(String &data, const Uint16 &num_bytes) {
+  int TCP_Socket::try_receive(String &data, const Uint16 &num_bytes) {
     data.resize(size_t(num_bytes));
+
     const int retval = receive(const_cast<char *>(data.c_str()), num_bytes);
+    if(retval == -1)
+      return -1;
+
     data.resize(size_t(retval));
     return retval;
+  }
+
+  int TCP_Socket::receive(void * const &data, const Uint16 &num_bytes) {
+    const int rv = try_receive(data, num_bytes);
+
+    if(rv == -1)
+      throw Socket_Closed();
+
+    return rv;
+  }
+
+  int TCP_Socket::receive(String &data, const Uint16 &num_bytes) {
+    const int rv = try_receive(data, num_bytes);
+
+    if(rv == -1)
+      throw Socket_Closed();
+
+    return rv;
   }
 
   void TCP_Socket::Uninit::operator()() {

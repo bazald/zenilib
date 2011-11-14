@@ -164,7 +164,7 @@ static void print_errors() {
   Zeni::Video::print_errors();
 
 #ifndef DISABLE_AL
-  std::cerr << "OpenAL    : " << Zeni::Sound_Renderer_AL::errorString().c_str() << std::endl;
+  std::cerr << "OpenAL    : " << Zeni::Sound_Renderer_AL::errorString() << std::endl;
 #endif
 }
 
@@ -221,7 +221,7 @@ inline int main2(const int argc, const char * const * const argv) {
 #pragma warning( disable : 4130 )
 #endif
   catch(Zeni::Error &error) {
-    std::cerr << error.msg.c_str() << std::endl;
+    std::cerr << error.msg << std::endl;
 
     print_errors();
 

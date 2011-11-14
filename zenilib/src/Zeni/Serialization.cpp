@@ -168,7 +168,7 @@ namespace Zeni {
   String ftoa(const float &number, const unsigned int &precision) {
     std::ostringstream oss;
     oss << std::setprecision(int(precision)) << number;
-    return oss.str().c_str();
+    return String(oss.str());
   }
 
   String dtoa(const double &number) {
@@ -185,7 +185,7 @@ namespace Zeni {
   String dtoa(const double &number, const unsigned int &precision) {
     std::ostringstream oss;
     oss << std::setprecision(int(precision)) << number;
-    return oss.str().c_str();
+    return String(oss.str());
   }
 
   String ldtoa(const long double &number) {
