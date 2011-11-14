@@ -39,7 +39,7 @@ namespace Zeni {
 
   class ZENI_DLL Random {
   public:
-    Random(const Uint32 &seed = std::rand())
+    Random(const Uint32 &seed = Uint32(std::rand()))
      : m_random_value(seed)
     {
     }
@@ -52,7 +52,7 @@ namespace Zeni {
     /// Get a random integer in the range [0, rand_max()]
     Sint32 rand() {
       m_random_value = m_random_value * 1103515245 + 12345;
-      return Sint32(static_cast<Uint32>(m_random_value / 65536) % (rand_max() + 1));
+      return Sint32(static_cast<Sint32>(m_random_value / 65536) % (rand_max() + 1));
     }
 
     /// Get a random floating point number in the range [0.0f, 1.0f)

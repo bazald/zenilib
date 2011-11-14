@@ -26,6 +26,7 @@
 #include <direct.h>
 #else
 #include <errno.h>
+#include <unistd.h>
 #endif
 
 #ifdef _MACOSX
@@ -234,6 +235,9 @@ inline int main2(const int argc, const char * const * const argv) {
 
     print_errors();
 
+#ifdef __clang__
+    if(strcmp(except.what(), "std::exception"))
+#endif
     Zeni::message_box(except.what());
 
     return 1;

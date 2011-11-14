@@ -1067,7 +1067,7 @@ default: return "SDLK_UNKNOWN";
   }
 
   void Gamestate_Base::render() {
-    static Logo logo(Point2f(1.5f, 0.5f), 1.0f, Color(1.0f, 0.875, 0.875, 0.875), Color(1.0f, 0.125, 0.125, 0.175));
+    static Logo logo(Point2f(1.5f, 0.5f), 1.0f, Color(1.0f, 0.875f, 0.875f, 0.875f), Color(1.0f, 0.125f, 0.125f, 0.175f));
 
     get_Video().set_2d(std::make_pair(Point2f(), Point2f(4.0f, 2.0f)), true);
 
