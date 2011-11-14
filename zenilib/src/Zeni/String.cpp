@@ -587,6 +587,17 @@ namespace Zeni {
   bool String::operator>=(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) >= static_cast<const std::string &>(rhs);}
   bool String::operator>=(const char *rhs) const {return static_cast<const std::string &>(*this) >= rhs;}
 
+  size_t String::Hash::operator()(const String &str) const {
+    size_t val = 42u;
+    for(const_iterator ii = str.begin(), iend = str.end(); ii != iend; ++ii)
+      val = ((val << 5) | (val >> (8u * sizeof(size_t) - 5))) + *ii;
+    return val;
+  }
+
+  bool String::Hash::operator()(const String &lhs, const String &rhs) const {
+    return lhs != rhs;
+  }
+
 }
 
 ZENI_DLL Zeni::String::iterator operator+(const Zeni::String::iterator::difference_type &lhs, const Zeni::String::iterator &rhs) {return rhs + lhs;}
@@ -624,12 +635,4 @@ ZENI_DLL bool operator>=(const char *lhs, const Zeni::String &rhs) {return rhs <
 
 ZENI_DLL void swap(Zeni::String &lhs, Zeni::String &rhs) {
   lhs.swap(rhs);
-}
-
-namespace stdext {
-
-  hash_compare<Zeni::String, std::less<Zeni::String> >::hash_compare() {}
-  size_t hash_compare<Zeni::String, std::less<Zeni::String> >::operator()(const Zeni::String &_Key) const {return static_cast<const stdext::hash_compare<std::string, std::less<std::string> > &>(*this)(_Key);}
-  bool hash_compare<Zeni::String, std::less<Zeni::String> >::operator()(const Zeni::String& _Key1, const Zeni::String& _Key2) const {return static_cast<const stdext::hash_compare<std::string, std::less<std::string> > &>(*this)(_Key1, _Key2);}
-
 }

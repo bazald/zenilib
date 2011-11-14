@@ -22,7 +22,6 @@
 #include <cctype>
 #include <cstring>
 #include <iosfwd>
-#include <hash_map>
 
 namespace Zeni {
 
@@ -34,8 +33,6 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    friend stdext::hash_compare<Zeni::String, std::less<Zeni::String> >;
-
   public:
     typedef std::string::difference_type difference_type;
     typedef std::string::pointer pointer;
@@ -50,14 +47,13 @@ namespace Zeni {
 #pragma warning( disable : 4275 )
 #endif
     class ZENI_DLL iterator : private std::string::iterator {
+      friend class String;
+
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-      friend String;
-
     public:
       typedef std::string::iterator::difference_type difference_type;
-      typedef std::string::iterator::distance_type distance_type;
       typedef std::string::iterator::iterator_category iterator_category;
       typedef std::string::iterator::pointer pointer;
       typedef std::string::iterator::reference reference;
@@ -105,11 +101,10 @@ namespace Zeni {
       iterator & operator=(std::string::iterator &&iter);
     };
     class ZENI_DLL const_iterator : private std::string::const_iterator {
-      friend String;
+      friend class String;
 
     public:
       typedef std::string::const_iterator::difference_type difference_type;
-      typedef std::string::const_iterator::distance_type distance_type;
       typedef std::string::const_iterator::iterator_category iterator_category;
       typedef std::string::const_iterator::pointer pointer;
       typedef std::string::const_iterator::reference reference;
@@ -159,11 +154,10 @@ namespace Zeni {
       const_iterator & operator=(std::string::const_iterator &&iter);
     };
     class ZENI_DLL reverse_iterator : private std::string::reverse_iterator {
-      friend String;
+      friend class String;
 
     public:
       typedef std::string::reverse_iterator::difference_type difference_type;
-      typedef std::string::reverse_iterator::distance_type distance_type;
       typedef std::string::reverse_iterator::iterator_category iterator_category;
       typedef std::string::reverse_iterator::pointer pointer;
       typedef std::string::reverse_iterator::reference reference;
@@ -211,11 +205,10 @@ namespace Zeni {
       reverse_iterator & operator=(std::string::reverse_iterator &&iter);
     };
     class ZENI_DLL const_reverse_iterator : private std::string::const_reverse_iterator {
-      friend String;
+      friend class String;
 
     public:
       typedef std::string::const_reverse_iterator::difference_type difference_type;
-      typedef std::string::const_reverse_iterator::distance_type distance_type;
       typedef std::string::const_reverse_iterator::iterator_category iterator_category;
       typedef std::string::const_reverse_iterator::pointer pointer;
       typedef std::string::const_reverse_iterator::reference reference;
@@ -434,6 +427,15 @@ namespace Zeni {
     bool operator>=(const Zeni::String &rhs) const;
     bool operator>=(const char *rhs) const;
 
+    struct ZENI_DLL Hash {
+      static const size_t bucket_size = 4;
+      static const size_t min_buckets = 8;
+
+      size_t operator()(const String &str) const;
+
+      bool operator()(const String &lhs, const String &rhs) const;
+    };
+
     explicit inline String(const std::string &rhs) {
       String lhs(rhs.data(), rhs.size());
       swap(lhs);
@@ -472,26 +474,5 @@ ZENI_DLL bool operator<=(const char *lhs, const Zeni::String &rhs);
 ZENI_DLL bool operator>=(const char *lhs, const Zeni::String &rhs);
 
 ZENI_DLL void swap(Zeni::String &lhs, Zeni::String &rhs);
-
-namespace stdext {
-
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4251 )
-#endif
-  template<>
-  class ZENI_DLL hash_compare<Zeni::String, std::less<Zeni::String> > : private stdext::hash_compare<std::string, std::less<std::string> > {
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
-  public:
-    static const size_t bucket_size = 4;
-    static const size_t min_buckets = 8;
-    hash_compare();
-    size_t operator()(const Zeni::String &_Key) const;
-    bool operator()(const Zeni::String& _Key1, const Zeni::String& _Key2) const;
-  };
-
-}
 
 #endif
