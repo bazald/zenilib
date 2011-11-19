@@ -155,12 +155,14 @@ namespace Zeni {
     // Lighting and Materials
     virtual void set_lighting(const bool &on = true) = 0; ///< Set lighting on/off
     virtual void set_ambient_lighting(const Color &color) = 0; ///< Set ambient lighting on/off
+    const Light * const get_Light(const int &number) const; ///< Get pointer to Light, or 0 if no such Light
     virtual void set_Light(const int &number, const Light &light) = 0; ///< Set a particular Light
     virtual void unset_Light(const int &number) = 0; ///< Unset a particular Light
     virtual void set_Material(const Material &material) = 0; ///< Set a Material
     virtual void unset_Material(const Material &material) = 0; ///< Unset a Material
 
     // Fog
+    const Fog * const get_Fog() const; ///< Get pointer to current Fog, or 0 if no Fog
     virtual void set_Fog(const Fog &fog) = 0; ///< Set Fog
     virtual void unset_Fog() = 0; ///< Unset Fog
 
@@ -237,6 +239,16 @@ namespace Zeni {
     static bool g_backface_culling;
     static bool g_lighting;
     static Color g_ambient_lighting;
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static Unordered_Map<int, Light> g_lights;
+    static Fog g_fog;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    static bool g_fog_enabled;
     static Color g_clear_color;
     static bool g_normal_interp;
     static bool g_vertical_sync;

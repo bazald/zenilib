@@ -358,6 +358,8 @@ namespace Zeni {
       throw Light_Out_of_Range();
     }
 
+    Video::set_Light(number, light);
+
     light.set(ln, *this);
   }
 
@@ -376,6 +378,8 @@ namespace Zeni {
       throw Light_Out_of_Range();
     }
 
+    Video::unset_Light(number);
+
     glDisable(ln);
   }
 
@@ -388,11 +392,15 @@ namespace Zeni {
   }
 
   void Video_GL::set_Fog(const Fog &fog) {
+    Video::set_Fog(fog);
+
     glEnable(GL_FOG);
     fog.set(*this);
   }
 
   void Video_GL::unset_Fog() {
+    Video::unset_Fog();
+
     glDisable(GL_FOG);
   }
 
@@ -667,6 +675,11 @@ namespace Zeni {
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());
+    for(int i = 0; i != 8; ++i)
+      if(const Light * const lp = get_Light(i))
+        set_Light(i, *lp);
+    if(const Fog * const fp = get_Fog())
+      set_Fog(*fp);
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());

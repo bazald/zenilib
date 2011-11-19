@@ -380,12 +380,16 @@ namespace Zeni {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
 
+    Video::set_Light(number, light);
+
     light.set(DWORD(number), *this);
   }
 
   void Video_DX9::unset_Light(const int &number) {
     if(number < 0 || 7 < number)
       throw Light_Out_of_Range(); // Match OpenGL - Limit for both may actually be higher
+
+    Video::unset_Light(number);
 
     m_d3d_device->LightEnable(DWORD(number), FALSE);
   }
@@ -399,11 +403,15 @@ namespace Zeni {
   }
 
   void Video_DX9::set_Fog(const Fog &fog) {
+    Video::set_Fog(fog);
+
     m_d3d_device->SetRenderState(D3DRS_FOGENABLE, true);
     fog.set(*this);
   }
 
   void Video_DX9::unset_Fog() {
+    Video::unset_Fog();
+
     m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
     m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
   }
@@ -717,6 +725,11 @@ namespace Zeni {
     set_backface_culling(get_backface_culling());
     set_lighting(get_lighting());
     set_ambient_lighting(get_ambient_lighting());
+    for(int i = 0; i != 8; ++i)
+      if(const Light * const lp = get_Light(i))
+        set_Light(i, *lp);
+    if(const Fog * const fp = get_Fog())
+      set_Fog(*fp);
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());

@@ -244,6 +244,36 @@ namespace Zeni {
     set_viewport(viewport);
   }
 
+  const Light * const Video::get_Light(const int &number) const {
+    const Unordered_Map<int, Light>::const_iterator it = g_lights.find(number);
+
+    if(it != g_lights.end())
+      return &it->second;
+    else
+      return 0;
+  }
+
+  void Video::set_Light(const int &number, const Light &light) {
+    g_lights[number] = light;
+  }
+
+  void Video::unset_Light(const int &number) {
+    g_lights.erase(number);
+  }
+
+  const Fog * const Video::get_Fog() const {
+    return g_fog_enabled ? &g_fog : 0;
+  }
+
+  void Video::set_Fog(const Fog &fog) {
+    g_fog = fog;
+    g_fog_enabled = false;
+  }
+
+  void Video::unset_Fog() {
+    g_fog_enabled = false;
+  }
+
   void Video::preinit_video_mode(const Video::VIDEO_MODE &vm) {
     g_video_mode = vm;
   }
@@ -423,9 +453,12 @@ namespace Zeni {
 
   Video::VIDEO_MODE Video::g_video_mode = Video::ZENI_VIDEO_ANY;
   bool Video::g_backface_culling = false;
-  Color Video::g_ambient_lighting = Color(1.0f, 1.0f, 1.0f, 1.0f);
-  Color Video::g_clear_color = Color(1.0f, 0.0f, 0.0f, 0.0f);
   bool Video::g_lighting = false;
+  Color Video::g_ambient_lighting = Color(1.0f, 1.0f, 1.0f, 1.0f);
+  Unordered_Map<int, Light> Video::g_lights;
+  Fog Video::g_fog;
+  bool Video::g_fog_enabled = false;
+  Color Video::g_clear_color = Color(1.0f, 0.0f, 0.0f, 0.0f);
   bool Video::g_normal_interp = false;
   bool Video::g_vertical_sync = false;
   int Video::g_multisampling = 0;
