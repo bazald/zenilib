@@ -65,7 +65,6 @@
 #define ZENI_MODEL_H
 
 #include <Zeni/Coordinate.h>
-#include <Zeni/Thread.h>
 #include <Zeni/Vector3f.h>
 
 #ifdef _MACOSX
@@ -154,24 +153,8 @@ namespace Zeni {
     Vector3f m_scale, m_rotate;
     Point3f m_translate;
     float m_rotate_angle;
-    
-    class ZENI_GRAPHICS_DLL Loader : public Task {
-      Loader(const Loader &);
-      Loader & operator=(const Loader &);
-      
-    public:
-      Loader(Model &model) : m_model(model) {}
-      
-      int function();
-      
-    private:
-      Model &m_model;
-    };
-    
+
     void load();
-    
-    mutable Loader m_loader;
-    mutable Runonce_Computation m_loader_op;
   };
 
   struct ZENI_GRAPHICS_DLL Model_Init_Failure : public Error {

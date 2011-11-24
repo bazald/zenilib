@@ -25,9 +25,7 @@
 namespace Zeni {
 
   Lib3dsFile * const & Model::get_file() const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_file;
-    GUARANTEED_FINISHED_END();
   }
 
   Lib3dsFile * const & Model::thun_get_file() const {
@@ -35,39 +33,27 @@ namespace Zeni {
   }
 
   const Model_Extents & Model::get_extents() const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_extents;
-    GUARANTEED_FINISHED_END();
   }
 
   float Model::get_keyframes() const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return float(m_file->frames);
-    GUARANTEED_FINISHED_END();
   }
 
   const Vector3f & Model::get_scale() {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_scale;
-    GUARANTEED_FINISHED_END();
   }
 
   std::pair<Vector3f, float> Model::get_rotate() {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return std::make_pair(m_rotate, m_rotate_angle);
-    GUARANTEED_FINISHED_END();
   }
 
   const Point3f & Model::get_translate() {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_translate;
-    GUARANTEED_FINISHED_END();
   }
 
   const float & Model::get_keyframe() {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_keyframe;
-    GUARANTEED_FINISHED_END();
   }
 
   bool Model::will_do_normal_alignment() const {
@@ -75,16 +61,12 @@ namespace Zeni {
   }
 
   void Model::set_scale(const Vector3f &multiplier) {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_scale = multiplier;
-    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_rotate(const float &angle, const Vector3f &ray) {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_rotate_angle = angle;
     m_rotate = ray;
-    GUARANTEED_FINISHED_END();
   }
 
   void Model::set_rotate(const Quaternion &rotation) {
@@ -93,9 +75,7 @@ namespace Zeni {
   }
 
   void Model::set_translate(const Point3f &vector) {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_translate = vector;
-    GUARANTEED_FINISHED_END();
   }
 
   void Model::do_normal_alignment(const bool align_normals_) {

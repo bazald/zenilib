@@ -195,8 +195,6 @@ else:
   zeni_core_src = [
     'src/Zeni/Core.cpp',
     'src/Zeni/Joysticks.cpp',
-    'src/Zeni/Mutex.cpp',
-    'src/Zeni/Thread.cpp',
     'src/Zeni/Timer.cpp']
   zeni_graphics_src = [
     'src/Zeni/EZ2D.cpp',

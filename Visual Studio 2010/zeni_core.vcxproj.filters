@@ -20,12 +20,6 @@
     <ClCompile Include="..\src\zeni_core.cxx">
       <Filter>SCU File</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Zeni\Mutex.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Zeni\Thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Zeni\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,20 +34,11 @@
     <ClInclude Include="..\include\zeni_core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Zeni\Mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Zeni\Thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Zeni\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Zeni\Core.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Zeni\Mutex.hxx">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Zeni\Timer.hxx">
       <Filter>Source Files</Filter>

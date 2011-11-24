@@ -29,11 +29,8 @@
 
 #include <Zeni/Core.h>
 #include <Zeni/Joysticks.h>
-#include <Zeni/Mutex.h>
-#include <Zeni/Thread.h>
 #include <Zeni/Timer.h>
 
-#include <Zeni/Mutex.hxx>
 #include <Zeni/Timer.hxx>
 
 #endif
