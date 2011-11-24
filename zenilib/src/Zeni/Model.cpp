@@ -180,10 +180,9 @@ namespace Zeni {
     m_scale(1.0f, 1.0f, 1.0f), 
     m_rotate(0.0f, 0.0f, 1.0f), 
     m_translate(0.0f, 0.0f, 0.0f), 
-    m_rotate_angle(0.0f),
-    m_loader(*this),
-    m_loader_op(m_loader)
+    m_rotate_angle(0.0f)
   {
+    load();
   }
 
   Model::Model(const Model &rhs)
@@ -195,18 +194,15 @@ namespace Zeni {
     m_scale(rhs.m_scale),
     m_rotate(rhs.m_rotate),
     m_translate(rhs.m_translate),
-    m_rotate_angle(rhs.m_rotate_angle),
-    m_loader(*this),
-    m_loader_op(m_loader)
+    m_rotate_angle(rhs.m_rotate_angle)
   {
+    load();
   }
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
 
   Model::~Model() {
-    m_loader.finish();
-    
     if(m_unrenderer)
       visit_meshes(*m_unrenderer);
     delete m_unrenderer;
@@ -219,12 +215,8 @@ namespace Zeni {
     Model *lhs = 0;
     
     try {
-      GUARANTEED_FINISHED_BEGIN(rhs.m_loader);
       lhs = new Model(rhs);
-      GUARANTEED_FINISHED_END();
 
-      GUARANTEED_FINISHED_BEGIN(lhs->m_loader);
-      GUARANTEED_FINISHED_BEGIN(m_loader);
       std::swap(m_filename, lhs->m_filename);
       std::swap(m_file, lhs->m_file);
       std::swap(m_keyframe, lhs->m_keyframe);
@@ -233,8 +225,6 @@ namespace Zeni {
       std::swap(m_rotate, lhs->m_rotate);
       std::swap(m_translate, lhs->m_translate);
       std::swap(m_rotate_angle, lhs->m_rotate_angle);
-      GUARANTEED_FINISHED_END();
-      GUARANTEED_FINISHED_END();
     }
     catch(...) {
       delete lhs;
@@ -247,16 +237,12 @@ namespace Zeni {
   }
 
   Point3f Model::get_position() const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_translate + m_scale.multiply_by(Quaternion::Axis_Angle(m_rotate, m_rotate_angle) * Vector3f(m_position));
-    GUARANTEED_FINISHED_END();
   }
   
   void Model::set_keyframe(const float &keyframe) {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
     m_keyframe = keyframe;
     lib3ds_file_eval(m_file, keyframe);
-    GUARANTEED_FINISHED_END();
   }
 
   void Model::visit_nodes(Model_Visitor &mv, Lib3dsNode *node) const {
@@ -312,8 +298,6 @@ namespace Zeni {
   }
 
   void Model::render() const {
-    GUARANTEED_FINISHED_BEGIN(m_loader);
-    
     if(!m_unrenderer)
       m_unrenderer = new Model_Unrenderer();
 
@@ -329,8 +313,6 @@ namespace Zeni {
     visit_meshes(mr);
 
     vr.pop_world_stack();
-    
-    GUARANTEED_FINISHED_END();
   }
 
   void Model_Renderer::operator()(const Model &model, Lib3dsMeshInstanceNode * const &node, Lib3dsMesh * const &mesh) {
@@ -380,11 +362,6 @@ namespace Zeni {
 
         started = true;
       }
-  }
-  
-  int Model::Loader::function() {
-    m_model.load();
-    return 0;
   }
   
   void Model::load() {

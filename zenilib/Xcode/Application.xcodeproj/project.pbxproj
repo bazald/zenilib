@@ -299,8 +299,6 @@
 		D3B6747213FB726400E03DB8 /* Matrix4f.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Matrix4f.hxx; sourceTree = "<group>"; };
 		D3B6747313FB726400E03DB8 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		D3B6747413FB726400E03DB8 /* Model.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Model.hxx; sourceTree = "<group>"; };
-		D3B6747513FB726400E03DB8 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
-		D3B6747613FB726500E03DB8 /* Mutex.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Mutex.hxx; sourceTree = "<group>"; };
 		D3B6747713FB726500E03DB8 /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Net.h; sourceTree = "<group>"; };
 		D3B6747913FB726500E03DB8 /* Popup_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Popup_State.h; sourceTree = "<group>"; };
 		D3B6747A13FB726500E03DB8 /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Projector.h; sourceTree = "<group>"; };
@@ -334,7 +332,6 @@
 		D3B6749613FB726500E03DB8 /* Texture.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture.hxx; sourceTree = "<group>"; };
 		D3B6749713FB726500E03DB8 /* Textures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Textures.h; sourceTree = "<group>"; };
 		D3B6749813FB726500E03DB8 /* Textures.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Textures.hxx; sourceTree = "<group>"; };
-		D3B6749913FB726500E03DB8 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
 		D3B6749A13FB726500E03DB8 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		D3B6749B13FB726500E03DB8 /* Timer.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Timer.hxx; sourceTree = "<group>"; };
 		D3B6749C13FB726500E03DB8 /* Timer_HQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer_HQ.h; sourceTree = "<group>"; };
@@ -761,8 +758,6 @@
 				D3B6747213FB726400E03DB8 /* Matrix4f.hxx */,
 				D3B6747313FB726400E03DB8 /* Model.h */,
 				D3B6747413FB726400E03DB8 /* Model.hxx */,
-				D3B6747513FB726400E03DB8 /* Mutex.h */,
-				D3B6747613FB726500E03DB8 /* Mutex.hxx */,
 				D3B6747713FB726500E03DB8 /* Net.h */,
 				D3B6747913FB726500E03DB8 /* Popup_State.h */,
 				D3B6747A13FB726500E03DB8 /* Projector.h */,
@@ -796,7 +791,6 @@
 				D3B6749613FB726500E03DB8 /* Texture.hxx */,
 				D3B6749713FB726500E03DB8 /* Textures.h */,
 				D3B6749813FB726500E03DB8 /* Textures.hxx */,
-				D3B6749913FB726500E03DB8 /* Thread.h */,
 				D3B6749A13FB726500E03DB8 /* Timer.h */,
 				D3B6749B13FB726500E03DB8 /* Timer.hxx */,
 				D3B6749C13FB726500E03DB8 /* Timer_HQ.h */,

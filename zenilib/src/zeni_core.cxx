@@ -19,6 +19,4 @@
 
 #include "Zeni/Core.cpp"
 #include "Zeni/Joysticks.cpp"
-#include "Zeni/Mutex.cpp"
-#include "Zeni/Thread.cpp"
 #include "Zeni/Timer.cpp"
