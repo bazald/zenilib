@@ -279,10 +279,8 @@ namespace Zeni {
     }
 
     void on_active(const SDL_ActiveEvent &event) {
-      if(event.gain && (event.state & SDL_APPINPUTFOCUS)) {
+      if(event.gain && (event.state & SDL_APPINPUTFOCUS))
         get_Game().pop_state();
-        get_Game().push_state(m_gamestate);
-      }
 
       Gamestate_Base::on_active(event);
     }
