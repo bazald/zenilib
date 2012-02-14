@@ -392,6 +392,8 @@ linkflags += " "
 
 # Prepare to Build Application
 
+SetOption('implicit_cache', 1)
+
 env = Environment(
   variables = vars,
   AR = lib,
