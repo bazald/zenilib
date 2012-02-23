@@ -182,15 +182,19 @@ inline int main2(const int argc, const char * const * const argv) {
     // Initialize Game
     Zeni::Game &gr = Zeni::get_Game();
 
-    // Initialize Gamestate Zero
-    if(Zeni::g_gzi)
-      gr.push_state((*Zeni::g_gzi)());
-
-    // Check Rendering Options on Firstrun
-    if(!user_config && Zeni::Window::is_enabled())
-      gr.push_state(new Zeni::Configurator_Video::Check_State(true));
-
     try {
+      // Initialize Gamestate Zero
+      if(Zeni::g_gzi)
+        gr.push_state((*Zeni::g_gzi)());
+
+      // Check Rendering Options on Firstrun
+      if(Zeni::Window::is_enabled()) {
+        if(!user_config)
+          gr.push_state(new Zeni::Configurator_Video::Check_State(true));
+        else
+          Zeni::get_Video();
+      }
+
       // Run Game
       gr.run();
     }
