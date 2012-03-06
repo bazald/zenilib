@@ -545,7 +545,15 @@ namespace Zeni {
   }
 
   Texture * Video_DX9::create_Texture(const Point2i &size, const bool &repeat) {
-    return new Texture_DX9(size, repeat);
+    const Point2i &max = get_Window().get_size();
+
+    Point2i corrected(size);
+    while(corrected.x > max.x)
+      corrected.x /= 2;
+    while(corrected.y > max.y)
+      corrected.y /= 2;
+
+    return new Texture_DX9(corrected, repeat);
   }
 
   Font * Video_DX9::create_Font(const String &filename, const bool &bold, const bool &italic, const float &glyph_height, const float &virtual_screen_height) {
