@@ -506,7 +506,7 @@ namespace Zeni {
       throw Texture_Init_Failure();
 
     D3DLOCKED_RECT rect;
-    if(FAILED(ppTexture->LockRect(0, &rect, 0, D3DLOCK_DISCARD))) {
+    if(FAILED(ppTexture->LockRect(0, &rect, 0, 0))) {
       ppTexture->Release();
       throw Texture_Init_Failure();
     }

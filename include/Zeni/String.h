@@ -60,6 +60,7 @@ namespace Zeni {
       typedef std::string::iterator::value_type value_type;
 
       iterator();
+      ~iterator();
 
       iterator(const iterator &rhs);
       iterator(iterator &&rhs);
@@ -111,6 +112,7 @@ namespace Zeni {
       typedef std::string::const_iterator::value_type value_type;
 
       const_iterator();
+      ~const_iterator();
 
       const_iterator(const const_iterator &rhs);
       const_iterator(const_iterator &&rhs);
@@ -164,6 +166,7 @@ namespace Zeni {
       typedef std::string::reverse_iterator::value_type value_type;
 
       reverse_iterator();
+      ~reverse_iterator();
 
       reverse_iterator(const reverse_iterator &rhs);
       reverse_iterator(reverse_iterator &&rhs);
@@ -215,6 +218,7 @@ namespace Zeni {
       typedef std::string::const_reverse_iterator::value_type value_type;
 
       const_reverse_iterator();
+      ~const_reverse_iterator();
 
       const_reverse_iterator(const const_reverse_iterator &rhs);
       const_reverse_iterator(const_reverse_iterator &&rhs);

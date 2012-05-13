@@ -27,8 +27,9 @@
 #endif
 
 namespace Zeni {
-
+    
   String::iterator::iterator() {}
+  String::iterator::~iterator() {}
 
   String::iterator::iterator(const iterator &rhs) : std::string::iterator(rhs) {}
   String::iterator::iterator(iterator &&rhs) : std::string::iterator(std::forward<std::string::iterator>(rhs)) {}
@@ -99,6 +100,7 @@ namespace Zeni {
   }
 
   String::const_iterator::const_iterator() {}
+  String::const_iterator::~const_iterator() {}
 
   String::const_iterator::const_iterator(const const_iterator &rhs) : std::string::const_iterator(rhs) {}
   String::const_iterator::const_iterator(const_iterator &&rhs) : std::string::const_iterator(std::forward<std::string::const_iterator>(rhs)) {}
@@ -177,6 +179,7 @@ namespace Zeni {
   }
 
   String::reverse_iterator::reverse_iterator() {}
+  String::reverse_iterator::~reverse_iterator() {}
 
   String::reverse_iterator::reverse_iterator(const reverse_iterator &rhs) : std::string::reverse_iterator(rhs) {}
   String::reverse_iterator::reverse_iterator(reverse_iterator &&rhs) : std::string::reverse_iterator(std::forward<std::string::reverse_iterator>(rhs)) {}
@@ -247,6 +250,7 @@ namespace Zeni {
   }
 
   String::const_reverse_iterator::const_reverse_iterator() {}
+  String::const_reverse_iterator::~const_reverse_iterator() {}
 
   String::const_reverse_iterator::const_reverse_iterator(const const_reverse_iterator &rhs) : std::string::const_reverse_iterator(rhs) {}
   String::const_reverse_iterator::const_reverse_iterator(const_reverse_iterator &&rhs) : std::string::const_reverse_iterator(std::forward<std::string::const_reverse_iterator>(rhs)) {}
