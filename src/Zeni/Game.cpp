@@ -295,20 +295,25 @@ namespace Zeni {
       if(Window::is_enabled()) {
         Video &vr = get_Video();
 
-        if(vr.begin_prerender()) {
-          prerender();
+        try {
+          if(vr.begin_prerender()) {
+            prerender();
 
-          if(vr.begin_render()) {
-            try {
-              render();
-            }
-            catch(...) {
+            if(vr.begin_render()) {
+              try {
+                render();
+              }
+              catch(...) {
+                vr.end_render();
+                throw;
+              }
+
               vr.end_render();
-              throw;
             }
-
-            vr.end_render();
           }
+        }
+        catch(Video_Device_Failure &) {
+          Video::destroy();
         }
       }
     }
