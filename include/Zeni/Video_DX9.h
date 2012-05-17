@@ -238,8 +238,8 @@ namespace Zeni {
     LPDIRECT3DSURFACE9 m_back_buffer;
   };
 
-  struct ZENI_GRAPHICS_DLL Video_Device_Failure : public Error {
-    Video_Device_Failure() : Error("Zeni Video Device Failed") {}
+  struct ZENI_GRAPHICS_DLL Video_Device_Failure : public std::exception {
+    Video_Device_Failure() : std::exception("Zeni Video Device Failed") {}
   };
 
 }
