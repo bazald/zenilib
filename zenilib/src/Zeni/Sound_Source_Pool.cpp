@@ -221,7 +221,7 @@ namespace Zeni {
         it != m_playing_and_destroying.end();
         ++it)
     {
-      if((*it)->is_playing())
+      if(!(*it)->is_stopped())
         keepers.push_back(*it);
       else
         delete *it;
