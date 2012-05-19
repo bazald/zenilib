@@ -295,7 +295,10 @@ namespace Zeni {
       if(Window::is_enabled()) {
         Video &vr = get_Video();
 
-        try {
+#ifndef DISABLE_DX9
+        try
+#endif
+        {
           if(vr.begin_prerender()) {
             prerender();
 
@@ -312,9 +315,11 @@ namespace Zeni {
             }
           }
         }
+#ifndef DISABLE_DX9
         catch(Video_Device_Failure &) {
           Video::destroy();
         }
+#endif
       }
     }
   }
