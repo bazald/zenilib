@@ -355,6 +355,8 @@ namespace Zeni {
   void Video_DX9::unapply_Texture() {
     m_textured = false;
 
+    m_d3d_device->SetTexture(0, 0);
+
     m_d3d_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
     m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
     m_d3d_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
