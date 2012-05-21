@@ -169,10 +169,17 @@ namespace Zeni {
         throw Video_Device_Failure();
       
       if(result == D3DERR_DEVICENOTRESET) {
+        if(m_back_buffer) {
+          m_back_buffer->Release();
+          m_back_buffer = 0;
+        }
+
         if(FAILED(m_d3d_device->Reset(m_d3d_parameters)))
           throw Video_Device_Failure();
-      
+
         g_video_dx9_reset = false;
+
+        m_d3d_device->GetRenderTarget(0, &m_back_buffer);
 
         init_context();
       }
