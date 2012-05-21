@@ -141,8 +141,10 @@ namespace Zeni {
   Video_DX9::~Video_DX9() {
     destroy_device();
 
-    if(m_d3d)
+    if(m_d3d) {
       m_d3d->Release();
+      m_d3d = 0;
+    }
 
     delete m_d3d_parameters;
     delete m_d3d_capabilities;
@@ -746,13 +748,20 @@ namespace Zeni {
   }
 
   void Video_DX9::destroy_device() {
-    if(m_matrix_stack)
+    if(m_matrix_stack) {
       m_matrix_stack->Release();
-    m_matrix_stack = 0;
+      m_matrix_stack = 0;
+    }
 
-    if(m_d3d_device)
+    if(m_back_buffer) {
+      m_back_buffer->Release();
+      m_back_buffer = 0;
+    }
+
+    if(m_d3d_device) {
       m_d3d_device->Release();
-    m_d3d_device = 0;
+      m_d3d_device = 0;
+    }
   }
 
   void Video_DX9::zero_handles() {
