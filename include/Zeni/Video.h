@@ -202,6 +202,12 @@ namespace Zeni {
     void set_viewport(const float &aspect_ratio,
       const std::pair<Point2i, Point2i> &viewport =
       std::make_pair(Point2i(), get().get_render_target_size())); ///< Set the viewport
+    std::pair<Point2i, Point2i> Video::calculate_viewport(const std::pair<Point2f, Point2f> &camera2d,
+      const std::pair<Point2i, Point2i> &viewport,
+      const bool &fix_aspect_ratio); ///< Calculate the viewport
+    std::pair<Point2i, Point2i> calculate_viewport(const float &aspect_ratio,
+      const std::pair<Point2i, Point2i> &viewport =
+      std::make_pair(Point2i(), get().get_render_target_size())) const; ///< Calculate the viewport
 
     // Creation Functions
     virtual Texture * load_Texture(const String &filename, const bool &repeat, const bool &lazy_loading = false) = 0; ///< Function for loading a Texture; used internally by Textures

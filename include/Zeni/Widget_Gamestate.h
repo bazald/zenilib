@@ -62,6 +62,7 @@ namespace Zeni {
 #pragma warning( push )
 #pragma warning( disable : 4251 )
 #endif
+    std::pair<Point2i, Point2i> m_viewport;
     std::pair<Point2f, Point2f> m_virtual_window;
 #ifdef _WINDOWS
 #pragma warning( pop )
