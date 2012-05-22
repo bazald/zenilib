@@ -134,10 +134,7 @@ namespace Zeni {
   void Video::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
     m_3d = false;
 
-    if(fix_aspect_ratio)
-      set_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
-    else
-      set_viewport(viewport);
+    set_viewport(calculate_viewport(camera2d, viewport, fix_aspect_ratio));
 
     const Matrix4f view = Matrix4f::Identity();
     set_view_matrix(view);
@@ -220,6 +217,17 @@ namespace Zeni {
   }
 
   void Video::set_viewport(const float &aspect_ratio, const std::pair<Point2i, Point2i> &viewport_) {
+    set_viewport(calculate_viewport(aspect_ratio, viewport_));
+  }
+
+  std::pair<Point2i, Point2i> Video::calculate_viewport(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+    if(fix_aspect_ratio)
+      return calculate_viewport((camera2d.second.x - camera2d.first.x) / (camera2d.second.y - camera2d.first.y), viewport);
+    else
+      return viewport;
+  }
+
+  std::pair<Point2i, Point2i> Video::calculate_viewport(const float &aspect_ratio, const std::pair<Point2i, Point2i> &viewport_) const {
     std::pair<Point2i, Point2i> viewport = viewport_;
 
     int width = viewport.second.x - viewport.first.x;
@@ -241,7 +249,7 @@ namespace Zeni {
       viewport.second.y -= cut_side;
     }
 
-    set_viewport(viewport);
+    return viewport;
   }
 
   const Light * const Video::get_Light(const int &number) const {
