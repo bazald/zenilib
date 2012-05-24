@@ -276,6 +276,8 @@ namespace Zeni {
     m_display_surface = 0;
 #endif
 
+	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+
     get_Core().set_screen_saver(true);
   }
 
