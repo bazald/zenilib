@@ -22,6 +22,7 @@
 #define new DEBUG_NEW
 #endif
 
+#include <Zeni/Chronometer.hxx>
 #include <Zeni/Singleton.hxx>
 
 namespace Zeni {
