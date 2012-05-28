@@ -61,7 +61,6 @@
 #include <Zeni/XML.h>
 
 #include <Zeni/Camera.hxx>
-#include <Zeni/Chronometer.hxx>
 #include <Zeni/Collision.hxx>
 #include <Zeni/Color.hxx>
 #include <Zeni/Coordinate.hxx>
