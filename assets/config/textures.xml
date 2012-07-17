@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!-- Images to load into the Textures Database in zenilib
+     Sprites to build in the Textures Database in zenilib
+
+For each Texture entry in Textures:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'is_sprite' should be 0 (or absent [deprecated])
+  3. 'filepath' should be the path from within 'zenilib/'
+  4. 'tile' should be 0 for best quality if tiling is unnecessary
+     'tile' should be 1 to enable tiling (for *ALL* textures for .3ds 'Model's)
+       
+     If 'tile' is 1 and tiling is not desired, floating point
+     error can make things look worse at the edges of tiles.
+
+For each Sprite entry in Textures:
+
+  1. 'sprite_token' should match the name you want to use in C++
+  2. 'is_sprite' should be 1
+  3. 'token's should be the tokens of existing Textures
+     'file's should be standard Texture entries (see above)
+       the 'token' for the frame will be 'sprite_token/frame_number'
+     
+     All 'token's must have been defined earlier in the file.
+     'token's defined later in the file will be ignored.
+
+The following formats are supported:
+
+  1. PNG is supported with 8 bits per channel
+     (Grayscale/RGBA, with or without Alpha)
+
+The following things are unsupported:
+
+  1. BMP, JPEG, and GIF images
+  2. Indexed color
+  3. Indexed transparency
+  4. Anything other than 8 bits per channel
+-->
+<Textures>
+  <!--
+  <one>
+    <is_sprite>0</is_sprite>
+    <filepath>textures/one.png</filepath>
+    <tile>0</tile>
+  </one>
+  <three>
+    <is_sprite>0</is_sprite>
+    <filepath>textures/three.png</filepath>
+    <tile>0</tile>
+  </three>
+  <sprite_token>
+    <is_sprite>1</is_sprite>
+    <token>one</token>
+    <file>
+      <filepath>textures/two.png</filepath>
+      <tile>0</tile>
+    </file>
+    <token>three</token>
+    <file>
+      <filepath>textures/four.png</filepath>
+      <tile>0</tile>
+    </file>
+  </sprite_token>
+  -->
+</Textures>

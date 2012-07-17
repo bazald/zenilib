@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<!-- Sound files to load into the Sounds Database in zenilib
+
+For each entry in Sounds:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'filepath' should be the path from within 'zenilib/',
+     without a file extension.
+
+On Android, only .wav is supported.
+Otherwise, only .ogg is supported.
+To support both, two sets of audio files are necessary.
+
+Stereo sounds are unaffected by positional audio.  They must 
+be downmixed to mono if you want them to work with OpenAL's
+positional audio functionality.
+
+HOWTO:  To convert between types, or to downmix to mono,
+        (1) Open in Audacity, obtainable from http://audacity.sourceforge.net/
+              or http://portableapps.com/apps/music_video/audacity_portable
+        (2) To the left of the waveform that appears, left-click on effect
+              and left-click on Split Stereo Track
+        (3) To the left of each of the split waveforms, left-click on effect
+              and left-click on Mono
+        (4) Go to File->Export As Ogg Vorbis
+-->
+<Sounds>
+  <hello_world>
+    <filepath>sfx/104469__dkmedic__world</filepath>
+  </hello_world>
+</Sounds>
