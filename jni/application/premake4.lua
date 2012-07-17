@@ -4,21 +4,34 @@ project(APPLICATION_NAME)
   kind "WindowedApp"
   language "C++"
 
+  configuration "windows"
+    prebuildcommands { "robocopy ..\\..\\dev\\pc ..\\.. /E" }
+  configuration { "macosx or linux" }
+    prebuildcommands { "rsync -av ../../dev/pc_/ ../../" }
+  configuration { "macosx", "Debug*" }
+    postbuildcommands { "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
+                        "rsync -av --delete ../../assets/ ../../game_d.app/Contents/assets/",
+                        "rsync -av --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
+                        "rsync -av ../../Info_d.plist ../../game.app/Contents/Info.plist" }
+  configuration { "macosx", "Release*" }
+    postbuildcommands { "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
+                        "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
+                        "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
+                        "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
+
   configuration "linux or macosx"
     targetdir "../.."
-
-  if os.get() ~= "windows" then
-    configuration { "Debug*", "x32" }
-      targetsuffix "_d32"
-    configuration { "Release*", "x32" }
-      targetsuffix "_x32"
-    configuration { "Debug*", "x64" }
-      targetsuffix "_d64"
-    configuration { "Release*", "x64" }
-      targetsuffix "_x64"
-    configuration { "Debug*", "univ" }
-      targetsuffix "_d"
-  end
+  configuration { "linux", "Debug*", "x32" }
+    targetsuffix "_d32"
+  configuration { "linux", "Release*", "x32" }
+    targetsuffix "_x32"
+  configuration { "linux", "Debug*", "x64" }
+    targetsuffix "_d64"
+  configuration { "linux", "Release*", "x64" }
+    targetsuffix "_x64"
+  configuration { "macosx", "Debug*" }
+    targetname "game_d"
+    targetsuffix ""
 
 --   os.copydir("assets_shared", "assets")
 --   os.copydir("assets_pc", "assets")

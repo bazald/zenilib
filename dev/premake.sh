@@ -7,9 +7,6 @@ then
   cd ..
 fi
 
-# Copy PC-specific development files
-rsync -r dev/pc_/ .
-
 #
 # Pick premake4
 #
@@ -72,9 +69,11 @@ done
 popd
 
 #
-# Generate Visual Studio 2010 solution
+# Generate IDE projects
 #
 
+$PREMAKE --os=macosx xcode3
+$PREMAKE --os=macosx xcode4
 $PREMAKE --os=windows vs2010
 
 #

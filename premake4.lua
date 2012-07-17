@@ -8,6 +8,8 @@ solution "zenilib"
     platforms { "x32", "x64" }
     TARGET_DIR = "bin"
   elseif os.get() == "macosx" then
+    premake.gcc.cc = "clang"
+    premake.gcc.cxx = "clang++"
     defines { "_MACOSX" }
     platforms { "native", "universal" }
     TARGET_DIR = "lib"
@@ -44,41 +46,40 @@ solution "zenilib"
   configuration "*"
     defines { "DISABLE_CPP11", "GLEW_NO_GLU", "DISABLE_CG" }
 
-    if os.get() == "windows" then
-      defines { "ZLIB_DLL",
---                "GLAPI=extern",
-                "OGG_DLL=__declspec(dllimport)",
-                "VORBIS_DLL=__declspec(dllimport)",
-                "VORBISFILE_DLL=__declspec(dllimport)",
-                "LIB3DSAPI=__declspec(dllimport)",
-                "TINYXML_DLL=__declspec(dllimport)",
-                "TINYXML_EXT=extern",
-                "ZENI_DLL=__declspec(dllimport)",
-                "ZENI_EXT=extern",
-                "ZENI_AUDIO_DLL=__declspec(dllimport)",
-                "ZENI_AUDIO_EXT=extern",
-                "ZENI_CORE_DLL=__declspec(dllimport)",
-                "ZENI_CORE_EXT=extern",
-                "ZENI_GRAPHICS_DLL=__declspec(dllimport)",
-                "ZENI_GRAPHICS_EXT=extern",
-                "ZENI_NET_DLL=__declspec(dllimport)",
-                "ZENI_NET_EXT=extern",
-                "ZENI_REST_DLL=__declspec(dllimport)",
-                "ZENI_REST_EXT=extern",
-                "ENABLE_XINPUT" }
-    else
-      defines { "OGG_DLL="           ,
-                "VORBIS_DLL="        ,
-                "VORBISFILE_DLL="    ,
-                "DISABLE_DX9"       , "DISABLE_WGL"       ,
-                "TINYXML_DLL="      , "TINYXML_EXT="      ,
-                "ZENI_DLL="         , "ZENI_EXT="         ,
-                "ZENI_AUDIO_DLL="   , "ZENI_AUDIO_EXT="   ,
-                "ZENI_CORE_DLL="    , "ZENI_CORE_EXT="    ,
-                "ZENI_GRAPHICS_DLL=", "ZENI_GRAPHICS_EXT=",
-                "ZENI_NET_DLL="     , "ZENI_NET_EXT="     ,
-                "ZENI_REST_DLL="    , "ZENI_REST_EXT=" }
-    end
+  configuration "windows"
+    defines { "ZLIB_DLL",
+--              "GLAPI=extern",
+              "OGG_DLL=__declspec(dllimport)",
+              "VORBIS_DLL=__declspec(dllimport)",
+              "VORBISFILE_DLL=__declspec(dllimport)",
+              "LIB3DSAPI=__declspec(dllimport)",
+              "TINYXML_DLL=__declspec(dllimport)",
+              "TINYXML_EXT=extern",
+              "ZENI_DLL=__declspec(dllimport)",
+              "ZENI_EXT=extern",
+              "ZENI_AUDIO_DLL=__declspec(dllimport)",
+              "ZENI_AUDIO_EXT=extern",
+              "ZENI_CORE_DLL=__declspec(dllimport)",
+              "ZENI_CORE_EXT=extern",
+              "ZENI_GRAPHICS_DLL=__declspec(dllimport)",
+              "ZENI_GRAPHICS_EXT=extern",
+              "ZENI_NET_DLL=__declspec(dllimport)",
+              "ZENI_NET_EXT=extern",
+              "ZENI_REST_DLL=__declspec(dllimport)",
+              "ZENI_REST_EXT=extern",
+              "ENABLE_XINPUT" }
+  configuration "not windows"
+    defines { "OGG_DLL="           ,
+              "VORBIS_DLL="        ,
+              "VORBISFILE_DLL="    ,
+              "DISABLE_DX9"       , "DISABLE_WGL"       ,
+              "TINYXML_DLL="      , "TINYXML_EXT="      ,
+              "ZENI_DLL="         , "ZENI_EXT="         ,
+              "ZENI_AUDIO_DLL="   , "ZENI_AUDIO_EXT="   ,
+              "ZENI_CORE_DLL="    , "ZENI_CORE_EXT="    ,
+              "ZENI_GRAPHICS_DLL=", "ZENI_GRAPHICS_EXT=",
+              "ZENI_NET_DLL="     , "ZENI_NET_EXT="     ,
+              "ZENI_REST_DLL="    , "ZENI_REST_EXT=" }
 
   configuration "linux"
     linkoptions { "-Wl,--hash-style=both" }
