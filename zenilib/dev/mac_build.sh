@@ -40,30 +40,3 @@ if [ $? -ne 0 ]
 then
   exit 2
 fi
-
-#
-# Marshall the App bundle
-#
-
-for file in $(find ./ -name '*.dylib'); do
-  DEST=game.app/Contents/MacOS/$(echo "$file" | sed 's/.*\///g')
-  if [ ! -f "$DEST" ] || [ "$file" -nt "$DEST" ]; then
-    cp "$file" "$DEST"
-  fi
-done
-
-if [ "$CONFIG" == "debug" ]; then
-  cp lib/univ_d/* game.app/Contents/MacOS/
-else
-  rm game.app/Contents/MacOS/*_d.dylib
-  rm game.app/Contents/MacOS/game_d
-  cp lib/univ/* game.app/Contents/MacOS/
-fi
-
-rsync -avz --delete assets/ game.app/Contents/assets/
-rsync -avz --delete Resources/ game.app/Contents/Resources/
-if [ "$CONFIG" == "debug" ]; then
-  cp Info_d.plist game.app/Contents/Info.plist
-else
-  cp Info.plist   game.app/Contents/Info.plist
-fi

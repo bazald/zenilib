@@ -14,7 +14,7 @@ fi
 for FILE in $(find dev/android_ dev/pc_ -type f)
 do
   MIRROR=$(echo "$FILE" | sed "s/dev\/[^\/]*_\///")
-  if [ -f "$MIRROR" ]
+  if [ -f "$MIRROR" ] && [ $(echo "$FILE" | grep -c "\.svn") -eq 0 ]
   then
     rm "$MIRROR"
   fi
