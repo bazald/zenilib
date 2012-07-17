@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<!-- Fonts to load into the Fonts Database in zenilib
+
+For each entry in Fonts:
+
+  1. 'token' should match the name you want to use in C++
+  2. 'filepath' should be the path from within 'zenilib/'
+  3. 'height' should be the number of pixels high you want the Font.
+  4. 'virtual_screen' should match the virtual screen resolution
+     that will be used when rendering the given Font.  'width' should
+     be set if using a fixed width.  'height' should be set if using
+     a fixed height.  If neither is fixed, 'virtual_screen' can be
+     omitted entirely.
+     
+     Using artificially high values will cause fonts to be blurry.
+     Using artificially low values will cause memory to be wasted.
+
+Only TrueType fonts are supported.
+-->
+<Fonts>
+  <system_36_x600>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <height>36</height>
+    <bold>0</bold>
+    <italics>0</italics>
+    <virtual_screen>
+      <height>600</height>
+    </virtual_screen>
+  </system_36_x600>
+  <system_36_500x600>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <height>36</height>
+    <bold>0</bold>
+    <italics>0</italics>
+    <virtual_screen>
+      <width>500</width>
+      <height>600</height>
+    </virtual_screen>
+  </system_36_500x600>
+  <system_36_800x600>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <height>36</height>
+    <bold>0</bold>
+    <italics>0</italics>
+    <virtual_screen>
+      <width>800</width>
+      <height>600</height>
+    </virtual_screen>
+  </system_36_800x600>
+  <title>
+    <filepath>fonts/FORGOTTE.TTF</filepath>
+    <height>92</height>
+    <bold>0</bold>
+    <italics>0</italics>
+    <virtual_screen>
+      <width>800</width>
+      <height>600</height>
+    </virtual_screen>
+  </title>
+</Fonts>

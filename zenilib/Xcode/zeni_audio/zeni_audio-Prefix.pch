@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'zeni_audio' target in the 'zeni_audio' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif

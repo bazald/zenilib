@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'zeni_graphics' target in the 'zeni_graphics' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif
