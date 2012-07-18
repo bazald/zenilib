@@ -9,12 +9,14 @@ project(APPLICATION_NAME)
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av ../../dev/pc_/ ../../" }
   configuration { "macosx", "Debug*" }
-    prebuildcommands { "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
+    prebuildcommands { "mkdir -p ../../game_d.app/Contents",
+                       "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
                        "rsync -av --delete ../../assets/ ../../game_d.app/Contents/assets/",
                        "rsync -av --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
                        "rsync -av ../../Info_d.plist ../../game_d.app/Contents/Info.plist" }
   configuration { "macosx", "Release*" }
-    prebuildcommands { "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
+    prebuildcommands { "mkdir -p ../../game.app/Contents",
+                       "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
                        "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
                        "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
                        "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
