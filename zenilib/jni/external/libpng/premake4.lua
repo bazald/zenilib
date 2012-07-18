@@ -11,6 +11,11 @@ project "local_png"
     linkoptions { "-install_name @loader_path/liblocal_png.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     includedirs { "../zlib" }
     files { "**.h", "png*.c" }

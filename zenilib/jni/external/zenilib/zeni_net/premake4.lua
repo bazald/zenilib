@@ -15,6 +15,12 @@ project "zeni_net"
     linkoptions { "-install_name @loader_path/libzeni_net.dylib" }
     targetdir "../../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W4" }
+  configuration "not windows"
+    buildoptions { "-Wall",
+                   "-Wextra" }
+
   configuration "*"
     includedirs { ".", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 

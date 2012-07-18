@@ -59,6 +59,11 @@ project "local_vorbis"
     linkoptions { "-install_name @loader_path/liblocal_vorbis.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     includedirs { ".", "include", "../libogg/include" }
     files { "include/**.h",
@@ -144,6 +149,11 @@ project "local_vorbisfile"
   configuration { "macosx", "Release*" }
     linkoptions { "-install_name @loader_path/liblocal_vorbisfile.dylib" }
     targetdir "../../../lib/univ"
+
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
 
   configuration "*"
     includedirs { ".", "include", "../libogg/include" }

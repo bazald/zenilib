@@ -5,19 +5,19 @@ project(APPLICATION_NAME)
   language "C++"
 
   configuration "windows"
-    prebuildcommands { "robocopy ..\\..\\dev\\pc ..\\.. /E" }
+    prebuildcommands { "xcopy ..\\..\\dev\\pc_ ..\\.. /E /Y" }
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av ../../dev/pc_/ ../../" }
   configuration { "macosx", "Debug*" }
-    postbuildcommands { "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
-                        "rsync -av --delete ../../assets/ ../../game_d.app/Contents/assets/",
-                        "rsync -av --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
-                        "rsync -av ../../Info_d.plist ../../game.app/Contents/Info.plist" }
+    prebuildcommands { "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
+                       "rsync -av --delete ../../assets/ ../../game_d.app/Contents/assets/",
+                       "rsync -av --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
+                       "rsync -av ../../Info_d.plist ../../game_d.app/Contents/Info.plist" }
   configuration { "macosx", "Release*" }
-    postbuildcommands { "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
-                        "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
-                        "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
-                        "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
+    prebuildcommands { "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
+                       "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
+                       "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
+                       "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
 
   configuration "linux or macosx"
     targetdir "../.."
@@ -55,6 +55,12 @@ project(APPLICATION_NAME)
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.m" }
     links { "Cocoa.framework" }
+
+  configuration "windows"
+    buildoptions { "/W4" }
+  configuration "not windows"
+    buildoptions { "-Wall",
+                   "-Wextra" }
 
   configuration "*"
     includedirs { ".", "../external/zenilib", "../external/zenilib/zeni_rest", "../external/zenilib/zeni_graphics", "../external/zenilib/zeni_net", "../external/zenilib/zeni_core", "../external/zenilib/zeni_audio", "../external/libvorbis/include", "../external/libogg/include", "../external/zenilib/zeni", "../external/sdl_net", "../external/sdl", "../external/tinyxml" }

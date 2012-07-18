@@ -234,6 +234,11 @@ project "local_SDL"
     linkoptions { "-install_name @loader_path/liblocal_SDL.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     includedirs { "SDL" }
     files { "include/**.h",
@@ -340,6 +345,11 @@ if os.get() ~= "macosx" then
                 "SDL_VIDEO_DISABLE_SCREENSAVER=1",
                 "SDL_ASSEMBLY_ROUTINES=1" }
       files { "src/main/dummy/*.c" }
+
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
 
   configuration "*"
     includedirs { ".", "SDL" }
