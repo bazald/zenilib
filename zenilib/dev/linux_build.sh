@@ -66,9 +66,9 @@ then
   make -j 4 -C build/linux config=$CONFIG$BIT
   EXIT_CODE=$?
 
-  if [ $EXIT_CODE -eq 0 ] && [ -x game_x$BIT ]
+  if [ $EXIT_CODE -eq 0 ] && [ -x game_$CONFIG_CHAR$BIT ]
   then
-    $LSB_HOME/bin/lsbappchk --no-journal --missing-symbols --lsb-version=4.0 game_x$BIT &> lsbappchk_full.txt
+    $LSB_HOME/bin/lsbappchk --no-journal --missing-symbols --lsb-version=4.0 game_$CONFIG_CHAR$BIT &> lsbappchk_full.txt
     cat lsbappchk_full.txt \
       | grep -v "WARNING" \
       | grep -v "ignoring" \
