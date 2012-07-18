@@ -9,6 +9,11 @@ project "local_z"
     linkoptions { "-install_name @loader_path/liblocal_z.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     files { "**.h",
             "adler32.c",

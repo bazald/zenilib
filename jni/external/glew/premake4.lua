@@ -16,6 +16,11 @@ project "local_GLEW"
     linkoptions { "-install_name @loader_path/liblocal_GLEW.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     includedirs { "include" }
     files { "include/**.h",

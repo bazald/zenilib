@@ -17,6 +17,12 @@ project "zeni_audio"
     linkoptions { "-install_name @loader_path/libzeni_audio.dylib" }
     targetdir "../../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W4" }
+  configuration "not windows"
+    buildoptions { "-Wall",
+                   "-Wextra" }
+
   configuration "*"
     includedirs { ".", "../../libvorbis/include", "../../libogg/include", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 

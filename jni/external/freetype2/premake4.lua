@@ -53,6 +53,11 @@ project "local_freetype2"
     linkoptions { "-install_name @loader_path/liblocal_freetype2.dylib" }
     targetdir "../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W0" }
+  configuration "not windows"
+    buildoptions { "-w" }
+
   configuration "*"
     defines { "_LIB", "FT2_BUILD_LIBRARY=1" }
     includedirs { "include" }

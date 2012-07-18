@@ -19,6 +19,12 @@ project "zeni_graphics"
     linkoptions { "-install_name @loader_path/libzeni_graphics.dylib" }
     targetdir "../../../../lib/univ"
 
+  configuration "windows"
+    buildoptions { "/W4" }
+  configuration "not windows"
+    buildoptions { "-Wall",
+                   "-Wextra" }
+
   configuration "*"
     includedirs { ".", "../../freetype2/include", "../../libpng", "../../libpng", "../../zlib", "../../lib3ds/src", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 
