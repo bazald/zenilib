@@ -89,9 +89,16 @@ namespace Zeni {
     }
 //     else
 //       ZENI_LOGD("png_create_info_struct(...) success.");
-
+    
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4611 )
+#endif
     //png error stuff, not sure libpng man suggests this.
     if(setjmp(png_jmpbuf(png_ptr))) {
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
       ZENI_LOGE("setjmp(png_jmpbuf(...)) failed.");
       throw Texture_Init_Failure();
     }
