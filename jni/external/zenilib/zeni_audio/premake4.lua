@@ -21,7 +21,8 @@ project "zeni_audio"
     buildoptions { "/W4" }
   configuration "not windows"
     buildoptions { "-Wall",
-                   "-Wextra" }
+                   "-Wextra",
+                   "-Wno-ignored-qualifiers" }
 
   configuration "*"
     includedirs { ".", "../../libvorbis/include", "../../libogg/include", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }

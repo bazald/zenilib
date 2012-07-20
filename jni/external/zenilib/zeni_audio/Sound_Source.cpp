@@ -79,9 +79,9 @@ namespace Zeni {
 #endif
     m_buffer(0)
   {
+#ifdef ENABLE_SLES
     Sound &sr = get_Sound();
 
-#ifdef ENABLE_SLES
     if(Sound_Renderer_SLES * const sles = dynamic_cast<Sound_Renderer_SLES *>(&sr.get_Renderer())) {
       // configure audio sink
       loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, sles->get_outputMixObject()};

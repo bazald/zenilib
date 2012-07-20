@@ -61,7 +61,7 @@ namespace Zeni {
       };
 
     public:
-      Check_State(const bool &failsafe);
+      Check_State();
 
     private:
       void on_pop();
