@@ -22,5 +22,5 @@ project "zeni_core"
 --     pchheader "jni/external/zenilib/zeni_core/zeni_core.h"
 --     pchsource "jni/external/zenilib/zeni_core/Core.cpp"
 
-    files { "**.h", "**.cpp", "Zeni/**.h" }
+    files { "**.h", "**.hxx", "**.cpp" }
     links { "zeni", "local_SDL" }

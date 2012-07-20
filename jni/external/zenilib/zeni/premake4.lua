@@ -25,5 +25,5 @@ project "zeni"
 --     pchheader "jni/external/zenilib/zeni/zeni.h"
 --     pchsource "jni/external/zenilib/zeni/String.cpp"
 
-    files { "**.h", "**.cpp", "Zeni/**.h" }
+    files { "**.h", "**.hxx", "**.cpp" }
     links { "local_tinyxml" }
