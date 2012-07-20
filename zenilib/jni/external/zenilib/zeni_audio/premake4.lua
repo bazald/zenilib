@@ -24,5 +24,5 @@ project "zeni_audio"
 --     pchheader "jni/external/zenilib/zeni_audio/zeni_audio.h"
 --     pchsource "jni/external/zenilib/zeni_audio/Sound.cpp"
 
-    files { "**.h", "**.cpp", "Zeni/**.h" }
+    files { "**.h", "**.hxx", "**.cpp" }
     links { "local_vorbisfile", "zeni" }
