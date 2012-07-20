@@ -17,14 +17,8 @@ project "zeni_audio"
     linkoptions { "-install_name @loader_path/libzeni_audio.dylib" }
     targetdir "../../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W4" }
-  configuration "not windows"
-    buildoptions { "-Wall",
-                   "-Wextra",
-                   "-Wno-ignored-qualifiers" }
-
   configuration "*"
+    flags { "ExtraWarnings" }
     includedirs { ".", "../../libvorbis/include", "../../libogg/include", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 
 --     pchheader "jni/external/zenilib/zeni_audio/zeni_audio.h"

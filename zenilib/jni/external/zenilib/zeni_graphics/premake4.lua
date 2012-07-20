@@ -19,14 +19,8 @@ project "zeni_graphics"
     linkoptions { "-install_name @loader_path/libzeni_graphics.dylib" }
     targetdir "../../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W4" }
-  configuration "not windows"
-    buildoptions { "-Wall",
-                   "-Wextra",
-                   "-Wno-ignored-qualifiers" }
-
   configuration "*"
+    flags { "ExtraWarnings" }
     includedirs { ".", "../../freetype2/include", "../../libpng", "../../libpng", "../../zlib", "../../lib3ds/src", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 
 --     pchheader "jni/external/zenilib/zeni_graphics/zeni_graphics.h"

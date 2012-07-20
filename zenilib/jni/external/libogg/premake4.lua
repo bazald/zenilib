@@ -11,8 +11,6 @@ project "local_ogg"
     linkoptions { "-install_name @loader_path/liblocal_ogg.dylib" }
     targetdir "../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 
