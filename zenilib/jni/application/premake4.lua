@@ -62,7 +62,8 @@ project(APPLICATION_NAME)
     buildoptions { "/W4" }
   configuration "not windows"
     buildoptions { "-Wall",
-                   "-Wextra" }
+                   "-Wextra",
+                   "-Wno-ignored-qualifiers" }
 
   configuration "*"
     includedirs { ".", "../external/zenilib", "../external/zenilib/zeni_rest", "../external/zenilib/zeni_graphics", "../external/zenilib/zeni_net", "../external/zenilib/zeni_core", "../external/zenilib/zeni_audio", "../external/libvorbis/include", "../external/libogg/include", "../external/zenilib/zeni", "../external/sdl_net", "../external/sdl", "../external/tinyxml" }

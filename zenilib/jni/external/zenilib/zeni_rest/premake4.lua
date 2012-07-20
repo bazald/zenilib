@@ -19,7 +19,8 @@ project "zeni_rest"
     buildoptions { "/W4" }
   configuration "not windows"
     buildoptions { "-Wall",
-                   "-Wextra" }
+                   "-Wextra",
+                   "-Wno-ignored-qualifiers" }
 
   configuration "*"
     includedirs { ".", "../zeni_graphics", "../zeni_core", "../../libvorbis/include", "../../libogg/include", "../zeni_audio", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }

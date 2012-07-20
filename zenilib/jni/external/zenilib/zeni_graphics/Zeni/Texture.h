@@ -70,11 +70,6 @@ namespace Zeni {
     virtual const Point2i & get_size() const = 0; ///< Get the resolution of the Texture on the GPU
 
   protected:
-#ifndef TEMP_DISABLE
-    static void simplify_surface(SDL_Surface * &surface);
-    static int build_from_surface(SDL_Surface * &surface, const Point2i &max_resolution, Point2i &built_size, const String * const &name = 0);
-#endif
-
     const bool m_repeat;
   };
 
@@ -130,7 +125,7 @@ namespace Zeni {
     inline const Point2i & get_size() const;
 
   private:
-    static GLuint build_from_Image(const Image &image, const String * const &name = 0);
+    static GLuint build_from_Image(const Image &image);
 
     mutable Point2i m_size;
     mutable GLuint m_texture_id;

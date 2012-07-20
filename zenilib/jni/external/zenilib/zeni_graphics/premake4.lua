@@ -23,7 +23,8 @@ project "zeni_graphics"
     buildoptions { "/W4" }
   configuration "not windows"
     buildoptions { "-Wall",
-                   "-Wextra" }
+                   "-Wextra",
+                   "-Wno-ignored-qualifiers" }
 
   configuration "*"
     includedirs { ".", "../../freetype2/include", "../../libpng", "../../libpng", "../../zlib", "../../lib3ds/src", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }

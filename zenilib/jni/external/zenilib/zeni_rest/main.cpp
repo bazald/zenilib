@@ -187,7 +187,7 @@ inline int main2(const int argc, const char * const * const argv) {
       // Check Rendering Options on Firstrun
       if(Zeni::Window::is_enabled()) {
         if(!user_config)
-          gr.push_state(new Zeni::Configurator_Video::Check_State(true));
+          gr.push_state(new Zeni::Configurator_Video::Check_State);
         else
           Zeni::get_Video();
       }

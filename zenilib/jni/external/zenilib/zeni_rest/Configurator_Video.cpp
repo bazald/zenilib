@@ -40,7 +40,7 @@ namespace Zeni {
     get_Game().pop_state();
   }
 
-  Configurator_Video::Check_State::Check_State(const bool &failsafe)
+  Configurator_Video::Check_State::Check_State()
     : Widget_Gamestate(std::make_pair(Point2f(), Point2f(600.0f * get_Window().get_width() / get_Window().get_height(), 600.0f))),
 #ifdef _WINDOWS
 #pragma warning( push )
@@ -96,7 +96,7 @@ namespace Zeni {
     m_code = CODE_IGNORE;
 
     get_Game().pop_state();
-	  get_Game().push_state(new Check_State(false));
+	  get_Game().push_state(new Check_State);
   }
 
   void Configurator_Video::Check_State::perform_logic() {
@@ -355,7 +355,7 @@ namespace Zeni {
     Text_Box::reformat_all();
 
     get_Game().pop_state();
-    get_Game().push_state(new Check_State(false));
+    get_Game().push_state(new Check_State);
   }
 
   Configurator_Video::Cancel_Button::Cancel_Button(const Point2f &upper_left,

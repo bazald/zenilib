@@ -22,7 +22,8 @@ project "zeni"
     buildoptions { "/W4" }
   configuration "not windows"
     buildoptions { "-Wall",
-                   "-Wextra" }
+                   "-Wextra",
+                   "-Wno-ignored-qualifiers" }
 
   configuration "*"
     includedirs { ".", "../../sdl_net", "../../sdl", "../../tinyxml" }

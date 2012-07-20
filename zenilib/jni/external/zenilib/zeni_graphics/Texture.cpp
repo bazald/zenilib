@@ -212,7 +212,7 @@ namespace Zeni {
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 
-  GLuint Texture_GL::build_from_Image(const Image &image, const String * const &name) {
+  GLuint Texture_GL::build_from_Image(const Image &image) {
     GLuint texture_id = 0;
     
     const GLenum format =
