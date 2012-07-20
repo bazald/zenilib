@@ -15,14 +15,8 @@ project "zeni_core"
     linkoptions { "-install_name @loader_path/libzeni_core.dylib" }
     targetdir "../../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W4" }
-  configuration "not windows"
-    buildoptions { "-Wall",
-                   "-Wextra",
-                   "-Wno-ignored-qualifiers" }
-
   configuration "*"
+    flags { "ExtraWarnings" }
     includedirs { ".", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 
 --     pchheader "jni/external/zenilib/zeni_core/zeni_core.h"

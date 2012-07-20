@@ -15,7 +15,7 @@ if os.get() == "windows" then
       targetsuffix " x64"
 
     configuration "*"
-      flags { "StaticRuntime" }
+      flags { "ExtraWarnings", "StaticRuntime" }
       defines { "EXECUTABLE_NAME=\""..APPLICATION_NAME..".exe\"" }
       files { "Launcher.c", "Launcher.rc" }
 end

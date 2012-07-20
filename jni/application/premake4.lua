@@ -58,14 +58,8 @@ project(APPLICATION_NAME)
             "../external/sdl/SDLmain/*.m" }
     links { "Cocoa.framework" }
 
-  configuration "windows"
-    buildoptions { "/W4" }
-  configuration "not windows"
-    buildoptions { "-Wall",
-                   "-Wextra",
-                   "-Wno-ignored-qualifiers" }
-
   configuration "*"
+    flags { "ExtraWarnings" }
     includedirs { ".", "../external/zenilib", "../external/zenilib/zeni_rest", "../external/zenilib/zeni_graphics", "../external/zenilib/zeni_net", "../external/zenilib/zeni_core", "../external/zenilib/zeni_audio", "../external/libvorbis/include", "../external/libogg/include", "../external/zenilib/zeni", "../external/sdl_net", "../external/sdl", "../external/tinyxml" }
 
 --     pchheader "jni/external/zenilib/zenilib.h"

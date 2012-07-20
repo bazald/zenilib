@@ -234,8 +234,6 @@ project "local_SDL"
     linkoptions { "-install_name @loader_path/liblocal_SDL.dylib" }
     targetdir "../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 
@@ -346,8 +344,6 @@ if os.get() ~= "macosx" then
                 "SDL_ASSEMBLY_ROUTINES=1" }
       files { "src/main/dummy/*.c" }
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 

@@ -59,8 +59,6 @@ project "local_vorbis"
     linkoptions { "-install_name @loader_path/liblocal_vorbis.dylib" }
     targetdir "../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 
@@ -150,8 +148,6 @@ project "local_vorbisfile"
     linkoptions { "-install_name @loader_path/liblocal_vorbisfile.dylib" }
     targetdir "../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 

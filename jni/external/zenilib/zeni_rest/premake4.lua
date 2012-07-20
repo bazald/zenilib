@@ -15,14 +15,8 @@ project "zeni_rest"
     linkoptions { "-install_name @loader_path/libzeni_rest.dylib" }
     targetdir "../../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W4" }
-  configuration "not windows"
-    buildoptions { "-Wall",
-                   "-Wextra",
-                   "-Wno-ignored-qualifiers" }
-
   configuration "*"
+    flags { "ExtraWarnings" }
     includedirs { ".", "../zeni_graphics", "../zeni_core", "../../libvorbis/include", "../../libogg/include", "../zeni_audio", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
 
 --     pchheader "jni/external/zenilib/zeni_rest/zeni_rest.h"

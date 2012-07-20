@@ -31,8 +31,6 @@ project "local_SDL_net"
     linkoptions { "-install_name @loader_path/liblocal_SDL_net.dylib" }
     targetdir "../../../lib/univ"
 
-  configuration "windows"
-    buildoptions { "/W0" }
   configuration "not windows"
     buildoptions { "-w" }
 
