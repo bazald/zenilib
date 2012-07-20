@@ -159,9 +159,9 @@ namespace Zeni {
 
   private:
     static void set_sampler_states(const bool &disable_mipmapping = false);
-    static IDirect3DTexture9 * build_from_Image(const Image &image, Point2i &built_size, const String * const &name = 0);
+    static IDirect3DTexture9 * build_from_Image(const Image &image);
 
-    Point2i m_size;
+    mutable Point2i m_size;
     mutable IDirect3DTexture9 *m_texture;
 
     ID3DXRenderToSurface *m_render_to_surface;
