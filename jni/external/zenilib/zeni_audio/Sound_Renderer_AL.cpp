@@ -33,11 +33,11 @@
 
 namespace Zeni {
 
-#ifndef _WINDOWS
+#ifdef _LINUX
   static void * LoadLibrary(const char * const &file) {
     return dlopen(file, RTLD_LAZY);
   }
-  
+
   static int FreeLibrary(void * const &handle) {
     return dlclose(handle);
   }
@@ -136,7 +136,9 @@ namespace Zeni {
     m_device = alcOpenDevice()(0);
     if(!m_device) {
       zero_handles();
+#ifndef _MACOSX
       FreeLibrary(m_openal32);
+#endif
 
       throw Sound_Init_Failure();
     }
@@ -146,7 +148,9 @@ namespace Zeni {
       alcCloseDevice()(m_device);
 
       zero_handles();
+#ifndef _MACOSX
       FreeLibrary(m_openal32);
+#endif
 
       throw Sound_Init_Failure();
     }
@@ -156,7 +160,9 @@ namespace Zeni {
       alcCloseDevice()(m_device);
 
       zero_handles();
+#ifndef _MACOSX
       FreeLibrary(m_openal32);
+#endif
 
       throw Sound_Init_Failure();
     }
