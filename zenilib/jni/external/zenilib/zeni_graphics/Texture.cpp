@@ -318,8 +318,8 @@ namespace Zeni {
 
   Texture_DX9::Texture_DX9(const Image &image)
     : Texture(image.tileable()),
-    //m_size(surface->w, surface->h),
-    m_texture(build_from_Image(image, m_size)),
+    m_size(image.size()),
+    m_texture(build_from_Image(image)),
     m_render_to_surface(0)
   {
   }
@@ -411,7 +411,7 @@ namespace Zeni {
     vr.get_d3d_device()->SetSamplerState(0, D3DSAMP_MIPFILTER, (!disable_mipmapping && Textures::get_mipmapping() ? D3DTEXF_LINEAR : D3DTEXF_NONE));
   }
 
-  IDirect3DTexture9 * Texture_DX9::build_from_Image(const Image &image, Point2i &built_size, const String * const &name) {
+  IDirect3DTexture9 * Texture_DX9::build_from_Image(const Image &image) {
     Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
     IDirect3DTexture9 * ppTexture;
@@ -435,6 +435,7 @@ namespace Zeni {
         break;
 
       default:
+        format = D3DFMT_UNKNOWN;
         abort();
     }
 
@@ -512,7 +513,8 @@ namespace Zeni {
 
     Image image(filename);
 
-    m_texture = build_from_Image(image, const_cast<Point2i &>(m_size), &filename);
+    m_texture = build_from_Image(image);
+    m_size = image.size();
   }
 #endif
 #endif

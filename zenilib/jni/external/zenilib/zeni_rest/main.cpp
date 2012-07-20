@@ -261,6 +261,7 @@ inline int main2(const int argc, const char * const * const argv) {
 }
 
 // Go up one directory (or strip a file off the end of a directory)
+#ifndef _WINDOWS
 static void up_one_dir(char path[], int &length) {
   for(path[length] = '\0'; length; --length)
     if(path[length] == '/') {
@@ -268,6 +269,7 @@ static void up_one_dir(char path[], int &length) {
       break;
     }
 }
+#endif
 
 ZENI_REST_DLL int zenilib_main(int argc, char **argv) {
 #ifdef _WINDOWS

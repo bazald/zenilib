@@ -324,7 +324,7 @@ NEXT_LINE_2:
     for(int i = 0; i != 96; ++i) {
       const Point2i pos((i % 10) * maxsz.x, (i / 10) * maxsz.y);
       glyphs.blit(pos, glyph[i]);
-      m_glyph.push_back(Glyph(face, i + 32, m_ascent, m_vratio, pos, glyphs.size()));
+      m_glyph.push_back(Glyph(face, char(i + 32), m_ascent, m_vratio, pos, glyphs.size()));
     }
     glyph.clear();
 		m_glyph.resize(256);
