@@ -6,8 +6,6 @@ project "zeni_audio"
     defines { "ZENI_AUDIO_DLL=__declspec(dllexport)", "ZENI_AUDIO_EXT=" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
-  configuration "linux"
-    buildoptions { "-std=c++0x" }
   configuration { "macosx" }
     links { "OpenAL.framework" }
   configuration { "macosx", "Debug*" }

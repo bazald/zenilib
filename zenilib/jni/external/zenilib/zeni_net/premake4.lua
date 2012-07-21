@@ -6,8 +6,6 @@ project "zeni_net"
     defines { "ZENI_NET_DLL=__declspec(dllexport)", "ZENI_NET_EXT=" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
-  configuration "linux"
-    buildoptions { "-std=c++0x" }
   configuration { "macosx", "Debug*" }
     linkoptions { "-install_name @loader_path/libzeni_net_d.dylib" }
     targetdir "../../../../lib/univ_d"
