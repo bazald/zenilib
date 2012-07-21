@@ -51,8 +51,6 @@ project(APPLICATION_NAME)
     links { "local_SDLmain" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
-  configuration "linux"
-    buildoptions { "-std=c++0x" }
   configuration "macosx"
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.m" }

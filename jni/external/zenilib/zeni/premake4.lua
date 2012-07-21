@@ -6,8 +6,6 @@ project "zeni"
     defines { "ZENI_DLL=__declspec(dllexport)", "ZENI_EXT=" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
-  configuration "linux"
-    buildoptions { "-std=c++0x" }
   configuration "macosx"
     files { "**.mm" }
     links { "Cocoa.framework" }

@@ -6,8 +6,6 @@ project "zeni_core"
     defines { "ZENI_CORE_DLL=__declspec(dllexport)", "ZENI_CORE_EXT=" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
-  configuration "linux"
-    buildoptions { "-std=c++0x" }
   configuration { "macosx", "Debug*" }
     linkoptions { "-install_name @loader_path/libzeni_core_d.dylib" }
     targetdir "../../../../lib/univ_d"

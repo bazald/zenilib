@@ -8,7 +8,6 @@ project "zeni_graphics"
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration "linux"
-    buildoptions { "-std=c++0x" }
     links { "GLU" }
   configuration "macosx"
     links { "OpenGL.framework" }
