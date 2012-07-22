@@ -178,7 +178,7 @@ case $OSTYPE in
       fi
 
       echo
-      if [ "$CONFIG" == "release"]; then echo "Distribute binaries only if no unspecified symbols were found."
+      if [ "$CONFIG" == "release" ]; then echo "Distribute binaries only if no unspecified symbols were found."
       else echo "Do not distribute debug binaries."
       fi
     else
