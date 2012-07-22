@@ -24,7 +24,7 @@
 #ifndef _WINDOWS
 #define _WINDOWS
 #endif
-#ifdef _WIN64
+#if defined(_WIN64) && !defined(X64)
 #define X64
 #endif
 #endif
