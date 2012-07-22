@@ -14,12 +14,10 @@ rm bin/d32/game.exe
 rm bin/d32/*.exp
 rm bin/d32/*.idb
 rm bin/d32/*.ilk
-rm bin/d32/*.pdb
 rm bin/d64/game.exe
 rm bin/d64/*.exp
 rm bin/d64/*.idb
 rm bin/d64/*.ilk
-rm bin/d64/*.pdb
 rm bin/x32/*.exp
 rm bin/x32/*.idb
 rm bin/x32/*.ilk
@@ -68,12 +66,10 @@ DEL /Q "%~dp0\bin\d32\game.exe"
 DEL /Q "%~dp0\bin\d32\*.exp"
 DEL /Q "%~dp0\bin\d32\*.idb"
 DEL /Q "%~dp0\bin\d32\*.ilk"
-DEL /Q "%~dp0\bin\d32\*.pdb"
 DEL /Q "%~dp0\bin\d64\game.exe"
 DEL /Q "%~dp0\bin\d64\*.exp"
 DEL /Q "%~dp0\bin\d64\*.idb"
 DEL /Q "%~dp0\bin\d64\*.ilk"
-DEL /Q "%~dp0\bin\d64\*.pdb"
 DEL /Q "%~dp0\bin\x32\*.exp"
 DEL /Q "%~dp0\bin\x32\*.idb"
 DEL /Q "%~dp0\bin\x32\*.ilk"

@@ -42,6 +42,10 @@ solution "zenilib"
     defines { "X64" }
     targetdir(TARGET_DIR .. "/x64")
     libdirs { TARGET_DIR .. "/x64" }
+  configuration { "macosx", "Debug*" }
+    libdirs { TARGET_DIR .. "/univ_d" }
+  configuration { "macosx", "Release*" }
+    libdirs { TARGET_DIR .. "/univ" }
 
   configuration "*"
     defines { "DISABLE_CPP11", "GLEW_NO_GLU", "DISABLE_CG" }
