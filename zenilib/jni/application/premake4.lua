@@ -32,7 +32,10 @@ project(APPLICATION_NAME)
   configuration { "linux", "Release*", "x64" }
     targetsuffix "_x64"
   configuration { "macosx", "Debug*" }
-    targetname "game_d"
+    targetname(APPLICATION_NAME.."_d")
+    targetsuffix ""
+  configuration { "windows", "Debug*" }
+    targetname(APPLICATION_NAME)
     targetsuffix ""
 
 --   os.copydir("assets_shared", "assets")

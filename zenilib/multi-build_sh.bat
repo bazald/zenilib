@@ -260,11 +260,9 @@ CALL "%VS100COMNTOOLS%vsvars32.bat"
 
 IF "%CONFIG32%"=="debug" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d32.log;Encoding=UTF-8
-  ECHO Do not distribute the debug 32-bit build.
 )
 IF "%CONFIG64%"=="debug" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d64.log;Encoding=UTF-8
-  ECHO Do not distribute the debug 64-bit build.
 )
 IF "%CONFIG32%"=="release" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x32.log;Encoding=UTF-8
@@ -273,6 +271,15 @@ IF "%CONFIG32%"=="release" (
 IF "%CONFIG64%"=="release" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x64.log;Encoding=UTF-8
   COPY %~dp0\jni\external\bin\x64\* %~dp0\bin\x64\
+)
+
+IF "%CONFIG32%"=="debug" (
+  ECHO(
+  ECHO Do not distribute the 32-bit debug build.
+)
+IF "%CONFIG64%"=="debug" (
+  ECHO(
+  ECHO Do not distribute the 64-bit debug build.
 )
 
 :: Restore environment variables
