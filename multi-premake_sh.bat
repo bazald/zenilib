@@ -1,5 +1,6 @@
-@echo off
+#!/bin/bash
 
+@echo off
 GOTO WINDOWS
 
 
