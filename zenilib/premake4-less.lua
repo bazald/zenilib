@@ -101,4 +101,4 @@ solution "zenilib"
       location ("build/" .. _ACTION)
     end
 
-  include "jni/application/premake4-less.lua"
+  include "jni/application"
