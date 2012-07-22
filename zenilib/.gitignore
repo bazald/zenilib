@@ -1,27 +1,36 @@
-bin/x64/zeni*
-bin/zeni*
-lib_win/x64/zeni*
-lib_win/zeni*
-Visual Studio 2010/Application_Name.h
-Visual Studio 2010/ipch
-Visual Studio 2010/Win32
-Visual Studio 2010/x64
-Xcode/Application.xcodeproj/project.xcworkspace
-Xcode/Application.xcodeproj/xcuserdata
-Xcode/build
-Xcode/zenilib_*_frameworks.zip
-application
-application_d
-stdout.txt
-stderr.txt
+# git ls-files --others -i --exclude-standard
+
+/assets/stderr.txt
+/assets/stdout.txt
+/Resources/
+/Info.plist
+/Info_d.plist
+
+/bin/
+/build/
+/lib/
+
+/game_d.app/
+/game.app/
+/game_d32
+/game_d64
+/game_x32
+/game_x64
+/lsbappchk_filtered.txt
+/lsbappchk_full.txt
+
 *~
 *.bak
 *.dblite
+*.dll
 *.DS_Store
+*.dylib
 *.exe
+*.exp
 *.idb
 *.ilk
 *.layout
+*.lib
 *.o
 *.opensdf
 *.os
@@ -30,3 +39,8 @@ stderr.txt
 *.sdf
 *.so
 *.suo
+
+!/jni/external/bin/*/*.dll
+!/jni/external/lib/*/*.lib
+!/jni/external/libvorbis/macos/*.exp
+!/jni/external/sdl/src/hermes/COPYING.LIB
