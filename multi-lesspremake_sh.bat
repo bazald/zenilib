@@ -24,7 +24,7 @@ esac
 
 rm -r build/gmake
 chmod +x $PREMAKE
-$PREMAKE --os=linux gmake
+$PREMAKE --file=premake4-less.lua --os=linux gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 # Migrate Makefiles to build/linux
@@ -41,7 +41,7 @@ rm -r build/gmake
 #
 
 chmod +x $PREMAKE
-$PREMAKE --os=macosx gmake
+$PREMAKE --file=premake4-less.lua --os=macosx gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 mkdir -p build/macosx
@@ -63,9 +63,9 @@ rm -r build/gmake
 # Generate IDE projects
 #
 
-$PREMAKE --os=macosx xcode3
-$PREMAKE --os=macosx xcode4
-$PREMAKE --os=windows vs2010
+$PREMAKE --file=premake4-less.lua --os=macosx xcode3
+$PREMAKE --file=premake4-less.lua --os=macosx xcode4
+$PREMAKE --file=premake4-less.lua --os=windows vs2010
 
 exit
 
@@ -75,7 +75,7 @@ exit
 
 
 
-%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows vs2010
+%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4-less.lua --os=windows vs2010
 
 
 
