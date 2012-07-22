@@ -45,6 +45,7 @@ case $OSTYPE in
                 > "../../build/macosx/$mf"
     done
     popd
+    rm -r build/gmake
 
     #
     # Setup the build
@@ -188,7 +189,7 @@ case $OSTYPE in
     ;;
   ?*)
     echo "Unknown"
-    exit
+    exit 2
     ;;
 esac
 exit
