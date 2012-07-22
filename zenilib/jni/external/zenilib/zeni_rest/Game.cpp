@@ -580,6 +580,13 @@ namespace Zeni {
   }
 #endif
 
+  bool Game::is_console_active() const {
+#if !defined(ANDROID) && !defined(NDEBUG)
+    return m_console_active;
+#else
+    return false;
+#endif
+  }
 }
 
 #include <Zeni/Undefine.h>

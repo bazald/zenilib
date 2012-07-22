@@ -292,7 +292,8 @@ namespace Zeni {
           material_ptr->clear_optimization();
         for(size_t i = 1; i < triangles.size(); ++i) {
           const Material * material_ptr1 = triangles[i]->get_Material();
-          material_ptr1 = &mat;
+          if(!material_ptr1)
+            material_ptr1 = &mat;
 
           if(material_ptr && *material_ptr == *material_ptr1)
             ++descriptors[last]->num_elements;

@@ -155,6 +155,9 @@ namespace Zeni {
 
     bool m_console_active;
 #endif
+
+  public:
+    bool is_console_active() const;
   };
 
   ZENI_REST_DLL Game & get_Game(); ///< Get access to the singleton.
