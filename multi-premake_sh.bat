@@ -22,8 +22,8 @@ esac
 #
 
 rm -r build/gmake
-chmod +x dev/premake/premake4-linux
-dev/premake/premake4-linux --os=linux gmake
+chmod +x $PREMAKE
+$PREMAKE --os=linux gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 # Migrate Makefiles to build/linux
@@ -39,8 +39,8 @@ rm -r build/gmake
 # Generate Makefiles for Mac OS X
 #
 
-chmod +x dev/premake/premake4-macosx
-dev/premake/premake4-macosx --os=macosx gmake
+chmod +x $PREMAKE
+$PREMAKE --os=macosx gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 mkdir -p build/macosx
