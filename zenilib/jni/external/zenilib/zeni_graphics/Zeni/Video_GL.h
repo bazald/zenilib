@@ -53,7 +53,12 @@
 #include <GL/glew.h>
 #ifdef _LINUX
 namespace GLXEW {
-#include <GL/glxew.h>
+struct _XDisplay;
+typedef _XDisplay Display;
+typedef long unsigned int XID;
+typedef XID GLXDrawable;
+typedef void ( * PFNGLXSWAPINTERVALEXTPROC) (Display* dpy, GLXDrawable drawable, int interval);
+typedef int ( * PFNGLXSWAPINTERVALSGIPROC) (int interval);
 }
 #endif
 #endif

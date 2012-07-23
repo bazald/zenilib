@@ -36,6 +36,12 @@ namespace SDLOPENGL {
 #endif
 #endif
 
+#ifdef _LINUX
+namespace GLXEW {
+#include <GL/glxew.h>
+}
+#endif
+
 #include <iostream>
 
 #if defined(_DEBUG) && defined(_WINDOWS)
