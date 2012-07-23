@@ -58,6 +58,8 @@ namespace Zeni {
     m_openal32 = LoadLibrary("OpenAL32.dll");
 #else
     m_openal32 = LoadLibrary("libopenal.so");
+    if(!m_openal32)
+      m_openal32 = LoadLibrary("libopenal.so.1");
 #endif
     if(!m_openal32) {
       std::cerr << "Loading OpenAL32.dll failed." << std::endl;
