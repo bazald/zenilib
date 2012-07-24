@@ -7,21 +7,21 @@ project(APPLICATION_NAME)
   configuration "windows"
     prebuildcommands { "xcopy ..\\..\\dev\\pc_ ..\\.. /E /Y" }
   configuration { "macosx or linux" }
-    prebuildcommands { "rsync -av ../../dev/pc_/ ../../" }
+    prebuildcommands { "rsync -av --exclude '.*' ../../dev/pc_/ ../../" }
   configuration { "macosx", "Debug*" }
     prebuildcommands { "mkdir -p ../../game_d.app/Contents",
-                       "rsync -av ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
-                       "rsync -av --delete ../../assets/ ../../game_d.app/Contents/assets/",
-                       "rsync -av --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
-                       "rsync -av ../../Info_d.plist ../../game_d.app/Contents/Info.plist" }
+                       "rsync -av --exclude '.*' ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
+                       "rsync -av --exclude '.*' --delete ../../assets/ ../../game_d.app/Contents/assets/",
+                       "rsync -av --exclude '.*' --delete ../../Resources/ ../../game_d.app/Contents/Resources/",
+                       "rsync -av --exclude '.*' ../../Info_d.plist ../../game_d.app/Contents/Info.plist" }
   configuration { "macosx", "Release*" }
     prebuildcommands { "mkdir -p ../../game.app/Contents",
-                       "rsync -av ../../lib/univ/ ../../game.app/Contents/MacOS/",
-                       "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
-                       "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
-                       "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
-  configuration { "linux" }
-    prelinkcommands { "../../dev/brandelf/brandelf -f 0 ../../lib/*/*.so" }
+                       "rsync -av --exclude '.*' ../../lib/univ/ ../../game.app/Contents/MacOS/",
+                       "rsync -av --exclude '.*' --delete ../../assets/ ../../game.app/Contents/assets/",
+                       "rsync -av --exclude '.*' --delete ../../Resources/ ../../game.app/Contents/Resources/",
+                       "rsync -av --exclude '.*' ../../Info.plist ../../game.app/Contents/Info.plist" }
+--   configuration { "linux" }
+--     prelinkcommands { "../../dev/brandelf/brandelf -f 0 ../../lib/*/*.so" }
 
   configuration "linux or macosx"
     targetdir "../.."
