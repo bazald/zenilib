@@ -20,6 +20,8 @@ project(APPLICATION_NAME)
                        "rsync -av --delete ../../assets/ ../../game.app/Contents/assets/",
                        "rsync -av --delete ../../Resources/ ../../game.app/Contents/Resources/",
                        "rsync -av ../../Info.plist ../../game.app/Contents/Info.plist" }
+  configuration { "linux" }
+    prelinkcommands { "../../dev/brandelf/brandelf -f 0 ../../lib/*/*.so" }
 
   configuration "linux or macosx"
     targetdir "../.."
@@ -59,6 +61,13 @@ project(APPLICATION_NAME)
             "../external/sdl/SDLmain/*.m" }
     links { "Cocoa.framework" }
 
+  if _OPTIONS.build == "mine" then
+    configuration "Debug*"
+      links { "zeni_rest_d", "zeni_graphics_d", "zeni_net_d", "zeni_core_d", "zeni_audio_d", "zeni_d", "local_SDL_d" }
+    configuration "Release*"
+      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+  end
+
   configuration "*"
     flags { "ExtraWarnings" }
     includedirs { ".", "../external/zenilib", "../external/zenilib/zeni_rest", "../external/zenilib/zeni_graphics", "../external/zenilib/zeni_net", "../external/zenilib/zeni_core", "../external/zenilib/zeni_audio", "../external/libvorbis/include", "../external/libogg/include", "../external/zenilib/zeni", "../external/sdl_net", "../external/sdl", "../external/tinyxml" }
@@ -67,4 +76,7 @@ project(APPLICATION_NAME)
 --     pchsource "jni/application/bootstrap.cpp"
 
     files { "**.h", "**.hxx", "**.cpp" }
-    links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+
+    if _OPTIONS.build == "all" then
+      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+    end

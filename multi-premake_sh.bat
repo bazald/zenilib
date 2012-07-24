@@ -5,6 +5,22 @@ GOTO WINDOWS
 
 
 
+function verify_arg {
+  if [ "$1" == "" ] || [ "$1" == "--build=all" ] || [ "$1" == "--build=mine" ]; then
+    return 0
+  elif [ "$1" == "" ] || [ "$1" == "--macosx=10.6" ] || [ "$1" == "--macosx=10.7" ] || [ "$1" == "--macosx=10.8" ] || [ "$1" == "--macosx=native" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function usage {
+  echo
+  echo "multi-build_sh.bat [--build=all/mine]"
+  echo "                   [--macosx=10.6/10.7/10.8/native]"
+}
+
 case $OSTYPE in
   darwin*)
     PREMAKE=dev/premake/premake4-macosx
@@ -24,7 +40,7 @@ esac
 
 rm -r build/gmake
 chmod +x $PREMAKE
-$PREMAKE --os=linux gmake
+$PREMAKE --os=linux $1 $2 gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 # Migrate Makefiles to build/linux
@@ -41,7 +57,7 @@ rm -r build/gmake
 #
 
 chmod +x $PREMAKE
-$PREMAKE --os=macosx gmake
+$PREMAKE --os=macosx $1 $2 gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 mkdir -p build/macosx
@@ -63,9 +79,16 @@ rm -r build/gmake
 # Generate IDE projects
 #
 
-$PREMAKE --os=macosx xcode3
-$PREMAKE --os=macosx xcode4
-$PREMAKE --os=windows vs2010
+for dir in build/xcode*/*.xcodeproj/; do
+  rm -r "$dir"
+done
+for file in build/vs2010/*.filters build/vs2010/*.user build/vs2010/*.vcxproj; do
+  if [ -f "$file" ]; then rm "$file"; fi
+done
+
+$PREMAKE --os=macosx $1 $2 xcode3
+$PREMAKE --os=macosx $1 $2 xcode4
+$PREMAKE --os=windows $1 $2 vs2010
 
 exit
 
@@ -75,7 +98,7 @@ exit
 
 
 
-%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows vs2010
+%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %1 %2 vs2010
 
 
 

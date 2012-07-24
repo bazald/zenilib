@@ -1,5 +1,35 @@
 -- dofile "dev/os_copy.lua"
 
+newoption {
+   trigger     = "build",
+   value       = "WHICH",
+   description = "Choose which binaries to build",
+   allowed = {
+      { "all",   "game and all dependencies" },
+      { "mine",  "game only (default)" }
+   }
+}
+
+if not _OPTIONS["build"] then
+   _OPTIONS["build"] = "mine"
+end
+
+newoption {
+  trigger     = "macosx",
+  value       = "SDK",
+  description = "Choose which version of Mac OS X to target",
+  allowed = {
+      { "10.6",     "Mac OS 10.6" },
+      { "10.7",     "Mac OS 10.7" },
+      { "10.8",     "Mac OS 10.8" },
+      { "native",   "Whatever version you happen to be running (default)" }
+  }
+}
+
+if not _OPTIONS["macosx"] then
+  _OPTIONS["macosx"] = "native"
+end
+
 solution "zenilib"
   configurations { "Debug", "Release" }
 
@@ -93,12 +123,15 @@ solution "zenilib"
     linkoptions { "-Wl,-rpath,'$$ORIGIN'" }
 
   configuration "macosx"
-    buildoptions { "-Qunused-arguments",
-                   "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk",
-                   "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk" }
-    linkoptions {  "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk",
-                   "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk",
-                   "-Wl,-macosx_version_min,10.6"}
+    buildoptions { "-Qunused-arguments" }
+
+    if _OPTIONS.macosx ~= "native" then
+      buildoptions { "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+                    "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk" }
+      linkoptions {  "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+                    "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+                    "-Wl,-macosx_version_min,".._OPTIONS.macosx}
+    end
 
   configuration "*"
     if _ACTION then
@@ -106,20 +139,23 @@ solution "zenilib"
     end
 
   include "jni/application"
-  include "jni/launcher"
-  include "jni/external/lib3ds"
-  include "jni/external/zlib"
-  include "jni/external/libpng"
-  include "jni/external/freetype2"
-  include "jni/external/tinyxml"
-  include "jni/external/glew"
-  include "jni/external/libogg"
-  include "jni/external/libvorbis"
-  include "jni/external/sdl"
-  include "jni/external/sdl_net"
-  include "jni/external/zenilib/zeni"
-  include "jni/external/zenilib/zeni_audio"
-  include "jni/external/zenilib/zeni_core"
-  include "jni/external/zenilib/zeni_graphics"
-  include "jni/external/zenilib/zeni_net"
-  include "jni/external/zenilib/zeni_rest"
+
+  if _OPTIONS.build == "all" then
+    include "jni/launcher"
+    include "jni/external/lib3ds"
+    include "jni/external/zlib"
+    include "jni/external/libpng"
+    include "jni/external/freetype2"
+    include "jni/external/tinyxml"
+    include "jni/external/glew"
+    include "jni/external/libogg"
+    include "jni/external/libvorbis"
+    include "jni/external/sdl"
+    include "jni/external/sdl_net"
+    include "jni/external/zenilib/zeni"
+    include "jni/external/zenilib/zeni_audio"
+    include "jni/external/zenilib/zeni_core"
+    include "jni/external/zenilib/zeni_graphics"
+    include "jni/external/zenilib/zeni_net"
+    include "jni/external/zenilib/zeni_rest"
+  end
