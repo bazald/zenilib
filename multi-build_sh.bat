@@ -1,7 +1,7 @@
 #!/bin/bash
 
 @echo off
-GOTO WINDOWS
+GOTO WINDOWS 
 
 
 
@@ -16,6 +16,9 @@ function usage {
   echo "           10.7     Mac OS 10.7"
   echo "           10.8     Mac OS 10.8"
   echo "           native   Whatever version you happen to be running (default)"
+  echo
+  echo "  release is the default"
+  echo
 }
 
 function usage_error {
@@ -267,7 +270,7 @@ exit
 
 
 
-:WINDOWS
+:WINDOWS 
 
 
 
@@ -289,76 +292,132 @@ IF "%WHOAMI%"=="cyg_server" (
 CALL %~dp0\dev\VCVarsQueryRegistry.bat
 IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
 
+
+SET BUILD=mine
+SET CONFIG=release32
+SET MACOSX=native
+
+SET STATE=config
+:NEXTARG 
+IF "%1" == "" GOTO DONEARGS 
+
+IF "%STATE%"=="build" (
+  IF "%1"=="all" (
+    SET BUILD=all
+  ) ELSE ( IF "%1"=="mine" (
+    SET BUILD=mine
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))
+  SET STATE=config
+) ELSE ( IF "%STATE%"=="config" (
+  IF "%1"=="--build" (
+    SET STATE=build
+  ) ELSE ( IF "%1"=="--macosx" (
+    SET STATE=macosx
+  ) ELSE ( IF "%1"=="debug" (
+    SET CONFIG=debug
+  ) ELSE ( IF "%1"=="debug32" (
+    SET CONFIG=debug32
+  ) ELSE ( IF "%1"=="debug64" (
+    SET CONFIG=debug64
+  ) ELSE ( IF "%1"=="release" (
+    SET CONFIG=release
+  ) ELSE ( IF "%1"=="release32" (
+    SET CONFIG=release32
+  ) ELSE ( IF "%1"=="release64" (
+    SET CONFIG=release64
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))))))))
+) ELSE ( IF "%STATE%"=="macosx" (
+  IF "%1"=="10.6" (
+    SET MACOSX=10.6
+  ) ELSE ( IF "%1"=="10.7" (
+    SET MACOSX=10.7
+  ) ELSE ( IF "%1"=="10.8" (
+    SET MACOSX=10.8
+  ) ELSE ( IF "%1"=="native" (
+    SET MACOSX=native
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))))
+  SET STATE=config
+) ELSE (
+  ECHO(
+  ECHO Error: Invalid Argument '%1'
+  GOTO ARGERROR 
+)))
+
+SHIFT
+GOTO NEXTARG 
+
+:ARGERROR 
+
+:: Restore environment variables
+FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
+CALL %~dp0\build\backupenv.bat
+
+ECHO(
+ECHO Usage: multi-build_sh.bat [options] [debug[32/64] or release[32/64]]
+ECHO(
+ECHO   --build=all       game and all dependencies
+ECHO           mine      game only (default)
+ECHO(
+ECHO   --macosx=10.6     Mac OS 10.6
+ECHO            10.7     Mac OS 10.7
+ECHO            10.8     Mac OS 10.8
+ECHO            native   Whatever version you happen to be running (default)
+ECHO(
+ECHO   release32 is the default
+
+:: Restore environment variables
+FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
+CALL %~dp0\build\backupenv.bat
+
+EXIT /B 1
+
+:DONEARGS 
+
+IF NOT "%STATE%"=="config" (
+  ECHO(
+  ECHO Error: Trailing Argument
+  GOTO ARGERROR 
+)
+
+
 :: Decide build targets
-IF "%1"=="" (
+IF "%CONFIG%"=="" (
   :: The default is to build release32
   SET CONFIG32=release
   SET CONFIG64=none
-) ELSE ( IF "%1"=="debug" (
+) ELSE ( IF "%CONFIG%"=="debug" (
   SET CONFIG32=debug
   SET CONFIG64=debug
-) ELSE ( IF "%1"=="release" (
+) ELSE ( IF "%CONFIG%"=="release" (
   SET CONFIG32=release
   SET CONFIG64=release
-) ELSE ( IF "%1"=="debug32" (
+) ELSE ( IF "%CONFIG%"=="debug32" (
   SET CONFIG32=debug
   SET CONFIG64=none
-) ELSE ( IF "%1"=="debug64" (
+) ELSE ( IF "%CONFIG%"=="debug64" (
   SET CONFIG32=none
   SET CONFIG64=debug
-) ELSE ( IF "%1"=="release32" (
+) ELSE ( IF "%CONFIG%"=="release32" (
   SET CONFIG32=release
   SET CONFIG64=none
-) ELSE ( IF "%1"=="release64" (
+) ELSE ( IF "%CONFIG%"=="release64" (
   SET CONFIG32=none
   SET CONFIG64=release
 ) ELSE (
-  ECHO Invalid configuration selection: %1
+  ECHO Invalid Configuration: %CONFIG%
   EXIT /B 1
-)))))))
-
-IF "%2=%3"=="=" (
-  SET ARG2=
-) ELSE ( IF "%2=%3"=="--build=all" (
-  SET ARG2=%2=%3
-) ELSE ( IF "%2=%3"=="--build=mine" (
-  SET ARG2=%2=%3
-) ELSE ( IF "%2=%3"=="--macosx=10.6" (
-  SET ARG2=%2=%3
-) ELSE ( IF "%2=%3"=="--macosx=10.7" (
-  SET ARG2=%2=%3
-) ELSE ( IF "%2=%3"=="--macosx=10.8" (
-  SET ARG2=%2=%3
-) ELSE ( IF "%2=%3"=="--macosx=native" (
-  SET ARG2=%2=%3
-) ELSE (
-  ECHO(
-  ECHO Illegal argument: %2=%3
-  ECHO(
-  ECHO multi-build_sh.bat [debug/release [--build=all/mine]]
-  EXIT /B 2
-)))))))
-
-IF "%4=%5"=="=" (
-  SET ARG3=
-) ELSE ( IF "%4=%5"=="--build=all" (
-  SET ARG3=%4=%5
-) ELSE ( IF "%4=%5"=="--build=mine" (
-  SET ARG3=%4=%5
-) ELSE ( IF "%4=%5"=="--macosx=10.6" (
-  SET ARG3=%4=%5
-) ELSE ( IF "%4=%5"=="--macosx=10.7" (
-  SET ARG3=%4=%5
-) ELSE ( IF "%4=%5"=="--macosx=10.8" (
-  SET ARG3=%4=%5
-) ELSE ( IF "%4=%5"=="--macosx=native" (
-  SET ARG3=%4=%5
-) ELSE (
-  ECHO(
-  ECHO Illegal argument: %4=%5
-  ECHO(
-  ECHO multi-build_sh.bat [debug/release [--build=all/mine]]
-  EXIT /B 3
 )))))))
 
 ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
@@ -366,7 +425,7 @@ ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 :: Generate Visual Studio 2010 solution and projects
 ::IF NOT EXIST %~dp0\build\vs2010 (
   IF EXIST %~dp0\dev\premake\premake4-windows.exe (
-    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %ARG2% %ARG3% vs2010
+    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
   )
 ::)
 
@@ -375,17 +434,21 @@ CALL "%VS100COMNTOOLS%vsvars32.bat"
 
 IF "%CONFIG32%"=="debug" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d32.log;Encoding=UTF-8
+  IF ERRORLEVEL 1 GOTO BUILDERROR 
 )
 IF "%CONFIG64%"=="debug" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d64.log;Encoding=UTF-8
+  IF ERRORLEVEL 1 GOTO BUILDERROR 
 )
 IF "%CONFIG32%"=="release" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x32.log;Encoding=UTF-8
-  COPY %~dp0\jni\external\bin\x32\* %~dp0\bin\x32\
+  IF ERRORLEVEL 1 GOTO BUILDERROR 
+  COPY /Y %~dp0\jni\external\bin\x32\* %~dp0\bin\x32\
 )
 IF "%CONFIG64%"=="release" (
   MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x64.log;Encoding=UTF-8
-  COPY %~dp0\jni\external\bin\x64\* %~dp0\bin\x64\
+  IF ERRORLEVEL 1 GOTO BUILDERROR 
+  COPY /Y %~dp0\jni\external\bin\x64\* %~dp0\bin\x64\
 )
 
 IF "%CONFIG32%"=="debug" (
@@ -397,6 +460,19 @@ IF "%CONFIG64%"=="debug" (
   ECHO Do not distribute the 64-bit debug build.
 )
 
+
+goto RESTORE 
+:BUILDERROR 
+
+ECHO(
+IF "%BUILD%"=="mine" (
+  ECHO Build failed.  Retry with --build=all
+) ELSE (
+  ECHO Build failed.
+)
+
+
+:RESTORE 
 :: Restore environment variables
 FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
 CALL %~dp0\build\backupenv.bat

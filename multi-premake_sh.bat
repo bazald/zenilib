@@ -1,7 +1,7 @@
 #!/bin/bash
 
 @echo off
-GOTO WINDOWS
+GOTO WINDOWS 
 
 
 
@@ -16,6 +16,7 @@ function usage {
   echo "           10.7     Mac OS 10.7"
   echo "           10.8     Mac OS 10.8"
   echo "           native   Whatever version you happen to be running (default)"
+  echo
 }
 
 function usage_error {
@@ -148,55 +149,108 @@ exit
 
 
 
-:WINDOWS
+:WINDOWS 
 
 
 
-IF "%1=%2"=="=" (
-  SET ARG1=
-) ELSE ( IF "%1=%2"=="--build=all" (
-  SET ARG1=%1=%2
-) ELSE ( IF "%1=%2"=="--build=mine" (
-  SET ARG1=%1=%2
-) ELSE ( IF "%1=%2"=="--macosx=10.6" (
-  SET ARG1=%1=%2
-) ELSE ( IF "%1=%2"=="--macosx=10.7" (
-  SET ARG1=%1=%2
-) ELSE ( IF "%1=%2"=="--macosx=10.8" (
-  SET ARG1=%1=%2
-) ELSE ( IF "%1=%2"=="--macosx=native" (
-  SET ARG1=%1=%2
+SET BUILD=mine
+SET CONFIG=release32
+SET MACOSX=native
+
+SET STATE=config
+:NEXTARG 
+IF "%1" == "" GOTO DONEARGS 
+
+IF "%STATE%"=="build" (
+  IF "%1"=="all" (
+    SET BUILD=all
+  ) ELSE ( IF "%1"=="mine" (
+    SET BUILD=mine
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))
+  SET STATE=config
+) ELSE ( IF "%STATE%"=="config" (
+  IF "%1"=="--build" (
+    SET STATE=build
+  ) ELSE ( IF "%1"=="--macosx" (
+    SET STATE=macosx
+  ) ELSE ( IF "%1"=="debug" (
+    SET CONFIG=debug
+  ) ELSE ( IF "%1"=="debug32" (
+    SET CONFIG=debug32
+  ) ELSE ( IF "%1"=="debug64" (
+    SET CONFIG=debug64
+  ) ELSE ( IF "%1"=="release" (
+    SET CONFIG=release
+  ) ELSE ( IF "%1"=="release32" (
+    SET CONFIG=release32
+  ) ELSE ( IF "%1"=="release64" (
+    SET CONFIG=release64
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))))))))
+) ELSE ( IF "%STATE%"=="macosx" (
+  IF "%1"=="10.6" (
+    SET MACOSX=10.6
+  ) ELSE ( IF "%1"=="10.7" (
+    SET MACOSX=10.7
+  ) ELSE ( IF "%1"=="10.8" (
+    SET MACOSX=10.8
+  ) ELSE ( IF "%1"=="native" (
+    SET MACOSX=native
+  ) ELSE (
+    ECHO(
+    ECHO Error: Invalid Argument '%1'
+    GOTO ARGERROR 
+  ))))
+  SET STATE=config
 ) ELSE (
   ECHO(
-  ECHO Illegal argument: %1=%2
-  ECHO(
-  ECHO multi-premake_sh.bat [--build=all/mine]
-  EXIT /B 2
-)))))))
+  ECHO Error: Invalid Argument '%1'
+  GOTO ARGERROR 
+)))
 
-IF "%3=%4"=="=" (
-  SET ARG2=
-) ELSE ( IF "%3=%4"=="--build=all" (
-  SET ARG2=%3=%4
-) ELSE ( IF "%3=%4"=="--build=mine" (
-  SET ARG2=%3=%4
-) ELSE ( IF "%3=%4"=="--macosx=10.6" (
-  SET ARG2=%3=%4
-) ELSE ( IF "%3=%4"=="--macosx=10.7" (
-  SET ARG2=%3=%4
-) ELSE ( IF "%3=%4"=="--macosx=10.8" (
-  SET ARG2=%3=%4
-) ELSE ( IF "%3=%4"=="--macosx=native" (
-  SET ARG2=%3=%4
-) ELSE (
-  ECHO(
-  ECHO Illegal argument: %3=%4
-  ECHO(
-  ECHO multi-premake_sh.bat [--build=all/mine]
-  EXIT /B 3
-)))))))
+SHIFT
+GOTO NEXTARG 
 
-%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %ARG1% %ARG2% vs2010
+:ARGERROR 
+
+:: Restore environment variables
+FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
+CALL %~dp0\build\backupenv.bat
+
+ECHO(
+ECHO Usage: multi-build_sh.bat [options]
+ECHO(
+ECHO   --build=all       game and all dependencies
+ECHO           mine      game only (default)
+ECHO(
+ECHO   --macosx=10.6     Mac OS 10.6
+ECHO            10.7     Mac OS 10.7
+ECHO            10.8     Mac OS 10.8
+ECHO            native   Whatever version you happen to be running (default)
+
+:: Restore environment variables
+FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
+CALL %~dp0\build\backupenv.bat
+
+EXIT /B 1
+
+:DONEARGS 
+
+IF NOT "%STATE%"=="config" (
+  ECHO(
+  ECHO Error: Trailing Argument
+  GOTO ARGERROR 
+)
+
+
+%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
 
 
 
