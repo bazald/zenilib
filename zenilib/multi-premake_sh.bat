@@ -5,21 +5,75 @@ GOTO WINDOWS
 
 
 
-function verify_arg {
-  if [ "$1" == "" ] || [ "$1" == "--build=all" ] || [ "$1" == "--build=mine" ]; then
-    return 0
-  elif [ "$1" == "" ] || [ "$1" == "--macosx=10.6" ] || [ "$1" == "--macosx=10.7" ] || [ "$1" == "--macosx=10.8" ] || [ "$1" == "--macosx=native" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 function usage {
   echo
-  echo "multi-premake_sh.bat [--build=all/mine]"
-  echo "                     [--macosx=10.6/10.7/10.8/native]"
+  echo "Usage: $0 [options]"
+  echo
+  echo "  --build=all       game and all dependencies"
+  echo "          mine      game only (default)"
+  echo
+  echo "  --macosx=10.6     Mac OS 10.6"
+  echo "           10.7     Mac OS 10.7"
+  echo "           10.8     Mac OS 10.8"
+  echo "           native   Whatever version you happen to be running (default)"
 }
+
+function usage_error {
+  echo
+  echo "Error: $1"
+  usage
+  exit $2
+}
+
+BUILD=mine
+CONFIG=release
+MACOSX=native
+
+STATE=config
+for arg in "$@"; do
+  case "$STATE" in
+    build)
+      case "$arg" in
+        all) BUILD=all ;;
+        mine) BUILD=mine ;;
+        *) usage_error "Invalid Argument '$arg'" 2
+      esac
+      STATE=config
+      ;;
+    config)
+      case "$arg" in
+        --build) STATE=build ;;
+          --build=all) BUILD=all ;;
+          --build=mine) BUILD=mine ;;
+        --macosx) STATE=macosx ;;
+          --macosx=10.6) MACOSX=10.6 ;;
+          --macosx=10.7) MACOSX=10.7 ;;
+          --macosx=10.8) MACOSX=10.8 ;;
+          --macosx=native) MACOSX=native ;;
+        debug) CONFIG=debug ;;
+        release) CONFIG=release ;;
+        releaseuniv) CONFIG=release ;;
+        *) usage_error "Invalid Argument '$arg'" 3
+      esac
+      ;;
+    macosx)
+      case "$arg" in
+        10.6) MACOSX=10.6 ;;
+        10.7) MACOSX=10.7 ;;
+        10.8) MACOSX=10.8 ;;
+        native) MACOSX=native ;;
+        *) usage_error "Invalid Argument '$arg'" 4
+      esac
+      STATE=config
+      ;;
+    *)
+      usage_error "Invalid Argument '$arg'" 1
+  esac
+done
+if [ "$STATE" != "config" ]; then
+  usage_error "Trailing Argument" 5
+fi
+
 
 case $OSTYPE in
   darwin*)
@@ -34,29 +88,13 @@ case $OSTYPE in
     ;;
 esac
 
-verify_arg $2
-if [ $? -ne 0 ]; then
-  echo
-  echo Illegal argument: $2
-  usage
-  exit 2
-fi
-
-verify_arg $3
-if [ $? -ne 0 ]; then
-  echo
-  echo Illegal argument: $3
-  usage
-  exit 3
-fi
-
 #
 # Generate Makefiles for Linux
 #
 
 rm -r build/gmake
 chmod +x $PREMAKE
-$PREMAKE --os=linux $1 $2 gmake
+$PREMAKE --os=linux --build=$BUILD --macosx=$MACOSX gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 # Migrate Makefiles to build/linux
@@ -73,7 +111,7 @@ rm -r build/gmake
 #
 
 chmod +x $PREMAKE
-$PREMAKE --os=macosx $1 $2 gmake
+$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX gmake
 if [ $? -ne 0 ]; then exit 1; fi
 
 mkdir -p build/macosx
@@ -102,9 +140,9 @@ for file in build/vs2010/*.filters build/vs2010/*.user build/vs2010/*.vcxproj; d
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-$PREMAKE --os=macosx $1 $2 xcode3
-$PREMAKE --os=macosx $1 $2 xcode4
-$PREMAKE --os=windows $1 $2 vs2010
+$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode3
+$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode4
+$PREMAKE --os=windows --build=$BUILD --macosx=$MACOSX vs2010
 
 exit
 
