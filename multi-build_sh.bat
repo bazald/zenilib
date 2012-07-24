@@ -296,12 +296,56 @@ IF "%1"=="" (
   EXIT /B 1
 )))))))
 
+IF "%2=%3"=="=" (
+  SET ARG2=
+) ELSE ( IF "%2=%3"=="--build=all" (
+  SET ARG2=%2=%3
+) ELSE ( IF "%2=%3"=="--build=mine" (
+  SET ARG2=%2=%3
+) ELSE ( IF "%2=%3"=="--macosx=10.6" (
+  SET ARG2=%2=%3
+) ELSE ( IF "%2=%3"=="--macosx=10.7" (
+  SET ARG2=%2=%3
+) ELSE ( IF "%2=%3"=="--macosx=10.8" (
+  SET ARG2=%2=%3
+) ELSE ( IF "%2=%3"=="--macosx=native" (
+  SET ARG2=%2=%3
+) ELSE (
+  ECHO(
+  ECHO Illegal argument: %2=%3
+  ECHO(
+  ECHO multi-build_sh.bat [debug/release [--build=all/mine]]
+  EXIT /B 2
+)))))))
+
+IF "%4=%5"=="=" (
+  SET ARG3=
+) ELSE ( IF "%4=%5"=="--build=all" (
+  SET ARG3=%4=%5
+) ELSE ( IF "%4=%5"=="--build=mine" (
+  SET ARG3=%4=%5
+) ELSE ( IF "%4=%5"=="--macosx=10.6" (
+  SET ARG3=%4=%5
+) ELSE ( IF "%4=%5"=="--macosx=10.7" (
+  SET ARG3=%4=%5
+) ELSE ( IF "%4=%5"=="--macosx=10.8" (
+  SET ARG3=%4=%5
+) ELSE ( IF "%4=%5"=="--macosx=native" (
+  SET ARG3=%4=%5
+) ELSE (
+  ECHO(
+  ECHO Illegal argument: %4=%5
+  ECHO(
+  ECHO multi-build_sh.bat [debug/release [--build=all/mine]]
+  EXIT /B 3
+)))))))
+
 ECHO Building: Windows x86:%CONFIG32% amd64:%CONFIG64%
 
 :: Generate Visual Studio 2010 solution and projects
 ::IF NOT EXIST %~dp0\build\vs2010 (
   IF EXIST %~dp0\dev\premake\premake4-windows.exe (
-    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %2 %3 vs2010
+    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %ARG2% %ARG3% vs2010
   )
 ::)
 

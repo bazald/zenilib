@@ -52,8 +52,6 @@ project(APPLICATION_NAME)
   configuration { "linux", "Release*", "x64" }
     linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,../../lib/x64" }
 
-  configuration "windows or linux"
-    links { "local_SDLmain" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration "macosx"
@@ -61,7 +59,14 @@ project(APPLICATION_NAME)
             "../external/sdl/SDLmain/*.m" }
     links { "Cocoa.framework" }
 
-  if _OPTIONS.build == "mine" then
+  if _OPTIONS.build == "all" then
+    configuration "windows or linux"
+      links { "local_SDLmain" }
+  else
+    configuration { "windows or linux", "Debug*" }
+      links { "local_SDLmain_d" }
+    configuration { "windows or linux", "Release*" }
+      links { "local_SDLmain" }
     configuration "Debug*"
       links { "zeni_rest_d", "zeni_graphics_d", "zeni_net_d", "zeni_core_d", "zeni_audio_d", "zeni_d", "local_SDL_d" }
     configuration "Release*"

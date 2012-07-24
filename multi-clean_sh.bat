@@ -5,19 +5,23 @@ GOTO WINDOWS
 
 
 
+if [ "$1" == "" ]; then
+  CLEAN=mine
+elif [ "$1" == "--build=all" ]; then
+  CLEAN=all
+elif [ "$1" == "--build=mine" ]; then
+  CLEAN=mine
+else
+  echo Illegal argument: $2
+  echo
+  echo "multi-clean.bat [--build=all/mine]"
+fi
+
 rm assets/stderr.txt
 rm assets/stdout.txt
 rm -r Resources
 rm *.plist
 
-rm bin/d32/game.exe
-rm bin/d32/*.exp
-rm bin/d32/*.idb
-rm bin/d32/*.ilk
-rm bin/d64/game.exe
-rm bin/d64/*.exp
-rm bin/d64/*.idb
-rm bin/d64/*.ilk
 rm bin/x32/*.exp
 rm bin/x32/*.idb
 rm bin/x32/*.ilk
@@ -42,6 +46,29 @@ rm game_d64
 rm lsbappchk_filtered.txt
 rm lsbappchk_full.txt
 
+if [ "$CLEAN" == "all" ]; then
+  rm -r bin/d32
+  rm -r bin/d64
+  rm bin/x32/*.lib
+  rm bin/x64/*.lib
+
+  rm -r lib/d32
+  rm -r lib/d64
+  rm lib/x32/liblocal_SDLmain.a
+  rm lib/x64/liblocal_SDLmain.a
+
+  rm -r lib/univ_d
+else
+  rm bin/d32/game.exe
+  rm bin/d32/*.exp
+  rm bin/d32/*.idb
+  rm bin/d32/*.ilk
+  rm bin/d64/game.exe
+  rm bin/d64/*.exp
+  rm bin/d64/*.idb
+  rm bin/d64/*.ilk
+fi
+
 rm -r build/macosx/obj
 rm -r build/xcode3/build
 rm -r build/xcode4/build
@@ -57,19 +84,25 @@ exit
 
 
 
+IF "%1=%2"=="=" (
+  SET CLEAN=mine
+) ELSE ( IF "%1=%2"=="--build=all" (
+  SET CLEAN=all
+) ELSE ( IF "%1=%2"=="--build=mine" (
+  SET CLEAN=mine
+) ELSE (
+  ECHO(
+  ECHO Illegal argument: %1=%2
+  ECHO(
+  ECHO multi-clean_sh.bat [--build=all/mine]
+  EXIT /B 2
+)))
+
 DEL /Q "%~dp0\assets\stderr.txt"
 DEL /Q "%~dp0\assets\stdout.txt"
 RMDIR /S /Q "%~dp0\Resources"
 DEL /Q "%~dp0\*.plist"
 
-DEL /Q "%~dp0\bin\d32\game.exe"
-DEL /Q "%~dp0\bin\d32\*.exp"
-DEL /Q "%~dp0\bin\d32\*.idb"
-DEL /Q "%~dp0\bin\d32\*.ilk"
-DEL /Q "%~dp0\bin\d64\game.exe"
-DEL /Q "%~dp0\bin\d64\*.exp"
-DEL /Q "%~dp0\bin\d64\*.idb"
-DEL /Q "%~dp0\bin\d64\*.ilk"
 DEL /Q "%~dp0\bin\x32\*.exp"
 DEL /Q "%~dp0\bin\x32\*.idb"
 DEL /Q "%~dp0\bin\x32\*.ilk"
@@ -98,6 +131,29 @@ RMDIR /S /Q "%~dp0\build\macosx\obj"
 RMDIR /S /Q "%~dp0\build\xcode3\build"
 RMDIR /S /Q "%~dp0\build\xcode4\build"
 RMDIR /S /Q "%~dp0\game_d.app"
+
+IF "%CLEAN%"=="all" (
+  RMDIR /S /Q "%~dp0\bin\d32"
+  RMDIR /S /Q "%~dp0\bin\d64"
+  DEL /Q "%~dp0\bin\x32\*.lib"
+  DEL /Q "%~dp0\bin\x64\*.lib"
+
+  RMDIR /S /Q "%~dp0\lib\d32"
+  RMDIR /S /Q "%~dp0\lib\d64"
+  DEL /Q "%~dp0\lib\x32\liblocal_SDLmain.a"
+  DEL /Q "%~dp0\lib\x64\liblocal_SDLmain.a"
+
+  RMDIR /S /Q "%~dp0\lib\univ_d"
+) ELSE (
+  DEL /Q "%~dp0\bin\d32\game.exe"
+  DEL /Q "%~dp0\bin\d32\*.exp"
+  DEL /Q "%~dp0\bin\d32\*.idb"
+  DEL /Q "%~dp0\bin\d32\*.ilk"
+  DEL /Q "%~dp0\bin\d64\game.exe"
+  DEL /Q "%~dp0\bin\d64\*.exp"
+  DEL /Q "%~dp0\bin\d64\*.idb"
+  DEL /Q "%~dp0\bin\d64\*.ilk"
+)
 
 
 
