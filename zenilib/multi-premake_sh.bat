@@ -17,8 +17,8 @@ function verify_arg {
 
 function usage {
   echo
-  echo "multi-build_sh.bat [--build=all/mine]"
-  echo "                   [--macosx=10.6/10.7/10.8/native]"
+  echo "multi-premake_sh.bat [--build=all/mine]"
+  echo "                     [--macosx=10.6/10.7/10.8/native]"
 }
 
 case $OSTYPE in
@@ -33,6 +33,22 @@ case $OSTYPE in
     exit 2
     ;;
 esac
+
+verify_arg $2
+if [ $? -ne 0 ]; then
+  echo
+  echo Illegal argument: $2
+  usage
+  exit 2
+fi
+
+verify_arg $3
+if [ $? -ne 0 ]; then
+  echo
+  echo Illegal argument: $3
+  usage
+  exit 3
+fi
 
 #
 # Generate Makefiles for Linux
@@ -98,7 +114,51 @@ exit
 
 
 
-%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %1 %2 vs2010
+IF "%1=%2"=="=" (
+  SET ARG1=
+) ELSE ( IF "%1=%2"=="--build=all" (
+  SET ARG1=%1=%2
+) ELSE ( IF "%1=%2"=="--build=mine" (
+  SET ARG1=%1=%2
+) ELSE ( IF "%1=%2"=="--macosx=10.6" (
+  SET ARG1=%1=%2
+) ELSE ( IF "%1=%2"=="--macosx=10.7" (
+  SET ARG1=%1=%2
+) ELSE ( IF "%1=%2"=="--macosx=10.8" (
+  SET ARG1=%1=%2
+) ELSE ( IF "%1=%2"=="--macosx=native" (
+  SET ARG1=%1=%2
+) ELSE (
+  ECHO(
+  ECHO Illegal argument: %1=%2
+  ECHO(
+  ECHO multi-premake_sh.bat [--build=all/mine]
+  EXIT /B 2
+)))))))
+
+IF "%3=%4"=="=" (
+  SET ARG2=
+) ELSE ( IF "%3=%4"=="--build=all" (
+  SET ARG2=%3=%4
+) ELSE ( IF "%3=%4"=="--build=mine" (
+  SET ARG2=%3=%4
+) ELSE ( IF "%3=%4"=="--macosx=10.6" (
+  SET ARG2=%3=%4
+) ELSE ( IF "%3=%4"=="--macosx=10.7" (
+  SET ARG2=%3=%4
+) ELSE ( IF "%3=%4"=="--macosx=10.8" (
+  SET ARG2=%3=%4
+) ELSE ( IF "%3=%4"=="--macosx=native" (
+  SET ARG2=%3=%4
+) ELSE (
+  ECHO(
+  ECHO Illegal argument: %3=%4
+  ECHO(
+  ECHO multi-premake_sh.bat [--build=all/mine]
+  EXIT /B 3
+)))))))
+
+%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %ARG1% %ARG2% vs2010
 
 
 
