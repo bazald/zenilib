@@ -5,17 +5,70 @@ GOTO WINDOWS
 
 
 
-if [ "$1" == "" ]; then
-  CLEAN=mine
-elif [ "$1" == "--build=all" ]; then
-  CLEAN=all
-elif [ "$1" == "--build=mine" ]; then
-  CLEAN=mine
-else
-  echo Illegal argument: $2
+function usage {
   echo
-  echo "multi-clean.bat [--build=all/mine]"
+  echo "Usage: $0 [options]"
+  echo
+  echo "  --build=all       game and all dependencies"
+  echo "          mine      game only (default)"
+}
+
+function usage_error {
+  echo
+  echo "Error: $1"
+  usage
+  exit $2
+}
+
+BUILD=mine
+CONFIG=release
+MACOSX=native
+
+STATE=config
+for arg in "$@"; do
+  case "$STATE" in
+    build)
+      case "$arg" in
+        all) BUILD=all ;;
+        mine) BUILD=mine ;;
+        *) usage_error "Invalid Argument '$arg'" 2
+      esac
+      STATE=config
+      ;;
+    config)
+      case "$arg" in
+        --build) STATE=build ;;
+          --build=all) BUILD=all ;;
+          --build=mine) BUILD=mine ;;
+        --macosx) STATE=macosx ;;
+          --macosx=10.6) MACOSX=10.6 ;;
+          --macosx=10.7) MACOSX=10.7 ;;
+          --macosx=10.8) MACOSX=10.8 ;;
+          --macosx=native) MACOSX=native ;;
+        debug) CONFIG=debug ;;
+        release) CONFIG=release ;;
+        releaseuniv) CONFIG=release ;;
+        *) usage_error "Invalid Argument '$arg'" 3
+      esac
+      ;;
+    macosx)
+      case "$arg" in
+        10.6) MACOSX=10.6 ;;
+        10.7) MACOSX=10.7 ;;
+        10.8) MACOSX=10.8 ;;
+        native) MACOSX=native ;;
+        *) usage_error "Invalid Argument '$arg'" 4
+      esac
+      STATE=config
+      ;;
+    *)
+      usage_error "Invalid Argument '$arg'" 1
+  esac
+done
+if [ "$STATE" != "config" ]; then
+  usage_error "Trailing Argument" 5
 fi
+
 
 rm assets/stderr.txt
 rm assets/stdout.txt
@@ -46,7 +99,7 @@ rm game_d64
 rm lsbappchk_filtered.txt
 rm lsbappchk_full.txt
 
-if [ "$CLEAN" == "all" ]; then
+if [ "$BUILD" == "all" ]; then
   rm -r bin/d32
   rm -r bin/d64
   rm bin/x32/*.lib

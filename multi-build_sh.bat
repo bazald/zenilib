@@ -5,56 +5,83 @@ GOTO WINDOWS
 
 
 
-function verify_arg {
-  if [ "$1" == "" ] || [ "$1" == "--build=all" ] || [ "$1" == "--build=mine" ]; then
-    return 0
-  elif [ "$1" == "" ] || [ "$1" == "--macosx=10.6" ] || [ "$1" == "--macosx=10.7" ] || [ "$1" == "--macosx=10.8" ] || [ "$1" == "--macosx=native" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 function usage {
   echo
-  echo "multi-build_sh.bat [debug/release [--build=all/mine]"
-  echo "                                  [--macosx=10.6/10.7/10.8/native]]"
+  echo "Usage: $0 [options] [debug or release]"
+  echo
+  echo "  --build=all       game and all dependencies"
+  echo "          mine      game only (default)"
+  echo
+  echo "  --macosx=10.6     Mac OS 10.6"
+  echo "           10.7     Mac OS 10.7"
+  echo "           10.8     Mac OS 10.8"
+  echo "           native   Whatever version you happen to be running (default)"
 }
+
+function usage_error {
+  echo
+  echo "Error: $1"
+  usage
+  exit $2
+}
+
+BUILD=mine
+CONFIG=release
+MACOSX=native
+
+STATE=config
+for arg in "$@"; do
+  case "$STATE" in
+    build)
+      case "$arg" in
+        all) BUILD=all ;;
+        mine) BUILD=mine ;;
+        *) usage_error "Invalid Argument '$arg'" 2
+      esac
+      STATE=config
+      ;;
+    config)
+      case "$arg" in
+        --build) STATE=build ;;
+          --build=all) BUILD=all ;;
+          --build=mine) BUILD=mine ;;
+        --macosx) STATE=macosx ;;
+          --macosx=10.6) MACOSX=10.6 ;;
+          --macosx=10.7) MACOSX=10.7 ;;
+          --macosx=10.8) MACOSX=10.8 ;;
+          --macosx=native) MACOSX=native ;;
+        debug) CONFIG=debug ;;
+        release) CONFIG=release ;;
+        releaseuniv) CONFIG=release ;;
+        *) usage_error "Invalid Argument '$arg'" 3
+      esac
+      ;;
+    macosx)
+      case "$arg" in
+        10.6) MACOSX=10.6 ;;
+        10.7) MACOSX=10.7 ;;
+        10.8) MACOSX=10.8 ;;
+        native) MACOSX=native ;;
+        *) usage_error "Invalid Argument '$arg'" 4
+      esac
+      STATE=config
+      ;;
+    *)
+      usage_error "Invalid Argument '$arg'" 1
+  esac
+done
+if [ "$STATE" != "config" ]; then
+  usage_error "Trailing Argument" 5
+fi
+
 
 case $OSTYPE in
   darwin*)
-    #
-    # Decide build targets
-    #
-
-    if [ "$1" == "" ]; then
+    if [ "$CONFIG"=="release" ]; then
       CONFIG=releaseuniv
-    elif [ "$1" == "debug" ]; then
-      CONFIG=debug
-    elif [ "$1" == "release" ]; then
-      CONFIG=releaseuniv
-    else
-      echo Invalid configuration selection: $1
-      exit 1
     fi
 
-    verify_arg $2
-    if [ $? -ne 0 ]; then
-      echo
-      echo Illegal argument: $2
-      usage
-      exit 2
-    fi
-
-    verify_arg $3
-    if [ $? -ne 0 ]; then
-      echo
-      echo Illegal argument: $3
-      usage
-      exit 3
-    fi
-
-    echo Building: Mac OS X $CONFIG
+    echo Building: Mac OS X $BUILD $MACOSX $CONFIG
 
     #
     # Generate Makefiles for Mac OS X
@@ -62,7 +89,7 @@ case $OSTYPE in
 
     rm -r build/gmake
     chmod +x dev/premake/premake4-macosx
-    dev/premake/premake4-macosx --os=macosx $2 $3 gmake
+    dev/premake/premake4-macosx --os=macosx --build=$BUILD --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then exit -1; fi
 
     mkdir -p build/macosx
@@ -93,7 +120,15 @@ case $OSTYPE in
     export CXX="$CCACHE clang++"
 
     make -j 4 -C build/macosx config=$CONFIG
-    if [ $? -ne 0 ]; then exit -2; fi
+    if [ $? -ne 0 ]; then
+      echo
+      if [ "$BUILD" == "mine" ]; then
+        echo "Build failed.  Retry with --build=all"
+      else
+        echo "Build failed."
+      fi
+      exit -2
+    fi
 
     if [ "$CONFIG" != "releaseuniv" ]; then
       echo
@@ -101,38 +136,7 @@ case $OSTYPE in
     fi
     ;;
   linux*)
-    #
-    # Decide build targets
-    #
-
-    if [ "$1" == "" ]; then
-      CONFIG=release
-    elif [ "$1" == "debug" ]; then
-      CONFIG=debug
-    elif [ "$1" == "release" ]; then
-      CONFIG=release
-    else
-      echo Invalid configuration selection: $1
-      exit 1
-    fi
-
-    verify_arg $2
-    if [ $? -ne 0 ]; then
-      echo
-      echo Illegal argument: $2
-      usage
-      exit 2
-    fi
-
-    verify_arg $3
-    if [ $? -ne 0 ]; then
-      echo
-      echo Illegal argument: $3
-      usage
-      exit 3
-    fi
-
-    echo Building: Linux $CONFIG
+    echo Building: Linux $BUILD $CONFIG
 
     #
     # Generate Makefiles for Linux
@@ -140,8 +144,7 @@ case $OSTYPE in
 
     rm -r build/gmake
     chmod +x dev/premake/premake4-linux
-    echo dev/premake/premake4-linux --os=linux $2 $3 gmake
-    dev/premake/premake4-linux --os=linux $2 $3 gmake
+    dev/premake/premake4-linux --os=linux --build=$BUILD --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then exit -1; fi
 
     # Migrate Makefiles to build/linux
@@ -206,6 +209,15 @@ case $OSTYPE in
 
       make -j 4 -C build/linux config=$CONFIG$BIT
       EXIT_CODE=$?
+      if [ $EXIT_CODE -ne 0 ]; then
+        echo
+        if [ "$BUILD" == "mine" ]; then
+          echo "Build failed.  Retry with --build=all"
+        else
+          echo "Build failed."
+        fi
+        exit -2
+      fi
 
       if [ $EXIT_CODE -eq 0 ] && [ -x game_$CONFIG_CHAR$BIT ]
       then
@@ -232,6 +244,15 @@ case $OSTYPE in
       fi
     else
       make -j 4 -C build/linux config=$CONFIG$BIT
+      if [ $? -ne 0 ]; then
+        echo
+        if [ "$BUILD" == "mine" ]; then
+          echo "Build failed.  Retry with --build=all"
+        else
+          echo "Build failed."
+        fi
+        exit -2
+      fi
 
       echo
       echo "Build not LSB-compliant.  Do not distribute binaries."
@@ -340,7 +361,7 @@ IF "%4=%5"=="=" (
   EXIT /B 3
 )))))))
 
-ECHO Building: Windows x86:%CONFIG32% amd64:%CONFIG64%
+ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 
 :: Generate Visual Studio 2010 solution and projects
 ::IF NOT EXIST %~dp0\build\vs2010 (
