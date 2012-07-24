@@ -5,6 +5,22 @@ GOTO WINDOWS
 
 
 
+function verify_arg {
+  if [ "$1" == "" ] || [ "$1" == "--build=all" ] || [ "$1" == "--build=mine" ]; then
+    return 0
+  elif [ "$1" == "" ] || [ "$1" == "--macosx=10.6" ] || [ "$1" == "--macosx=10.7" ] || [ "$1" == "--macosx=10.8" ] || [ "$1" == "--macosx=native" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function usage {
+  echo
+  echo "multi-build_sh.bat [debug/release [--build=all/mine]"
+  echo "                                  [--macosx=10.6/10.7/10.8/native]]"
+}
+
 case $OSTYPE in
   darwin*)
     #
@@ -22,6 +38,22 @@ case $OSTYPE in
       exit 1
     fi
 
+    verify_arg $2
+    if [ $? -ne 0 ]; then
+      echo
+      echo Illegal argument: $2
+      usage
+      exit 2
+    fi
+
+    verify_arg $3
+    if [ $? -ne 0 ]; then
+      echo
+      echo Illegal argument: $3
+      usage
+      exit 3
+    fi
+
     echo Building: Mac OS X $CONFIG
 
     #
@@ -30,8 +62,8 @@ case $OSTYPE in
 
     rm -r build/gmake
     chmod +x dev/premake/premake4-macosx
-    dev/premake/premake4-macosx --os=macosx gmake
-    if [ $? -ne 0 ]; then exit 1; fi
+    dev/premake/premake4-macosx --os=macosx $2 $3 gmake
+    if [ $? -ne 0 ]; then exit -1; fi
 
     mkdir -p build/macosx
     for file in build/macosx/*; do
@@ -61,7 +93,7 @@ case $OSTYPE in
     export CXX="$CCACHE clang++"
 
     make -j 4 -C build/macosx config=$CONFIG
-    if [ $? -ne 0 ]; then exit 2; fi
+    if [ $? -ne 0 ]; then exit -2; fi
 
     if [ "$CONFIG" != "releaseuniv" ]; then
       echo
@@ -84,6 +116,22 @@ case $OSTYPE in
       exit 1
     fi
 
+    verify_arg $2
+    if [ $? -ne 0 ]; then
+      echo
+      echo Illegal argument: $2
+      usage
+      exit 2
+    fi
+
+    verify_arg $3
+    if [ $? -ne 0 ]; then
+      echo
+      echo Illegal argument: $3
+      usage
+      exit 3
+    fi
+
     echo Building: Linux $CONFIG
 
     #
@@ -92,8 +140,9 @@ case $OSTYPE in
 
     rm -r build/gmake
     chmod +x dev/premake/premake4-linux
-    dev/premake/premake4-linux --os=linux gmake
-    if [ $? -ne 0 ]; then exit 1; fi
+    echo dev/premake/premake4-linux --os=linux $2 $3 gmake
+    dev/premake/premake4-linux --os=linux $2 $3 gmake
+    if [ $? -ne 0 ]; then exit -1; fi
 
     # Migrate Makefiles to build/linux
 
@@ -190,7 +239,7 @@ case $OSTYPE in
     ;;
   ?*)
     echo "Unknown"
-    exit 2
+    exit -2
     ;;
 esac
 exit
@@ -212,7 +261,7 @@ FOR /F %%v in ('C:\Windows\System32\whoami.exe /USER') DO SET WHOAMI=%%v
 FOR /F %%v in ('echo.exe %WHOAMI% ^| sed.exe "s/.*\\\\//"') DO SET WHOAMI=%%v
 IF "%WHOAMI%"=="cyg_server" (
   echo Logged in as cyg_server.  Please relog in using your password.
-  exit 1
+  exit -1
 )
 
 :: If logged in over Cygwin SSH, necessary variables are unset.
@@ -252,7 +301,7 @@ ECHO Building: Windows x86:%CONFIG32% amd64:%CONFIG64%
 :: Generate Visual Studio 2010 solution and projects
 ::IF NOT EXIST %~dp0\build\vs2010 (
   IF EXIST %~dp0\dev\premake\premake4-windows.exe (
-    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows vs2010
+    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows %2 %3 vs2010
   )
 ::)
 
