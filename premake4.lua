@@ -126,10 +126,18 @@ solution "zenilib"
     buildoptions { "-Qunused-arguments" }
 
     if _OPTIONS.macosx ~= "native" then
+      sysroot="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
+      if not os.isdir(sysroot) then
+        sysroot="/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
+      end
+      if not os.isdir(sysroot) then
+        error("Mac OS ".._OPTIONS.macosx.." SDK not found.")
+      end
+
       buildoptions { "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
-                    "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk" }
+                    "-isysroot "..sysroot }
       linkoptions {  "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
-                    "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+                    "-isysroot "..sysroot,
                     "-Wl,-macosx_version_min,".._OPTIONS.macosx}
     end
 
