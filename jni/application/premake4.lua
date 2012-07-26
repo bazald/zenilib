@@ -8,6 +8,20 @@ project(APPLICATION_NAME)
     prebuildcommands { "xcopy ..\\..\\dev\\pc_ ..\\.. /E /Y" }
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av --exclude '.*' ../../dev/pc_/ ../../" }
+  if _OPTIONS.macosx ~= "native" then
+    configuration { "macosx", "Debug*" }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" ../../Info_d.plist" }
+    configuration { "macosx", "Release*" }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" ../../Info.plist" }
+  else
+    local macosx = os.outputof("sw_vers | grep -o '[0-9]\\{2,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}' | sed 's/\\.[0-9]*$//'")
+    local macosx = string.sub(macosx, 1, string.len(macosx) - 1)
+
+    configuration { "macosx", "Debug*" }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info_d.plist" }
+    configuration { "macosx", "Release*" }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info.plist" }
+  end
   configuration { "macosx", "Debug*" }
     prebuildcommands { "mkdir -p ../../game_d.app/Contents",
                        "rsync -av --exclude '.*' ../../lib/univ_d/ ../../game_d.app/Contents/MacOS/",
