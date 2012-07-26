@@ -14,13 +14,20 @@ project(APPLICATION_NAME)
     configuration { "macosx", "Release*" }
       prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" ../../Info.plist" }
   else
-    local macosx = os.outputof("sw_vers | grep -o '[0-9]\\{2,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}' | sed 's/\\.[0-9]*$//'")
-    local macosx = string.sub(macosx, 1, string.len(macosx) - 1)
+    local ver=os.getversion()
+    if ver.majorversion == 10 and ver.minorversion >= 6 then
+      local macosx = string.format("%d.%d", ver.majorversion, ver.minorversion)
 
-    configuration { "macosx", "Debug*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info_d.plist" }
-    configuration { "macosx", "Release*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info.plist" }
+      configuration { "macosx", "Debug*" }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info_d.plist" }
+      configuration { "macosx", "Release*" }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" ../../Info.plist" }
+    else
+      configuration { "macosx", "Debug*" }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" ../../Info_d.plist" }
+      configuration { "macosx", "Release*" }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" ../../Info.plist" }
+    end
   end
   configuration { "macosx", "Debug*" }
     prebuildcommands { "mkdir -p ../../game_d.app/Contents",
