@@ -75,6 +75,8 @@ if [ "$STATE" != "config" ]; then
   usage_error "Trailing Argument" 5
 fi
 
+pushd $(echo $0 | sed 's/\/[^\/]*$//')
+if [ $? -ne 0 ]; then exit -4; fi
 
 case $OSTYPE in
   darwin*)
@@ -85,7 +87,8 @@ case $OSTYPE in
     ;;
   ?*)
     echo "Unknown"
-    exit 2
+    popd
+    exit -3
     ;;
 esac
 
@@ -96,7 +99,10 @@ esac
 rm -r build/gmake
 chmod +x $PREMAKE
 $PREMAKE --os=linux --build=$BUILD --macosx=$MACOSX gmake
-if [ $? -ne 0 ]; then exit 1; fi
+if [ $? -ne 0 ]; then
+  popd
+  exit 1
+fi
 
 # Migrate Makefiles to build/linux
 
@@ -113,7 +119,10 @@ rm -r build/gmake
 
 chmod +x $PREMAKE
 $PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX gmake
-if [ $? -ne 0 ]; then exit 1; fi
+if [ $? -ne 0 ]; then
+  popd
+  exit 1
+fi
 
 mkdir -p build/macosx
 for file in build/macosx/*; do
@@ -145,6 +154,7 @@ $PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode3
 $PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode4
 $PREMAKE --os=windows --build=$BUILD --macosx=$MACOSX vs2010
 
+popd
 exit
 
 

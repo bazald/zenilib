@@ -77,6 +77,8 @@ if [ "$STATE" != "config" ]; then
   usage_error "Trailing Argument" 5
 fi
 
+pushd $(echo $0 | sed 's/\/[^\/]*$//')
+if [ $? -ne 0 ]; then exit -4; fi
 
 case $OSTYPE in
   darwin*)
@@ -93,7 +95,10 @@ case $OSTYPE in
     rm -r build/gmake
     chmod +x dev/premake/premake4-macosx
     dev/premake/premake4-macosx --os=macosx --build=$BUILD --macosx=$MACOSX gmake
-    if [ $? -ne 0 ]; then exit -1; fi
+    if [ $? -ne 0 ]; then
+      popd
+      exit -1
+    fi
 
     mkdir -p build/macosx
     for file in build/macosx/*; do
@@ -130,6 +135,7 @@ case $OSTYPE in
       else
         echo "Build failed."
       fi
+      popd
       exit -2
     fi
 
@@ -148,7 +154,10 @@ case $OSTYPE in
     rm -r build/gmake
     chmod +x dev/premake/premake4-linux
     dev/premake/premake4-linux --os=linux --build=$BUILD --macosx=$MACOSX gmake
-    if [ $? -ne 0 ]; then exit -1; fi
+    if [ $? -ne 0 ]; then
+      popd
+      exit -1
+    fi
 
     # Migrate Makefiles to build/linux
 
@@ -219,6 +228,7 @@ case $OSTYPE in
         else
           echo "Build failed."
         fi
+        popd
         exit -2
       fi
 
@@ -254,6 +264,7 @@ case $OSTYPE in
         else
           echo "Build failed."
         fi
+        popd
         exit -2
       fi
 
@@ -263,9 +274,12 @@ case $OSTYPE in
     ;;
   ?*)
     echo "Unknown"
-    exit -2
+    popd
+    exit -3
     ;;
 esac
+
+popd
 exit
 
 

@@ -70,6 +70,8 @@ if [ "$STATE" != "config" ]; then
   usage_error "Trailing Argument" 5
 fi
 
+pushd $(echo $0 | sed 's/\/[^\/]*$//')
+if [ $? -ne 0 ]; then exit -4; fi
 
 rm assets/stderr.txt
 rm assets/stdout.txt
@@ -128,8 +130,7 @@ rm -r build/xcode3/build
 rm -r build/xcode4/build
 rm -r game_d.app
 
-
-
+popd
 exit
 
 
