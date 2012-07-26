@@ -205,19 +205,11 @@ GOTO NEXTARG
 
 :ARGERROR 
 
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
-
 ECHO(
 ECHO Usage: multi-build_sh.bat [options]
 ECHO(
 ECHO   --build=all       game and all dependencies
 ECHO           mine      game only (default)
-
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
 
 EXIT /B 1
 

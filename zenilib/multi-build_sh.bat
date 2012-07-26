@@ -275,9 +275,9 @@ exit
 
 
 :: Backup environment variables
-IF NOT EXIST %~dp0\build MKDIR %~dp0\build
+IF NOT EXIST "%~dp0\build" MKDIR "%~dp0\build"
 IF EXIST "%~dp0\dev\backupenv.bat" DEL "%~dp0\dev\backupenv.bat"
-FOR /f "tokens=1* delims==" %%a in ('SET') DO ECHO SET %%a=%%b>> %~dp0\build\backupenv.bat
+FOR /f "tokens=1* delims==" %%a in ('SET') DO ECHO SET %%a=%%b>> "%~dp0\build\backupenv.bat"
 
 :: If logged in over Cygwin SSH, must use a password or commands fail.
 SET WHOAMI=
@@ -289,7 +289,7 @@ IF "%WHOAMI%"=="cyg_server" (
 )
 
 :: If logged in over Cygwin SSH, necessary variables are unset.
-CALL %~dp0\dev\VCVarsQueryRegistry.bat
+CALL "%~dp0\dev\VCVarsQueryRegistry.bat"
 IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
 
 
@@ -362,7 +362,7 @@ GOTO NEXTARG
 
 :: Restore environment variables
 FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
+CALL "%~dp0\build\backupenv.bat"
 
 ECHO(
 ECHO Usage: multi-build_sh.bat [options] [debug[32/64] or release[32/64]]
@@ -376,10 +376,6 @@ ECHO            10.8     Mac OS 10.8
 ECHO            native   Whatever version you happen to be running (default)
 ECHO(
 ECHO   release32 is the default
-
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
 
 EXIT /B 1
 
@@ -423,9 +419,9 @@ IF "%CONFIG%"=="" (
 ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 
 :: Generate Visual Studio 2010 solution and projects
-::IF NOT EXIST %~dp0\build\vs2010 (
-  IF EXIST %~dp0\dev\premake\premake4-windows.exe (
-    %~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
+::IF NOT EXIST "%~dp0\build\vs2010" (
+  IF EXIST "%~dp0\dev\premake\premake4-windows.exe" (
+    "%~dp0\dev\premake\premake4-windows.exe" --file="%~dp0\premake4.lua" --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
   )
 ::)
 
@@ -433,22 +429,22 @@ ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 CALL "%VS100COMNTOOLS%vsvars32.bat"
 
 IF "%CONFIG32%"=="debug" (
-  MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d32.log;Encoding=UTF-8
+  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\d32.log";Encoding=UTF-8
   IF ERRORLEVEL 1 GOTO BUILDERROR 
 )
 IF "%CONFIG64%"=="debug" (
-  MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\d64.log;Encoding=UTF-8
+  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\d64.log";Encoding=UTF-8
   IF ERRORLEVEL 1 GOTO BUILDERROR 
 )
 IF "%CONFIG32%"=="release" (
-  MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x32.log;Encoding=UTF-8
+  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\x32.log";Encoding=UTF-8
   IF ERRORLEVEL 1 GOTO BUILDERROR 
-  COPY /Y %~dp0\jni\external\bin\x32\* %~dp0\bin\x32\
+  COPY /Y "%~dp0\jni\external\bin\x32\*" "%~dp0\bin\x32\"
 )
 IF "%CONFIG64%"=="release" (
-  MSBuild %~dp0\build\vs2010\zenilib.sln /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile=%~dp0\build\x64.log;Encoding=UTF-8
+  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\x64.log";Encoding=UTF-8
   IF ERRORLEVEL 1 GOTO BUILDERROR 
-  COPY /Y %~dp0\jni\external\bin\x64\* %~dp0\bin\x64\
+  COPY /Y "%~dp0\jni\external\bin\x64\*" "%~dp0\bin\x64\"
 )
 
 IF "%CONFIG32%"=="debug" (
@@ -475,7 +471,7 @@ IF "%BUILD%"=="mine" (
 :RESTORE 
 :: Restore environment variables
 FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
+CALL "%~dp0\build\backupenv.bat"
 
 
 

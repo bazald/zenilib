@@ -220,10 +220,6 @@ GOTO NEXTARG
 
 :ARGERROR 
 
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
-
 ECHO(
 ECHO Usage: multi-build_sh.bat [options]
 ECHO(
@@ -234,10 +230,6 @@ ECHO   --macosx=10.6     Mac OS 10.6
 ECHO            10.7     Mac OS 10.7
 ECHO            10.8     Mac OS 10.8
 ECHO            native   Whatever version you happen to be running (default)
-
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL %~dp0\build\backupenv.bat
 
 EXIT /B 1
 
@@ -250,7 +242,7 @@ IF NOT "%STATE%"=="config" (
 )
 
 
-%~dp0\dev\premake\premake4-windows.exe --file=%~dp0\premake4.lua --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
+"%~dp0\dev\premake\premake4-windows.exe" --file="%~dp0\premake4.lua" --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
 
 
 
