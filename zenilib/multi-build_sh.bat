@@ -80,7 +80,7 @@ fi
 
 case $OSTYPE in
   darwin*)
-    if [ "$CONFIG "==" release" ]; then
+    if [ "$CONFIG" == "release" ]; then
       CONFIG=releaseuniv
     fi
 
