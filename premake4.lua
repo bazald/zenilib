@@ -131,12 +131,15 @@ solution "zenilib"
         sysroot="/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
       end
       if not os.isdir(sysroot) then
+        sysroot="/Applications/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
+      end
+      if not os.isdir(sysroot) then
         error("Mac OS ".._OPTIONS.macosx.." SDK not found.")
       end
 
-      buildoptions { "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+      buildoptions { "--sysroot "..sysroot,
                     "-isysroot "..sysroot }
-      linkoptions {  "--sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk",
+      linkoptions {  "--sysroot "..sysroot,
                     "-isysroot "..sysroot,
                     "-Wl,-macosx_version_min,".._OPTIONS.macosx}
     end
