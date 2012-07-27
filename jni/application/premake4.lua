@@ -79,7 +79,6 @@ project(APPLICATION_NAME)
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.m" }
     links { "Cocoa.framework" }
-    buildoptions { "-Wno-objc-protocol-method-implementation" }
 
   if _OPTIONS.build == "all" then
     configuration "windows or linux"
