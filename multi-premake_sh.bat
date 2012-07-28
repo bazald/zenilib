@@ -110,7 +110,13 @@ mkdir -p build/linux
 for file in build/linux/*; do
   if [ -f "$file" ]; then rm "$file"; fi
 done
-cp build/gmake/* build/linux/
+
+pushd build/gmake
+for mf in *; do
+  cat "$mf" | sed 's/ -rcs / -rso /' \
+            > "../../build/linux/$mf"
+done
+popd
 rm -r build/gmake
 
 #
