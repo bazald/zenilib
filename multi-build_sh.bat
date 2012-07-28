@@ -165,7 +165,13 @@ case $OSTYPE in
     for file in build/linux/*; do
       if [ -f "$file" ]; then rm "$file"; fi
     done
-    cp build/gmake/* build/linux/
+
+    pushd build/gmake
+    for mf in *; do
+      cat "$mf" | sed 's/ -rcs / -rso /' \
+                > "../../build/linux/$mf"
+    done
+    popd
     rm -r build/gmake
 
     #
@@ -199,8 +205,8 @@ case $OSTYPE in
     fi
 
     export LSBCC_LIB_PREFIX
-    export LSBCC=gcc-4.4
-    export LSBCXX=g++-4.4
+    export LSBCC=$(which gcc-4.4)
+    export LSBCXX=$(which g++-4.4)
     export LSBCC_LSBVERSION=4.0
     export LSBCC_LIBS=$LSBCC_LIB_PREFIX$LSBCC_LSBVERSION
     export LSB_SHAREDLIBPATH="$(pwd)/lib/$CONFIG_CHAR$BIT"
@@ -211,13 +217,28 @@ case $OSTYPE in
     export CCACHE_SLOPPINESS=time_macros
     export CCACHE_COMPILERCHECK="$CCACHE_CC -v"
 
-    if [ -x $(which $LSBCC) ] && [ -x $(which $LSBCXX) ] && [ -x "$LSB_HOME/bin/lsbcc" ] && [ -x "$LSB_HOME/bin/lsbc++" ]
-    then
+    if [ -x "$LSBCC" ] && [ -x "$LSBCXX" ] && [ -x "$LSB_HOME/bin/lsbcc" ] && [ -x "$LSB_HOME/bin/lsbc++" ]; then
       COMPILING_WITH_LSB=1
       echo "Compiling for LSB"
 
       export CC="$CCACHE $CCACHE_CC"
       export CXX="$CCACHE $CCACHE_CXX"
+
+      VERCC=$(echo $LSBCC | sed 's/.*-\([0-9]\)/\1/')
+      VERCXX=$(echo $LSBCXX | sed 's/.*-\([0-9]\)/\1/')
+      if [ "$VERCC" \> "4.4" ] || [ "$VERCXX" \> "4.4" ]; then
+        echo "gold-ld forced by GCC version > 4.4"
+
+        GOLD_LD=$(echo $(whereis -b gold-ld) | sed 's/.* //')
+        if [ "$GOLD_LD" != "" ]; then
+          export LDFLAGS="-B$GOLD_LD -Wl,--no-gnu-unique"
+        else
+          echo "gold-ld could not be found, but is required for LSB build"
+          echo "Notes: gold-ld is merely a directory on the path (e.g. /usr/lib/gold-ld)"
+          echo "       gold-ld must contain 'ld', a symlink to ld.gold or gold"
+          exit -4
+        fi
+      fi
 
       make -j 4 -C build/linux config=$CONFIG$BIT
       EXIT_CODE=$?
@@ -232,8 +253,7 @@ case $OSTYPE in
         exit -2
       fi
 
-      if [ $EXIT_CODE -eq 0 ] && [ -x game_$CONFIG_CHAR$BIT ]
-      then
+      if [ $EXIT_CODE -eq 0 ] && [ -x game_$CONFIG_CHAR$BIT ]; then
         $LSB_HOME/bin/lsbappchk --no-journal --missing-symbols --lsb-version=$LSBCC_LSBVERSION game_$CONFIG_CHAR$BIT &> lsbappchk_full.txt
         cat lsbappchk_full.txt \
           | grep -v "WARNING" \
@@ -256,6 +276,8 @@ case $OSTYPE in
       else echo "Do not distribute debug binaries."
       fi
     else
+      echo "Not compiling for LSB"
+
       make -j 4 -C build/linux config=$CONFIG$BIT
       if [ $? -ne 0 ]; then
         echo

@@ -116,11 +116,8 @@ solution "zenilib"
               "ZENI_REST_DLL="    , "ZENI_REST_EXT=" }
 
   configuration "linux"
-    linkoptions { "-Wl,--hash-style=both" }
-  configuration { "linux", "x32" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN'" }
-  configuration { "linux", "x64" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN'" }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN'",
+                  "-Wl,--hash-style=both" }
 
   configuration "macosx"
     buildoptions { "-Qunused-arguments" }
