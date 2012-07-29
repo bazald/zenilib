@@ -204,9 +204,70 @@ case $OSTYPE in
       CONFIG_CHAR=x
     fi
 
+    if [ "$COMPILE_FOR_LSB" == "" ]; then
+      COMPILE_FOR_LSB=1
+    fi
+
+    if [ "$CC" == "" ]; then CC=gcc; fi
+    if [ "$CXX" == "" ]; then CXX=g++; fi
+    VERCC=( $($CC --version \
+            | grep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}' \
+            | head -n 1 \
+            | sed 's/\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)/\1 \2 \3/') )
+    VERCXX=( $($CXX --version \
+             | grep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}' \
+             | head -n 1 \
+             | sed 's/\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)/\1 \2 \3/') )
+    echo "Detected gcc version ${VERCC[0]}.${VERCC[1]}.${VERCC[2]}"
+    echo "Detected g++ version ${VERCXX[0]}.${VERCXX[1]}.${VERCXX[2]}"
+
+    if [ ! -x "$LSB_HOME/bin/lsbcc" ] || [ ! -x "$LSB_HOME/bin/lsbc++" ]; then
+      COMPILE_FOR_LSB=0
+      echo "LSB compilation toolchain not found."
+    fi
+
+    if [ $COMPILE_FOR_LSB -ne 0 ] && [ ${VERCC[0]} -gt 4 -o ${VERCXX[0]} -gt 4 -o ${VERCC[1]} -gt 4 -o ${VERCXX[1]} -gt 4 ]
+    then
+      echo "gcc/g++ 4.5 and 4.6 require ld.gold for LSB compilation."
+
+      GOLD_LD=$(echo $(whereis -b gold-ld) | sed 's/.* //')
+      if [ -x "$GOLD_LD/ld" ]; then
+        MAX_MINOR=6
+        echo "ld.gold found: $GOLD_LD"
+      else
+        MAX_MINOR=4
+        echo "gold-ld could not be found, but is required for LSB build with GCC 4.5 and 4.6."
+        echo "Notes: gold-ld is merely a directory on the path (e.g. /usr/lib/gold-ld)"
+        echo "       gold-ld must contain 'ld', a symlink to ld.gold or gold"
+      fi
+    fi
+
+    if [ $COMPILE_FOR_LSB -ne 0 ] && [ ${VERCC[0]} -gt 4 -o ${VERCXX[0]} -gt 4 -o ${VERCC[1]} -gt $MAX_MINOR -o ${VERCXX[1]} -gt $MAX_MINOR ]
+    then
+      COMPILE_FOR_LSB=0
+      for minor in $(seq $MAX_MINOR -1 0); do
+        TESTCC=$(which "gcc-4.$minor")
+        TESTCXX=$(which "g++-4.$minor")
+        if [ -x $TESTCC -a -x $TESTCXX ]; then
+          COMPILE_FOR_LSB=1
+          CC=$TESTCC
+          CXX=$TESTCXX
+          VERCC[0]=4
+          VERCXX[0]=4
+          VERCC[1]=$MAX_MINOR
+          VERCXX[1]=$MAX_MINOR
+          break
+        fi
+      done
+
+      if [ $COMPILE_FOR_LSB -eq 0 ]; then
+        echo "No version of gcc/g++ usable for LSB compilation found."
+      fi
+    fi
+
     export LSBCC_LIB_PREFIX
-    export LSBCC=$(which gcc-4.4)
-    export LSBCXX=$(which g++-4.4)
+    export LSBCC=$CC
+    export LSBCXX=$CXX
     export LSBCC_LSBVERSION=4.0
     export LSBCC_LIBS=$LSBCC_LIB_PREFIX$LSBCC_LSBVERSION
     export LSB_SHAREDLIBPATH="$(pwd)/lib/$CONFIG_CHAR$BIT"
@@ -217,27 +278,15 @@ case $OSTYPE in
     export CCACHE_SLOPPINESS=time_macros
     export CCACHE_COMPILERCHECK="$CCACHE_CC -v"
 
-    if [ -x "$LSBCC" ] && [ -x "$LSBCXX" ] && [ -x "$LSB_HOME/bin/lsbcc" ] && [ -x "$LSB_HOME/bin/lsbc++" ]; then
-      COMPILING_WITH_LSB=1
-      echo "Compiling for LSB"
+    if [ $COMPILE_FOR_LSB -ne 0 ]; then
+      echo "Compiling for the LSB with $CC and $CXX"
 
       export CC="$CCACHE $CCACHE_CC"
       export CXX="$CCACHE $CCACHE_CXX"
 
-      VERCC=$(echo $LSBCC | sed 's/.*-\([0-9]\)/\1/')
-      VERCXX=$(echo $LSBCXX | sed 's/.*-\([0-9]\)/\1/')
-      if [ "$VERCC" \> "4.4" ] || [ "$VERCXX" \> "4.4" ]; then
-        echo "gold-ld forced by GCC version > 4.4"
-
-        GOLD_LD=$(echo $(whereis -b gold-ld) | sed 's/.* //')
-        if [ "$GOLD_LD" != "" ]; then
-          export LDFLAGS="-B$GOLD_LD -Wl,--no-gnu-unique"
-        else
-          echo "gold-ld could not be found, but is required for LSB build"
-          echo "Notes: gold-ld is merely a directory on the path (e.g. /usr/lib/gold-ld)"
-          echo "       gold-ld must contain 'ld', a symlink to ld.gold or gold"
-          exit -4
-        fi
+      if [ ${VERCC[0]} -gt 4 -o ${VERCXX[0]} -gt 4 -o ${VERCC[1]} -gt 4 -o ${VERCXX[1]} -gt 4 ]; then
+        echo "Using ld.gold: $GOLD_LD"
+        export LDFLAGS="-B$GOLD_LD -Wl,--no-gnu-unique"
       fi
 
       make -j 4 -C build/linux config=$CONFIG$BIT
@@ -276,7 +325,7 @@ case $OSTYPE in
       else echo "Do not distribute debug binaries."
       fi
     else
-      echo "Not compiling for LSB"
+      echo "Not compiling for the LSB."
 
       make -j 4 -C build/linux config=$CONFIG$BIT
       if [ $? -ne 0 ]; then
