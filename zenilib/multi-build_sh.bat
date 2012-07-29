@@ -119,9 +119,9 @@ case $OSTYPE in
     # Setup the build
     #
 
-    CCACHE=""
-    if [ "$(which ccache)" != "" ]; then
-      CCACHE=ccache
+    CCACHE=$(which ccache)
+    if [ ! -x $CCACHE ]; then
+      CCACHE=""
     fi
 
     export CC="$CCACHE clang"
