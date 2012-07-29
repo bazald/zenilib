@@ -178,22 +178,6 @@ case $OSTYPE in
     # Setup the build
     #
 
-    if [ "$LSB_HOME" == "" ]; then
-      LSB_HOME=/opt/lsb
-    fi
-
-    CCACHE=""
-    if [ -x $(which ccache) ]; then
-      CCACHE=ccache
-    fi
-
-    LSBCC_LIB_PREFIX=$LSB_HOME/lib-
-    BIT=32
-    if [ $(uname -m) == "x86_64" ]; then
-      LSBCC_LIB_PREFIX=$LSB_HOME/lib64-
-      BIT=64
-    fi
-
     if [ "$CONFIG" == "" ]; then
       CONFIG=debug
     fi
@@ -202,6 +186,22 @@ case $OSTYPE in
       CONFIG_CHAR=d
     elif [ "$CONFIG" == "release" ]; then
       CONFIG_CHAR=x
+    fi
+
+    if [ "$LSB_HOME" == "" ]; then
+      LSB_HOME=/opt/lsb
+    fi
+
+    CCACHE=$(which ccache)
+    if [ ! -x $CCACHE ]; then
+      CCACHE=""
+    fi
+
+    LSBCC_LIB_PREFIX=$LSB_HOME/lib-
+    BIT=32
+    if [ $(uname -m) == "x86_64" ]; then
+      LSBCC_LIB_PREFIX=$LSB_HOME/lib64-
+      BIT=64
     fi
 
     if [ "$COMPILE_FOR_LSB" == "" ]; then
