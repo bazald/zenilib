@@ -101,7 +101,7 @@ project(APPLICATION_NAME)
 --     pchheader "jni/external/zenilib/zenilib.h"
 --     pchsource "jni/application/bootstrap.cpp"
 
-    files { "**.h", "**.hxx", "**.cpp" }
+    files { "**.h", "**.hxx", "**.cpp", "../external/zenilib/**.h" }
 
     if _OPTIONS.build == "all" then
       links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
