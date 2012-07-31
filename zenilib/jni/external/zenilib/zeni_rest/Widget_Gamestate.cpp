@@ -80,7 +80,7 @@ namespace Zeni {
 #endif
 
   void Widget_Gamestate::perform_logic() {
-    m_viewport = get_Video().calculate_viewport(m_virtual_window, std::make_pair(Point2f(), Point2f(get_Window().get_size())), m_fix_aspect_ratio);
+    m_viewport = get_Video().calculate_viewport(m_virtual_window, std::make_pair(Point2i(), get_Window().get_size()), m_fix_aspect_ratio);
     m_projector = Projector2D(m_virtual_window, m_viewport);
 
     m_widgets.perform_logic();
