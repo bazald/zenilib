@@ -18,7 +18,7 @@ project(APPLICATION_NAME)
   configuration "windows"
     prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("../..").." /E /Y" }
   configuration { "macosx or linux" }
-    prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_/").." "..rebase("") }
+    prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_").."/ "..rebase("") }
   if _OPTIONS.macosx ~= "native" then
     configuration { "macosx", "Debug*" }
       prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("Info_d.plist") }
@@ -42,15 +42,15 @@ project(APPLICATION_NAME)
   end
   configuration { "macosx", "Debug*" }
     prebuildcommands { "mkdir -p "..rebase("game_d.app/Contents"),
-                       "rsync -av --exclude '.*' "..rebase("lib/univ_d/").." "..rebase("game_d.app/Contents/MacOS/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("assets/").." "..rebase("game_d.app/Contents/assets/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("Resources/").." "..rebase("game_d.app/Contents/Resources/"),
+                       "rsync -av --exclude '.*' "..rebase("lib/univ_d").."/ "..rebase("game_d.app/Contents/MacOS"),
+                       "rsync -av --exclude '.*' --delete "..rebase("assets").."/ "..rebase("game_d.app/Contents/assets"),
+                       "rsync -av --exclude '.*' --delete "..rebase("Resources").."/ "..rebase("game_d.app/Contents/Resources"),
                        "rsync -av --exclude '.*' "..rebase("Info_d.plist").." "..rebase("game_d.app/Contents/Info.plist") }
   configuration { "macosx", "Release*" }
     prebuildcommands { "mkdir -p "..rebase("game.app/Contents"),
-                       "rsync -av --exclude '.*' "..rebase("lib/univ/").." "..rebase("game.app/Contents/MacOS/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("assets/").." "..rebase("game.app/Contents/assets/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("Resources/").." "..rebase("game.app/Contents/Resources/"),
+                       "rsync -av --exclude '.*' "..rebase("lib/univ").."/ "..rebase("game.app/Contents/MacOS"),
+                       "rsync -av --exclude '.*' --delete "..rebase("assets").."/ "..rebase("game.app/Contents/assets"),
+                       "rsync -av --exclude '.*' --delete "..rebase("Resources").."/ "..rebase("game.app/Contents/Resources"),
                        "rsync -av --exclude '.*' "..rebase("Info.plist").." "..rebase("game.app/Contents/Info.plist") }
 --   configuration { "linux" }
 --     prelinkcommands { rebase("dev/brandelf/brandelf").." -f 0 "..rebase("lib/*/*.so") }
