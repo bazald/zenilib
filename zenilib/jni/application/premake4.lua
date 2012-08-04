@@ -55,6 +55,15 @@ project(APPLICATION_NAME)
 --   configuration { "linux" }
 --     prelinkcommands { rebase("dev/brandelf/brandelf").." -f 0 "..rebase("lib/*/*.so") }
 
+  configuration { "linux", "Debug*", "x32" }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d32'", "-Wl,-rpath-link,"..rebase("lib/d32") }
+  configuration { "linux", "Release*", "x32" }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x32'", "-Wl,-rpath-link,"..rebase("lib/x32") }
+  configuration { "linux", "Debug*", "x64" }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d64'", "-Wl,-rpath-link,"..rebase("lib/d64") }
+  configuration { "linux", "Release*", "x64" }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,"..rebase("lib/x64") }
+
   os.chdir('jni')
   os.chdir('application')
 
@@ -77,15 +86,6 @@ project(APPLICATION_NAME)
 
 --   os.copydir("assets_shared", "assets")
 --   os.copydir("assets_pc", "assets")
-
-  configuration { "linux", "Debug*", "x32" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d32'", "-Wl,-rpath-link,"..rebase("lib/d32") }
-  configuration { "linux", "Release*", "x32" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x32'", "-Wl,-rpath-link,"..rebase("lib/x32") }
-  configuration { "linux", "Debug*", "x64" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d64'", "-Wl,-rpath-link,"..rebase("lib/d64") }
-  configuration { "linux", "Release*", "x64" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,"..rebase("lib/x64") }
 
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
