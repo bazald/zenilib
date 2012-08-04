@@ -143,8 +143,10 @@ exit
 
 
 
+SET DP0=%~dp0
 SET BUILD=mine
 SET CONFIG=release32
+SET DIR=build
 SET MACOSX=native
 
 SET STATE=config
@@ -167,6 +169,8 @@ IF "%STATE%"=="build" (
     SET STATE=build
   ) ELSE ( IF "%1"=="--macosx" (
     SET STATE=macosx
+  ) ELSE ( IF "%1"=="--dir" (
+    SET STATE=dir
   ) ELSE ( IF "%1"=="debug" (
     SET CONFIG=debug
   ) ELSE ( IF "%1"=="debug32" (
@@ -183,7 +187,10 @@ IF "%STATE%"=="build" (
     ECHO(
     ECHO Error: Invalid Argument '%1'
     GOTO ARGERROR 
-  ))))))))
+  )))))))))
+) ELSE ( IF "%STATE%"=="dir" (
+  SET DIR=%1
+  SET STATE=config
 ) ELSE ( IF "%STATE%"=="macosx" (
   IF "%1"=="10.6" (
     SET MACOSX=10.6
@@ -203,7 +210,7 @@ IF "%STATE%"=="build" (
   ECHO(
   ECHO Error: Invalid Argument '%1'
   GOTO ARGERROR 
-)))
+))))
 
 SHIFT
 GOTO NEXTARG 
@@ -227,65 +234,65 @@ IF NOT "%STATE%"=="config" (
 )
 
 
-DEL /Q "%~dp0\assets\stderr.txt"
-DEL /Q "%~dp0\assets\stdout.txt"
-RMDIR /S /Q "%~dp0\Resources"
-DEL /Q "%~dp0\*.plist"
+DEL /Q "%DP0%\assets\stderr.txt"
+DEL /Q "%DP0%\assets\stdout.txt"
+RMDIR /S /Q "%DP0%\Resources"
+DEL /Q "%DP0%\*.plist"
 
-DEL /Q "%~dp0\bin\x32\*.exp"
-DEL /Q "%~dp0\bin\x32\*.idb"
-DEL /Q "%~dp0\bin\x32\*.ilk"
-DEL /Q "%~dp0\bin\x32\*.pdb"
-DEL /Q "%~dp0\bin\x64\*.exp"
-DEL /Q "%~dp0\bin\x64\*.idb"
-DEL /Q "%~dp0\bin\x64\*.ilk"
-DEL /Q "%~dp0\bin\x64\*.pdb"
-RMDIR /S /Q "%~dp0\build\vs2010\ipch"
-RMDIR /S /Q "%~dp0\build\vs2010\obj"
-DEL /Q "%~dp0\build\vs2010\*.sdf"
-DEL /Q "%~dp0\build\*.log"
-DEL /Q "%~dp0\build\backupenv.bat"
-DEL /Q "%~dp0\* Debug.exe"
-DEL /Q "%~dp0\*.idb"
-DEL /Q "%~dp0\*.ilk"
-DEL /Q "%~dp0\*.pdb"
+DEL /Q "%DP0%\bin\x32\*.exp"
+DEL /Q "%DP0%\bin\x32\*.idb"
+DEL /Q "%DP0%\bin\x32\*.ilk"
+DEL /Q "%DP0%\bin\x32\*.pdb"
+DEL /Q "%DP0%\bin\x64\*.exp"
+DEL /Q "%DP0%\bin\x64\*.idb"
+DEL /Q "%DP0%\bin\x64\*.ilk"
+DEL /Q "%DP0%\bin\x64\*.pdb"
+RMDIR /S /Q "%DP0%\build\vs2010\ipch"
+RMDIR /S /Q "%DP0%\build\vs2010\obj"
+DEL /Q "%DP0%\build\vs2010\*.sdf"
+DEL /Q "%DP0%\build\*.log"
+DEL /Q "%DP0%\build\backupenv.bat"
+DEL /Q "%DP0%\* Debug.exe"
+DEL /Q "%DP0%\*.idb"
+DEL /Q "%DP0%\*.ilk"
+DEL /Q "%DP0%\*.pdb"
 
-RMDIR /S /Q "%~dp0\build\linux\obj"
-DEL /Q "%~dp0\game_d32"
-DEL /Q "%~dp0\game_d64"
-DEL /Q "%~dp0\lsbappchk_filtered.txt"
-DEL /Q "%~dp0\lsbappchk_full.txt"
+RMDIR /S /Q "%DP0%\build\linux\obj"
+DEL /Q "%DP0%\game_d32"
+DEL /Q "%DP0%\game_d64"
+DEL /Q "%DP0%\lsbappchk_filtered.txt"
+DEL /Q "%DP0%\lsbappchk_full.txt"
 
-RMDIR /S /Q "%~dp0\build\macosx\obj"
-RMDIR /S /Q "%~dp0\build\xcode3\build"
-RMDIR /S /Q "%~dp0\build\xcode4\build"
-RMDIR /S /Q "%~dp0\game_d.app"
+RMDIR /S /Q "%DP0%\build\macosx\obj"
+RMDIR /S /Q "%DP0%\build\xcode3\build"
+RMDIR /S /Q "%DP0%\build\xcode4\build"
+RMDIR /S /Q "%DP0%\game_d.app"
 
 IF "%BUILD%"=="all" (
-  RMDIR /S /Q "%~dp0\bin\d32"
-  RMDIR /S /Q "%~dp0\bin\d64"
-  DEL /Q "%~dp0\bin\x32\*.lib"
-  DEL /Q "%~dp0\bin\x64\*.lib"
+  RMDIR /S /Q "%DP0%\bin\d32"
+  RMDIR /S /Q "%DP0%\bin\d64"
+  DEL /Q "%DP0%\bin\x32\*.lib"
+  DEL /Q "%DP0%\bin\x64\*.lib"
 
-  RMDIR /S /Q "%~dp0\lib\d32"
-  RMDIR /S /Q "%~dp0\lib\d64"
-  DEL /Q "%~dp0\lib\x32\liblocal_SDLmain.a"
-  DEL /Q "%~dp0\lib\x64\liblocal_SDLmain.a"
+  RMDIR /S /Q "%DP0%\lib\d32"
+  RMDIR /S /Q "%DP0%\lib\d64"
+  DEL /Q "%DP0%\lib\x32\liblocal_SDLmain.a"
+  DEL /Q "%DP0%\lib\x64\liblocal_SDLmain.a"
 
-  RMDIR /S /Q "%~dp0\lib\univ_d"
+  RMDIR /S /Q "%DP0%\lib\univ_d"
 ) ELSE (
-  DEL /Q "%~dp0\bin\d32\game.exe"
-  DEL /Q "%~dp0\bin\d32\game.idb"
-  DEL /Q "%~dp0\bin\d32\game.pdb"
-  DEL /Q "%~dp0\bin\d32\*.exp"
-  DEL /Q "%~dp0\bin\d32\*.idb"
-  DEL /Q "%~dp0\bin\d32\*.ilk"
-  DEL /Q "%~dp0\bin\d64\game.exe"
-  DEL /Q "%~dp0\bin\d64\game.idb"
-  DEL /Q "%~dp0\bin\d64\game.pdb"
-  DEL /Q "%~dp0\bin\d64\*.exp"
-  DEL /Q "%~dp0\bin\d64\*.idb"
-  DEL /Q "%~dp0\bin\d64\*.ilk"
+  DEL /Q "%DP0%\bin\d32\game.exe"
+  DEL /Q "%DP0%\bin\d32\game.idb"
+  DEL /Q "%DP0%\bin\d32\game.pdb"
+  DEL /Q "%DP0%\bin\d32\*.exp"
+  DEL /Q "%DP0%\bin\d32\*.idb"
+  DEL /Q "%DP0%\bin\d32\*.ilk"
+  DEL /Q "%DP0%\bin\d64\game.exe"
+  DEL /Q "%DP0%\bin\d64\game.idb"
+  DEL /Q "%DP0%\bin\d64\game.pdb"
+  DEL /Q "%DP0%\bin\d64\*.exp"
+  DEL /Q "%DP0%\bin\d64\*.idb"
+  DEL /Q "%DP0%\bin\d64\*.ilk"
 )
 
 
