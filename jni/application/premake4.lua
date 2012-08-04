@@ -4,53 +4,59 @@ project(APPLICATION_NAME)
   kind "WindowedApp"
   language "C++"
 
-  local rebase_i = function (dir) return path.rebase(dir, '.', _OPTIONS.dir..'/dir') end
+  local rebase_i = function (dir) return path.rebase(dir, '.', _OPTIONS.dir..'/dir'); end
   local rebase = nil
   if os.get() == "windows" then
-    rebase = function (dir) return string.gsub(rebase_i(dir), '/', '\\') end
+    rebase = function (dir) a,b=string.gsub(rebase_i(dir), '/', '\\'); return a; end
   else
     rebase = rebase_i
   end
 
+  os.chdir('..')
+  os.chdir('..')
+
   configuration "windows"
-    prebuildcommands { "xcopy "..rebase("../../dev/pc_").." "..rebase("../..").." /E /Y" }
+    prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("../..").." /E /Y" }
   configuration { "macosx or linux" }
-    prebuildcommands { "rsync -av --exclude '.*' "..rebase("../../dev/pc_/").." "..rebase("../../") }
+    prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_/").." "..rebase("") }
   if _OPTIONS.macosx ~= "native" then
     configuration { "macosx", "Debug*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("../../Info_d.plist") }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("Info_d.plist") }
     configuration { "macosx", "Release*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("../../Info.plist") }
+      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("Info.plist") }
   else
     local ver=os.getversion()
     if ver.majorversion == 10 and ver.minorversion >= 6 then
       local macosx = string.format("%d.%d", ver.majorversion, ver.minorversion)
 
       configuration { "macosx", "Debug*" }
-        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" "..rebase("../../Info_d.plist") }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" "..rebase("Info_d.plist") }
       configuration { "macosx", "Release*" }
-        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" "..rebase("../../Info.plist") }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion "..macosx.."\" "..rebase("Info.plist") }
     else
       configuration { "macosx", "Debug*" }
-        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" "..rebase("../../Info_d.plist") }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" "..rebase("Info_d.plist") }
       configuration { "macosx", "Release*" }
-        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" "..rebase("../../Info.plist") }
+        prebuildcommands { "/usr/libexec/PlistBuddy -c \"Delete :LSMinimumSystemVersion\" "..rebase("Info.plist") }
     end
   end
   configuration { "macosx", "Debug*" }
-    prebuildcommands { "mkdir -p "..rebase("../../game_d.app/Contents"),
-                       "rsync -av --exclude '.*' "..rebase("../../lib/univ_d/").." "..rebase("../../game_d.app/Contents/MacOS/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("../../assets/").." "..rebase("../../game_d.app/Contents/assets/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("../../Resources/").." "..rebase("../../game_d.app/Contents/Resources/"),
-                       "rsync -av --exclude '.*' "..rebase("../../Info_d.plist").." "..rebase("../../game_d.app/Contents/Info.plist") }
+    prebuildcommands { "mkdir -p "..rebase("game_d.app/Contents"),
+                       "rsync -av --exclude '.*' "..rebase("lib/univ_d/").." "..rebase("game_d.app/Contents/MacOS/"),
+                       "rsync -av --exclude '.*' --delete "..rebase("assets/").." "..rebase("game_d.app/Contents/assets/"),
+                       "rsync -av --exclude '.*' --delete "..rebase("Resources/").." "..rebase("game_d.app/Contents/Resources/"),
+                       "rsync -av --exclude '.*' "..rebase("Info_d.plist").." "..rebase("game_d.app/Contents/Info.plist") }
   configuration { "macosx", "Release*" }
-    prebuildcommands { "mkdir -p "..rebase("../../game.app/Contents"),
-                       "rsync -av --exclude '.*' "..rebase("../../lib/univ/").." "..rebase("../../game.app/Contents/MacOS/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("../../assets/").." "..rebase("../../game.app/Contents/assets/"),
-                       "rsync -av --exclude '.*' --delete "..rebase("../../Resources/").." "..rebase("../../game.app/Contents/Resources/"),
-                       "rsync -av --exclude '.*' "..rebase("../../Info.plist").." "..rebase("../../game.app/Contents/Info.plist") }
+    prebuildcommands { "mkdir -p "..rebase("game.app/Contents"),
+                       "rsync -av --exclude '.*' "..rebase("lib/univ/").." "..rebase("game.app/Contents/MacOS/"),
+                       "rsync -av --exclude '.*' --delete "..rebase("assets/").." "..rebase("game.app/Contents/assets/"),
+                       "rsync -av --exclude '.*' --delete "..rebase("Resources/").." "..rebase("game.app/Contents/Resources/"),
+                       "rsync -av --exclude '.*' "..rebase("Info.plist").." "..rebase("game.app/Contents/Info.plist") }
 --   configuration { "linux" }
---     prelinkcommands { rebase("../../dev/brandelf/brandelf").." -f 0 "..rebase("../../lib/*/*.so") }
+--     prelinkcommands { rebase("dev/brandelf/brandelf").." -f 0 "..rebase("lib/*/*.so") }
+
+  os.chdir('jni')
+  os.chdir('application')
 
   configuration "linux or macosx"
     targetdir "../.."
@@ -73,13 +79,13 @@ project(APPLICATION_NAME)
 --   os.copydir("assets_pc", "assets")
 
   configuration { "linux", "Debug*", "x32" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d32'", "-Wl,-rpath-link,"..rebase("../../lib/d32") }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d32'", "-Wl,-rpath-link,"..rebase("lib/d32") }
   configuration { "linux", "Release*", "x32" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x32'", "-Wl,-rpath-link,"..rebase("../../lib/x32") }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x32'", "-Wl,-rpath-link,"..rebase("lib/x32") }
   configuration { "linux", "Debug*", "x64" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d64'", "-Wl,-rpath-link,"..rebase("../../lib/d64") }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d64'", "-Wl,-rpath-link,"..rebase("lib/d64") }
   configuration { "linux", "Release*", "x64" }
-    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,"..rebase("../../lib/x64") }
+    linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,"..rebase("lib/x64") }
 
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
