@@ -15,6 +15,16 @@ if not _OPTIONS["build"] then
 end
 
 newoption {
+   trigger     = "dir",
+   value       = "DIR",
+   description = "Choose the build directory"
+}
+
+if not _OPTIONS["dir"] then
+   _OPTIONS["dir"] = "build"
+end
+
+newoption {
   trigger     = "macosx",
   value       = "SDK",
   description = "Choose which version of Mac OS X to target",
@@ -143,7 +153,7 @@ solution "zenilib"
 
   configuration "*"
     if _ACTION then
-      location ("build/" .. _ACTION)
+      location (_OPTIONS.dir .. "/" .. _ACTION)
     end
 
   include "jni/application"

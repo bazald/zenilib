@@ -12,6 +12,9 @@ function usage {
   echo "  --build=all       game and all dependencies"
   echo "          mine      game only (default)"
   echo
+  echo "  --dir=DIR         arbitrary build directory"
+  echo "        build       (default)"
+  echo
   echo "  --macosx=10.6     Mac OS 10.6"
   echo "           10.7     Mac OS 10.7"
   echo "           10.8     Mac OS 10.8"
@@ -359,27 +362,10 @@ exit
 
 
 
-:: Backup environment variables
-IF NOT EXIST "%~dp0\build" MKDIR "%~dp0\build"
-IF EXIST "%~dp0\dev\backupenv.bat" DEL "%~dp0\dev\backupenv.bat"
-FOR /f "tokens=1* delims==" %%a in ('SET') DO ECHO SET %%a=%%b>> "%~dp0\build\backupenv.bat"
-
-:: If logged in over Cygwin SSH, must use a password or commands fail.
-SET WHOAMI=
-FOR /F %%v in ('C:\Windows\System32\whoami.exe /USER') DO SET WHOAMI=%%v
-FOR /F %%v in ('echo.exe %WHOAMI% ^| sed.exe "s/.*\\\\//"') DO SET WHOAMI=%%v
-IF "%WHOAMI%"=="cyg_server" (
-  echo Logged in as cyg_server.  Please relog in using your password.
-  exit -1
-)
-
-:: If logged in over Cygwin SSH, necessary variables are unset.
-CALL "%~dp0\dev\VCVarsQueryRegistry.bat"
-IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
-
-
+SET DP0=%~dp0
 SET BUILD=mine
 SET CONFIG=release32
+SET DIR=build
 SET MACOSX=native
 
 SET STATE=config
@@ -402,6 +388,8 @@ IF "%STATE%"=="build" (
     SET STATE=build
   ) ELSE ( IF "%1"=="--macosx" (
     SET STATE=macosx
+  ) ELSE ( IF "%1"=="--dir" (
+    SET STATE=dir
   ) ELSE ( IF "%1"=="debug" (
     SET CONFIG=debug
   ) ELSE ( IF "%1"=="debug32" (
@@ -418,7 +406,10 @@ IF "%STATE%"=="build" (
     ECHO(
     ECHO Error: Invalid Argument '%1'
     GOTO ARGERROR 
-  ))))))))
+  )))))))))
+) ELSE ( IF "%STATE%"=="dir" (
+  SET DIR=%1
+  SET STATE=config
 ) ELSE ( IF "%STATE%"=="macosx" (
   IF "%1"=="10.6" (
     SET MACOSX=10.6
@@ -438,22 +429,21 @@ IF "%STATE%"=="build" (
   ECHO(
   ECHO Error: Invalid Argument '%1'
   GOTO ARGERROR 
-)))
+))))
 
 SHIFT
 GOTO NEXTARG 
 
 :ARGERROR 
 
-:: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL "%~dp0\build\backupenv.bat"
-
 ECHO(
 ECHO Usage: multi-build_sh.bat [options] [debug[32/64] or release[32/64]]
 ECHO(
 ECHO   --build=all       game and all dependencies
 ECHO           mine      game only (default)
+ECHO(
+ECHO   --dir=DIR         arbitrary build directory
+echo         build       (default)
 ECHO(
 ECHO   --macosx=10.6     Mac OS 10.6
 ECHO            10.7     Mac OS 10.7
@@ -501,63 +491,88 @@ IF "%CONFIG%"=="" (
   EXIT /B 1
 )))))))
 
-ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 
-:: Generate Visual Studio 2010 solution and projects
-::IF NOT EXIST "%~dp0\build\vs2010" (
-  IF EXIST "%~dp0\dev\premake\premake4-windows.exe" (
-    "%~dp0\dev\premake\premake4-windows.exe" --file="%~dp0\premake4.lua" --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
-  )
-::)
+:: Backup environment variables
+IF NOT EXIST "%DIR%" MKDIR "%DIR%"
+IF EXIST "%DIR%\backupenv.bat" DEL "%DIR%\backupenv.bat"
+FOR /f "tokens=1* delims==" %%a in ('SET') DO ECHO SET %%a=%%b>> "%DIR%\backupenv.bat"
+
+:: If logged in over Cygwin SSH, must use a password or commands fail.
+SET WHOAMI=
+FOR /F %%v in ('C:\Windows\System32\whoami.exe /USER') DO SET WHOAMI=%%v
+FOR /F %%v in ('echo.exe %WHOAMI% ^| sed.exe "s/.*\\\\//"') DO SET WHOAMI=%%v
+IF "%WHOAMI%"=="cyg_server" (
+  echo Logged in as cyg_server.  Please relog in using your password.
+  exit -1
+)
+
+:: If logged in over Cygwin SSH, necessary variables are unset.
+CALL "%DP0%\dev\VCVarsQueryRegistry.bat"
+IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
 
 :: Setup devenv
 CALL "%VS100COMNTOOLS%vsvars32.bat"
 
-IF "%CONFIG32%"=="debug" (
-  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\d32.log";Encoding=UTF-8
-  IF ERRORLEVEL 1 GOTO BUILDERROR 
+
+ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
+
+:: Generate Visual Studio 2010 solution and projects
+::IF NOT EXIST "%DIR%\vs2010" (
+  IF EXIST "%DP0%\dev\premake\premake4-windows.exe" (
+    "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2010
+  )
+::)
+
+SET EL=0
+IF %EL%==0 IF "%CONFIG32%"=="debug" (
+  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d32.log";Encoding=UTF-8
+  IF ERRORLEVEL 1 SET EL=1
 )
-IF "%CONFIG64%"=="debug" (
-  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\d64.log";Encoding=UTF-8
-  IF ERRORLEVEL 1 GOTO BUILDERROR 
+IF %EL%==0 IF "%CONFIG64%"=="debug" (
+  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d64.log";Encoding=UTF-8
+  IF ERRORLEVEL 1 SET EL=1
 )
-IF "%CONFIG32%"=="release" (
-  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\x32.log";Encoding=UTF-8
-  IF ERRORLEVEL 1 GOTO BUILDERROR 
-  COPY /Y "%~dp0\jni\external\bin\x32\*" "%~dp0\bin\x32\"
+IF %EL%==0 IF "%CONFIG32%"=="release" (
+  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x32.log";Encoding=UTF-8
+  IF ERRORLEVEL 1 SET EL=1
 )
-IF "%CONFIG64%"=="release" (
-  MSBuild "%~dp0\build\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%~dp0\build\x64.log";Encoding=UTF-8
-  IF ERRORLEVEL 1 GOTO BUILDERROR 
-  COPY /Y "%~dp0\jni\external\bin\x64\*" "%~dp0\bin\x64\"
+IF %EL%==0 IF "%CONFIG64%"=="release" (
+  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x64.log";Encoding=UTF-8
+  IF ERRORLEVEL 1 SET EL=1
 )
 
-IF "%CONFIG32%"=="debug" (
+IF NOT %EL%==0 (
   ECHO(
-  ECHO Do not distribute the 32-bit debug build.
-)
-IF "%CONFIG64%"=="debug" (
-  ECHO(
-  ECHO Do not distribute the 64-bit debug build.
-)
-
-
-goto RESTORE 
-:BUILDERROR 
-
-ECHO(
-IF "%BUILD%"=="mine" (
-  ECHO Build failed.  Retry with --build=all
+  IF "%BUILD%"=="mine" (
+    ECHO Build failed.  Retry with --build=all
+  ) ELSE (
+    ECHO Build failed.
+  )
 ) ELSE (
-  ECHO Build failed.
+  IF "%CONFIG32%"=="debug" (
+    ECHO(
+    ECHO Do not distribute the 32-bit debug build.
+  )
+  IF "%CONFIG64%"=="debug" (
+    ECHO(
+    ECHO Do not distribute the 64-bit debug build.
+  )
+  IF "%CONFIG32%"=="release" (
+    ECHO(
+    COPY /Y "%DP0%\jni\external\bin\x32\*" "%DP0%\bin\x32\"
+  )
+  IF "%CONFIG64%"=="release" (
+    ECHO(
+    COPY /Y "%DP0%\jni\external\bin\x64\*" "%DP0%\bin\x64\"
+  )
 )
 
-
-:RESTORE 
 :: Restore environment variables
-FOR /f "tokens=1* delims==" %%a in ('SET') DO SET %%a=
-CALL "%~dp0\build\backupenv.bat"
-
-
+FOR /f "tokens=1* delims==" %%a in ('SET') DO (
+  IF NOT "%%a"=="DIR" (
+    SET %%a=
+  )
+)
+CALL "%DIR%\backupenv.bat"
 
 EXIT /B

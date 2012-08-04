@@ -12,6 +12,9 @@ function usage {
   echo "  --build=all       game and all dependencies"
   echo "          mine      game only (default)"
   echo
+  echo "  --dir=DIR         arbitrary build directory"
+  echo "        build       (default)"
+  echo
   echo "  --macosx=10.6     Mac OS 10.6"
   echo "           10.7     Mac OS 10.7"
   echo "           10.8     Mac OS 10.8"
@@ -169,8 +172,10 @@ exit
 
 
 
+SET DP0=%~dp0
 SET BUILD=mine
 SET CONFIG=release32
+SET DIR=build
 SET MACOSX=native
 
 SET STATE=config
@@ -193,6 +198,8 @@ IF "%STATE%"=="build" (
     SET STATE=build
   ) ELSE ( IF "%1"=="--macosx" (
     SET STATE=macosx
+  ) ELSE ( IF "%1"=="--dir" (
+    SET STATE=dir
   ) ELSE ( IF "%1"=="debug" (
     SET CONFIG=debug
   ) ELSE ( IF "%1"=="debug32" (
@@ -209,7 +216,10 @@ IF "%STATE%"=="build" (
     ECHO(
     ECHO Error: Invalid Argument '%1'
     GOTO ARGERROR 
-  ))))))))
+  )))))))))
+) ELSE ( IF "%STATE%"=="dir" (
+  SET DIR=%1
+  SET STATE=config
 ) ELSE ( IF "%STATE%"=="macosx" (
   IF "%1"=="10.6" (
     SET MACOSX=10.6
@@ -229,7 +239,7 @@ IF "%STATE%"=="build" (
   ECHO(
   ECHO Error: Invalid Argument '%1'
   GOTO ARGERROR 
-)))
+))))
 
 SHIFT
 GOTO NEXTARG 
@@ -241,6 +251,9 @@ ECHO Usage: multi-build_sh.bat [options]
 ECHO(
 ECHO   --build=all       game and all dependencies
 ECHO           mine      game only (default)
+ECHO(
+ECHO   --dir=DIR         arbitrary build directory
+echo         build       (default)
 ECHO(
 ECHO   --macosx=10.6     Mac OS 10.6
 ECHO            10.7     Mac OS 10.7
@@ -257,8 +270,7 @@ IF NOT "%STATE%"=="config" (
   GOTO ARGERROR 
 )
 
-
-"%~dp0\dev\premake\premake4-windows.exe" --file="%~dp0\premake4.lua" --os=windows --build=%BUILD% --macosx=%MACOSX% vs2010
+"%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2010
 
 
 
