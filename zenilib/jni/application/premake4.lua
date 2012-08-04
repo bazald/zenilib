@@ -16,7 +16,7 @@ project(APPLICATION_NAME)
   os.chdir('..')
 
   configuration "windows"
-    prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("../..").." /E /Y" }
+    prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("").." /E /Y" }
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_").."/ "..rebase("") }
   if _OPTIONS.macosx ~= "native" then
