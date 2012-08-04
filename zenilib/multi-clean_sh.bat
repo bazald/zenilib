@@ -23,6 +23,7 @@ function usage_error {
 
 BUILD=mine
 CONFIG=release
+DIR=build
 MACOSX=native
 
 STATE=config
@@ -41,6 +42,8 @@ for arg in "$@"; do
         --build) STATE=build ;;
           --build=all) BUILD=all ;;
           --build=mine) BUILD=mine ;;
+        --dir) STATE=dir ;;
+          --dir=*) DIR=$(echo "$arg" | sed 's/--dir=//') ;;
         --macosx) STATE=macosx ;;
           --macosx=10.6) MACOSX=10.6 ;;
           --macosx=10.7) MACOSX=10.7 ;;
@@ -51,6 +54,10 @@ for arg in "$@"; do
         releaseuniv) CONFIG=release ;;
         *) usage_error "Invalid Argument '$arg'" 3
       esac
+      ;;
+    dir)
+      DIR="$arg"
+      STATE=config
       ;;
     macosx)
       case "$arg" in

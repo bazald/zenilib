@@ -31,6 +31,7 @@ function usage_error {
 
 BUILD=mine
 CONFIG=release
+DIR=build
 MACOSX=native
 
 STATE=config
@@ -49,6 +50,8 @@ for arg in "$@"; do
         --build) STATE=build ;;
           --build=all) BUILD=all ;;
           --build=mine) BUILD=mine ;;
+        --dir) STATE=dir ;;
+          --dir=*) DIR=$(echo "$arg" | sed 's/--dir=//') ;;
         --macosx) STATE=macosx ;;
           --macosx=10.6) MACOSX=10.6 ;;
           --macosx=10.7) MACOSX=10.7 ;;
@@ -59,6 +62,10 @@ for arg in "$@"; do
         releaseuniv) CONFIG=release ;;
         *) usage_error "Invalid Argument '$arg'" 3
       esac
+      ;;
+    dir)
+      DIR="$arg"
+      STATE=config
       ;;
     macosx)
       case "$arg" in
@@ -99,9 +106,9 @@ esac
 # Generate Makefiles for Linux
 #
 
-rm -r build/gmake
+rm -r "$DIR/gmake"
 chmod +x $PREMAKE
-$PREMAKE --os=linux --build=$BUILD --macosx=$MACOSX gmake
+$PREMAKE --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
 if [ $? -ne 0 ]; then
   popd
   exit 1
@@ -109,59 +116,57 @@ fi
 
 # Migrate Makefiles to build/linux
 
-mkdir -p build/linux
-for file in build/linux/*; do
+mkdir -p "$DIR/linux"
+for file in $DIR/linux/*; do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-pushd build/gmake
-for mf in *; do
+for mf in $DIR/gmake/*; do
+  DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/linux\/\1/')
   cat "$mf" | sed 's/ -rcs / -rso /' \
-            > "../../build/linux/$mf"
+            > "$DEST"
 done
-popd
-rm -r build/gmake
+rm -r "$DIR/gmake"
 
 #
 # Generate Makefiles for Mac OS X
 #
 
 chmod +x $PREMAKE
-$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX gmake
+$PREMAKE --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
 if [ $? -ne 0 ]; then
   popd
   exit 1
 fi
 
-mkdir -p build/macosx
-for file in build/macosx/*; do
+mkdir -p "$DIR/macosx"
+for file in $DIR/macosx/*; do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-pushd build/gmake
-for mf in *; do
+for mf in $DIR/gmake/*; do
+  DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/macosx\/\1/')
   cat "$mf" | sed 's/-MF [^ ]* //' \
             | sed 's/\-arch ppc \{0,1\}//' \
             | sed 's/\-arch ppc64 \{0,1\}//' \
-            > "../../build/macosx/$mf"
+            > "$DEST"
 done
-popd
-rm -r build/gmake
+rm -r "$DIR/gmake"
 
 #
 # Generate IDE projects
 #
 
-for dir in build/xcode*/*.xcodeproj/; do
+for dir in $DIR/xcode*/*.xcodeproj/; do
   rm -r "$dir"
 done
-for file in build/vs2010/*.filters build/vs2010/*.user build/vs2010/*.vcxproj; do
+for file in $DIR/vs2010/*.filters $DIR/vs2010/*.user $DIR/vs2010/*.vcxproj; do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode3
-$PREMAKE --os=macosx --build=$BUILD --macosx=$MACOSX xcode4
-$PREMAKE --os=windows --build=$BUILD --macosx=$MACOSX vs2010
+$PREMAKE --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX xcode3
+$PREMAKE --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX xcode4
+$PREMAKE --os=windows --build=$BUILD --dir="$DIR" --macosx=$MACOSX vs2010
 
 popd
 exit
