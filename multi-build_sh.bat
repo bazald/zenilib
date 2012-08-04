@@ -33,6 +33,7 @@ function usage_error {
 
 BUILD=mine
 CONFIG=release
+DIR=build
 MACOSX=native
 
 STATE=config
@@ -51,6 +52,8 @@ for arg in "$@"; do
         --build) STATE=build ;;
           --build=all) BUILD=all ;;
           --build=mine) BUILD=mine ;;
+        --dir) STATE=dir ;;
+          --dir=*) DIR=$(echo "$arg" | sed 's/--dir=//') ;;
         --macosx) STATE=macosx ;;
           --macosx=10.6) MACOSX=10.6 ;;
           --macosx=10.7) MACOSX=10.7 ;;
@@ -61,6 +64,10 @@ for arg in "$@"; do
         releaseuniv) CONFIG=release ;;
         *) usage_error "Invalid Argument '$arg'" 3
       esac
+      ;;
+    dir)
+      DIR="$arg"
+      STATE=config
       ;;
     macosx)
       case "$arg" in
@@ -95,28 +102,27 @@ case $OSTYPE in
     # Generate Makefiles for Mac OS X
     #
 
-    rm -r build/gmake
+    rm -r "$DIR/gmake"
     chmod +x dev/premake/premake4-macosx
-    dev/premake/premake4-macosx --os=macosx --build=$BUILD --macosx=$MACOSX gmake
+    dev/premake/premake4-macosx --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then
       popd
       exit -1
     fi
 
-    mkdir -p build/macosx
-    for file in build/macosx/*; do
+    mkdir -p "$DIR/macosx"
+    for file in $DIR/macosx/*; do
       if [ -f "$file" ]; then rm "$file"; fi
     done
 
-    pushd build/gmake
-    for mf in *; do
+    for mf in $DIR/gmake/*; do
+      DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/macosx\/\1/')
       cat "$mf" | sed 's/-MF [^ ]* //' \
                 | sed 's/\-arch ppc \{0,1\}//' \
                 | sed 's/\-arch ppc64 \{0,1\}//' \
-                > "../../build/macosx/$mf"
+                > "$DEST"
     done
-    popd
-    rm -r build/gmake
+    rm -r "$DIR/gmake"
 
     #
     # Setup the build
@@ -130,7 +136,7 @@ case $OSTYPE in
     export CC="$CCACHE clang"
     export CXX="$CCACHE clang++"
 
-    make -j 4 -C build/macosx config=$CONFIG
+    make -j 4 -C "$DIR/macosx" config=$CONFIG
     if [ $? -ne 0 ]; then
       echo
       if [ "$BUILD" == "mine" ]; then
@@ -154,9 +160,9 @@ case $OSTYPE in
     # Generate Makefiles for Linux
     #
 
-    rm -r build/gmake
+    rm -r "$DIR/gmake"
     chmod +x dev/premake/premake4-linux
-    dev/premake/premake4-linux --os=linux --build=$BUILD --macosx=$MACOSX gmake
+    dev/premake/premake4-linux --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then
       popd
       exit -1
@@ -164,18 +170,17 @@ case $OSTYPE in
 
     # Migrate Makefiles to build/linux
 
-    mkdir -p build/linux
-    for file in build/linux/*; do
+    mkdir -p "$DIR/linux"
+    for file in $DIR/linux/*; do
       if [ -f "$file" ]; then rm "$file"; fi
     done
 
-    pushd build/gmake
-    for mf in *; do
+    for mf in $DIR/gmake/*; do
+      DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/linux\/\1/')
       cat "$mf" | sed 's/ -rcs / -rso /' \
-                > "../../build/linux/$mf"
+                > "$DEST"
     done
-    popd
-    rm -r build/gmake
+    rm -r "$DIR/gmake"
 
     #
     # Setup the build
@@ -292,7 +297,7 @@ case $OSTYPE in
         export LDFLAGS="-B$GOLD_LD -Wl,--no-gnu-unique"
       fi
 
-      make -j 4 -C build/linux config=$CONFIG$BIT
+      make -j 4 -C "$DIR/linux" config=$CONFIG$BIT
       EXIT_CODE=$?
       if [ $EXIT_CODE -ne 0 ]; then
         echo
@@ -330,7 +335,7 @@ case $OSTYPE in
     else
       echo "Not compiling for the LSB."
 
-      make -j 4 -C build/linux config=$CONFIG$BIT
+      make -j 4 -C "$DIR/linux" config=$CONFIG$BIT
       if [ $? -ne 0 ]; then
         echo
         if [ "$BUILD" == "mine" ]; then
