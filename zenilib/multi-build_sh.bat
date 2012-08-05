@@ -524,6 +524,8 @@ ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 :: Generate Visual Studio 2010 solution and projects
 ::IF NOT EXIST "%DIR%\vs2010" (
   IF EXIST "%DP0%\dev\premake\premake4-windows.exe" (
+    DEL /Q "%DIR%\vs2010\*.filters" "%DIR%\vs2010\*.user" "%DIR%\vs2010\*.vcxproj"
+
     "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2010
   )
 ::)
