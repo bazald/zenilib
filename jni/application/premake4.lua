@@ -91,7 +91,7 @@ project(APPLICATION_NAME)
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration "macosx"
     files { "../external/sdl/SDLmain/*.h",
-            "../external/sdl/SDLmain/*.m" }
+            "../external/sdl/SDLmain/*.mm" }
     links { "Cocoa.framework" }
 
   if _OPTIONS.build == "all" then

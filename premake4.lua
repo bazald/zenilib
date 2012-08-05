@@ -130,7 +130,9 @@ solution "zenilib"
                   "-Wl,--hash-style=both" }
 
   configuration "macosx"
-    buildoptions { "-Qunused-arguments" }
+    buildoptions { "-Qunused-arguments",
+                   "-stdlib=libc++" }
+    linkoptions { "-stdlib=libc++" }
 
     if _OPTIONS.macosx ~= "native" then
       local sysroot="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
