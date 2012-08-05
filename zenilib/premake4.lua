@@ -132,7 +132,7 @@ solution "zenilib"
   configuration "macosx"
     buildoptions { "-Qunused-arguments" }
 
-    if _OPTIONS.macosx ~= "native" then
+    if os.get() == "macosx" and _OPTIONS.macosx ~= "native" then
       local sysroot="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
       if not os.isdir(sysroot) then
         sysroot="/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
