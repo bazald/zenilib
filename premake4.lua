@@ -130,9 +130,7 @@ solution "zenilib"
                   "-Wl,--hash-style=both" }
 
   configuration "macosx"
-    buildoptions { "-Qunused-arguments",
-                   "-stdlib=libc++" }
-    linkoptions { "-stdlib=libc++" }
+    buildoptions { "-Qunused-arguments" }
 
     if _OPTIONS.macosx ~= "native" then
       local sysroot="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
@@ -151,6 +149,15 @@ solution "zenilib"
       linkoptions {  "--sysroot "..sysroot,
                     "-isysroot "..sysroot,
                     "-Wl,-macosx_version_min,".._OPTIONS.macosx}
+    end
+
+    local ver=os.getversion()
+    if _OPTIONS.macosx == "10.6" or _OPTIONS.macosx == "native" and ver.majorversion < 11 and ver.minorversion < 7 then
+      buildoptions { "-stdlib=libstdc++" }
+      linkoptions { "-stdlib=libstdc++" }
+    else
+      buildoptions { "-stdlib=libc++" }
+      linkoptions { "-stdlib=libc++" }
     end
 
   configuration "*"
