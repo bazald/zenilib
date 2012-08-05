@@ -20,7 +20,11 @@
 
 #include <Zeni/String.h>
 
-#if 0
+#ifndef __has_include
+#define __has_include(x) 0
+#endif
+
+#if __has_include("unordered_map")
 
 #include <unordered_map>
 
