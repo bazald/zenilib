@@ -56,11 +56,7 @@ namespace Zeni {
     m_prerendered(false),
     m_macrorenderer(new Vertex_Buffer_Macrorenderer)
   {
-    Video &vr = get_Video();
-
     get_vbos().insert(this);
-
-    vr.lend_pre_uninit(&g_uninit);
   }
 
   template <typename VERTEX>
@@ -75,8 +71,6 @@ namespace Zeni {
   }
 
   Vertex_Buffer::~Vertex_Buffer() {
-    Video::remove_pre_uninit(&g_uninit);
-
     clear_triangles(m_triangles_cm, m_descriptors_cm);
     clear_triangles(m_triangles_t, m_descriptors_t);
 
@@ -248,8 +242,12 @@ namespace Zeni {
 
   void Vertex_Buffer::render() {
     if(!m_renderer) {
+      Video &vr = get_Video();
+
       prerender();
-      m_renderer = get_Video().create_Vertex_Buffer_Renderer(*this);
+
+      vr.lend_pre_uninit(&g_uninit);
+      m_renderer = vr.create_Vertex_Buffer_Renderer(*this);
     }
 
     m_renderer->render();
