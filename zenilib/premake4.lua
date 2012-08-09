@@ -145,10 +145,11 @@ solution "zenilib"
       end
 
       buildoptions { "--sysroot "..sysroot,
-                    "-isysroot "..sysroot }
+                    "-isysroot "..sysroot,
+                    "-mmacosx_version_min,".._OPTIONS.macosx }
       linkoptions {  "--sysroot "..sysroot,
                     "-isysroot "..sysroot,
-                    "-Wl,-macosx_version_min,".._OPTIONS.macosx}
+                    "-mmacosx_version_min,".._OPTIONS.macosx}
     end
 
     local ver=os.getversion()
