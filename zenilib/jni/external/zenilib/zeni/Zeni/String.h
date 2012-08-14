@@ -25,51 +25,31 @@
 
 namespace Zeni {
 
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4251 )
-#endif
-  class ZENI_DLL String : private std::string {
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
+  class ZENI_DLL String {
   public:
-    typedef std::string::difference_type difference_type;
-    typedef std::string::pointer pointer;
-    typedef std::string::reference reference;
-    typedef std::string::size_type size_type;
-    typedef std::string::value_type value_type;
+    typedef ptrdiff_t difference_type;
+    typedef size_t size_type;
+    typedef char value_type;
+    typedef value_type * pointer;
+    typedef value_type & reference;
 
     static const size_type npos = size_type(-1);
 
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4275 )
-#endif
-    class ZENI_DLL iterator : private std::string::iterator {
+    class ZENI_DLL iterator {
       friend class String;
 
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
     public:
-      typedef std::string::iterator::difference_type difference_type;
-      typedef std::string::iterator::iterator_category iterator_category;
-      typedef std::string::iterator::pointer pointer;
-      typedef std::string::iterator::reference reference;
-      typedef std::string::iterator::value_type value_type;
+      typedef ptrdiff_t difference_type;
+      typedef std::random_access_iterator_tag iterator_category;
+      typedef char value_type;
+      typedef value_type * pointer;
+      typedef value_type & reference;
 
       iterator();
       ~iterator();
 
       iterator(const iterator &rhs);
-#ifndef DISABLE_CPP11
-      iterator(iterator &&rhs);
-#endif
       iterator & operator=(const iterator &rhs);
-#ifndef DISABLE_CPP11
-      iterator & operator=(iterator &&rhs);
-#endif
 
       bool operator==(const iterator &rhs) const;
       bool operator!=(const iterator &rhs) const;
@@ -101,44 +81,28 @@ namespace Zeni {
 
     private:
       iterator(const std::string::iterator &iter);
-#ifndef DISABLE_CPP11
-      iterator(std::string::iterator &&iter);
-#endif
       iterator & operator=(const std::string::iterator &iter);
-#ifndef DISABLE_CPP11
-      iterator & operator=(std::string::iterator &&iter);
-#endif
+
+      void * m_impl;
     };
-    class ZENI_DLL const_iterator : private std::string::const_iterator {
+    class ZENI_DLL const_iterator {
       friend class String;
 
     public:
-      typedef std::string::const_iterator::difference_type difference_type;
-      typedef std::string::const_iterator::iterator_category iterator_category;
-      typedef std::string::const_iterator::pointer pointer;
-      typedef std::string::const_iterator::reference reference;
-      typedef std::string::const_iterator::value_type value_type;
+      typedef ptrdiff_t difference_type;
+      typedef std::random_access_iterator_tag iterator_category;
+      typedef const char value_type;
+      typedef value_type * pointer;
+      typedef value_type & reference;
 
       const_iterator();
       ~const_iterator();
 
       const_iterator(const const_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_iterator(const_iterator &&rhs);
-#endif
       const_iterator & operator=(const const_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_iterator & operator=(const_iterator &&rhs);
-#endif
 
       const_iterator(const String::iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_iterator(String::iterator &&rhs);
-#endif
       const_iterator & operator=(const String::iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_iterator & operator=(String::iterator &&rhs);
-#endif
 
       bool operator==(const const_iterator &rhs) const;
       bool operator!=(const const_iterator &rhs) const;
@@ -167,35 +131,25 @@ namespace Zeni {
 
     private:
       const_iterator(const std::string::const_iterator &iter);
-#ifndef DISABLE_CPP11
-      const_iterator(std::string::iterator &&iter);
-#endif
       const_iterator & operator=(const std::string::const_iterator &iter);
-#ifndef DISABLE_CPP11
-      const_iterator & operator=(std::string::const_iterator &&iter);
-#endif
+
+      void * m_impl;
     };
-    class ZENI_DLL reverse_iterator : private std::string::reverse_iterator {
+    class ZENI_DLL reverse_iterator {
       friend class String;
 
     public:
-      typedef std::string::reverse_iterator::difference_type difference_type;
-      typedef std::string::reverse_iterator::iterator_category iterator_category;
-      typedef std::string::reverse_iterator::pointer pointer;
-      typedef std::string::reverse_iterator::reference reference;
-      typedef std::string::reverse_iterator::value_type value_type;
+      typedef ptrdiff_t difference_type;
+      typedef std::random_access_iterator_tag iterator_category;
+      typedef char value_type;
+      typedef value_type * pointer;
+      typedef value_type & reference;
 
       reverse_iterator();
       ~reverse_iterator();
 
       reverse_iterator(const reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      reverse_iterator(reverse_iterator &&rhs);
-#endif
       reverse_iterator & operator=(const reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      reverse_iterator & operator=(reverse_iterator &&rhs);
-#endif
 
       bool operator==(const reverse_iterator &rhs) const;
       bool operator!=(const reverse_iterator &rhs) const;
@@ -227,44 +181,28 @@ namespace Zeni {
 
     private:
       reverse_iterator(const std::string::reverse_iterator &iter);
-#ifndef DISABLE_CPP11
-      reverse_iterator(std::string::reverse_iterator &&iter);
-#endif
       reverse_iterator & operator=(const std::string::reverse_iterator &iter);
-#ifndef DISABLE_CPP11
-      reverse_iterator & operator=(std::string::reverse_iterator &&iter);
-#endif
+
+      void * m_impl;
     };
-    class ZENI_DLL const_reverse_iterator : private std::string::const_reverse_iterator {
+    class ZENI_DLL const_reverse_iterator {
       friend class String;
 
     public:
-      typedef std::string::const_reverse_iterator::difference_type difference_type;
-      typedef std::string::const_reverse_iterator::iterator_category iterator_category;
-      typedef std::string::const_reverse_iterator::pointer pointer;
-      typedef std::string::const_reverse_iterator::reference reference;
-      typedef std::string::const_reverse_iterator::value_type value_type;
+      typedef ptrdiff_t difference_type;
+      typedef std::random_access_iterator_tag iterator_category;
+      typedef const char value_type;
+      typedef value_type * pointer;
+      typedef value_type & reference;
 
       const_reverse_iterator();
       ~const_reverse_iterator();
 
       const_reverse_iterator(const const_reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator(const_reverse_iterator &&rhs);
-#endif
       const_reverse_iterator & operator=(const const_reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator & operator=(const_reverse_iterator &&rhs);
-#endif
 
       const_reverse_iterator(const String::reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator(String::reverse_iterator &&rhs);
-#endif
       const_reverse_iterator & operator=(const String::reverse_iterator &rhs);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator & operator=(String::reverse_iterator &&rhs);
-#endif
       
       bool operator==(const const_reverse_iterator &rhs) const;
       bool operator!=(const const_reverse_iterator &rhs) const;
@@ -293,30 +231,22 @@ namespace Zeni {
 
     private:
       const_reverse_iterator(const std::string::const_reverse_iterator &iter);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator(std::string::const_reverse_iterator &&iter);
-#endif
       const_reverse_iterator & operator=(const std::string::const_reverse_iterator &iter);
-#ifndef DISABLE_CPP11
-      const_reverse_iterator & operator=(std::string::const_reverse_iterator &&iter);
-#endif
+
+      void * m_impl;
     };
 
     String();
     String(const String &str);
-#ifndef DISABLE_CPP11
-    String(String &&str);
-#endif
     String(const String &str, size_t pos, size_t n = npos);
     String(const char * s, size_t n);
     String(const char * s);
     String(size_t n, char c);
     //template<class InputIterator> String(InputIterator begin, InputIterator end) : std::string(begin, end) {}
-    
+
+    ~String();
+
     String & operator=(const String &str);
-#ifndef DISABLE_CPP11
-    String & operator=(String &&str);
-#endif
     String & operator=(const char *s);
     String & operator=(char c);
 
@@ -366,23 +296,20 @@ namespace Zeni {
     String & append(size_t n, char c);
     //template <class InputIterator>
     //String & append(InputIterator first, InputIterator last) {
-    //  std::string::append(first, last);
+    //  append(first, last);
     //  return *this;
     //}
 
     void push_back(char c);
     
     String & assign(const String &str);
-#ifndef DISABLE_CPP11
-    String & assign(String &&str);
-#endif
     String & assign(const String &str, size_t pos, size_t n);
     String & assign(const char *s, size_t n);
     String & assign(const char *s);
     String & assign(size_t n, char c);
     //template <class InputIterator>
     //String & assign(InputIterator first, InputIterator last) {
-    //  std::string::assign(first, last);
+    //  assign(first, last);
     //  return *this;
     //}
     
@@ -395,7 +322,7 @@ namespace Zeni {
     void insert(iterator p, size_t n, char c);
     //template<class InputIterator>
     //void insert(iterator p, InputIterator first, InputIterator last) {
-    //  std::string::insert(p, first, last);
+    //  insert(p, first, last);
     //}
 
     String & erase(size_t pos = 0, size_t n = npos);
@@ -413,7 +340,7 @@ namespace Zeni {
     String & replace(iterator i1, iterator i2, size_t n2, char c);
     //template<class InputIterator>
     //String & replace(iterator i1, iterator i2, InputIterator j1, InputIterator j2) {
-    //  std::string::replace(i1, i2, j1, j2);
+    //  replace(i1, i2, j1, j2);
     //  return *this;
     //}
 
@@ -501,6 +428,9 @@ namespace Zeni {
       std::string rv(data(), size());
       return rv;
     }
+
+  private:
+    void * m_impl;
   };
 
 }
