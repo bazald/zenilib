@@ -29,7 +29,7 @@
 namespace Zeni {
 
   String::iterator::iterator() : m_impl(new std::string::iterator) {}
-  String::iterator::~iterator() {delete m_impl;}
+  String::iterator::~iterator() {delete static_cast<std::string::iterator *>(m_impl);}
 
   String::iterator::iterator(const iterator &rhs) : m_impl(new std::string::iterator(*static_cast<const std::string::iterator * const>(rhs.m_impl))) {}
   String::iterator & String::iterator::operator=(const iterator &rhs) {
@@ -91,7 +91,7 @@ namespace Zeni {
   }
 
   String::const_iterator::const_iterator() : m_impl(new std::string::const_iterator) {}
-  String::const_iterator::~const_iterator() {delete m_impl;}
+  String::const_iterator::~const_iterator() {delete static_cast<std::string::const_iterator *>(m_impl);}
 
   String::const_iterator::const_iterator(const const_iterator &rhs) : m_impl(new std::string::const_iterator(*static_cast<const std::string::const_iterator * const>(rhs.m_impl))) {}
   String::const_iterator & String::const_iterator::operator=(const const_iterator &rhs) {
@@ -150,7 +150,7 @@ namespace Zeni {
   }
   
   String::reverse_iterator::reverse_iterator() : m_impl(new std::string::reverse_iterator) {}
-  String::reverse_iterator::~reverse_iterator() {delete m_impl;}
+  String::reverse_iterator::~reverse_iterator() {delete static_cast<std::string::reverse_iterator *>(m_impl);}
 
   String::reverse_iterator::reverse_iterator(const reverse_iterator &rhs) : m_impl(new std::string::reverse_iterator(*static_cast<const std::string::reverse_iterator * const>(rhs.m_impl))) {}
   String::reverse_iterator & String::reverse_iterator::operator=(const reverse_iterator &rhs) {
@@ -212,7 +212,7 @@ namespace Zeni {
   }
 
   String::const_reverse_iterator::const_reverse_iterator() : m_impl(new std::string::const_reverse_iterator) {}
-  String::const_reverse_iterator::~const_reverse_iterator() {delete m_impl;}
+  String::const_reverse_iterator::~const_reverse_iterator() {delete static_cast<std::string::const_reverse_iterator *>(m_impl);}
 
   String::const_reverse_iterator::const_reverse_iterator(const const_reverse_iterator &rhs) : m_impl(new std::string::const_reverse_iterator(*static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl))) {}
   String::const_reverse_iterator & String::const_reverse_iterator::operator=(const const_reverse_iterator &rhs) {
@@ -277,18 +277,21 @@ namespace Zeni {
   String::String(const char * s) : m_impl(new std::string(s)) {}
   String::String(size_t n, char c) : m_impl(new std::string(n, c)) {}
 
-  String::~String() {delete m_impl;}
+  String::~String() {delete static_cast<std::string *>(m_impl);}
 
   String & String::operator=(const String &str) {
-    *static_cast<std::string *>(m_impl) = *static_cast<std::string *>(str.m_impl);
+    String temp(str);
+    swap(temp);
     return *this;
   }
   String & String::operator=(const char *s) {
-    *static_cast<std::string *>(m_impl) = s;
+    String temp(s);
+    swap(temp);
     return *this;
   }
   String & String::operator=(char c) {
-    *static_cast<std::string *>(m_impl) = c;
+    String temp(1, c);
+    swap(temp);
     return *this;
   }
 
@@ -459,7 +462,7 @@ namespace Zeni {
     return *this;
   }
 
-  void String::swap(String &str) {static_cast<std::string *>(m_impl)->swap(*static_cast<std::string *>(str.m_impl));}
+  void String::swap(String &str) {std::swap(m_impl, str.m_impl);}
 
   const char * String::c_str() const {return static_cast<std::string *>(m_impl)->c_str();}
 
