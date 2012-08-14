@@ -413,7 +413,7 @@ namespace Zeni {
       bool operator()(const String &lhs, const String &rhs) const;
     };
 
-    explicit inline String(const std::string &rhs) {
+    explicit inline String(const std::string &rhs) : m_impl(0) {
       String lhs(rhs.data(), rhs.size());
       swap(lhs);
     }
