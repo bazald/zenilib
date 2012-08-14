@@ -28,614 +28,503 @@
 
 namespace Zeni {
 
-  String::iterator::iterator() {}
-  String::iterator::~iterator() {}
+  String::iterator::iterator() : m_impl(new std::string::iterator) {}
+  String::iterator::~iterator() {delete m_impl;}
 
-  String::iterator::iterator(const iterator &rhs) : std::string::iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::iterator::iterator(iterator &&rhs) : std::string::iterator(std::forward<std::string::iterator>(rhs)) {}
-#endif
+  String::iterator::iterator(const iterator &rhs) : m_impl(new std::string::iterator(*static_cast<const std::string::iterator * const>(rhs.m_impl))) {}
   String::iterator & String::iterator::operator=(const iterator &rhs) {
-    this->std::string::iterator::operator=(rhs);
+    *static_cast<std::string::iterator *>(m_impl) = *static_cast<std::string::iterator *>(rhs.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::iterator & String::iterator::operator=(iterator &&rhs) {
-    this->std::string::iterator::operator=(std::forward<std::string::iterator>(rhs));
-    return *this;
-  }
-#endif
       
-  bool String::iterator::operator==(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) == static_cast<const std::string::iterator &>(rhs);}
-  bool String::iterator::operator!=(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) != static_cast<const std::string::iterator &>(rhs);}
+  bool String::iterator::operator==(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) == *static_cast<const std::string::iterator *>(rhs.m_impl);}
+  bool String::iterator::operator!=(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) != *static_cast<const std::string::iterator *>(rhs.m_impl);}
       
-  String::iterator::value_type String::iterator::operator*() const {return this->std::string::iterator::operator*();}
-  String::iterator::value_type & String::iterator::operator*() {return this->std::string::iterator::operator*();}
-  String::iterator::value_type String::iterator::operator->() const {return this->std::string::iterator::operator*();}
-  String::iterator::value_type & String::iterator::operator->() {return this->std::string::iterator::operator*();}
+  String::iterator::value_type String::iterator::operator*() const {return static_cast<const std::string::iterator * const>(m_impl)->operator*();}
+  String::iterator::value_type & String::iterator::operator*() {return static_cast<const std::string::iterator * const>(m_impl)->operator*();}
+  String::iterator::value_type String::iterator::operator->() const {return static_cast<const std::string::iterator * const>(m_impl)->operator*();}
+  String::iterator::value_type & String::iterator::operator->() {return static_cast<const std::string::iterator * const>(m_impl)->operator*();}
       
   String::iterator String::iterator::operator++() {
-    this->std::string::iterator::operator++();
+    static_cast<std::string::iterator *>(m_impl)->operator++();
     return *this;
   }
   String::iterator String::iterator::operator--() {
-    this->std::string::iterator::operator--();
+    static_cast<std::string::iterator *>(m_impl)->operator--();
     return *this;
   }
   String::iterator String::iterator::operator++(int) {
-    this->std::string::iterator::operator++(0);
+    static_cast<std::string::iterator *>(m_impl)->operator++(0);
     return *this;
   }
   String::iterator String::iterator::operator--(int) {
-    this->std::string::iterator::operator--(0);
+    static_cast<std::string::iterator *>(m_impl)->operator--(0);
     return *this;
   }
 
-  String::iterator String::iterator::operator+(const difference_type &n) const {return this->std::string::iterator::operator+(n);}
-  String::iterator String::iterator::operator-(const difference_type &n) const {return this->std::string::iterator::operator-(n);}
-  String::iterator::difference_type String::iterator::operator-(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) - static_cast<const std::string::iterator &>(rhs);}
+  String::iterator String::iterator::operator+(const difference_type &n) const {return static_cast<const std::string::iterator * const>(m_impl)->operator+(n);}
+  String::iterator String::iterator::operator-(const difference_type &n) const {return static_cast<const std::string::iterator * const>(m_impl)->operator-(n);}
+  String::iterator::difference_type String::iterator::operator-(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) - *static_cast<const std::string::iterator * const>(rhs.m_impl);}
 
-  bool String::iterator::operator<(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) < static_cast<const std::string::iterator &>(rhs);}
-  bool String::iterator::operator>(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) > static_cast<const std::string::iterator &>(rhs);}
-  bool String::iterator::operator<=(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) <= static_cast<const std::string::iterator &>(rhs);}
-  bool String::iterator::operator>=(const iterator &rhs) const {return static_cast<const std::string::iterator &>(*this) >= static_cast<const std::string::iterator &>(rhs);}
+  bool String::iterator::operator<(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) < *static_cast<const std::string::iterator * const>(rhs.m_impl);}
+  bool String::iterator::operator>(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) > *static_cast<const std::string::iterator * const>(rhs.m_impl);}
+  bool String::iterator::operator<=(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) <= *static_cast<const std::string::iterator * const>(rhs.m_impl);}
+  bool String::iterator::operator>=(const iterator &rhs) const {return *static_cast<const std::string::iterator * const>(m_impl) >= *static_cast<const std::string::iterator * const>(rhs.m_impl);}
 
   String::iterator String::iterator::operator+=(const difference_type &n) {
-    this->std::string::iterator::operator+=(n);
+    static_cast<std::string::iterator *>(m_impl)->operator+=(n);
     return *this;
   }
   String::iterator String::iterator::operator-=(const difference_type &n) {
-    this->std::string::iterator::operator-=(n);
+    static_cast<std::string::iterator *>(m_impl)->operator-=(n);
     return *this;
   }
       
-  String::iterator::value_type String::iterator::operator[](const difference_type &n) const {return this->std::string::iterator::operator[](n);}
-  String::iterator::value_type & String::iterator::operator[](const difference_type &n) {return this->std::string::iterator::operator[](n);}
+  String::iterator::value_type String::iterator::operator[](const difference_type &n) const {return static_cast<const std::string::iterator * const>(m_impl)->operator[](n);}
+  String::iterator::value_type & String::iterator::operator[](const difference_type &n) {return static_cast<std::string::iterator *>(m_impl)->operator[](n);}
 
-  String::iterator::iterator(const std::string::iterator &iter) : std::string::iterator(iter) {}
-#ifndef DISABLE_CPP11
-  String::iterator::iterator(std::string::iterator &&iter) : std::string::iterator(std::forward<std::string::iterator>(iter)) {}
-#endif
+  String::iterator::iterator(const std::string::iterator &iter) : m_impl(new std::string::iterator(iter)) {}
   String::iterator & String::iterator::operator=(const std::string::iterator &iter) {
-    std::string::iterator(*this) = iter;
+    String::iterator temp(iter);
+    std::swap(m_impl, temp.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::iterator & String::iterator::operator=(std::string::iterator &&iter) {
-    std::string::iterator(*this) = std::forward<std::string::iterator>(iter);
-    return *this;
-  }
-#endif
 
-  String::const_iterator::const_iterator() {}
-  String::const_iterator::~const_iterator() {}
+  String::const_iterator::const_iterator() : m_impl(new std::string::const_iterator) {}
+  String::const_iterator::~const_iterator() {delete m_impl;}
 
-  String::const_iterator::const_iterator(const const_iterator &rhs) : std::string::const_iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::const_iterator::const_iterator(const_iterator &&rhs) : std::string::const_iterator(std::forward<std::string::const_iterator>(rhs)) {}
-#endif
+  String::const_iterator::const_iterator(const const_iterator &rhs) : m_impl(new std::string::const_iterator(*static_cast<const std::string::const_iterator * const>(rhs.m_impl))) {}
   String::const_iterator & String::const_iterator::operator=(const const_iterator &rhs) {
-    this->std::string::const_iterator::operator=(rhs);
+    *static_cast<std::string::const_iterator *>(m_impl) = *static_cast<std::string::const_iterator *>(rhs.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::const_iterator & String::const_iterator::operator=(const_iterator &&rhs) {
-    this->std::string::const_iterator::operator=(std::forward<std::string::const_iterator>(rhs));
-    return *this;
-  }
-#endif
-
-  String::const_iterator::const_iterator(const String::iterator &rhs) : std::string::const_iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::const_iterator::const_iterator(String::iterator &&rhs) : std::string::const_iterator(std::forward<std::string::iterator>(rhs)) {}
-#endif
-  String::const_iterator & String::const_iterator::operator=(const String::iterator &rhs) {
-    this->std::string::const_iterator::operator=(rhs);
-    return *this;
-  }
-#ifndef DISABLE_CPP11
-  String::const_iterator & String::const_iterator::operator=(String::iterator &&rhs) {
-    this->std::string::const_iterator::operator=(std::forward<std::string::iterator>(rhs));
-    return *this;
-  }
-#endif
-
-  bool String::const_iterator::operator==(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) == static_cast<const std::string::const_iterator &>(rhs);}
-  bool String::const_iterator::operator!=(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) != static_cast<const std::string::const_iterator &>(rhs);}
       
-  String::const_iterator::value_type String::const_iterator::operator*() const {return this->std::string::const_iterator::operator*();}
-  String::const_iterator::value_type String::const_iterator::operator->() const {return this->std::string::const_iterator::operator*();}
+  bool String::const_iterator::operator==(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) == *static_cast<const std::string::const_iterator *>(rhs.m_impl);}
+  bool String::const_iterator::operator!=(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) != *static_cast<const std::string::const_iterator *>(rhs.m_impl);}
+      
+  String::const_iterator::value_type String::const_iterator::operator*() const {return static_cast<const std::string::const_iterator * const>(m_impl)->operator*();}
+  String::const_iterator::value_type String::const_iterator::operator->() const {return static_cast<const std::string::const_iterator * const>(m_impl)->operator*();}
       
   String::const_iterator String::const_iterator::operator++() {
-    this->std::string::const_iterator::operator++();
+    static_cast<std::string::const_iterator *>(m_impl)->operator++();
     return *this;
   }
   String::const_iterator String::const_iterator::operator--() {
-    this->std::string::const_iterator::operator--();
+    static_cast<std::string::const_iterator *>(m_impl)->operator--();
     return *this;
   }
   String::const_iterator String::const_iterator::operator++(int) {
-    this->std::string::const_iterator::operator++(0);
+    static_cast<std::string::const_iterator *>(m_impl)->operator++(0);
     return *this;
   }
   String::const_iterator String::const_iterator::operator--(int) {
-    this->std::string::const_iterator::operator--(0);
+    static_cast<std::string::const_iterator *>(m_impl)->operator--(0);
     return *this;
   }
 
-  String::const_iterator String::const_iterator::operator+(const difference_type &n) const {return this->std::string::const_iterator::operator+(n);}
-  String::const_iterator String::const_iterator::operator-(const difference_type &n) const {return this->std::string::const_iterator::operator-(n);}
-  String::const_iterator::difference_type String::const_iterator::operator-(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) - static_cast<const std::string::const_iterator &>(rhs);}
+  String::const_iterator String::const_iterator::operator+(const difference_type &n) const {return static_cast<const std::string::const_iterator * const>(m_impl)->operator+(n);}
+  String::const_iterator String::const_iterator::operator-(const difference_type &n) const {return static_cast<const std::string::const_iterator * const>(m_impl)->operator-(n);}
+  String::const_iterator::difference_type String::const_iterator::operator-(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) - *static_cast<const std::string::const_iterator * const>(rhs.m_impl);}
 
-  bool String::const_iterator::operator<(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) < static_cast<const std::string::const_iterator &>(rhs);}
-  bool String::const_iterator::operator>(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) > static_cast<const std::string::const_iterator &>(rhs);}
-  bool String::const_iterator::operator<=(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) <= static_cast<const std::string::const_iterator &>(rhs);}
-  bool String::const_iterator::operator>=(const const_iterator &rhs) const {return static_cast<const std::string::const_iterator &>(*this) >= static_cast<const std::string::const_iterator &>(rhs);}
+  bool String::const_iterator::operator<(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) < *static_cast<const std::string::const_iterator * const>(rhs.m_impl);}
+  bool String::const_iterator::operator>(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) > *static_cast<const std::string::const_iterator * const>(rhs.m_impl);}
+  bool String::const_iterator::operator<=(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) <= *static_cast<const std::string::const_iterator * const>(rhs.m_impl);}
+  bool String::const_iterator::operator>=(const const_iterator &rhs) const {return *static_cast<const std::string::const_iterator * const>(m_impl) >= *static_cast<const std::string::const_iterator * const>(rhs.m_impl);}
 
   String::const_iterator String::const_iterator::operator+=(const difference_type &n) {
-    this->std::string::const_iterator::operator+=(n);
+    static_cast<std::string::const_iterator *>(m_impl)->operator+=(n);
     return *this;
   }
   String::const_iterator String::const_iterator::operator-=(const difference_type &n) {
-    this->std::string::const_iterator::operator-=(n);
+    static_cast<std::string::const_iterator *>(m_impl)->operator-=(n);
     return *this;
   }
       
-  String::const_iterator::value_type String::const_iterator::operator[](const difference_type &n) const {return this->std::string::const_iterator::operator[](n);}
+  String::const_iterator::value_type String::const_iterator::operator[](const difference_type &n) const {return static_cast<const std::string::const_iterator * const>(m_impl)->operator[](n);}
 
-  String::const_iterator::const_iterator(const std::string::const_iterator &iter) : std::string::const_iterator(iter) {}
-#ifndef DISABLE_CPP11
-  String::const_iterator::const_iterator(std::string::iterator &&iter) : std::string::const_iterator(std::forward<std::string::const_iterator>(iter)) {}
-#endif
+  String::const_iterator::const_iterator(const std::string::const_iterator &iter) : m_impl(new std::string::const_iterator(iter)) {}
   String::const_iterator & String::const_iterator::operator=(const std::string::const_iterator &iter) {
-    std::string::const_iterator(*this) = iter;
+    String::const_iterator temp(iter);
+    std::swap(m_impl, temp.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::const_iterator & String::const_iterator::operator=(std::string::const_iterator &&iter) {
-    std::string::const_iterator(*this) = std::forward<std::string::const_iterator>(iter);
-    return *this;
-  }
-#endif
+  
+  String::reverse_iterator::reverse_iterator() : m_impl(new std::string::reverse_iterator) {}
+  String::reverse_iterator::~reverse_iterator() {delete m_impl;}
 
-  String::reverse_iterator::reverse_iterator() {}
-  String::reverse_iterator::~reverse_iterator() {}
-
-  String::reverse_iterator::reverse_iterator(const reverse_iterator &rhs) : std::string::reverse_iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::reverse_iterator::reverse_iterator(reverse_iterator &&rhs) : std::string::reverse_iterator(std::forward<std::string::reverse_iterator>(rhs)) {}
-#endif
+  String::reverse_iterator::reverse_iterator(const reverse_iterator &rhs) : m_impl(new std::string::reverse_iterator(*static_cast<const std::string::reverse_iterator * const>(rhs.m_impl))) {}
   String::reverse_iterator & String::reverse_iterator::operator=(const reverse_iterator &rhs) {
-    this->std::string::reverse_iterator::operator=(rhs);
+    *static_cast<std::string::reverse_iterator *>(m_impl) = *static_cast<std::string::reverse_iterator *>(rhs.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::reverse_iterator & String::reverse_iterator::operator=(reverse_iterator &&rhs) {
-    this->std::string::reverse_iterator::operator=(std::forward<std::string::reverse_iterator>(rhs));
-    return *this;
-  }
-#endif
       
-  bool String::reverse_iterator::operator==(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) == static_cast<const std::string::reverse_iterator &>(rhs);}
-  bool String::reverse_iterator::operator!=(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) != static_cast<const std::string::reverse_iterator &>(rhs);}
+  bool String::reverse_iterator::operator==(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) == *static_cast<const std::string::reverse_iterator *>(rhs.m_impl);}
+  bool String::reverse_iterator::operator!=(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) != *static_cast<const std::string::reverse_iterator *>(rhs.m_impl);}
       
-  String::reverse_iterator::value_type String::reverse_iterator::operator*() const {return this->std::string::reverse_iterator::operator*();}
-  String::reverse_iterator::value_type & String::reverse_iterator::operator*() {return this->std::string::reverse_iterator::operator*();}
-  String::reverse_iterator::value_type String::reverse_iterator::operator->() const {return this->std::string::reverse_iterator::operator*();}
-  String::reverse_iterator::value_type & String::reverse_iterator::operator->() {return this->std::string::reverse_iterator::operator*();}
+  String::reverse_iterator::value_type String::reverse_iterator::operator*() const {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator*();}
+  String::reverse_iterator::value_type & String::reverse_iterator::operator*() {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator*();}
+  String::reverse_iterator::value_type String::reverse_iterator::operator->() const {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator*();}
+  String::reverse_iterator::value_type & String::reverse_iterator::operator->() {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator*();}
       
   String::reverse_iterator String::reverse_iterator::operator++() {
-    this->std::string::reverse_iterator::operator++();
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator++();
     return *this;
   }
   String::reverse_iterator String::reverse_iterator::operator--() {
-    this->std::string::reverse_iterator::operator--();
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator--();
     return *this;
   }
   String::reverse_iterator String::reverse_iterator::operator++(int) {
-    this->std::string::reverse_iterator::operator++(0);
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator++(0);
     return *this;
   }
   String::reverse_iterator String::reverse_iterator::operator--(int) {
-    this->std::string::reverse_iterator::operator--(0);
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator--(0);
     return *this;
   }
 
-  String::reverse_iterator String::reverse_iterator::operator+(const difference_type &n) const {return this->std::string::reverse_iterator::operator+(n);}
-  String::reverse_iterator String::reverse_iterator::operator-(const difference_type &n) const {return this->std::string::reverse_iterator::operator-(n);}
-  String::reverse_iterator::difference_type String::reverse_iterator::operator-(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) - static_cast<const std::string::reverse_iterator &>(rhs);}
+  String::reverse_iterator String::reverse_iterator::operator+(const difference_type &n) const {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator+(n);}
+  String::reverse_iterator String::reverse_iterator::operator-(const difference_type &n) const {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator-(n);}
+  String::reverse_iterator::difference_type String::reverse_iterator::operator-(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) - *static_cast<const std::string::reverse_iterator * const>(rhs.m_impl);}
 
-  bool String::reverse_iterator::operator<(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) < static_cast<const std::string::reverse_iterator &>(rhs);}
-  bool String::reverse_iterator::operator>(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) > static_cast<const std::string::reverse_iterator &>(rhs);}
-  bool String::reverse_iterator::operator<=(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) <= static_cast<const std::string::reverse_iterator &>(rhs);}
-  bool String::reverse_iterator::operator>=(const reverse_iterator &rhs) const {return static_cast<const std::string::reverse_iterator &>(*this) >= static_cast<const std::string::reverse_iterator &>(rhs);}
+  bool String::reverse_iterator::operator<(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) < *static_cast<const std::string::reverse_iterator * const>(rhs.m_impl);}
+  bool String::reverse_iterator::operator>(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) > *static_cast<const std::string::reverse_iterator * const>(rhs.m_impl);}
+  bool String::reverse_iterator::operator<=(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) <= *static_cast<const std::string::reverse_iterator * const>(rhs.m_impl);}
+  bool String::reverse_iterator::operator>=(const reverse_iterator &rhs) const {return *static_cast<const std::string::reverse_iterator * const>(m_impl) >= *static_cast<const std::string::reverse_iterator * const>(rhs.m_impl);}
 
   String::reverse_iterator String::reverse_iterator::operator+=(const difference_type &n) {
-    this->std::string::reverse_iterator::operator+=(n);
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator+=(n);
     return *this;
   }
   String::reverse_iterator String::reverse_iterator::operator-=(const difference_type &n) {
-    this->std::string::reverse_iterator::operator-=(n);
+    static_cast<std::string::reverse_iterator *>(m_impl)->operator-=(n);
     return *this;
   }
       
-  String::reverse_iterator::value_type String::reverse_iterator::operator[](const difference_type &n) const {return this->std::string::reverse_iterator::operator[](n);}
-  String::reverse_iterator::value_type & String::reverse_iterator::operator[](const difference_type &n) {return this->std::string::reverse_iterator::operator[](n);}
+  String::reverse_iterator::value_type String::reverse_iterator::operator[](const difference_type &n) const {return static_cast<const std::string::reverse_iterator * const>(m_impl)->operator[](n);}
+  String::reverse_iterator::value_type & String::reverse_iterator::operator[](const difference_type &n) {return static_cast<std::string::reverse_iterator *>(m_impl)->operator[](n);}
 
-  String::reverse_iterator::reverse_iterator(const std::string::reverse_iterator &iter) : std::string::reverse_iterator(iter) {}
-#ifndef DISABLE_CPP11
-  String::reverse_iterator::reverse_iterator(std::string::reverse_iterator &&iter) : std::string::reverse_iterator(std::forward<std::string::reverse_iterator>(iter)) {}
-#endif
+  String::reverse_iterator::reverse_iterator(const std::string::reverse_iterator &iter) : m_impl(new std::string::reverse_iterator(iter)) {}
   String::reverse_iterator & String::reverse_iterator::operator=(const std::string::reverse_iterator &iter) {
-    std::string::reverse_iterator(*this) = iter;
+    String::reverse_iterator temp(iter);
+    std::swap(m_impl, temp.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::reverse_iterator & String::reverse_iterator::operator=(std::string::reverse_iterator &&iter) {
-    std::string::reverse_iterator(*this) = std::forward<std::string::reverse_iterator>(iter);
-    return *this;
-  }
-#endif
 
-  String::const_reverse_iterator::const_reverse_iterator() {}
-  String::const_reverse_iterator::~const_reverse_iterator() {}
+  String::const_reverse_iterator::const_reverse_iterator() : m_impl(new std::string::const_reverse_iterator) {}
+  String::const_reverse_iterator::~const_reverse_iterator() {delete m_impl;}
 
-  String::const_reverse_iterator::const_reverse_iterator(const const_reverse_iterator &rhs) : std::string::const_reverse_iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator::const_reverse_iterator(const_reverse_iterator &&rhs) : std::string::const_reverse_iterator(std::forward<std::string::const_reverse_iterator>(rhs)) {}
-#endif
+  String::const_reverse_iterator::const_reverse_iterator(const const_reverse_iterator &rhs) : m_impl(new std::string::const_reverse_iterator(*static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl))) {}
   String::const_reverse_iterator & String::const_reverse_iterator::operator=(const const_reverse_iterator &rhs) {
-    this->std::string::const_reverse_iterator::operator=(rhs);
+    *static_cast<std::string::const_reverse_iterator *>(m_impl) = *static_cast<std::string::const_reverse_iterator *>(rhs.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator & String::const_reverse_iterator::operator=(const_reverse_iterator &&rhs) {
-    this->std::string::const_reverse_iterator::operator=(std::forward<std::string::const_reverse_iterator>(rhs));
-    return *this;
-  }
-#endif
-
-  String::const_reverse_iterator::const_reverse_iterator(const String::reverse_iterator &rhs) : std::string::const_reverse_iterator(rhs) {}
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator::const_reverse_iterator(String::reverse_iterator &&rhs) : std::string::const_reverse_iterator(std::forward<std::string::reverse_iterator>(rhs)) {}
-#endif
-  String::const_reverse_iterator & String::const_reverse_iterator::operator=(const String::reverse_iterator &rhs) {
-    this->std::string::const_reverse_iterator::operator=(rhs);
-    return *this;
-  }
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator & String::const_reverse_iterator::operator=(String::reverse_iterator &&rhs) {
-    this->std::string::const_reverse_iterator::operator=(std::forward<std::string::reverse_iterator>(rhs));
-    return *this;
-  }
-#endif
-
-  bool String::const_reverse_iterator::operator==(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) == static_cast<const std::string::const_reverse_iterator &>(rhs);}
-  bool String::const_reverse_iterator::operator!=(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) != static_cast<const std::string::const_reverse_iterator &>(rhs);}
-
-  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator*() const {return this->std::string::const_reverse_iterator::operator*();}
-  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator->() const {return this->std::string::const_reverse_iterator::operator*();}
-
+      
+  bool String::const_reverse_iterator::operator==(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) == *static_cast<const std::string::const_reverse_iterator *>(rhs.m_impl);}
+  bool String::const_reverse_iterator::operator!=(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) != *static_cast<const std::string::const_reverse_iterator *>(rhs.m_impl);}
+      
+  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator*() const {return static_cast<const std::string::const_reverse_iterator * const>(m_impl)->operator*();}
+  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator->() const {return static_cast<const std::string::const_reverse_iterator * const>(m_impl)->operator*();}
+      
   String::const_reverse_iterator String::const_reverse_iterator::operator++() {
-    this->std::string::const_reverse_iterator::operator++();
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator++();
     return *this;
   }
   String::const_reverse_iterator String::const_reverse_iterator::operator--() {
-    this->std::string::const_reverse_iterator::operator--();
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator--();
     return *this;
   }
   String::const_reverse_iterator String::const_reverse_iterator::operator++(int) {
-    this->std::string::const_reverse_iterator::operator++(0);
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator++(0);
     return *this;
   }
   String::const_reverse_iterator String::const_reverse_iterator::operator--(int) {
-    this->std::string::const_reverse_iterator::operator--(0);
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator--(0);
     return *this;
   }
 
-  String::const_reverse_iterator String::const_reverse_iterator::operator+(const difference_type &n) const {return this->std::string::const_reverse_iterator::operator+(n);}
-  String::const_reverse_iterator String::const_reverse_iterator::operator-(const difference_type &n) const {return this->std::string::const_reverse_iterator::operator-(n);}
-  String::const_reverse_iterator::difference_type String::const_reverse_iterator::operator-(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) - static_cast<const std::string::const_reverse_iterator &>(rhs);}
+  String::const_reverse_iterator String::const_reverse_iterator::operator+(const difference_type &n) const {return static_cast<const std::string::const_reverse_iterator * const>(m_impl)->operator+(n);}
+  String::const_reverse_iterator String::const_reverse_iterator::operator-(const difference_type &n) const {return static_cast<const std::string::const_reverse_iterator * const>(m_impl)->operator-(n);}
+  String::const_reverse_iterator::difference_type String::const_reverse_iterator::operator-(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) - *static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl);}
 
-  bool String::const_reverse_iterator::operator<(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) < static_cast<const std::string::const_reverse_iterator &>(rhs);}
-  bool String::const_reverse_iterator::operator>(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) > static_cast<const std::string::const_reverse_iterator &>(rhs);}
-  bool String::const_reverse_iterator::operator<=(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) <= static_cast<const std::string::const_reverse_iterator &>(rhs);}
-  bool String::const_reverse_iterator::operator>=(const const_reverse_iterator &rhs) const {return static_cast<const std::string::const_reverse_iterator &>(*this) >= static_cast<const std::string::const_reverse_iterator &>(rhs);}
+  bool String::const_reverse_iterator::operator<(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) < *static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl);}
+  bool String::const_reverse_iterator::operator>(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) > *static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl);}
+  bool String::const_reverse_iterator::operator<=(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) <= *static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl);}
+  bool String::const_reverse_iterator::operator>=(const const_reverse_iterator &rhs) const {return *static_cast<const std::string::const_reverse_iterator * const>(m_impl) >= *static_cast<const std::string::const_reverse_iterator * const>(rhs.m_impl);}
 
   String::const_reverse_iterator String::const_reverse_iterator::operator+=(const difference_type &n) {
-    this->std::string::const_reverse_iterator::operator+=(n);
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator+=(n);
     return *this;
   }
   String::const_reverse_iterator String::const_reverse_iterator::operator-=(const difference_type &n) {
-    this->std::string::const_reverse_iterator::operator-=(n);
+    static_cast<std::string::const_reverse_iterator *>(m_impl)->operator-=(n);
     return *this;
   }
       
-  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator[](const difference_type &n) const {return this->std::string::const_reverse_iterator::operator[](n);}
+  String::const_reverse_iterator::value_type String::const_reverse_iterator::operator[](const difference_type &n) const {return static_cast<const std::string::const_reverse_iterator * const>(m_impl)->operator[](n);}
 
-  String::const_reverse_iterator::const_reverse_iterator(const std::string::const_reverse_iterator &iter) : std::string::const_reverse_iterator(iter) {}
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator::const_reverse_iterator(std::string::const_reverse_iterator &&iter) : std::string::const_reverse_iterator(std::forward<std::string::const_reverse_iterator>(iter)) {}
-#endif
+  String::const_reverse_iterator::const_reverse_iterator(const std::string::const_reverse_iterator &iter) : m_impl(new std::string::const_reverse_iterator(iter)) {}
   String::const_reverse_iterator & String::const_reverse_iterator::operator=(const std::string::const_reverse_iterator &iter) {
-    std::string::const_reverse_iterator(*this) = iter;
+    String::const_reverse_iterator temp(iter);
+    std::swap(m_impl, temp.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String::const_reverse_iterator & String::const_reverse_iterator::operator=(std::string::const_reverse_iterator &&iter) {
-    std::string::const_reverse_iterator(*this) = std::forward<std::string::const_reverse_iterator>(iter);
-    return *this;
-  }
-#endif
 
-  String::String() {}
-  String::String(const String &str) : std::string(str) {}
-#ifndef DISABLE_CPP11
-  String::String(String &&str) : std::string(std::forward<String>(str)) {}
-#endif
-  String::String(const String &str, size_t pos, size_t n) : std::string(str, pos, n) {}
-  String::String(const char * s, size_t n) : std::string(s, n) {}
-  String::String(const char * s) : std::string(s) {}
-  String::String(size_t n, char c) : std::string(n, c) {}
+  String::String() : m_impl(new std::string) {}
+  String::String(const String &str) : m_impl(new std::string(*static_cast<std::string *>(str.m_impl))) {}
+  String::String(const String &str, size_t pos, size_t n) : m_impl(new std::string(*static_cast<std::string *>(str.m_impl), pos, n)) {}
+  String::String(const char * s, size_t n) : m_impl(new std::string(s, n)) {}
+  String::String(const char * s) : m_impl(new std::string(s)) {}
+  String::String(size_t n, char c) : m_impl(new std::string(n, c)) {}
+
+  String::~String() {delete m_impl;}
 
   String & String::operator=(const String &str) {
-    std::string::operator=(str);
+    *static_cast<std::string *>(m_impl) = *static_cast<std::string *>(str.m_impl);
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String & String::operator=(String &&str) {
-    std::string::operator=(std::forward<String>(str));
-    return *this;
-  }
-#endif
   String & String::operator=(const char *s) {
-    std::string::operator=(s);
+    *static_cast<std::string *>(m_impl) = s;
     return *this;
   }
   String & String::operator=(char c) {
-    std::string::operator=(c);
+    *static_cast<std::string *>(m_impl) = c;
     return *this;
   }
 
-  String::iterator String::begin() {return std::string::begin();}
-  String::const_iterator String::begin() const {return std::string::begin();}
+  String::iterator String::begin() {return static_cast<std::string *>(m_impl)->begin();}
+  String::const_iterator String::begin() const {return static_cast<const std::string * const>(m_impl)->begin();}
 
-  String::iterator String::end() {return std::string::end();}
-  String::const_iterator String::end() const {return std::string::end();}
+  String::iterator String::end() {return static_cast<std::string *>(m_impl)->end();}
+  String::const_iterator String::end() const {return static_cast<const std::string * const>(m_impl)->end();}
 
-  String::reverse_iterator String::rbegin() {return std::string::rbegin();}
-  String::const_reverse_iterator String::rbegin() const {return std::string::rbegin();}
+  String::reverse_iterator String::rbegin() {return static_cast<std::string *>(m_impl)->rbegin();}
+  String::const_reverse_iterator String::rbegin() const {return static_cast<const std::string * const>(m_impl)->rbegin();}
 
-  String::reverse_iterator String::rend() {return std::string::rend();}
-  String::const_reverse_iterator String::rend() const {return std::string::rend();}
+  String::reverse_iterator String::rend() {return static_cast<std::string *>(m_impl)->rend();}
+  String::const_reverse_iterator String::rend() const {return static_cast<const std::string * const>(m_impl)->rend();}
 
-  size_t String::size() const {return std::string::size();}
+  size_t String::size() const {return static_cast<std::string *>(m_impl)->size();}
 
-  size_t String::length() const {return std::string::length();}
+  size_t String::length() const {return static_cast<std::string *>(m_impl)->length();}
 
-  size_t String::max_size() const {return std::string::max_size();}
+  size_t String::max_size() const {return static_cast<std::string *>(m_impl)->max_size();}
 
-  void String::resize(size_t n, char c) {std::string::resize(n, c);}
-  void String::resize(size_t n) {std::string::resize(n);}
+  void String::resize(size_t n, char c) {static_cast<std::string *>(m_impl)->resize(n, c);}
+  void String::resize(size_t n) {static_cast<std::string *>(m_impl)->resize(n);}
 
-  size_t String::capacity() const {return std::string::capacity();}
+  size_t String::capacity() const {return static_cast<std::string *>(m_impl)->capacity();}
 
-  void String::reserve(size_t res_arg) {std::string::reserve(res_arg);}
+  void String::reserve(size_t res_arg) {static_cast<std::string *>(m_impl)->reserve(res_arg);}
 
-  void String::clear() {std::string::clear();}
+  void String::clear() {static_cast<std::string *>(m_impl)->clear();}
 
-  bool String::empty() const {return std::string::empty();}
+  bool String::empty() const {return static_cast<std::string *>(m_impl)->empty();}
 
-  String::value_type String::operator[](const unsigned int &pos) const {return static_cast<const std::string &>(*this)[pos];}
-  String::value_type & String::operator[](const unsigned int &pos) {return static_cast<std::string &>(*this)[pos];}
+  String::value_type String::operator[](const unsigned int &pos) const {return static_cast<const std::string * const>(m_impl)->operator[](pos);}
+  String::value_type & String::operator[](const unsigned int &pos) {return static_cast<std::string *>(m_impl)->operator[](pos);}
 
-  String::value_type String::at(size_t pos) const {return std::string::at(pos);}
-  String::value_type & String::at(size_t pos) {return std::string::at(pos);}
+  String::value_type String::at(size_t pos) const {return static_cast<const std::string * const>(m_impl)->at(pos);}
+  String::value_type & String::at(size_t pos) {return static_cast<std::string *>(m_impl)->at(pos);}
 
   String & String::operator+=(const String & str) {
-    std::string::operator+=(str);
+    *static_cast<std::string *>(m_impl) += *static_cast<std::string *>(str.m_impl);
     return *this;
   }
   String & String::operator+=(const char *s) {
-    std::string::operator+=(s);
+    *static_cast<std::string *>(m_impl) += s;
     return *this;
   }
   String & String::operator+=(char c) {
-    std::string::operator+=(c);
+    *static_cast<std::string *>(m_impl) += c;
     return *this;
   }
     
   String & String::append(const String &str) {
-    std::string::append(str);
+    static_cast<std::string *>(m_impl)->append(*static_cast<std::string *>(str.m_impl));
     return *this;
   }
   String & String::append(const String &str, size_t pos, size_t n) {
-    std::string::append(str, pos, n);
+    static_cast<std::string *>(m_impl)->append(*static_cast<std::string *>(str.m_impl), pos, n);
     return *this;
   }
   String & String::append(const char *s, size_t n) {
-    std::string::append(s, n);
+    static_cast<std::string *>(m_impl)->append(s, n);
     return *this;
   }
   String & String::append(const char *s) {
-    std::string::append(s);
+    static_cast<std::string *>(m_impl)->append(s);
     return *this;
   }
   String & String::append(size_t n, char c) {
-    std::string::append(n, c);
+    static_cast<std::string *>(m_impl)->append(n, c);
     return *this;
   }
 
-  void String::push_back(char c) {std::string::push_back(c);}
+  void String::push_back(char c) {static_cast<std::string *>(m_impl)->push_back(c);}
     
   String & String::assign(const String &str) {
-    std::string::assign(str);
+    static_cast<std::string *>(m_impl)->assign(*static_cast<std::string *>(str.m_impl));
     return *this;
   }
-#ifndef DISABLE_CPP11
-  String & String::assign(String &&str) {
-    std::string::assign(std::forward<String>(str));
-    return *this;
-  }
-#endif
   String & String::assign(const String &str, size_t pos, size_t n) {
-    std::string::assign(str, pos, n);
+    static_cast<std::string *>(m_impl)->assign(*static_cast<std::string *>(str.m_impl), pos, n);
     return *this;
   }
   String & String::assign(const char *s, size_t n) {
-    std::string::assign(s, n);
+    static_cast<std::string *>(m_impl)->assign(s, n);
     return *this;
   }
   String & String::assign(const char *s) {
-    std::string::assign(s);
+    static_cast<std::string *>(m_impl)->assign(s);
     return *this;
   }
   String & String::assign(size_t n, char c) {
-    std::string::assign(n, c);
+    static_cast<std::string *>(m_impl)->assign(n, c);
     return *this;
   }
     
   String & String::insert(size_t pos1, const String &str) {
-    std::string::insert(pos1, str);
+    static_cast<std::string *>(m_impl)->insert(pos1, *static_cast<std::string *>(str.m_impl));
     return *this;
   }
   String & String::insert(size_t pos1, const String &str, size_t pos2, size_t n) {
-    std::string::insert(pos1, str, pos2, n);
+    static_cast<std::string *>(m_impl)->insert(pos1, *static_cast<std::string *>(str.m_impl), pos2, n);
     return *this;
   }
   String & String::insert(size_t pos1, const char *s, size_t n) {
-    std::string::insert(pos1, s, n);
+    static_cast<std::string *>(m_impl)->insert(pos1, s, n);
     return *this;
   }
   String & String::insert(size_t pos1, const char *s) {
-    std::string::insert(pos1, s);
+    static_cast<std::string *>(m_impl)->insert(pos1, s);
     return *this;
   }
   String & String::insert(size_t pos1, size_t n, char c) {
-    std::string::insert(pos1, n, c);
+    static_cast<std::string *>(m_impl)->insert(pos1, n, c);
     return *this;
   }
   String::iterator String::insert(iterator p, char c) {
-    return std::string::insert(p, c);
+    return static_cast<std::string *>(m_impl)->insert(*static_cast<std::string::iterator *>(p.m_impl), c);
   }
   void String::insert(iterator p, size_t n, char c) {
-    std::string::insert(p, n, c);
+    static_cast<std::string *>(m_impl)->insert(*static_cast<std::string::iterator *>(p.m_impl), n, c);
   }
 
   String & String::erase(size_t pos, size_t n) {
-    std::string::erase(pos, n);
+    static_cast<std::string *>(m_impl)->erase(pos, n);
     return *this;
   }
   String::iterator String::erase(iterator position) {
-    return std::string::erase(position);
+    return static_cast<std::string *>(m_impl)->erase(*static_cast<std::string::iterator *>(position.m_impl));
   }
   String::iterator String::erase(iterator first, iterator last) {
-    return std::string::erase(first, last);
+    return static_cast<std::string *>(m_impl)->erase(*static_cast<std::string::iterator *>(first.m_impl), *static_cast<std::string::iterator *>(last.m_impl));
   }
 
   String & String::replace(size_t pos1, size_t n1, const String &str) {
-    std::string::replace(pos1, n1, str);
+    static_cast<std::string *>(m_impl)->replace(pos1, n1, *static_cast<std::string *>(str.m_impl));
     return *this;
   }
   String & String::replace(iterator i1, iterator i2, const String &str) {
-    std::string::replace(i1, i2, str);
+    static_cast<std::string *>(m_impl)->replace(*static_cast<std::string::iterator *>(i1.m_impl), *static_cast<std::string::iterator *>(i2.m_impl), *static_cast<const std::string * const>(str.m_impl));
     return *this;
   }
   String & String::replace(size_t pos1, size_t n1, const String &str, size_t pos2, size_t n2) {
-    std::string::replace(pos1, n1, str, pos2, n2);
+    static_cast<std::string *>(m_impl)->replace(pos1, n1, *static_cast<std::string *>(str.m_impl), pos2, n2);
     return *this;
   }
   String & String::replace(size_t pos1, size_t n1, const char *s, size_t n2) {
-    std::string::replace(pos1, n1, s, n2);
+    static_cast<std::string *>(m_impl)->replace(pos1, n1, s, n2);
     return *this;
   }
   String & String::replace(iterator i1, iterator i2, const char *s, size_t n2) {
-    std::string::replace(i1, i2, s, n2);
+    static_cast<std::string *>(m_impl)->replace(*static_cast<std::string::iterator *>(i1.m_impl), *static_cast<std::string::iterator *>(i2.m_impl), s, n2);
     return *this;
   }
   String & String::replace(size_t pos1, size_t n1, const char *s) {
-    std::string::replace(pos1, n1, s);
+    static_cast<std::string *>(m_impl)->replace(pos1, n1, s);
     return *this;
   }
   String & String::replace(iterator i1, iterator i2, const char *s) {
-    std::string::replace(i1, i2, s);
+    static_cast<std::string *>(m_impl)->replace(*static_cast<std::string::iterator *>(i1.m_impl), *static_cast<std::string::iterator *>(i2.m_impl), s);
     return *this;
   }
   String & String::replace(size_t pos1, size_t n1, size_t n2, char c) {
-    std::string::replace(pos1, n1, n2, c);
+    static_cast<std::string *>(m_impl)->replace(pos1, n1, n2, c);
     return *this;
   }
   String & String::replace(iterator i1, iterator i2, size_t n2, char c) {
-    std::string::replace(i1, i2, n2, c);
+    static_cast<std::string *>(m_impl)->replace(*static_cast<std::string::iterator *>(i1.m_impl), *static_cast<std::string::iterator *>(i2.m_impl), n2, c);
     return *this;
   }
 
-  void String::swap(String &str) {std::string::swap(str);}
+  void String::swap(String &str) {static_cast<std::string *>(m_impl)->swap(*static_cast<std::string *>(str.m_impl));}
 
-  const char * String::c_str() const {return std::string::c_str();}
+  const char * String::c_str() const {return static_cast<std::string *>(m_impl)->c_str();}
 
-  const char * String::data() const {return std::string::data();}
+  const char * String::data() const {return static_cast<std::string *>(m_impl)->data();}
 
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4996 )
 #endif
-  size_t String::copy(char *s, size_t n, size_t pos) const {return std::string::copy(s, n, pos);}
+  size_t String::copy(char *s, size_t n, size_t pos) const {return static_cast<std::string *>(m_impl)->copy(s, n, pos);}
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
 
-  size_t String::find(const String &str, size_t pos) const {return std::string::find(str, pos);}
-  size_t String::find(const char *s, size_t pos, size_t n) const {return std::string::find(s, pos, n);}
-  size_t String::find(const char *s, size_t pos) const {return std::string::find(s, pos);}
-  size_t String::find(char c, size_t pos) const {return std::string::find(c, pos);}
+  size_t String::find(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->find(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::find(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->find(s, pos, n);}
+  size_t String::find(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->find(s, pos);}
+  size_t String::find(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->find(c, pos);}
 
-  size_t String::rfind(const String &str, size_t pos) const {return std::string::rfind(str, pos);}
-  size_t String::rfind(const char *s, size_t pos, size_t n) const {return std::string::rfind(s, pos, n);}
-  size_t String::rfind(const char *s, size_t pos) const {return std::string::rfind(s, pos);}
-  size_t String::rfind(char c, size_t pos) const {return std::string::rfind(c, pos);}
+  size_t String::rfind(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->rfind(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::rfind(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->rfind(s, pos, n);}
+  size_t String::rfind(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->rfind(s, pos);}
+  size_t String::rfind(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->rfind(c, pos);}
 
-  size_t String::find_first_of(const String &str, size_t pos) const {return std::string::find_first_of(str, pos);}
-  size_t String::find_first_of(const char *s, size_t pos, size_t n) const {return std::string::find_first_of(s, pos, n);}
-  size_t String::find_first_of(const char *s, size_t pos) const {return std::string::find_first_of(s, pos);}
-  size_t String::find_first_of(char c, size_t pos) const {return std::string::find_first_of(c, pos);}
+  size_t String::find_first_of(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_of(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::find_first_of(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->find_first_of(s, pos, n);}
+  size_t String::find_first_of(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_of(s, pos);}
+  size_t String::find_first_of(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_of(c, pos);}
 
-  size_t String::find_last_of(const String &str, size_t pos) const {return std::string::find_last_of(str, pos);}
-  size_t String::find_last_of(const char *s, size_t pos, size_t n) const {return std::string::find_last_of(s, pos, n);}
-  size_t String::find_last_of(const char *s, size_t pos) const {return std::string::find_last_of(s, pos);}
-  size_t String::find_last_of(char c, size_t pos) const {return std::string::find_last_of(c, pos);}
+  size_t String::find_last_of(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_of(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::find_last_of(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->find_last_of(s, pos, n);}
+  size_t String::find_last_of(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_of(s, pos);}
+  size_t String::find_last_of(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_of(c, pos);}
 
-  size_t String::find_first_not_of(const String &str, size_t pos) const {return std::string::find_first_not_of(str, pos);}
-  size_t String::find_first_not_of(const char *s, size_t pos, size_t n) const {return std::string::find_first_not_of(s, pos, n);}
-  size_t String::find_first_not_of(const char *s, size_t pos) const {return std::string::find_first_not_of(s, pos);}
-  size_t String::find_first_not_of(char c, size_t pos) const {return std::string::find_first_not_of(c, pos);}
+  size_t String::find_first_not_of(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_not_of(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::find_first_not_of(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->find_first_not_of(s, pos, n);}
+  size_t String::find_first_not_of(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_not_of(s, pos);}
+  size_t String::find_first_not_of(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->find_first_not_of(c, pos);}
 
-  size_t String::find_last_not_of(const String &str, size_t pos) const {return std::string::find_last_not_of(str, pos);}
-  size_t String::find_last_not_of(const char *s, size_t pos, size_t n) const {return std::string::find_last_not_of(s, pos, n);}
-  size_t String::find_last_not_of(const char *s, size_t pos) const {return std::string::find_last_not_of(s, pos);}
-  size_t String::find_last_not_of(char c, size_t pos) const {return std::string::find_last_not_of(c, pos);}
+  size_t String::find_last_not_of(const String &str, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_not_of(*static_cast<std::string *>(str.m_impl), pos);}
+  size_t String::find_last_not_of(const char *s, size_t pos, size_t n) const {return static_cast<std::string *>(m_impl)->find_last_not_of(s, pos, n);}
+  size_t String::find_last_not_of(const char *s, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_not_of(s, pos);}
+  size_t String::find_last_not_of(char c, size_t pos) const {return static_cast<std::string *>(m_impl)->find_last_not_of(c, pos);}
 
-  String String::substr(size_t pos, size_t n) const {return String(std::string::substr(pos, n));}
+  String String::substr(size_t pos, size_t n) const {return String(static_cast<std::string *>(m_impl)->substr(pos, n));}
 
-  int String::compare(const String &str) const {return std::string::compare(str);}
-  int String::compare(const char *s) const {return std::string::compare(s);}
-  int String::compare(size_t pos1, size_t n1, const String &str) const {return std::string::compare(pos1, n1, str);}
-  int String::compare(size_t pos1, size_t n1, const char *s) const {return std::string::compare(pos1, n1, s);}
-  int String::compare(size_t pos1, size_t n1, const String &str, size_t pos2, size_t n2) const {return std::string::compare(pos1, n1, str, pos2, n2);}
-  int String::compare(size_t pos1, size_t n1, const char *s, size_t n2) const {return std::string::compare(pos1, n1, s, n2);}
+  int String::compare(const String &str) const {return static_cast<std::string *>(m_impl)->compare(*static_cast<std::string *>(str.m_impl));}
+  int String::compare(const char *s) const {return static_cast<std::string *>(m_impl)->compare(s);}
+  int String::compare(size_t pos1, size_t n1, const String &str) const {return static_cast<std::string *>(m_impl)->compare(pos1, n1, *static_cast<std::string *>(str.m_impl));}
+  int String::compare(size_t pos1, size_t n1, const char *s) const {return static_cast<std::string *>(m_impl)->compare(pos1, n1, s);}
+  int String::compare(size_t pos1, size_t n1, const String &str, size_t pos2, size_t n2) const {return static_cast<std::string *>(m_impl)->compare(pos1, n1, *static_cast<std::string *>(str.m_impl), pos2, n2);}
+  int String::compare(size_t pos1, size_t n1, const char *s, size_t n2) const {return static_cast<std::string *>(m_impl)->compare(pos1, n1, s, n2);}
 
-  bool String::operator==(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) == static_cast<const std::string &>(rhs);}
-  bool String::operator==(const char *rhs) const {return static_cast<const std::string &>(*this) == rhs;}
-  bool String::operator!=(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) != static_cast<const std::string &>(rhs);}
-  bool String::operator!=(const char *rhs) const {return static_cast<const std::string &>(*this) != rhs;}
-  bool String::operator<(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) < static_cast<const std::string &>(rhs);}
-  bool String::operator<(const char *rhs) const {return static_cast<const std::string &>(*this) < rhs;}
-  bool String::operator>(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) > static_cast<const std::string &>(rhs);}
-  bool String::operator>(const char *rhs) const {return static_cast<const std::string &>(*this) > rhs;}
-  bool String::operator<=(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) <= static_cast<const std::string &>(rhs);}
-  bool String::operator<=(const char *rhs) const {return static_cast<const std::string &>(*this) <= rhs;}
-  bool String::operator>=(const Zeni::String &rhs) const {return static_cast<const std::string &>(*this) >= static_cast<const std::string &>(rhs);}
-  bool String::operator>=(const char *rhs) const {return static_cast<const std::string &>(*this) >= rhs;}
+  bool String::operator==(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) == *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator==(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) == rhs;}
+  bool String::operator!=(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) != *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator!=(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) != rhs;}
+  bool String::operator<(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) < *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator<(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) < rhs;}
+  bool String::operator>(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) > *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator>(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) > rhs;}
+  bool String::operator<=(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) <= *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator<=(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) <= rhs;}
+  bool String::operator>=(const Zeni::String &rhs) const {return *static_cast<const std::string * const>(m_impl) >= *static_cast<const std::string * const>(rhs.m_impl);}
+  bool String::operator>=(const char *rhs) const {return *static_cast<const std::string * const>(m_impl) >= rhs;}
 
   size_t String::Hash::operator()(const String &str) const {
     size_t val = 42u;
