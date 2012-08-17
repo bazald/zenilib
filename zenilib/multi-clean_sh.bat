@@ -80,66 +80,66 @@ fi
 pushd $(echo $0 | sed 's/\/[^\/]*$//')
 if [ $? -ne 0 ]; then exit -4; fi
 
-rm assets/stderr.txt
-rm assets/stdout.txt
-rm -r Resources
-rm *.plist
+for file in $(ls assets/stderr.txt 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls assets/stdout.txt 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for dir in $(ls Resources 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for file in $(ls *.plist 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 
-rm bin/x32/*.exp
-rm bin/x32/*.idb
-rm bin/x32/*.ilk
-rm bin/x32/*.pdb
-rm bin/x64/*.exp
-rm bin/x64/*.idb
-rm bin/x64/*.ilk
-rm bin/x64/*.pdb
-rm -r build/vs2010/ipch
-rm -r build/vs2010/obj
-rm build/vs2010/*.sdf
-rm build/*.log
-rm build/backupenv.bat
-rm *\ Debug.exe
-rm *.idb
-rm *.ilk
-rm *.pdb
+for file in $(ls bin/x32/*.exp 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x32/*.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x32/*.ilk 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x32/*.pdb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x64/*.exp 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x64/*.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x64/*.ilk 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls bin/x64/*.pdb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for dir in $(ls build/vs2010/ipch 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for dir in $(ls build/vs2010/obj 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for file in $(ls build/vs2010/*.sdf 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls build/*.log 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls build/backupenv.bat 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls *\ Debug.exe 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls *.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls *.ilk 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls *.pdb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 
-rm -r build/linux/obj
-rm game_d32
-rm game_d64
-rm lsbappchk_filtered.txt
-rm lsbappchk_full.txt
+for dir in $(ls build/linux/obj 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for file in $(ls game_d32 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls game_d64 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls lsbappchk_filtered.txt 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+for file in $(ls lsbappchk_full.txt 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 
 if [ "$BUILD" == "all" ]; then
-  rm -r bin/d32
-  rm -r bin/d64
-  rm bin/x32/*.lib
-  rm bin/x64/*.lib
+  for dir in $(ls bin/d32 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+  for dir in $(ls bin/d64 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+  for file in $(ls bin/x32/*.lib 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/x64/*.lib 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 
-  rm -r lib/d32
-  rm -r lib/d64
-  rm lib/x32/liblocal_SDLmain.a
-  rm lib/x64/liblocal_SDLmain.a
+  for dir in $(ls lib/d32 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+  for dir in $(ls lib/d64 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+  for file in $(ls lib/x32/liblocal_SDLmain.a 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls lib/x64/liblocal_SDLmain.a 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 
-  rm -r lib/univ_d
+  for dir in $(ls lib/univ_d 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
 else
-  rm bin/d32/game.exe
-  rm bin/d32/game.idb
-  rm bin/d32/game.pdb
-  rm bin/d32/*.exp
-  rm bin/d32/*.idb
-  rm bin/d32/*.ilk
-  rm bin/d64/game.exe
-  rm bin/d64/game.idb
-  rm bin/d64/game.pdb
-  rm bin/d64/*.exp
-  rm bin/d64/*.idb
-  rm bin/d64/*.ilk
+  for file in $(ls bin/d32/game.exe 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d32/game.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d32/game.pdb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d32/*.exp 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d32/*.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d32/*.ilk 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/game.exe 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/game.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/game.pdb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/*.exp 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/*.idb 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
+  for file in $(ls bin/d64/*.ilk 2> /dev/null); do if [ -f $file ]; then rm $file; fi; done
 fi
 
-rm -r build/macosx/obj
-rm -r build/xcode3/build
-rm -r build/xcode4/build
-rm -r game_d.app
+for dir in $(ls build/macosx/obj 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for dir in $(ls build/xcode3/build 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for dir in $(ls build/xcode4/build 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
+for dir in $(ls game_d.app 2> /dev/null); do if [ -d $dir ]; then rm -r $dir; fi; done
 
 popd
 exit
@@ -241,66 +241,69 @@ IF NOT "%STATE%"=="config" (
 )
 
 
-DEL /Q "%DP0%\assets\stderr.txt"
-DEL /Q "%DP0%\assets\stdout.txt"
-RMDIR /S /Q "%DP0%\Resources"
-DEL /Q "%DP0%\*.plist"
+IF EXIST "%DP0%\assets\stderr.txt" DEL /Q "%DP0%\assets\stderr.txt"
+IF EXIST "%DP0%\assets\stdout.txt" DEL /Q "%DP0%\assets\stdout.txt"
+IF EXIST "%DP0%\Resources" RMDIR /S /Q "%DP0%\Resources"
+IF EXIST "%DP0%\*.plist" DEL /Q "%DP0%\*.plist"
 
-DEL /Q "%DP0%\bin\x32\*.exp"
-DEL /Q "%DP0%\bin\x32\*.idb"
-DEL /Q "%DP0%\bin\x32\*.ilk"
-DEL /Q "%DP0%\bin\x32\*.pdb"
-DEL /Q "%DP0%\bin\x64\*.exp"
-DEL /Q "%DP0%\bin\x64\*.idb"
-DEL /Q "%DP0%\bin\x64\*.ilk"
-DEL /Q "%DP0%\bin\x64\*.pdb"
-RMDIR /S /Q "%DP0%\build\vs2010\ipch"
-RMDIR /S /Q "%DP0%\build\vs2010\obj"
-DEL /Q "%DP0%\build\vs2010\*.sdf"
-DEL /Q "%DP0%\build\*.log"
-DEL /Q "%DP0%\build\backupenv.bat"
-DEL /Q "%DP0%\* Debug.exe"
-DEL /Q "%DP0%\*.idb"
-DEL /Q "%DP0%\*.ilk"
-DEL /Q "%DP0%\*.pdb"
+IF EXIST "%DP0%\bin\x32\*.exp" DEL /Q "%DP0%\bin\x32\*.exp"
+IF EXIST "%DP0%\bin\x32\*.idb" DEL /Q "%DP0%\bin\x32\*.idb"
+IF EXIST "%DP0%\bin\x32\*.ilk" DEL /Q "%DP0%\bin\x32\*.ilk"
+IF EXIST "%DP0%\bin\x32\*.pdb" DEL /Q "%DP0%\bin\x32\*.pdb"
+IF EXIST "%DP0%\bin\x64\*.exp" DEL /Q "%DP0%\bin\x64\*.exp"
+IF EXIST "%DP0%\bin\x64\*.idb" DEL /Q "%DP0%\bin\x64\*.idb"
+IF EXIST "%DP0%\bin\x64\*.ilk" DEL /Q "%DP0%\bin\x64\*.ilk"
+IF EXIST "%DP0%\bin\x64\*.pdb" DEL /Q "%DP0%\bin\x64\*.pdb"
+IF EXIST "%DP0%\build\vs2010\ipch" RMDIR /S /Q "%DP0%\build\vs2010\ipch"
+IF EXIST "%DP0%\build\vs2010\obj" RMDIR /S /Q "%DP0%\build\vs2010\obj"
+IF EXIST "%DP0%\build\vs2010\*.sdf" DEL /Q "%DP0%\build\vs2010\*.sdf"
+IF EXIST "%DP0%\build\*.log" DEL /Q "%DP0%\build\*.log"
+IF EXIST "%DP0%\build\backupenv.bat" DEL /Q "%DP0%\build\backupenv.bat"
+IF EXIST "%DP0%\* Debug.exe" DEL /Q "%DP0%\* Debug.exe"
+IF EXIST "%DP0%\*.idb" DEL /Q "%DP0%\*.idb"
+IF EXIST "%DP0%\*.ilk" DEL /Q "%DP0%\*.ilk"
+IF EXIST "%DP0%\*.pdb" DEL /Q "%DP0%\*.pdb"
 
-RMDIR /S /Q "%DP0%\build\linux\obj"
-DEL /Q "%DP0%\game_d32"
-DEL /Q "%DP0%\game_d64"
-DEL /Q "%DP0%\lsbappchk_filtered.txt"
-DEL /Q "%DP0%\lsbappchk_full.txt"
+IF EXIST "%DP0%\build\linux\obj" RMDIR /S /Q "%DP0%\build\linux\obj"
+IF EXIST "%DP0%\game_d32" DEL /Q "%DP0%\game_d32"
+IF EXIST "%DP0%\game_d64" DEL /Q "%DP0%\game_d64"
+IF EXIST "%DP0%\lsbappchk_filtered.txt" DEL /Q "%DP0%\lsbappchk_filtered.txt"
+IF EXIST "%DP0%\lsbappchk_full.txt" DEL /Q "%DP0%\lsbappchk_full.txt"
 
-RMDIR /S /Q "%DP0%\build\macosx\obj"
-RMDIR /S /Q "%DP0%\build\xcode3\build"
-RMDIR /S /Q "%DP0%\build\xcode4\build"
-RMDIR /S /Q "%DP0%\game_d.app"
+IF EXIST "%DP0%\build\macosx\obj" RMDIR /S /Q "%DP0%\build\macosx\obj"
+IF EXIST "%DP0%\build\xcode3\build" RMDIR /S /Q "%DP0%\build\xcode3\build"
+IF EXIST "%DP0%\build\xcode4\build" RMDIR /S /Q "%DP0%\build\xcode4\build"
+IF EXIST "%DP0%\game_d.app" RMDIR /S /Q "%DP0%\game_d.app"
 
 IF "%BUILD%"=="all" (
-  RMDIR /S /Q "%DP0%\bin\d32"
-  RMDIR /S /Q "%DP0%\bin\d64"
-  DEL /Q "%DP0%\bin\x32\*.lib"
-  DEL /Q "%DP0%\bin\x64\*.lib"
+  IF EXIST "%DP0%\bin\d32" RMDIR /S /Q "%DP0%\bin\d32"
+  IF EXIST "%DP0%\bin\d64" RMDIR /S /Q "%DP0%\bin\d64"
+  IF EXIST "%DP0%\bin\x32\*.lib" DEL /Q "%DP0%\bin\x32\*.lib"
+  IF EXIST "%DP0%\bin\x64\*.lib" DEL /Q "%DP0%\bin\x64\*.lib"
 
-  RMDIR /S /Q "%DP0%\lib\d32"
-  RMDIR /S /Q "%DP0%\lib\d64"
-  DEL /Q "%DP0%\lib\x32\liblocal_SDLmain.a"
-  DEL /Q "%DP0%\lib\x64\liblocal_SDLmain.a"
+  IF EXIST "%DP0%\lib\d32" RMDIR /S /Q "%DP0%\lib\d32"
+  IF EXIST "%DP0%\lib\d64" RMDIR /S /Q "%DP0%\lib\d64"
+  IF EXIST "%DP0%\lib\x32\liblocal_SDLmain.a" DEL /Q "%DP0%\lib\x32\liblocal_SDLmain.a"
+  IF EXIST "%DP0%\lib\x64\liblocal_SDLmain.a" DEL /Q "%DP0%\lib\x64\liblocal_SDLmain.a"
 
-  RMDIR /S /Q "%DP0%\lib\univ_d"
+  IF EXIST "%DP0%\lib\univ_d" RMDIR /S /Q "%DP0%\lib\univ_d"
 ) ELSE (
-  DEL /Q "%DP0%\bin\d32\game.exe"
-  DEL /Q "%DP0%\bin\d32\game.idb"
-  DEL /Q "%DP0%\bin\d32\game.pdb"
-  DEL /Q "%DP0%\bin\d32\*.exp"
-  DEL /Q "%DP0%\bin\d32\*.idb"
-  DEL /Q "%DP0%\bin\d32\*.ilk"
-  DEL /Q "%DP0%\bin\d64\game.exe"
-  DEL /Q "%DP0%\bin\d64\game.idb"
-  DEL /Q "%DP0%\bin\d64\game.pdb"
-  DEL /Q "%DP0%\bin\d64\*.exp"
-  DEL /Q "%DP0%\bin\d64\*.idb"
-  DEL /Q "%DP0%\bin\d64\*.ilk"
+  IF EXIST "%DP0%\bin\d32\game.exe" DEL /Q "%DP0%\bin\d32\game.exe"
+  IF EXIST "%DP0%\bin\d32\game.idb" DEL /Q "%DP0%\bin\d32\game.idb"
+  IF EXIST "%DP0%\bin\d32\game.pdb" DEL /Q "%DP0%\bin\d32\game.pdb"
+  IF EXIST "%DP0%\bin\d32\*.exp" DEL /Q "%DP0%\bin\d32\*.exp"
+  IF EXIST "%DP0%\bin\d32\*.idb" DEL /Q "%DP0%\bin\d32\*.idb"
+  IF EXIST "%DP0%\bin\d32\*.ilk" DEL /Q "%DP0%\bin\d32\*.ilk"
+  IF EXIST "%DP0%\bin\d64\game.exe" DEL /Q "%DP0%\bin\d64\game.exe"
+  IF EXIST "%DP0%\bin\d64\game.idb" DEL /Q "%DP0%\bin\d64\game.idb"
+  IF EXIST "%DP0%\bin\d64\game.pdb" DEL /Q "%DP0%\bin\d64\game.pdb"
+  IF EXIST "%DP0%\bin\d64\*.exp" DEL /Q "%DP0%\bin\d64\*.exp"
+  IF EXIST "%DP0%\bin\d64\*.idb" DEL /Q "%DP0%\bin\d64\*.idb"
+  IF EXIST "%DP0%\bin\d64\*.ilk" DEL /Q "%DP0%\bin\d64\*.ilk"
 )
+
+ECHO(
+ECHO Clean completed successfully.
 
 
 

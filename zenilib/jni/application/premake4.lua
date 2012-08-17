@@ -17,6 +17,10 @@ project(APPLICATION_NAME)
 
   configuration "windows"
     prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("").." /E /Y" }
+  configuration { "windows", "Release*", "x32" }
+    prebuildcommands { "xcopy "..rebase("jni/external/bin/x32").." "..rebase("bin/x32").." /E /Y" }
+  configuration { "windows", "Release*", "x64" }
+    prebuildcommands { "xcopy "..rebase("jni/external/bin/x64").." "..rebase("bin/x64").." /E /Y" }
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_").."/ "..rebase("") }
   if _OPTIONS.macosx ~= "native" then

@@ -564,14 +564,6 @@ IF NOT %EL%==0 (
     ECHO(
     ECHO Do not distribute the 64-bit debug build.
   )
-  IF "%CONFIG32%"=="release" (
-    ECHO(
-    COPY /Y "%DP0%\jni\external\bin\x32\*" "%DP0%\bin\x32\"
-  )
-  IF "%CONFIG64%"=="release" (
-    ECHO(
-    COPY /Y "%DP0%\jni\external\bin\x64\*" "%DP0%\bin\x64\"
-  )
 )
 
 :: Restore environment variables
