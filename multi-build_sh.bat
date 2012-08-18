@@ -102,7 +102,7 @@ case $OSTYPE in
     # Generate Makefiles for Mac OS X
     #
 
-    rm -r "$DIR/gmake"
+    for dir in $(ls -d "$DIR/gmake" 2> /dev/null); do rm -r $dir; done
     chmod +x dev/premake/premake4-macosx
     dev/premake/premake4-macosx --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then
@@ -111,16 +111,15 @@ case $OSTYPE in
     fi
 
     mkdir -p "$DIR/macosx"
-    for file in $DIR/macosx/*; do
+    for file in $(ls -d "$DIR/macosx/*" 2> /dev/null); do
       if [ -f "$file" ]; then rm "$file"; fi
     done
 
-    for mf in $DIR/gmake/*; do
-      DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/macosx\/\1/')
-      cat "$mf" | sed 's/-MF [^ ]* //' \
-                | sed 's/\-arch ppc \{0,1\}//' \
-                | sed 's/\-arch ppc64 \{0,1\}//' \
-                > "$DEST"
+    for mf in $(ls "$DIR/gmake/" 2> /dev/null); do
+      cat "$DIR/gmake/$mf" | sed 's/-MF [^ ]* //' \
+                           | sed 's/\-arch ppc \{0,1\}//' \
+                           | sed 's/\-arch ppc64 \{0,1\}//' \
+                           > "$DIR/macosx/$mf"
     done
     rm -r "$DIR/gmake"
 
@@ -160,7 +159,7 @@ case $OSTYPE in
     # Generate Makefiles for Linux
     #
 
-    rm -r "$DIR/gmake"
+    for dir in $(ls -d "$DIR/gmake" 2> /dev/null); do rm -r $dir; done
     chmod +x dev/premake/premake4-linux
     dev/premake/premake4-linux --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then
@@ -171,14 +170,13 @@ case $OSTYPE in
     # Migrate Makefiles to build/linux
 
     mkdir -p "$DIR/linux"
-    for file in $DIR/linux/*; do
+    for file in $(ls -d "$DIR/linux/*" 2> /dev/null); do
       if [ -f "$file" ]; then rm "$file"; fi
     done
 
-    for mf in $DIR/gmake/*; do
-      DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/linux\/\1/')
-      cat "$mf" | sed 's/ -rcs / -rso /' \
-                > "$DEST"
+    for mf in $(ls "$DIR/gmake/" 2> /dev/null); do
+      cat "$DIR/gmake/$mf" | sed 's/ -rcs / -rso /' \
+                          > "$DIR/linux/$mf"
     done
     rm -r "$DIR/gmake"
 
