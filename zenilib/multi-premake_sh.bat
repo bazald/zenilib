@@ -106,7 +106,7 @@ esac
 # Generate Makefiles for Linux
 #
 
-rm -r "$DIR/gmake"
+for dir in $(ls -d "$DIR/gmake" 2> /dev/null); do rm -r $dir; done
 chmod +x $PREMAKE
 $PREMAKE --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
 if [ $? -ne 0 ]; then
@@ -117,14 +117,13 @@ fi
 # Migrate Makefiles to build/linux
 
 mkdir -p "$DIR/linux"
-for file in $DIR/linux/*; do
+for file in $(ls -d "$DIR/linux/*" 2> /dev/null); do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-for mf in $DIR/gmake/*; do
-  DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/linux\/\1/')
-  cat "$mf" | sed 's/ -rcs / -rso /' \
-            > "$DEST"
+for mf in $(ls "$DIR/gmake/" 2> /dev/null); do
+  cat "$DIR/gmake/$mf" | sed 's/ -rcs / -rso /' \
+                       > "$DIR/linux/$mf"
 done
 rm -r "$DIR/gmake"
 
@@ -140,16 +139,15 @@ if [ $? -ne 0 ]; then
 fi
 
 mkdir -p "$DIR/macosx"
-for file in $DIR/macosx/*; do
+for file in $(ls -d "$DIR/macosx/*" 2> /dev/null); do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-for mf in $DIR/gmake/*; do
-  DEST=$(echo "$mf" | sed 's/\/\{1,\}[^/]*\/\{1,\}\([^/]*\)$/\/macosx\/\1/')
-  cat "$mf" | sed 's/-MF [^ ]* //' \
-            | sed 's/\-arch ppc \{0,1\}//' \
-            | sed 's/\-arch ppc64 \{0,1\}//' \
-            > "$DEST"
+for mf in $(ls "$DIR/gmake/" 2> /dev/null); do
+  cat "$DIR/gmake/$mf" | sed 's/-MF [^ ]* //' \
+                       | sed 's/\-arch ppc \{0,1\}//' \
+                       | sed 's/\-arch ppc64 \{0,1\}//' \
+                       > "$DIR/macosx/$mf"
 done
 rm -r "$DIR/gmake"
 
@@ -157,10 +155,12 @@ rm -r "$DIR/gmake"
 # Generate IDE projects
 #
 
-for dir in $DIR/xcode*/*.xcodeproj/; do
-  rm -r "$dir"
+for outer_dir in $(ls -d "$DIR/xcode*" 2> /dev/null); do
+  for dir in $(ls -d "$outer_dir/*.xcodeproj/" 2> /dev/null); do
+    rm -r "$dir"
+  done
 done
-for file in $DIR/vs2010/*.filters $DIR/vs2010/*.user $DIR/vs2010/*.vcxproj; do
+for file in $(ls -d "$DIR/vs2010/*.filters" "$DIR/vs2010/*.user" "$DIR/vs2010/*.vcxproj" 2> /dev/null); do
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
