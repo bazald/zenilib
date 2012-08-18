@@ -14,6 +14,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ /** \defgroup zenilib
+*
+* \brief Game Development Framework
+*
+* This library acts as as frontend to SDL (Simple Directmedia Layer), 
+* OpenGL, and Direct3D 9.  It also uses GLEW, libpng, FreeType2, lib3ds, 
+* OpenAL, libogg, libvorbis, and TinyXml.
+* 
+* For more information, please visit zenilib.com.
+*
+* Featurelist:
+* Cameras
+* Fonts
+* Gamestates and a Game Loop
+* Dynamic Lighting and Materials
+* Model Loading and Rendering
+* Sound Loading and Playing
+* Texturing
+* Timers
+* ...and more!
+*
+* All built-in rendering functionality is supported in both OpenGL and 
+* Direct3D 9.
+*/
 
 #ifndef ZENILIB_H
 #define ZENILIB_H
