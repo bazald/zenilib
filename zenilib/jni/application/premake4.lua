@@ -93,6 +93,8 @@ project(APPLICATION_NAME)
 
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
+  configuration "linux"
+    links { "GL" }
   configuration "macosx"
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.mm" }
