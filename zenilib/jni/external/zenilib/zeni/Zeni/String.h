@@ -430,7 +430,7 @@ namespace Zeni {
     }
 
   private:
-    void * m_impl;
+    std::string * m_impl;
   };
 
 }
