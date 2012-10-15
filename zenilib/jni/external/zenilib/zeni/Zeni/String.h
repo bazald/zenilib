@@ -20,6 +20,7 @@
 
 #include <string>
 #include <cctype>
+#include <cstddef>
 #include <cstring>
 #include <iosfwd>
 
