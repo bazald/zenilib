@@ -41,25 +41,25 @@ namespace Zeni {
 //     GUARANTEED_FINISHED_END();
   }
 
-  const Vector3f & Model::get_scale() {
+  const Vector3f & Model::get_scale() const {
 //     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_scale;
 //     GUARANTEED_FINISHED_END();
   }
 
-  std::pair<Vector3f, float> Model::get_rotate() {
+  std::pair<Vector3f, float> Model::get_rotate() const {
 //     GUARANTEED_FINISHED_BEGIN(m_loader);
     return std::make_pair(m_rotate, m_rotate_angle);
 //     GUARANTEED_FINISHED_END();
   }
 
-  const Point3f & Model::get_translate() {
+  const Point3f & Model::get_translate() const {
 //     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_translate;
 //     GUARANTEED_FINISHED_END();
   }
 
-  const float & Model::get_keyframe() {
+  const float & Model::get_keyframe() const {
 //     GUARANTEED_FINISHED_BEGIN(m_loader);
     return m_keyframe;
 //     GUARANTEED_FINISHED_END();

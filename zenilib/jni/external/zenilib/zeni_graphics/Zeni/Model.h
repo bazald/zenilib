@@ -116,10 +116,10 @@ namespace Zeni {
     Point3f get_position() const; ///< Get the position of the Model
     inline const Model_Extents & get_extents() const; ///< Get the extents of the Model
     float get_keyframes() const; ///< Get the number of keyframes; may be higher than you expect
-    inline const Vector3f & get_scale(); ///< Get the Model scale
-    inline std::pair<Vector3f, float> get_rotate(); ///< Get the Model rotation
-    inline const Point3f & get_translate(); ///< Get the Model translation
-    inline const float & get_keyframe(); ///< Get the current (key)frame
+    inline const Vector3f & get_scale() const; ///< Get the Model scale
+    inline std::pair<Vector3f, float> get_rotate() const; ///< Get the Model rotation
+    inline const Point3f & get_translate() const; ///< Get the Model translation
+    inline const float & get_keyframe() const; ///< Get the current (key)frame
     inline bool will_do_normal_alignment() const; // Find out whether the Model will try to fix broken normals before rendering
 
     // Modifiers
