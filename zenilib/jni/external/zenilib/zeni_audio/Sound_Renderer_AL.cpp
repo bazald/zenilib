@@ -92,13 +92,15 @@ namespace Zeni {
     g_alSourcePause = (alSourcePause_fcn)GetProcAddress(m_openal32, "alSourcePause");
     g_alSourcePlay = (alSourcePlay_fcn)GetProcAddress(m_openal32, "alSourcePlay");
     g_alSourceStop = (alSourceStop_fcn)GetProcAddress(m_openal32, "alSourceStop");
+    g_alSourceQueueBuffers = (alSourceQueueBuffers_fcn)GetProcAddress(m_openal32, "alSourceQueueBuffers");
+    g_alSourceUnqueueBuffers = (alSourceUnqueueBuffers_fcn)GetProcAddress(m_openal32, "alSourceUnqueueBuffers");
     if(!g_alBufferData || !g_alcCloseDevice || !g_alcCreateContext || !g_alcDestroyContext ||
        !g_alIsExtensionPresent || !g_alcMakeContextCurrent || !g_alcOpenDevice || !g_alDeleteBuffers ||
        !g_alDeleteSources || !g_alGenBuffers || !g_alGetError || !g_alGetListenerf ||
        !g_alGetListenerfv || !g_alGetSourcef || !g_alGetSourcefv || !g_alGetSourcei ||
        !g_alGenSources || !g_alListenerf || !g_alListenerfv || !g_alSourcef ||
        !g_alSourcefv || !g_alSourcei || !g_alSourcePause || !g_alSourcePlay ||
-       !g_alSourceStop)
+       !g_alSourceStop || !g_alSourceQueueBuffers || !g_alSourceUnqueueBuffers)
     {
       std::cerr << "Loading OpenAL32.dll failed." << std::endl;
 
@@ -263,6 +265,8 @@ namespace Zeni {
       g_alSourcePause = 0;
       g_alSourcePlay = 0;
       g_alSourceStop = 0;
+      g_alSourceQueueBuffers = 0;
+      g_alSourceUnqueueBuffers = 0;
   }
 
   Sound_Renderer_AL::alBufferData_fcn Sound_Renderer_AL::g_alBufferData = 0;
@@ -290,6 +294,8 @@ namespace Zeni {
   Sound_Renderer_AL::alSourcePause_fcn Sound_Renderer_AL::g_alSourcePause = 0;
   Sound_Renderer_AL::alSourcePlay_fcn Sound_Renderer_AL::g_alSourcePlay = 0;
   Sound_Renderer_AL::alSourceStop_fcn Sound_Renderer_AL::g_alSourceStop = 0;
+  Sound_Renderer_AL::alSourceQueueBuffers_fcn Sound_Renderer_AL::g_alSourceQueueBuffers = 0;
+  Sound_Renderer_AL::alSourceUnqueueBuffers_fcn Sound_Renderer_AL::g_alSourceUnqueueBuffers = 0;
 
 }
 

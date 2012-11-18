@@ -34,6 +34,7 @@
 #include <Zeni/Sound_Renderer_SLES.h>
 #include <Zeni/Sound_Source.h>
 #include <Zeni/Sound_Source_Pool.h>
+#include <Zeni/Sound_Stream_AL.h>
 #include <Zeni/Sounds.h>
 
 #include <Zeni/Sound.hxx>

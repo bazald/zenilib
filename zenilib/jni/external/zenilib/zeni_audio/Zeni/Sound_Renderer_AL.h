@@ -74,6 +74,8 @@ namespace Zeni {
     typedef void (AL_APIENTRY *alSourcePause_fcn)( ALuint sid );
     typedef void (AL_APIENTRY *alSourcePlay_fcn)( ALuint sid );
     typedef void (AL_APIENTRY *alSourceStop_fcn)( ALuint sid );
+    typedef void (AL_APIENTRY *alSourceQueueBuffers_fcn)( ALuint sid, ALsizei numEntries, const ALuint *bids );
+    typedef void (AL_APIENTRY *alSourceUnqueueBuffers_fcn)( ALuint sid, ALsizei numEntries, ALuint *bids );
 
     // DLL Functions
     static alBufferData_fcn alBufferData() {return g_alBufferData;}
@@ -101,6 +103,8 @@ namespace Zeni {
     static alSourcePause_fcn alSourcePause() {return g_alSourcePause;}
     static alSourcePlay_fcn alSourcePlay() {return g_alSourcePlay;}
     static alSourceStop_fcn alSourceStop() {return g_alSourceStop;}
+    static alSourceQueueBuffers_fcn alSourceQueueBuffers() {return g_alSourceQueueBuffers;}
+    static alSourceUnqueueBuffers_fcn alSourceUnqueueBuffers() {return g_alSourceUnqueueBuffers;}
 
     static String errorString(const ALenum &err);
     static String errorString();
@@ -146,6 +150,8 @@ namespace Zeni {
     static alSourcePause_fcn g_alSourcePause;
     static alSourcePlay_fcn g_alSourcePlay;
     static alSourceStop_fcn g_alSourceStop;
+    static alSourceQueueBuffers_fcn g_alSourceQueueBuffers;
+    static alSourceUnqueueBuffers_fcn g_alSourceUnqueueBuffers;
 
     ALCdevice *m_device;
     ALCcontext *m_context;
