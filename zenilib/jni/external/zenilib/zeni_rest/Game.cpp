@@ -280,7 +280,6 @@ namespace Zeni {
     Time start_time;
 #endif
 
-    Sound_Source_Pool &sspr = get_Sound_Source_Pool();
     Time time_processed;
 
     for(;;) {
@@ -515,7 +514,8 @@ namespace Zeni {
       perform_logic();
 #endif
 
-      sspr.update();
+      get_Sound().update();
+      get_Sound_Source_Pool().update();
 
       if(Window::is_enabled()) {
         Video &vr = get_Video();

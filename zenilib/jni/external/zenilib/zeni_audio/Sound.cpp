@@ -78,13 +78,23 @@ namespace Zeni {
   }
 
   void Sound::set_listener_position(const Point3f &position) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_position(position);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_position(position);
+#endif
 
     m_sound_renderer->set_listener_position(position);
   }
 
   void Sound::set_listener_velocity(const Vector3f &velocity) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_velocity(velocity);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_velocity(velocity);
+#endif
 
     m_sound_renderer->set_listener_velocity(velocity);
   }
@@ -106,11 +116,21 @@ namespace Zeni {
   }
 
   Point3f Sound::get_listener_position() const {
+#ifdef DISABLE_AL
     return get_BGM_Source().get_position();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->get_position();
+#endif
   }
 
   Vector3f Sound::get_listener_velocity() const {
+#ifdef DISABLE_AL
     return get_BGM_Source().get_velocity();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->get_velocity();
+#endif
   }
 
   std::pair<Vector3f, Vector3f> Sound::get_listener_forward_and_up() const {
@@ -118,6 +138,7 @@ namespace Zeni {
   }
 
   void Sound::set_BGM(const String &filename) {
+#ifdef DISABLE_AL
     Sound_Source &bgm_source = get_BGM_Source();
 
     bool playing = bgm_source.is_playing() ? true : false;
@@ -134,6 +155,34 @@ namespace Zeni {
 
     if(playing)
       bgm_source.play();
+#else
+    init_BGM_Sound_Stream_AL();
+    const float pitch = m_bgm->get_pitch();
+    const float gain = m_bgm->get_gain();
+    const Point3f position = m_bgm->get_position();
+    const Vector3f velocity = m_bgm->get_velocity();
+    const bool looping = m_bgm->is_looping();
+    const float reference_distance = m_bgm->get_reference_distance();
+    const float max_distance = m_bgm->get_max_distance();
+    const float rolloff = m_bgm->get_rolloff();
+    const bool playing = m_bgm->is_playing();
+
+    delete m_bgm;
+    m_bgm = 0;
+
+    m_bgmusic = filename;
+    m_bgm = new Sound_Stream_AL(filename, looping);
+    m_bgm->set_pitch(pitch);
+    m_bgm->set_gain(gain);
+    m_bgm->set_position(position);
+    m_bgm->set_velocity(velocity);
+    m_bgm->set_reference_distance(reference_distance);
+    m_bgm->set_max_distance(max_distance);
+    m_bgm->set_rolloff(rolloff);
+
+    if(playing)
+      m_bgm->play();
+#endif
   }
 
   Sound_Buffer & Sound::get_Hello_World_Buffer() const {
@@ -143,6 +192,7 @@ namespace Zeni {
     return *m_hello_world_buffer;
   }
 
+#ifdef DISABLE_AL
   Sound_Source & Sound::get_BGM_Source() const {
     static Sound_Source bgm_source;
 
@@ -155,6 +205,12 @@ namespace Zeni {
 
     return bgm_source;
   }
+#else
+  void Sound::init_BGM_Sound_Stream_AL() const {
+    if(!m_bgm)
+      m_bgm = new Sound_Stream_AL("sfx/104469__dkmedic__world");
+  }
+#endif
 
   Sound & get_Sound() {
     return Sound::get();

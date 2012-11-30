@@ -38,6 +38,7 @@
 #include <Zeni/Singleton.h>
 #include <Zeni/Sound_Buffer.h>
 #include <Zeni/Sound_Renderer.h>
+#include <Zeni/Sound_Stream_AL.h>
 
 #include <Zeni/Define.h>
 
@@ -100,14 +101,20 @@ namespace Zeni {
 
     Sound_Buffer & get_Hello_World_Buffer() const; ///< Initialize m_bgm if needed and return a corresponding Sound_Source
 
-  private:
-    Sound_Source & get_BGM_Source() const; ///< Initialize m_bgm if needed and return a corresponding Sound_Source
+    inline void update(); ///< Update background music, as needed
 
+  private:
     Sound_Renderer *m_sound_renderer;
     mutable Sound_Buffer *m_hello_world_buffer;
 
     String m_bgmusic;
+#ifdef DISABLE_AL
+    Sound_Source & get_BGM_Source() const; ///< Initialize m_bgm if needed and return a corresponding Sound_Source
     mutable Sound_Buffer *m_bgm;
+#else
+    void init_BGM_Sound_Stream_AL() const; ///< Initialize m_bgm if needed and return a corresponding Sound_Stream_AL *
+    mutable Sound_Stream_AL *m_bgm;
+#endif
 
     float m_listener_gain;
     bool m_listener_muted;

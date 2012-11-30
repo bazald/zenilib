@@ -40,59 +40,136 @@ namespace Zeni {
   }
 
   void Sound::set_BGM_pitch(const float & pitch) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_pitch(pitch);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_pitch(pitch);
+#endif
   }
 
   void Sound::set_BGM_gain(const float &gain) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_gain(gain);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_gain(gain);
+#endif
   }
 
   void Sound::set_BGM_looping(const bool &looping) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_looping(looping);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_looping(looping);
+#endif
   }
 
   void Sound::set_BGM_time(const float &time) {
+#ifdef DISABLE_AL
     get_BGM_Source().set_time(time);
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->set_time(time);
+#endif
+  }
+
+  void Sound::update() {
+#ifndef DISABLE_AL
+    init_BGM_Sound_Stream_AL();
+    m_bgm->update();
+#endif
   }
 
   float Sound::get_BGM_pitch() {
+#ifdef DISABLE_AL
     return get_BGM_Source().get_pitch();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->get_pitch();
+#endif
   }
 
   float Sound::get_BGM_gain() {
+#ifdef DISABLE_AL
     return get_BGM_Source().get_gain();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->get_gain();
+#endif
   }
 
   bool Sound::is_BGM_looping() {
+#ifdef DISABLE_AL
     return get_BGM_Source().is_looping();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->is_looping();
+#endif
   }
 
   float Sound::get_BGM_time() {
+#ifdef DISABLE_AL
     return get_BGM_Source().get_time();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->get_time();
+#endif
   }
 
   bool Sound::playing_BGM() {
+#ifdef DISABLE_AL
     return get_BGM_Source().is_playing();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->is_playing();
+#endif
   }
 
   bool Sound::paused_BGM() {
+#ifdef DISABLE_AL
     return get_BGM_Source().is_paused();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->is_paused();
+#endif
   }
 
   bool Sound::stopped_BGM() {
+#ifdef DISABLE_AL
     return get_BGM_Source().is_stopped();
+#else
+    init_BGM_Sound_Stream_AL();
+    return m_bgm->is_stopped();
+#endif
   }
 
   void Sound::play_BGM() {
+#ifdef DISABLE_AL
     get_BGM_Source().play();
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->play();
+#endif
   }
 
   void Sound::pause_BGM() {
+#ifdef DISABLE_AL
     get_BGM_Source().pause();
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->pause();
+#endif
   }
   
   void Sound::stop_BGM() {
+#ifdef DISABLE_AL
     get_BGM_Source().stop();
+#else
+    init_BGM_Sound_Stream_AL();
+    m_bgm->stop();
+#endif
   }
 
 }
