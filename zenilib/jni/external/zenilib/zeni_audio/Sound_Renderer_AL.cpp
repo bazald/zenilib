@@ -135,6 +135,8 @@ namespace Zeni {
     g_alSourcePause = (alSourcePause_fcn)::alSourcePause;
     g_alSourcePlay = (alSourcePlay_fcn)::alSourcePlay;
     g_alSourceStop = (alSourceStop_fcn)::alSourceStop;
+    g_alSourceQueueBuffers = (alSourceQueueBuffers_fcn)::g_alSourceQueueBuffers;
+    g_alSourceUnqueueBuffers = (alSourceUnqueueBuffers_fcn)::g_alSourceUnqueueBuffers;
 #endif
 
     m_device = alcOpenDevice()(0);
