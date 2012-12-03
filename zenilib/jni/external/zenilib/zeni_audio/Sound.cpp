@@ -82,7 +82,8 @@ namespace Zeni {
     get_BGM_Source().set_position(position);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_position(position);
+    if(m_bgm)
+      m_bgm->set_position(position);
 #endif
 
     m_sound_renderer->set_listener_position(position);
@@ -93,7 +94,8 @@ namespace Zeni {
     get_BGM_Source().set_velocity(velocity);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_velocity(velocity);
+    if(m_bgm)
+      m_bgm->set_velocity(velocity);
 #endif
 
     m_sound_renderer->set_listener_velocity(velocity);
@@ -120,7 +122,7 @@ namespace Zeni {
     return get_BGM_Source().get_position();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->get_position();
+    return m_bgm ? m_bgm->get_position() : Point3f();
 #endif
   }
 
@@ -129,7 +131,7 @@ namespace Zeni {
     return get_BGM_Source().get_velocity();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->get_velocity();
+    return m_bgm ? m_bgm->get_velocity() : Vector3f();
 #endif
   }
 
@@ -157,31 +159,34 @@ namespace Zeni {
       bgm_source.play();
 #else
     init_BGM_Sound_Stream_AL();
-    const float pitch = m_bgm->get_pitch();
-    const float gain = m_bgm->get_gain();
-    const Point3f position = m_bgm->get_position();
-    const Vector3f velocity = m_bgm->get_velocity();
-    const bool looping = m_bgm->is_looping();
-    const float reference_distance = m_bgm->get_reference_distance();
-    const float max_distance = m_bgm->get_max_distance();
-    const float rolloff = m_bgm->get_rolloff();
-    const bool playing = m_bgm->is_playing();
 
-    delete m_bgm;
-    m_bgm = 0;
+    if(m_bgm) {
+      const float pitch = m_bgm->get_pitch();
+      const float gain = m_bgm->get_gain();
+      const Point3f position = m_bgm->get_position();
+      const Vector3f velocity = m_bgm->get_velocity();
+      const bool looping = m_bgm->is_looping();
+      const float reference_distance = m_bgm->get_reference_distance();
+      const float max_distance = m_bgm->get_max_distance();
+      const float rolloff = m_bgm->get_rolloff();
+      const bool playing = m_bgm->is_playing();
 
-    m_bgmusic = filename;
-    m_bgm = new Sound_Stream_AL(filename, looping);
-    m_bgm->set_pitch(pitch);
-    m_bgm->set_gain(gain);
-    m_bgm->set_position(position);
-    m_bgm->set_velocity(velocity);
-    m_bgm->set_reference_distance(reference_distance);
-    m_bgm->set_max_distance(max_distance);
-    m_bgm->set_rolloff(rolloff);
+      delete m_bgm;
+      m_bgm = 0;
 
-    if(playing)
-      m_bgm->play();
+      m_bgmusic = filename;
+      m_bgm = new Sound_Stream_AL(filename, looping);
+      m_bgm->set_pitch(pitch);
+      m_bgm->set_gain(gain);
+      m_bgm->set_position(position);
+      m_bgm->set_velocity(velocity);
+      m_bgm->set_reference_distance(reference_distance);
+      m_bgm->set_max_distance(max_distance);
+      m_bgm->set_rolloff(rolloff);
+
+      if(playing)
+        m_bgm->play();
+    }
 #endif
   }
 
@@ -207,7 +212,7 @@ namespace Zeni {
   }
 #else
   void Sound::init_BGM_Sound_Stream_AL() const {
-    if(!m_bgm)
+    if(!m_bgm && dynamic_cast<Sound_Renderer_AL *>(&get_Sound().get_Renderer()))
       m_bgm = new Sound_Stream_AL("sfx/104469__dkmedic__world");
   }
 #endif

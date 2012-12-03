@@ -44,7 +44,8 @@ namespace Zeni {
     get_BGM_Source().set_pitch(pitch);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_pitch(pitch);
+    if(m_bgm)
+      m_bgm->set_pitch(pitch);
 #endif
   }
 
@@ -53,7 +54,8 @@ namespace Zeni {
     get_BGM_Source().set_gain(gain);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_gain(gain);
+    if(m_bgm)
+      m_bgm->set_gain(gain);
 #endif
   }
 
@@ -62,7 +64,8 @@ namespace Zeni {
     get_BGM_Source().set_looping(looping);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_looping(looping);
+    if(m_bgm)
+      m_bgm->set_looping(looping);
 #endif
   }
 
@@ -71,14 +74,16 @@ namespace Zeni {
     get_BGM_Source().set_time(time);
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->set_time(time);
+    if(m_bgm)
+      m_bgm->set_time(time);
 #endif
   }
 
   void Sound::update() {
 #ifndef DISABLE_AL
     init_BGM_Sound_Stream_AL();
-    m_bgm->update();
+    if(m_bgm)
+      m_bgm->update();
 #endif
   }
 
@@ -87,7 +92,7 @@ namespace Zeni {
     return get_BGM_Source().get_pitch();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->get_pitch();
+    return m_bgm ? m_bgm->get_pitch() : ZENI_DEFAULT_PITCH;
 #endif
   }
 
@@ -96,7 +101,7 @@ namespace Zeni {
     return get_BGM_Source().get_gain();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->get_gain();
+    return m_bgm ? m_bgm->get_gain() : ZENI_DEFAULT_GAIN;
 #endif
   }
 
@@ -105,7 +110,7 @@ namespace Zeni {
     return get_BGM_Source().is_looping();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->is_looping();
+    return m_bgm ? m_bgm->is_looping() : false;
 #endif
   }
 
@@ -114,7 +119,7 @@ namespace Zeni {
     return get_BGM_Source().get_time();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->get_time();
+    return m_bgm ? m_bgm->get_time() : 0.0f;
 #endif
   }
 
@@ -123,7 +128,7 @@ namespace Zeni {
     return get_BGM_Source().is_playing();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->is_playing();
+    return m_bgm ? m_bgm->is_playing() : false;
 #endif
   }
 
@@ -132,7 +137,7 @@ namespace Zeni {
     return get_BGM_Source().is_paused();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->is_paused();
+    return m_bgm ? m_bgm->is_paused() : false;
 #endif
   }
 
@@ -141,7 +146,7 @@ namespace Zeni {
     return get_BGM_Source().is_stopped();
 #else
     init_BGM_Sound_Stream_AL();
-    return m_bgm->is_stopped();
+    return m_bgm ? m_bgm->is_stopped() : true;
 #endif
   }
 
@@ -150,7 +155,8 @@ namespace Zeni {
     get_BGM_Source().play();
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->play();
+    if(m_bgm)
+      m_bgm->play();
 #endif
   }
 
@@ -159,7 +165,8 @@ namespace Zeni {
     get_BGM_Source().pause();
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->pause();
+    if(m_bgm)
+      m_bgm->pause();
 #endif
   }
   
@@ -168,7 +175,8 @@ namespace Zeni {
     get_BGM_Source().stop();
 #else
     init_BGM_Sound_Stream_AL();
-    m_bgm->stop();
+    if(m_bgm)
+      m_bgm->stop();
 #endif
   }
 
