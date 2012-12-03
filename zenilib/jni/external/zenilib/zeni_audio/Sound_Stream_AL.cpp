@@ -39,14 +39,6 @@ namespace Zeni {
     Sound_Renderer_AL::alSourcef() (source, AL_ROLLOFF_FACTOR,  0.0    );
     Sound_Renderer_AL::alSourcei() (source, AL_SOURCE_RELATIVE, AL_TRUE);
 
-    while(buffers_used != NUM_BUFFERS) {
-      if(oggStream.offset == oggStream.end && !looping)
-        break;
-      stream(buffers[buffers_used++]);
-    }
-
-    Sound_Renderer_AL::alSourceQueueBuffers()(source, buffers_used, buffers);
-
     if(Sound_Renderer_AL::alGetError()() != AL_NO_ERROR) {
       destroy();
       throw Sound_Stream_Init_Failure();
@@ -152,10 +144,10 @@ namespace Zeni {
   }
 
   void Sound_Stream_AL::play() {
-    if(oggStream.offset == oggStream.end) {
+    if(oggStream.offset == oggStream.end)
       ov_raw_seek(&oggStream, 0);
-      update();
-    }
+
+    update();
 
     Sound_Renderer_AL::alSourcePlay()(source);
   }
