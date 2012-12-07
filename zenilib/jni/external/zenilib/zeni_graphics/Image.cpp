@@ -160,7 +160,7 @@ namespace Zeni {
     png_read_update_info(png_ptr, info_ptr);
 
     // Row size in bytes.
-    m_row_size = png_get_rowbytes(png_ptr, info_ptr);
+    m_row_size = int(png_get_rowbytes(png_ptr, info_ptr));
 
     // Allocate the image_data as a big block, to be given to opengl
     m_data.resize(m_row_size * theight);

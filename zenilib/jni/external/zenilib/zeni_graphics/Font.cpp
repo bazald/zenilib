@@ -275,7 +275,7 @@ NEXT_LINE_2:
     memset(&foargs, 0, sizeof(FT_Open_Args));
     foargs.flags = FT_OPEN_MEMORY;
     foargs.memory_base = reinterpret_cast<const FT_Byte *>(file.c_str());
-    foargs.memory_size = file.size();
+    foargs.memory_size = FT_Long(file.size());
 
     const int height = int(get_text_height() * m_vratio + 0.5f);
 
