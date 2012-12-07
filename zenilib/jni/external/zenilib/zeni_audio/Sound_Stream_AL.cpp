@@ -39,8 +39,10 @@ namespace Zeni {
     Sound_Renderer_AL::alSourcef() (source, AL_ROLLOFF_FACTOR,  0.0    );
     Sound_Renderer_AL::alSourcei() (source, AL_SOURCE_RELATIVE, AL_TRUE);
 
-    if(Sound_Renderer_AL::alGetError()() != AL_NO_ERROR) {
+    const ALenum error = Sound_Renderer_AL::alGetError()();
+    if(error != AL_NO_ERROR) {
       destroy();
+      std::cerr << "OpenAL error: " << Sound_Renderer_AL::errorString(error) << std::endl;
       throw Sound_Stream_Init_Failure();
     }
   }
@@ -237,9 +239,12 @@ namespace Zeni {
     //  memset(data + size, 0, BUFFER_SIZE - size);
  
     Sound_Renderer_AL::alBufferData()(buffer, format, data, size, vorbisInfo->rate);
-
-    if(Sound_Renderer_AL::alGetError()() != AL_NO_ERROR)
+    
+    const ALenum error = Sound_Renderer_AL::alGetError()();
+    if(error != AL_NO_ERROR) {
+      std::cerr << "OpenAL error: " << Sound_Renderer_AL::errorString(error) << std::endl;
       throw Sound_Stream_Update_Failure();
+    }
   }
 
   //String Sound_Stream_AL::errorString(int code) {
