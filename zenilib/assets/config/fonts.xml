@@ -21,8 +21,6 @@ Only TrueType fonts are supported.
   <system_36_x600>
     <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>36</height>
-    <bold>0</bold>
-    <italics>0</italics>
     <virtual_screen>
       <height>600</height>
     </virtual_screen>
@@ -30,8 +28,6 @@ Only TrueType fonts are supported.
   <system_36_500x600>
     <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>36</height>
-    <bold>0</bold>
-    <italics>0</italics>
     <virtual_screen>
       <width>500</width>
       <height>600</height>
@@ -40,8 +36,6 @@ Only TrueType fonts are supported.
   <system_36_800x600>
     <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>36</height>
-    <bold>0</bold>
-    <italics>0</italics>
     <virtual_screen>
       <width>800</width>
       <height>600</height>
@@ -50,8 +44,6 @@ Only TrueType fonts are supported.
   <title>
     <filepath>fonts/FORGOTTE.TTF</filepath>
     <height>92</height>
-    <bold>0</bold>
-    <italics>0</italics>
     <virtual_screen>
       <width>800</width>
       <height>600</height>
