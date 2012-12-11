@@ -17,6 +17,10 @@ project(APPLICATION_NAME)
 
   configuration "windows"
     prebuildcommands { "xcopy "..rebase("dev/pc_").." "..rebase("").." /E /Y" }
+  configuration { "windows", "Debug*", "x32" }
+    prebuildcommands { "xcopy "..rebase("jni/external/bin/x32/soft_oal.dll").." "..rebase("bin/d32").." /Y" }
+  configuration { "windows", "Debug*", "x64" }
+    prebuildcommands { "xcopy "..rebase("jni/external/bin/x64/soft_oal.dll").." "..rebase("bin/d64").." /Y" }
   configuration { "windows", "Release*", "x32" }
     prebuildcommands { "xcopy "..rebase("jni/external/bin/x32").." "..rebase("bin/x32").." /E /Y" }
   configuration { "windows", "Release*", "x64" }

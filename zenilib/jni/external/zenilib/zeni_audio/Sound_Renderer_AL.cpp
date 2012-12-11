@@ -56,13 +56,15 @@ namespace Zeni {
 #ifndef _MACOSX
 #ifdef _WINDOWS
     m_openal32 = LoadLibrary("OpenAL32.dll");
+    if(!m_openal32)
+      m_openal32 = LoadLibrary("soft_oal.dll");
 #else
     m_openal32 = LoadLibrary("libopenal.so");
     if(!m_openal32)
       m_openal32 = LoadLibrary("libopenal.so.1");
 #endif
     if(!m_openal32) {
-      std::cerr << "Loading OpenAL32.dll failed." << std::endl;
+      std::cerr << "Locating OpenAL32.dll/libopenal.so failed." << std::endl;
 
       throw Sound_Init_Failure();
     }
@@ -102,7 +104,7 @@ namespace Zeni {
        !g_alSourcefv || !g_alSourcei || !g_alSourcePause || !g_alSourcePlay ||
        !g_alSourceStop || !g_alSourceQueueBuffers || !g_alSourceUnqueueBuffers)
     {
-      std::cerr << "Loading OpenAL32.dll failed." << std::endl;
+      std::cerr << "Loading OpenAL32.dll/libopenal.so failed." << std::endl;
 
       zero_handles();
       FreeLibrary(m_openal32);
