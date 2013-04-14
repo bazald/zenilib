@@ -218,7 +218,7 @@ namespace Zeni {
     int  section;
     int  result;
  
-    while(size < BUFFER_SIZE) {
+    while(size < int(BUFFER_SIZE)) {
       result = ov_read(&oggStream, data + size, BUFFER_SIZE - size, 0, 2, 1, & section);
     
       if(result > 0)
