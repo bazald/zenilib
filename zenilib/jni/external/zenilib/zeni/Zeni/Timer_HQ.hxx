@@ -75,13 +75,15 @@ namespace Zeni {
   }
 
   void Timer_HQ::update() {
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
     LARGE_INTEGER lpPerformanceCount;
     QueryPerformanceCounter(&lpPerformanceCount);
 
     m_ticks = lpPerformanceCount.QuadPart;
+#elif defined(_MACOSX)
+    m_ticks = orwl_gettime();
 #else
-    gettimeofday(&m_ticks, 0);
+    clock_gettime(CLOCK_MONOTONIC, &m_ticks);
 #endif
   }
 

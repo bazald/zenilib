@@ -25,31 +25,60 @@
 #include <Zeni/Chronometer.hxx>
 #include <Zeni/Singleton.hxx>
 
+#ifdef _MACOSX
+#include <mach/mach_time.h>
+#endif
+
 namespace Zeni {
 
 #ifndef _WINDOWS
-  timeval subtract(const timeval &lhs, const timeval &rhs) {
-    timeval retval = lhs;
+  timespec subtract(const timespec &lhs, const timespec &rhs) {
+    timespec retval = lhs;
 
     retval.tv_sec -= rhs.tv_sec;
 
-    if(retval.tv_usec > rhs.tv_usec)
-      retval.tv_usec -= rhs.tv_usec;
+    if(retval.tv_nsec > rhs.tv_nsec)
+      retval.tv_nsec -= rhs.tv_nsec;
     else {
       --retval.tv_sec;
-      retval.tv_usec = 1000000 - (rhs.tv_usec - retval.tv_usec);
+      retval.tv_nsec = 1000000000 - (rhs.tv_nsec - retval.tv_nsec);
     }
 
     return retval;
   }
 
-  long double to_seconds(const timeval &ticks) {
-    return ticks.tv_sec + ticks.tv_usec / 1000000.0;
+  long double to_seconds(const timespec &ticks) {
+    return ticks.tv_sec + ticks.tv_nsec / 1000000000.0;
   }
 
-  long double to_useconds(const timeval &ticks) {
-    return 1000000.0 * ticks.tv_sec + ticks.tv_usec;
+  long double to_useconds(const timespec &ticks) {
+    return 1000000000.0 * ticks.tv_sec + ticks.tv_nsec;
   }
+
+#ifdef _MACOSX
+  timespec orwl_gettime(void) {
+    static const double ORWL_NANO = +1.0e-9;
+    static const uint64_t ORWL_GIGA = 1000000000;
+    
+    static double orwl_timebase = 0.0;
+    static uint64_t orwl_timestart = 0;
+
+    // be more careful in a multithreaded environement
+    if(!orwl_timestart) {
+      mach_timebase_info_data_t tb = {0};
+      mach_timebase_info(&tb);
+      orwl_timebase = tb.numer;
+      orwl_timebase /= tb.denom;
+      orwl_timestart = mach_absolute_time();
+    }
+
+    struct timespec t;
+    double diff = (mach_absolute_time() - orwl_timestart) * orwl_timebase;
+    t.tv_sec = diff * ORWL_NANO;
+    t.tv_nsec = diff - (t.tv_sec * ORWL_GIGA);
+    return t;
+  }
+#endif
 #endif
 
   Time_HQ::Time_HQ(const HQ_Tick_Type &ticks)
@@ -87,7 +116,7 @@ namespace Zeni {
 
     m_ticks_per_second = unsigned long(lpFrequency.QuadPart);
 #else
-    m_ticks_per_second = 1000000;
+    m_ticks_per_second = 1000000000;
 #endif
   }
 

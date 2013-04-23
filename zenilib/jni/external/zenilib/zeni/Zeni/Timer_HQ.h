@@ -68,9 +68,12 @@ namespace Zeni {
 #else
   typedef long double HQ_Tick_Type;
 
-  timeval subtract(const timeval &lhs, const timeval &rhs);
-  long double to_seconds(const timeval &ticks);
-  long double to_useconds(const timeval &ticks);
+  timespec subtract(const timespec &lhs, const timespec &rhs);
+  long double to_seconds(const timespec &ticks);
+  long double to_useconds(const timespec &ticks);
+#ifdef _MACOSX
+  timespec orwl_gettime(void);
+#endif
 #endif
 
   class ZENI_DLL Time_HQ {
@@ -133,7 +136,7 @@ namespace Zeni {
 #ifdef _WINDOWS
     HQ_Tick_Type m_ticks;
 #else
-    timeval m_ticks;
+    timespec m_ticks;
 #endif
     HQ_Tick_Type m_ticks_per_second;
   };

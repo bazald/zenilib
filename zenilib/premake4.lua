@@ -128,6 +128,7 @@ solution "zenilib"
   configuration "linux"
     linkoptions { "-Wl,-rpath,'$$ORIGIN'",
                   "-Wl,--hash-style=both" }
+    links { "rt" }
 
   configuration "macosx"
     buildoptions { "-Qunused-arguments" }
