@@ -50,11 +50,7 @@
 namespace Zeni {
 
   struct ZENI_DLL Error : public std::exception {
-    Error(const String &msg_) : msg(msg_) {
-#ifdef _WINDOWS
-      assert("Error! - Set a Breakpoint Here to Make Your Debugger More Useful" && false);
-#endif
-    }
+    Error(const String &msg_) : msg(msg_) {}
 
     ~Error() throw() {}
 
