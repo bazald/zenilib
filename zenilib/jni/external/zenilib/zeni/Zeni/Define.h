@@ -18,6 +18,10 @@
 #ifndef ZENI_DEFINE_H
 #define ZENI_DEFINE_H
 
+// Old SDL stuff
+#define SDL_DEFAULT_REPEAT_DELAY	  500
+#define SDL_DEFAULT_REPEAT_INTERVAL	 30
+
 // Camera.h
 #define ZENI_DEFAULT_CAMERA_POSITION      (Point3f(0.0f, 0.0f, 0.0f))
 #define ZENI_DEFAULT_CAMERA_ORIENTATION   Quaternion()

@@ -77,6 +77,12 @@ namespace Zeni {
   void Widget_Gamestate::on_mouse_motion(const SDL_MouseMotionEvent &event) {
     m_widgets.on_event(event, m_projector);
   }
+
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Widget_Gamestate::on_mouse_wheel(const SDL_MouseWheelEvent &event) {
+    m_widgets.on_event(event, m_projector);
+  }
+#endif
 #endif
 
   void Widget_Gamestate::perform_logic() {

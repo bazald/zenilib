@@ -307,6 +307,11 @@ namespace Zeni {
 #endif
   }
 
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Widget_Button::on_mouse_wheel(const Zeni::Point2i &, const int &) {
+  }
+#endif
+
   void Check_Box::on_accept() {
     m_checked = !m_checked;
     m_toggling = false;
@@ -364,6 +369,8 @@ namespace Zeni {
                  const float &slider_position_)
   : m_line_segment(Point3f(end_point_a_), Point3f(end_point_b_)),
     m_slider_radius(slider_radius_),
+    m_mouse_wheel_inverted(false),
+    m_mouse_wheel_continuous_rate(0.01f),
     m_slider_position(slider_position_),
     m_down(false)
   {
@@ -398,7 +405,7 @@ namespace Zeni {
     }
 #endif
   }
-
+  
   void Slider::on_mouse_motion(const Zeni::Point2i &pos) {
     if(m_down) {
       const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
@@ -414,6 +421,22 @@ namespace Zeni {
       }
     }
   }
+  
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Slider::on_mouse_wheel(const Zeni::Point2i &pos, const int &up) {
+    if(!m_down) {
+      const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
+      const int up_ = is_mouse_wheel_inverted() ? -up : up;
+      
+      const std::pair<float, float> test = get_line_segment().nearest_point(mouse_pos);
+      if(test.first < get_slider_radius()) {
+        m_slider_position = std::max(0.0f, std::min(1.0f, m_slider_position + m_mouse_wheel_continuous_rate * up_));
+
+        on_slide();
+      }
+    }
+  }
+#endif
 
   void Slider::on_slide() {
   }
@@ -427,28 +450,36 @@ namespace Zeni {
                          const float &slider_radius_,
                          const float &slider_position_)
   : Slider(end_point_a_, end_point_b_, slider_radius_, slider_position_),
-  m_range(range),
-  m_mouse_wheel_inverted(false)
+  m_range(range)
   {
     assert(range.first <= range.second);
     set_value(get_value());
   }
+  
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Slider_Int::on_mouse_wheel(const Zeni::Point2i &pos, const int &up) {
+    Slider::on_mouse_wheel(pos, up);
 
+    const int up_ = is_mouse_wheel_inverted() ? -up : up;
+#else
   void Slider_Int::on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button) {
-#ifndef ANDROID
     Slider::on_mouse_button(pos, down, button);
 
-    if(!is_editable() || is_busy() || down || (button != SDL_BUTTON_WHEELDOWN && button != SDL_BUTTON_WHEELUP))
+    if(down || (button != SDL_BUTTON_WHEELDOWN && button != SDL_BUTTON_WHEELUP))
+      return;
+
+    const int up_ = (button == (is_mouse_wheel_inverted() ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP)) ? 1 : -1;
+#endif
+
+#ifndef ANDROID
+    if(!is_editable() || is_busy())
       return;
 
     const Point3f mouse_pos(float(pos.x), float(pos.y), 0.0f);
 
     const std::pair<float, float> test = get_line_segment().nearest_point(mouse_pos);
     if(test.first < get_slider_radius()) {
-      if(button == (m_mouse_wheel_inverted ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP))
-        set_value(std::min(get_range().second, get_value() + 1));
-      else
-        set_value(std::max(get_range().first, get_value() - 1));
+      set_value(std::max(get_range().first, std::min(get_range().second, get_value() + up_)));
 
       on_slide();
     }
@@ -622,17 +653,45 @@ namespace Zeni {
           m_selector_buttons[i]->on_mouse_button(offset_pos, down, button);
 
         if(view_hidden) {
+#if !SDL_VERSION_ATLEAST(2,0,0)
           if(button == SDL_BUTTON_WHEELDOWN || button == SDL_BUTTON_WHEELUP) {
             const Point2f &a = m_selector_slider.get_end_point_a();
             m_selector_slider.on_mouse_button(Point2i(int(a.x), int(a.y)), down, button);
           }
           else
+#endif
             m_selector_slider.on_mouse_button(pos, down, button);
         }
       }
     }
 #endif
   }
+  
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Selector::on_mouse_wheel(const Zeni::Point2i &pos, const int &up) {
+#ifndef ANDROID
+    if(!is_editable())
+      return;
+
+    if(!m_selected)
+      m_normal_button.on_mouse_wheel(pos, up);
+    else {
+      const std::pair<Point2f, Point2f> v = visible_region();
+
+      if(pos.x >= v.first.x && pos.x <= v.second.x && pos.y >= v.first.y && pos.y <= v.second.y) {
+        const Point2i offset_pos(pos.x, int(pos.y + vertical_offset()));
+        for(size_t i = view_start; i != view_end; ++i)
+          m_selector_buttons[i]->on_mouse_wheel(offset_pos, up);
+
+        if(view_hidden) {
+          const Point2f &a = m_selector_slider.get_end_point_a();
+          m_selector_slider.on_mouse_wheel(Point2i(int(a.x), int(a.y)), up);
+        }
+      }
+    }
+#endif
+  }
+#endif
 
   void Selector::on_mouse_motion(const Point2i &pos) {
     if(!is_editable())
@@ -799,7 +858,7 @@ namespace Zeni {
   }
 
 #ifndef ANDROID
-  void Text_Box::on_key(const SDL_keysym &keysym, const bool &down) {
+  void Text_Box::on_key(const SDL_Keysym &keysym, const bool &down) {
     if(down && m_edit_pos != -1) {
       Game &gr = get_Game();
       const bool mod_alt = gr.get_key_state(SDLK_LALT) || gr.get_key_state(SDLK_RALT);
@@ -1350,7 +1409,7 @@ namespace Zeni {
   }
 
 #ifndef ANDROID
-  void Widget_Input_Repeater::on_key(const SDL_keysym &keysym, const bool &down) {
+  void Widget_Input_Repeater::on_key(const SDL_Keysym &keysym, const bool &down) {
     if(!is_editable())
       return;
 
@@ -1414,7 +1473,7 @@ namespace Zeni {
   }
 
 #ifndef ANDROID
-  void Widgets::on_key(const SDL_keysym &keysym, const bool &down) {
+  void Widgets::on_key(const SDL_Keysym &keysym, const bool &down) {
     if(!is_editable())
       return;
 
@@ -1492,6 +1551,34 @@ namespace Zeni {
       }
     }
   }
+
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Widgets::on_mouse_wheel(const Zeni::Point2i &pos, const int &up) {
+    if(!is_editable())
+      return;
+
+    if(m_busy_one) {
+      m_busy_one->on_mouse_wheel(pos, up);
+
+      if(!m_busy_one->is_busy()) {
+        m_busy_one = 0;
+        set_busy(false);
+      }
+    }
+    else {
+      std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);
+
+      for(std::vector<Widget *>::iterator it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->on_mouse_wheel(pos, up);
+
+        if(!m_busy_one && (*it)->is_busy()) {
+          m_busy_one = *it;
+          set_busy(true);
+        }
+      }
+    }
+  }
+#endif
 
   void Widgets::perform_logic() {
     std::sort(m_widgets.begin(), m_widgets.end(), &widget_layer_less);

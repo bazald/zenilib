@@ -89,9 +89,17 @@ namespace Zeni {
     else
       Widget_Gamestate::on_key(event);
   }
+  
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Configurator_Video::Check_State::on_window_event(const SDL_WindowEvent &event) {
+    if(event.event != SDL_WINDOWEVENT_RESIZED)
+      return;
 
+    Video::change_resolution(Point2i(event.data1, event.data2));
+#else
   void Configurator_Video::Check_State::on_video_resize(const SDL_ResizeEvent &event) {
     Video::change_resolution(Point2i(event.w, event.h));
+#endif
 
     m_code = CODE_IGNORE;
 

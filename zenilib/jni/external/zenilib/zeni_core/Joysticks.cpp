@@ -533,8 +533,13 @@ namespace Zeni {
         throw Joystick_Init_Failure();
 
       for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
-        m_joystick.push_back(std::make_pair(SDL_JoystickOpen(i),
-                                            SDL_JoystickName(i)));
+        SDL_Joystick * const joystick = SDL_JoystickOpen(i);
+#if SDL_VERSION_ATLEAST(2,0,0)
+        const char * const name = SDL_JoystickName(joystick);
+#else
+        const char * const name = SDL_JoystickName(i);
+#endif
+        m_joystick.push_back(std::make_pair(joystick, name));
 
         if(!m_joystick[size_t(i)].first) {
           m_joystick.pop_back();

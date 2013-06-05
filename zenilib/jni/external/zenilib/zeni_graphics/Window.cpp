@@ -144,10 +144,10 @@ namespace Zeni {
 
     // Initialize Window Mode Listing
 #if SDL_VERSION_ATLEAST(1,3,0)
-    const int num_modes = SDL_GetNumDisplayModes();
+    const int num_modes = SDL_GetNumDisplayModes(0);
     for(int i = 0; i != num_modes; ++i) {
       SDL_DisplayMode mode;
-      SDL_GetDisplayMode(i, &mode);
+      SDL_GetDisplayMode(0, i, &mode);
       if(m_modes.empty() || m_modes.rbegin()->x != mode.w || m_modes.rbegin()->y != mode.h)
         m_modes.push_back(Point2i(mode.w, mode.h));
     }
@@ -231,7 +231,16 @@ namespace Zeni {
     g_screen_size.y = h;
 #else
     // Initialize SDL + Variables
+#if SDL_VERSION_ATLEAST(2,0,0)
+    SDL_Rect rect;
+    SDL_GetDisplayBounds(0, &rect);
+    const Sint32 current_w = rect.w;
+    const Sint32 current_h = rect.h;
+#else
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+    const Sint32 current_w = VideoInfo->current_w;
+    const Sint32 current_h = VideoInfo->current_h;
+#endif
 
 #if !SDL_VERSION_ATLEAST(1,3,0)
     set_tt();
@@ -243,7 +252,7 @@ namespace Zeni {
     if(g_screen_size.x < 0)
       g_screen_size.x = max_res.x;
     else if(g_screen_size.x == 0)
-      g_screen_size.x = VideoInfo->current_w;
+      g_screen_size.x = current_w;
     else if(g_screen_size.x < MINIMUM_SCREEN_WIDTH)
       g_screen_size.x = MINIMUM_SCREEN_WIDTH;
     else if(g_screen_size.x > max_res.x)
@@ -252,7 +261,7 @@ namespace Zeni {
     if(g_screen_size.y < 0)
       g_screen_size.y = max_res.y;
     else if(g_screen_size.y == 0)
-      g_screen_size.y = VideoInfo->current_h;
+      g_screen_size.y = current_h;
     else if(g_screen_size.y < MINIMUM_SCREEN_HEIGHT)
       g_screen_size.y = MINIMUM_SCREEN_HEIGHT;
     else if(g_screen_size.y > max_res.y)
@@ -320,9 +329,9 @@ namespace Zeni {
 #ifdef _WINDOWS
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
-#if SDL_VERSION_ATLEAST(1,3,0)
+#if SDL_VERSION_ATLEAST(2,0,0)
     SDL_GetWindowWMInfo(m_window, &wmInfo);
-    HWND hWnd = wmInfo.win.window;
+    HWND hWnd = wmInfo.info.win.window;
 #else
     SDL_GetWMInfo(&wmInfo);
     HWND hWnd = wmInfo.window;
@@ -451,9 +460,9 @@ namespace Zeni {
   bool Window::is_mouse_grabbed() const {
 #ifdef ANDROID
     return true;
-#elif SDL_VERSION_ATLEAST(1,3,0)
+#elif SDL_VERSION_ATLEAST(2,0,0)
     SDL_Window * const window = get_Window().get_window();
-    return window && SDL_GetWindowGrab(window) == SDL_GRAB_ON;
+    return window && SDL_GetWindowGrab(window) == SDL_TRUE;
 #else
     return SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
 #endif
@@ -468,10 +477,10 @@ namespace Zeni {
   }
 
   void Window::mouse_grab(const bool &grab) {
-#if SDL_VERSION_ATLEAST(1,3,0)
+#if SDL_VERSION_ATLEAST(2,0,0)
     SDL_Window * const window = get_Window().get_window();
     if(window)
-      SDL_SetWindowGrab(window, grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+      SDL_SetWindowGrab(window, grab ? SDL_TRUE : SDL_FALSE);
 #elif !defined(ANDROID)
     SDL_WM_GrabInput(grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
 #endif

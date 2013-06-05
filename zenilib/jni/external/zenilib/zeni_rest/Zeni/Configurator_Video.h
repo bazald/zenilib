@@ -67,7 +67,11 @@ namespace Zeni {
       void on_pop();
 
       void on_key(const SDL_KeyboardEvent &event);
+#if SDL_VERSION_ATLEAST(2,0,0)
+      void on_window_event(const SDL_WindowEvent &event);
+#else
       void on_video_resize(const SDL_ResizeEvent &event);
+#endif
 
       void perform_logic();
 

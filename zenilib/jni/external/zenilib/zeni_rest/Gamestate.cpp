@@ -35,9 +35,11 @@ namespace Zeni {
 #else
   void Gamestate_Base::on_event(const SDL_Event &event) {
     switch(event.type) {
+#if !SDL_VERSION_ATLEAST(2,0,0)
     case SDL_ACTIVEEVENT:
       on_active(event.active);
       break;
+#endif
     case SDL_KEYDOWN:
     case SDL_KEYUP:
       on_key(event.key);
@@ -78,10 +80,10 @@ namespace Zeni {
     case SDL_SYSWMEVENT:
       on_system_wm_event(event.syswm);
       break;
+#if !SDL_VERSION_ATLEAST(2,0,0)
     case SDL_VIDEORESIZE:
       on_video_resize(event.resize);
       break;
-#if !SDL_VERSION_ATLEAST(1,3,0)
     case SDL_VIDEOEXPOSE:
       on_video_expose(event.expose);
       break;
@@ -126,54 +128,64 @@ namespace Zeni {
   void Gamestate_Base::on_quit(const SDL_QuitEvent &) {
   }
 
-#if SDL_VERSION_ATLEAST(1,3,0)
-  void Gamestate_Base::on_window_event(const SDL_WindowEvent &event) {
-    if(event.event == SDL_WINDOWEVENT_RESIZED) {
-      const SDL_ResizeEvent sre = {SDL_VIDEORESIZE, event.data1, event.data2};
-      on_video_resize(sre);
-    }
-  }
-#endif
-
   void Gamestate_Base::on_system_wm_event(const SDL_SysWMEvent &) {
   }
+  
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Gamestate_Base::on_window_event(const SDL_WindowEvent &event) {
+    if(event.event == SDL_WINDOWEVENT_RESIZED) {
+      Video::change_resolution(Point2i(event.data1, event.data2));
+      Video::save();
+      return;
+    }
 
+    if(event.event != SDL_WINDOWEVENT_FOCUS_GAINED && event.event != SDL_WINDOWEVENT_FOCUS_LOST)
+      return;
+
+    const bool gain = event.event == SDL_WINDOWEVENT_FOCUS_GAINED;
+#else
   void Gamestate_Base::on_active(const SDL_ActiveEvent &event) {
-    if(event.state & SDL_APPINPUTFOCUS) {
-      static bool hide_cursor = false;
-      static bool grab_input = false;
-      Window &wr = get_Window();
+    if(!(event.state & SDL_APPINPUTFOCUS))
+      return;
 
-      if(event.gain) {
-        if(hide_cursor)
-          wr.mouse_hide(true);
+    const bool gain = event.gain != 0;
+#endif
 
-        if(grab_input)
-          wr.mouse_grab(true);
+    static bool hide_cursor = false;
+    static bool grab_input = false;
+    Window &wr = get_Window();
 
-        get_Joysticks().enable(true);
-      }
-      else {
-        get_Joysticks().enable(false);
+    if(gain) {
+      if(hide_cursor)
+        wr.mouse_hide(true);
 
-        hide_cursor = wr.is_mouse_hidden();
-        if(hide_cursor)
-          wr.mouse_hide(false);
+      if(grab_input)
+        wr.mouse_grab(true);
 
-        grab_input = wr.is_mouse_grabbed();
-        if(grab_input)
-          wr.mouse_grab(false);
+      get_Joysticks().enable(true);
+    }
+    else {
+      get_Joysticks().enable(false);
 
-        if(m_pausable)
-          get_Game().push_state(new Popup_Pause_State);
-      }
+      hide_cursor = wr.is_mouse_hidden();
+      if(hide_cursor)
+        wr.mouse_hide(false);
+
+      grab_input = wr.is_mouse_grabbed();
+      if(grab_input)
+        wr.mouse_grab(false);
+
+      if(m_pausable)
+        get_Game().push_state(new Popup_Pause_State);
     }
   }
-
+  
+#if !SDL_VERSION_ATLEAST(2,0,0)
   void Gamestate_Base::on_video_resize(const SDL_ResizeEvent &event) {
     Video::change_resolution(Point2i(event.w, event.h));
     Video::save();
   }
+#endif
 
 #if !SDL_VERSION_ATLEAST(1,3,0)
   void Gamestate_Base::on_video_expose(const SDL_ExposeEvent &) {
@@ -183,7 +195,7 @@ namespace Zeni {
   void Gamestate_Base::on_user_event(const SDL_UserEvent &) {
   }
 
-  char Gamestate_Base::to_char(const SDL_keysym &ks) {
+  char Gamestate_Base::to_char(const SDL_Keysym &ks) {
     Game &gr = get_Game();
     const bool mod_caps = (ks.mod & KMOD_CAPS) != 0;
     const bool mod_shift = gr.get_key_state(SDLK_LSHIFT) || gr.get_key_state(SDLK_RSHIFT);
@@ -251,6 +263,18 @@ namespace Zeni {
 
     if(ks.mod & KMOD_NUM)
       switch(ks.sym) {
+#if SDL_VERSION_ATLEAST(2,0,0)
+      case SDLK_KP_0:        return '0';
+      case SDLK_KP_1:        return '1';
+      case SDLK_KP_2:        return '2';
+      case SDLK_KP_3:        return '3';
+      case SDLK_KP_4:        return '4';
+      case SDLK_KP_5:        return '5';
+      case SDLK_KP_6:        return '6';
+      case SDLK_KP_7:        return '7';
+      case SDLK_KP_8:        return '8';
+      case SDLK_KP_9:        return '9';
+#else
       case SDLK_KP0:         return '0';
       case SDLK_KP1:         return '1';
       case SDLK_KP2:         return '2';
@@ -261,6 +285,7 @@ namespace Zeni {
       case SDLK_KP7:         return '7';
       case SDLK_KP8:         return '8';
       case SDLK_KP9:         return '9';
+#endif
       case SDLK_KP_MULTIPLY: return '*';
       case SDLK_KP_PLUS:     return '+';
       case SDLK_KP_MINUS:    return '-';
@@ -324,7 +349,7 @@ namespace Zeni {
     return '\0';
   }
 
-  SDLKey Gamestate_Base::to_sym(const String &text_version) {
+  SDL_Keycode Gamestate_Base::to_sym(const String &text_version) {
 
 #define SC(name) if(text_version == #name) return name;
 
@@ -424,7 +449,11 @@ SC(SDLK_F11)
 SC(SDLK_F12)
 
 SC10(SDLK_PRINTSCREEN, SDLK_PRINT)
+#if SDL_VERSION_ATLEAST(2,0,0)
+SC(SDLK_SCROLLLOCK)
+#else
 SC(SDLK_SCROLLOCK)
+#endif
 SC(SDLK_PAUSE)
 SC(SDLK_INSERT)
 SC(SDLK_HOME)
@@ -695,9 +724,9 @@ SC0(SDLK_WORLD_95)
     return SDLK_UNKNOWN;
   }
 
-//static String to_text_part_2(const SDLKey &keysym);
+//static String to_text_part_2(const SDL_Keycode &keysym);
 
-  String Gamestate_Base::to_text(const SDLKey &sym) {
+  String Gamestate_Base::to_text(const SDL_Keycode &sym) {
     switch(sym) {
 
 #define SC(name) case name: return #name;
@@ -798,7 +827,11 @@ SC(SDLK_F11)
 SC(SDLK_F12)
 
 SC10(SDLK_PRINTSCREEN, SDLK_PRINT)
+#if SDL_VERSION_ATLEAST(2,0,0)
+SC(SDLK_SCROLLLOCK)
+#else
 SC(SDLK_SCROLLOCK)
+#endif
 SC(SDLK_PAUSE)
 SC(SDLK_INSERT)
 SC(SDLK_HOME)

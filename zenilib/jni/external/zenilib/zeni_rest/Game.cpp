@@ -323,7 +323,11 @@ namespace Zeni {
           else if(y >= get_Window().get_width())
             y = get_Window().get_height() - 1;
 
+#if SDL_VERSION_ATLEAST(2,0,0)
+          SDL_WarpMouseInWindow(get_Window().get_window(), x, y);
+#else
           SDL_WarpMouse(Uint16(x), Uint16(y));
+#endif
         }
       }
 
@@ -331,7 +335,7 @@ namespace Zeni {
         if(event.type == SDL_KEYDOWN ||
            event.type == SDL_KEYUP)
         {
-          const SDL_keysym &s = event.key.keysym;
+          const SDL_Keysym &s = event.key.keysym;
           const bool alt = get_key_state(SDLK_LALT) || get_key_state(SDLK_RALT);
           const bool ctrl = get_key_state(SDLK_LCTRL) || get_key_state(SDLK_RCTRL);
           const bool shift = get_key_state(SDLK_LSHIFT) || get_key_state(SDLK_RSHIFT);
@@ -451,10 +455,15 @@ namespace Zeni {
             SDL_Event e;
 
             e.type = Uint8(event.type == SDL_JOYBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP);
+#if SDL_VERSION_ATLEAST(2,0,0)
+            e.key.keysym.mod = Uint16(SDL_GetModState());
+            e.key.keysym.scancode = SDL_SCANCODE_ESCAPE;
+#else
             e.key.which = Uint8(event.jbutton.which + 1);
-            e.key.state = event.jbutton.state;
             e.key.keysym.mod = SDL_GetModState();
             e.key.keysym.scancode = 0;
+#endif
+            e.key.state = event.jbutton.state;
             e.key.keysym.sym = SDLK_ESCAPE;
             e.key.keysym.unicode = 0;
 
@@ -467,6 +476,15 @@ namespace Zeni {
           if(joy_mouse.enabled && joy_mouse.scroll_hat == event.jhat.hat && (event.jhat.value == SDL_HAT_DOWN || event.jhat.value == SDL_HAT_UP)) {
             SDL_Event e;
 
+#if SDL_VERSION_ATLEAST(2,0,0)
+            e.type = SDL_MOUSEWHEEL;
+            e.wheel.which = Uint8(event.jhat.which + 1);
+            e.wheel.windowID = 0;
+            e.wheel.x = 0;
+            e.wheel.y = event.jhat.value == SDL_HAT_UP ? 1 : -1;
+
+            on_event(e);
+#else
             e.type = SDL_MOUSEBUTTONDOWN;
             e.button.which = Uint8(event.jhat.which + 1);
             e.button.state = SDL_PRESSED;
@@ -483,6 +501,7 @@ namespace Zeni {
             e.button.state = SDL_RELEASED;
 
             on_event(e);
+#endif
           }
           else
             on_event(event);

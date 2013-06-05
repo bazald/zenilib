@@ -52,6 +52,9 @@ namespace Zeni {
     void on_key(const SDL_KeyboardEvent &event);
     void on_mouse_button(const SDL_MouseButtonEvent &event);
     void on_mouse_motion(const SDL_MouseMotionEvent &event);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    void Widget_Gamestate::on_mouse_wheel(const SDL_MouseWheelEvent &event);
+#endif
 #endif
     void perform_logic();
     void render();

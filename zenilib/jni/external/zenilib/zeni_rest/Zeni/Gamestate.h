@@ -61,8 +61,12 @@
 
 #include <SDL/SDL.h>
 
-#ifndef ANDROID
+#if SDL_VERSION_ATLEAST(2,0,0)
+#include <SDL/SDL_keycode.h>
+#elif !defined(ANDROID)
 #include <SDL/SDL_keysym.h>
+typedef SDLKey SDL_Keycode;
+typedef SDL_keysym SDL_Keysym;
 #endif
 
 #include <map>
@@ -115,9 +119,9 @@ namespace Zeni {
     // Converters
 
 #ifndef ANDROID
-    static char to_char(const SDL_keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or the null character (0).
-    static SDLKey to_sym(const String &text_version); ///< Convert a text representation to an actual sym
-    static String to_text(const SDLKey &sym); ///< Convert a sym to a text representation
+    static char to_char(const SDL_Keysym &ks); ///< Returns a character key corresponding to the current combination of keys pressed or the null character (0).
+    static SDL_Keycode to_sym(const String &text_version); ///< Convert a text representation to an actual sym
+    static String to_text(const SDL_Keycode &sym); ///< Convert a sym to a text representation
 #endif
 
   protected:
@@ -144,8 +148,10 @@ namespace Zeni {
     virtual void on_window_event(const SDL_WindowEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 #endif
     virtual void on_system_wm_event(const SDL_SysWMEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#if !SDL_VERSION_ATLEAST(2,0,0)
     virtual void on_active(const SDL_ActiveEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     virtual void on_video_resize(const SDL_ResizeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+#endif
 #if !SDL_VERSION_ATLEAST(1,3,0)
     virtual void on_video_expose(const SDL_ExposeEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 #endif

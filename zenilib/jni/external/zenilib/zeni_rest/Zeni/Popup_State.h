@@ -286,7 +286,14 @@ namespace Zeni {
     {
     }
 
-#ifndef ANDROID
+#if SDL_VERSION_ATLEAST(2,0,0)
+    void on_window_event(const SDL_WindowEvent &event) {
+      if(event.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+        get_Game().pop_state();
+
+      Gamestate_Base::on_window_event(event);
+    }
+#elif !defined(ANDROID)
     void on_active(const SDL_ActiveEvent &event) {
       if(event.gain && (event.state & SDL_APPINPUTFOCUS))
         get_Game().pop_state();

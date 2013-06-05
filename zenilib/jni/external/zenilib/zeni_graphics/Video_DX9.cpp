@@ -600,9 +600,9 @@ namespace Zeni {
   void Video_DX9::init() {
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
-#if SDL_VERSION_ATLEAST(1,3,0)
+#if SDL_VERSION_ATLEAST(2,0,0)
     SDL_GetWindowWMInfo(get_Window().get_window(), &wmInfo);
-    HWND hWnd = wmInfo.win.window;
+    HWND hWnd = wmInfo.info.win.window;
 #else
     SDL_GetWMInfo(&wmInfo);
     HWND hWnd = wmInfo.window;

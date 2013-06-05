@@ -91,6 +91,21 @@ namespace Zeni {
     const Point2f projected = projector.unproject(Point2f(float(event.x), float(event.y)));
     on_mouse_motion(Point2i(int(projected.x), int(projected.y)));
   }
+
+#if SDL_VERSION_ATLEAST(2,0,0)
+  void Widget::on_event(const SDL_MouseWheelEvent &event) {
+    Point2i pos;
+    SDL_GetMouseState(&pos.x, &pos.y);
+    on_mouse_wheel(pos, event.y);
+  }
+
+  void Widget::on_event(const SDL_MouseWheelEvent &event, const Projector2D &projector) {
+    Point2i pos;
+    SDL_GetMouseState(&pos.x, &pos.y);
+    const Point2f projected = projector.unproject(Point2f(float(pos.x), float(pos.y)));
+    on_mouse_wheel(Point2i(int(projected.x), int(projected.y)), event.y);
+  }
+#endif
 #endif
 
   void Widget::render() const {
@@ -402,10 +417,26 @@ namespace Zeni {
       m_slider_position = slider_position_;
   }
 
+  const bool & Slider::is_mouse_wheel_inverted() const {
+    return m_mouse_wheel_inverted;
+  }
+
+  void Slider::invert_mouse_wheel(const bool &invert) {
+    m_mouse_wheel_inverted = invert;
+  }
+  
+  const float & Slider::get_mouse_wheel_continuous_rate() const {
+    return m_mouse_wheel_continuous_rate;
+  }
+
+  void Slider::set_mouse_wheel_continuous_rate(const float &mouse_wheel_continuous_rate) {
+    m_mouse_wheel_continuous_rate = mouse_wheel_continuous_rate;
+  }
+
   const Collision::Line_Segment & Slider::get_line_segment() const {
     return m_line_segment;
   }
-
+  
   const Slider_Int::Range & Slider_Int::get_range() const {
     return m_range;
   }
@@ -422,14 +453,6 @@ namespace Zeni {
   void Slider_Int::set_value(const int &value) {
     const int clamped = value < m_range.first ? m_range.first : value > m_range.second ? m_range.second : value;
     set_slider_position(float(clamped - m_range.first) / (m_range.second - m_range.first));
-  }
-
-  const bool & Slider_Int::is_mouse_wheel_inverted() const {
-    return m_mouse_wheel_inverted;
-  }
-
-  void Slider_Int::invert_mouse_wheel(const bool &invert) {
-    m_mouse_wheel_inverted = invert;
   }
 
   const Widget_Render_Function * Selector::get_Text_Button_Renderer() const {

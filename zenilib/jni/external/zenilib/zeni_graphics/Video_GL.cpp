@@ -611,6 +611,8 @@ namespace Zeni {
 #endif
 
   void Video_GL::init() {
+    Core::assert_no_error();
+
     std::cout << "Initializing OpenGL" << std::endl;
 
 #ifndef TEMP_DISABLE
@@ -640,11 +642,18 @@ namespace Zeni {
     }
 #endif
 
-#if SDL_VERSION_ATLEAST(1,3,0)
-    SDL_GL_SetSwapInterval(get_vertical_sync());
+    Core::assert_no_error();
 
+#if SDL_VERSION_ATLEAST(2,0,0)
     m_context = SDL_GL_CreateContext(get_Window().get_window());
+
+    /* This had to be before SDL_GL_CreateContext to work correctly on OS X some time ago.
+     * Now it causes an error to be before. Test.
+     */
+    SDL_GL_SetSwapInterval(get_vertical_sync());
 #endif
+
+    Core::assert_no_error();
 
 #ifndef REQUIRE_GL_ES
     {
@@ -656,6 +665,8 @@ namespace Zeni {
     }
 #endif
 #endif
+
+    Core::assert_no_error();
 
     // Set Fill/Shade Mode
     glShadeModel(GL_SMOOTH);
@@ -682,6 +693,8 @@ namespace Zeni {
     //glPointSize(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
     //glLineWidth(static_cast<GLfloat>(sqrt(pow(double(get_screen_width()), 2.) * pow(double(get_screen_height()), 2.)) / 1000000));
 
+    Core::assert_no_error();
+
     // Finish with a few function calls
     set_2d();
     set_Color(get_Color());
@@ -697,6 +710,8 @@ namespace Zeni {
     set_alpha_test(is_alpha_test_enabled(), get_alpha_test_function(), get_alpha_test_value());
     set_zwrite(is_zwrite_enabled());
     set_ztest(is_ztest_enabled());
+
+    Core::assert_no_error();
 
 #ifndef REQUIRE_GL_ES
     union {
@@ -750,6 +765,8 @@ namespace Zeni {
 
     // Has to be done after finding the function pointer
     set_vertical_sync(get_vertical_sync());
+
+    Core::assert_no_error();
   }
 
   void Video_GL::uninit() {

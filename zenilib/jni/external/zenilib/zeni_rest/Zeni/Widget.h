@@ -261,13 +261,20 @@ namespace Zeni {
     inline void on_event(const SDL_MouseButtonEvent &event, const Projector2D &projector);
     inline void on_event(const SDL_MouseMotionEvent &event);
     inline void on_event(const SDL_MouseMotionEvent &event, const Projector2D &projector);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    inline void on_event(const SDL_MouseWheelEvent &event);
+    inline void on_event(const SDL_MouseWheelEvent &event, const Projector2D &projector);
+#endif
 #endif
 
 #ifndef ANDROID
-    virtual void on_key(const SDL_keysym & /*keysym*/, const bool & /*down*/) {}
+    virtual void on_key(const SDL_Keysym & /*keysym*/, const bool & /*down*/) {}
 #endif
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button) = 0;
     virtual void on_mouse_motion(const Point2i &pos) = 0;
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up) = 0;
+#endif
 
     virtual void perform_logic() {}
 
@@ -457,6 +464,9 @@ namespace Zeni {
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up);
+#endif
 
     /// Called when the cursor passes over the button
     virtual void on_hover() {}
@@ -569,8 +579,8 @@ namespace Zeni {
 
   public:
     Slider(const Point2f &end_point_a_, const Point2f &end_point_b_,
-                            const float &slider_radius_,
-                            const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+           const float &slider_radius_,
+           const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline Point2f get_end_point_a() const;
     inline Point2f get_end_point_b() const;
@@ -581,11 +591,20 @@ namespace Zeni {
     inline void set_slider_radius(const float &radius_);
     inline void set_slider_position(const float &slider_position_);
 
-    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
-    virtual void on_mouse_motion(const Zeni::Point2i &pos);
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
+    virtual void on_mouse_motion(const Point2i &pos);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up);
+#endif
 
     virtual void on_slide();
     virtual void on_accept();
+
+    inline const bool & is_mouse_wheel_inverted() const;
+    inline void invert_mouse_wheel(const bool &invert);
+
+    inline const float & get_mouse_wheel_continuous_rate() const;
+    inline void set_mouse_wheel_continuous_rate(const float &mouse_wheel_continuous_rate);
 
   protected:
     inline const Collision::Line_Segment & get_line_segment() const;
@@ -593,6 +612,9 @@ namespace Zeni {
   private:
     Collision::Line_Segment m_line_segment;
     float m_slider_radius;
+
+    bool m_mouse_wheel_inverted;
+    float m_mouse_wheel_continuous_rate;
 
     float m_slider_position;
     float m_backup_position;
@@ -607,9 +629,9 @@ namespace Zeni {
     typedef std::pair<int, int> Range;
 
     Slider_Int(const Range &range,
-                                const Point2f &end_point_a_, const Point2f &end_point_b_,
-                                const float &slider_radius_,
-                                const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
+               const Point2f &end_point_a_, const Point2f &end_point_b_,
+               const float &slider_radius_,
+               const float &slider_position_ = ZENI_DEFAULT_SLIDER_POSITION);
 
     inline const Range & get_range() const;
     inline void set_range(const Range &range_);
@@ -617,11 +639,12 @@ namespace Zeni {
     inline int get_value() const;
     inline void set_value(const int &value);
 
-    virtual void on_mouse_button(const Zeni::Point2i &pos, const bool &down, const int &button);
     virtual void on_slide();
-
-    inline const bool & is_mouse_wheel_inverted() const;
-    inline void invert_mouse_wheel(const bool &invert);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up);
+#else
+    virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
+#endif
 
   private:
 #ifdef _WINDOWS
@@ -632,7 +655,6 @@ namespace Zeni {
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif
-    bool m_mouse_wheel_inverted;
   };
 
   class ZENI_REST_DLL Selector : public Widget {
@@ -707,6 +729,9 @@ namespace Zeni {
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up);
+#endif
 
     virtual void on_accept(const String &option);
 
@@ -801,7 +826,7 @@ namespace Zeni {
     ~Text_Box();
 
 #ifndef ANDROID
-    virtual void on_key(const SDL_keysym &keysym, const bool &down);
+    virtual void on_key(const SDL_Keysym &keysym, const bool &down);
 #endif
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
@@ -961,7 +986,7 @@ namespace Zeni {
 
 #ifndef ANDROID
     /// on_key input is repeated
-    virtual void on_key(const SDL_keysym &keysym, const bool &down);
+    virtual void on_key(const SDL_Keysym &keysym, const bool &down);
 #endif
     
     /// on_mouse_button deactivates the repeater (if active) and then passes input to the Widget
@@ -990,7 +1015,7 @@ namespace Zeni {
     bool m_delay_finished;
 
 #ifndef ANDROID
-    SDL_keysym m_keysym;
+    SDL_Keysym m_keysym;
 #endif
     bool m_down;
   };
@@ -1006,11 +1031,14 @@ namespace Zeni {
     inline void unlend_Widget(Widget &widget);
 
 #ifndef ANDROID
-    virtual void on_key(const SDL_keysym &keysym, const bool &down);
+    virtual void on_key(const SDL_Keysym &keysym, const bool &down);
 #endif
 
     virtual void on_mouse_button(const Point2i &pos, const bool &down, const int &button);
     virtual void on_mouse_motion(const Point2i &pos);
+#if SDL_VERSION_ATLEAST(2,0,0)
+    virtual void on_mouse_wheel(const Point2i &pos, const int &up);
+#endif
 
     virtual void perform_logic();
 
