@@ -1,25 +1,26 @@
 /*
-    SDL - Simple DirectMedia Layer
-    Copyright (C) 1997-2012 Sam Lantinga
+  Simple DirectMedia Layer
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Sam Lantinga
-    slouken@libsdl.org
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 */
 #include "SDL_config.h"
+
+#if defined(__BEOS__) || defined(__HAIKU__)
 
 /* Handle the BeApp specific portions of the application */
 
@@ -28,84 +29,108 @@
 #include <storage/Entry.h>
 #include <unistd.h>
 
+#include "SDL_BApp.h"	/* SDL_BApp class definition */
 #include "SDL_BeApp.h"
 #include "SDL_thread.h"
 #include "SDL_timer.h"
 #include "SDL_error.h"
 
+#include "../../video/bwindow/SDL_BWin.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* Flag to tell whether or not the Be application is active or not */
 int SDL_BeAppActive = 0;
 static SDL_Thread *SDL_AppThread = NULL;
 
-static int StartBeApp(void *unused)
+static int
+StartBeApp(void *unused)
 {
-  if(!be_app) {
-	BApplication *App;
+    BApplication *App;
 
-	App = new BApplication("application/x-SDL-executable");
+    App = new SDL_BApp("application/x-SDL-executable");
 
-	App->Run();
-	delete App;
-  }
- return(0);
+    App->Run();
+    delete App;
+    return (0);
 }
 
 /* Initialize the Be Application, if it's not already started */
-int SDL_InitBeApp(void)
+int
+SDL_InitBeApp(void)
 {
-	/* Create the BApplication that handles appserver interaction */
-	if ( SDL_BeAppActive <= 0 ) {
-		SDL_AppThread = SDL_CreateThread(StartBeApp, NULL);
-		if ( SDL_AppThread == NULL ) {
-			SDL_SetError("Couldn't create BApplication thread");
-			return(-1);
-		}
-		
-		/* Change working to directory to that of executable */
-		app_info info;
-		if (B_OK == be_app->GetAppInfo(&info)) {
-			entry_ref ref = info.ref;
-			BEntry entry;
-			if (B_OK == entry.SetTo(&ref)) {
-				BPath path;
-				if (B_OK == path.SetTo(&entry)) {
-					if (B_OK == path.GetParent(&path)) {
-						chdir(path.Path());
-					}
-				}
-			}
-		}	
-		
-		do {
-			SDL_Delay(10);
-		} while ( (be_app == NULL) || be_app->IsLaunching() );
+    /* Create the BApplication that handles appserver interaction */
+    if (SDL_BeAppActive <= 0) {
+        SDL_AppThread = SDL_CreateThread(StartBeApp, "SDLApplication", NULL);
+        if (SDL_AppThread == NULL) {
+            return SDL_SetError("Couldn't create BApplication thread");
+        }
 
-		/* Mark the application active */
-		SDL_BeAppActive = 0;
-	}
+        /* Change working to directory to that of executable */
+        app_info info;
+        if (B_OK == be_app->GetAppInfo(&info)) {
+            entry_ref ref = info.ref;
+            BEntry entry;
+            if (B_OK == entry.SetTo(&ref)) {
+                BPath path;
+                if (B_OK == path.SetTo(&entry)) {
+                    if (B_OK == path.GetParent(&path)) {
+                        chdir(path.Path());
+                    }
+                }
+            }
+        }
 
-	/* Increment the application reference count */
-	++SDL_BeAppActive;
+        do {
+            SDL_Delay(10);
+        } while ((be_app == NULL) || be_app->IsLaunching());
 
-	/* The app is running, and we're ready to go */
- return(0);
+        /* Mark the application active */
+        SDL_BeAppActive = 0;
+    }
+
+    /* Increment the application reference count */
+    ++SDL_BeAppActive;
+
+    /* The app is running, and we're ready to go */
+    return (0);
 }
 
 /* Quit the Be Application, if there's nothing left to do */
-void SDL_QuitBeApp(void)
+void
+SDL_QuitBeApp(void)
 {
-	/* Decrement the application reference count */
-	--SDL_BeAppActive;
+    /* Decrement the application reference count */
+    --SDL_BeAppActive;
 
-	/* If the reference count reached zero, clean up the app */
-	if ( SDL_BeAppActive == 0 ) {
-		if ( SDL_AppThread != NULL ) {
-			if ( be_app != NULL ) { /* Not tested */
-				be_app->PostMessage(B_QUIT_REQUESTED);
-			}
-			SDL_WaitThread(SDL_AppThread, NULL);
-			SDL_AppThread = NULL;
-		}
-		/* be_app should now be NULL since be_app has quit */
+    /* If the reference count reached zero, clean up the app */
+    if (SDL_BeAppActive == 0) {
+        if (SDL_AppThread != NULL) {
+            if (be_app != NULL) {       /* Not tested */
+                be_app->PostMessage(B_QUIT_REQUESTED);
+            }
+            SDL_WaitThread(SDL_AppThread, NULL);
+            SDL_AppThread = NULL;
+        }
+        /* be_app should now be NULL since be_app has quit */
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+/* SDL_BApp functions */
+void SDL_BApp::ClearID(SDL_BWin *bwin) {
+	_SetSDLWindow(NULL, bwin->GetID());
+	int32 i = _GetNumWindowSlots() - 1;
+	while(i >= 0 && GetSDLWindow(i) == NULL) {
+		_PopBackWindow();
+		--i;
 	}
 }
+
+#endif /* __BEOS__ */
+
+/* vi: set ts=4 sw=4 expandtab: */

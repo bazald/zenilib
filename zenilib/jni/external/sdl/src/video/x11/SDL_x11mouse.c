@@ -1,288 +1,356 @@
 /*
-    SDL - Simple DirectMedia Layer
-    Copyright (C) 1997-2012 Sam Lantinga
+  Simple DirectMedia Layer
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Sam Lantinga
-    slouken@libsdl.org
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 */
 #include "SDL_config.h"
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#if SDL_VIDEO_DRIVER_X11
 
-#include "SDL_mouse.h"
-#include "../../events/SDL_events_c.h"
-#include "../SDL_cursor_c.h"
-#include "SDL_x11dga_c.h"
-#include "SDL_x11mouse_c.h"
-
-
-/* The implementation dependent data for the window manager cursor */
-struct WMcursor {
-	Cursor x_cursor;
-};
+#include <X11/cursorfont.h>
+#include "SDL_assert.h"
+#include "SDL_x11video.h"
+#include "SDL_x11mouse.h"
+#include "SDL_x11xinput2.h"
+#include "../../events/SDL_mouse_c.h"
 
 
-void X11_FreeWMCursor(_THIS, WMcursor *cursor)
+/* FIXME: Find a better place to put this... */
+static Cursor x11_empty_cursor = None;
+
+static Display *
+GetDisplay(void)
 {
-	if ( SDL_Display != NULL ) {
-		SDL_Lock_EventThread();
-		XFreeCursor(SDL_Display, cursor->x_cursor);
-		XSync(SDL_Display, False);
-		SDL_Unlock_EventThread();
-	}
-	SDL_free(cursor);
+    return ((SDL_VideoData *)SDL_GetVideoDevice()->driverdata)->display;
 }
 
-WMcursor *X11_CreateWMCursor(_THIS,
-		Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
+static Cursor
+X11_CreateEmptyCursor()
 {
-	WMcursor *cursor;
-	XGCValues GCvalues;
-	GC        GCcursor;
-	XImage *data_image, *mask_image;
-	Pixmap  data_pixmap, mask_pixmap;
-	int       clen, i;
-	char     *x_data, *x_mask;
-	static XColor black = {  0,  0,  0,  0 };
-	static XColor white = { 0xffff, 0xffff, 0xffff, 0xffff };
+    if (x11_empty_cursor == None) {
+        Display *display = GetDisplay();
+        char data[1];
+        XColor color;
+        Pixmap pixmap;
 
-	/* Allocate the cursor memory */
-	cursor = (WMcursor *)SDL_malloc(sizeof(WMcursor));
-	if ( cursor == NULL ) {
-		SDL_OutOfMemory();
-		return(NULL);
-	}
-
-	/* Mix the mask and the data */
-	clen = (w/8)*h;
-	x_data = (char *)SDL_malloc(clen);
-	if ( x_data == NULL ) {
-		SDL_free(cursor);
-		SDL_OutOfMemory();
-		return(NULL);
-	}
-	x_mask = (char *)SDL_malloc(clen);
-	if ( x_mask == NULL ) {
-		SDL_free(cursor);
-		SDL_free(x_data);
-		SDL_OutOfMemory();
-		return(NULL);
-	}
-	for ( i=0; i<clen; ++i ) {
-		/* The mask is OR'd with the data to turn inverted color
-		   pixels black since inverted color cursors aren't supported
-		   under X11.
-		 */
-		x_mask[i] = data[i] | mask[i];
-		x_data[i] = data[i];
-	}
-
-	/* Prevent the event thread from running while we use the X server */
-	SDL_Lock_EventThread();
-
-	/* Create the data image */
-	data_image = XCreateImage(SDL_Display, 
-			DefaultVisual(SDL_Display, SDL_Screen),
-					1, XYBitmap, 0, x_data, w, h, 8, w/8);
-	data_image->byte_order = MSBFirst;
-	data_image->bitmap_bit_order = MSBFirst;
-	data_pixmap = XCreatePixmap(SDL_Display, SDL_Root, w, h, 1);
-
-	/* Create the data mask */
-	mask_image = XCreateImage(SDL_Display, 
-			DefaultVisual(SDL_Display, SDL_Screen),
-					1, XYBitmap, 0, x_mask, w, h, 8, w/8);
-	mask_image->byte_order = MSBFirst;
-	mask_image->bitmap_bit_order = MSBFirst;
-	mask_pixmap = XCreatePixmap(SDL_Display, SDL_Root, w, h, 1);
-
-	/* Create the graphics context */
-	GCvalues.function = GXcopy;
-	GCvalues.foreground = ~0;
-	GCvalues.background =  0;
-	GCvalues.plane_mask = AllPlanes;
-	GCcursor = XCreateGC(SDL_Display, data_pixmap,
-			(GCFunction|GCForeground|GCBackground|GCPlaneMask),
-								&GCvalues);
-
-	/* Blit the images to the pixmaps */
-	XPutImage(SDL_Display, data_pixmap, GCcursor, data_image,
-							0, 0, 0, 0, w, h);
-	XPutImage(SDL_Display, mask_pixmap, GCcursor, mask_image,
-							0, 0, 0, 0, w, h);
-	XFreeGC(SDL_Display, GCcursor);
-	/* These free the x_data and x_mask memory pointers */
-	XDestroyImage(data_image);
-	XDestroyImage(mask_image);
-
-	/* Create the cursor */
-	cursor->x_cursor = XCreatePixmapCursor(SDL_Display, data_pixmap,
-				mask_pixmap, &black, &white, hot_x, hot_y);
-	XFreePixmap(SDL_Display, data_pixmap);
-	XFreePixmap(SDL_Display, mask_pixmap);
-
-	/* Release the event thread */
-	XSync(SDL_Display, False);
-	SDL_Unlock_EventThread();
-
-	return(cursor);
+        SDL_zero(data);
+        color.red = color.green = color.blue = 0;
+        pixmap = XCreateBitmapFromData(display, DefaultRootWindow(display),
+                                       data, 1, 1);
+        if (pixmap) {
+            x11_empty_cursor = XCreatePixmapCursor(display, pixmap, pixmap,
+                                                   &color, &color, 0, 0);
+            XFreePixmap(display, pixmap);
+        }
+    }
+    return x11_empty_cursor;
 }
 
-int X11_ShowWMCursor(_THIS, WMcursor *cursor)
+static void
+X11_DestroyEmptyCursor(void)
 {
-	/* Don't do anything if the display is gone */
-	if ( SDL_Display == NULL ) {
-		return(0);
-	}
-
-	/* Set the X11 cursor cursor, or blank if cursor is NULL */
-	if ( SDL_Window ) {
-		SDL_Lock_EventThread();
-		if ( cursor == NULL ) {
-			if ( SDL_BlankCursor != NULL ) {
-				XDefineCursor(SDL_Display, SDL_Window,
-					SDL_BlankCursor->x_cursor);
-			}
-		} else {
-			XDefineCursor(SDL_Display, SDL_Window, cursor->x_cursor);
-		}
-		XSync(SDL_Display, False);
-		SDL_Unlock_EventThread();
-	}
-	return(1);
+    if (x11_empty_cursor != None) {
+        XFreeCursor(GetDisplay(), x11_empty_cursor);
+        x11_empty_cursor = None;
+    }
 }
 
-void X11_WarpWMCursor(_THIS, Uint16 x, Uint16 y)
+static SDL_Cursor *
+X11_CreateDefaultCursor()
 {
-	if ( using_dga & DGA_MOUSE ) {
-		SDL_PrivateMouseMotion(0, 0, x, y);
-	} else if ( mouse_relative) {
-		/*	RJR: March 28, 2000
-			leave physical cursor at center of screen if
-			mouse hidden and grabbed */
-		SDL_PrivateMouseMotion(0, 0, x, y);
-	} else {
-		SDL_Lock_EventThread();
-		XWarpPointer(SDL_Display, None, SDL_Window, 0, 0, 0, 0, x, y);
-		XSync(SDL_Display, False);
-		SDL_Unlock_EventThread();
-	}
+    SDL_Cursor *cursor;
+
+    cursor = SDL_calloc(1, sizeof(*cursor));
+    if (cursor) {
+        /* None is used to indicate the default cursor */
+        cursor->driverdata = (void*)None;
+    } else {
+        SDL_OutOfMemory();
+    }
+
+    return cursor;
 }
 
-/* Sets the mouse acceleration from a string of the form:
-	2/1/0
-   The first number is the numerator, followed by the acceleration
-   denumenator and threshold.
-*/
-static void SetMouseAccel(_THIS, const char *accel_param)
+#if SDL_VIDEO_DRIVER_X11_XCURSOR
+static Cursor
+X11_CreateXCursorCursor(SDL_Surface * surface, int hot_x, int hot_y)
 {
-	int i;
-	size_t len;
-	int accel_value[3];
-	char *mouse_param, *mouse_param_buf, *pin;
+    Display *display = GetDisplay();
+    Cursor cursor = None;
+    XcursorImage *image;
 
-	len = SDL_strlen(accel_param)+1;
-	mouse_param_buf = SDL_stack_alloc(char, len);
-	if ( ! mouse_param_buf ) {
-		return;
-	}
-	SDL_strlcpy(mouse_param_buf, accel_param, len);
-	mouse_param = mouse_param_buf;
+    image = XcursorImageCreate(surface->w, surface->h);
+    if (!image) {
+        SDL_OutOfMemory();
+        return None;
+    }
+    image->xhot = hot_x;
+    image->yhot = hot_y;
+    image->delay = 0;
 
-	for ( i=0; (i < 3) && mouse_param; ++i ) {
-		pin = SDL_strchr(mouse_param, '/');
-		if ( pin ) {
-			*pin = '\0';
-		}
-		accel_value[i] = atoi(mouse_param);
-		if ( pin ) {
-			mouse_param = pin+1;
-		} else {
-			mouse_param = NULL;
-		}
-	}
-	if ( i == 3 ) {
-		XChangePointerControl(SDL_Display, True, True,
-			accel_value[0], accel_value[1], accel_value[2]);
-	}
-	SDL_stack_free(mouse_param_buf);
+    SDL_assert(surface->format->format == SDL_PIXELFORMAT_ARGB8888);
+    SDL_assert(surface->pitch == surface->w * 4);
+    SDL_memcpy(image->pixels, surface->pixels, surface->h * surface->pitch);
+
+    cursor = XcursorImageLoadCursor(display, image);
+
+    XcursorImageDestroy(image);
+
+    return cursor;
+}
+#endif /* SDL_VIDEO_DRIVER_X11_XCURSOR */
+
+static Cursor
+X11_CreatePixmapCursor(SDL_Surface * surface, int hot_x, int hot_y)
+{
+    Display *display = GetDisplay();
+    XColor fg, bg;
+    Cursor cursor = None;
+    Uint32 *ptr;
+    Uint8 *data_bits, *mask_bits;
+    Pixmap data_pixmap, mask_pixmap;
+    int x, y;
+    unsigned int rfg, gfg, bfg, rbg, gbg, bbg, fgBits, bgBits;
+    unsigned int width_bytes = ((surface->w + 7) & ~7) / 8;
+
+    data_bits = SDL_calloc(1, surface->h * width_bytes);
+    if (!data_bits) {
+        SDL_OutOfMemory();
+        return None;
+    }
+
+    mask_bits = SDL_calloc(1, surface->h * width_bytes);
+    if (!mask_bits) {
+        SDL_free(data_bits);
+        SDL_OutOfMemory();
+        return None;
+    }
+
+    /* Code below assumes ARGB pixel format */
+    SDL_assert(surface->format->format == SDL_PIXELFORMAT_ARGB8888);
+
+    rfg = gfg = bfg = rbg = gbg = bbg = fgBits = bgBits = 0;
+    for (y = 0; y < surface->h; ++y) {
+        ptr = (Uint32 *)((Uint8 *)surface->pixels + y * surface->pitch);
+        for (x = 0; x < surface->w; ++x) {
+            int alpha = (*ptr >> 24) & 0xff;
+            int red   = (*ptr >> 16) & 0xff;
+            int green = (*ptr >> 8) & 0xff;
+            int blue  = (*ptr >> 0) & 0xff;
+            if (alpha > 25) {
+                mask_bits[y * width_bytes + x / 8] |= (0x01 << (x % 8));
+
+                if ((red + green + blue) > 0x40) {
+                    fgBits++;
+                    rfg += red;
+                    gfg += green;
+                    bfg += blue;
+                    data_bits[y * width_bytes + x / 8] |= (0x01 << (x % 8));
+                } else {
+                    bgBits++;
+                    rbg += red;
+                    gbg += green;
+                    bbg += blue;
+                }
+            }
+            ++ptr;
+        }
+    }
+
+    if (fgBits) {
+        fg.red   = rfg * 257 / fgBits;
+        fg.green = gfg * 257 / fgBits;
+        fg.blue  = bfg * 257 / fgBits;
+    }
+    else fg.red = fg.green = fg.blue = 0;
+
+    if (bgBits) {
+        bg.red   = rbg * 257 / bgBits;
+        bg.green = gbg * 257 / bgBits;
+        bg.blue  = bbg * 257 / bgBits;
+    }
+    else bg.red = bg.green = bg.blue = 0;
+
+    data_pixmap = XCreateBitmapFromData(display, DefaultRootWindow(display),
+                                        (char*)data_bits,
+                                        surface->w, surface->h);
+    mask_pixmap = XCreateBitmapFromData(display, DefaultRootWindow(display),
+                                        (char*)mask_bits,
+                                        surface->w, surface->h);
+    cursor = XCreatePixmapCursor(display, data_pixmap, mask_pixmap,
+                                 &fg, &bg, hot_x, hot_y);
+    XFreePixmap(display, data_pixmap);
+    XFreePixmap(display, mask_pixmap);
+
+    return cursor;
 }
 
-/* Check to see if we need to enter or leave mouse relative mode */
-void X11_CheckMouseModeNoLock(_THIS)
+static SDL_Cursor *
+X11_CreateCursor(SDL_Surface * surface, int hot_x, int hot_y)
 {
-	const Uint8 full_focus = (SDL_APPACTIVE|SDL_APPINPUTFOCUS|SDL_APPMOUSEFOCUS);
-	char *env_override;
-	int enable_relative = 1;
+    SDL_Cursor *cursor;
 
-	/* This happens when quiting after an xio error */
-	if ( SDL_Display == NULL )
-	        return;
+    cursor = SDL_calloc(1, sizeof(*cursor));
+    if (cursor) {
+        Cursor x11_cursor = None;
 
-	/* Allow the user to override the relative mouse mode.
-	   They almost never want to do this, as it seriously affects
-	   applications that rely on continuous relative mouse motion.
-	*/
-	env_override = SDL_getenv("SDL_MOUSE_RELATIVE");
-	if ( env_override ) {
-		enable_relative = atoi(env_override);
-	}
+#if SDL_VIDEO_DRIVER_X11_XCURSOR
+        if (SDL_X11_HAVE_XCURSOR) {
+            x11_cursor = X11_CreateXCursorCursor(surface, hot_x, hot_y);
+        }
+#endif
+        if (x11_cursor == None) {
+            x11_cursor = X11_CreatePixmapCursor(surface, hot_x, hot_y);
+        }
+        cursor->driverdata = (void*)x11_cursor;
+    } else {
+        SDL_OutOfMemory();
+    }
 
-	/* If the mouse is hidden and input is grabbed, we use relative mode */
-	if ( enable_relative &&
-	     !(SDL_cursorstate & CURSOR_VISIBLE) &&
-	     (this->input_grab != SDL_GRAB_OFF) &&
-             (SDL_GetAppState() & full_focus) == full_focus ) {
-		if ( ! mouse_relative ) {
-			X11_EnableDGAMouse(this);
-			if ( ! (using_dga & DGA_MOUSE) ) {
-				char *xmouse_accel;
-
-				SDL_GetMouseState(&mouse_last.x, &mouse_last.y);
-				/* Use as raw mouse mickeys as possible */
-				XGetPointerControl(SDL_Display,
-						&mouse_accel.numerator, 
-						&mouse_accel.denominator,
-						&mouse_accel.threshold);
-				xmouse_accel=SDL_getenv("SDL_VIDEO_X11_MOUSEACCEL");
-				if ( xmouse_accel ) {
-					SetMouseAccel(this, xmouse_accel);
-				}
-			}
-			mouse_relative = 1;
-		}
-	} else {
-		if ( mouse_relative ) {
-			if ( using_dga & DGA_MOUSE ) {
-				X11_DisableDGAMouse(this);
-			} else {
-				XChangePointerControl(SDL_Display, True, True,
-						mouse_accel.numerator, 
-						mouse_accel.denominator,
-						mouse_accel.threshold);
-			}
-			mouse_relative = 0;
-		}
-	}
+    return cursor;
 }
-void X11_CheckMouseMode(_THIS)
+
+static SDL_Cursor *
+X11_CreateSystemCursor(SDL_SystemCursor id)
 {
-	SDL_Lock_EventThread();
-	X11_CheckMouseModeNoLock(this);
-	SDL_Unlock_EventThread();
+    SDL_Cursor *cursor;
+    unsigned int shape;
+
+    switch(id)
+    {
+    default:
+        SDL_assert(0);
+        return NULL;
+    /* X Font Cursors reference: */
+    /*   http://tronche.com/gui/x/xlib/appendix/b/ */
+    case SDL_SYSTEM_CURSOR_ARROW:     shape = XC_left_ptr; break;
+    case SDL_SYSTEM_CURSOR_IBEAM:     shape = XC_xterm; break;
+    case SDL_SYSTEM_CURSOR_WAIT:      shape = XC_watch; break;
+    case SDL_SYSTEM_CURSOR_CROSSHAIR: shape = XC_tcross; break;
+    case SDL_SYSTEM_CURSOR_WAITARROW: shape = XC_watch; break;
+    case SDL_SYSTEM_CURSOR_SIZENWSE:  shape = XC_fleur; break;
+    case SDL_SYSTEM_CURSOR_SIZENESW:  shape = XC_fleur; break;
+    case SDL_SYSTEM_CURSOR_SIZEWE:    shape = XC_sb_h_double_arrow; break;
+    case SDL_SYSTEM_CURSOR_SIZENS:    shape = XC_sb_v_double_arrow; break;
+    case SDL_SYSTEM_CURSOR_SIZEALL:   shape = XC_fleur; break;
+    case SDL_SYSTEM_CURSOR_NO:        shape = XC_pirate; break;
+    case SDL_SYSTEM_CURSOR_HAND:      shape = XC_hand2; break;
+    }
+
+    cursor = SDL_calloc(1, sizeof(*cursor));
+    if (cursor) {
+        Cursor x11_cursor;
+
+        x11_cursor = XCreateFontCursor(GetDisplay(), shape);
+
+        cursor->driverdata = (void*)x11_cursor;
+    } else {
+        SDL_OutOfMemory();
+    }
+
+    return cursor;
 }
+
+static void
+X11_FreeCursor(SDL_Cursor * cursor)
+{
+    Cursor x11_cursor = (Cursor)cursor->driverdata;
+
+    if (x11_cursor != None) {
+        XFreeCursor(GetDisplay(), x11_cursor);
+    }
+    SDL_free(cursor);
+}
+
+static int
+X11_ShowCursor(SDL_Cursor * cursor)
+{
+    Cursor x11_cursor = 0;
+
+    if (cursor) {
+        x11_cursor = (Cursor)cursor->driverdata;
+    } else {
+        x11_cursor = X11_CreateEmptyCursor();
+    }
+
+    /* FIXME: Is there a better way than this? */
+    {
+        SDL_VideoDevice *video = SDL_GetVideoDevice();
+        Display *display = GetDisplay();
+        SDL_Window *window;
+        SDL_WindowData *data;
+
+        for (window = video->windows; window; window = window->next) {
+            data = (SDL_WindowData *)window->driverdata;
+            if (x11_cursor != None) {
+                XDefineCursor(display, data->xwindow, x11_cursor);
+            } else {
+                XUndefineCursor(display, data->xwindow);
+            }
+        }
+        XFlush(display);
+    }
+    return 0;
+}
+
+static void
+X11_WarpMouse(SDL_Window * window, int x, int y)
+{
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    Display *display = data->videodata->display;
+
+    XWarpPointer(display, None, data->xwindow, 0, 0, 0, 0, x, y);
+    XSync(display, False);
+}
+
+static int
+X11_SetRelativeMouseMode(SDL_bool enabled)
+{
+#if SDL_VIDEO_DRIVER_X11_XINPUT2
+    if(X11_Xinput2IsInitialized())
+        return 0;
+#else
+    SDL_Unsupported();
+#endif
+    return -1;
+}
+
+void
+X11_InitMouse(_THIS)
+{
+    SDL_Mouse *mouse = SDL_GetMouse();
+
+    mouse->CreateCursor = X11_CreateCursor;
+    mouse->CreateSystemCursor = X11_CreateSystemCursor;
+    mouse->ShowCursor = X11_ShowCursor;
+    mouse->FreeCursor = X11_FreeCursor;
+    mouse->WarpMouse = X11_WarpMouse;
+    mouse->SetRelativeMouseMode = X11_SetRelativeMouseMode;
+
+    SDL_SetDefaultCursor(X11_CreateDefaultCursor());
+}
+
+void
+X11_QuitMouse(_THIS)
+{
+    X11_DestroyEmptyCursor();
+}
+
+#endif /* SDL_VIDEO_DRIVER_X11 */
+
+/* vi: set ts=4 sw=4 expandtab: */

@@ -4,17 +4,21 @@ project "local_SDL"
 
   configuration "windows"
     files {
-            "src/joystick/win32/*.c",
---            "src/cdrom/win32/*.c",
-            "src/loadso/win32/*.c",
+            "src/audio/directsound/*.c",
+            "src/audio/winmm/*.c",
+            "src/audio/xaudio2/*.c",
+            "src/core/windows/*.c",
+            "src/haptic/windows/*.c",
+            "src/joystick/windows/*.c",
+            "src/loadso/windows/*.c",
+            "src/power/windows/*.c",
+            "src/render/direct3d/*.c",
             "src/thread/generic/SDL_syscond.c",
-            "src/thread/win32/*.c",
-            "src/timer/win32/*.c",
-            "src/video/wincommon/*.c",
-            "src/video/windib/*.c",
-            "src/video/windx5/*.c",
+            "src/thread/windows/*.c",
+            "src/timer/windows/*.c",
+            "src/video/windows/*.c"
     }
-    links { "winmm", "dxguid" }
+    links { "dxguid", "Imm32", "Version", "Winmm" }
   configuration { "windows", "x32" }
     libdirs { "../lib/x32" }
   configuration { "windows", "x64" }
@@ -241,18 +245,25 @@ project "local_SDL"
     includedirs { "SDL" }
     files { "include/**.h",
             "src/*.c",
+            "src/atomic/*.c",
             "src/audio/*.c",
-  --           "src/cdrom/*.c",
+            "src/audio/disk/*.c",
+            "src/audio/dummy/*.c",
             "src/cpuinfo/*.c",
             "src/events/*.c",
             "src/file/*.c",
+            "src/haptic/*.c",
+            "src/joystick/*.c",
+            "src/libm/*.c",
+            "src/power/*.c",
+            "src/render/*.c",
+            "src/render/opengl/*.c",
+            "src/render/software/*.c",
             "src/stdlib/*.c",
             "src/thread/*.c",
             "src/timer/*.c",
             "src/video/*.c",
-            "src/joystick/*.c",
-            "src/video/dummy/*.c",
-            "src/audio/dummy/*.c" }
+            "src/video/dummy/*.c" }
 
 if os.get() ~= "macosx" then
   project "local_SDLmain"
@@ -260,7 +271,7 @@ if os.get() ~= "macosx" then
     language "C"
 
     configuration "windows"
-      files { "src/main/win32/*.c" }
+      files { "src/main/windows/*.c" }
     configuration "linux"
       defines { "_GNU_SOURCE=1",
                 "_REENTRANT",

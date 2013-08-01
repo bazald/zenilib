@@ -21,4 +21,4 @@ project "zeni_rest"
 --     pchsource "jni/external/zenilib/zeni_rest/Gamestate.cpp"
 
     files { "**.h", "**.hxx", "**.cpp" }
-    links { "zeni_graphics", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+    links { "zeni_graphics", "zeni_core", "zeni_audio", "zeni", "local_SDL", "local_SDL_net" }

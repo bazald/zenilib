@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2012 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #ifndef _WIN32_WCE
 #include <errno.h>
@@ -56,9 +57,7 @@ typedef int socklen_t;
 #ifndef __BEOS__
 #include <arpa/inet.h>
 #endif
-#ifdef linux /* FIXME: what other platforms have this? */
 #include <netinet/tcp.h>
-#endif
 #include <sys/socket.h>
 #include <net/if.h>
 #include <netdb.h>
@@ -74,11 +73,11 @@ typedef Uint32 socklen_t;
 #ifdef __OS2__
 #define closesocket     soclose
 #else  /* !__OS2__ */
-#define closesocket	close
+#define closesocket close
 #endif /* __OS2__ */
-#define SOCKET	int
-#define INVALID_SOCKET	-1
-#define SOCKET_ERROR	-1
+#define SOCKET  int
+#define INVALID_SOCKET  -1
+#define SOCKET_ERROR    -1
 #endif /* __USE_W32_SOCKETS */
 
 #ifdef __USE_W32_SOCKETS
