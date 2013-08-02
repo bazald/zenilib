@@ -47,6 +47,8 @@ project "local_SDL"
     includedirs { "/usr/X11R6/include" }
     files { "src/audio/disk/*.c",
             "src/loadso/dlopen/*.c",
+            "src/file/cocoa/*.m",
+            "src/video/cocoa/*.m",
             "src/video/quartz/*.m",
 --            "src/video/x11/*.c",
 --            "src/video/Xext/Xxf86dga/*.c",
@@ -56,13 +58,18 @@ project "local_SDL"
 --            "src/video/Xext/Xinerama/*.c",
 --            "src/video/Xext/XME/*.c",
             "src/thread/pthread/*.c",
+            "src/audio/coreaudio/*.c",
             "src/audio/macosx/*.c",
+            "src/haptic/darwin/*.c",
             "src/joystick/darwin/*.c",
+            "src/power/macosx/*.c",
             "src/timer/unix/*.c" }
     links { "ApplicationServices.framework",
             "AudioUnit.framework",
             "Carbon.framework",
             "Cocoa.framework",
+            "CoreAudio.framework",
+            "ForceFeedback.framework",
             "IOKit.framework",
             "OpenGL.framework" }
   configuration { "macosx", "Debug*" }
