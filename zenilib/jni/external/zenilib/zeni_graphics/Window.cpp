@@ -573,13 +573,13 @@ namespace Zeni {
       m_icon_surface = 0;
     }
 
-    Image image(get_m_icon());
-    if(image.color_space() != Image::RGBA) {
+    m_icon = Image(get_m_icon());
+    if(m_icon.color_space() != Image::RGBA) {
       std::cerr << "Display window icon must be RGBA.\n";
       return false;
     }
 
-    m_icon_surface = SDL_CreateRGBSurfaceFrom(image.get_data(), image.width(), image.height(), 32, 4 * image.width(), 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+    m_icon_surface = SDL_CreateRGBSurfaceFrom(m_icon.get_data(), m_icon.width(), m_icon.height(), 32, 4 * m_icon.width(), 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
     if(!m_icon_surface) {
       std::cerr << "Could not load display window icon.\n";
       return false;
