@@ -234,15 +234,15 @@ case $OSTYPE in
 
     if [ $COMPILE_FOR_LSB -ne 0 ] && [ ${VERCC[0]} -gt 4 -o ${VERCXX[0]} -gt 4 -o ${VERCC[1]} -gt 4 -o ${VERCXX[1]} -gt 4 ]
     then
-      echo "gcc/g++ 4.5 and 4.6 require ld.gold for LSB compilation."
+      echo "gcc/g++ 4.5-4.8 require ld.gold for LSB compilation."
 
       GOLD_LD=$(echo $(whereis -b gold-ld) | sed 's/.* //')
       if [ -x "$GOLD_LD/ld" ]; then
-        MAX_MINOR=6
+        MAX_MINOR=8
         echo "ld.gold found: $GOLD_LD"
       else
         MAX_MINOR=4
-        echo "gold-ld could not be found, but is required for LSB build with GCC 4.5 and 4.6."
+        echo "gold-ld could not be found, but is required for LSB build with GCC 4.5-4.8."
         echo "Notes: gold-ld is merely a directory on the path (e.g. /usr/lib/gold-ld)"
         echo "       gold-ld must contain 'ld', a symlink to ld.gold or gold"
       fi

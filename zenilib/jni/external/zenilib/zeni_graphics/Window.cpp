@@ -508,8 +508,6 @@ namespace Zeni {
       SDL_DestroyWindow(m_window);
     m_window = 0;
 #endif
-    
-    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
 
     // Initialize Window
 #if SDL_VERSION_ATLEAST(1,3,0)
@@ -518,7 +516,9 @@ namespace Zeni {
       (g_screen_full ? SDL_WINDOW_FULLSCREEN
                      : ((g_screen_show_frame ? 0u : SDL_WINDOW_BORDERLESS) |
                         (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0u))));
-#else
+#else    
+    const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
+
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       SDL_OPENGL |
       (g_screen_full ? SDL_FULLSCREEN
