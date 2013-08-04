@@ -68,7 +68,6 @@
 #include <Zeni/Video.hxx>
 #include <Zeni/Video_DX9.hxx>
 #include <Zeni/Video_GL_Fixed.hxx>
-#include <Zeni/Video_GL_Shader.hxx>
 #include <Zeni/Window.hxx>
 
 #endif

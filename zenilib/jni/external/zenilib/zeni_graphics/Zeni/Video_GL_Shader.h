@@ -167,13 +167,6 @@ namespace Zeni {
     void initialize(Fragment_Shader &shader, const String &filename, const String &entry_function); ///< Function for initializing a Fragment_Shader
 #endif
 
-    // Vertex Buffer Functions
-    inline void pglBindBufferARB(const GLenum target, const GLuint buffer) const; ///< The glBindBufferARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
-    inline void pglDeleteBuffersARB(const GLsizei n, GLuint * const buffers) const; ///< The glDeleteBuffersARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
-    inline void pglGenBuffersARB(const GLsizei n, GLuint * const buffers) const; ///< The glGenBuffersARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
-    inline void pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, 
-      const GLenum usage) const; ///< The glBufferDataARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
-
 #if SDL_VERSION_ATLEAST(1,3,0)
     virtual void alert_window_destroyed(); ///< Tell Video that its SDL_Window has been destroyed
 #endif

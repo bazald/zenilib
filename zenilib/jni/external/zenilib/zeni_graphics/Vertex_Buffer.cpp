@@ -653,8 +653,6 @@ namespace Zeni {
   {
     memset(m_vbuf, 0, sizeof(VBO_GL) * 6);
 
-    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
-
     const size_t v_size = vertex_size();
     const size_t n_size = normal_size();
     const size_t c_size = color_size();
@@ -690,14 +688,14 @@ namespace Zeni {
         }
 
       for(int i = 0; i < 3; ++i)
-        vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
+        glGenBuffers(1, &m_vbuf[i].vbo);
 
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(vbuf_c_size), p_verts, GL_STATIC_DRAW_ARB);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(nbuf_c_size), p_normals, GL_STATIC_DRAW_ARB);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(cbuf_size), p_colors, GL_STATIC_DRAW_ARB);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[0].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(vbuf_c_size), p_verts, GL_STATIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[1].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(nbuf_c_size), p_normals, GL_STATIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[2].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(cbuf_size), p_colors, GL_STATIC_DRAW);
 
       delete [] p_verts;
       delete [] p_normals;
@@ -726,14 +724,14 @@ namespace Zeni {
         }
 
       for(int i = 3; i < 6; ++i)
-        vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
+        glGenBuffers(1, &m_vbuf[i].vbo);
 
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(vbuf_t_size), p_verts, GL_STATIC_DRAW_ARB);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(nbuf_t_size), p_normals, GL_STATIC_DRAW_ARB);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
-      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(tbuf_size), p_texels, GL_STATIC_DRAW_ARB);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[3].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(vbuf_t_size), p_verts, GL_STATIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[4].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(nbuf_t_size), p_normals, GL_STATIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[5].vbo);
+      glBufferData(GL_ARRAY_BUFFER, int(tbuf_size), p_texels, GL_STATIC_DRAW);
 
       delete [] p_verts;
       delete [] p_normals;
@@ -742,29 +740,25 @@ namespace Zeni {
   }
 
   Vertex_Buffer_Renderer_GL_Shader::~Vertex_Buffer_Renderer_GL_Shader() {
-    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
-
     for(int i = 0; i < 6; ++i)
       if(m_vbuf[i].vbo)
-        vgl.pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
+        glDeleteBuffers(1, &m_vbuf[i].vbo);
   }
 
   void Vertex_Buffer_Renderer_GL_Shader::render() {
-    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
-
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
 
     if(!m_vbo.m_descriptors_cm.empty()) {
       // Bind Vertex Buffer
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[0].vbo);
       glVertexPointer(3, GL_FLOAT, 0, 0);
       // Bind Normal Buffer
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[1].vbo);
       glNormalPointer(GL_FLOAT, 0, 0);
       // Bind Color Buffer
       glEnableClientState(GL_COLOR_ARRAY);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[2].vbo);
       glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm);
@@ -774,14 +768,14 @@ namespace Zeni {
 
     if(!m_vbo.m_descriptors_t.empty()) {
       // Bind Vertex Buffer
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[3].vbo);
       glVertexPointer(3, GL_FLOAT, 0, 0);
       // Bind Normal Buffer
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[4].vbo);
       glNormalPointer(GL_FLOAT, 0, 0);
       // Bind Texel Buffer
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
       glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);
@@ -791,7 +785,7 @@ namespace Zeni {
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
 #endif
