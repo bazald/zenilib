@@ -108,6 +108,7 @@ namespace Zeni {
     virtual bool begin_render() = 0; ///< Must be called before all rendering functions; Returns true if rendering can proceed
     virtual void end_render() = 0; ///< Must be called after all rendering functions
     virtual void render(const Renderable &renderable) = 0; ///< Render a Renderable
+    virtual void clear_depth_buffer() = 0; ///< Can reset the depth buffer at any time if necessary
 
     // Accessors
     inline static const VIDEO_MODE & get_video_mode(); ///< Get the currently selected video mode

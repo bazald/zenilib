@@ -271,19 +271,12 @@ namespace Zeni {
     m_child->render();
 
     Video &vr = get_Video();
-
-    const bool ztest = vr.is_ztest_enabled();
-    if(ztest)
-      vr.set_ztest(false);
-
+    vr.clear_depth_buffer();
     vr.set_2d(m_virtual_screen);
 
     vr.render(m_bg);
     m_log.render();
     m_prompt.render();
-
-    if(ztest)
-      vr.set_ztest(true);
   }
 
   void Console_Function::operator()(Console_State &console,

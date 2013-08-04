@@ -180,6 +180,14 @@ namespace Zeni {
     renderable.render_to(*this);
   }
 
+  void Video_GL_Fixed::clear_depth_buffer() {
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    if(!is_zwrite_enabled())
+      glDepthMask(GL_FALSE);
+  }
+
   int Video_GL_Fixed::get_maximum_anisotropy() const {
     return m_maximum_anisotropy;
   }

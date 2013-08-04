@@ -89,11 +89,7 @@ namespace Zeni {
       m_gamestate.render();
 
       Video &vr = get_Video();
-      const bool ztest = vr.is_ztest_enabled();
-
-      if(ztest)
-        vr.set_ztest(false);
-
+      vr.clear_depth_buffer();
       vr.set_2d(std::make_pair(Point2f(), Point2f(800.0f, 600.0f)));
 
       Color color = get_Colors()["title_bg"];
@@ -108,9 +104,6 @@ namespace Zeni {
       vr.set_2d(get_virtual_window(), fix_aspect_ratio());
 
       m_widgets.render();
-
-      if(ztest)
-        vr.set_ztest(true);
     }
 
     Gamestate m_gamestate;
@@ -313,17 +306,9 @@ namespace Zeni {
       if(m_gamestate.is_pausable()) {
         Popup_State::render();
 
-        Video &vr = get_Video();
         Font &font = get_Fonts()["title"];
-        const bool ztest = vr.is_ztest_enabled();
-
-        if(ztest)
-          vr.set_ztest(false);
 
         font.render_text("Paused", Point2f(400.0f, 300.0f - 0.5f * font.get_text_height()), get_Colors()["title_text"], ZENI_CENTER);
-
-        if(ztest)
-          vr.set_ztest(true);
       }
       else
         m_gamestate.render();

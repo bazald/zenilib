@@ -243,6 +243,10 @@ namespace Zeni {
 
     renderable.render_to(*this);
   }
+  
+  void Video_DX9::clear_depth_buffer() {
+    m_d3d_device->Clear(0, 0, D3DCLEAR_ZBUFFER, D3DCOLOR(), 1.0f, 0);
+  }
 
   int Video_DX9::get_maximum_anisotropy() const {
     return int(m_d3d_capabilities->MaxAnisotropy);

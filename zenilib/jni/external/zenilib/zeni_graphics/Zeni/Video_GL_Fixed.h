@@ -84,6 +84,7 @@ namespace Zeni {
     bool begin_render(); ///< Must be called before all rendering functions; Returns true if rendering can proceed
     void end_render(); ///< Must be called after all rendering functions
     void render(const Renderable &renderable); ///< Render a Renderable
+    void clear_depth_buffer(); ///< Can reset the depth buffer at any time if necessary
 
     // Accessors
     int get_maximum_anisotropy() const; ///< Get the current level of anisotrophy
