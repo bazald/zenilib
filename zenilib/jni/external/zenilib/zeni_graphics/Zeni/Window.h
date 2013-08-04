@@ -148,7 +148,6 @@ namespace Zeni {
 #else
     SDL_Surface *m_display_surface;
 #endif
-    Image m_icon;
     SDL_Surface *m_icon_surface;
 
     static bool g_screen_full;

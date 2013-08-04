@@ -54,7 +54,8 @@ struct ID3DXRenderToSurface;
 namespace Zeni {
 
   class Video;
-  class Video_GL;
+  class Video_GL_Fixed;
+  class Video_GL_Shader;
   class Video_DX9;
 
   class ZENI_GRAPHICS_DLL Texture {
@@ -110,8 +111,9 @@ namespace Zeni {
   class ZENI_GRAPHICS_DLL Texture_GL : public Texture {
     Texture_GL(const Texture_GL &);
     Texture_GL & operator=(const Texture_GL &);
-
-    friend class Video_GL;
+    
+    friend class Video_GL_Fixed;
+    friend class Video_GL_Shader;
 
   public:
     Texture_GL(const String &filename, const bool &repeat /* otherwise clamp */,

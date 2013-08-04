@@ -91,10 +91,15 @@ namespace Zeni {
     // Begin rendering functions
 
     virtual bool is_3d() const; ///< Tell the rendering system if we're using 3D coordinates
+    
+#ifndef DISABLE_GL_FIXED
+    virtual void render_to(Video_GL_Fixed &screen) const;
+    virtual void subrender_to(Video_GL_Fixed &screen) const;
+#endif
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
-    virtual void subrender_to(Video_GL &screen) const;
+#ifndef DISABLE_GL_Shader
+    virtual void render_to(Video_GL_Shader &screen) const;
+    virtual void subrender_to(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
@@ -120,10 +125,15 @@ namespace Zeni {
 
     // NOTE: Not really meaningful to render a textured point in isolation;
     //       assert(false) for all but subrender_to(Video_GL &)
+    
+#ifndef DISABLE_GL_FIXED
+    virtual void render_to(Video_GL_Fixed &screen) const;
+    virtual void subrender_to(Video_GL_Fixed &screen) const;
+#endif
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
-    virtual void subrender_to(Video_GL &screen) const;
+#ifndef DISABLE_GL_Shader
+    virtual void render_to(Video_GL_Shader &screen) const;
+    virtual void subrender_to(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

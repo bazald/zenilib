@@ -45,9 +45,13 @@ namespace Zeni {
 
     /// Tell the rendering system if we're using 3D coordinates
     virtual bool is_3d() const;
+    
+#ifndef DISABLE_GL_FIXED
+    virtual void render_to(Video_GL_Fixed &screen) const;
+#endif
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const;
+#ifndef DISABLE_GL_SHADER
+    virtual void render_to(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

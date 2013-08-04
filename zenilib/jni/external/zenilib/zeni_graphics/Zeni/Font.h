@@ -60,7 +60,8 @@ namespace Zeni {
 
   struct Color;
   class ZENI_GRAPHICS_DLL Video;
-  class ZENI_GRAPHICS_DLL Video_GL;
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
   class ZENI_GRAPHICS_DLL Video_DX9;
   class ZENI_GRAPHICS_DLL Texture;
 

@@ -48,8 +48,9 @@
 #include <Zeni/Define.h>
 
 namespace Zeni {
-
-  class ZENI_GRAPHICS_DLL Video_GL;
+  
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
   class ZENI_GRAPHICS_DLL Video_DX9;
 
   class ZENI_GRAPHICS_DLL Material {
@@ -73,10 +74,15 @@ namespace Zeni {
     inline void set_power(const float &power); ///< Set the power of the Material (indicates the focus of the specular highlights)
     void set_shininess(const float &shininess); ///< Set the shininess of the Material (indicates the focus of the specular highlights - logarithmically tied to power)
     void set_Texture(const String &texture); ///< Set the texture identifier
+    
+#ifndef DISABLE_GL_FIXED
+    void set(Video_GL_Fixed &screen) const;
+    void unset(Video_GL_Fixed &screen) const;
+#endif
 
-#ifndef DISABLE_GL
-    void set(Video_GL &screen) const;
-    void unset(Video_GL &screen) const;
+#ifndef DISABLE_GL_SHADER
+    void set(Video_GL_Shader &screen) const;
+    void unset(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

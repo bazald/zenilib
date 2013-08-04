@@ -97,7 +97,8 @@
 namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Video_DX9;
-  class ZENI_GRAPHICS_DLL Video_GL;
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
 
   class ZENI_GRAPHICS_DLL Shader_System {
     // Get reference to only instance;

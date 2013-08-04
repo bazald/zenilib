@@ -154,6 +154,8 @@ namespace Zeni {
 
       void add_entry(const String &option, const String &save_as);
 
+      size_t num_entries() const;
+
       void on_accept(const String &option);
 
     private:

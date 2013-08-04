@@ -85,8 +85,9 @@ namespace Zeni {
   class ZENI_GRAPHICS_DLL Vertex_Buffer {
     Vertex_Buffer(const Vertex_Buffer &);
     Vertex_Buffer & operator=(const Vertex_Buffer &);
-
-    friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL;
+    
+    friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL_Fixed;
+    friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL_Shader;
     friend class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_DX9;
 
   public:
@@ -209,13 +210,13 @@ namespace Zeni {
 
 #ifndef DISABLE_GL
 
-  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL : public Vertex_Buffer_Renderer {
-    Vertex_Buffer_Renderer_GL(const Vertex_Buffer_Renderer_GL &);
-    Vertex_Buffer_Renderer_GL operator=(const Vertex_Buffer_Renderer_GL &);
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL_Fixed : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_GL_Fixed(const Vertex_Buffer_Renderer_GL_Fixed &);
+    Vertex_Buffer_Renderer_GL_Fixed operator=(const Vertex_Buffer_Renderer_GL_Fixed &);
 
   public:
-    Vertex_Buffer_Renderer_GL(Vertex_Buffer &vertex_buffer);
-    virtual ~Vertex_Buffer_Renderer_GL();
+    Vertex_Buffer_Renderer_GL_Fixed(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_GL_Fixed();
 
     virtual void render();
 
@@ -224,11 +225,32 @@ namespace Zeni {
     inline size_t normal_size() const;
     inline size_t color_size() const;
     inline size_t texel_size() const;
-    inline bool buffers_supported(Video_GL &vgl) const;
+    inline bool buffers_supported(Video_GL_Fixed &vgl) const;
 
     union ZENI_GRAPHICS_DLL VBO_GL {
       GLuint vbo;
       unsigned char * alt;
+    } m_vbuf[6];
+  };
+
+  class ZENI_GRAPHICS_DLL Vertex_Buffer_Renderer_GL_Shader : public Vertex_Buffer_Renderer {
+    Vertex_Buffer_Renderer_GL_Shader(const Vertex_Buffer_Renderer_GL_Shader &);
+    Vertex_Buffer_Renderer_GL_Shader operator=(const Vertex_Buffer_Renderer_GL_Shader &);
+
+  public:
+    Vertex_Buffer_Renderer_GL_Shader(Vertex_Buffer &vertex_buffer);
+    virtual ~Vertex_Buffer_Renderer_GL_Shader();
+
+    virtual void render();
+
+  private:
+    inline size_t vertex_size() const;
+    inline size_t normal_size() const;
+    inline size_t color_size() const;
+    inline size_t texel_size() const;
+
+    union ZENI_GRAPHICS_DLL VBO_GL {
+      GLuint vbo;
     } m_vbuf[6];
   };
 

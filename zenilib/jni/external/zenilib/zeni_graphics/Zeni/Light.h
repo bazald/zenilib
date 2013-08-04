@@ -47,8 +47,9 @@
 #endif
 
 namespace Zeni {
-
-  class Video_GL;
+  
+  class Video_GL_Fixed;
+  class Video_GL_Shader;
   class Video_DX9;
 
   enum LIGHT_TYPE {LIGHT_POINT = 1, LIGHT_SPOT = 2, LIGHT_DIRECTIONAL = 3};
@@ -65,9 +66,13 @@ namespace Zeni {
     inline void set_light_type(const LIGHT_TYPE &light_type); ///< Set the type of the Light
     inline void set_spot_theta(const float &spot_theta); ///< Set the angle, in radians, describing the size of the inner cone (automatically increases phi if necessary)
     inline void set_spot_phi(const float &spot_phi); ///< Set the angle, in radians, describing the size of the outer cone (automatically decreases theta if necessary)
+    
+#ifndef DISABLE_GL_FIXED
+    void set(const GLenum &number, Video_GL_Fixed &screen) const;
+#endif
 
-#ifndef DISABLE_GL
-    void set(const GLenum &number, Video_GL &screen) const;
+#ifndef DISABLE_GL_SHADER
+    void set(const GLenum &number, Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

@@ -44,35 +44,46 @@ namespace Zeni {
     m_descriptors_t.clear();
     m_prerendered = false;
   }
+  
+#ifndef DISABLE_GL_FIXED
 
-#ifndef DISABLE_GL
-
-  size_t Vertex_Buffer_Renderer_GL::vertex_size() const {
+  size_t Vertex_Buffer_Renderer_GL_Fixed::vertex_size() const {
     return 3u * sizeof(float);
   }
 
-  size_t Vertex_Buffer_Renderer_GL::normal_size() const {
+  size_t Vertex_Buffer_Renderer_GL_Fixed::normal_size() const {
     return 3u * sizeof(float);
   }
 
-  size_t Vertex_Buffer_Renderer_GL::color_size() const {
+  size_t Vertex_Buffer_Renderer_GL_Fixed::color_size() const {
     return 4u * sizeof(unsigned char);
   }
 
-  size_t Vertex_Buffer_Renderer_GL::texel_size() const {
+  size_t Vertex_Buffer_Renderer_GL_Fixed::texel_size() const {
     return 2u * sizeof(float);
   }
   
-  bool Vertex_Buffer_Renderer_GL::buffers_supported(Video_GL &
-#if !defined(REQUIRE_GL_ES) && !defined(DISABLE_VBO)
-    vgl
-#endif
-    ) const {
-#if !defined(REQUIRE_GL_ES) && !defined(DISABLE_VBO)
+  bool Vertex_Buffer_Renderer_GL_Fixed::buffers_supported(Video_GL_Fixed &vgl) const {
     return vgl.get_pglDeleteBuffersARB() != 0;
-#else
-    return true;
+  }
+
 #endif
+#ifndef DISABLE_GL_SHADER
+
+  size_t Vertex_Buffer_Renderer_GL_Shader::vertex_size() const {
+    return 3u * sizeof(float);
+  }
+
+  size_t Vertex_Buffer_Renderer_GL_Shader::normal_size() const {
+    return 3u * sizeof(float);
+  }
+
+  size_t Vertex_Buffer_Renderer_GL_Shader::color_size() const {
+    return 4u * sizeof(unsigned char);
+  }
+
+  size_t Vertex_Buffer_Renderer_GL_Shader::texel_size() const {
+    return 2u * sizeof(float);
   }
 
 #endif

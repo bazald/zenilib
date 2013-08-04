@@ -92,7 +92,7 @@ namespace Zeni {
     Video & operator=(const Video &);
 
   public:
-    enum VIDEO_MODE {ZENI_VIDEO_ANY, ZENI_VIDEO_GL, ZENI_VIDEO_DX9};
+    enum VIDEO_MODE {ZENI_VIDEO_ANY, ZENI_VIDEO_GL_FIXED, ZENI_VIDEO_DX9, ZENI_VIDEO_GL_SHADER};
 
     enum TEST {ZENI_NEVER = 0,
                ZENI_LESS = 1,

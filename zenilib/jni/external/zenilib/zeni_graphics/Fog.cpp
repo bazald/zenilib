@@ -44,8 +44,8 @@ namespace Zeni {
   {
   }
 
-#ifndef DISABLE_GL
-  void Fog::set(Video_GL &) const {
+#ifndef DISABLE_GL_FIXED
+  void Fog::set(Video_GL_Fixed &) const {
     const int mode = type == FOG_EXP ? GL_EXP
       : type == FOG_EXP2 ? GL_EXP2
       : GL_LINEAR;
@@ -61,6 +61,13 @@ namespace Zeni {
 
     glFogfv(GL_FOG_COLOR, reinterpret_cast<const GLfloat *>(&color));
     glHint(GL_FOG_HINT, GL_NICEST);
+  }
+#endif
+
+#ifndef DISABLE_GL_SHADER
+  void Fog::set(Video_GL_Shader &vgl) const {
+    /// DEPRECATED
+    set(reinterpret_cast<Video_GL_Fixed &>(vgl));
   }
 #endif
 

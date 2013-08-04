@@ -94,24 +94,29 @@ static bool load_config() {
     Zeni::XML_Element_c video = zenilib["Video"];
 
     const Zeni::String api = video["API"].to_string();
-#ifndef DISABLE_GL
-    if(api == "OpenGL")
-      config.video.api = Zeni::Video::ZENI_VIDEO_GL;
+#ifndef DISABLE_GL_FIXED
+    if(api == "OpenGL Fixed" || api == "OpenGL")
+      config.video.api = Zeni::Video::ZENI_VIDEO_GL_FIXED;
     else
 #endif
-#ifndef DISABLE_DX9
-      if(api == "DX9")
-        config.video.api = Zeni::Video::ZENI_VIDEO_DX9;
+#ifndef DISABLE_GL_SHADER
+      if(api == "OpenGL Shader")
+        config.video.api = Zeni::Video::ZENI_VIDEO_GL_SHADER;
       else
 #endif
-      {
-        config.video.api = Zeni::Video::ZENI_VIDEO_ANY;
+#ifndef DISABLE_DX9
+        if(api == "Direct3D 9" || api == "DX9")
+          config.video.api = Zeni::Video::ZENI_VIDEO_DX9;
+        else
+#endif
+        {
+          config.video.api = Zeni::Video::ZENI_VIDEO_ANY;
 
 #ifndef ANDROID
-        if(api == "Disabled")
-          Zeni::Window::set_enabled(false);
+          if(api == "Disabled")
+            Zeni::Window::set_enabled(false);
 #endif
-      }
+        }
 
     config.video.full_screen = video["Full_Screen"].to_bool();
 

@@ -78,15 +78,11 @@ namespace Zeni {
     else
       m_texture_id = get_Textures().get_id(texture);
   }
-
-#ifndef DISABLE_GL
-  void Material::set(Video_GL &vgl) const {
+  
+#ifndef DISABLE_GL_FIXED
+  void Material::set(Video_GL_Fixed &vgl) const {
     if(vgl.get_lighting()) {
-#ifdef REQUIRE_GL_ES
       const GLenum face = GL_FRONT_AND_BACK;
-#else
-      const GLenum face = GLenum(vgl.get_backface_culling() ? GL_FRONT : GL_FRONT_AND_BACK);
-#endif
 
       if(!(m_optimization & (1 << 0)))
         glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
@@ -116,7 +112,47 @@ namespace Zeni {
     }
   }
 
-  void Material::unset(Video_GL &vgl) const {
+  void Material::unset(Video_GL_Fixed &vgl) const {
+    if(!(m_optimization & (1 << 11)) &&
+       !m_texture.empty())
+      vgl.unapply_Texture();
+  }
+#endif
+
+#ifndef DISABLE_GL_SHADER
+  void Material::set(Video_GL_Shader &vgl) const {
+    if(vgl.get_lighting()) {
+      const GLenum face = GL_FRONT_AND_BACK;
+
+      if(!(m_optimization & (1 << 0)))
+        glMaterialfv(face, GL_AMBIENT, reinterpret_cast<const GLfloat *>(&ambient));
+      if(!(m_optimization & (1 << 1)))
+        glMaterialfv(face, GL_DIFFUSE, reinterpret_cast<const GLfloat *>(&diffuse));
+      if(!(m_optimization & (1 << 2)))
+        glMaterialfv(face, GL_SPECULAR, reinterpret_cast<const GLfloat *>(&specular));
+      if(!(m_optimization & (1 << 3)))
+        glMaterialfv(face, GL_EMISSION, reinterpret_cast<const GLfloat *>(&emissive));
+      if(!(m_optimization & (1 << 4)))
+        glMaterialfv(face, GL_SHININESS, &m_power);
+    }
+    else
+      vgl.set_Color(diffuse);
+
+    if(!(m_optimization & (1 << 5)) &&
+       !m_texture.empty()) {
+      try {
+        vgl.apply_Texture(m_texture_id);
+      }
+      catch(Database_Entry_Not_Found &) {
+        m_texture_id = get_Textures().get_id(m_texture);
+        if(!m_texture_id)
+          throw;
+        vgl.apply_Texture(m_texture_id);
+      }
+    }
+  }
+
+  void Material::unset(Video_GL_Shader &vgl) const {
     if(!(m_optimization & (1 << 11)) &&
        !m_texture.empty())
       vgl.unapply_Texture();

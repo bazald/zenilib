@@ -437,15 +437,15 @@ namespace Zeni {
     static std::set<Vertex_Buffer *> vbos;
     return vbos;
   }
+  
+#ifndef DISABLE_GL_FIXED
 
-#ifndef DISABLE_GL
-
-  Vertex_Buffer_Renderer_GL::Vertex_Buffer_Renderer_GL(Vertex_Buffer &vbo)
+  Vertex_Buffer_Renderer_GL_Fixed::Vertex_Buffer_Renderer_GL_Fixed(Vertex_Buffer &vbo)
     : Vertex_Buffer_Renderer(vbo)
   {
     memset(m_vbuf, 0, sizeof(VBO_GL) * 6);
 
-    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
+    Video_GL_Fixed &vgl = dynamic_cast<Video_GL_Fixed &>(get_Video());
 
     const size_t v_size = vertex_size();
     const size_t n_size = normal_size();
@@ -547,8 +547,8 @@ namespace Zeni {
     }
   }
 
-  Vertex_Buffer_Renderer_GL::~Vertex_Buffer_Renderer_GL() {
-    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
+  Vertex_Buffer_Renderer_GL_Fixed::~Vertex_Buffer_Renderer_GL_Fixed() {
+    Video_GL_Fixed &vgl = dynamic_cast<Video_GL_Fixed &>(get_Video());
 
     if(buffers_supported(vgl)) {
       for(int i = 0; i < 6; ++i)
@@ -593,8 +593,8 @@ namespace Zeni {
     }
   }
 
-  void Vertex_Buffer_Renderer_GL::render() {
-    Video_GL &vgl = dynamic_cast<Video_GL &>(get_Video());
+  void Vertex_Buffer_Renderer_GL_Fixed::render() {
+    Video_GL_Fixed &vgl = dynamic_cast<Video_GL_Fixed &>(get_Video());
     const bool buffers_supported_ = buffers_supported(vgl);
 
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -634,6 +634,154 @@ namespace Zeni {
       if(buffers_supported_)
         vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
       glTexCoordPointer(2, GL_FLOAT, 0, buffers_supported_ ? 0 : m_vbuf[5].alt);
+
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);
+
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+  }
+
+#endif
+#ifndef DISABLE_GL_SHADER
+
+  Vertex_Buffer_Renderer_GL_Shader::Vertex_Buffer_Renderer_GL_Shader(Vertex_Buffer &vbo)
+    : Vertex_Buffer_Renderer(vbo)
+  {
+    memset(m_vbuf, 0, sizeof(VBO_GL) * 6);
+
+    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
+
+    const size_t v_size = vertex_size();
+    const size_t n_size = normal_size();
+    const size_t c_size = color_size();
+    const size_t t_size = texel_size();
+
+    const size_t vbuf_c_size = v_size * (vbo.num_vertices_cm());
+    const size_t nbuf_c_size = n_size * (vbo.num_vertices_cm());
+    const size_t cbuf_size = c_size * (vbo.num_vertices_cm());
+    const size_t vbuf_t_size = v_size * (vbo.num_vertices_t());
+    const size_t nbuf_t_size = n_size * (vbo.num_vertices_t());
+    const size_t tbuf_size = t_size * (vbo.num_vertices_t());
+    
+    if(vbuf_c_size) {
+      unsigned char *p_verts = new unsigned char [vbuf_c_size];
+      unsigned char *p_normals = new unsigned char [nbuf_c_size];
+      unsigned char *p_colors = new unsigned char [cbuf_size];
+
+      unsigned char *buffered_verts = p_verts;
+      unsigned char *buffered_normals = p_normals;
+      unsigned char *buffered_colors = p_colors;
+
+      for(unsigned int i = 0; i < vbo.m_triangles_cm.size(); ++i)
+        for(int j = 0; j < 3; ++j) {
+          memcpy(buffered_verts, (*vbo.m_triangles_cm[i])[j].get_address(), v_size);
+          buffered_verts += v_size;
+
+          memcpy(buffered_normals, reinterpret_cast<float *>((*vbo.m_triangles_cm[i])[j].get_address())+3, n_size);
+          buffered_normals += n_size;
+
+          memcpy(buffered_colors, reinterpret_cast<float *>((*vbo.m_triangles_cm[i])[j].get_address())+6, c_size);
+          std::swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
+          buffered_colors += c_size;
+        }
+
+      for(int i = 0; i < 3; ++i)
+        vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
+
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(vbuf_c_size), p_verts, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(nbuf_c_size), p_normals, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(cbuf_size), p_colors, GL_STATIC_DRAW_ARB);
+
+      delete [] p_verts;
+      delete [] p_normals;
+      delete [] p_colors;
+    }
+
+    if(vbuf_t_size) {
+      unsigned char *p_verts = new unsigned char [vbuf_t_size];
+      unsigned char *p_normals = new unsigned char [nbuf_t_size];
+      unsigned char *p_texels = new unsigned char [tbuf_size];
+
+      unsigned char *buffered_verts = p_verts;
+      unsigned char *buffered_normals = p_normals;
+      unsigned char *buffered_texels = p_texels;
+
+      for(unsigned int i = 0; i < vbo.m_triangles_t.size(); ++i)
+        for(int j = 0; j < 3; ++j) {
+          memcpy(buffered_verts, (*vbo.m_triangles_t[i])[j].get_address(), v_size);
+          buffered_verts += v_size;
+
+          memcpy(buffered_normals, reinterpret_cast<float *>((*vbo.m_triangles_t[i])[j].get_address())+3, n_size);
+          buffered_normals += n_size;
+
+          memcpy(buffered_texels, reinterpret_cast<float *>((*vbo.m_triangles_t[i])[j].get_address())+6, t_size);
+          buffered_texels += t_size;
+        }
+
+      for(int i = 3; i < 6; ++i)
+        vgl.pglGenBuffersARB(1, &m_vbuf[i].vbo);
+
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(vbuf_t_size), p_verts, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(nbuf_t_size), p_normals, GL_STATIC_DRAW_ARB);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
+      vgl.pglBufferDataARB(GL_ARRAY_BUFFER_ARB, int(tbuf_size), p_texels, GL_STATIC_DRAW_ARB);
+
+      delete [] p_verts;
+      delete [] p_normals;
+      delete [] p_texels;
+    }
+  }
+
+  Vertex_Buffer_Renderer_GL_Shader::~Vertex_Buffer_Renderer_GL_Shader() {
+    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
+
+    for(int i = 0; i < 6; ++i)
+      if(m_vbuf[i].vbo)
+        vgl.pglDeleteBuffersARB(1, &m_vbuf[i].vbo);
+  }
+
+  void Vertex_Buffer_Renderer_GL_Shader::render() {
+    Video_GL_Shader &vgl = dynamic_cast<Video_GL_Shader &>(get_Video());
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+
+    if(!m_vbo.m_descriptors_cm.empty()) {
+      // Bind Vertex Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[0].vbo);
+      glVertexPointer(3, GL_FLOAT, 0, 0);
+      // Bind Normal Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[1].vbo);
+      glNormalPointer(GL_FLOAT, 0, 0);
+      // Bind Color Buffer
+      glEnableClientState(GL_COLOR_ARRAY);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[2].vbo);
+      glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
+
+      Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm);
+
+      glDisableClientState(GL_COLOR_ARRAY);
+    }
+
+    if(!m_vbo.m_descriptors_t.empty()) {
+      // Bind Vertex Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[3].vbo);
+      glVertexPointer(3, GL_FLOAT, 0, 0);
+      // Bind Normal Buffer
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[4].vbo);
+      glNormalPointer(GL_FLOAT, 0, 0);
+      // Bind Texel Buffer
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
+      glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);
 

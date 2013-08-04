@@ -59,14 +59,19 @@ namespace Zeni {
     {
       switch(Video::g_video_mode) {
       case Video::ZENI_VIDEO_ANY:
+#ifndef DISABLE_GL_SHADER
+      case Video::ZENI_VIDEO_GL_SHADER:
+        video = new Video_GL_Shader();
+        break;
+#endif
 #ifndef DISABLE_DX9
       case Video::ZENI_VIDEO_DX9:
         video = new Video_DX9();
         break;
 #endif
-#ifndef DISABLE_GL
-      case Video::ZENI_VIDEO_GL:
-        video = new Video_GL();
+#ifndef DISABLE_GL_FIXED
+      case Video::ZENI_VIDEO_GL_FIXED:
+        video = new Video_GL_Fixed();
         break;
 #endif
       default:
@@ -311,11 +316,14 @@ namespace Zeni {
     const String api = video["API"].to_string();
 
     preinit_video_mode(
-#ifndef DISABLE_DX9
-                              api == "DX9" ? Video::ZENI_VIDEO_DX9 :
+#ifndef DISABLE_GL_SHADER
+                              api == "OpenGL Shader" ? Video::ZENI_VIDEO_GL_SHADER :
 #endif
-#ifndef DISABLE_GL
-                              api == "OpenGL" ? Video::ZENI_VIDEO_GL :
+#ifndef DISABLE_DX9
+                              api == "Direct3D 9" || api == "DX9" ? Video::ZENI_VIDEO_DX9 :
+#endif
+#ifndef DISABLE_GL_FIXED
+                              api == "OpenGL Fixed" || api == "OpenGL" ? Video::ZENI_VIDEO_GL_FIXED :
 #endif
                               Video::ZENI_VIDEO_ANY);
     preinit_multisampling(video["Multisampling"].to_int());
@@ -372,15 +380,16 @@ namespace Zeni {
     textures["Mipmapping"].set_bool(Textures::get_mipmapping());
 
     video["API"].set_string(
-#if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
-                            g_video_mode == Video::ZENI_VIDEO_DX9 ? "DX9" : "OpenGL");
-#elif !defined(DISABLE_DX9)
-                            "DX9");
-#elif !defined(DISABLE_GL)
-                            "OpenGL");
-#else
+#ifndef DISABLE_GL_SHADER
+                            g_video_mode == Video::ZENI_VIDEO_GL_SHADER ? "OpenGL Shader" :
+#endif
+#ifndef DISABLE_DX9
+                            g_video_mode == Video::ZENI_VIDEO_DX9 ? "Direct3D 9" :
+#endif
+#ifndef DISABLE_GL_FIXED
+                            g_video_mode == Video::ZENI_VIDEO_GL_FIXED ? "OpenGL Fixed" :
+#endif
                             "Disabled");
-#endif                            
 
     video["Full_Screen"].set_bool(Window::is_full_screen());
     video["Multisampling"].set_int(g_multisampling);
@@ -471,10 +480,12 @@ namespace Zeni {
 
     Textures::set_texturing_mode(0, false, false);
 
-#if !defined(DISABLE_GL)
-    g_video_mode = Video::ZENI_VIDEO_GL;
+#if !defined(DISABLE_GL_FIXED)
+    g_video_mode = Video::ZENI_VIDEO_GL_FIXED;
 #elif !defined(DISABLE_DX9)
     g_video_mode = Video::ZENI_VIDEO_DX9;
+#elif !defined(DISABLE_GL_SHADER)
+    g_video_mode = Video::ZENI_VIDEO_GL_SHADER;
 #else
     g_video_mode = Video::ZENI_VIDEO_ANY;
 #endif

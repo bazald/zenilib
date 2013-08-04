@@ -73,7 +73,7 @@ namespace Zeni {
 
 #if !defined(DISABLE_GL) && !defined(REQUIRE_GL_ES)
   template <typename VERTEX>
-  void Line_Segment<VERTEX>::render_to(Video_GL &screen) const {
+  void Line_Segment<VERTEX>::render_to(Video_GL_Fixed &screen) const {
     glBegin(GL_LINES);
     a.subrender_to(screen);
     b.subrender_to(screen);

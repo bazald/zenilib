@@ -82,7 +82,7 @@ namespace Zeni {
 
 #if !defined(DISABLE_GL) && !defined(REQUIRE_GL_ES)
   template <typename VERTEX>
-  void Triangle<VERTEX>::render_to(Video_GL &screen) const {
+  void Triangle<VERTEX>::render_to(Video_GL_Fixed &screen) const {
     glBegin(GL_TRIANGLES);
     a.subrender_to(screen);
     b.subrender_to(screen);

@@ -38,8 +38,9 @@
 namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Material;
-
-  class ZENI_GRAPHICS_DLL Video_GL;
+  
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
   class ZENI_GRAPHICS_DLL Video_DX9;
 
   // For any object that knows how to render itself
@@ -53,9 +54,13 @@ namespace Zeni {
 
     /// Tell the rendering system if we're using 3D coordinates
     virtual bool is_3d() const = 0;
+    
+#ifndef DISABLE_GL_FIXED
+    virtual void render_to(Video_GL_Fixed &screen) const = 0; ///< Overridden for OpenGL rendering
+#endif
 
-#ifndef DISABLE_GL
-    virtual void render_to(Video_GL &screen) const = 0; ///< Overridden for OpenGL rendering
+#ifndef DISABLE_GL_SHADER
+    virtual void render_to(Video_GL_Shader &screen) const = 0; ///< Overridden for OpenGL rendering
 #endif
 
 #ifndef DISABLE_DX9

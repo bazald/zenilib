@@ -48,8 +48,8 @@ namespace Zeni {
   {
   }
 
-#ifndef DISABLE_GL
-  void Light::set(const GLenum &number, Video_GL &) const {
+#ifndef DISABLE_GL_FIXED
+  void Light::set(const GLenum &number, Video_GL_Fixed &) const {
     GLfloat pos[] = {position.x, position.y, position.z, 1.0f};
 
     if(light_type == LIGHT_DIRECTIONAL) {
@@ -70,6 +70,13 @@ namespace Zeni {
     glLightf(number, GL_CONSTANT_ATTENUATION, constant_attenuation);
     glLightf(number, GL_LINEAR_ATTENUATION, linear_attenuation);
     glLightf(number, GL_QUADRATIC_ATTENUATION, quadratic_attenuation);
+  }
+#endif
+
+#ifndef DISABLE_GL_SHADER
+  void Light::set(const GLenum &number, Video_GL_Shader &vgl) const {
+    /// DEPRECATED
+    set(number, reinterpret_cast<Video_GL_Fixed &>(vgl));
   }
 #endif
 

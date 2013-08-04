@@ -15,8 +15,8 @@
  * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZENI_VIDEO_GL_HXX
-#define ZENI_VIDEO_GL_HXX
+#ifndef ZENI_VIDEO_GL_FIXED_HXX
+#define ZENI_VIDEO_GL_FIXED_HXX
 
 // HXXed below
 #include <Zeni/Light.h>
@@ -27,7 +27,7 @@
 #include <Zeni/Textures.h>
 #include <Zeni/Video.h>
 
-#include <Zeni/Video_GL.h>
+#include <Zeni/Video_GL_Fixed.h>
 
 // Not HXXed
 #include <Zeni/Fog.h>
@@ -38,7 +38,7 @@
 
 namespace Zeni {
 
-  void Video_GL::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
+  void Video_GL_Fixed::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
 #ifdef REQUIRE_GL_ES
     glBindBuffer(target, buffer);
 #else
@@ -46,7 +46,7 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::pglDeleteBuffersARB(const GLsizei n, GLuint * const buffers) const {
+  void Video_GL_Fixed::pglDeleteBuffersARB(const GLsizei n, GLuint * const buffers) const {
 #ifdef REQUIRE_GL_ES
     glDeleteBuffers(n, buffers);
 #else
@@ -54,7 +54,7 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::pglGenBuffersARB(const GLsizei n, GLuint * const buffers) const {
+  void Video_GL_Fixed::pglGenBuffersARB(const GLsizei n, GLuint * const buffers) const {
 #ifdef REQUIRE_GL_ES
     glGenBuffers(n, buffers);
 #else
@@ -62,7 +62,7 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, const GLenum usage) const {
+  void Video_GL_Fixed::pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, const GLenum usage) const {
 #ifdef REQUIRE_GL_ES
     glBufferData(target, size, data, usage);
 #else

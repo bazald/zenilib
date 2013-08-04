@@ -16,7 +16,7 @@
  */
 
 /**
- * \class Zeni::Video_GL
+ * \class Zeni::Video_GL_Fixed
  *
  * \ingroup zenilib
  *
@@ -29,8 +29,8 @@
  * Contact: bazald@zenipex.com
  */
 
-#ifndef ZENI_VIDEO_GL_H
-#define ZENI_VIDEO_GL_H
+#ifndef ZENI_VIDEO_GL_FIXED_H
+#define ZENI_VIDEO_GL_FIXED_H
 
 #include <Zeni/Timer.h>
 #include <Zeni/Video.h>
@@ -67,16 +67,16 @@ namespace Zeni {
 
   class Texture_GL;
 
-  class ZENI_GRAPHICS_DLL Video_GL : public Video {
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed : public Video {
     friend class Video;
     friend ZENI_GRAPHICS_DLL Video & get_Video();
 
-    Video_GL();
-    ~Video_GL();
+    Video_GL_Fixed();
+    ~Video_GL_Fixed();
 
     // Undefined
-    Video_GL(const Video_GL &);
-    Video_GL & operator=(const Video_GL &);
+    Video_GL_Fixed(const Video_GL_Fixed &);
+    Video_GL_Fixed & operator=(const Video_GL_Fixed &);
 
   public:
     // Rendering functions
@@ -173,12 +173,10 @@ namespace Zeni {
     inline void pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, 
       const GLenum usage) const; ///< The glBufferDataARB OpenGL function as provided by an extension; Will segfault if has_vertex_buffers() returns false
     
-#ifndef REQUIRE_GL_ES
     PFNGLBINDBUFFERARBPROC get_pglBindBufferARB() const {return m_pglBindBufferARB;}
     PFNGLDELETEBUFFERSARBPROC get_pglDeleteBuffersARB() const {return m_pglDeleteBuffersARB;}
     PFNGLGENBUFFERSARBPROC get_pglGenBuffersARB() const {return m_pglGenBuffersARB;}
     PFNGLBUFFERDATAARBPROC get_pglBufferDataARB() const {return m_pglBufferDataARB;}
-#endif
 
 #if SDL_VERSION_ATLEAST(1,3,0)
     virtual void alert_window_destroyed(); ///< Tell Video that its SDL_Window has been destroyed
@@ -205,7 +203,7 @@ namespace Zeni {
 #endif
 
     int m_maximum_anisotropy;
-    bool m_vertex_buffers, m_zwrite;
+    bool m_zwrite;
 
     Texture_GL * m_render_target;
 

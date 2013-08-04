@@ -15,60 +15,72 @@
  * along with zenilib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZENILIB_GRAPHICS_H
-#define ZENILIB_GRAPHICS_H
+#ifndef ZENI_VIDEO_GL_SHADER_HXX
+#define ZENI_VIDEO_GL_SHADER_HXX
 
-#ifndef ZENI_GRAPHICS_DLL
-#define ZENI_GRAPHICS_DLL __declspec(dllimport)
-#endif
-#ifndef ZENI_GRAPHICS_EXT
-#define ZENI_GRAPHICS_EXT extern
-#endif
-
-#include <zeni_core.h>
-
-#include <Zeni/EZ2D.h>
-#include <Zeni/Fog.h>
-#include <Zeni/Font.h>
-#include <Zeni/Fonts.h>
-#include <Zeni/Image.h>
+// HXXed below
 #include <Zeni/Light.h>
-#include <Zeni/Line_Segment.h>
 #include <Zeni/Material.h>
-#include <Zeni/Model.h>
-#include <Zeni/Projector.h>
-#include <Zeni/Quadrilateral.h>
 #include <Zeni/Renderable.h>
 #include <Zeni/Shader.h>
 #include <Zeni/Texture.h>
 #include <Zeni/Textures.h>
-#include <Zeni/Triangle.h>
-#include <Zeni/Vertex2f.h>
-#include <Zeni/Vertex3f.h>
-#include <Zeni/Vertex_Buffer.h>
 #include <Zeni/Video.h>
-#include <Zeni/Video_DX9.h>
-#include <Zeni/Video_GL_Fixed.h>
-#include <Zeni/Video_GL_Shader.h>
-#include <Zeni/Window.h>
 
-#include <Zeni/Font.hxx>
-#include <Zeni/Image.hxx>
+#include <Zeni/Video_GL_Shader.h>
+
+// Not HXXed
+#include <Zeni/Fog.h>
+#include <Zeni/Shader.h>
+#include <Zeni/Vertex_Buffer.h>
+
+#ifndef DISABLE_GL
+
+namespace Zeni {
+
+  void Video_GL_Shader::pglBindBufferARB(const GLenum target, const GLuint buffer) const {
+#ifdef REQUIRE_GL_ES
+    glBindBuffer(target, buffer);
+#else
+    glBindBufferARB(target, buffer);
+#endif
+  }
+
+  void Video_GL_Shader::pglDeleteBuffersARB(const GLsizei n, GLuint * const buffers) const {
+#ifdef REQUIRE_GL_ES
+    glDeleteBuffers(n, buffers);
+#else
+    glDeleteBuffersARB(n, buffers);
+#endif
+  }
+
+  void Video_GL_Shader::pglGenBuffersARB(const GLsizei n, GLuint * const buffers) const {
+#ifdef REQUIRE_GL_ES
+    glGenBuffers(n, buffers);
+#else
+    glGenBuffersARB(n, buffers);
+#endif
+  }
+
+  void Video_GL_Shader::pglBufferDataARB(const GLenum target, const int size, const GLvoid * const data, const GLenum usage) const {
+#ifdef REQUIRE_GL_ES
+    glBufferData(target, size, data, usage);
+#else
+    glBufferDataARB(target, size, data, usage);
+#endif
+  }
+
+}
+
+#endif
+
+#include <Zeni/Fonts.h>
 #include <Zeni/Light.hxx>
 #include <Zeni/Material.hxx>
-#include <Zeni/Model.hxx>
-#include <Zeni/Projector.hxx>
 #include <Zeni/Renderable.hxx>
 #include <Zeni/Shader.hxx>
 #include <Zeni/Texture.hxx>
 #include <Zeni/Textures.hxx>
-#include <Zeni/Vertex2f.hxx>
-#include <Zeni/Vertex3f.hxx>
-#include <Zeni/Vertex_Buffer.hxx>
 #include <Zeni/Video.hxx>
-#include <Zeni/Video_DX9.hxx>
-#include <Zeni/Video_GL_Fixed.hxx>
-#include <Zeni/Video_GL_Shader.hxx>
-#include <Zeni/Window.hxx>
 
 #endif

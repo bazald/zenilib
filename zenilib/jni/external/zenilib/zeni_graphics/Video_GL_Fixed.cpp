@@ -61,7 +61,7 @@ static void * proc_loader(void *, const char * name) {
 
 namespace Zeni {
 
-  Video_GL::Video_GL()
+  Video_GL_Fixed::Video_GL_Fixed()
     :
 #if SDL_VERSION_ATLEAST(1,3,0)
       m_context(0),
@@ -76,7 +76,6 @@ namespace Zeni {
       m_pglBufferDataARB(0),
 #endif
       m_maximum_anisotropy(-1),
-      m_vertex_buffers(false),
       m_zwrite(false),
       m_render_target(0)
 #ifdef MANUAL_GL_VSYNC_DELAY
@@ -89,11 +88,11 @@ namespace Zeni {
     init();
   }
 
-  Video_GL::~Video_GL() {
+  Video_GL_Fixed::~Video_GL_Fixed() {
     uninit();
   }
 
-  bool Video_GL::begin_prerender() {
+  bool Video_GL_Fixed::begin_prerender() {
     assert(!m_render_target);
 
 #ifdef _WINDOWS
@@ -108,7 +107,7 @@ namespace Zeni {
     return true;
   }
 
-  bool Video_GL::begin_render() {
+  bool Video_GL_Fixed::begin_render() {
     assert(!m_render_target);
 
     glViewport(0, 0, get_Window().get_width(), get_Window().get_height());
@@ -123,7 +122,7 @@ namespace Zeni {
     return true;
   }
 
-  void Video_GL::end_render() {
+  void Video_GL_Fixed::end_render() {
     /*** Begin CPU saver ***/
 #ifdef MANUAL_GL_VSYNC_DELAY
    Timer &tr = get_Timer();
@@ -155,12 +154,12 @@ namespace Zeni {
   }
 
 #if SDL_VERSION_ATLEAST(1,3,0)
-  void Video_GL::alert_window_destroyed() {
+  void Video_GL_Fixed::alert_window_destroyed() {
     m_context = 0;
   }
 #endif
 
-  void Video_GL::render(const Renderable &renderable) {
+  void Video_GL_Fixed::render(const Renderable &renderable) {
     class PrePostRenderActor {
       PrePostRenderActor & operator=(const PrePostRenderActor &) {return *this;}
 
@@ -181,15 +180,15 @@ namespace Zeni {
     renderable.render_to(*this);
   }
 
-  int Video_GL::get_maximum_anisotropy() const {
+  int Video_GL_Fixed::get_maximum_anisotropy() const {
     return m_maximum_anisotropy;
   }
 
-  bool Video_GL::has_vertex_buffers() const {
-    return m_vertex_buffers;
+  bool Video_GL_Fixed::has_vertex_buffers() const {
+    return GLEW_ARB_vertex_buffer_object != 0;
   }
 
-  void Video_GL::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
+  void Video_GL_Fixed::set_2d_view(const std::pair<Point2f, Point2f> &camera2d, const std::pair<Point2i, Point2i> &viewport, const bool &fix_aspect_ratio) {
     Video::set_2d_view(camera2d, viewport, fix_aspect_ratio);
 
     if(m_render_target) {
@@ -205,7 +204,7 @@ namespace Zeni {
       glCullFace(GL_BACK);
   }
 
-  void Video_GL::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
+  void Video_GL_Fixed::set_3d_view(const Camera &camera, const std::pair<Point2i, Point2i> &viewport) {
     Video::set_3d_view(camera, viewport);
 
     if(m_render_target) {
@@ -216,7 +215,7 @@ namespace Zeni {
       glCullFace(GL_BACK);
   }
 
-  void Video_GL::set_backface_culling(const bool &on) {
+  void Video_GL_Fixed::set_backface_culling(const bool &on) {
     Video::set_backface_culling(on);
 
     if(on) {
@@ -232,7 +231,7 @@ namespace Zeni {
       glDisable(GL_CULL_FACE);
   }
 
-  void Video_GL::set_vertical_sync(const bool &on_) {
+  void Video_GL_Fixed::set_vertical_sync(const bool &on_) {
     Video::set_vertical_sync(on_);
 
 #ifdef MANUAL_GL_VSYNC_DELAY
@@ -269,13 +268,13 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::set_zwrite(const bool &enabled) {
+  void Video_GL_Fixed::set_zwrite(const bool &enabled) {
     Video::set_zwrite(enabled);
 
     glDepthMask(GLboolean(enabled));
   }
 
-  void Video_GL::set_ztest(const bool &enabled) {
+  void Video_GL_Fixed::set_ztest(const bool &enabled) {
     Video::set_ztest(enabled);
 
     if(enabled) {
@@ -286,7 +285,7 @@ namespace Zeni {
       glDisable(GL_DEPTH_TEST);
   }
 
-  void Video_GL::set_alpha_test(const bool &enabled,
+  void Video_GL_Fixed::set_alpha_test(const bool &enabled,
                                 const TEST &test,
                                 const float &value)
   {
@@ -316,31 +315,31 @@ namespace Zeni {
     glAlphaFunc(func, value); 
   }
 
-  void Video_GL::set_Color(const Color &color) {
+  void Video_GL_Fixed::set_Color(const Color &color) {
     Video::set_Color(color);
 
     glColor4f(color.r, color.g, color.b, color.a);
   }
 
-  void Video_GL::set_clear_Color(const Color &color) {
+  void Video_GL_Fixed::set_clear_Color(const Color &color) {
     Video::set_clear_Color(color);
 
     glClearColor(color.r, color.g, color.b, color.a);
   }
 
-  void Video_GL::apply_Texture(const unsigned long &id) {
+  void Video_GL_Fixed::apply_Texture(const unsigned long &id) {
     get_Textures().apply_Texture(id);
   }
 
-  void Video_GL::apply_Texture(const Texture &texture) {
+  void Video_GL_Fixed::apply_Texture(const Texture &texture) {
     texture.apply_Texture();
   }
 
-  void Video_GL::unapply_Texture() {
+  void Video_GL_Fixed::unapply_Texture() {
     glDisable(GL_TEXTURE_2D);
   }
 
-  void Video_GL::set_lighting(const bool &on) {
+  void Video_GL_Fixed::set_lighting(const bool &on) {
     Video::set_lighting(on);
 
     if(on)
@@ -349,13 +348,13 @@ namespace Zeni {
       glDisable(GL_LIGHTING);
   }
 
-  void Video_GL::set_ambient_lighting(const Color &color) {
+  void Video_GL_Fixed::set_ambient_lighting(const Color &color) {
     Video::set_ambient_lighting(color);
 
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, reinterpret_cast<const GLfloat *>(&color));
   }
 
-  void Video_GL::set_Light(const int &number, const Light &light) {
+  void Video_GL_Fixed::set_Light(const int &number, const Light &light) {
     GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
@@ -375,7 +374,7 @@ namespace Zeni {
     light.set(ln, *this);
   }
 
-  void Video_GL::unset_Light(const int &number) {
+  void Video_GL_Fixed::unset_Light(const int &number) {
     GLenum ln;
     switch(number) {
     case 0: ln = GL_LIGHT0; break;
@@ -395,46 +394,46 @@ namespace Zeni {
     glDisable(ln);
   }
 
-  void Video_GL::set_Material(const Material &material) {
+  void Video_GL_Fixed::set_Material(const Material &material) {
     material.set(*this);
   }
 
-  void Video_GL::unset_Material(const Material &material) {
+  void Video_GL_Fixed::unset_Material(const Material &material) {
     material.unset(*this);
   }
 
-  void Video_GL::set_Fog(const Fog &fog) {
+  void Video_GL_Fixed::set_Fog(const Fog &fog) {
     Video::set_Fog(fog);
 
     glEnable(GL_FOG);
     fog.set(*this);
   }
 
-  void Video_GL::unset_Fog() {
+  void Video_GL_Fixed::unset_Fog() {
     Video::unset_Fog();
 
     glDisable(GL_FOG);
   }
 
 #ifndef DISABLE_CG
-  void Video_GL::set_vertex_shader(const Vertex_Shader &shader) {
+  void Video_GL_Fixed::set_vertex_shader(const Vertex_Shader &shader) {
     shader.set(*this);
   }
 
-  void Video_GL::set_fragment_shader(const Fragment_Shader &shader) {
+  void Video_GL_Fixed::set_fragment_shader(const Fragment_Shader &shader) {
     shader.set(*this);
   }
 
-  void Video_GL::unset_vertex_shader(const Vertex_Shader &shader) {
+  void Video_GL_Fixed::unset_vertex_shader(const Vertex_Shader &shader) {
     shader.unset(*this);
   }
 
-  void Video_GL::unset_fragment_shader(const Fragment_Shader &shader) {
+  void Video_GL_Fixed::unset_fragment_shader(const Fragment_Shader &shader) {
     shader.unset(*this);
   }
 #endif
 
-  void Video_GL::set_render_target(Texture &
+  void Video_GL_Fixed::set_render_target(Texture &
 #if !defined(REQUIRE_GL_ES) || defined(GL_OES_VERSION_2_0)
     texture
 #endif
@@ -472,7 +471,7 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::unset_render_target() {
+  void Video_GL_Fixed::unset_render_target() {
 #if defined(REQUIRE_GL_ES) && !defined(GL_OES_VERSION_2_0)
     throw Video_Render_To_Texture_Error();
 #else
@@ -502,60 +501,60 @@ namespace Zeni {
 #endif
   }
 
-  void Video_GL::clear_render_target(const Color &color) {
+  void Video_GL_Fixed::clear_render_target(const Color &color) {
     set_clear_Color(color);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
-  inline const Point2i & Video_GL::get_render_target_size() const {
+  inline const Point2i & Video_GL_Fixed::get_render_target_size() const {
     if(m_render_target)
       return m_render_target->get_size();
     else
       return get_Window().get_size();
   }
 
-  void Video_GL::select_world_matrix() {
+  void Video_GL_Fixed::select_world_matrix() {
     glMatrixMode(GL_MODELVIEW);
   }
 
-  void Video_GL::push_world_stack() {
+  void Video_GL_Fixed::push_world_stack() {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
   }
 
-  void Video_GL::pop_world_stack() {
+  void Video_GL_Fixed::pop_world_stack() {
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
   }
 
-  void Video_GL::translate_scene(const Vector3f &direction) {
+  void Video_GL_Fixed::translate_scene(const Vector3f &direction) {
     glTranslatef(direction.i, direction.j, direction.k);
   }
 
-  void Video_GL::rotate_scene(const Vector3f &about, const float &radians) {
+  void Video_GL_Fixed::rotate_scene(const Vector3f &about, const float &radians) {
     glRotatef(radians * 180.0f / Global::pi, about.i, about.j, about.k);
   }
 
-  void Video_GL::scale_scene(const Vector3f &factor) {
+  void Video_GL_Fixed::scale_scene(const Vector3f &factor) {
     glScalef(factor.i, factor.j, factor.k);
   }
 
-  void Video_GL::transform_scene(const Matrix4f &transformation) {
+  void Video_GL_Fixed::transform_scene(const Matrix4f &transformation) {
     glMultMatrixf(reinterpret_cast<const GLfloat * const>(&transformation));
   }
 
-  Point2f Video_GL::get_pixel_offset() const {
+  Point2f Video_GL_Fixed::get_pixel_offset() const {
     return Point2f(0.0f, 0.0f);
   }
 
-  void Video_GL::set_view_matrix(const Matrix4f &view) {
+  void Video_GL_Fixed::set_view_matrix(const Matrix4f &view) {
     Video::set_view_matrix(view);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&view)));
   }
 
-  void Video_GL::set_projection_matrix(const Matrix4f &projection) {
+  void Video_GL_Fixed::set_projection_matrix(const Matrix4f &projection) {
     Video::set_projection_matrix(projection);
 
     glMatrixMode(GL_PROJECTION);
@@ -567,7 +566,7 @@ namespace Zeni {
       glLoadMatrixf(reinterpret_cast<GLfloat *>(const_cast<Matrix4f *>(&projection)));
   }
 
-  void Video_GL::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
+  void Video_GL_Fixed::set_viewport(const std::pair<Point2i, Point2i> &viewport) {
     Video::set_viewport(viewport);
 
     if(m_render_target)
@@ -576,41 +575,41 @@ namespace Zeni {
       glViewport(viewport.first.x, get_Window().get_height() - viewport.second.y, viewport.second.x - viewport.first.x, viewport.second.y - viewport.first.y);
   }
 
-  Texture * Video_GL::load_Texture(const String &filename, const bool &repeat, const bool &lazy_loading) {
+  Texture * Video_GL_Fixed::load_Texture(const String &filename, const bool &repeat, const bool &lazy_loading) {
     return new Texture_GL(filename, repeat, lazy_loading);
   }
 
-  Texture * Video_GL::create_Texture(const Image &image) {
+  Texture * Video_GL_Fixed::create_Texture(const Image &image) {
     return new Texture_GL(image);
   }
 
-  Texture * Video_GL::create_Texture(const Point2i &size, const bool &repeat) {
+  Texture * Video_GL_Fixed::create_Texture(const Point2i &size, const bool &repeat) {
     return new Texture_GL(size, repeat);
   }
 
-  Font * Video_GL::create_Font(const String &filename, const float &glyph_height, const float &virtual_screen_height) {
+  Font * Video_GL_Fixed::create_Font(const String &filename, const float &glyph_height, const float &virtual_screen_height) {
     return new Font_FT(filename, glyph_height, virtual_screen_height);
   }
 
-  Vertex_Buffer_Renderer * Video_GL::create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer) {
-    return new Vertex_Buffer_Renderer_GL(vertex_buffer);
+  Vertex_Buffer_Renderer * Video_GL_Fixed::create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer) {
+    return new Vertex_Buffer_Renderer_GL_Fixed(vertex_buffer);
   }
 
 #ifndef DISABLE_CG
-  void Video_GL::initialize(Shader_System &shader_system) {
+  void Video_GL_Fixed::initialize(Shader_System &shader_system) {
     shader_system.init(*this);
   }
 
-  void Video_GL::initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) {
+  void Video_GL_Fixed::initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) {
     shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
   }
 
-  void Video_GL::initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) {
+  void Video_GL_Fixed::initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) {
     shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
   }
 #endif
 
-  void Video_GL::init() {
+  void Video_GL_Fixed::init() {
     Core::assert_no_error();
 
     std::cout << "Initializing OpenGL" << std::endl;
@@ -645,7 +644,28 @@ namespace Zeni {
     Core::assert_no_error();
 
 #if SDL_VERSION_ATLEAST(2,0,0)
-    m_context = SDL_GL_CreateContext(get_Window().get_window());
+    std::list<std::pair<int, int> > contexts;
+    contexts.push_back(std::make_pair(1, 4));
+    contexts.push_back(std::make_pair(1, 3));
+    contexts.push_back(std::make_pair(1, 2));
+    contexts.push_back(std::make_pair(1, 1));
+
+    while(!contexts.empty()) {
+      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, contexts.front().first);
+      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, contexts.front().second);
+
+      m_context = SDL_GL_CreateContext(get_Window().get_window());
+      if(m_context)
+        break;
+
+      std::cerr << "OpenGL context (" << contexts.front().first << ", " << contexts.front().second << ") error: "
+                << SDL_GetError() << std::endl;
+      SDL_ClearError();
+      contexts.pop_front();
+    }
+
+    if(!m_context)
+      throw Video_Init_Failure();
 
     /* This had to be before SDL_GL_CreateContext to work correctly on OS X some time ago.
      * Now it causes an error to be before. Test.
@@ -738,8 +758,7 @@ namespace Zeni {
     m_pglSwapIntervalSGI = ptr.pglSwapIntervalSGI;
 #endif
 
-    m_vertex_buffers = strstr(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)), "ARB_vertex_buffer_object") != 0;
-    if(m_vertex_buffers) {
+    if(GLEW_ARB_vertex_buffer_object) {
       ptr.v = SDL_GL_GetProcAddress("glBindBufferARB");
       m_pglBindBufferARB = ptr.pglBindBufferARB;
 
@@ -755,7 +774,7 @@ namespace Zeni {
     else
       std::cerr << "Performance Warning:  Your graphics card does not offer Vertex Buffer Objects (VBO) in OpenGL.\n";
 
-    if(strstr((char*)glGetString(GL_EXTENSIONS), "GL_EXT_texture_filter_anisotropic"))
+    if(GLEW_EXT_texture_filter_anisotropic)
       glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, reinterpret_cast<GLint *>(&m_maximum_anisotropy));
     else
       m_maximum_anisotropy = 0;
@@ -769,7 +788,7 @@ namespace Zeni {
     Core::assert_no_error();
   }
 
-  void Video_GL::uninit() {
+  void Video_GL_Fixed::uninit() {
 #if SDL_VERSION_ATLEAST(1,3,0)
     if(m_context)
       SDL_GL_DeleteContext(m_context);

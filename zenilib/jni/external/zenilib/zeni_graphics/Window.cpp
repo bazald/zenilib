@@ -65,13 +65,18 @@ namespace Zeni {
     try {
       switch(Video::get_video_mode()) {
       case Video::ZENI_VIDEO_ANY:
+#ifndef DISABLE_GL_SHADER
+      case Video::ZENI_VIDEO_GL_SHADER:
+        Window::set_opengl_flag(true);
+        break;
+#endif
 #ifndef DISABLE_DX9
       case Video::ZENI_VIDEO_DX9:
         Window::set_opengl_flag(false);
         break;
 #endif
-#ifndef DISABLE_GL
-      case Video::ZENI_VIDEO_GL:
+#ifndef DISABLE_GL_FIXED
+      case Video::ZENI_VIDEO_GL_FIXED:
         Window::set_opengl_flag(true);
         break;
 #endif
@@ -573,13 +578,13 @@ namespace Zeni {
       m_icon_surface = 0;
     }
 
-    m_icon = Image(get_m_icon());
-    if(m_icon.color_space() != Image::RGBA) {
+    Image icon(get_m_icon());
+    if(icon.color_space() != Image::RGBA) {
       std::cerr << "Display window icon must be RGBA.\n";
       return false;
     }
 
-    m_icon_surface = SDL_CreateRGBSurfaceFrom(m_icon.get_data(), m_icon.width(), m_icon.height(), 32, 4 * m_icon.width(), 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+    m_icon_surface = SDL_CreateRGBSurfaceFrom(icon.get_data(), icon.width(), icon.height(), 32, 4 * icon.width(), 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
     if(!m_icon_surface) {
       std::cerr << "Could not load display window icon.\n";
       return false;

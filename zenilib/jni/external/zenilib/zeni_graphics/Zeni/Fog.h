@@ -37,8 +37,9 @@
 #include <Zeni/Define.h>
 
 namespace Zeni {
-
-  class ZENI_GRAPHICS_DLL Video_GL;
+  
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
   class ZENI_GRAPHICS_DLL Video_DX9;
 
   enum FOG_TYPE {FOG_LINEAR = 1, FOG_EXP = 2, FOG_EXP2 = 3};
@@ -50,8 +51,12 @@ namespace Zeni {
         const float &start_ = ZENI_DEFAULT_FOG_START,
         const float &end_ = ZENI_DEFAULT_FOG_END);
 
-#ifndef DISABLE_GL
-    void set(Video_GL &screen) const;
+#ifndef DISABLE_GL_FIXED
+    void set(Video_GL_Fixed &screen) const;
+#endif
+
+#ifndef DISABLE_GL_SHADER
+    void set(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

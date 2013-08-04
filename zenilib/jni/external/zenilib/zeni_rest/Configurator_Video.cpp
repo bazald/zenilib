@@ -239,6 +239,10 @@ namespace Zeni {
     m_save_as[option] = save_as;
   }
 
+  size_t Configurator_Video::Selector_Element::num_entries() const {
+    return m_save_as.size();
+  }
+
   void Configurator_Video::Selector_Element::on_accept(const String &option) {
     Selector::on_accept(option);
     m_element.set_string(m_save_as[option]);
@@ -336,11 +340,14 @@ namespace Zeni {
     const String api = video["API"].to_string();
 
     Video::preinit_video_mode(
-#ifndef DISABLE_DX9
-                              api == "DX9" ? Video::ZENI_VIDEO_DX9 :
+#ifndef DISABLE_GL_SHADER
+                              api == "OpenGL Shader" ? Video::ZENI_VIDEO_GL_SHADER :
 #endif
-#ifndef DISABLE_GL
-                              api == "OpenGL" ? Video::ZENI_VIDEO_GL :
+#ifndef DISABLE_DX9
+                              api == "Direct3D 9" || api == "DX9" ? Video::ZENI_VIDEO_DX9 :
+#endif
+#ifndef DISABLE_GL_FIXED
+                              api == "OpenGL Fixed" || api == "OpenGL" ? Video::ZENI_VIDEO_GL_FIXED :
 #endif
                               Video::ZENI_VIDEO_ANY);
     Window::preinit_resolution(Point2i(video["Resolution"]["Width"].to_int(),
@@ -409,21 +416,23 @@ namespace Zeni {
   {
     /** Build m_widgets **/
 
-#if !defined(DISABLE_DX9) && !defined(DISABLE_GL)
-    api.add_entry("Direct3D 9", "DX9");
-    api.add_entry("OpenGL", "OpenGL");
-    api.select_option(dynamic_cast<Video_DX9 *>(&get_Video()) ? "DX9" : "OpenGL");
-#elif !defined(DISABLE_DX9)
-    api.add_entry("Direct3D 9", "DX9");
-    api.select_option("DX9");
-    api.set_editable(false);
-#elif !defined(DISABLE_GL)
-    api.add_entry("OpenGL", "OpenGL");
-    api.select_option("OpenGL");
-    api.set_editable(false);
-#else
-    m_api.set_editable(false);
+#if !defined(DISABLE_DX9)
+    api.add_entry("Direct3D 9", "Direct3D 9");
+    if(dynamic_cast<Video_DX9 *>(&get_Video()))
+      api.select_option("Direct3D 9");
 #endif
+#if !defined(DISABLE_GL_FIXED)
+    api.add_entry("OpenGL Fixed", "OpenGL Fixed");
+    if(dynamic_cast<Video_GL_Fixed *>(&get_Video()))
+      api.select_option("OpenGL Fixed");
+#endif
+#if !defined(DISABLE_GL_SHADER)
+    api.add_entry("OpenGL Shader", "OpenGL Shader");
+    if(dynamic_cast<Video_GL_Shader *>(&get_Video()))
+      api.select_option("OpenGL Shader");
+#endif
+    if(api.num_entries() < 2)
+      api.set_editable(false);
 
     m_widgets.lend_Widget(anisotropy);
     m_widgets.lend_Widget(bilinear_filtering);

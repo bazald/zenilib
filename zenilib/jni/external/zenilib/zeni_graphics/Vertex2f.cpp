@@ -91,9 +91,25 @@ namespace Zeni {
     return false;
   }
 
-#ifdef REQUIRE_GL_ES
+#ifndef DISABLE_GL_FIXED
+  void Vertex2f_Color::render_to(Video_GL_Fixed &screen) const {
+    glBegin(GL_POINTS);
+    subrender_to(screen);
+    glEnd();
+  }
+
+  void Vertex2f_Color::subrender_to(Video_GL_Fixed &) const {
+    glColor4ub(GLubyte((m_argb >> 16) & 0xFF), 
+      GLubyte((m_argb >> 8) & 0xFF), 
+      GLubyte(m_argb & 0xFF), 
+      GLubyte((m_argb >> 24) & 0xFF));
+    glVertex2f(position.x, position.y);
+  }
+#endif
+  
+#ifndef DISABLE_GL_SHADER
   template <>
-  void Line_Segment<Vertex2f_Color>::render_to(Video_GL &) const {
+  void Line_Segment<Vertex2f_Color>::render_to(Video_GL_Shader &) const {
     Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
                      ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00))};
 
@@ -109,7 +125,7 @@ namespace Zeni {
   }
 
   template <>
-  void Triangle<Vertex2f_Color>::render_to(Video_GL &) const {
+  void Triangle<Vertex2f_Color>::render_to(Video_GL_Shader &) const {
     Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
                      ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00)),
                      ((c.get_Color() & 0x000000FF) << 16) | ((c.get_Color() & 0x00FF0000) >> 16) | ((c.get_Color() & 0xFF00FF00))};
@@ -126,7 +142,7 @@ namespace Zeni {
   }
 
   template <>
-  void Quadrilateral<Vertex2f_Color>::render_to(Video_GL &) const {
+  void Quadrilateral<Vertex2f_Color>::render_to(Video_GL_Shader &) const {
     Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
                      ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00)),
                      ((c.get_Color() & 0x000000FF) << 16) | ((c.get_Color() & 0x00FF0000) >> 16) | ((c.get_Color() & 0xFF00FF00)),
@@ -142,16 +158,8 @@ namespace Zeni {
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
   }
-#endif
-
-#ifndef DISABLE_GL
-  void Vertex2f_Color::render_to(Video_GL &
-#ifndef REQUIRE_GL_ES
-    screen
-#endif
-    ) const
-  {
-#ifdef REQUIRE_GL_ES
+  
+  void Vertex2f_Color::render_to(Video_GL_Shader &) const {
     Uint32 c4ub = ((m_argb & 0x000000FF) << 16) | ((m_argb & 0x00FF0000) >> 16) | ((m_argb & 0xFF00FF00));
 
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -163,21 +171,15 @@ namespace Zeni {
 
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
-#else
-    glBegin(GL_POINTS);
-    subrender_to(screen);
-    glEnd();
-#endif
   }
 
-  void Vertex2f_Color::subrender_to(Video_GL &) const {
-#ifndef REQUIRE_GL_ES
+  void Vertex2f_Color::subrender_to(Video_GL_Shader &) const {
+    /// Deprecated
     glColor4ub(GLubyte((m_argb >> 16) & 0xFF), 
       GLubyte((m_argb >> 8) & 0xFF), 
       GLubyte(m_argb & 0xFF), 
       GLubyte((m_argb >> 24) & 0xFF));
     glVertex2f(position.x, position.y);
-#endif
   }
 #endif
 
@@ -207,9 +209,20 @@ namespace Zeni {
     return false;
   }
 
-#ifdef REQUIRE_GL_ES
+#ifndef DISABLE_GL_FIXED
+  void Vertex2f_Texture::render_to(Video_GL_Fixed &) const {
+    assert(false);
+  }
+
+  void Vertex2f_Texture::subrender_to(Video_GL_Fixed &) const {
+    glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
+    glVertex2f(position.x, position.y);
+  }
+#endif
+  
+#ifndef DISABLE_GL_SHADER
   template <>
-  void Line_Segment<Vertex2f_Texture>::render_to(Video_GL &) const {
+  void Line_Segment<Vertex2f_Texture>::render_to(Video_GL_Shader &) const {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -222,7 +235,7 @@ namespace Zeni {
   }
 
   template <>
-  void Triangle<Vertex2f_Texture>::render_to(Video_GL &) const {
+  void Triangle<Vertex2f_Texture>::render_to(Video_GL_Shader &) const {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -235,7 +248,7 @@ namespace Zeni {
   }
 
   template <>
-  void Quadrilateral<Vertex2f_Texture>::render_to(Video_GL &) const {
+  void Quadrilateral<Vertex2f_Texture>::render_to(Video_GL_Shader &) const {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -246,18 +259,15 @@ namespace Zeni {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
   }
-#endif
-
-#ifndef DISABLE_GL
-  void Vertex2f_Texture::render_to(Video_GL &) const {
+  
+  void Vertex2f_Texture::render_to(Video_GL_Shader &) const {
     assert(false);
   }
 
-  void Vertex2f_Texture::subrender_to(Video_GL &) const {
-#ifndef REQUIRE_GL_ES
+  void Vertex2f_Texture::subrender_to(Video_GL_Shader &) const {
+    /// DEPRECATED
     glTexCoord2f(texture_coordinate.x, texture_coordinate.y);
     glVertex2f(position.x, position.y);
-#endif
   }
 #endif
 
