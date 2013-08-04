@@ -683,7 +683,6 @@ namespace Zeni {
           buffered_normals += n_size;
 
           memcpy(buffered_colors, reinterpret_cast<float *>((*vbo.m_triangles_cm[i])[j].get_address())+6, c_size);
-          std::swap(buffered_colors[0], buffered_colors[2]); /// HACK: Switch to BGRA order
           buffered_colors += c_size;
         }
 
@@ -759,7 +758,7 @@ namespace Zeni {
       // Bind Color Buffer
       glEnableClientState(GL_COLOR_ARRAY);
       glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[2].vbo);
-      glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
+      glColorPointer(GL_BGRA, GL_UNSIGNED_BYTE, 0, 0);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_cm);
 
