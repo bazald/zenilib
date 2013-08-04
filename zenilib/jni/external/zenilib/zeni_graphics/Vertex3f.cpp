@@ -124,10 +124,13 @@ namespace Zeni {
 #ifndef DISABLE_GL_SHADER
   template <>
   void Line_Segment<Vertex3f_Color>::render_to(Video_GL_Shader &) const {
+    Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
+                     ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00))};
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(GL_BGRA, GL_UNSIGNED_BYTE, sizeof(a), &a.get_Color());
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, c4ub);
 
     glDrawArrays(GL_LINES, 0, 2);
 
@@ -137,10 +140,14 @@ namespace Zeni {
 
   template <>
   void Triangle<Vertex3f_Color>::render_to(Video_GL_Shader &) const {
+    Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
+                     ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00)),
+                     ((c.get_Color() & 0x000000FF) << 16) | ((c.get_Color() & 0x00FF0000) >> 16) | ((c.get_Color() & 0xFF00FF00))};
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(GL_BGRA, GL_UNSIGNED_BYTE, sizeof(a), &a.get_Color());
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, c4ub);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -150,10 +157,15 @@ namespace Zeni {
 
   template <>
   void Quadrilateral<Vertex3f_Color>::render_to(Video_GL_Shader &) const {
+    Uint32 c4ub[] = {((a.get_Color() & 0x000000FF) << 16) | ((a.get_Color() & 0x00FF0000) >> 16) | ((a.get_Color() & 0xFF00FF00)),
+                     ((b.get_Color() & 0x000000FF) << 16) | ((b.get_Color() & 0x00FF0000) >> 16) | ((b.get_Color() & 0xFF00FF00)),
+                     ((c.get_Color() & 0x000000FF) << 16) | ((c.get_Color() & 0x00FF0000) >> 16) | ((c.get_Color() & 0xFF00FF00)),
+                     ((d.get_Color() & 0x000000FF) << 16) | ((d.get_Color() & 0x00FF0000) >> 16) | ((d.get_Color() & 0xFF00FF00))};
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(a), a.get_address());
     glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(GL_BGRA, GL_UNSIGNED_BYTE, sizeof(a), &a.get_Color());
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, c4ub);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
@@ -162,10 +174,12 @@ namespace Zeni {
   }
   
   void Vertex3f_Color::render_to(Video_GL_Shader &) const {
+    Uint32 c4ub = ((m_argb & 0x000000FF) << 16) | ((m_argb & 0x00FF0000) >> 16) | ((m_argb & 0xFF00FF00));
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, get_address());
     glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(GL_BGRA, GL_UNSIGNED_BYTE, sizeof(Color), &m_argb);
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, &c4ub);
 
     glDrawArrays(GL_POINTS, 0, 1);
 
