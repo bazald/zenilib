@@ -97,26 +97,48 @@
 namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Video_DX9;
-  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
-  class ZENI_GRAPHICS_DLL Video_GL_Shader;
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed_Shader;
 
-  class ZENI_GRAPHICS_DLL Shader_System {
-    // Get reference to only instance;
-    friend ZENI_GRAPHICS_DLL Shader_System & get_Shader_System(); ///< Get access to the singleton.
+#ifdef _WINDOWS
+  ZENI_GRAPHICS_EXT template class ZENI_GRAPHICS_DLL Singleton<Shader_System>;
+#endif
 
+  class ZENI_GRAPHICS_DLL Shader_System : public Singleton<Shader_System> {
+    friend class Singleton<Shader_System>;
+
+    static Shader_System * create();
+
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    static Uninit g_uninit;
+    static Reinit g_reinit;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+
+  protected:
+    Shader_System();
+    ~Shader_System();
+
+  private:
+    // Undefined
     Shader_System(const Shader_System &);
     Shader_System & operator=(const Shader_System &);
 
   public:
-    Shader_System();
-    ~Shader_System();
-
     inline const CGcontext & get_context() const;
     inline const CGprofile & get_vertex_profile() const;
     inline const CGprofile & get_fragment_profile() const;
 
-#ifndef DISABLE_GL
-    void init(Video_GL &screen);
+#ifndef DISABLE_GL_FIXED
+    void init(Video_GL_Fixed &screen);
+#endif
+
+#ifndef DISABLE_GL_SHADER
+    void init(Video_GL_Shader &screen);
 #endif
 
 #ifndef DISABLE_DX9
@@ -138,10 +160,18 @@ namespace Zeni {
   public:
     Shader();
     ~Shader();
+    
+    inline const CGprogram & get() const;
+    inline CGprogram & get();
 
-#ifndef DISABLE_GL
-    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL &screen);
-    void load(Video_GL &screen);
+#ifndef DISABLE_GL_Fixed
+    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL_Fixed &screen);
+    void load(Video_GL_Fixed &screen);
+#endif
+
+#ifndef DISABLE_GL_Fixed
+    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL_Shader &screen);
+    void load(Video_GL_Shader &screen);
 #endif
 
 #ifndef DISABLE_DX9
@@ -152,9 +182,14 @@ namespace Zeni {
     void compile();
 
   protected:
-#ifndef DISABLE_GL
-    void set(const CGprofile &profile, Video_GL &screen) const;
-    void unset(const CGprofile &profile, Video_GL &screen) const;
+#ifndef DISABLE_GL_FIXED
+    void set(const CGprofile &profile, Video_GL_Fixed &screen) const;
+    void unset(const CGprofile &profile, Video_GL_Fixed &screen) const;
+#endif
+    
+#ifndef DISABLE_GL_SHADER
+    void set(const CGprofile &profile, Video_GL_Shader &screen) const;
+    void unset(const CGprofile &profile, Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
@@ -163,20 +198,20 @@ namespace Zeni {
 #endif
 
   private:
-    typedef Unordered_Map<String, std::pair<CGparameter, CGparameter> > Parameters;
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4251 )
-#endif
-    Parameters m_parameters;
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
-
-    void initialize_parameter(const String &parameter_name);
-    CGparameter get_from_parameter(const String &parameter_name);
-    // cgSetParameter*() routines
-    void connect_parameter(const String &parameter_name);
+//    typedef Unordered_Map<String, std::pair<CGparameter, CGparameter> > Parameters;
+//#ifdef _WINDOWS
+//#pragma warning( push )
+//#pragma warning( disable : 4251 )
+//#endif
+//    Parameters m_parameters;
+//#ifdef _WINDOWS
+//#pragma warning( pop )
+//#endif
+//
+//    void initialize_parameter(const String &parameter_name);
+//    CGparameter get_from_parameter(const String &parameter_name);
+//    // cgSetParameter*() routines
+//    void connect_parameter(const String &parameter_name);
 
     CGprogram m_program;
   };
@@ -188,9 +223,14 @@ namespace Zeni {
   public:
     inline Vertex_Shader(const String &filename, const String &entry_function = "main");
 
-#ifndef DISABLE_GL
-    inline void set(Video_GL &screen) const;
-    inline void unset(Video_GL &screen) const;
+#ifndef DISABLE_GL_FIXED
+    inline void set(Video_GL_Fixed &screen) const;
+    inline void unset(Video_GL_Fixed &screen) const;
+#endif
+
+#ifndef DISABLE_GL_SHADER
+    inline void set(Video_GL_Shader &screen) const;
+    inline void unset(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9
@@ -206,9 +246,14 @@ namespace Zeni {
   public:
     inline Fragment_Shader(const String &filename, const String &entry_function = "main");
 
-#ifndef DISABLE_GL
-    inline void set(Video_GL &screen) const;
-    inline void unset(Video_GL &screen) const;
+#ifndef DISABLE_GL_FIXED
+    inline void set(Video_GL_Fixed &screen) const;
+    inline void unset(Video_GL_Fixed &screen) const;
+#endif
+
+#ifndef DISABLE_GL_SHADER
+    inline void set(Video_GL_Shader &screen) const;
+    inline void unset(Video_GL_Shader &screen) const;
 #endif
 
 #ifndef DISABLE_DX9

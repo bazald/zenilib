@@ -208,6 +208,7 @@ inline int main2(const int argc, const char * const * const argv) {
       //Zeni::Net::completely_destroy();
       Zeni::Fonts::completely_destroy();
       Zeni::Textures::completely_destroy();
+      Zeni::Shader_System::completely_destroy();
       Zeni::Video::completely_destroy();
       Zeni::Window::completely_destroy();
       Zeni::Sound_Source_Pool::completely_destroy();

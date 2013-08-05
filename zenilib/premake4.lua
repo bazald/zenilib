@@ -88,7 +88,7 @@ solution "zenilib"
     libdirs { TARGET_DIR .. "/univ" }
 
   configuration "*"
-    defines { "DISABLE_CPP11", "GLEW_NO_GLU", "DISABLE_CG" }
+    defines { "DISABLE_CPP11", "GLEW_NO_GLU" }
 
   configuration "windows"
     defines { "ZLIB_DLL",
