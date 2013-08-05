@@ -26,10 +26,10 @@ project "zeni_graphics"
 
   configuration "*"
     flags { "ExtraWarnings" }
-    includedirs { ".", "../../freetype2/include", "../../libpng", "../../libpng", "../../zlib", "../../lib3ds/src", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml" }
+    includedirs { ".", "../../freetype2/include", "../../libpng", "../../libpng", "../../zlib", "../../lib3ds/src", "../zeni_core", "../zeni", "../../sdl_net", "../../sdl", "../../tinyxml", "../../angle/include" }
 
 --     pchheader "jni/external/zenilib/zeni_graphics/zeni_graphics.h"
 --     pchsource "jni/external/zenilib/zeni_graphics/Video.cpp"
 
     files { "**.h", "**.hxx", "**.cpp" }
-    links { "zeni_core", "zeni", "local_SDL", "local_GLEW", "local_freetype2", "local_png", "local_z", "local_3ds" }
+    links { "zeni_core", "zeni", "local_SDL", "local_GLEW", "local_freetype2", "local_png", "local_z", "local_angle", "local_3ds" }

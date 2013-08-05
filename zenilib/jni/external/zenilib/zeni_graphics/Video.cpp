@@ -19,12 +19,15 @@
 
 #include <Zeni/GLU.h>
 
+#include <GLSLANG/ShaderLang.h>
+
 #ifdef _WINDOWS
 #include <WinUser.h>
 #endif
 
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 
 #include <Zeni/Define.h>
 
@@ -121,6 +124,8 @@ namespace Zeni {
     m_alpha_value(0.0f),
     m_3d(false)
   {
+    ShInitialize();
+
     Window::remove_post_reinit(&g_reinit);
 
     Window &wr = get_Window();
@@ -131,6 +136,8 @@ namespace Zeni {
 
   Video::~Video() {
     Window::remove_pre_uninit(&g_uninit);
+
+    ShFinalize();
   }
 
   Video & get_Video() {
@@ -286,6 +293,25 @@ namespace Zeni {
 
   void Video::unset_Fog() {
     g_fog_enabled = false;
+  }
+
+  String Video::compile_glsles_shader(const String &filename, const ShHandle &compiler) {
+    Zeni::String in;
+    char c;
+    for(std::ifstream fin(filename.c_str()); fin.get(c); )
+      in += c;
+
+    std::cerr << "Compiling: " << in;
+    const char * const in_ptr = in.c_str();
+    if(ShCompile(compiler, &in_ptr, 1, SH_OBJECT_CODE | SH_VALIDATE)) {
+      size_t len;
+      ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &len);
+      Zeni::String out(len - 1, '\0');
+      ShGetObjectCode(compiler, const_cast<char *>(out.c_str()));
+      return out;
+    }
+
+    throw GLSL_ES_Shader_Compilation_Failure();
   }
 
   void Video::preinit_video_mode(const Video::VIDEO_MODE &vm) {

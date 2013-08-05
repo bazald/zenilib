@@ -42,6 +42,8 @@ namespace GLXEW {
 }
 #endif
 
+#include <GLSLANG/ShaderLang.h>
+
 #include <iostream>
 
 #if defined(_DEBUG) && defined(_WINDOWS)
@@ -772,11 +774,34 @@ namespace Zeni {
 
     // Has to be done after finding the function pointer
     set_vertical_sync(get_vertical_sync());
+    
+    /// Generate vertex and fragment shader compilers
+
+    ShBuiltInResources resources;
+    ShInitBuiltInResources(&resources);
+
+    resources.MaxVertexAttribs = 8;
+    resources.MaxVertexUniformVectors = 128;
+    resources.MaxVaryingVectors = 8;
+    resources.MaxVertexTextureImageUnits = 0;
+    resources.MaxCombinedTextureImageUnits = 8;
+    resources.MaxTextureImageUnits = 8;
+    resources.MaxFragmentUniformVectors = 16;
+    resources.MaxDrawBuffers = 1;
+
+    resources.OES_standard_derivatives = 0;
+    resources.OES_EGL_image_external = 0;
+
+    m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_GLSL_OUTPUT, &resources);
+    m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_OUTPUT, &resources);
 
     Core::assert_no_error();
   }
 
   void Video_GL_Shader::uninit() {
+    ShDestruct(m_vertex_compiler);
+    ShDestruct(m_fragment_compiler);
+
 #if SDL_VERSION_ATLEAST(1,3,0)
     if(m_context)
       SDL_GL_DeleteContext(m_context);

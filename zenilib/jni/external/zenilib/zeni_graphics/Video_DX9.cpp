@@ -19,6 +19,7 @@
 
 #ifndef DISABLE_DX9
 
+#include <GLSLANG/ShaderLang.h>
 #include <SDL/SDL_syswm.h>
 
 #include <cassert>
@@ -140,6 +141,9 @@ namespace Zeni {
 
   Video_DX9::~Video_DX9() {
     destroy_device();
+
+    ShDestruct(m_vertex_compiler);
+    ShDestruct(m_fragment_compiler);
 
     if(m_d3d) {
       m_d3d->Release();
@@ -677,6 +681,26 @@ namespace Zeni {
     init_context();
 
     m_d3d_device->GetRenderTarget(0, &m_back_buffer);
+    
+    /// Generate vertex and fragment shader compilers
+
+    ShBuiltInResources resources;
+    ShInitBuiltInResources(&resources);
+
+    resources.MaxVertexAttribs = 8;
+    resources.MaxVertexUniformVectors = 128;
+    resources.MaxVaryingVectors = 8;
+    resources.MaxVertexTextureImageUnits = 0;
+    resources.MaxCombinedTextureImageUnits = 8;
+    resources.MaxTextureImageUnits = 8;
+    resources.MaxFragmentUniformVectors = 16;
+    resources.MaxDrawBuffers = 1;
+
+    resources.OES_standard_derivatives = 0;
+    resources.OES_EGL_image_external = 0;
+
+    m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
+    m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
   }
   
   bool Video_DX9::init_device() {

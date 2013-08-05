@@ -22,6 +22,7 @@
 #include <cassert>
 
 #ifdef _WINDOWS
+#include <io.h>
 #include <shlobj.h>
 #include <WinUser.h>
 #else
@@ -53,9 +54,9 @@ extern "C" {
 #endif
 
 namespace Zeni {
-
-  static std::streambuf * cerr_bak = 0;
-  static std::streambuf * cout_bak = 0;
+  
+  static int stderr_bak = 0;
+  static int stdout_bak = 0;
 
   template class Singleton<File_Ops>;
 
@@ -68,19 +69,9 @@ namespace Zeni {
     m_appdata_path("./")
   {
     /** Redirect output **/
-
-    static std::ofstream cerr_file("stderr.txt");
-    static std::ofstream cout_file("stdout.txt");
-
-    if(cerr_file.is_open()) {
-      cerr_bak = std::cerr.rdbuf();
-      std::cerr.rdbuf(cerr_file.rdbuf());
-    }
-
-    if(cout_file.is_open()) {
-      cout_bak = std::cout.rdbuf();
-      std::cout.rdbuf(cout_file.rdbuf());
-    }
+    
+    freopen("stderr.txt","w",stderr);
+    freopen("stdout.txt","w",stdout);
 
     /** Get username **/
 
@@ -114,10 +105,10 @@ namespace Zeni {
   }
 
   File_Ops::~File_Ops() {
-    if(cout_bak)
-      std::cout.rdbuf(cout_bak);
-    if(cerr_bak)
-      std::cerr.rdbuf(cerr_bak);
+    if(stdout_bak)
+      _dup2(stdout_bak, _fileno(stdout));
+    if(stderr_bak)
+      _dup2(stderr_bak, _fileno(stderr));
   }
 
   File_Ops & get_File_Ops() {

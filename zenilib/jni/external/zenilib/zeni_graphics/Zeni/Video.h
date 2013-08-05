@@ -46,6 +46,8 @@
 #include <cmath>
 #include <vector>
 
+typedef void* ShHandle;
+
 namespace Zeni {
 
   class Camera;
@@ -241,6 +243,12 @@ namespace Zeni {
 
     static void print_errors(); ///< Print any errors that may have occurred
 #endif
+    
+  protected:
+    String compile_glsles_shader(const String &filename, const ShHandle &compiler); ///< Compile an OpenGL ES shader to GLSL/HLSL
+
+    ShHandle m_vertex_compiler;
+    ShHandle m_fragment_compiler;
 
   private:
     static VIDEO_MODE g_video_mode;
@@ -299,6 +307,10 @@ namespace Zeni {
 
   struct ZENI_GRAPHICS_DLL Video_Render_To_Texture_Error : public Error {
     Video_Render_To_Texture_Error() : Error("Zeni Video Render To Texture Encountered An Error") {}
+  };
+
+  struct ZENI_GRAPHICS_DLL GLSL_ES_Shader_Compilation_Failure : public Error {
+    GLSL_ES_Shader_Compilation_Failure() : Error("GLSL ES Shader failed to compile") {}
   };
 
 }
