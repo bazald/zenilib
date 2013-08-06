@@ -124,7 +124,12 @@ namespace Zeni {
     m_alpha_value(0.0f),
     m_3d(false)
   {
-    ShInitialize();
+    static bool once = false;
+    if(!once) {
+      once = true;
+      ShInitialize();
+      atexit((void (*)())ShFinalize);
+    }
 
     Window::remove_post_reinit(&g_reinit);
 
@@ -136,8 +141,6 @@ namespace Zeni {
 
   Video::~Video() {
     Window::remove_pre_uninit(&g_uninit);
-
-    ShFinalize();
   }
 
   Video & get_Video() {
@@ -301,7 +304,7 @@ namespace Zeni {
     for(std::ifstream fin(filename.c_str()); fin.get(c); )
       in += c;
 
-    std::cerr << "Compiling: " << in;
+    std::cerr << "Compiling: " << filename << std::endl;
     const char * const in_ptr = in.c_str();
     if(ShCompile(compiler, &in_ptr, 1, SH_OBJECT_CODE | SH_VALIDATE)) {
       size_t len;
@@ -522,10 +525,6 @@ namespace Zeni {
   void Video::print_errors() {
 #if !defined(DISABLE_GL) && !defined(REQUIRE_GL_ES)
     std::cerr << "OpenGL    : " << Zeni::gluErrorString(glGetError()) << std::endl;
-#endif
-
-#ifndef DISABLE_CG
-    std::cerr << "Cg        : " << cgGetErrorString(cgGetError()) << std::endl;
 #endif
   }
 #endif

@@ -142,9 +142,6 @@ namespace Zeni {
   Video_DX9::~Video_DX9() {
     destroy_device();
 
-    ShDestruct(m_vertex_compiler);
-    ShDestruct(m_fragment_compiler);
-
     if(m_d3d) {
       m_d3d->Release();
       m_d3d = 0;
@@ -434,24 +431,12 @@ namespace Zeni {
     m_d3d_device->SetRenderState(D3DRS_FOGENABLE, false);
     m_d3d_device->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
   }
-
-#ifndef DISABLE_CG
-  void Video_DX9::set_vertex_shader(const Vertex_Shader &shader) {
-    shader.set(*this);
+  
+  void Video_DX9::set_program(Program &program) {
   }
 
-  void Video_DX9::set_fragment_shader(const Fragment_Shader &shader) {
-    shader.set(*this);
+  void Video_DX9::unset_program() {
   }
-
-  void Video_DX9::unset_vertex_shader(const Vertex_Shader &shader) {
-    shader.unset(*this);
-  }
-
-  void Video_DX9::unset_fragment_shader(const Fragment_Shader &shader) {
-    shader.unset(*this);
-  }
-#endif
 
   void Video_DX9::set_render_target(Texture &texture) {
     if(m_render_target)
@@ -583,19 +568,17 @@ namespace Zeni {
     return new Vertex_Buffer_Renderer_DX9(vertex_buffer);
   }
 
-#ifndef DISABLE_CG
-  void Video_DX9::initialize(Shader_System &shader_system) {
-    shader_system.init(*this);
+  Shader * Video_DX9::create_Vertex_Shader(const String &filename) {
+    return new Shader_DX9(compile_glsles_shader(filename, m_vertex_compiler), Shader::VERTEX);
   }
 
-  void Video_DX9::initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) {
-    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
+  Shader * Video_DX9::create_Fragment_Shader(const String &filename) {
+    return new Shader_DX9(compile_glsles_shader(filename, m_fragment_compiler), Shader::FRAGMENT);
   }
-
-  void Video_DX9::initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) {
-    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
+  
+  Program * Video_DX9::create_Program() {
+    return new Program_DX9();
   }
-#endif
 
   const D3DCAPS9 & Video_DX9::get_d3d_capabilities() {
     return *m_d3d_capabilities;
@@ -681,26 +664,6 @@ namespace Zeni {
     init_context();
 
     m_d3d_device->GetRenderTarget(0, &m_back_buffer);
-    
-    /// Generate vertex and fragment shader compilers
-
-    ShBuiltInResources resources;
-    ShInitBuiltInResources(&resources);
-
-    resources.MaxVertexAttribs = 8;
-    resources.MaxVertexUniformVectors = 128;
-    resources.MaxVaryingVectors = 8;
-    resources.MaxVertexTextureImageUnits = 0;
-    resources.MaxCombinedTextureImageUnits = 8;
-    resources.MaxTextureImageUnits = 8;
-    resources.MaxFragmentUniformVectors = 16;
-    resources.MaxDrawBuffers = 1;
-
-    resources.OES_standard_derivatives = 0;
-    resources.OES_EGL_image_external = 0;
-
-    m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
-    m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
   }
   
   bool Video_DX9::init_device() {
@@ -727,6 +690,26 @@ namespace Zeni {
       default:
         return false;
       }
+    
+      /// Generate vertex and fragment shader compilers
+
+      ShBuiltInResources resources;
+      ShInitBuiltInResources(&resources);
+
+      resources.MaxVertexAttribs = 8;
+      resources.MaxVertexUniformVectors = 128;
+      resources.MaxVaryingVectors = 8;
+      resources.MaxVertexTextureImageUnits = 0;
+      resources.MaxCombinedTextureImageUnits = 8;
+      resources.MaxTextureImageUnits = 8;
+      resources.MaxFragmentUniformVectors = 16;
+      resources.MaxDrawBuffers = 1;
+
+      resources.OES_standard_derivatives = 0;
+      resources.OES_EGL_image_external = 0;
+
+      m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
+      m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
     }
 
     const bool try_hardware = (m_d3d_capabilities->VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) != 0;
@@ -783,6 +766,9 @@ namespace Zeni {
   }
 
   void Video_DX9::destroy_device() {
+    ShDestruct(m_vertex_compiler);
+    ShDestruct(m_fragment_compiler);
+
     if(m_matrix_stack) {
       m_matrix_stack->Release();
       m_matrix_stack = 0;

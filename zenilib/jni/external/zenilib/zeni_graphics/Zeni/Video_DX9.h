@@ -144,13 +144,9 @@ namespace Zeni {
     void set_Fog(const Fog &fog); ///< Set Fog
     void unset_Fog(); ///< Unset Fog
 
-#ifndef DISABLE_CG
     // Shaders
-    void set_vertex_shader(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
-    void set_fragment_shader(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
-    void unset_vertex_shader(const Vertex_Shader &shader); ///< Enable a Vertex_Shader
-    void unset_fragment_shader(const Fragment_Shader &shader); ///< Enable a Vertex_Shader
-#endif
+    void set_program(Program &program); ///< Enable a program
+    void unset_program(); ///< Disable a program
 
     // Render-to-texture
     void set_render_target(Texture &texture); ///< Set a render target
@@ -181,13 +177,9 @@ namespace Zeni {
     Font * create_Font(const String &filename, 
       const float &glyph_height, const float &virtual_screen_height); ///< Function for creating a Font; used internally by Fonts
     Vertex_Buffer_Renderer * create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer); ///< Function for creating a Vertex_Buffer_Renderer
-
-#ifndef DISABLE_CG
-    // Initialization Functions
-    void initialize(Shader_System &shader_system); ///< Initialize a Shader_System; Used by the Shader_System's constructor
-    void initialize(Vertex_Shader &shader, const String &filename, const String &entry_function); ///< Function for initializing a Vertex_Shader
-    void initialize(Fragment_Shader &shader, const String &filename, const String &entry_function); ///< Function for initializing a Fragment_Shader
-#endif
+    Shader * create_Vertex_Shader(const String &filename); ///< Create a Vertex_Shader from a file
+    Shader * create_Fragment_Shader(const String &filename); ///< Create a Fragment_Shader from a file
+    Program * create_Program(); ///< Create a Program from a file
 
     // D3D-Related Functions
     const D3DCAPS9 & get_d3d_capabilities(); ///< See DirectX Documentation for details

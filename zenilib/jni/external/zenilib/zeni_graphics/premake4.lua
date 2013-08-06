@@ -11,12 +11,6 @@ project "zeni_graphics"
     links { "GLU" }
   configuration "macosx"
     links { "OpenGL.framework" }
-  configuration "windows"
-    links { "cg", "cgD3D9", "cgGL" }
-  configuration { "windows", "*32" }
-    libdirs { "../../lib/x32" }
-  configuration { "windows", "*64" }
-    libdirs { "../../lib/x64" }
   configuration { "macosx", "Debug*" }
     linkoptions { "-install_name @loader_path/libzeni_graphics_d.dylib" }
     targetdir "../../../../lib/univ_d"

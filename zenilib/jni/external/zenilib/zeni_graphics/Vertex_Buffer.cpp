@@ -775,7 +775,7 @@ namespace Zeni {
       glNormalPointer(GL_FLOAT, 0, 0);
       // Bind Texel Buffer
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-      glBindBuffer(GL_ARRAY_BUFFER_ARB, m_vbuf[5].vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vbuf[5].vbo);
       glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
       Zeni::render(*m_vbo.m_macrorenderer, m_vbo.m_descriptors_t);

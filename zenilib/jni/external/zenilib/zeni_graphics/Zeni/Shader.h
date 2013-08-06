@@ -77,12 +77,6 @@
 #include <Zeni/Core.h>
 #include <Zeni/Hash_Map.h>
 
-#ifndef DISABLE_CG
-
-#ifndef DISABLE_DX9
-#include <Cg/cgD3D9.h>
-#endif
-
 #ifndef DISABLE_GL
 #if defined(REQUIRE_GL_ES)
 #include <GLES/gl.h>
@@ -91,191 +85,159 @@
 #else
 #include <GL/glew.h>
 #endif
-#include <Cg/cgGL.h>
-#endif
 
 namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Video_DX9;
-  class ZENI_GRAPHICS_DLL Video_GL_Fixed_Fixed;
-  class ZENI_GRAPHICS_DLL Video_GL_Fixed_Shader;
-
-#ifdef _WINDOWS
-  ZENI_GRAPHICS_EXT template class ZENI_GRAPHICS_DLL Singleton<Shader_System>;
-#endif
-
-  class ZENI_GRAPHICS_DLL Shader_System : public Singleton<Shader_System> {
-    friend class Singleton<Shader_System>;
-
-    static Shader_System * create();
-
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4251 )
-#endif
-    static Uninit g_uninit;
-    static Reinit g_reinit;
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
-
-  protected:
-    Shader_System();
-    ~Shader_System();
-
-  private:
-    // Undefined
-    Shader_System(const Shader_System &);
-    Shader_System & operator=(const Shader_System &);
-
-  public:
-    inline const CGcontext & get_context() const;
-    inline const CGprofile & get_vertex_profile() const;
-    inline const CGprofile & get_fragment_profile() const;
-
-#ifndef DISABLE_GL_FIXED
-    void init(Video_GL_Fixed &screen);
-#endif
-
-#ifndef DISABLE_GL_SHADER
-    void init(Video_GL_Shader &screen);
-#endif
-
-#ifndef DISABLE_DX9
-    void init(Video_DX9 &screen);
-#endif
-
-  private:
-    CGcontext m_context;
-    CGprofile m_cg_vertex_profile;
-    CGprofile m_cg_fragment_profile;
-  };
-
-  ZENI_GRAPHICS_DLL Shader_System & get_Shader_System(); ///< Get access to the singleton.
+  class ZENI_GRAPHICS_DLL Video_GL_Fixed;
+  class ZENI_GRAPHICS_DLL Video_GL_Shader;
 
   class ZENI_GRAPHICS_DLL Shader {
     Shader(const Shader &);
     Shader & operator=(const Shader &);
 
   public:
-    Shader();
-    ~Shader();
-    
-    inline const CGprogram & get() const;
-    inline CGprogram & get();
+    enum Type {VERTEX, FRAGMENT};
 
-#ifndef DISABLE_GL_Fixed
-    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL_Fixed &screen);
-    void load(Video_GL_Fixed &screen);
-#endif
+    Shader() {}
+    virtual ~Shader() {}
+  };
 
-#ifndef DISABLE_GL_Fixed
-    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_GL_Shader &screen);
-    void load(Video_GL_Shader &screen);
-#endif
+  class ZENI_GRAPHICS_DLL Program {
+    Program(const Program &);
+    Program & operator=(const Program &);
 
-#ifndef DISABLE_DX9
-    void init(const String &filename, const String &entry_function, const CGprofile &profile, Video_DX9 &screen);
-    void load(Video_DX9 &screen);
-#endif
+  public:
+    Program() {}
+    virtual ~Program() {}
 
-    void compile();
-
-  protected:
+    virtual void attach(Shader &shader) = 0;
+    virtual void link() = 0;
+  };
+  
 #ifndef DISABLE_GL_FIXED
-    void set(const CGprofile &profile, Video_GL_Fixed &screen) const;
-    void unset(const CGprofile &profile, Video_GL_Fixed &screen) const;
-#endif
-    
-#ifndef DISABLE_GL_SHADER
-    void set(const CGprofile &profile, Video_GL_Shader &screen) const;
-    void unset(const CGprofile &profile, Video_GL_Shader &screen) const;
-#endif
+  class ZENI_GRAPHICS_DLL Shader_GL_Fixed : public Shader {
+    Shader_GL_Fixed(const Shader_GL_Fixed &);
+    Shader_GL_Fixed & operator=(const Shader_GL_Fixed &);
 
-#ifndef DISABLE_DX9
-    void set(const CGprofile &profile, Video_DX9 &screen) const;
-    void unset(const CGprofile &profile, Video_DX9 &screen) const;
-#endif
+  public:
+    Shader_GL_Fixed(const String &shader_src, const Type &type);
+    virtual ~Shader_GL_Fixed();
+
+    inline GLuint get() const;
 
   private:
-//    typedef Unordered_Map<String, std::pair<CGparameter, CGparameter> > Parameters;
-//#ifdef _WINDOWS
-//#pragma warning( push )
-//#pragma warning( disable : 4251 )
-//#endif
-//    Parameters m_parameters;
-//#ifdef _WINDOWS
-//#pragma warning( pop )
-//#endif
-//
-//    void initialize_parameter(const String &parameter_name);
-//    CGparameter get_from_parameter(const String &parameter_name);
-//    // cgSetParameter*() routines
-//    void connect_parameter(const String &parameter_name);
-
-    CGprogram m_program;
+    GLuint m_shader;
   };
 
-  class ZENI_GRAPHICS_DLL Vertex_Shader : public Shader {
-    Vertex_Shader(const Vertex_Shader &);
-    Vertex_Shader & operator=(const Vertex_Shader &);
+  class ZENI_GRAPHICS_DLL Program_GL_Fixed : public Program {
+    Program_GL_Fixed(const Program_GL_Fixed &);
+    Program_GL_Fixed & operator=(const Program_GL_Fixed &);
 
   public:
-    inline Vertex_Shader(const String &filename, const String &entry_function = "main");
+    Program_GL_Fixed();
+    ~Program_GL_Fixed();
 
-#ifndef DISABLE_GL_FIXED
-    inline void set(Video_GL_Fixed &screen) const;
-    inline void unset(Video_GL_Fixed &screen) const;
-#endif
+    void attach(Shader &shader);
+    void link();
 
-#ifndef DISABLE_GL_SHADER
-    inline void set(Video_GL_Shader &screen) const;
-    inline void unset(Video_GL_Shader &screen) const;
-#endif
+    inline GLuint get() const;
 
-#ifndef DISABLE_DX9
-    inline void set(Video_DX9 &screen) const;
-    inline void unset(Video_DX9 &screen) const;
+  private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
 #endif
+    std::list<Shader_GL_Fixed *> m_shaders;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
+    GLuint m_program;
   };
-
-  class ZENI_GRAPHICS_DLL Fragment_Shader : public Shader {
-    Fragment_Shader(const Fragment_Shader &);
-    Fragment_Shader & operator=(const Fragment_Shader &);
+#endif
+  
+#ifndef DISABLE_GL_SHADER
+  class ZENI_GRAPHICS_DLL Shader_GL_Shader : public Shader {
+    Shader_GL_Shader(const Shader_GL_Shader &);
+    Shader_GL_Shader & operator=(const Shader_GL_Shader &);
 
   public:
-    inline Fragment_Shader(const String &filename, const String &entry_function = "main");
+    Shader_GL_Shader(const String &shader_src, const Type &type);
+    ~Shader_GL_Shader();
 
-#ifndef DISABLE_GL_FIXED
-    inline void set(Video_GL_Fixed &screen) const;
-    inline void unset(Video_GL_Fixed &screen) const;
+    inline GLuint get() const;
+
+  private:
+    GLuint m_shader;
+  };
+
+  class ZENI_GRAPHICS_DLL Program_GL_Shader : public Program {
+    Program_GL_Shader(const Program_GL_Shader &);
+    Program_GL_Shader & operator=(const Program_GL_Shader &);
+
+  public:
+    Program_GL_Shader();
+    virtual ~Program_GL_Shader();
+
+    void attach(Shader &shader);
+    void link();
+
+    inline GLuint get() const;
+
+  private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
 #endif
-
-#ifndef DISABLE_GL_SHADER
-    inline void set(Video_GL_Shader &screen) const;
-    inline void unset(Video_GL_Shader &screen) const;
+    std::list<Shader_GL_Shader *> m_shaders;
+#ifdef _WINDOWS
+#pragma warning( pop )
 #endif
-
+    GLuint m_program;
+  };
+#endif
+  
 #ifndef DISABLE_DX9
-    inline void set(Video_DX9 &screen) const;
-    inline void unset(Video_DX9 &screen) const;
-#endif
+  class ZENI_GRAPHICS_DLL Shader_DX9 : public Shader {
+    Shader_DX9(const Shader_DX9 &);
+    Shader_DX9 & operator=(const Shader_DX9 &);
+
+  public:
+    Shader_DX9(const String &shader_src, const Type &type);
+    ~Shader_DX9();
   };
 
-  struct ZENI_GRAPHICS_DLL Shader_System_Init_Failure : public Error {
-    Shader_System_Init_Failure() : Error("Zeni Shader System Failed to Initialize Correctly") {}
+  class ZENI_GRAPHICS_DLL Program_DX9 : public Program {
+    Program_DX9(const Program_DX9 &);
+    Program_DX9 & operator=(const Program_DX9 &);
+
+  public:
+    Program_DX9();
+    virtual ~Program_DX9();
+
+    void attach(Shader &shader);
+    void link();
+
+    inline GLuint get() const;
+
+  private:
+#ifdef _WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+    std::list<Shader_DX9 *> m_shaders;
+#ifdef _WINDOWS
+#pragma warning( pop )
+#endif
   };
+#endif
 
   struct ZENI_GRAPHICS_DLL Shader_Init_Failure : public Error {
     Shader_Init_Failure() : Error("Zeni Shader Failed to Initialize Correctly") {}
   };
 
-  struct ZENI_GRAPHICS_DLL Shader_Bind_Failure : public Error {
-    Shader_Bind_Failure() : Error("Zeni Shader Failed to Bind Correctly") {}
-  };
-
-  struct ZENI_GRAPHICS_DLL Shader_Parameter_Error : public Error {
-    Shader_Parameter_Error() : Error("Zeni Shader Parameter Error") {}
+  struct ZENI_GRAPHICS_DLL Shader_Link_Failure : public Error {
+    Shader_Link_Failure() : Error("Zeni Shader Failed to Link Correctly") {}
   };
 
 }

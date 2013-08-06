@@ -30,15 +30,15 @@
 
 namespace Zeni {
 
-  const Video::VIDEO_MODE & Video::get_video_mode() {
+  Video::VIDEO_MODE Video::get_video_mode() {
     return g_video_mode;
   }
 
-  const bool & Video::get_backface_culling() {
+  bool Video::get_backface_culling() {
     return g_backface_culling;
   }
 
-  const bool & Video::get_lighting() {
+  bool Video::get_lighting() {
     return g_lighting;
   }
 
@@ -46,40 +46,48 @@ namespace Zeni {
     return g_ambient_lighting;
   }
 
-  const bool & Video::get_normal_interpolation() {
+  bool Video::get_normal_interpolation() {
     return g_normal_interp;
   }
 
-  const bool & Video::get_vertical_sync() {
+  bool Video::get_vertical_sync() {
     return g_vertical_sync;
   }
 
-  const int & Video::get_multisampling() {
+  int Video::get_multisampling() {
     return g_multisampling;
   }
 
-  const bool & Video::is_zwrite_enabled() const {
+  bool Video::is_zwrite_enabled() const {
     return g_zwrite;
   }
 
-  const bool & Video::is_ztest_enabled() const {
+  bool Video::is_ztest_enabled() const {
     return g_ztest;
   }
 
-  const bool & Video::is_alpha_test_enabled() const {
+  bool Video::is_alpha_test_enabled() const {
     return m_alpha_test;
   }
 
-  const Video::TEST & Video::get_alpha_test_function() const {
+  Video::TEST Video::get_alpha_test_function() const {
     return m_alpha_function;
   }
 
-  const float & Video::get_alpha_test_value() const {
+  float Video::get_alpha_test_value() const {
     return m_alpha_value;
   }
 
-  const bool & Video::is_3d() const {
+  bool Video::is_3d() const {
     return m_3d;
+  }
+  
+  ShHandle Video::get_vertex_shader_compiler() const {
+    return m_vertex_compiler;
+  }
+
+  ShHandle Video::get_fragment_shader_compiler() const {
+    return m_fragment_compiler;
   }
 
   void Video::set_2d() {

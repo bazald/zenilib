@@ -53,15 +53,14 @@ namespace Zeni {
   class Camera;
   struct Fog;
   class Font;
-  class Fragment_Shader;
   struct Light;
   class Material;
+  class Program;
   class Renderable;
-  class Shader_System;
+  class Shader;
   class Texture;
   class Vertex_Buffer;
   class Vertex_Buffer_Renderer;
-  class Vertex_Shader;
   class Video;
   class XML_Document;
 
@@ -113,21 +112,23 @@ namespace Zeni {
     virtual void clear_depth_buffer() = 0; ///< Can reset the depth buffer at any time if necessary
 
     // Accessors
-    inline static const VIDEO_MODE & get_video_mode(); ///< Get the currently selected video mode
-    inline static const bool & get_backface_culling(); ///< Determine whether backface culling is enabled
-    inline static const bool & get_lighting(); ///< Determine whether dynamic lighting is enabled
+    inline static VIDEO_MODE get_video_mode(); ///< Get the currently selected video mode
+    inline static bool get_backface_culling(); ///< Determine whether backface culling is enabled
+    inline static bool get_lighting(); ///< Determine whether dynamic lighting is enabled
     inline static const Color & get_ambient_lighting(); ///< Get the current ambient lighting Color
-    inline static const bool & get_normal_interpolation(); ///< Determine whether normal interpolation is enabled
-    inline static const bool & get_vertical_sync(); ///< Determine whether vertical sync is enabled
-    inline static const int & get_multisampling(); ///< Get the current level of multisampling
+    inline static bool get_normal_interpolation(); ///< Determine whether normal interpolation is enabled
+    inline static bool get_vertical_sync(); ///< Determine whether vertical sync is enabled
+    inline static int get_multisampling(); ///< Get the current level of multisampling
     virtual int get_maximum_anisotropy() const = 0; ///< Get the current level of anisotrophy
     virtual bool has_vertex_buffers() const = 0; ///< Determine whether Vertex_Buffers are supported
-    inline const bool & is_zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
-    inline const bool & is_ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
-    inline const bool & is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
-    inline const TEST & get_alpha_test_function() const; ///< Determine which alpha test is in use
-    inline const float & get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
-    inline const bool & is_3d() const; ///< Determine whether currently rendering in 3D
+    inline bool is_zwrite_enabled() const; ///< Determine whether writing to Z-Buffer is enabled
+    inline bool is_ztest_enabled() const; ///< Determine whether testing the Z-Buffer is enabled
+    inline bool is_alpha_test_enabled() const; ///< Determine whether alpha testing is enabled
+    inline TEST get_alpha_test_function() const; ///< Determine which alpha test is in use
+    inline float get_alpha_test_value() const; ///< Determine what value the alpha test is comparing against
+    inline bool is_3d() const; ///< Determine whether currently rendering in 3D
+    inline ShHandle get_vertex_shader_compiler() const; ///< Get the vertex shader compiler
+    inline ShHandle get_fragment_shader_compiler() const; ///< Get the fragment shader compiler
 
     // Modifiers
     inline void set_2d(); ///< Set the default 2D view filling the entire display area
@@ -169,13 +170,9 @@ namespace Zeni {
     virtual void set_Fog(const Fog &fog) = 0; ///< Set Fog
     virtual void unset_Fog() = 0; ///< Unset Fog
 
-#ifndef DISABLE_CG
     // Shaders
-    virtual void set_vertex_shader(const Vertex_Shader &shader) = 0; ///< Enable a Vertex_Shader
-    virtual void set_fragment_shader(const Fragment_Shader &shader) = 0; ///< Enable a Vertex_Shader
-    virtual void unset_vertex_shader(const Vertex_Shader &shader) = 0; ///< Enable a Vertex_Shader
-    virtual void unset_fragment_shader(const Fragment_Shader &shader) = 0; ///< Enable a Vertex_Shader
-#endif
+    virtual void set_program(Program &program) = 0; ///< Enable a program
+    virtual void unset_program() = 0; ///< Disable a program
 
     // Render-to-texture
     virtual void set_render_target(Texture &texture) = 0; ///< Set a render target
@@ -219,13 +216,9 @@ namespace Zeni {
     virtual Font * create_Font(const String &filename, 
       const float &glyph_height, const float &virtual_screen_height) = 0; ///< Function for creating a Font; used internally by Fonts
     virtual Vertex_Buffer_Renderer * create_Vertex_Buffer_Renderer(Vertex_Buffer &vertex_buffer) = 0; ///< Function for creating a Vertex_Buffer_Renderer
-
-#ifndef DISABLE_CG
-    // Initialization Functions
-    virtual void initialize(Shader_System &shader_system) = 0; ///< Initialize a Shader_System; Used by the Shader_System's constructor
-    virtual void initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) = 0; ///< Function for initializing a Vertex_Shader
-    virtual void initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) = 0; ///< Function for initializing a Fragment_Shader
-#endif
+    virtual Shader * create_Vertex_Shader(const String &filename) = 0; ///< Create a Vertex_Shader from a file
+    virtual Shader * create_Fragment_Shader(const String &filename) = 0; ///< Create a Fragment_Shader from a file
+    virtual Program * create_Program() = 0; ///< Create a Program from a file
 
     // Call before any other Video functions; May throw Video_Initialized
     static void preinit_video_mode(const VIDEO_MODE &vm = ZENI_VIDEO_ANY); ///< Set which rendering engine to use

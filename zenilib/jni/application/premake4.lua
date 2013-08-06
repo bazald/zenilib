@@ -95,20 +95,16 @@ project(APPLICATION_NAME)
 --   os.copydir("assets_shared", "assets")
 --   os.copydir("assets_pc", "assets")
 
+  configuration "windows"
+    links { "glu32", "opengl32" }
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration "linux"
-    links { "GL" }
+    links { "GLU" }
   configuration "macosx"
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.mm" }
-    links { "Cocoa.framework" }
-  configuration "windows"
-    links { "cg" }
-  configuration { "windows", "*32" }
-    libdirs { "../external/lib/x32" }
-  configuration { "windows", "*64" }
-    libdirs { "../external/lib/x64" }
+    links { "Cocoa.framework", "OpenGL.framework" }
 
   if _OPTIONS.build == "all" then
     configuration "windows or linux"
@@ -119,9 +115,9 @@ project(APPLICATION_NAME)
     configuration { "windows or linux", "Release*" }
       links { "local_SDLmain" }
     configuration "Debug*"
-      links { "zeni_rest_d", "zeni_graphics_d", "zeni_net_d", "zeni_core_d", "zeni_audio_d", "zeni_d", "local_SDL_d" }
+      links { "zeni_rest_d", "zeni_graphics_d", "zeni_net_d", "zeni_core_d", "zeni_audio_d", "zeni_d", "local_GLEW_d", "local_SDL_d" }
     configuration "Release*"
-      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_GLEW", "local_SDL" }
   end
 
   configuration "*"
@@ -134,5 +130,5 @@ project(APPLICATION_NAME)
     files { "**.h", "**.hxx", "**.cpp", "../external/zenilib/**.h" }
 
     if _OPTIONS.build == "all" then
-      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_SDL" }
+      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_GLEW", "local_SDL" }
     end

@@ -418,24 +418,15 @@ namespace Zeni {
 
     glDisable(GL_FOG);
   }
-
-#ifndef DISABLE_CG
-  void Video_GL_Shader::set_vertex_shader(const Vertex_Shader &shader) {
-    shader.set(*this);
+  
+  void Video_GL_Shader::set_program(Program &program) {
+    program.link();
+    glUseProgram(dynamic_cast<Program_GL_Shader &>(program).get());
   }
 
-  void Video_GL_Shader::set_fragment_shader(const Fragment_Shader &shader) {
-    shader.set(*this);
+  void Video_GL_Shader::unset_program() {
+    glUseProgram(0); ///< DEPRECATED: Requires SDL_GL_CONTEXT_PROFILE_COMPATIBILITY
   }
-
-  void Video_GL_Shader::unset_vertex_shader(const Vertex_Shader &shader) {
-    shader.unset(*this);
-  }
-
-  void Video_GL_Shader::unset_fragment_shader(const Fragment_Shader &shader) {
-    shader.unset(*this);
-  }
-#endif
 
   void Video_GL_Shader::set_render_target(Texture &
 #if !defined(REQUIRE_GL_ES) || defined(GL_OES_VERSION_2_0)
@@ -599,19 +590,17 @@ namespace Zeni {
     return new Vertex_Buffer_Renderer_GL_Shader(vertex_buffer);
   }
 
-#ifndef DISABLE_CG
-  void Video_GL_Shader::initialize(Shader_System &shader_system) {
-    shader_system.init(*this);
+  Shader * Video_GL_Shader::create_Vertex_Shader(const String &filename) {
+    return new Shader_GL_Shader(compile_glsles_shader(filename, m_vertex_compiler), Shader::VERTEX);
   }
 
-  void Video_GL_Shader::initialize(Vertex_Shader &shader, const String &filename, const String &entry_function) {
-    shader.init(filename, entry_function, get_Shader_System().get_vertex_profile(), *this);
+  Shader * Video_GL_Shader::create_Fragment_Shader(const String &filename) {
+    return new Shader_GL_Shader(compile_glsles_shader(filename, m_fragment_compiler), Shader::FRAGMENT);
   }
-
-  void Video_GL_Shader::initialize(Fragment_Shader &shader, const String &filename, const String &entry_function) {
-    shader.init(filename, entry_function, get_Shader_System().get_fragment_profile(), *this);
+  
+  Program * Video_GL_Shader::create_Program() {
+    return new Program_GL_Shader();
   }
-#endif
 
   void Video_GL_Shader::init() {
     Core::assert_no_error();

@@ -23,101 +23,29 @@
 
 #include <Zeni/Shader.h>
 
-#ifndef DISABLE_CG
-
 namespace Zeni {
-
-  const CGcontext & Shader_System::get_context() const {
-    return m_context;
-  }
-
-  const CGprofile & Shader_System::get_vertex_profile() const {
-    return m_cg_vertex_profile;
-  }
-
-  const CGprofile & Shader_System::get_fragment_profile() const {
-    return m_cg_fragment_profile;
-  }
-    
-  const CGprogram & Shader::get() const {
-    return m_program;
-  }
-
-  CGprogram & Shader::get() {
-    return m_program;
-  }
-
-  Vertex_Shader::Vertex_Shader(const String &filename, const String &entry_function) {
-    get_Video().initialize(*this, filename, entry_function);
-  }
-
+  
 #ifndef DISABLE_GL_FIXED
-  void Vertex_Shader::set(Video_GL_Fixed &screen) const {
-    Shader::set(get_Shader_System().get_vertex_profile(), screen);
+  GLuint Shader_GL_Fixed::get() const {
+    return m_shader;
   }
 
-  void Vertex_Shader::unset(Video_GL_Fixed &screen) const {
-    Shader::unset(get_Shader_System().get_vertex_profile(), screen);
+  GLuint Program_GL_Fixed::get() const {
+    return m_program;
   }
 #endif
 
 #ifndef DISABLE_GL_SHADER
-  void Vertex_Shader::set(Video_GL_Shader &screen) const {
-    Shader::set(get_Shader_System().get_vertex_profile(), screen);
+  GLuint Shader_GL_Shader::get() const {
+    return m_shader;
   }
 
-  void Vertex_Shader::unset(Video_GL_Shader &screen) const {
-    Shader::unset(get_Shader_System().get_vertex_profile(), screen);
-  }
-#endif
-
-#ifndef DISABLE_DX9
-  void Vertex_Shader::set(Video_DX9 &screen) const {
-    Shader::set(get_Shader_System().get_vertex_profile(), screen);
-  }
-
-  void Vertex_Shader::unset(Video_DX9 &screen) const {
-    Shader::unset(get_Shader_System().get_vertex_profile(), screen);
-  }
-#endif
-
-  Fragment_Shader::Fragment_Shader(const String &filename, const String &entry_function) {
-    get_Video().initialize(*this, filename, entry_function);
-  }
-
-#ifndef DISABLE_GL_FIXED
-  void Fragment_Shader::set(Video_GL_Fixed &screen) const {
-    Shader::set(get_Shader_System().get_fragment_profile(), screen);
-  }
-
-  void Fragment_Shader::unset(Video_GL_Fixed &screen) const {
-    Shader::unset(get_Shader_System().get_fragment_profile(), screen);
-  }
-#endif
-
-#ifndef DISABLE_GL_SHADER
-  void Fragment_Shader::set(Video_GL_Shader &screen) const {
-    Shader::set(get_Shader_System().get_fragment_profile(), screen);
-  }
-
-  void Fragment_Shader::unset(Video_GL_Shader &screen) const {
-    Shader::unset(get_Shader_System().get_fragment_profile(), screen);
-  }
-#endif
-
-#ifndef DISABLE_DX9
-  void Fragment_Shader::set(Video_DX9 &screen) const {
-    Shader::set(get_Shader_System().get_fragment_profile(), screen);
-  }
-
-  void Fragment_Shader::unset(Video_DX9 &screen) const {
-    Shader::unset(get_Shader_System().get_fragment_profile(), screen);
+  GLuint Program_GL_Shader::get() const {
+    return m_program;
   }
 #endif
 
 }
-
-#endif
 
 #include <Zeni/Video.hxx>
 
