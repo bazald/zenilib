@@ -106,9 +106,17 @@ namespace Zeni {
 
   File_Ops::~File_Ops() {
     if(stdout_bak)
+#ifdef _WINDOWS
       _dup2(stdout_bak, _fileno(stdout));
+#else
+      dup2(stdout_bak, fileno(stdout));
+#endif
     if(stderr_bak)
+#ifdef _WINDOWS
       _dup2(stderr_bak, _fileno(stderr));
+#else
+      dup2(stderr_bak, fileno(stderr));
+#endif
   }
 
   File_Ops & get_File_Ops() {

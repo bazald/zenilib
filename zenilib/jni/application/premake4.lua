@@ -100,7 +100,7 @@ project(APPLICATION_NAME)
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration "linux"
-    links { "GLU" }
+    links { "GL", "GLU" }
   configuration "macosx"
     files { "../external/sdl/SDLmain/*.h",
             "../external/sdl/SDLmain/*.mm" }

@@ -6,7 +6,10 @@
 
 #include <zenilib.h>
 
+#include <memory>
+#ifndef DISABLE_DX9
 #include <d3dx9.h>
+#endif
 
 #if defined(_DEBUG) && defined(_WINDOWS)
 #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -34,11 +37,14 @@ public:
     m_fragment_shader(get_Video().create_Fragment_Shader("shaders/shader.frag")),
     m_program(get_Video().create_Program()),
     a_position(0),
-    a_color(0),
+    a_color(0)
+#ifndef DISABLE_DX9
+    ,
     vertexDecl(0),
     vertexBuffer(0),
     colorBuffer(0),
     indexBuffer(0)
+#endif
   {
     set_pausable(true);
     
@@ -82,6 +88,7 @@ public:
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+#ifndef DISABLE_DX9
     else if(Program_DX9 * program = dynamic_cast<Program_DX9 *>(m_program.get())) {
       Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
@@ -109,9 +116,11 @@ public:
       memcpy(data, indices, sizeof(indices));
       indexBuffer->Unlock();
     }
+#endif
   }
 
   ~Modern_State() {
+#ifndef DISABLE_DX9
     if(dynamic_cast<Video_DX9 *>(&get_Video())) {
       if(indexBuffer)
         indexBuffer->Release();
@@ -123,6 +132,7 @@ public:
         vertexDecl->Release();
     }
     else
+#endif
       glDeleteBuffers(3, buffers);
   }
 
@@ -177,6 +187,7 @@ private:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
       }
+#ifndef DISABLE_DX9
       else if(Program_DX9 * program = dynamic_cast<Program_DX9 *>(m_program.get())) {
         Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
         Shader_DX9 &vsdx = dynamic_cast<Shader_DX9 &>(*m_vertex_shader.get());
@@ -184,12 +195,14 @@ private:
         if(FAILED(vsdx.get_constant_table()->SetMatrix(vdx.get_d3d_device(), "$_modelViewProj", reinterpret_cast<const D3DXMATRIX *>(&modelViewMatrix))))
           throw Error("Setting modelViewProj failed.");
       }
+#endif
     }
     else {
       vr.set_view_matrix(modelViewMatrix);
       vr.set_projection_matrix(Matrix4f::Identity());
     }
 
+#ifndef DISABLE_DX9
     if(Program_DX9 * program = dynamic_cast<Program_DX9 *>(m_program.get())) {
       Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
@@ -205,31 +218,35 @@ private:
       vdx.get_d3d_device()->SetStreamSource(1, 0, 0, 0);
       vdx.get_d3d_device()->SetVertexDeclaration(0);
     }
-    else if(!use_shaders) {
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glVertexPointer(2, GL_FLOAT, 0, vertices);
-      glEnableClientState(GL_COLOR_ARRAY);
-      glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-      
-      glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_SHORT, indices);
-      
-      glDisableClientState(GL_VERTEX_ARRAY);
-      glDisableClientState(GL_COLOR_ARRAY);
-    }
+    else
+#endif
+      if(!use_shaders) {
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_COLOR_ARRAY);
+        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+        
+        glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_SHORT, indices);
+        
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+      }
 
     if(use_shaders)
       vr.unset_program();
   }
   
-  shared_ptr<Shader> m_vertex_shader;
-  shared_ptr<Shader> m_fragment_shader;
-  shared_ptr<Program> m_program;
+  auto_ptr<Shader> m_vertex_shader;
+  auto_ptr<Shader> m_fragment_shader;
+  auto_ptr<Program> m_program;
   GLuint a_position;
   GLuint a_color;
 
   GLuint buffers[3];
+#ifndef DISABLE_DX9
   LPDIRECT3DVERTEXDECLARATION9 vertexDecl;
   LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
   LPDIRECT3DVERTEXBUFFER9 colorBuffer;
   LPDIRECT3DINDEXBUFFER9 indexBuffer;
+#endif
 };

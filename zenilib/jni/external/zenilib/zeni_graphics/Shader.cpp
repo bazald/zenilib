@@ -17,7 +17,9 @@
 
 #include <zeni_graphics.h>
 
+#ifndef DISABLE_DX9
 #include <d3dx9shader.h>
+#endif
 
 #include <iostream>
 

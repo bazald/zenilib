@@ -52,7 +52,7 @@
         <!--<API>DX9</API>-->
         <!--<API>OpenGL</API>-->
         <!--<API>Disabled</API>-->
-        <API>OpenGL Fixed</API>
+        <API>OpenGL Shader</API>
         <Full_Screen>0</Full_Screen>
         <Multisampling>0</Multisampling>
         <Resolution>
