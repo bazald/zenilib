@@ -19,9 +19,9 @@ using namespace Zeni;
 GLfloat vertices[12] = {  0.0f,   0.0f,
                           0.0f, 300.0f,
                         400.0f,   0.0f};
-GLfloat colors[12] = {1.0f, 0.0f, 0.0f, 1.0f,
-                      0.0f, 1.0f, 0.0f, 1.0f,
-                      0.0f, 0.0f, 1.0f, 1.0f};
+GLuint colors[3] = {0xFF0000FF,
+                    0xFF00FF00,
+                    0xFFFF0000};
 GLushort indices[3] = {0, 1, 2};
 
 class Modern_State : public Gamestate_Base {
@@ -86,7 +86,7 @@ public:
       Video_DX9 &vdx = dynamic_cast<Video_DX9 &>(get_Video());
 
       D3DVERTEXELEMENT9 decl[] = {{0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-                                  {1, 0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
+                                  {1, 0, D3DDECLTYPE_UBYTE4N, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
                                   D3DDECL_END()};
       vdx.get_d3d_device()->CreateVertexDeclaration(decl, &vertexDecl);
       
@@ -146,7 +146,7 @@ private:
         glEnableVertexAttribArrayARB(a_position);
         
         glBindBufferARB(GL_ARRAY_BUFFER_ARB, buffers[1]);
-        glVertexAttribPointerARB(a_color, 4, GL_FLOAT, GL_TRUE, 0, 0);
+        glVertexAttribPointerARB(a_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
         glEnableVertexAttribArrayARB(a_color);
         
         glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, buffers[2]);
@@ -166,7 +166,7 @@ private:
         glEnableVertexAttribArray(a_position);
         
         glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-        glVertexAttribPointer(a_color, 4, GL_FLOAT, GL_TRUE, 0, 0);
+        glVertexAttribPointer(a_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
         glEnableVertexAttribArray(a_color);
         
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[2]);
@@ -195,7 +195,7 @@ private:
 
       vdx.get_d3d_device()->SetVertexDeclaration(vertexDecl);
       vdx.get_d3d_device()->SetStreamSource(0, vertexBuffer, 0, 2 * sizeof(float));
-      vdx.get_d3d_device()->SetStreamSource(1, colorBuffer, 0, 4 * sizeof(float));
+      vdx.get_d3d_device()->SetStreamSource(1, colorBuffer, 0, 4 * sizeof(unsigned char));
       vdx.get_d3d_device()->SetIndices(indexBuffer);
 
       vdx.get_d3d_device()->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, 3, 0, 1);
@@ -209,7 +209,7 @@ private:
       glEnableClientState(GL_VERTEX_ARRAY);
       glVertexPointer(2, GL_FLOAT, 0, vertices);
       glEnableClientState(GL_COLOR_ARRAY);
-      glColorPointer(4, GL_FLOAT, 0, colors);
+      glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
       
       glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_SHORT, indices);
       
