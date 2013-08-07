@@ -100,8 +100,10 @@ namespace Zeni {
     g_D3DXCreateTexture = (D3DXCreateTexture_fcn)GetProcAddress(m_d3dx9, "D3DXCreateTexture");
     g_D3DXFilterTexture = (D3DXFilterTexture_fcn)GetProcAddress(m_d3dx9, "D3DXFilterTexture");
     g_D3DXCreateMatrixStack = (D3DXCreateMatrixStack_fcn)GetProcAddress(m_d3dx9, "D3DXCreateMatrixStack");
+    g_D3DXCompileShader = (D3DXCompileShader_fcn)GetProcAddress(m_d3dx9, "D3DXCompileShader");
     if(!g_D3DXCreateRenderToSurface || !g_D3DXCreateTexture ||
-       !g_D3DXFilterTexture || !g_D3DXCreateMatrixStack)
+       !g_D3DXFilterTexture || !g_D3DXCreateMatrixStack ||
+       !g_D3DXCompileShader)
     {
       std::cerr << "Loading d3dx9.dll failed." << std::endl;
 
@@ -433,9 +435,17 @@ namespace Zeni {
   }
   
   void Video_DX9::set_program(Program &program) {
+    Program_DX9 &pdx = dynamic_cast<Program_DX9 &>(program);
+    
+    if(pdx.get_vertex_shader())
+      m_d3d_device->SetVertexShader(pdx.get_vertex_shader()->get_vertex_shader());
+    if(pdx.get_fragment_shader())
+      m_d3d_device->SetPixelShader(pdx.get_fragment_shader()->get_pixel_shader());
   }
 
   void Video_DX9::unset_program() {
+    m_d3d_device->SetVertexShader(0);
+    m_d3d_device->SetPixelShader(0);
   }
 
   void Video_DX9::set_render_target(Texture &texture) {
@@ -569,11 +579,11 @@ namespace Zeni {
   }
 
   Shader * Video_DX9::create_Vertex_Shader(const String &filename) {
-    return new Shader_DX9(compile_glsles_shader(filename, m_vertex_compiler), Shader::VERTEX);
+    return new Shader_DX9(compile_glsles_shader(filename, m_vertex_compiler), Shader::VERTEX, *this);
   }
 
   Shader * Video_DX9::create_Fragment_Shader(const String &filename) {
-    return new Shader_DX9(compile_glsles_shader(filename, m_fragment_compiler), Shader::FRAGMENT);
+    return new Shader_DX9(compile_glsles_shader(filename, m_fragment_compiler), Shader::FRAGMENT, *this);
   }
   
   Program * Video_DX9::create_Program() {
@@ -690,26 +700,6 @@ namespace Zeni {
       default:
         return false;
       }
-    
-      /// Generate vertex and fragment shader compilers
-
-      ShBuiltInResources resources;
-      ShInitBuiltInResources(&resources);
-
-      resources.MaxVertexAttribs = 8;
-      resources.MaxVertexUniformVectors = 128;
-      resources.MaxVaryingVectors = 8;
-      resources.MaxVertexTextureImageUnits = 0;
-      resources.MaxCombinedTextureImageUnits = 8;
-      resources.MaxTextureImageUnits = 8;
-      resources.MaxFragmentUniformVectors = 16;
-      resources.MaxDrawBuffers = 1;
-
-      resources.OES_standard_derivatives = 0;
-      resources.OES_EGL_image_external = 0;
-
-      m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
-      m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
     }
 
     const bool try_hardware = (m_d3d_capabilities->VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) != 0;
@@ -725,6 +715,26 @@ namespace Zeni {
     // Set Up Matrix Stack
     D3DXCreateMatrixStack()(0, &m_matrix_stack);
     m_matrix_stack->LoadIdentity();
+    
+    /// Generate vertex and fragment shader compilers
+
+    ShBuiltInResources resources;
+    ShInitBuiltInResources(&resources);
+
+    resources.MaxVertexAttribs = 8;
+    resources.MaxVertexUniformVectors = 128;
+    resources.MaxVaryingVectors = 8;
+    resources.MaxVertexTextureImageUnits = 0;
+    resources.MaxCombinedTextureImageUnits = 8;
+    resources.MaxTextureImageUnits = 8;
+    resources.MaxFragmentUniformVectors = 16;
+    resources.MaxDrawBuffers = 1;
+
+    resources.OES_standard_derivatives = 0;
+    resources.OES_EGL_image_external = 0;
+
+    m_vertex_compiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
+    m_fragment_compiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL9_OUTPUT, &resources);
 
     return true;
   }
@@ -792,6 +802,7 @@ namespace Zeni {
     g_D3DXCreateTexture = 0;
     g_D3DXFilterTexture = 0;
     g_D3DXCreateMatrixStack = 0;
+    g_D3DXCompileShader = 0;
   }
 
   void Video_DX9::set_fvf(const bool &is_3d) {
@@ -830,6 +841,7 @@ namespace Zeni {
   Video_DX9::D3DXCreateTexture_fcn Video_DX9::g_D3DXCreateTexture = 0;
   Video_DX9::D3DXFilterTexture_fcn Video_DX9::g_D3DXFilterTexture = 0;
   Video_DX9::D3DXCreateMatrixStack_fcn Video_DX9::g_D3DXCreateMatrixStack = 0;
+  Video_DX9::D3DXCompileShader_fcn Video_DX9::g_D3DXCompileShader = 0;
 
 }
 

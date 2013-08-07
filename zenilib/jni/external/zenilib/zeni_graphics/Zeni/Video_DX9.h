@@ -49,6 +49,10 @@ typedef struct IDirect3DDevice9 *LPDIRECT3DDEVICE9;
 typedef struct IDirect3DSurface9 *LPDIRECT3DSURFACE9;
 typedef struct IDirect3DTexture9 *LPDIRECT3DTEXTURE9;
 typedef struct tagPALETTEENTRY PALETTEENTRY;
+typedef struct _D3DXMACRO D3DXMACRO, *LPD3DXMACRO;
+typedef struct ID3DXInclude *LPD3DXINCLUDE;
+typedef struct ID3DXBuffer *LPD3DXBUFFER;
+typedef struct ID3DXConstantTable *LPD3DXCONSTANTTABLE;
 
 namespace Zeni {
 
@@ -93,6 +97,17 @@ namespace Zeni {
     typedef HRESULT (WINAPI *D3DXCreateMatrixStack_fcn)(
       DWORD               Flags, 
       LPD3DXMATRIXSTACK*  ppStack);
+    typedef HRESULT (WINAPI *D3DXCompileShader_fcn)(
+      LPCSTR               pSrcData,
+      UINT                 srcDataLen,
+      const D3DXMACRO      *pDefines,
+      LPD3DXINCLUDE        pInclude,
+      LPCSTR               pFunctionName,
+      LPCSTR               pProfile,
+      DWORD                Flags,
+      LPD3DXBUFFER        *ppShader,
+      LPD3DXBUFFER        *ppErrorMsgs,
+      LPD3DXCONSTANTTABLE *ppConstantTable);
 
     // DLL Functions
     static Direct3DCreate9_fcn Direct3DCreate9() {return g_Direct3DCreate9;}
@@ -100,6 +115,7 @@ namespace Zeni {
     static D3DXCreateTexture_fcn D3DXCreateTexture() {return g_D3DXCreateTexture;}
     static D3DXFilterTexture_fcn D3DXFilterTexture() {return g_D3DXFilterTexture;}
     static D3DXCreateMatrixStack_fcn D3DXCreateMatrixStack() {return g_D3DXCreateMatrixStack;}
+    static D3DXCompileShader_fcn D3DXCompileShader() {return g_D3DXCompileShader;}
 
     // Rendering functions
     bool begin_prerender(); ///< Must be called before begin_render
@@ -212,6 +228,7 @@ namespace Zeni {
     static D3DXCreateTexture_fcn g_D3DXCreateTexture;
     static D3DXFilterTexture_fcn g_D3DXFilterTexture;
     static D3DXCreateMatrixStack_fcn g_D3DXCreateMatrixStack;
+    static D3DXCompileShader_fcn g_D3DXCompileShader;
 
     void set_fvf();
 

@@ -311,6 +311,7 @@ namespace Zeni {
       ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &len);
       Zeni::String out(len - 1, '\0');
       ShGetObjectCode(compiler, const_cast<char *>(out.c_str()));
+      std::cerr << "Result:" << std::endl << out;
       return out;
     }
 

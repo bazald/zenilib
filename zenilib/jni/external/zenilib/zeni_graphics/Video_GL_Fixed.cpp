@@ -427,7 +427,7 @@ namespace Zeni {
   
   void Video_GL_Fixed::set_program(Program &program) {
     program.link();
-    glUseProgramObjectARB(dynamic_cast<Program_GL_Shader &>(program).get());
+    glUseProgramObjectARB(dynamic_cast<Program_GL_Fixed &>(program).get());
   }
 
   void Video_GL_Fixed::unset_program() {
@@ -656,9 +656,8 @@ namespace Zeni {
       m_context = SDL_GL_CreateContext(get_Window().get_window());
       if(m_context)
         break;
-
-      std::cerr << "OpenGL context (" << contexts.front().first << ", " << contexts.front().second << ") error: "
-                << SDL_GetError() << std::endl;
+      
+      std::cerr << "OpenGL context " << contexts.front().first << '.' << contexts.front().second << " failed." << std::endl;
       SDL_ClearError();
       contexts.pop_front();
     }

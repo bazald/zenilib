@@ -44,6 +44,32 @@ namespace Zeni {
     return m_program;
   }
 #endif
+  
+#ifndef DISABLE_DX9
+  Shader::Type Shader_DX9::type() const {
+    return m_constant_table ? Shader::VERTEX : Shader::FRAGMENT;
+  }
+
+  LPD3DXCONSTANTTABLE Shader_DX9::get_constant_table() const {
+    return m_constant_table;
+  }
+
+  LPDIRECT3DVERTEXSHADER9 Shader_DX9::get_vertex_shader() const {
+    return m_vertex_shader;
+  }
+
+  LPDIRECT3DPIXELSHADER9 Shader_DX9::get_pixel_shader() const {
+    return m_pixel_shader;
+  }
+
+  const Shader_DX9 * Program_DX9::get_vertex_shader() const {
+    return m_vertex_shader;
+  }
+
+  const Shader_DX9 * Program_DX9::get_fragment_shader() const {
+    return m_fragment_shader;
+  }
+#endif
 
 }
 

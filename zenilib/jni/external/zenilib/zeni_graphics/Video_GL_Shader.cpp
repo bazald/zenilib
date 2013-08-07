@@ -655,9 +655,8 @@ namespace Zeni {
       m_context = SDL_GL_CreateContext(get_Window().get_window());
       if(m_context)
         break;
-
-      std::cerr << "OpenGL context (" << contexts.front().first << ", " << contexts.front().second << ") error: "
-                << SDL_GetError() << std::endl;
+      
+      std::cerr << "OpenGL context " << contexts.front().first << '.' << contexts.front().second << " failed." << std::endl;
       SDL_ClearError();
       contexts.pop_front();
     }

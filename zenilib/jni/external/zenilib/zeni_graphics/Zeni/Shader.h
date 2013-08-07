@@ -86,6 +86,10 @@
 #include <GL/glew.h>
 #endif
 
+typedef struct ID3DXConstantTable *LPD3DXCONSTANTTABLE;
+typedef struct IDirect3DVertexShader9 *LPDIRECT3DVERTEXSHADER9;
+typedef struct IDirect3DPixelShader9 *LPDIRECT3DPIXELSHADER9;
+
 namespace Zeni {
 
   class ZENI_GRAPHICS_DLL Video_DX9;
@@ -203,8 +207,20 @@ namespace Zeni {
     Shader_DX9 & operator=(const Shader_DX9 &);
 
   public:
-    Shader_DX9(const String &shader_src, const Type &type);
+    Shader_DX9(const String &shader_src, const Type &type, Video_DX9 &vdx);
     ~Shader_DX9();
+
+    inline Shader::Type type() const;
+    inline LPD3DXCONSTANTTABLE get_constant_table() const;
+    inline LPDIRECT3DVERTEXSHADER9 get_vertex_shader() const;
+    inline LPDIRECT3DPIXELSHADER9 get_pixel_shader() const;
+
+  private:
+    LPD3DXCONSTANTTABLE m_constant_table;
+    union {
+      LPDIRECT3DVERTEXSHADER9 m_vertex_shader;
+      LPDIRECT3DPIXELSHADER9 m_pixel_shader;
+    };
   };
 
   class ZENI_GRAPHICS_DLL Program_DX9 : public Program {
@@ -217,18 +233,13 @@ namespace Zeni {
 
     void attach(Shader &shader);
     void link();
-
-    inline GLuint get() const;
+    
+    inline const Shader_DX9 * get_vertex_shader() const;
+    inline const Shader_DX9 * get_fragment_shader() const;
 
   private:
-#ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4251 )
-#endif
-    std::list<Shader_DX9 *> m_shaders;
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
+    Shader_DX9 * m_vertex_shader;
+    Shader_DX9 * m_fragment_shader;
   };
 #endif
 

@@ -34,7 +34,7 @@
 
 namespace Zeni {
 
-  struct ZENI_DLL Quit_Event : public std::exception {
+  struct ZENI_DLL Quit_Event {
     Quit_Event() {fired = true;}
 
     static void fire() {throw Quit_Event();}
