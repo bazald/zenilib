@@ -522,6 +522,88 @@ namespace Zeni {
        * boxes overlap.
        */
 
+      float rv = 0.0f;
+
+      // A and B's 6 basis vectors (3 each)
+      for(int i = 0; i < 3; ++i) {
+        {
+          const float &ra = a[i];
+          const float rb = b[0] * abs_R[i][0] + b[1] * abs_R[i][1] + b[2] * abs_R[i][2];
+          const float t = float(fabs(T[i]));
+
+          if(t > ra + rb)
+            rv = std::max(rv, t - (ra + rb));
+        }
+
+        {
+          const float ra = a[0] * abs_R[0][i] + a[1] * abs_R[1][i] + a[2] * abs_R[2][i];
+          const float &rb = b[i];
+          const float t = float(fabs(T[0] * R[0][i] + T[1] * R[1][i] + T[2] * R[2][i]));
+
+          if(t > ra + rb)
+            rv = std::max(rv, t - (ra + rb));
+        }
+      }
+
+      /* 9 cross products
+       *
+       * L = A/j[0,1,2] x B/i[0,1,2]
+       *
+       * row by row  | column by column
+       * j = [0,1,2] | i = [0,1,2]
+       * u = [1,0,0] | m = [1,0,0]
+       * v = [2,2,1] | n = [2,2,1]
+       */
+      for(int j = 0, u = 1, v = 2; j < 3; ++j) {
+        for(int i = 0, m = 1, n = 2; i < 3; ++i) {
+          const float ra = a[u] * abs_R[v][i] + a[v] * abs_R[u][i];
+          const float rb = b[m] * abs_R[j][n] + b[n] * abs_R[j][m];
+          const float t = float(fabs(T[u] * R[v][i] - T[v] * R[u][i]));
+
+          if(t > ra + rb)
+            rv = std::max(rv, t - (ra + rb));
+
+          if(!i) --m; else --n;
+        }
+
+        if(!j) --u; else --v;
+      }
+
+      // no separating axis found, indicating that the two boxes overlap
+      return rv;
+    }
+    
+    float Parallelepiped::some_distance(const Parallelepiped &rhs) const {
+      const Vector3f &a = extents;
+      const Point3f &Pa = center;
+      const Vector3f * const A = &normal_a;
+
+      const Vector3f &b = rhs.extents;
+      const Point3f &Pb = rhs.center;
+      const Vector3f * const B = &rhs.normal_a;
+
+      // translation, in parent frame
+      const Vector3f v = Pb - Pa;
+
+      // translation, in A's frame
+      const Vector3f T(v * A[0], v * A[1], v * A[2]);
+
+      // B's basis with respect to A's local frame (rotation matrix)
+      float R[3][3];
+      for(int j = 0; j < 3; ++j)
+        for(int i = 0; i < 3; ++i)
+          R[j][i] = A[j] * B[i]; 
+
+      // generate the fabs(rotation matrix)
+      const float abs_R[3][3] = {{float(fabs(R[0][0])), float(fabs(R[0][1])), float(fabs(R[0][2]))},
+                                 {float(fabs(R[1][0])), float(fabs(R[1][1])), float(fabs(R[1][2]))},
+                                 {float(fabs(R[2][0])), float(fabs(R[2][1])), float(fabs(R[2][2]))}};
+
+      /* ALGORITHM: Use the separating axis test for all 15 potential
+       * separating axes. If a separating axis could not be found, the two
+       * boxes overlap.
+       */
+
       // A and B's 6 basis vectors (3 each)
       for(int i = 0; i < 3; ++i) {
         {

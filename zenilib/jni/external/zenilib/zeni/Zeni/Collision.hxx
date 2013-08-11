@@ -221,6 +221,11 @@ namespace Zeni {
       return shortest_distance(rhs) < ZENI_COLLISION_EPSILON;
     }
 
+    template <>
+    inline bool Parallelepiped::intersects<Parallelepiped>(const Parallelepiped &rhs) const {
+      return some_distance(rhs) < ZENI_COLLISION_EPSILON;
+    }
+
   }
 
 }

@@ -450,6 +450,8 @@ namespace Zeni {
       const Vector3f & get_normal_c() const {return normal_c;}
 
     private:
+      float some_distance(const Parallelepiped &rhs) const;
+
       Point3f point;
       Vector3f edge_a;
       Vector3f edge_b;
