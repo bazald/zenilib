@@ -5,10 +5,10 @@ project "local_angle"
   configuration "windows"
     defines { "TINYXML_DLL=__declspec(dllexport)" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_tinyxml_d.dylib" }
+    linkoptions { "-install_name @loader_path/liblocal_angle_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_tinyxml.dylib" }
+    linkoptions { "-install_name @loader_path/liblocal_angle.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

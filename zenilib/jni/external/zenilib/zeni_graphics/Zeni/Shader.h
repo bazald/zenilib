@@ -80,8 +80,6 @@
 #ifndef DISABLE_GL
 #if defined(REQUIRE_GL_ES)
 #include <GLES/gl.h>
-#elif defined(_MACOSX)
-#include <GLEW/glew.h>
 #else
 #include <GL/glew.h>
 #endif
