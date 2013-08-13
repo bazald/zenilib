@@ -33,6 +33,8 @@
 /* Dropfile support */
 #include <shellapi.h>
 
+/* For GET_X_LPARAM, GET_Y_LPARAM. */
+#include <windowsx.h>
 
 /*#define WMMSG_DEBUG*/
 #ifdef WMMSG_DEBUG
@@ -381,7 +383,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_MOUSEMOVE:
         if( !SDL_GetMouse()->relative_mode )
-            SDL_SendMouseMotion(data->window, 0, 0, LOWORD(lParam), HIWORD(lParam));
+            SDL_SendMouseMotion(data->window, 0, 0, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         /* don't break here, fall through to check the wParam like the button presses */
     case WM_LBUTTONUP:
     case WM_RBUTTONUP:
@@ -446,14 +448,11 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 #ifdef WM_MOUSELEAVE
     case WM_MOUSELEAVE:
-        if (SDL_GetMouseFocus() == data->window) {
-            if (!SDL_GetMouse()->relative_mode) {
-                POINT cursorPos;
-                GetCursorPos(&cursorPos);
-                ScreenToClient(hwnd, &cursorPos);
-                SDL_SendMouseMotion(data->window, 0, 0, cursorPos.x, cursorPos.y);
-            }
-
+        if (SDL_GetMouseFocus() == data->window && !SDL_GetMouse()->relative_mode) {
+            POINT cursorPos;
+            GetCursorPos(&cursorPos);
+            ScreenToClient(hwnd, &cursorPos);
+            SDL_SendMouseMotion(data->window, 0, 0, cursorPos.x, cursorPos.y);
             SDL_SetMouseFocus(NULL);
         }
         returnCode = 0;
@@ -645,7 +644,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             RECT rect;
             if (GetUpdateRect(hwnd, &rect, FALSE)) {
-                ValidateRect(hwnd, &rect);
+                ValidateRect(hwnd, NULL);
                 SDL_SendWindowEvent(data->window, SDL_WINDOWEVENT_EXPOSED,
                                     0, 0);
             }
@@ -690,6 +689,9 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
                 if (!GetClientRect(hwnd, &rect) ||
                     (rect.right == rect.left && rect.bottom == rect.top)) {
+                    if (inputs) {
+                        SDL_stack_free(inputs);
+                    }
                     break;
                 }
                 ClientToScreen(hwnd, (LPPOINT) & rect);
@@ -702,7 +704,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 for (i = 0; i < num_inputs; ++i) {
                     PTOUCHINPUT input = &inputs[i];
 
-                    const SDL_TouchID touchId = (SDL_TouchID)input->hSource;
+                    const SDL_TouchID touchId = (SDL_TouchID)((size_t)input->hSource);
                     if (!SDL_GetTouch(touchId)) {
                         if (SDL_AddTouch(touchId, "") < 0) {
                             continue;
@@ -767,10 +769,23 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 void
 WIN_PumpEvents(_THIS)
 {
+    const Uint8 *keystate;
     MSG msg;
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
+    }
+
+    /* Windows loses a shift KEYUP event when you have both pressed at once and let go of one.
+       You won't get a KEYUP until both are released, and that keyup will only be for the second
+       key you released. Take heroic measures and check the keystate as of the last handled event,
+       and if we think a key is pressed when Windows doesn't, unstick it in SDL's state. */
+    keystate = SDL_GetKeyboardState(NULL);
+    if ((keystate[SDL_SCANCODE_LSHIFT] == SDL_PRESSED) && !(GetKeyState(VK_LSHIFT) & 0x8000)) {
+        SDL_SendKeyboardKey(SDL_RELEASED, SDL_SCANCODE_LSHIFT);
+    }
+    if ((keystate[SDL_SCANCODE_RSHIFT] == SDL_PRESSED) && !(GetKeyState(VK_RSHIFT) & 0x8000)) {
+        SDL_SendKeyboardKey(SDL_RELEASED, SDL_SCANCODE_RSHIFT);
     }
 }
 

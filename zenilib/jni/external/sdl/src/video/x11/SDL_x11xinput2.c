@@ -121,17 +121,6 @@ X11_InitXinput2(_THIS)
 #endif
 }
 
-struct XGenericEventCookie {
-  int type;
-  unsigned long serial;
-  Bool send_event;
-  Display *display;
-  int extension;
-  int evtype;
-  unsigned int cookie;
-  void *data;
-};
-
 int
 X11_HandleXinput2Event(SDL_VideoData *videodata,XGenericEventCookie *cookie)
 {

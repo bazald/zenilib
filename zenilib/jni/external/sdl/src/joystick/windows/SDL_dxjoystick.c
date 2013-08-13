@@ -396,10 +396,10 @@ SetDIerror(const char *function, HRESULT code)
     }                                               \
 }
 
-
 DEFINE_GUID(CLSID_WbemLocator,   0x4590f811,0x1d3a,0x11d0,0x89,0x1F,0x00,0xaa,0x00,0x4b,0x2e,0x24);
-/* The Windows SDK doesn't define this GUID */
 DEFINE_GUID(IID_IWbemLocator,    0xdc12a687,0x737f,0x11cf,0x88,0x4d,0x00,0xaa,0x00,0x4b,0x2e,0x24);
+
+DEFINE_GUID(IID_ValveStreamingGamepad,  MAKELONG( 0x28DE, 0x11FF ),0x0000,0x0000,0x00,0x00,0x50,0x49,0x44,0x56,0x49,0x44);
 
 /*-----------------------------------------------------------------------------
  *
@@ -411,6 +411,9 @@ DEFINE_GUID(IID_IWbemLocator,    0xdc12a687,0x737f,0x11cf,0x88,0x4d,0x00,0xaa,0x
  *-----------------------------------------------------------------------------*/
 BOOL IsXInputDevice( const GUID* pGuidProductFromDirectInput )
 {
+    static const GUID *s_XInputProductGUID[] = {
+        &IID_ValveStreamingGamepad
+    };
     IWbemLocator*           pIWbemLocator  = NULL;
     IEnumWbemClassObject*   pEnumDevices   = NULL;
     IWbemClassObject*       pDevices[20];
@@ -428,6 +431,14 @@ BOOL IsXInputDevice( const GUID* pGuidProductFromDirectInput )
     if (!s_bXInputEnabled)
     {
         return SDL_FALSE;
+    }
+
+    // Check for well known XInput device GUIDs
+    // We need to do this for the Valve Streaming Gamepad because it's virtualized and doesn't show up in the device list.
+    for ( iDevice = 0; iDevice < SDL_arraysize(s_XInputProductGUID); ++iDevice ) {
+        if (SDL_memcmp(pGuidProductFromDirectInput, s_XInputProductGUID[iDevice], sizeof(GUID)) == 0) {
+            return SDL_TRUE;
+        }
     }
 
     SDL_memset( pDevices, 0x0, sizeof(pDevices) );
@@ -1495,12 +1506,12 @@ SDL_SYS_JoystickUpdate_XInput(SDL_Joystick * joystick)
         XINPUT_STATE_EX *pXInputState = &joystick->hwdata->XInputState[joystick->hwdata->currentXInputSlot];
         XINPUT_STATE_EX *pXInputStatePrev = &joystick->hwdata->XInputState[joystick->hwdata->currentXInputSlot ^ 1];
 
-        SDL_PrivateJoystickAxis(joystick, 0, (Sint16)pXInputState->Gamepad.sThumbLX );
-        SDL_PrivateJoystickAxis(joystick, 1, (Sint16)(-1*pXInputState->Gamepad.sThumbLY-1) );
-        SDL_PrivateJoystickAxis(joystick, 2, (Sint16)pXInputState->Gamepad.sThumbRX );
-        SDL_PrivateJoystickAxis(joystick, 3, (Sint16)(-1*pXInputState->Gamepad.sThumbRY-1) );
-        SDL_PrivateJoystickAxis(joystick, 4, (Sint16)((int)pXInputState->Gamepad.bLeftTrigger*32767/255) );
-        SDL_PrivateJoystickAxis(joystick, 5, (Sint16)((int)pXInputState->Gamepad.bRightTrigger*32767/255) );
+        SDL_PrivateJoystickAxis( joystick, 0, (Sint16)pXInputState->Gamepad.sThumbLX );
+        SDL_PrivateJoystickAxis( joystick, 1, (Sint16)(-SDL_max(-32767, pXInputState->Gamepad.sThumbLY)) );
+        SDL_PrivateJoystickAxis( joystick, 2, (Sint16)pXInputState->Gamepad.sThumbRX );
+        SDL_PrivateJoystickAxis( joystick, 3, (Sint16)(-SDL_max(-32767, pXInputState->Gamepad.sThumbRY)) );
+        SDL_PrivateJoystickAxis( joystick, 4, (Sint16)(((int)pXInputState->Gamepad.bLeftTrigger*65535/255) - 32768));
+        SDL_PrivateJoystickAxis( joystick, 5, (Sint16)(((int)pXInputState->Gamepad.bRightTrigger*65535/255) - 32768));
 
         if ( ButtonChanged( pXInputState->Gamepad.wButtons, pXInputStatePrev->Gamepad.wButtons, XINPUT_GAMEPAD_DPAD_UP ) )
             SDL_PrivateJoystickButton(joystick, 0, pXInputState->Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP ? SDL_PRESSED :  SDL_RELEASED );

@@ -22,25 +22,48 @@
 
 /* This is the joystick API for Simple DirectMedia Layer */
 
+#include "SDL.h"
 #include "SDL_events.h"
 #include "SDL_sysjoystick.h"
 #include "SDL_assert.h"
+#include "SDL_hints.h"
 
 #if !SDL_EVENTS_DISABLED
 #include "../events/SDL_events_c.h"
 #endif
 
+static SDL_bool SDL_joystick_allows_background_events = SDL_FALSE;
 static SDL_Joystick *SDL_joysticks = NULL;
 static SDL_Joystick *SDL_updating_joystick = NULL;
+
+static void
+SDL_JoystickAllowBackgroundEventsChanged(void *userdata, const char *name, const char *oldValue, const char *hint)
+{
+    if (hint && *hint == '1') {
+        SDL_joystick_allows_background_events = SDL_TRUE;
+    } else {
+        SDL_joystick_allows_background_events = SDL_FALSE;
+    }
+}
 
 int
 SDL_JoystickInit(void)
 {
     int status;
 
+    /* See if we should allow joystick events while in the background */
+    SDL_AddHintCallback(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS,
+                        SDL_JoystickAllowBackgroundEventsChanged, NULL);
+
+#if !SDL_EVENTS_DISABLED
+    if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) {
+        return -1;
+    }
+#endif /* !SDL_EVENTS_DISABLED */
+
     status = SDL_SYS_JoystickInit();
     if (status >= 0) {
-      status = 0;
+        status = 0;
     }
     return (status);
 }
@@ -330,7 +353,7 @@ SDL_JoystickGetButton(SDL_Joystick * joystick, int button)
 
 /*
  * Return if the joystick in question is currently attached to the system,
- *  \return 0 if not plugged in, 1 if still present.
+ *  \return SDL_FALSE if not plugged in, SDL_TRUE if still present.
  */
 SDL_bool
 SDL_JoystickGetAttached(SDL_Joystick * joystick)
@@ -448,8 +471,33 @@ SDL_JoystickQuit(void)
 
     /* Quit the joystick setup */
     SDL_SYS_JoystickQuit();
+
+#if !SDL_EVENTS_DISABLED
+    SDL_QuitSubSystem(SDL_INIT_EVENTS);
+#endif
 }
 
+
+static SDL_bool
+SDL_PrivateJoystickShouldIgnoreEvent()
+{
+    if (SDL_joystick_allows_background_events)
+    {
+        return SDL_FALSE;
+    }
+
+    if (SDL_WasInit(SDL_INIT_VIDEO)) {
+        if (SDL_GetKeyboardFocus() == NULL) {
+            // Video is initialized and we don't have focus, ignore the event.
+            return SDL_TRUE;
+        } else {
+            return SDL_FALSE;
+        }
+    }
+
+    // Video subsystem wasn't initialized, always allow the event
+    return SDL_FALSE;
+}
 
 /* These are global for SDL_sysjoystick.c and SDL_events.c */
 
@@ -468,6 +516,15 @@ SDL_PrivateJoystickAxis(SDL_Joystick * joystick, Uint8 axis, Sint16 value)
         return 0;
     }
     joystick->axes[axis] = value;
+
+    /* We ignore events if we don't have keyboard focus, except for centering
+     * events.
+     */
+    if (SDL_PrivateJoystickShouldIgnoreEvent()) {
+        if (!(joystick->closed && joystick->uncentered)) {
+            return 0;
+        }
+    }
 
     /* Post the event, if desired */
     posted = 0;
@@ -497,6 +554,16 @@ SDL_PrivateJoystickHat(SDL_Joystick * joystick, Uint8 hat, Uint8 value)
     /* Update internal joystick state */
     joystick->hats[hat] = value;
 
+    /* We ignore events if we don't have keyboard focus, except for centering
+     * events.
+     */
+    if (SDL_PrivateJoystickShouldIgnoreEvent()) {
+        if (!(joystick->closed && joystick->uncentered)) {
+            return 0;
+        }
+    }
+
+
     /* Post the event, if desired */
     posted = 0;
 #if !SDL_EVENTS_DISABLED
@@ -520,6 +587,11 @@ SDL_PrivateJoystickBall(SDL_Joystick * joystick, Uint8 ball,
 
     /* Make sure we're not getting garbage events */
     if (ball >= joystick->nballs) {
+        return 0;
+    }
+
+    /* We ignore events if we don't have keyboard focus. */
+    if (SDL_PrivateJoystickShouldIgnoreEvent()) {
         return 0;
     }
 
@@ -568,6 +640,12 @@ SDL_PrivateJoystickButton(SDL_Joystick * joystick, Uint8 button, Uint8 state)
         return 0;
     }
 
+    /* We ignore events if we don't have keyboard focus, except for button
+     * release. */
+    if (state == SDL_PRESSED && SDL_PrivateJoystickShouldIgnoreEvent()) {
+        return 0;
+    }
+
     /* Update internal joystick state */
     joystick->buttons[button] = state;
 
@@ -605,7 +683,6 @@ SDL_JoystickUpdate(void)
         if ( joystick->closed && joystick->uncentered )
         {
             int i;
-            joystick->uncentered = 0;
 
             /* Tell the app that everything is centered/unpressed...  */
             for (i = 0; i < joystick->naxes; i++)
@@ -617,6 +694,7 @@ SDL_JoystickUpdate(void)
             for (i = 0; i < joystick->nhats; i++)
                 SDL_PrivateJoystickHat(joystick, i, SDL_HAT_CENTERED);
 
+            joystick->uncentered = 0;
         }
 
         SDL_updating_joystick = NULL;
@@ -682,6 +760,12 @@ SDL_PrivateJoystickNeedsPolling()
 /* return the guid for this index */
 SDL_JoystickGUID SDL_JoystickGetDeviceGUID(int device_index)
 {
+    if ((device_index < 0) || (device_index >= SDL_NumJoysticks())) {
+        SDL_JoystickGUID emptyGUID;
+        SDL_SetError("There are %d joysticks available", SDL_NumJoysticks());
+        SDL_zero( emptyGUID );
+        return emptyGUID;
+    }
     return SDL_SYS_JoystickGetDeviceGUID( device_index );
 }
 
