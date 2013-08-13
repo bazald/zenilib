@@ -465,7 +465,7 @@ namespace Zeni {
 #endif
             e.key.state = event.jbutton.state;
             e.key.keysym.sym = SDLK_ESCAPE;
-            e.key.keysym.unicode = 0;
+            //e.key.keysym.unicode = 0;
 
             on_event(e);
           }
