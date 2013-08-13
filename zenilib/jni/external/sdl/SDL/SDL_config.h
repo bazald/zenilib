@@ -31,6 +31,8 @@
 /* Add any platform that doesn't build using the configure system. */
 #if defined(__WIN32__)
 #include "SDL_config_windows.h"
+#elif defined(__LINUX__)
+#include "SDL_config_linux.h"
 #elif defined(__MACOSX__)
 #include "SDL_config_macosx.h"
 #elif defined(__IPHONEOS__)

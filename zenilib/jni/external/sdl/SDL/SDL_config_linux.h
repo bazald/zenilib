@@ -46,7 +46,7 @@
 #ifdef __LP64__
 #define SIZEOF_VOIDP 8
 #else
-#define SIZEOF_VOIDP 8
+#define SIZEOF_VOIDP 4
 #endif
 #define HAVE_GCC_ATOMICS 1
 /* #undef HAVE_GCC_SYNC_LOCK_TEST_AND_SET */
@@ -150,7 +150,7 @@
 #define HAVE_FSEEKO64 1
 #define HAVE_SIGACTION 1
 #define HAVE_SA_SIGACTION 1
-/* #undef HAVE_SETJMP */
+#undef HAVE_SETJMP
 #define HAVE_NANOSLEEP 1
 #define HAVE_SYSCONF 1
 /* #undef HAVE_SYSCTLBYNAME */
@@ -158,7 +158,7 @@
 /* #undef HAVE_GETPAGESIZE */
 #define HAVE_MPROTECT 1
 #define HAVE_ICONV 1
-/* #undef HAVE_PTHREAD_SETNAME_NP */
+#undef HAVE_PTHREAD_SETNAME_NP
 /* #undef HAVE_PTHREAD_SET_NAME_NP */
 #define HAVE_SEM_TIMEDWAIT 1
 

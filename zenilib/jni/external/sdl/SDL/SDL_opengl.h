@@ -5978,7 +5978,7 @@ typedef void (APIENTRYP PFNGLBLENDFUNCSEPARATEIPROC) (GLuint buf, GLenum srcRGB,
 /* ARB_viewport_array */
 #endif
 
-#ifndef GL_ARB_multitexture
+#if 1
 #define GL_ARB_multitexture 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glActiveTextureARB (GLenum texture);
@@ -6409,7 +6409,7 @@ typedef void (APIENTRYP PFNGLGETQUERYOBJECTIVARBPROC) (GLuint id, GLenum pname, 
 typedef void (APIENTRYP PFNGLGETQUERYOBJECTUIVARBPROC) (GLuint id, GLenum pname, GLuint *params);
 #endif
 
-#ifndef GL_ARB_shader_objects
+#if 1
 #define GL_ARB_shader_objects 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glDeleteObjectARB (GLhandleARB obj);
