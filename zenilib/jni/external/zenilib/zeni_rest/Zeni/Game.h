@@ -49,6 +49,8 @@ namespace Zeni {
 
   class Console_State;
   class Game;
+  class Popup_Menu_State_Factory;
+  class Popup_Pause_State_Factory;
 
   class ZENI_REST_DLL Gamestate_Zero_Initializer {
   public:
@@ -70,6 +72,7 @@ namespace Zeni {
     static Game * create();
 
     Game();
+    ~Game();
 
     // Undefined
     Game(const Game &);
@@ -102,6 +105,11 @@ namespace Zeni {
     bool get_joy_button_state(const int &which, const int &button) const; ///< Get the state of a joystick button.
 
     void run();
+
+    void push_Popup_Menu_State();
+    void push_Popup_Pause_State();
+    void replace_Popup_Menu_State_Factory(Popup_Menu_State_Factory * const popup_menu_state_factory);
+    void replace_Popup_Pause_State_Factory(Popup_Pause_State_Factory * const popup_pause_state_factory);
 
 #ifndef ANDROID
     struct ZENI_REST_DLL Joy_Mouse {
@@ -147,6 +155,9 @@ namespace Zeni {
 
     Time time;
     Time::Tick_Type ticks_passed, fps, fps_next;
+    
+    Popup_Menu_State_Factory * m_popup_menu_state_factory;
+    Popup_Pause_State_Factory * m_popup_pause_state_factory;
 
 #if !defined(ANDROID) && !defined(NDEBUG)
     void activate_console();

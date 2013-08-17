@@ -99,7 +99,7 @@ namespace Zeni {
 
   void Gamestate_Base::on_key(const SDL_KeyboardEvent &event) {
     if(event.state == SDL_PRESSED && event.keysym.sym == SDLK_ESCAPE)
-      get_Game().push_state(new Popup_Menu_State);
+      get_Game().push_Popup_Menu_State();
   }
 
   void Gamestate_Base::on_mouse_motion(const SDL_MouseMotionEvent &) {
@@ -176,7 +176,7 @@ namespace Zeni {
         wr.mouse_grab(false);
 
       if(m_pausable)
-        get_Game().push_state(new Popup_Pause_State);
+        get_Game().push_Popup_Pause_State();
     }
   }
   

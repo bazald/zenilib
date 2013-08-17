@@ -270,6 +270,15 @@ namespace Zeni {
     }
   };
 
+  class ZENI_REST_DLL Popup_Menu_State_Factory {
+  public:
+    virtual ~Popup_Menu_State_Factory() {}
+
+    virtual Popup_Menu_State * operator()() {
+      return new Popup_Menu_State;
+    }
+  };
+
   class ZENI_REST_DLL Popup_Pause_State : public Popup_State {
     Popup_Pause_State(const Popup_Pause_State &);
     Popup_Pause_State operator=(const Popup_Pause_State &);
@@ -312,6 +321,15 @@ namespace Zeni {
       }
       else
         m_gamestate.render();
+    }
+  };
+
+  class ZENI_REST_DLL Popup_Pause_State_Factory {
+  public:
+    virtual ~Popup_Pause_State_Factory() {}
+
+    virtual Popup_Pause_State * operator()() {
+      return new Popup_Pause_State;
     }
   };
 

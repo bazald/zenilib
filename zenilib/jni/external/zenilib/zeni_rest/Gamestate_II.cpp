@@ -189,7 +189,7 @@ namespace Zeni {
   void Gamestate_II::on_event(const Zeni_Input_ID &id, const float &confidence, const int &) {
 #ifndef ANDROID
     if(id.type == SDL_KEYDOWN && id.subid == SDLK_ESCAPE && confidence == 1.0f)
-      get_Game().push_state(new Popup_Menu_State);
+      get_Game().push_Popup_Menu_State();
 #endif
   }
 

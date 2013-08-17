@@ -38,11 +38,21 @@ namespace Zeni {
   }
 
   Game::Game()
-    : time(get_Timer().get_time()), ticks_passed(0), fps(END_OF_TIME), fps_next(0)
+    : time(get_Timer().get_time()),
+    ticks_passed(0),
+    fps(END_OF_TIME),
+    fps_next(0),
+    m_popup_menu_state_factory(new Popup_Menu_State_Factory),
+    m_popup_pause_state_factory(new Popup_Pause_State_Factory)
 #if !defined(ANDROID) && !defined(NDEBUG)
     , m_console_active(false)
 #endif
   {
+  }
+
+  Game::~Game() {
+    delete m_popup_menu_state_factory;
+    delete m_popup_pause_state_factory;
   }
 
   Game & get_Game() {
@@ -566,6 +576,26 @@ namespace Zeni {
 #endif
       }
     }
+  }
+
+  void Game::push_Popup_Menu_State() {
+    push_state((*m_popup_menu_state_factory)());
+  }
+
+  void Game::push_Popup_Pause_State() {
+    push_state((*m_popup_pause_state_factory)());
+  }
+
+  void Game::replace_Popup_Menu_State_Factory(Popup_Menu_State_Factory * const popup_menu_state_factory) {
+    assert(popup_menu_state_factory);
+    delete m_popup_menu_state_factory;
+    m_popup_menu_state_factory = popup_menu_state_factory;
+  }
+
+  void Game::replace_Popup_Pause_State_Factory(Popup_Pause_State_Factory * const popup_pause_state_factory) {
+    assert(popup_pause_state_factory);
+    delete m_popup_pause_state_factory;
+    m_popup_pause_state_factory = popup_pause_state_factory;
   }
 
   void Game::calculate_fps() {
