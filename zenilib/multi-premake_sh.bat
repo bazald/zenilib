@@ -93,7 +93,7 @@ case $OSTYPE in
     PREMAKE=dev/premake/premake4-macosx
     ;;
   linux*)
-    PREMAKE=dev/premake/premake4-linux
+    PREMAKE=dev/premake/premake4-$(arch)
     ;;
   ?*)
     echo "Unknown"

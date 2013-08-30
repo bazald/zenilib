@@ -160,8 +160,8 @@ case $OSTYPE in
     #
 
     for dir in $(ls -d "$DIR/gmake" 2> /dev/null); do rm -r $dir; done
-    chmod +x dev/premake/premake4-linux
-    dev/premake/premake4-linux --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
+    chmod +x dev/premake/premake4-$(arch)
+    dev/premake/premake4-$(arch) --os=linux --build=$BUILD --dir="$DIR" --macosx=$MACOSX gmake
     if [ $? -ne 0 ]; then
       popd
       exit -1
