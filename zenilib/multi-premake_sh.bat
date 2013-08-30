@@ -166,9 +166,9 @@ for file in $(ls -d "$DIR/vs2010/*.filters" "$DIR/vs2010/*.user" "$DIR/vs2010/*.
   if [ -f "$file" ]; then rm "$file"; fi
 done
 
-$PREMAKE --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX xcode3
 $PREMAKE --os=macosx --build=$BUILD --dir="$DIR" --macosx=$MACOSX xcode4
 $PREMAKE --os=windows --build=$BUILD --dir="$DIR" --macosx=$MACOSX vs2010
+$PREMAKE --os=windows --build=$BUILD --dir="$DIR" --macosx=$MACOSX vs2012
 
 popd
 exit
@@ -281,6 +281,7 @@ IF NOT "%STATE%"=="config" (
 DEL /Q "%DIR%\vs2010\*.filters" "%DIR%\vs2010\*.user" "%DIR%\vs2010\*.vcxproj"
 
 "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2010
+"%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2012
 
 
 

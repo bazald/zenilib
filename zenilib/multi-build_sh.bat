@@ -516,35 +516,43 @@ CALL "%DP0%\dev\VCVarsQueryRegistry.bat"
 IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
 
 :: Setup devenv
-CALL "%VS100COMNTOOLS%vsvars32.bat"
+IF EXIST "%VS100COMNTOOLS%" (
+  CALL "%VS100COMNTOOLS%vsvars32.bat"
+  SET VSVER=vs2010
+) ELSE ( IF EXIST "%VS110COMNTOOLS%" (
+  CALL "%VS110COMNTOOLS%vsvars32.bat"
+  SET VSVER=vs2012
+) ELSE (
+  ECHO "Neither Visual Studio 2010 nor 2012 detected."
+  EXIT /B
+))
 
+ECHO %VSVER% building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
 
-ECHO Building: Windows %BUILD% x86:%CONFIG32% amd64:%CONFIG64%
-
-:: Generate Visual Studio 2010 solution and projects
-::IF NOT EXIST "%DIR%\vs2010" (
+:: Generate Visual Studio solution and projects
+::IF NOT EXIST "%DIR%\%VSVER%" (
   IF EXIST "%DP0%\dev\premake\premake4-windows.exe" (
-    DEL /Q "%DIR%\vs2010\*.filters" "%DIR%\vs2010\*.user" "%DIR%\vs2010\*.vcxproj"
+    DEL /Q "%DIR%\%VSVER%\*.filters" "%DIR%\%VSVER%\*.user" "%DIR%\%VSVER%\*.vcxproj"
 
-    "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% vs2010
+    "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% --macosx=%MACOSX% %VSVER%
   )
 ::)
 
 SET EL=0
 IF %EL%==0 IF "%CONFIG32%"=="debug" (
-  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d32.log";Encoding=UTF-8
+  MSBuild "%DIR%\%VSVER%\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d32.log";Encoding=UTF-8
   IF ERRORLEVEL 1 SET EL=1
 )
 IF %EL%==0 IF "%CONFIG64%"=="debug" (
-  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d64.log";Encoding=UTF-8
+  MSBuild "%DIR%\%VSVER%\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Debug /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\d64.log";Encoding=UTF-8
   IF ERRORLEVEL 1 SET EL=1
 )
 IF %EL%==0 IF "%CONFIG32%"=="release" (
-  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x32.log";Encoding=UTF-8
+  MSBuild "%DIR%\%VSVER%\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=Win32 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x32.log";Encoding=UTF-8
   IF ERRORLEVEL 1 SET EL=1
 )
 IF %EL%==0 IF "%CONFIG64%"=="release" (
-  MSBuild "%DIR%\vs2010\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x64.log";Encoding=UTF-8
+  MSBuild "%DIR%\%VSVER%\zenilib.sln" /m /p:MultiProcessorCompilation=true /t:Build /p:Configuration=Release /p:Platform=x64 /fileLogger /fileLoggerParameters:LogFile="%DIR%\x64.log";Encoding=UTF-8
   IF ERRORLEVEL 1 SET EL=1
 )
 
