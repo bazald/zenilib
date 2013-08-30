@@ -518,14 +518,14 @@ CALL "%DP0%\dev\VCVarsQueryRegistry.bat"
 IF "%AppData%"=="" SET AppData=C:\Users\%WHOAMI%\AppData
 
 :: Setup devenv
-IF EXIST "%VS100COMNTOOLS%" (
-  CALL "%VS100COMNTOOLS%vsvars32.bat"
-  SET VSVER=vs2010
-) ELSE ( IF EXIST "%VS110COMNTOOLS%" (
+IF EXIST "%VS110COMNTOOLS%" (
   CALL "%VS110COMNTOOLS%vsvars32.bat"
   SET VSVER=vs2012
+) ELSE ( IF EXIST "%VS100COMNTOOLS%" (
+  CALL "%VS100COMNTOOLS%vsvars32.bat"
+  SET VSVER=vs2010
 ) ELSE (
-  ECHO "Neither Visual Studio 2010 nor 2012 detected."
+  ECHO "Neither Visual Studio 2012 nor 2010 detected."
   EXIT /B
 ))
 
