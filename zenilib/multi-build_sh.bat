@@ -178,6 +178,8 @@ case $OSTYPE in
       cat "$DIR/gmake/$mf" | sed 's/ -rcs / -rso /' \
                            | sed 's/CC = gcc//' \
                            | sed 's/CXX = g++//' \
+                           | sed -n 'h; p; {g; s/LDDEPS    +=/LIBS      +=/; t keep_going; d; :keep_going; s/\.\.\/\.\.\/lib\/...\/lib/-l/g; s/\.so//g; s/\.a//g; p}' \
+                           | sed 's/+= \$(LDDEPS)/+=/' \
                           > "$DIR/linux/$mf"
     done
     rm -r "$DIR/gmake"
