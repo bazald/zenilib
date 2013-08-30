@@ -296,19 +296,19 @@ namespace Zeni {
     m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
       SDL_WINDOW_OPENGL |
       (g_screen_full ? SDL_WINDOW_FULLSCREEN
-                     : ((g_screen_show_frame ? 0u : SDL_WINDOW_BORDERLESS) |
-                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0u))));
+                     : ((g_screen_show_frame ? SDL_WINDOW_OPENGL : SDL_WINDOW_BORDERLESS) |
+                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : SDL_WINDOW_OPENGL))));
 #else
 #ifdef _MACOSX
-	if(g_screen_full)
-		g_screen_size = Point2i();
+  if(g_screen_full)
+    g_screen_size = Point2i();
 #endif
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       SDL_OPENGL |
       (g_screen_full ? SDL_FULLSCREEN
-                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? 0 : SDL_NOFRAME) |
-                                                   (g_screen_resizable ? SDL_RESIZABLE : 0))
-                                                : 0)));
+                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? SDL_OPENGL : SDL_NOFRAME) |
+                                                   (g_screen_resizable ? SDL_RESIZABLE : SDL_OPENGL))
+                                                : SDL_OPENGL)));
 #endif
     Core::assert_no_error();
 
@@ -519,17 +519,17 @@ namespace Zeni {
     m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
       SDL_WINDOW_OPENGL |
       (g_screen_full ? SDL_WINDOW_FULLSCREEN
-                     : ((g_screen_show_frame ? 0u : SDL_WINDOW_BORDERLESS) |
-                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : 0u))));
+                     : ((g_screen_show_frame ? SDL_WINDOW_OPENGL : SDL_WINDOW_BORDERLESS) |
+                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : SDL_WINDOW_OPENGL))));
 #else    
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
 
     m_display_surface = SDL_SetVideoMode(g_screen_size.x, g_screen_size.y, 32,
       SDL_OPENGL |
       (g_screen_full ? SDL_FULLSCREEN
-                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? 0 : SDL_NOFRAME) |
-                                                   (g_screen_resizable ? SDL_RESIZABLE : 0))
-                                                : 0)));
+                     : (VideoInfo->wm_available ? ((g_screen_show_frame ? SDL_OPENGL : SDL_NOFRAME) |
+                                                   (g_screen_resizable ? SDL_RESIZABLE : SDL_OPENGL))
+                                                : SDL_OPENGL)));
 #endif
     Core::assert_no_error();
 

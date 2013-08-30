@@ -268,7 +268,7 @@ namespace Zeni {
     return viewport;
   }
 
-  const Light * const Video::get_Light(const int &number) const {
+  const Light * Video::get_Light(const int &number) const {
     const Unordered_Map<int, Light>::const_iterator it = g_lights.find(number);
 
     if(it != g_lights.end())
@@ -285,7 +285,7 @@ namespace Zeni {
     g_lights.erase(number);
   }
 
-  const Fog * const Video::get_Fog() const {
+  const Fog * Video::get_Fog() const {
     return g_fog_enabled ? &g_fog : 0;
   }
 

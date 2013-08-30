@@ -98,7 +98,7 @@ namespace Zeni {
     void set_rolloff(const float &rolloff = ZENI_DEFAULT_ROLLOFF); // Set the maximum reduction in volume due to distance
 
     const Sound_Buffer & get_buffer() const; ///< Get the Sound_Buffer
-    const float get_duration() const; ///< Get the duration of the Sound_Buffer in seconds
+    float get_duration() const; ///< Get the duration of the Sound_Buffer in seconds
     float get_pitch() const; ///< Get the pitch.
     float get_gain() const; ///< Get the gain.
     Point3f get_position() const; ///< Get the position of the Sound_Buffer.

@@ -176,6 +176,8 @@ case $OSTYPE in
 
     for mf in $(ls "$DIR/gmake/" 2> /dev/null); do
       cat "$DIR/gmake/$mf" | sed 's/ -rcs / -rso /' \
+                           | sed 's/CC = gcc//' \
+                           | sed 's/CXX = g++//' \
                           > "$DIR/linux/$mf"
     done
     rm -r "$DIR/gmake"

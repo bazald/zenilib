@@ -246,7 +246,7 @@ namespace Zeni {
     return *m_buffer;
   }
 
-  const float Sound_Source_HW::get_duration() const {
+  float Sound_Source_HW::get_duration() const {
 #ifdef ENABLE_SLES
     if(dynamic_cast<Sound_Renderer_SLES *>(&get_Sound().get_Renderer())) {
       SLmillisecond duration;

@@ -92,7 +92,7 @@ namespace Zeni {
     public:
       typedef ptrdiff_t difference_type;
       typedef std::random_access_iterator_tag iterator_category;
-      typedef const char value_type;
+      typedef char value_type;
       typedef value_type * pointer;
       typedef value_type & reference;
 
@@ -192,7 +192,7 @@ namespace Zeni {
     public:
       typedef ptrdiff_t difference_type;
       typedef std::random_access_iterator_tag iterator_category;
-      typedef const char value_type;
+      typedef char value_type;
       typedef value_type * pointer;
       typedef value_type & reference;
 

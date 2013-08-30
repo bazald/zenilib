@@ -348,7 +348,7 @@ namespace Zeni {
   }
 
   const bool & Check_Box::is_checked() const {return m_checked;}
-  const void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
+  void Check_Box::set_checked(const bool &checked_) {m_checked = checked_;}
   const bool & Check_Box::is_toggling() const {return m_toggling;}
 
   Radio_Button::Radio_Button(Radio_Button_Set &radio_button_set_,

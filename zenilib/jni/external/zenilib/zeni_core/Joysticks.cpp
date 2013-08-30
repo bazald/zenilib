@@ -110,7 +110,7 @@ namespace Zeni {
       return m_joystick.size();
   }
 
-  const char * const Joysticks::get_joystick_name(const size_t &index) const {
+  const char * Joysticks::get_joystick_name(const size_t &index) const {
     if(m_using_xinput) {
       assert(index < 4);
       return "Controller (XBOX 360 For Windows)";

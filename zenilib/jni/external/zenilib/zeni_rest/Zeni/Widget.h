@@ -507,7 +507,7 @@ namespace Zeni {
                      const bool &checked_ = false, const bool &toggleable_ = true);
 
     inline const bool & is_checked() const;
-    inline const void set_checked(const bool &checked_);
+    inline void set_checked(const bool &checked_);
     inline const bool & is_toggling() const;
 
     virtual void on_accept();
