@@ -65,7 +65,7 @@ namespace Zeni {
 
     // be more careful in a multithreaded environement
     if(!orwl_timestart) {
-      mach_timebase_info_data_t tb = {0};
+      mach_timebase_info_data_t tb = {0, 0};
       mach_timebase_info(&tb);
       orwl_timebase = tb.numer;
       orwl_timebase /= tb.denom;
