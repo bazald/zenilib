@@ -346,6 +346,9 @@
 #define _IOC_TYPECHECK(t) (sizeof(t))
 #endif
 
+#ifndef _IOC_WRITE
+#define _IOC_WRITE 1U
+#endif
 #ifndef _IOC_READ
 #define _IOC_READ 2U
 #endif
@@ -354,8 +357,12 @@
 #define _IOR(type,nr,size) _IOC(_IOC_READ,(type),(nr),(_IOC_TYPECHECK(size)))
 #endif
 
+#ifndef _IOW
+#define _IOW(type,nr,size)  _IOC(_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
+#endif
 
 #define EVIOCGID _IOR('E', 0x02, struct input_devinfo)
+#define EVIOCRMFF               _IOW('E', 0x81, int)
 #define SDL_X11_HAVE_UTF8 1
 #define XK_Escape (0xFF1B)
 #define XK_KP_Enter (0xFF8D)

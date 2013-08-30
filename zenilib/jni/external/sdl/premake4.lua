@@ -24,7 +24,8 @@ project "local_SDL"
   configuration { "windows", "x64" }
     libdirs { "../lib/x64" }
   configuration "linux"
-    files { "src/loadso/dlopen/*.c",
+    files { "src/haptic/linux/*.c",
+            "src/loadso/dlopen/*.c",
             "src/video/x11/*.c",
   --           "src/video/Xext/Xxf86dga/*.c",
   --           "src/video/dga/*.c",
