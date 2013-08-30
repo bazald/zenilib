@@ -33,6 +33,7 @@ project "local_SDL"
   --           "src/video/Xext/Xinerama/*.c",
   --           "src/video/Xext/XME/*.c",
   --           "src/video/fbcon/*.c",
+            "src/power/linux/*.c",
             "src/thread/pthread/*.c",
             "src/joystick/linux/*.c",
   --           "src/cdrom/linux/*.c",

@@ -236,6 +236,7 @@ namespace Zeni {
   }
 
   void Video_GL_Shader::set_vertical_sync(const bool &on_) {
+    Core::assert_no_error();
     Video::set_vertical_sync(on_);
 
 #ifdef MANUAL_GL_VSYNC_DELAY
@@ -270,6 +271,8 @@ namespace Zeni {
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, on);
 #endif
 #endif
+
+    SDL_ClearError();
   }
 
   void Video_GL_Shader::set_zwrite(const bool &enabled) {
@@ -667,7 +670,9 @@ namespace Zeni {
     /* This had to be before SDL_GL_CreateContext to work correctly on OS X some time ago.
      * Now it causes an error to be before. Test.
      */
+    Core::assert_no_error();
     SDL_GL_SetSwapInterval(get_vertical_sync());
+    SDL_ClearError();
 #endif
 
     Core::assert_no_error();
