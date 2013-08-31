@@ -53,10 +53,10 @@ project "local_vorbis"
               "STDC_HEADERS=1",
               "VERSION=\\\"1.3.2\\\"" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_vorbis_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_vorbis_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_vorbis.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_vorbis.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"
@@ -142,10 +142,10 @@ project "local_vorbisfile"
               "STDC_HEADERS=1",
               "VERSION=\\\"1.3.2\\\"" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_vorbisfile_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_vorbisfile_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_vorbisfile.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_vorbisfile.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

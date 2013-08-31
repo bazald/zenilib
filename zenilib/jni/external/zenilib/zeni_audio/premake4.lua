@@ -9,10 +9,10 @@ project "zeni_audio"
   configuration { "macosx" }
     links { "OpenAL.framework" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/libzeni_audio_d.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_audio_d.dylib" }
     targetdir "../../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/libzeni_audio.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_audio.dylib" }
     targetdir "../../../../lib/univ"
 
   configuration "*"

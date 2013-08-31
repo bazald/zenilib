@@ -10,10 +10,10 @@ project "zeni"
     files { "**.mm" }
     links { "Cocoa.framework" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/libzeni_d.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_d.dylib" }
     targetdir "../../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/libzeni.dylib" }
+    linkoptions { "-install_name @rpath/libzeni.dylib" }
     targetdir "../../../../lib/univ"
 
   configuration "*"

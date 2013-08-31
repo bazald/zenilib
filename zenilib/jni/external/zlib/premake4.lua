@@ -3,10 +3,10 @@ project "local_z"
   language "C"
 
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_z_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_z_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_z.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_z.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

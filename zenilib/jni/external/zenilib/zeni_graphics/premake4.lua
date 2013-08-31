@@ -12,10 +12,10 @@ project "zeni_graphics"
   configuration "macosx"
     links { "OpenGL.framework" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/libzeni_graphics_d.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_graphics_d.dylib" }
     targetdir "../../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/libzeni_graphics.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_graphics.dylib" }
     targetdir "../../../../lib/univ"
 
   configuration "*"

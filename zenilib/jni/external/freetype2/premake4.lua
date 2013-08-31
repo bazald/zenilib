@@ -47,10 +47,10 @@ project "local_freetype2"
     defines { "FT_MACINTOSH" }
     links { "Carbon.framework" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_freetype2_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_freetype2_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_freetype2.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_freetype2.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

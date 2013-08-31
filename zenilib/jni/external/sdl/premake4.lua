@@ -75,10 +75,10 @@ project "local_SDL"
             "IOKit.framework",
             "OpenGL.framework" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_SDL_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_SDL_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_SDL.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_SDL.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

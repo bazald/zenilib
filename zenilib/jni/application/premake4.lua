@@ -71,6 +71,8 @@ project(APPLICATION_NAME)
     linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/d64'", "-Wl,-rpath-link,"..rebase("lib/d64") }
   configuration { "linux", "Release*", "x64" }
     linkoptions { "-Wl,-rpath,'$$ORIGIN/lib/x64'", "-Wl,-rpath-link,"..rebase("lib/x64") }
+  configuration "macosx"
+    linkoptions { "-Wl,-rpath,'@loader_path/'" }
 
   os.chdir('jni')
   os.chdir('application')

@@ -25,10 +25,10 @@ project "local_SDL_net"
               "PACKAGE=\"SDL_net\"",
               "VERSION=\"1.2.8\"" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_SDL_net_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_SDL_net_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_SDL_net.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_SDL_net.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

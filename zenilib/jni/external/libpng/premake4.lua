@@ -5,10 +5,10 @@ project "local_png"
   configuration "windows"
     defines { "_USRDLL" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_png_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_png_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_png.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_png.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

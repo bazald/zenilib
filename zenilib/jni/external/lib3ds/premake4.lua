@@ -5,10 +5,10 @@ project "local_3ds"
   configuration "windows"
     defines { "LIB3DSAPI=__declspec(dllexport)" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_3ds_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_3ds_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_3ds.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_3ds.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

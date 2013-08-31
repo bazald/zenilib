@@ -5,10 +5,10 @@ project "local_ogg"
   configuration "windows"
     defines { "OGG_DLL=__declspec(dllexport)" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/liblocal_ogg_d.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_ogg_d.dylib" }
     targetdir "../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/liblocal_ogg.dylib" }
+    linkoptions { "-install_name @rpath/liblocal_ogg.dylib" }
     targetdir "../../../lib/univ"
 
   configuration "not windows"

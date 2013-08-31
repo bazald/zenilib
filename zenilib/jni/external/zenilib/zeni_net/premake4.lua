@@ -7,10 +7,10 @@ project "zeni_net"
   configuration "linux or macosx"
     buildoptions { "-ffast-math", "-fpch-preprocess", "-Wall" }
   configuration { "macosx", "Debug*" }
-    linkoptions { "-install_name @loader_path/libzeni_net_d.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_net_d.dylib" }
     targetdir "../../../../lib/univ_d"
   configuration { "macosx", "Release*" }
-    linkoptions { "-install_name @loader_path/libzeni_net.dylib" }
+    linkoptions { "-install_name @rpath/libzeni_net.dylib" }
     targetdir "../../../../lib/univ"
 
   configuration "*"
