@@ -422,8 +422,8 @@ namespace Zeni {
 
   void Window::set_failsafe_defaults() {
     g_screen_full = false;
-    g_screen_size.x = MINIMUM_SCREEN_WIDTH;
-    g_screen_size.y = MINIMUM_SCREEN_HEIGHT;
+    g_screen_size.x = FAILSAFE_SCREEN_WIDTH;
+    g_screen_size.y = FAILSAFE_SCREEN_HEIGHT;
   }
 
   const bool & Window::get_opengl_flag() {

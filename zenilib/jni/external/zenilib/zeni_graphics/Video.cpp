@@ -83,6 +83,9 @@ namespace Zeni {
     }
 #ifndef ANDROID
     catch(Video_Init_Failure &) {
+      Video::completely_destroy();
+      Window::destroy();
+
       if(fo.copy_file(user_backup, user_normal) && fo.delete_file(user_backup)) {
         std::cerr << '\'' << user_normal << "' backup restored due to initialization failure.\n";
         Video::preinit_from_file(user_normal);
