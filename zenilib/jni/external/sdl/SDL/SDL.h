@@ -25,7 +25,7 @@
  *  Main include header for the SDL library
  */
 
-/**
+/*
  *  \mainpage Simple DirectMedia Layer (SDL)
  *
  *  http://www.libsdl.org/
