@@ -17,6 +17,7 @@
 
 #include <zeni_audio.h>
 
+#include <algorithm>
 #include <iostream>
 #include <utility>
 #include <vector>

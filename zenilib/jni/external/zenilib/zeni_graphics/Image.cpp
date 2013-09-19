@@ -17,6 +17,7 @@
 
 #include <zeni_graphics.h>
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <png.h>

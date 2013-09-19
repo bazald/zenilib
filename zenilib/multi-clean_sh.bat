@@ -88,7 +88,9 @@ for file in $(ls assets/stderr.txt \
 for dir in $(ls -d build/vs2010/ipch \
                    build/vs2010/obj \
                    build/vs2012/ipch \
-                   build/vs2012/obj 2> /dev/null); do rm -r $dir; done
+                   build/vs2012/obj \
+                   build/vs2013/ipch \
+                   build/vs2013/obj 2> /dev/null); do rm -r $dir; done
 for file in $(ls bin/x32/*.exp \
                  bin/x32/*.idb \
                  bin/x32/*.ilk \
@@ -99,6 +101,7 @@ for file in $(ls bin/x32/*.exp \
                  bin/x64/*.pdb \
                  build/vs2010/*.sdf \
                  build/vs2012/*.sdf \
+                 build/vs2013/*.sdf \
                  build/*.log \
                  build/backupenv.bat \
                  *\ Debug.exe \
@@ -253,6 +256,8 @@ IF EXIST "%DP0%\build\vs2010\ipch" RMDIR /S /Q "%DP0%\build\vs2010\ipch"
 IF EXIST "%DP0%\build\vs2010\obj" RMDIR /S /Q "%DP0%\build\vs2010\obj"
 IF EXIST "%DP0%\build\vs2012\ipch" RMDIR /S /Q "%DP0%\build\vs2012\ipch"
 IF EXIST "%DP0%\build\vs2012\obj" RMDIR /S /Q "%DP0%\build\vs2012\obj"
+IF EXIST "%DP0%\build\vs2013\ipch" RMDIR /S /Q "%DP0%\build\vs2013\ipch"
+IF EXIST "%DP0%\build\vs2013\obj" RMDIR /S /Q "%DP0%\build\vs2013\obj"
 IF EXIST "%DP0%\bin\x32\*.exp" DEL /Q "%DP0%\bin\x32\*.exp"
 IF EXIST "%DP0%\bin\x32\*.idb" DEL /Q "%DP0%\bin\x32\*.idb"
 IF EXIST "%DP0%\bin\x32\*.ilk" DEL /Q "%DP0%\bin\x32\*.ilk"
@@ -263,6 +268,7 @@ IF EXIST "%DP0%\bin\x64\*.ilk" DEL /Q "%DP0%\bin\x64\*.ilk"
 IF EXIST "%DP0%\bin\x64\*.pdb" DEL /Q "%DP0%\bin\x64\*.pdb"
 IF EXIST "%DP0%\build\vs2010\*.sdf" DEL /Q "%DP0%\build\vs2010\*.sdf"
 IF EXIST "%DP0%\build\vs2012\*.sdf" DEL /Q "%DP0%\build\vs2012\*.sdf"
+IF EXIST "%DP0%\build\vs2013\*.sdf" DEL /Q "%DP0%\build\vs2013\*.sdf"
 IF EXIST "%DP0%\build\*.log" DEL /Q "%DP0%\build\*.log"
 IF EXIST "%DP0%\build\backupenv.bat" DEL /Q "%DP0%\build\backupenv.bat"
 IF EXIST "%DP0%\* Debug.exe" DEL /Q "%DP0%\* Debug.exe"

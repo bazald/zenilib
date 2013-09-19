@@ -17,6 +17,7 @@
 
 #include <zeni.h>
 
+#include <algorithm>
 #include <cmath>
 
 #include <Zeni/Define.h>
