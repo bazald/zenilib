@@ -642,7 +642,8 @@ namespace Zeni {
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    if(buffers_supported_)
+      vgl.pglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
   }
 
 #endif
