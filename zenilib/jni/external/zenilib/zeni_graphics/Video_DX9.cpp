@@ -609,7 +609,7 @@ namespace Zeni {
     HWND hWnd = wmInfo.window;
 #endif
 
-    std::cout << "Initializing DirectX 9" << std::endl;
+    std::cerr << "Initializing DirectX 9" << std::endl;
 
     try {
       m_d3d_capabilities = new D3DCAPS9;

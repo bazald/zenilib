@@ -614,7 +614,7 @@ namespace Zeni {
   void Video_GL_Fixed::init() {
     Core::assert_no_error();
 
-    std::cout << "Initializing OpenGL" << std::endl;
+    std::cerr << "Initializing OpenGL" << std::endl;
 
 #ifndef TEMP_DISABLE
     //double buffer, no stencil, no accumulation buffer

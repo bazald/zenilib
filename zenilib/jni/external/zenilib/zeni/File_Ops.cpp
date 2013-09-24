@@ -54,9 +54,6 @@ extern "C" {
 #endif
 
 namespace Zeni {
-  
-  static int stderr_bak = 0;
-  static int stdout_bak = 0;
 
   template class Singleton<File_Ops>;
 
@@ -69,11 +66,22 @@ namespace Zeni {
     m_appdata_path("./")
   {
     /** Redirect output **/
-    
-    freopen("stderr.txt","w",stderr);
-    freopen("stdout.txt","w",stdout);
 
-    /** Get username **/
+    static bool once = true;
+    if(once) {
+      once = false;
+
+      freopen("stderr.txt", "w", stderr);
+#if defined(_WINDOWS) || defined(NDEBUG)
+      freopen("stdout.txt", "w", stdout);
+#else
+      FILE * const stdout_txt = popen("tee stdout.txt", "w");
+      if(stdout_txt)
+        dup2(fileno(stdout_txt), STDOUT_FILENO);
+#endif
+    }
+
+/** Get username **/
 
 #ifdef _WINDOWS
     char username[MAX_PATH];
@@ -105,18 +113,6 @@ namespace Zeni {
   }
 
   File_Ops::~File_Ops() {
-    if(stdout_bak)
-#ifdef _WINDOWS
-      _dup2(stdout_bak, _fileno(stdout));
-#else
-      dup2(stdout_bak, fileno(stdout));
-#endif
-    if(stderr_bak)
-#ifdef _WINDOWS
-      _dup2(stderr_bak, _fileno(stderr));
-#else
-      dup2(stderr_bak, fileno(stderr));
-#endif
   }
 
   File_Ops & get_File_Ops() {
