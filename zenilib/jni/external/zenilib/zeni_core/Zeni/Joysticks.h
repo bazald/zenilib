@@ -89,44 +89,34 @@ namespace Zeni {
     enum {
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
-#if defined(_MACOSX)
-      AXIS_RIGHT_THUMB_X = 2,
       AXIS_RIGHT_THUMB_Y = 3,
+      AXIS_RIGHT_THUMB_X = 4,
+#if defined(_MACOSX)
       AXIS_LEFT_TRIGGER = 4,
       AXIS_RIGHT_TRIGGER = 5
 #elif defined(_WINDOWS)
       AXIS_RIGHT_TRIGGER = 2,
-      AXIS_RIGHT_THUMB_Y = 3,
-      AXIS_RIGHT_THUMB_X = 4,
       AXIS_LEFT_TRIGGER = 5
 #else
       AXIS_LEFT_TRIGGER = 2,
-      AXIS_RIGHT_THUMB_X = 3,
-      AXIS_RIGHT_THUMB_Y = 4,
       AXIS_RIGHT_TRIGGER = 5
 #endif
     } Xbox_360_Axis;
 
     enum {
-#ifdef _MACOSX
-      BUTTON_START = 4,
-      BUTTON_BACK = 5,
-      BUTTON_LEFT_THUMB = 6,
-      BUTTON_RIGHT_THUMB = 7,
-      BUTTON_LEFT_SHOULDER = 8,
-      BUTTON_RIGHT_SHOULDER = 9,
-      //BUTTON_RESERVED = 10,
-      BUTTON_A = 11,
-      BUTTON_B = 12,
-      BUTTON_X = 13,
-      BUTTON_Y = 14
-#else
       BUTTON_A = 0,
       BUTTON_B = 1,
       BUTTON_X = 2,
       BUTTON_Y = 3,
       BUTTON_LEFT_SHOULDER = 4,
       BUTTON_RIGHT_SHOULDER = 5,
+#ifdef _MACOSX
+      BUTTON_START = 8,
+      BUTTON_BACK = 9,
+      BUTTON_LEFT_THUMB = 6,
+      BUTTON_RIGHT_THUMB = 7,
+      //BUTTON_RESERVED = 10,
+#else
       BUTTON_BACK = 6,
       BUTTON_START = 7,
 #ifdef _WINDOWS

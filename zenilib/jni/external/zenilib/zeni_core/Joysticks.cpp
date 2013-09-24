@@ -300,8 +300,9 @@ namespace Zeni {
           if(state->Gamepad.sThumbLX != state_prev->Gamepad.sThumbLX) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_LEFT_THUMB_X;
             e.jaxis.value = state->Gamepad.sThumbLX;
 
@@ -310,8 +311,9 @@ namespace Zeni {
           if(state->Gamepad.sThumbLY != state_prev->Gamepad.sThumbLY) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_LEFT_THUMB_Y;
             e.jaxis.value = -state->Gamepad.sThumbLY - 1;
 
@@ -320,8 +322,9 @@ namespace Zeni {
           if(state->Gamepad.bRightTrigger != state_prev->Gamepad.bRightTrigger) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_RIGHT_TRIGGER;
             e.jaxis.value = state->Gamepad.bRightTrigger * 128;
 
@@ -330,8 +333,9 @@ namespace Zeni {
           if(state->Gamepad.sThumbRY != state_prev->Gamepad.sThumbRY) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_RIGHT_THUMB_Y;
             e.jaxis.value = -state->Gamepad.sThumbRY - 1;
 
@@ -340,8 +344,9 @@ namespace Zeni {
           if(state->Gamepad.sThumbRX != state_prev->Gamepad.sThumbRX) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_RIGHT_THUMB_X;
             e.jaxis.value = state->Gamepad.sThumbRX;
 
@@ -350,8 +355,9 @@ namespace Zeni {
           if(state->Gamepad.bLeftTrigger != state_prev->Gamepad.bLeftTrigger) {
             SDL_Event e;
 
-            e.type = SDL_JOYAXISMOTION;
-            e.jaxis.which = Uint8(index);
+            e.common.type = SDL_JOYAXISMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jaxis.which = index;
             e.jaxis.axis = AXIS_LEFT_TRIGGER;
             e.jaxis.value = state->Gamepad.bLeftTrigger * 128;
 
@@ -360,8 +366,9 @@ namespace Zeni {
           if((state->Gamepad.wButtons & 0xF) != (state_prev->Gamepad.wButtons & 0xF)) {
             SDL_Event e;
 
-            e.type = SDL_JOYHATMOTION;
-            e.jhat.which = Uint8(index);
+            e.common.type = SDL_JOYHATMOTION;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jhat.which = index;
             e.jhat.hat = 0;
 
             switch(state->Gamepad.wButtons & 0xF) {
@@ -407,100 +414,110 @@ namespace Zeni {
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_A) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_A)) {
             SDL_Event e;
 
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_A) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_A) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_A;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_B) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_B) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_B) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_B;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_X) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_X) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_X) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_X;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_Y) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_Y)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_Y;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_LEFT_SHOULDER;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_RIGHT_SHOULDER;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_BACK)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_BACK;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_START) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_START)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_START) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_START) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_START;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_LEFT_THUMB;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }
           if((state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) != (state_prev->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)) {
             SDL_Event e;
             
-            e.type = Uint8((state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP);
-            e.jbutton.which = Uint8(index);
+            e.common.type = (state->Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? SDL_JOYBUTTONDOWN : SDL_JOYBUTTONUP;
+            e.common.timestamp = state->dwPacketNumber;
+            e.jbutton.which = index;
             e.jbutton.button = BUTTON_RIGHT_THUMB;
-            e.jbutton.state = Uint8(e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED);
+            e.jbutton.state = e.type == SDL_JOYBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
 
             SDL_PushEvent(&e);
           }

@@ -412,7 +412,8 @@ namespace Zeni {
 
             SDL_Event e;
 
-            e.type = Uint8(SDL_JOYHATMOTION);
+            e.common.type = SDL_JOYHATMOTION;
+            e.common.timestamp = event.common.timestamp;
             e.jhat.which = event.jbutton.which;
             e.jhat.hat = 0;
 
@@ -449,27 +450,29 @@ namespace Zeni {
           if(joy_mouse.enabled && joy_mouse.left_click == event.jbutton.button) {
             SDL_Event e;
 
-            e.type = Uint8(event.type == SDL_JOYBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP);
-            e.button.which = Uint8(event.jbutton.which + 1);
+            e.common.type = event.common.type == SDL_JOYBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
+            e.common.timestamp = event.common.timestamp;
+            e.button.which = event.jbutton.which + 1;
             e.button.state = event.jbutton.state;
             e.button.button = SDL_BUTTON_LEFT;
 
-            int x, y;
+            Sint32 x, y;
             SDL_GetMouseState(&x, &y);
-            e.button.x = Uint16(x);
-            e.button.y = Uint16(y);
+            e.button.x = x;
+            e.button.y = y;
 
             on_event(e);
           }
           else if(joy_mouse.enabled && joy_mouse.escape == event.jbutton.button) {
             SDL_Event e;
 
-            e.type = Uint8(event.type == SDL_JOYBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP);
+            e.common.type = event.common.type == SDL_JOYBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP;
+            e.common.timestamp = event.common.timestamp;
 #if SDL_VERSION_ATLEAST(2,0,0)
             e.key.keysym.mod = Uint16(SDL_GetModState());
             e.key.keysym.scancode = SDL_SCANCODE_ESCAPE;
 #else
-            e.key.which = Uint8(event.jbutton.which + 1);
+            e.key.which = event.jbutton.which + 1;
             e.key.keysym.mod = SDL_GetModState();
             e.key.keysym.scancode = 0;
 #endif
@@ -487,8 +490,9 @@ namespace Zeni {
             SDL_Event e;
 
 #if SDL_VERSION_ATLEAST(2,0,0)
-            e.type = SDL_MOUSEWHEEL;
-            e.wheel.which = Uint8(event.jhat.which + 1);
+            e.common.type = SDL_MOUSEWHEEL;
+            e.common.timestamp = event.common.timestamp;
+            e.wheel.which = event.jhat.which + 1;
             e.wheel.windowID = 0;
             e.wheel.x = 0;
             e.wheel.y = event.jhat.value == SDL_HAT_UP ? 1 : -1;
@@ -496,9 +500,9 @@ namespace Zeni {
             on_event(e);
 #else
             e.type = SDL_MOUSEBUTTONDOWN;
-            e.button.which = Uint8(event.jhat.which + 1);
+            e.button.which = event.jhat.which + 1;
             e.button.state = SDL_PRESSED;
-            e.button.button = Uint8(event.jhat.value == SDL_HAT_DOWN ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP);
+            e.button.button = event.jhat.value == SDL_HAT_DOWN ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP;
 
             int x, y;
             SDL_GetMouseState(&x, &y);
