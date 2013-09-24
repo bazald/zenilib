@@ -28,13 +28,16 @@ The following formats are supported:
 
   1. PNG is supported with 8 bits per channel
      (Grayscale/RGBA, with or without Alpha)
+  2. Images with width and height that are powers of 2.
+     (i.e. 2, 4, 8, 16, ...)
 
 The following things are unsupported:
 
   1. BMP, JPEG, and GIF images
-  2. Indexed color
-  3. Indexed transparency
-  4. Anything other than 8 bits per channel
+  2. Images with arbitrary width and height
+  3. Indexed color
+  4. Indexed transparency
+  5. Anything other than 8 bits per channel
 -->
 <Textures>
   <!--
@@ -43,11 +46,11 @@ The following things are unsupported:
     <filepath>textures/one.png</filepath>
     <tile>0</tile>
   </one>
-  <three>
+  <four>
     <is_sprite>0</is_sprite>
-    <filepath>textures/three.png</filepath>
+    <filepath>textures/four.png</filepath>
     <tile>0</tile>
-  </three>
+  </four>
   <sprite_token>
     <is_sprite>1</is_sprite>
     <token>one</token>
@@ -55,11 +58,11 @@ The following things are unsupported:
       <filepath>textures/two.png</filepath>
       <tile>0</tile>
     </file>
-    <token>three</token>
     <file>
-      <filepath>textures/four.png</filepath>
+      <filepath>textures/three.png</filepath>
       <tile>0</tile>
     </file>
+    <token>four</token>
   </sprite_token>
   -->
 </Textures>
