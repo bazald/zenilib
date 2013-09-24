@@ -89,6 +89,12 @@ namespace Zeni {
     enum {
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
+#if defined(_WINDOWS) && !defined(ENABLE_XINPUT)
+      AXIS_RIGHT_THUMB_X = 2,
+      AXIS_RIGHT_THUMB_Y = 3,
+      AXIS_LEFT_TRIGGER = 4,
+      AXIS_RIGHT_TRIGGER = 5
+#else
       AXIS_RIGHT_THUMB_Y = 3,
       AXIS_RIGHT_THUMB_X = 4,
 #if defined(_MACOSX)
@@ -101,9 +107,23 @@ namespace Zeni {
       AXIS_LEFT_TRIGGER = 2,
       AXIS_RIGHT_TRIGGER = 5
 #endif
+#endif
     } Xbox_360_Axis;
 
     enum {
+#if defined(_WINDOWS) && !defined(ENABLE_XINPUT)
+      BUTTON_START = 4,
+      BUTTON_BACK = 5,
+      BUTTON_LEFT_THUMB = 6,
+      BUTTON_RIGHT_THUMB = 7,
+      BUTTON_LEFT_SHOULDER = 8,
+      BUTTON_RIGHT_SHOULDER = 9,
+      BUTTON_A = 10,
+      BUTTON_B = 11,
+      BUTTON_X = 12,
+      BUTTON_Y = 13,
+      //BUTTON_RESERVED = 14,
+#else
       BUTTON_A = 0,
       BUTTON_B = 1,
       BUTTON_X = 2,
@@ -111,10 +131,10 @@ namespace Zeni {
       BUTTON_LEFT_SHOULDER = 4,
       BUTTON_RIGHT_SHOULDER = 5,
 #ifdef _MACOSX
-      BUTTON_START = 8,
-      BUTTON_BACK = 9,
       BUTTON_LEFT_THUMB = 6,
       BUTTON_RIGHT_THUMB = 7,
+      BUTTON_START = 8,
+      BUTTON_BACK = 9,
       //BUTTON_RESERVED = 10,
 #else
       BUTTON_BACK = 6,
@@ -128,15 +148,19 @@ namespace Zeni {
       BUTTON_RIGHT_THUMB = 10
 #endif
 #endif
+#endif
     } Xbox_360_Button;
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 
-    const char * get_joystick_name(const size_t &index) const; ///< Get the name of a given joystick
-    int get_joystick_num_axes(const size_t &index) const; ///< Get the number of axes for a joystick
-    int get_joystick_num_balls(const size_t &index) const; ///< Get the number of balls for a joystick
-    int get_joystick_num_hats(const size_t &index) const; ///< Get the number of hats for a joystick
-    int get_joystick_num_buttons(const size_t &index) const; ///< Get the number of buttons for a joystick
+    Sint32 get_joystick_id(const size_t index) const; ///< Get the id (as mapped by SDL) from the index
+    size_t get_joystick_index(const Sint32 id) const; ///< Get the index from the id (as mapped by SDL)
+
+    const char * get_joystick_name(const Sint32 &id) const; ///< Get the name of a given joystick
+    int get_joystick_num_axes(const Sint32 &id) const; ///< Get the number of axes for a joystick
+    int get_joystick_num_balls(const Sint32 &id) const; ///< Get the number of balls for a joystick
+    int get_joystick_num_hats(const Sint32 &id) const; ///< Get the number of hats for a joystick
+    int get_joystick_num_buttons(const Sint32 &id) const; ///< Get the number of buttons for a joystick
 
     void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
     void reinit(const bool &try_xinput = true); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks

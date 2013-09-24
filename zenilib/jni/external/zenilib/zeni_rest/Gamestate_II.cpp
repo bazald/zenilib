@@ -66,7 +66,7 @@ namespace Zeni {
         const float nm = confidence < 0.0f ? -1.0f : 1.0f;
         confidence = nm * std::min(std::max(ac - m_joystick_min, 0.0f) / (m_joystick_max - m_joystick_min), 1.0f);
 
-        fire_event(Zeni_Input_ID(SDL_JOYAXISMOTION, event.jaxis.axis, event.jaxis.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYAXISMOTION, event.jaxis.axis, get_Joysticks().get_joystick_index(event.jaxis.which)), confidence);
       }
       break;
     case SDL_JOYBALLMOTION:
@@ -75,14 +75,14 @@ namespace Zeni {
         const int nm = event.jball.xrel < 0.0f ? -1 : 1;
         const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
 
-        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 0, event.jball.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 0, get_Joysticks().get_joystick_index(event.jball.which)), confidence);
       }
       {
         const int ac = abs(event.jball.yrel);
         const int nm = event.jball.yrel < 0.0f ? -1 : 1;
         const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
 
-        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 1, event.jball.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 1, get_Joysticks().get_joystick_index(event.jball.which)), confidence);
       }
       break;
     case SDL_JOYBUTTONDOWN:
@@ -90,7 +90,7 @@ namespace Zeni {
       {
         const float confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-        fire_event(Zeni_Input_ID(SDL_JOYBUTTONDOWN, event.jbutton.button, event.jbutton.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYBUTTONDOWN, event.jbutton.button, get_Joysticks().get_joystick_index(event.jbutton.which)), confidence);
       }
       break;
     case SDL_JOYHATMOTION:
@@ -118,7 +118,7 @@ namespace Zeni {
             break;
         }
 
-        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 0, event.jhat.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 0, get_Joysticks().get_joystick_index(event.jhat.which)), confidence);
       }
       {
         float confidence;
@@ -144,7 +144,7 @@ namespace Zeni {
             break;
         }
 
-        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 1, event.jhat.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 1, get_Joysticks().get_joystick_index(event.jhat.which)), confidence);
       }
       break;
     case SDL_KEYDOWN:

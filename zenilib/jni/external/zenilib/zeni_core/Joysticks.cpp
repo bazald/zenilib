@@ -103,6 +103,26 @@ namespace Zeni {
     return Joysticks::get();
   }
 
+  Sint32 Joysticks::get_joystick_id(const size_t index) const {
+    if(m_using_xinput)
+      return index;
+    else
+      return SDL_JoystickInstanceID(m_joystick[index].first);
+  }
+
+  size_t Joysticks::get_joystick_index(const Sint32 id) const {
+    if(m_using_xinput)
+      return id;
+    else {
+      for(int i = 0, iend = m_joystick.size(); i != iend; ++i) {
+        if(SDL_JoystickInstanceID(m_joystick[i].first) == id)
+          return i;
+      }
+
+      return size_t(-1);
+    }
+  }
+
   size_t Joysticks::get_num_joysticks() const {
     if(m_using_xinput)
       return 4;
@@ -110,73 +130,73 @@ namespace Zeni {
       return m_joystick.size();
   }
 
-  const char * Joysticks::get_joystick_name(const size_t &index) const {
+  const char * Joysticks::get_joystick_name(const Sint32 &id) const {
     if(m_using_xinput) {
-      assert(index < 4);
+      assert(id < 4);
       return "Controller (XBOX 360 For Windows)";
     }
     else {
-      assert(index < m_joystick.size());
-      return m_joystick[index].second.c_str();
+      assert(id >= 0 && Uint32(id) < m_joystick.size());
+      return m_joystick[id].second.c_str();
     }
   }
   
-  int Joysticks::get_joystick_num_axes(const size_t &index) const {
+  int Joysticks::get_joystick_num_axes(const Sint32 &id) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(index < 4);
+      assert(id < 4);
       return 6;
     }
     else {
-      assert(index < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[index].first);
+      assert(id >= 0 && Uint32(id) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[id].first);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_balls(const size_t &index) const {
+  int Joysticks::get_joystick_num_balls(const Sint32 &id) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(index < 4);
+      assert(id < 4);
       return 0;
     }
     else {
-      assert(index < m_joystick.size());
-      return SDL_JoystickNumBalls(m_joystick[index].first);
+      assert(id >= 0 && Uint32(id) < m_joystick.size());
+      return SDL_JoystickNumBalls(m_joystick[id].first);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_hats(const size_t &index) const {
+  int Joysticks::get_joystick_num_hats(const Sint32 &id) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(index < 4);
+      assert(id < 4);
       return 1;
     }
     else {
-      assert(index < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[index].first);
+      assert(id >= 0 && Uint32(id) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[id].first);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_buttons(const size_t &index) const {
+  int Joysticks::get_joystick_num_buttons(const Sint32 &id) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(index < 4);
+      assert(id < 4);
       return 10;
     }
     else {
-      assert(index < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[index].first);
+      assert(id >= 0 && Uint32(id) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[id].first);
     }
 #endif
   }
@@ -581,7 +601,7 @@ namespace Zeni {
     else {
       SDL_JoystickEventState(SDL_DISABLE);
 
-      for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i)
+      for(int i = 0, end = m_joystick.size(); i < end; ++i)
         SDL_JoystickClose(m_joystick[size_t(i)].first);
 
       m_joystick.clear();
