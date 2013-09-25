@@ -87,26 +87,36 @@ namespace Zeni {
 #endif
   public:
     enum {
+#if defined(_WINDOWS)
+#ifdef ENABLE_XINPUT
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
-#if defined(_WINDOWS) && !defined(ENABLE_XINPUT)
+      AXIS_RIGHT_TRIGGER = 2,
+      AXIS_RIGHT_THUMB_Y = 3,
+      AXIS_RIGHT_THUMB_X = 4,
+      AXIS_LEFT_TRIGGER = 5
+#else
+      AXIS_LEFT_THUMB_X = 0,
+      AXIS_LEFT_THUMB_Y = 1,
       AXIS_RIGHT_THUMB_X = 2,
       AXIS_RIGHT_THUMB_Y = 3,
       AXIS_LEFT_TRIGGER = 4,
       AXIS_RIGHT_TRIGGER = 5
-#else
-      AXIS_RIGHT_THUMB_Y = 3,
-      AXIS_RIGHT_THUMB_X = 4,
-#if defined(_MACOSX)
-      AXIS_LEFT_TRIGGER = 4,
-      AXIS_RIGHT_TRIGGER = 5
-#elif defined(_WINDOWS)
-      AXIS_RIGHT_TRIGGER = 2,
-      AXIS_LEFT_TRIGGER = 5
-#else
-      AXIS_LEFT_TRIGGER = 2,
-      AXIS_RIGHT_TRIGGER = 5
 #endif
+#elif defined(_MACOSX)
+      AXIS_LEFT_THUMB_X = 0,
+      AXIS_LEFT_THUMB_Y = 1,
+      AXIS_LEFT_TRIGGER = 2,
+      AXIS_RIGHT_THUMB_X = 3,
+      AXIS_RIGHT_THUMB_Y = 4,
+      AXIS_RIGHT_TRIGGER = 5
+#elif defined(_LINUX)
+      AXIS_LEFT_THUMB_X = 0,
+      AXIS_LEFT_THUMB_Y = 1,
+      AXIS_LEFT_TRIGGER = 2,
+      AXIS_RIGHT_THUMB_X = 3,
+      AXIS_RIGHT_THUMB_Y = 4,
+      AXIS_RIGHT_TRIGGER = 5
 #endif
     } Xbox_360_Axis;
 
