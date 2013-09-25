@@ -163,8 +163,8 @@ namespace Zeni {
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
 
-    Sint32 get_joystick_id(const size_t index) const; ///< Get the id (as mapped by SDL) from the index
-    size_t get_joystick_index(const Sint32 id) const; ///< Get the index from the id (as mapped by SDL)
+    Sint32 get_joystick_id(const Sint32 &index) const; ///< Get the id (as mapped by SDL) from the index
+    Sint32 get_joystick_index(const Sint32 &id) const; ///< Get the index from the id (as mapped by SDL)
 
     const char * get_joystick_name(const Sint32 &index) const; ///< Get the name of a given joystick
     int get_joystick_num_axes(const Sint32 &index) const; ///< Get the number of axes for a joystick

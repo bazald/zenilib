@@ -103,23 +103,23 @@ namespace Zeni {
     return Joysticks::get();
   }
 
-  Sint32 Joysticks::get_joystick_id(const size_t index) const {
+  Sint32 Joysticks::get_joystick_id(const Sint32 &index) const {
     if(m_using_xinput)
       return index;
     else
-      return SDL_JoystickInstanceID(m_joystick[index]);
+      return SDL_JoystickInstanceID(m_joystick.at(index));
   }
 
-  size_t Joysticks::get_joystick_index(const Sint32 id) const {
+  Sint32 Joysticks::get_joystick_index(const Sint32 &id) const {
     if(m_using_xinput)
       return id;
     else {
-      for(int i = 0, iend = m_joystick.size(); i != iend; ++i) {
+      for(int i = 0, iend = int(m_joystick.size()); i != iend; ++i) {
         if(SDL_JoystickInstanceID(m_joystick[i]) == id)
           return i;
       }
 
-      return size_t(-1);
+      return -1;
     }
   }
 
@@ -625,7 +625,7 @@ namespace Zeni {
     else {
       SDL_JoystickEventState(SDL_DISABLE);
 
-      for(int i = 0, end = m_joystick.size(); i < end; ++i)
+      for(int i = 0, end = int(m_joystick.size()); i < end; ++i)
         SDL_JoystickClose(m_joystick[size_t(i)]);
 
       m_joystick.clear();
