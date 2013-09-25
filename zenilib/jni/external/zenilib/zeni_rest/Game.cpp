@@ -297,9 +297,7 @@ namespace Zeni {
       float time_step = time_passed.get_seconds_since(time_processed);
       time_processed = time_passed;
 
-#ifdef ENABLE_XINPUT
       get_Joysticks().poll();
-#endif
 
 #ifndef ANDROID
       if(joy_mouse.enabled && (joy_mouse.velocity.x != 0 || joy_mouse.velocity.y != 0)) {

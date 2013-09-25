@@ -156,20 +156,20 @@ namespace Zeni {
     Sint32 get_joystick_id(const size_t index) const; ///< Get the id (as mapped by SDL) from the index
     size_t get_joystick_index(const Sint32 id) const; ///< Get the index from the id (as mapped by SDL)
 
-    const char * get_joystick_name(const Sint32 &id) const; ///< Get the name of a given joystick
-    int get_joystick_num_axes(const Sint32 &id) const; ///< Get the number of axes for a joystick
-    int get_joystick_num_balls(const Sint32 &id) const; ///< Get the number of balls for a joystick
-    int get_joystick_num_hats(const Sint32 &id) const; ///< Get the number of hats for a joystick
-    int get_joystick_num_buttons(const Sint32 &id) const; ///< Get the number of buttons for a joystick
+    const char * get_joystick_name(const Sint32 &index) const; ///< Get the name of a given joystick
+    int get_joystick_num_axes(const Sint32 &index) const; ///< Get the number of axes for a joystick
+    int get_joystick_num_balls(const Sint32 &index) const; ///< Get the number of balls for a joystick
+    int get_joystick_num_hats(const Sint32 &index) const; ///< Get the number of hats for a joystick
+    int get_joystick_num_buttons(const Sint32 &index) const; ///< Get the number of buttons for a joystick
+    bool is_joystick_connected(const Sint32 &index) const; ///< Check to see if the joystick is currently connected
 
     void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
     void reinit(const bool &try_xinput = true); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
     void enable(const bool &enable_); ///< Temporarily turn joystick input on/off
-
-#ifdef ENABLE_XINPUT
+    
     void poll(); ///< Poll for new input
 
-    bool is_xinput_connected(const size_t &index) const;
+#ifdef ENABLE_XINPUT
     const XINPUT_CAPABILITIES & get_xinput_capabilities(const size_t &index) const;
     const XINPUT_STATE & get_xinput_state(const size_t &index) const;
     void set_xinput_vibration(const size_t &index, const float &left, const float &right);
@@ -209,7 +209,7 @@ namespace Zeni {
 #pragma warning( push )
 #pragma warning( disable : 4251 )
 #endif
-    std::vector<std::pair<SDL_Joystick *, String> > m_joystick;
+    std::vector<SDL_Joystick *> m_joystick;
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif

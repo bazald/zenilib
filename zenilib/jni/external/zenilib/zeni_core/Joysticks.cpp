@@ -107,7 +107,7 @@ namespace Zeni {
     if(m_using_xinput)
       return index;
     else
-      return SDL_JoystickInstanceID(m_joystick[index].first);
+      return SDL_JoystickInstanceID(m_joystick[index]);
   }
 
   size_t Joysticks::get_joystick_index(const Sint32 id) const {
@@ -115,7 +115,7 @@ namespace Zeni {
       return id;
     else {
       for(int i = 0, iend = m_joystick.size(); i != iend; ++i) {
-        if(SDL_JoystickInstanceID(m_joystick[i].first) == id)
+        if(SDL_JoystickInstanceID(m_joystick[i]) == id)
           return i;
       }
 
@@ -124,81 +124,99 @@ namespace Zeni {
   }
 
   size_t Joysticks::get_num_joysticks() const {
-    if(m_using_xinput)
-      return 4;
+#ifdef ENABLE_XINPUT
+    if(m_using_xinput) {
+      return m_xinput_controller[3].connected ? 4 :
+             m_xinput_controller[2].connected ? 3 :
+             m_xinput_controller[1].connected ? 2 :
+             m_xinput_controller[0].connected ? 1 :
+             0;
+    }
     else
+#endif
       return m_joystick.size();
   }
 
-  const char * Joysticks::get_joystick_name(const Sint32 &id) const {
+  const char * Joysticks::get_joystick_name(const Sint32 &index) const {
     if(m_using_xinput) {
-      assert(id < 4);
+      assert(index < 4);
       return "Controller (XBOX 360 For Windows)";
     }
     else {
-      assert(id >= 0 && Uint32(id) < m_joystick.size());
-      return m_joystick[id].second.c_str();
+      assert(index >= 0 && Uint32(index) < m_joystick.size());
+      return SDL_JoystickName(m_joystick[index]);
     }
   }
   
-  int Joysticks::get_joystick_num_axes(const Sint32 &id) const {
+  int Joysticks::get_joystick_num_axes(const Sint32 &index) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(id < 4);
+      assert(index < 4);
       return 6;
     }
     else {
-      assert(id >= 0 && Uint32(id) < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[id].first);
+      assert(index >= 0 && Uint32(index) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index]);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_balls(const Sint32 &id) const {
+  int Joysticks::get_joystick_num_balls(const Sint32 &index) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(id < 4);
+      assert(index < 4);
       return 0;
     }
     else {
-      assert(id >= 0 && Uint32(id) < m_joystick.size());
-      return SDL_JoystickNumBalls(m_joystick[id].first);
+      assert(index >= 0 && Uint32(index) < m_joystick.size());
+      return SDL_JoystickNumBalls(m_joystick[index]);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_hats(const Sint32 &id) const {
+  int Joysticks::get_joystick_num_hats(const Sint32 &index) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(id < 4);
+      assert(index < 4);
       return 1;
     }
     else {
-      assert(id >= 0 && Uint32(id) < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[id].first);
+      assert(index >= 0 && Uint32(index) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index]);
     }
 #endif
   }
 
-  int Joysticks::get_joystick_num_buttons(const Sint32 &id) const {
+  int Joysticks::get_joystick_num_buttons(const Sint32 &index) const {
 #ifdef ANDROID
     return 0;
 #else
     if(m_using_xinput) {
-      assert(id < 4);
+      assert(index < 4);
       return 10;
     }
     else {
-      assert(id >= 0 && Uint32(id) < m_joystick.size());
-      return SDL_JoystickNumAxes(m_joystick[id].first);
+      assert(index >= 0 && Uint32(index) < m_joystick.size());
+      return SDL_JoystickNumAxes(m_joystick[index]);
     }
 #endif
+  }
+  
+  bool Joysticks::is_joystick_connected(const Sint32 &index) const {
+#ifdef ENABLE_XINPUT
+    if(m_using_xinput) {
+      assert(index < 4);
+      return m_xinput_controller[index].connected;
+    }
+    else
+#endif
+      return SDL_JoystickGetAttached(m_joystick[index]) != SDL_FALSE;
   }
 
   void Joysticks::reinit() {
@@ -225,6 +243,42 @@ namespace Zeni {
       SDL_JoystickEventState(enable_ ? SDL_ENABLE : SDL_DISABLE);
 #endif
   }
+  
+  void Joysticks::poll() {
+#ifdef ENABLE_XINPUT
+    if(m_using_xinput) {
+      for(int i = 0; i != 4; ++i)
+        m_xinput_controller[i].poll();
+    }
+    else
+#endif
+    {
+      for(int i = 0, iend = SDL_NumJoysticks(); i != iend; ++i) {
+        SDL_Joystick * const joystick = SDL_JoystickOpen(i);
+        if(!joystick) {
+          uninit();
+          throw Joystick_Init_Failure();
+        }
+
+        std::vector<SDL_Joystick *>::iterator found = m_joystick.end();
+        for(std::vector<SDL_Joystick *>::iterator it = m_joystick.begin(), iend = m_joystick.end(); it != iend; ++it) {
+          if(SDL_JoystickInstanceID(joystick) == SDL_JoystickInstanceID(*it)) {
+            found = it;
+            break;
+          }
+          else if(SDL_JoystickGetAttached(*it) == SDL_FALSE)
+            found = it;
+        }
+
+        if(found == m_joystick.end())
+          m_joystick.push_back(joystick);
+        else if(SDL_JoystickInstanceID(joystick) != SDL_JoystickInstanceID(*found)) {
+          SDL_JoystickClose(*found);
+          *found = joystick;
+        }
+      }
+    }
+  }
 
 #ifdef ENABLE_XINPUT
   void Joysticks::zero_handles() {
@@ -232,19 +286,6 @@ namespace Zeni {
     g_XInputGetCapabilities = 0;
     g_XInputGetState = 0;
     g_XInputSetState = 0;
-  }
-
-  void Joysticks::poll() {
-    if(!m_using_xinput)
-      return;
-
-    for(int i = 0; i != 4; ++i)
-      m_xinput_controller[i].poll();
-  }
-
-  bool Joysticks::is_xinput_connected(const size_t &index) const {
-    assert(index < 4lu);
-    return m_xinput_controller[index].connected;
   }
 
   const XINPUT_CAPABILITIES & Joysticks::get_xinput_capabilities(const size_t &index) const {
@@ -569,23 +610,6 @@ namespace Zeni {
       if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
         throw Joystick_Init_Failure();
 
-      for(int i = 0, end = SDL_NumJoysticks(); i < end; ++i) {
-        SDL_Joystick * const joystick = SDL_JoystickOpen(i);
-#if SDL_VERSION_ATLEAST(2,0,0)
-        const char * const name = SDL_JoystickName(joystick);
-#else
-        const char * const name = SDL_JoystickName(i);
-#endif
-        m_joystick.push_back(std::make_pair(joystick, name));
-
-        if(!m_joystick[size_t(i)].first) {
-          m_joystick.pop_back();
-          uninit();
-
-          throw Joystick_Init_Failure();
-        }
-      }
-
       SDL_JoystickEventState(SDL_ENABLE);
 #endif
     }
@@ -602,7 +626,7 @@ namespace Zeni {
       SDL_JoystickEventState(SDL_DISABLE);
 
       for(int i = 0, end = m_joystick.size(); i < end; ++i)
-        SDL_JoystickClose(m_joystick[size_t(i)].first);
+        SDL_JoystickClose(m_joystick[size_t(i)]);
 
       m_joystick.clear();
 
