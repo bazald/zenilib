@@ -1185,6 +1185,7 @@ SDL_SYS_HapticEffectType(SDL_HapticEffect * effect)
         return &GUID_Friction;
 
     case SDL_HAPTIC_CUSTOM:
+    case SDL_HAPTIC_LEFTRIGHT:
         return &GUID_CustomForce;
 
     default:
@@ -1322,7 +1323,10 @@ SDL_SYS_HapticRunEffect(SDL_Haptic * haptic, struct haptic_effect *effect,
         XINPUT_VIBRATION *vib = &effect->hweffect->vibration;
         SDL_assert(effect->effect.type == SDL_HAPTIC_LEFTRIGHT);  /* should catch this at higher level */
         SDL_LockMutex(haptic->hwdata->mutex);
-        haptic->hwdata->stopTicks = SDL_GetTicks() + (effect->effect.leftright.length * iterations);
+        if(effect->effect.leftright.length == SDL_HAPTIC_INFINITY || iterations == SDL_HAPTIC_INFINITY)
+          haptic->hwdata->stopTicks = SDL_HAPTIC_INFINITY;
+        else
+          haptic->hwdata->stopTicks = SDL_GetTicks() + (effect->effect.leftright.length * iterations);
         SDL_UnlockMutex(haptic->hwdata->mutex);
         return (XINPUTSETSTATE(haptic->hwdata->userid, vib) == ERROR_SUCCESS) ? 0 : -1;
     }
