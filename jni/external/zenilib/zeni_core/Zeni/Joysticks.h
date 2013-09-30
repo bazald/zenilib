@@ -73,36 +73,15 @@ namespace Zeni {
     Joysticks(const Joysticks &);
     Joysticks & operator=(const Joysticks &);
 
-#ifdef ENABLE_XINPUT
-    typedef void (WINAPI *XInputEnable_fcn)(BOOL enable);
-    typedef DWORD (WINAPI *XInputGetCapabilities_fcn)(DWORD dwUserIndex, DWORD dwFlags, XINPUT_CAPABILITIES* pCapabilities);
-    typedef DWORD (WINAPI *XInputGetState_fcn)(DWORD dwUserIndex, XINPUT_STATE* pState);
-    typedef DWORD (WINAPI *XInputSetState_fcn)(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
-
-    // DLL Functions
-    static XInputEnable_fcn XInputEnable() {return g_XInputEnable;}
-    static XInputGetCapabilities_fcn XInputGetCapabilities() {return g_XInputGetCapabilities;}
-    static XInputGetState_fcn XInputGetState() {return g_XInputGetState;}
-    static XInputSetState_fcn XInputSetState() {return g_XInputSetState;}
-#endif
   public:
     enum {
 #if defined(_WINDOWS)
-#ifdef ENABLE_XINPUT
-      AXIS_LEFT_THUMB_X = 0,
-      AXIS_LEFT_THUMB_Y = 1,
-      AXIS_RIGHT_TRIGGER = 2,
-      AXIS_RIGHT_THUMB_Y = 3,
-      AXIS_RIGHT_THUMB_X = 4,
-      AXIS_LEFT_TRIGGER = 5
-#else
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
       AXIS_RIGHT_THUMB_X = 2,
       AXIS_RIGHT_THUMB_Y = 3,
       AXIS_LEFT_TRIGGER = 4,
       AXIS_RIGHT_TRIGGER = 5
-#endif
 #elif defined(_MACOSX)
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
@@ -121,7 +100,7 @@ namespace Zeni {
     } Xbox_360_Axis;
 
     enum {
-#if defined(_WINDOWS) && !defined(ENABLE_XINPUT)
+#if defined(_WINDOWS)
       BUTTON_START = 4,
       BUTTON_BACK = 5,
       BUTTON_LEFT_THUMB = 6,
@@ -149,14 +128,9 @@ namespace Zeni {
 #else
       BUTTON_BACK = 6,
       BUTTON_START = 7,
-#ifdef _WINDOWS
-      BUTTON_LEFT_THUMB = 8,
-      BUTTON_RIGHT_THUMB = 9
-#else
       //BUTTON_RESERVED = 8,
       BUTTON_LEFT_THUMB = 9,
       BUTTON_RIGHT_THUMB = 10
-#endif
 #endif
 #endif
     } Xbox_360_Button;
@@ -174,52 +148,37 @@ namespace Zeni {
     bool is_joystick_connected(const Sint32 &index) const; ///< Check to see if the joystick is currently connected
 
     void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
-    void reinit(const bool &try_xinput = true); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
     void enable(const bool &enable_); ///< Temporarily turn joystick input on/off
     
     void poll(); ///< Poll for new input
 
-#ifdef ENABLE_XINPUT
-    const XINPUT_CAPABILITIES & get_xinput_capabilities(const size_t &index) const;
-    const XINPUT_STATE & get_xinput_state(const size_t &index) const;
-    void set_xinput_vibration(const size_t &index, const float &left, const float &right);
-#endif
+    void set_vibration(const size_t &index, const float &left, const float &right);
 
   private:
-#ifdef ENABLE_XINPUT
-    void zero_handles();
+    class Joystick_Info {
+      Joystick_Info(const Joystick_Info &rhs);
+      Joystick_Info & operator=(const Joystick_Info &rhs);
 
-    HMODULE m_xinput;
-    static XInputEnable_fcn g_XInputEnable;
-    static XInputGetCapabilities_fcn g_XInputGetCapabilities;
-    static XInputGetState_fcn g_XInputGetState;
-    static XInputSetState_fcn g_XInputSetState;
+    public:
+      Joystick_Info();
+      ~Joystick_Info();
 
-    struct ZENI_CORE_DLL XInput {
-      XInput();
-      ~XInput();
+      SDL_Joystick * joystick;
+      SDL_Haptic * haptic;
 
-      void poll();
+      SDL_HapticEffect haptic_effect;
+      int haptic_effect_id;
+    };
 
-      int index;
-      bool connected;
-      XINPUT_CAPABILITIES *capabilities;
-      XINPUT_STATE *state;
-      XINPUT_STATE *state_prev;
-      XINPUT_VIBRATION *vibration;
-    } m_xinput_controller[4];
-#endif
-
-    void init(const bool &try_xinput);
+    void init();
     void uninit();
-
-    bool m_using_xinput;
 
 #ifdef _WINDOWS
 #pragma warning( push )
 #pragma warning( disable : 4251 )
 #endif
-    std::vector<SDL_Joystick *> m_joystick;
+    typedef std::vector<Joystick_Info *> Joystick_Array;
+    Joystick_Array m_joysticks;
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif

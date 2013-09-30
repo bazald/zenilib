@@ -110,8 +110,7 @@ solution "zenilib"
               "ZENI_NET_DLL=__declspec(dllimport)",
               "ZENI_NET_EXT=extern",
               "ZENI_REST_DLL=__declspec(dllimport)",
-              "ZENI_REST_EXT=extern",
-              "ENABLE_XINPUT" }
+              "ZENI_REST_EXT=extern" }
   configuration "not windows"
     defines { "OGG_DLL="           ,
               "VORBIS_DLL="        ,
