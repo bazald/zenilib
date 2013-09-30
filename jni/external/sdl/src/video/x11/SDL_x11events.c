@@ -97,7 +97,7 @@ static Atom X11_PickTargetFromAtoms(Display *disp, Atom a0, Atom a1, Atom a2)
     if (a2 != None) atom[count++] = a2;
     return X11_PickTarget(disp, atom, count);
 }
-/*#define DEBUG_XEVENTS*/
+/* #define DEBUG_XEVENTS */
 
 struct KeyRepeatCheckData
 {
@@ -135,7 +135,9 @@ static Bool X11_IsWheelCheckIfEvent(Display *display, XEvent *chkev,
     XPointer arg)
 {
     XEvent *event = (XEvent *) arg;
+    /* we only handle buttons 4 and 5 - false positive avoidance */
     if (chkev->type == ButtonRelease &&
+        (event->xbutton.button == Button4 || event->xbutton.button == Button5) &&
         chkev->xbutton.button == event->xbutton.button &&
         chkev->xbutton.time == event->xbutton.time)
         return True;
@@ -150,7 +152,12 @@ static SDL_bool X11_IsWheelEvent(Display * display,XEvent * event,int * ticks)
            however, mouse wheel events trigger a button press and a button release
            immediately. thus, checking if the same button was released at the same
            time as it was pressed, should be an adequate hack to derive a mouse
-           wheel event. */
+           wheel event.
+           However, there is broken and unusual hardware out there...
+           - False positive: a button for which a release event is
+             generated (or synthesised) immediately.
+           - False negative: a wheel which, when rolled, doesn't have
+             a release event generated immediately. */
         if (XCheckIfEvent(display, &relevent, X11_IsWheelCheckIfEvent,
             (XPointer) event)) {
 
@@ -173,11 +180,12 @@ static SDL_bool X11_IsWheelEvent(Display * display,XEvent * event,int * ticks)
 */
 static char* X11_URIToLocal(char* uri) {
     char *file = NULL;
+    SDL_bool local;
 
     if (memcmp(uri,"file:/",6) == 0) uri += 6;      /* local file? */
     else if (strstr(uri,":/") != NULL) return file; /* wrong scheme */
 
-    SDL_bool local = uri[0] != '/' || ( uri[0] != '\0' && uri[1] == '/' );
+    local = uri[0] != '/' || ( uri[0] != '\0' && uri[1] == '/' );
 
     /* got a hostname? */
     if ( !local && uri[0] == '/' && uri[2] != '/' ) {
@@ -267,6 +275,7 @@ X11_DispatchEvent(_THIS)
     SDL_WindowData *data;
     XEvent xevent;
     int i;
+    XClientMessageEvent m;
 
     SDL_zero(xevent);           /* valgrind fix. --ryan. */
     XNextEvent(display, &xevent);
@@ -384,7 +393,7 @@ X11_DispatchEvent(_THIS)
                    I think it's better to think the ALT key is held down
                    when it's not, then always lose the ALT modifier on Unity.
                  */
-                /*SDL_ResetKeyboard();*/
+                /* SDL_ResetKeyboard(); */
             }
             data->pending_focus = PENDING_FOCUS_IN;
             data->pending_focus_time = SDL_GetTicks() + PENDING_FOCUS_IN_TIME;
@@ -440,7 +449,7 @@ X11_DispatchEvent(_THIS)
 #endif
             SDL_SendKeyboardKey(SDL_PRESSED, videodata->key_layout[keycode]);
 #if 1
-            if (videodata->key_layout[keycode] == SDL_SCANCODE_UNKNOWN) {
+            if (videodata->key_layout[keycode] == SDL_SCANCODE_UNKNOWN && keycode) {
                 int min_keycode, max_keycode;
                 XDisplayKeycodes(display, &min_keycode, &max_keycode);
 #if SDL_VIDEO_DRIVER_X11_HAS_XKBKEYCODETOKEYSYM
@@ -549,7 +558,6 @@ X11_DispatchEvent(_THIS)
             else if (xevent.xclient.message_type == videodata->XdndPosition) {
 
                 /* reply with status */
-                XClientMessageEvent m;
                 memset(&m, 0, sizeof(XClientMessageEvent));
                 m.type = ClientMessage;
                 m.display = xevent.xclient.display;
@@ -568,7 +576,6 @@ X11_DispatchEvent(_THIS)
             else if(xevent.xclient.message_type == videodata->XdndDrop) {
                 if (data->xdnd_req == None) {
                     /* say again - not interested! */
-                    XClientMessageEvent m;
                     memset(&m, 0, sizeof(XClientMessageEvent));
                     m.type = ClientMessage;
                     m.display = xevent.xclient.display;
@@ -841,7 +848,6 @@ X11_DispatchEvent(_THIS)
                 XFree(p.data);
 
                 /* send reply */
-                XClientMessageEvent m;
                 SDL_memset(&m, 0, sizeof(XClientMessageEvent));
                 m.type = ClientMessage;
                 m.display = display;

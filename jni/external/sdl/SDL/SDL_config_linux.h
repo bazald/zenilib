@@ -303,6 +303,9 @@
 /* #undef SDL_POWER_BEOS */
 /* #undef SDL_POWER_HARDWIRED */
 
+/* enable filesystem support */
+#define SDL_FILESYSTEM_UNIX   1
+
 /* Enable assembly routines */
 #define SDL_ASSEMBLY_ROUTINES 1
 /* #undef SDL_ALTIVEC_BLITTERS */

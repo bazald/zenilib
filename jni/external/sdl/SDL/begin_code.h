@@ -33,15 +33,17 @@
 #endif
 #define _begin_code_h
 
+#ifndef SDL_DEPRECATED
+#  if (__GNUC__ >= 4)  /* technically, this arrived in gcc 3.1, but oh well. */
+#    define SDL_DEPRECATED __attribute__((deprecated))
+#  else
+#    define SDL_DEPRECATED
+#  endif
+#endif
+
 /* Some compilers use a special export keyword */
 #ifndef DECLSPEC
-# if defined(__BEOS__) || defined(__HAIKU__)
-#  if defined(__GNUC__)
-#   define DECLSPEC __declspec(dllexport)
-#  else
-#   define DECLSPEC __declspec(export)
-#  endif
-# elif defined(__WIN32__)
+# if defined(__WIN32__)
 #  ifdef __BORLANDC__
 #   ifdef BUILD_SDL
 #    define DECLSPEC
@@ -54,6 +56,8 @@
 # else
 #  if defined(__GNUC__) && __GNUC__ >= 4
 #   define DECLSPEC __attribute__ ((visibility("default")))
+#  elif defined(__GNUC__) && __GNUC__ >= 2
+#   define DECLSPEC __declspec(dllexport)
 #  else
 #   define DECLSPEC
 #  endif

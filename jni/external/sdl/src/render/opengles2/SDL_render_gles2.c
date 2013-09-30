@@ -336,9 +336,7 @@ GLES2_DestroyRenderer(SDL_Renderer *renderer)
             }
             SDL_GL_DeleteContext(rdata->context);
         }
-        if (rdata->shader_formats) {
-            SDL_free(rdata->shader_formats);
-        }
+        SDL_free(rdata->shader_formats);
         SDL_free(rdata);
     }
     SDL_free(renderer);
@@ -541,9 +539,7 @@ GLES2_UpdateTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect
                     tdata->pixel_format,
                     tdata->pixel_type,
                     src);
-    if (blob) {
-        SDL_free(blob);
-    }
+    SDL_free(blob);
 
     if (rdata->glGetError() != GL_NO_ERROR) {
         return SDL_SetError("Failed to update texture");
@@ -1174,7 +1170,7 @@ GLES2_RenderCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *s
 {
     GLES2_DriverContext *rdata = (GLES2_DriverContext *)renderer->driverdata;
     GLES2_TextureData *tdata = (GLES2_TextureData *)texture->driverdata;
-    GLES2_ImageSource sourceType;
+    GLES2_ImageSource sourceType = GLES2_IMAGESOURCE_TEXTURE_ABGR;
     SDL_BlendMode blendMode;
     GLfloat vertices[8];
     GLfloat texCoords[8];
@@ -1330,7 +1326,7 @@ GLES2_RenderCopyEx(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect 
 {
     GLES2_DriverContext *rdata = (GLES2_DriverContext *)renderer->driverdata;
     GLES2_TextureData *tdata = (GLES2_TextureData *)texture->driverdata;
-    GLES2_ImageSource sourceType;
+    GLES2_ImageSource sourceType = GLES2_IMAGESOURCE_TEXTURE_ABGR;
     SDL_BlendMode blendMode;
     GLfloat vertices[8];
     GLfloat texCoords[8];
@@ -1632,7 +1628,7 @@ GLES2_CreateRenderer(SDL_Window *window, Uint32 flags)
     Uint32 windowFlags;
     GLint window_framebuffer;
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_EGL, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 

@@ -34,7 +34,7 @@
 #include "SDL_x11shape.h"
 #include "SDL_x11xinput2.h"
 
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+#if SDL_VIDEO_OPENGL_EGL
 #include "SDL_x11opengles.h"
 #endif
 
@@ -131,7 +131,7 @@ X11_SetNetWMState(_THIS, Window xwindow, Uint32 flags)
     SDL_VideoData *videodata = (SDL_VideoData *) _this->driverdata;
     Display *display = videodata->display;
     Atom _NET_WM_STATE = videodata->_NET_WM_STATE;
-    /*Atom _NET_WM_STATE_HIDDEN = videodata->_NET_WM_STATE_HIDDEN;*/
+    /* Atom _NET_WM_STATE_HIDDEN = videodata->_NET_WM_STATE_HIDDEN; */
     Atom _NET_WM_STATE_FOCUSED = videodata->_NET_WM_STATE_FOCUSED;
     Atom _NET_WM_STATE_MAXIMIZED_VERT = videodata->_NET_WM_STATE_MAXIMIZED_VERT;
     Atom _NET_WM_STATE_MAXIMIZED_HORZ = videodata->_NET_WM_STATE_MAXIMIZED_HORZ;
@@ -213,7 +213,7 @@ X11_GetNetWMState(_THIS, Window xwindow)
     }
 
     /* FIXME, check the size hints for resizable */
-    /*flags |= SDL_WINDOW_RESIZABLE;*/
+    /* flags |= SDL_WINDOW_RESIZABLE; */
 
     return flags;
 }
@@ -346,6 +346,7 @@ X11_CreateWindow(_THIS, SDL_Window * window)
     SDL_VideoData *data = (SDL_VideoData *) _this->driverdata;
     SDL_DisplayData *displaydata =
         (SDL_DisplayData *) SDL_GetDisplayForWindow(window)->driverdata;
+    SDL_WindowData *windowdata;
     Display *display = data->display;
     int screen = displaydata->screen;
     Visual *visual;
@@ -363,12 +364,14 @@ X11_CreateWindow(_THIS, SDL_Window * window)
     Atom XdndAware, xdnd_version = 5;
     Uint32 fevent = 0;
 
-#if SDL_VIDEO_OPENGL_GLX || SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-    if (window->flags & SDL_WINDOW_OPENGL) {
-        XVisualInfo *vinfo;
+#if SDL_VIDEO_OPENGL_GLX || SDL_VIDEO_OPENGL_EGL
+    if ((window->flags & SDL_WINDOW_OPENGL) &&
+        !SDL_getenv("SDL_VIDEO_X11_VISUALID")) {
+        XVisualInfo *vinfo = NULL;
 
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-        if (_this->gl_config.use_egl == 1) {
+#if SDL_VIDEO_OPENGL_EGL
+        if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES && 
+            ( !_this->gl_data || ! _this->gl_data->HAS_GLX_EXT_create_context_es2_profile )) {
             vinfo = X11_GLES_GetVisual(_this, display, screen);
         } else
 #endif
@@ -377,6 +380,7 @@ X11_CreateWindow(_THIS, SDL_Window * window)
             vinfo = X11_GL_GetVisual(_this, display, screen);
 #endif
         }
+
         if (!vinfo) {
             return -1;
         }
@@ -391,7 +395,7 @@ X11_CreateWindow(_THIS, SDL_Window * window)
     }
 
     xattr.override_redirect = False;
-    xattr.background_pixel = 0;
+    xattr.background_pixmap = None;
     xattr.border_pixel = 0;
 
     if (visual->class == DirectColor) {
@@ -476,31 +480,11 @@ X11_CreateWindow(_THIS, SDL_Window * window)
     w = XCreateWindow(display, RootWindow(display, screen),
                       window->x, window->y, window->w, window->h,
                       0, depth, InputOutput, visual,
-                      (CWOverrideRedirect | CWBackPixel | CWBorderPixel |
+                      (CWOverrideRedirect | CWBackPixmap | CWBorderPixel |
                        CWColormap), &xattr);
     if (!w) {
         return SDL_SetError("Couldn't create window");
     }
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-    if ((window->flags & SDL_WINDOW_OPENGL) && (_this->gl_config.use_egl == 1)) {
-        if (!_this->gles_data) {
-            XDestroyWindow(display, w);
-            return -1;
-        }
-
-        /* Create the GLES window surface */
-        _this->gles_data->egl_surface =
-            _this->gles_data->eglCreateWindowSurface(_this->gles_data->
-                                                 egl_display,
-                                                 _this->gles_data->egl_config,
-                                                 (NativeWindowType) w, NULL);
-
-        if (_this->gles_data->egl_surface == EGL_NO_SURFACE) {
-            XDestroyWindow(display, w);
-            return SDL_SetError("Could not create GLES window surface");
-        }
-    }
-#endif
 
     SetWindowBordered(display, screen, w,
                       (window->flags & SDL_WINDOW_BORDERLESS) == 0);
@@ -567,11 +551,31 @@ X11_CreateWindow(_THIS, SDL_Window * window)
         XDestroyWindow(display, w);
         return -1;
     }
+    windowdata = (SDL_WindowData *) window->driverdata;
+
+#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+    if ((window->flags & SDL_WINDOW_OPENGL) && 
+        _this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES && 
+        (!_this->gl_data || ! _this->gl_data->HAS_GLX_EXT_create_context_es2_profile) ) {
+        if (!_this->egl_data) {
+            XDestroyWindow(display, w);
+            return -1;
+        }
+
+        /* Create the GLES window surface */
+        windowdata->egl_surface = SDL_EGL_CreateSurface(_this, (NativeWindowType) w);
+
+        if (windowdata->egl_surface == EGL_NO_SURFACE) {
+            XDestroyWindow(display, w);
+            return SDL_SetError("Could not create GLES window surface");
+        }
+    }
+#endif
+    
 
 #ifdef X_HAVE_UTF8_STRING
-    if (SDL_X11_HAVE_UTF8) {
-        pXGetICValues(((SDL_WindowData *) window->driverdata)->ic,
-                      XNFilterEvents, &fevent, NULL);
+    if (SDL_X11_HAVE_UTF8 && windowdata->ic) {
+        pXGetICValues(windowdata->ic, XNFilterEvents, &fevent, NULL);
     }
 #endif
 
@@ -825,7 +829,7 @@ X11_SetWindowSize(_THIS, SDL_Window * window)
     }
     if (!(window->flags & SDL_WINDOW_RESIZABLE)) {
          /* Apparently, if the X11 Window is set to a 'non-resizable' window, you cannot resize it using the XResizeWindow, thus
-            we must set the size hints to adjust the window size.*/
+            we must set the size hints to adjust the window size. */
          XSizeHints *sizehints = XAllocSizeHints();
          long userhints;
 
@@ -931,6 +935,34 @@ X11_HideWindow(_THIS, SDL_Window * window)
     }
 }
 
+static void
+SetWindowActive(_THIS, SDL_Window * window)
+{
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    SDL_DisplayData *displaydata =
+        (SDL_DisplayData *) SDL_GetDisplayForWindow(window)->driverdata;
+    Display *display = data->videodata->display;
+    Atom _NET_ACTIVE_WINDOW = data->videodata->_NET_ACTIVE_WINDOW;
+
+    if (X11_IsWindowMapped(_this, window)) {
+        XEvent e;
+
+        SDL_zero(e);
+        e.xany.type = ClientMessage;
+        e.xclient.message_type = _NET_ACTIVE_WINDOW;
+        e.xclient.format = 32;
+        e.xclient.window = data->xwindow;
+        e.xclient.data.l[0] = 1;  /* source indication. 1 = application */
+        e.xclient.data.l[1] = CurrentTime;
+        e.xclient.data.l[2] = 0;
+
+        XSendEvent(display, RootWindow(display, displaydata->screen), 0,
+                   SubstructureNotifyMask | SubstructureRedirectMask, &e);
+
+        XFlush(display);
+    }
+}
+
 void
 X11_RaiseWindow(_THIS, SDL_Window * window)
 {
@@ -938,6 +970,7 @@ X11_RaiseWindow(_THIS, SDL_Window * window)
     Display *display = data->videodata->display;
 
     XRaiseWindow(display, data->xwindow);
+    SetWindowActive(_this, window);
     XFlush(display);
 }
 
@@ -998,40 +1031,12 @@ X11_MinimizeWindow(_THIS, SDL_Window * window)
     XFlush(display);
 }
 
-static void
-SetWindowActive(_THIS, SDL_Window * window)
-{
-    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
-    SDL_DisplayData *displaydata =
-        (SDL_DisplayData *) SDL_GetDisplayForWindow(window)->driverdata;
-    Display *display = data->videodata->display;
-    Atom _NET_ACTIVE_WINDOW = data->videodata->_NET_ACTIVE_WINDOW;
-
-    if (X11_IsWindowMapped(_this, window)) {
-        XEvent e;
-
-        SDL_zero(e);
-        e.xany.type = ClientMessage;
-        e.xclient.message_type = _NET_ACTIVE_WINDOW;
-        e.xclient.format = 32;
-        e.xclient.window = data->xwindow;
-        e.xclient.data.l[0] = 1;  /* source indication. 1 = application */
-        e.xclient.data.l[1] = CurrentTime;
-        e.xclient.data.l[2] = 0;
-
-        XSendEvent(display, RootWindow(display, displaydata->screen), 0,
-                   SubstructureNotifyMask | SubstructureRedirectMask, &e);
-
-        XFlush(display);
-    }
-}
-
 void
 X11_RestoreWindow(_THIS, SDL_Window * window)
 {
     SetWindowMaximized(_this, window, SDL_FALSE);
-    SetWindowActive(_this, window);
     X11_ShowWindow(_this, window);
+    SetWindowActive(_this, window);
 }
 
 /* This asks the Window Manager to handle fullscreen for us. Most don't do it right, though. */

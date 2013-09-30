@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 #define VIDEO_USAGE \
-"[--video driver] [--renderer driver] [--gldebug] [--info all|video|modes|render|event] [--log all|error|system|audio|video|render|input] [--display N] [--fullscreen | --fullscreen-desktop | --windows N] [--title title] [--icon icon.bmp] [--center | --position X,Y] [--geometry WxH] [--min-geometry WxH] [--max-geometry WxH] [--logical WxH] [--scale N] [--depth N] [--refresh R] [--vsync] [--noframe] [--resize] [--minimize] [--maximize] [--grab]"
+"[--video driver] [--renderer driver] [--gldebug] [--info all|video|modes|render|event] [--log all|error|system|audio|video|render|input] [--display N] [--fullscreen | --fullscreen-desktop | --windows N] [--title title] [--icon icon.bmp] [--center | --position X,Y] [--geometry WxH] [--min-geometry WxH] [--max-geometry WxH] [--logical WxH] [--scale N] [--depth N] [--refresh R] [--vsync] [--noframe] [--resize] [--minimize] [--maximize] [--grab] [--allow-hidpi]"
 
 #define AUDIO_USAGE \
 "[--rate N] [--format U8|S8|U16|U16LE|U16BE|S16|S16LE|S16BE] [--channels N] [--samples N]"
@@ -192,6 +192,10 @@ SDLTest_CommonArg(SDLTest_CommonState * state, int index)
     if (SDL_strcasecmp(argv[index], "--fullscreen-desktop") == 0) {
         state->window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
         state->num_windows = 1;
+        return 1;
+    }
+    if (SDL_strcasecmp(argv[index], "--allow-highdpi") == 0) {
+        state->window_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
         return 1;
     }
     if (SDL_strcasecmp(argv[index], "--windows") == 0) {
@@ -697,7 +701,9 @@ SDLTest_CommonInit(SDLTest_CommonState * state)
             SDL_DisplayMode mode;
             int bpp;
             Uint32 Rmask, Gmask, Bmask, Amask;
-
+#if SDL_VIDEO_DRIVER_WINDOWS
+			int adapterIndex = 0;
+#endif
             n = SDL_GetNumVideoDisplays();
             fprintf(stderr, "Number of displays: %d\n", n);
             for (i = 0; i < n; ++i) {
@@ -750,6 +756,12 @@ SDLTest_CommonInit(SDLTest_CommonState * state)
                         }
                     }
                 }
+
+#if SDL_VIDEO_DRIVER_WINDOWS
+				/* Print the adapter index */
+				adapterIndex = SDL_Direct3D9GetAdapterIndex( i );
+				fprintf( stderr, "Adapter Index: %d", adapterIndex );
+#endif
             }
         }
 
@@ -1388,9 +1400,7 @@ SDLTest_CommonQuit(SDLTest_CommonState * state)
 {
     int i;
 
-    if (state->windows) {
-        SDL_free(state->windows);
-    }
+    SDL_free(state->windows);
     if (state->renderers) {
         for (i = 0; i < state->num_windows; ++i) {
             if (state->renderers[i]) {

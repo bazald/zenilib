@@ -157,7 +157,7 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, SDL_bool created)
             int w = rect.right;
             int h = rect.bottom;
             if ((window->w && window->w != w) || (window->h && window->h != h)) {
-                // We tried to create a window larger than the desktop and Windows didn't allow it.  Override!
+                /* We tried to create a window larger than the desktop and Windows didn't allow it.  Override! */
                 WIN_SetWindowPositionInternal(_this, window, SWP_NOCOPYBITS | SWP_NOZORDER | SWP_NOACTIVATE);
             } else {
                 window->w = w;
@@ -319,9 +319,7 @@ WIN_SetWindowTitle(_THIS, SDL_Window * window)
         title = NULL;
     }
     SetWindowText(hwnd, title ? title : TEXT(""));
-    if (title) {
-        SDL_free(title);
-    }
+    SDL_free(title);
 }
 
 void

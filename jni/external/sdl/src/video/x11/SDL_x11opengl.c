@@ -140,25 +140,6 @@ X11_GL_LoadLibrary(_THIS, const char *path)
         return SDL_SetError("OpenGL context already created");
     }
 
-    /* If SDL_GL_CONTEXT_EGL has been changed to 1, switch over to X11_GLES functions  */
-    if (_this->gl_config.use_egl == 1) {
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-        _this->GL_LoadLibrary = X11_GLES_LoadLibrary;
-        _this->GL_GetProcAddress = X11_GLES_GetProcAddress;
-        _this->GL_UnloadLibrary = X11_GLES_UnloadLibrary;
-        _this->GL_CreateContext = X11_GLES_CreateContext;
-        _this->GL_MakeCurrent = X11_GLES_MakeCurrent;
-        _this->GL_SetSwapInterval = X11_GLES_SetSwapInterval;
-        _this->GL_GetSwapInterval = X11_GLES_GetSwapInterval;
-        _this->GL_SwapWindow = X11_GLES_SwapWindow;
-        _this->GL_DeleteContext = X11_GLES_DeleteContext;
-        return X11_GLES_LoadLibrary(_this, path);
-#else
-        return SDL_SetError("SDL not configured with OpenGL ES/EGL support");
-#endif
-    }
-
-
     /* Load the OpenGL library */
     if (path == NULL) {
         path = SDL_getenv("SDL_OPENGL_LIBRARY");
@@ -228,6 +209,33 @@ X11_GL_LoadLibrary(_THIS, const char *path)
 
     /* Initialize extensions */
     X11_GL_InitExtensions(_this);
+    
+    /* If we need a GL ES context and there's no  
+     * GLX_EXT_create_context_es2_profile extension, switch over to X11_GLES functions  
+     */
+    if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES && 
+        ! _this->gl_data->HAS_GLX_EXT_create_context_es2_profile ) {
+#if SDL_VIDEO_OPENGL_EGL
+        X11_GL_UnloadLibrary(_this);
+        /* Better avoid conflicts! */
+        if (_this->gl_config.dll_handle != NULL ) {
+            GL_UnloadObject(_this->gl_config.dll_handle);
+            _this->gl_config.dll_handle = NULL;
+        }
+        _this->GL_LoadLibrary = X11_GLES_LoadLibrary;
+        _this->GL_GetProcAddress = X11_GLES_GetProcAddress;
+        _this->GL_UnloadLibrary = X11_GLES_UnloadLibrary;
+        _this->GL_CreateContext = X11_GLES_CreateContext;
+        _this->GL_MakeCurrent = X11_GLES_MakeCurrent;
+        _this->GL_SetSwapInterval = X11_GLES_SetSwapInterval;
+        _this->GL_GetSwapInterval = X11_GLES_GetSwapInterval;
+        _this->GL_SwapWindow = X11_GLES_SwapWindow;
+        _this->GL_DeleteContext = X11_GLES_DeleteContext;
+        return X11_GLES_LoadLibrary(_this, NULL);
+#else
+        return SDL_SetError("SDL not configured with EGL support");
+#endif
+    }
 
     return 0;
 }
@@ -254,10 +262,8 @@ X11_GL_UnloadLibrary(_THIS)
 #endif
 
     /* Free OpenGL memory */
-    if (_this->gl_data) {
-        SDL_free(_this->gl_data);
-        _this->gl_data = NULL;
-    }
+    SDL_free(_this->gl_data);
+    _this->gl_data = NULL;
 }
 
 static SDL_bool
@@ -368,6 +374,11 @@ X11_GL_InitExtensions(_THIS)
     /* Check for GLX_EXT_visual_info */
     if (HasExtension("GLX_EXT_visual_info", extensions)) {
         _this->gl_data->HAS_GLX_EXT_visual_info = SDL_TRUE;
+    }
+    
+    /* Check for GLX_EXT_create_context_es2_profile */
+    if (HasExtension("GLX_EXT_create_context_es2_profile", extensions)) {
+        _this->gl_data->HAS_GLX_EXT_create_context_es2_profile = SDL_TRUE;
     }
 
     if (context) {
@@ -546,6 +557,7 @@ X11_GL_CreateContext(_THIS, SDL_Window * window)
     XVisualInfo v, *vinfo;
     int n;
     GLXContext context = NULL, share_context;
+    PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribs = NULL;
 
     if (_this->gl_config.share_with_current_context) {
         share_context = (GLXContext)SDL_GL_GetCurrentContext();
@@ -599,7 +611,7 @@ X11_GL_CreateContext(_THIS, SDL_Window * window)
                 attribs[iattr++] = 0;
 
                 /* Get a pointer to the context creation function for GL 3.0 */
-                PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribs =
+                glXCreateContextAttribs =
                     (PFNGLXCREATECONTEXTATTRIBSARBPROC) _this->gl_data->
                     glXGetProcAddress((GLubyte *)
                                       "glXCreateContextAttribsARB");

@@ -95,20 +95,20 @@ X11_InitXinput2(_THIS)
         return;
     }
 
-    /*Check supported version*/
+    /* Check supported version */
     if(outmajor * 1000 + outminor < major * 1000 + minor) {
-        /*X server does not support the version we want*/
+        /* X server does not support the version we want */
         return;
     }
     xinput2_initialized = 1;
 #if SDL_VIDEO_DRIVER_X11_XINPUT2_SUPPORTS_MULTITOUCH
-    /*XInput 2.2*/
+    /* XInput 2.2 */
     if(outmajor * 1000 + outminor >= major * 1000 + minor) {
         xinput2_multitouch_supported = 1;
     }
 #endif
 
-    /*Enable  Raw motion events for this display*/
+    /* Enable  Raw motion events for this display */
     eventmask.deviceid = XIAllMasterDevices;
     eventmask.mask_len = sizeof(mask);
     eventmask.mask = mask;
@@ -120,17 +120,6 @@ X11_InitXinput2(_THIS)
     }
 #endif
 }
-
-struct XGenericEventCookie {
-  int type;
-  unsigned long serial;
-  Bool send_event;
-  Display *display;
-  int extension;
-  int evtype;
-  unsigned int cookie;
-  void *data;
-};
 
 int
 X11_HandleXinput2Event(SDL_VideoData *videodata,XGenericEventCookie *cookie)
@@ -199,7 +188,7 @@ X11_InitXinput2Multitouch(_THIS)
             XIAnyClassInfo *class = dev->classes[j];
             XITouchClassInfo *t = (XITouchClassInfo*)class;
 
-            /*Only touch devices*/
+            /* Only touch devices */
             if (class->type != XITouchClass)
                 continue;
 
@@ -217,14 +206,17 @@ void
 X11_Xinput2SelectTouch(_THIS, SDL_Window *window)
 {
 #if SDL_VIDEO_DRIVER_X11_XINPUT2_SUPPORTS_MULTITOUCH
+    SDL_VideoData *data = NULL;
+    XIEventMask eventmask;
+    unsigned char mask[3] = { 0,0,0 };
+    SDL_WindowData *window_data = NULL;
+    
     if (!X11_Xinput2IsMultitouchSupported()) {
         return;
     }
 
-    SDL_VideoData *data = (SDL_VideoData *) _this->driverdata;
-    XIEventMask eventmask;
-    unsigned char mask[3] = { 0,0,0 };
-    SDL_WindowData *window_data = (SDL_WindowData*)window->driverdata;
+    data = (SDL_VideoData *) _this->driverdata;
+    window_data = (SDL_WindowData*)window->driverdata;
 
     eventmask.deviceid = XIAllMasterDevices;
     eventmask.mask_len = sizeof(mask);

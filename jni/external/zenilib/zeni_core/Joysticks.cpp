@@ -154,43 +154,71 @@ namespace Zeni {
         else if(SDL_JoystickGetAttached((*it)->joystick) == SDL_FALSE)
           found = it;
       }
-
-      SDL_Haptic * haptic = SDL_JoystickIsHaptic(joystick) == 1 ? SDL_HapticOpenFromJoystick(joystick) : nullptr;
+      
+      if(found != m_joysticks.end() && SDL_JoystickInstanceID(joystick) == SDL_JoystickInstanceID((*found)->joystick))
+        continue;
 
       Joystick_Info * info = new Joystick_Info();
       info->joystick = joystick;
-      info->haptic = haptic;
-      if(SDL_HapticEffectSupported(info->haptic, &info->haptic_effect) == SDL_TRUE)
-        info->haptic_effect_id = SDL_HapticNewEffect(info->haptic, &info->haptic_effect);
 
       if(found == m_joysticks.end())
         m_joysticks.push_back(info);
-      else if(SDL_JoystickInstanceID(joystick) != SDL_JoystickInstanceID((*found)->joystick)) {
+      else {
         delete *found;
         *found = info;
       }
+
+      char szGUID[33];
+      SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joystick), szGUID, sizeof(szGUID));
+      info->gamecontroller = SDL_GameControllerOpen(i);
+      if(info->gamecontroller) {
+        char * mapping = SDL_GameControllerMapping(info->gamecontroller);
+        std::cerr << "Loaded game controller: " << mapping << std::endl;
+        SDL_free(mapping);
+      }
+      else {
+        std::cerr << "Failed to load game controller (" << szGUID << "): " << SDL_GetError() << std::endl;
+        SDL_ClearError();
+      }
+
+      info->haptic = SDL_JoystickIsHaptic(joystick) == 1 ? SDL_HapticOpenFromJoystick(joystick) : nullptr;
+      if(info->haptic) {
+        if(SDL_HapticEffectSupported(info->haptic, &info->haptic_effect) == SDL_TRUE) {
+          info->haptic_effect_id = SDL_HapticNewEffect(info->haptic, &info->haptic_effect);
+          if(SDL_HapticRunEffect(info->haptic, info->haptic_effect_id, 1) == -1)
+            std::cerr << "Failed to run effect on joystick (" << szGUID << ")." << std::endl;
+        }
+      }
+      else {
+        std::cerr << "Joystick (" << szGUID << ") not recognized as haptic." << std::endl;
+        SDL_ClearError();
+      }
     }
+    
   }
 
   void Joysticks::set_vibration(const size_t &index, const float &left, const float &right) {
-    if(index < m_joysticks.size()) {
-      m_joysticks[index]->haptic_effect.leftright.large_magnitude = Uint16(left * 65535);
-      m_joysticks[index]->haptic_effect.leftright.small_magnitude = Uint16(right * 65535);
-      SDL_HapticUpdateEffect(m_joysticks[index]->haptic, 0, &m_joysticks[index]->haptic_effect);
+    if(index < m_joysticks.size() && m_joysticks[index]->haptic_effect_id > -1) {
+      m_joysticks[index]->haptic_effect.leftright.large_magnitude = Uint16(left * 0xFFFF);
+      m_joysticks[index]->haptic_effect.leftright.small_magnitude = Uint16(right * 0xFFFF);
       if(m_joysticks[index]->haptic_effect_id > -1) {
-        switch(SDL_HapticGetEffectStatus(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id)) {
-          case 0: SDL_HapticRunEffect(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id, 1);
-                  break;
-          case 1: SDL_HapticUpdateEffect(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id, &m_joysticks[index]->haptic_effect);
-                  break;
-          default: break;
-        }
+        //switch(SDL_HapticGetEffectStatus(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id)) {
+        //  case 0:
+            //SDL_HapticRunEffect(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id, 1);
+        //    break;
+        //  case 1: 
+            SDL_HapticUpdateEffect(m_joysticks[index]->haptic, m_joysticks[index]->haptic_effect_id, &m_joysticks[index]->haptic_effect);
+        //    break;
+        //  default:
+        //    break;
+        //}
       }
     }
   }
 
   Joysticks::Joystick_Info::Joystick_Info()
     : joystick(nullptr),
+    gamecontroller(nullptr),
     haptic(nullptr),
     haptic_effect_id(-1)
   {
@@ -200,14 +228,50 @@ namespace Zeni {
   }
 
   Joysticks::Joystick_Info::~Joystick_Info() {
-    SDL_HapticClose(haptic);
+    get_Core().assert_no_error();
+    if(haptic)
+      SDL_HapticClose(haptic);
+    if(gamecontroller)
+      SDL_GameControllerClose(gamecontroller);
     SDL_JoystickClose(joystick);
+    get_Core().assert_no_error();
   }
   
   void Joysticks::init() {
 #ifndef ANDROID
-    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) == -1)
+    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) == -1)
       throw Joystick_Init_Failure();
+
+    const String appdata_path = get_File_Ops().get_appdata_path();
+    const String user_normal = appdata_path + "config/zenilib.xml";
+    const String local_normal = "config/zenilib.xml";
+    XML_Document file;
+
+    if(file.try_load(local_normal)) {
+      XML_Element_c zenilib = file["Zenilib"];
+      XML_Element_c joysticks = zenilib["Joysticks"];
+      if(joysticks.good()) {
+        for(XML_Element_c joystick = joysticks.first(); joystick.good(); joystick = joystick.next()) {
+          if(joystick.value() == "GameController") {
+            if(SDL_GameControllerAddMapping(joystick.to_string().c_str()) < 0)
+              std::cerr << "Joystick mapping " << joystick.to_string().c_str() << " failed." << std::endl;
+          }
+        }
+      }
+    }
+    
+    if(file.try_load(user_normal)) {
+      XML_Element_c zenilib = file["Zenilib"];
+      XML_Element_c joysticks = zenilib["Joysticks"];
+      if(joysticks.good()) {
+        for(XML_Element_c joystick = joysticks.first(); joystick.good(); joystick = joystick.next()) {
+          if(joystick.value() == "GameController") {
+            if(SDL_GameControllerAddMapping(joystick.to_string().c_str()) < 0)
+              std::cerr << "Joystick mapping " << joystick.to_string().c_str() << " failed." << std::endl;
+          }
+        }
+      }
+    }
 
     SDL_JoystickEventState(SDL_ENABLE);
 #endif
@@ -221,7 +285,9 @@ namespace Zeni {
       delete *it;
     m_joysticks.clear();
 
-    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+    SDL_QuitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
+
+    get_Core().assert_no_error();
 #endif
   }
 

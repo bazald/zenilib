@@ -801,7 +801,7 @@ SDL_UnlockSurface(SDL_Surface * surface)
  * Convert a surface into the specified pixel format.
  */
 SDL_Surface *
-SDL_ConvertSurface(SDL_Surface * surface, SDL_PixelFormat * format,
+SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
                    Uint32 flags)
 {
     SDL_Surface *convert;
@@ -963,7 +963,7 @@ SDL_CreateSurfaceOnStack(int width, int height, Uint32 pixel_format,
     surface->h = height;
     surface->pitch = pitch;
     /* We don't actually need to set up the clip rect for our purposes */
-    /*SDL_SetClipRect(surface, NULL);*/
+    /* SDL_SetClipRect(surface, NULL); */
 
     /* Allocate an empty mapping */
     SDL_zerop(blitmap);
@@ -1076,7 +1076,7 @@ SDL_FreeSurface(SDL_Surface * surface)
         SDL_FreeBlitMap(surface->map);
         surface->map = NULL;
     }
-    if (surface->pixels && ((surface->flags & SDL_PREALLOC) != SDL_PREALLOC)) {
+    if (!(surface->flags & SDL_PREALLOC)) {
         SDL_free(surface->pixels);
     }
     SDL_free(surface);

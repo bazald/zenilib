@@ -8,7 +8,9 @@ project "local_SDL"
             "src/audio/winmm/*.c",
             "src/audio/xaudio2/*.c",
             "src/core/windows/*.c",
+            "src/filesystem/windows/*.c",
             "src/haptic/windows/*.c",
+            "src/input/evdev/*.c",
             "src/joystick/windows/*.c",
             "src/loadso/windows/*.c",
             "src/power/windows/*.c",
@@ -24,7 +26,9 @@ project "local_SDL"
   configuration { "windows", "x64" }
     libdirs { "../lib/x64" }
   configuration "linux"
-    files { "src/haptic/linux/*.c",
+    files { "src/core/linux/*.c",
+            "src/filesystem/unix/*.c",
+            "src/haptic/linux/*.c",
             "src/loadso/dlopen/*.c",
             "src/video/x11/*.c",
   --           "src/video/Xext/Xxf86dga/*.c",
@@ -48,6 +52,7 @@ project "local_SDL"
                    "-Wall" }
     includedirs { "/usr/X11R6/include" }
     files { "src/audio/disk/*.c",
+            "src/filesystem/cocoa/*.m",
             "src/loadso/dlopen/*.c",
             "src/file/cocoa/*.m",
             "src/video/cocoa/*.m",

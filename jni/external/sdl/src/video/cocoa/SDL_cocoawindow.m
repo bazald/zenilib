@@ -34,6 +34,13 @@
 #include "SDL_cocoamouse.h"
 #include "SDL_cocoaopengl.h"
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+/* Taken from AppKit/NSOpenGLView.h in 10.8 SDK. */
+@interface NSView (NSOpenGLSurfaceResolution)
+- (BOOL)wantsBestResolutionOpenGLSurface;
+- (void)setWantsBestResolutionOpenGLSurface:(BOOL)flag;
+@end
+#endif
 
 static Uint32 s_moveHack;
 
@@ -62,6 +69,7 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
 
     _data = data;
     observingVisible = YES;
+    wasCtrlLeft = NO;
     wasVisible = [window isVisible];
 
     center = [NSNotificationCenter defaultCenter];
@@ -333,7 +341,13 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
 
     switch ([theEvent buttonNumber]) {
     case 0:
-        button = SDL_BUTTON_LEFT;
+        if ([theEvent modifierFlags] & NSControlKeyMask) {
+            wasCtrlLeft = YES;
+            button = SDL_BUTTON_RIGHT;
+        } else {
+            wasCtrlLeft = NO;
+            button = SDL_BUTTON_LEFT;
+        }
         break;
     case 1:
         button = SDL_BUTTON_RIGHT;
@@ -364,7 +378,12 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
 
     switch ([theEvent buttonNumber]) {
     case 0:
-        button = SDL_BUTTON_LEFT;
+        if (wasCtrlLeft) {
+            button = SDL_BUTTON_RIGHT;
+            wasCtrlLeft = NO;
+        } else {
+            button = SDL_BUTTON_LEFT;
+        }
         break;
     case 1:
         button = SDL_BUTTON_RIGHT;
@@ -727,6 +746,13 @@ Cocoa_CreateWindow(_THIS, SDL_Window * window)
     /* Create a default view for this window */
     rect = [nswindow contentRectForFrameRect:[nswindow frame]];
     NSView *contentView = [[SDLView alloc] initWithFrame:rect];
+
+    if ((window->flags & SDL_WINDOW_ALLOW_HIGHDPI) > 0) {
+        if ([contentView respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)]) {
+            [contentView setWantsBestResolutionOpenGLSurface:YES];
+        }
+    }
+
     [nswindow setContentView: contentView];
     [contentView release];
 
@@ -1047,9 +1073,11 @@ Cocoa_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display
         [nswindow setLevel:kCGNormalWindowLevel];
     }
 
-    [data->listener pauseVisibleObservation];
-    [nswindow makeKeyAndOrderFront:nil];
-    [data->listener resumeVisibleObservation];
+    if ([nswindow isVisible] || fullscreen) {
+        [data->listener pauseVisibleObservation];
+        [nswindow makeKeyAndOrderFront:nil];
+        [data->listener resumeVisibleObservation];
+    }
 
     ScheduleContextUpdates(data);
 

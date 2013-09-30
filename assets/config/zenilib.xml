@@ -43,6 +43,10 @@
 -->
 <Zenilib>
     <Uniqname>zenilib</Uniqname>
+    <Joysticks>
+        <GameController>00000000000000000000000000000000,X360 Controller,a:b10,b:b11,back:b5,dpdown:b1,dpleft:b2,dpright:b3,dpup:b0,guide:b14,leftshoulder:b8,leftstick:b6,lefttrigger:a4,leftx:a0,lefty:a1,rightshoulder:b9,rightstick:b7,righttrigger:a5,rightx:a2,righty:a3,start:b4,x:b12,y:b13,</GameController>
+        <GameController>5e048e02000000000000504944564944,X360 Controller,a:b10,b:b11,back:b5,dpdown:b1,dpleft:b2,dpright:b3,dpup:b0,guide:b14,leftshoulder:b8,leftstick:b6,lefttrigger:a4,leftx:a0,lefty:a1,rightshoulder:b9,rightstick:b7,righttrigger:a5,rightx:a2,righty:a3,start:b4,x:b12,y:b13,</GameController>
+    </Joysticks>
     <Textures>
         <Anisotropy>0</Anisotropy>
         <Bilinear_Filtering>1</Bilinear_Filtering>
@@ -57,7 +61,7 @@
         <Full_Screen>0</Full_Screen>
         <Multisampling>0</Multisampling>
         <Resolution>
-            <Width>640</Width>
+            <Width>853</Width>
             <Height>480</Height>
         </Resolution>
         <Vertical_Sync>1</Vertical_Sync>

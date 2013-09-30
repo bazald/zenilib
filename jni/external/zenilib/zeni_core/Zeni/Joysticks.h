@@ -75,32 +75,15 @@ namespace Zeni {
 
   public:
     enum {
-#if defined(_WINDOWS)
       AXIS_LEFT_THUMB_X = 0,
       AXIS_LEFT_THUMB_Y = 1,
       AXIS_RIGHT_THUMB_X = 2,
       AXIS_RIGHT_THUMB_Y = 3,
       AXIS_LEFT_TRIGGER = 4,
       AXIS_RIGHT_TRIGGER = 5
-#elif defined(_MACOSX)
-      AXIS_LEFT_THUMB_X = 0,
-      AXIS_LEFT_THUMB_Y = 1,
-      AXIS_LEFT_TRIGGER = 2,
-      AXIS_RIGHT_THUMB_X = 3,
-      AXIS_RIGHT_THUMB_Y = 4,
-      AXIS_RIGHT_TRIGGER = 5
-#elif defined(_LINUX)
-      AXIS_LEFT_THUMB_X = 0,
-      AXIS_LEFT_THUMB_Y = 1,
-      AXIS_LEFT_TRIGGER = 2,
-      AXIS_RIGHT_THUMB_X = 3,
-      AXIS_RIGHT_THUMB_Y = 4,
-      AXIS_RIGHT_TRIGGER = 5
-#endif
     } Xbox_360_Axis;
 
     enum {
-#if defined(_WINDOWS)
       BUTTON_START = 4,
       BUTTON_BACK = 5,
       BUTTON_LEFT_THUMB = 6,
@@ -111,28 +94,7 @@ namespace Zeni {
       BUTTON_B = 11,
       BUTTON_X = 12,
       BUTTON_Y = 13,
-      //BUTTON_RESERVED = 14,
-#else
-      BUTTON_A = 0,
-      BUTTON_B = 1,
-      BUTTON_X = 2,
-      BUTTON_Y = 3,
-      BUTTON_LEFT_SHOULDER = 4,
-      BUTTON_RIGHT_SHOULDER = 5,
-#ifdef _MACOSX
-      BUTTON_LEFT_THUMB = 6,
-      BUTTON_RIGHT_THUMB = 7,
-      BUTTON_START = 8,
-      BUTTON_BACK = 9,
-      //BUTTON_RESERVED = 10,
-#else
-      BUTTON_BACK = 6,
-      BUTTON_START = 7,
-      //BUTTON_RESERVED = 8,
-      BUTTON_LEFT_THUMB = 9,
-      BUTTON_RIGHT_THUMB = 10
-#endif
-#endif
+      //BUTTON_GUIDE = 14,
     } Xbox_360_Button;
 
     size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
@@ -164,6 +126,7 @@ namespace Zeni {
       ~Joystick_Info();
 
       SDL_Joystick * joystick;
+      SDL_GameController * gamecontroller;
       SDL_Haptic * haptic;
 
       SDL_HapticEffect haptic_effect;

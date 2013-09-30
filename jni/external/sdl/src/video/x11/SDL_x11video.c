@@ -35,7 +35,7 @@
 #include "SDL_x11touch.h"
 #include "SDL_x11xinput2.h"
 
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+#if SDL_VIDEO_OPENGL_EGL
 #include "SDL_x11opengles.h"
 #endif
 
@@ -259,10 +259,11 @@ static int (*orig_x11_errhandler) (Display *, XErrorEvent *) = NULL;
 static int
 X11_SafetyNetErrHandler(Display * d, XErrorEvent * e)
 {
+    SDL_VideoDevice *device = NULL;
     /* if we trigger an error in our error handler, don't try again. */
     if (!safety_net_triggered) {
         safety_net_triggered = SDL_TRUE;
-        SDL_VideoDevice *device = SDL_GetVideoDevice();
+        device = SDL_GetVideoDevice();
         if (device != NULL) {
             int i;
             for (i = 0; i < device->num_displays; i++) {
@@ -394,7 +395,7 @@ X11_CreateDevice(int devindex)
     device->GL_GetSwapInterval = X11_GL_GetSwapInterval;
     device->GL_SwapWindow = X11_GL_SwapWindow;
     device->GL_DeleteContext = X11_GL_DeleteContext;
-#elif SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
+#elif SDL_VIDEO_OPENGL_EGL
     device->GL_LoadLibrary = X11_GLES_LoadLibrary;
     device->GL_GetProcAddress = X11_GLES_GetProcAddress;
     device->GL_UnloadLibrary = X11_GLES_UnloadLibrary;
@@ -564,9 +565,7 @@ X11_VideoQuit(_THIS)
 {
     SDL_VideoData *data = (SDL_VideoData *) _this->driverdata;
 
-    if (data->classname) {
-        SDL_free(data->classname);
-    }
+    SDL_free(data->classname);
 #ifdef X_HAVE_UTF8_STRING
     if (data->im) {
         XCloseIM(data->im);
