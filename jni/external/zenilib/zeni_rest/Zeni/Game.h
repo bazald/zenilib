@@ -102,7 +102,8 @@ namespace Zeni {
     inline size_t get_fps() const; ///< Get the current approximation of the frames displayed per second.
     bool get_key_state(const int &key) const; ///< Get the state of a key.
     bool get_mouse_button_state(const int &button) const; ///< Get the state of a mouse button.
-    bool get_joy_button_state(const int &which, const int &button) const; ///< Get the state of a joystick button.
+    Sint16 get_controller_axis_state(const int &which, const SDL_GameControllerAxis &axis) const; ///< Get the state of a joystick axis.
+    bool get_controller_button_state(const int &which, const SDL_GameControllerButton &button) const; ///< Get the state of a joystick button.
 
     void run();
 
@@ -112,30 +113,31 @@ namespace Zeni {
     void replace_Popup_Pause_State_Factory(Popup_Pause_State_Factory * const popup_pause_state_factory);
 
 #ifndef ANDROID
-    struct ZENI_REST_DLL Joy_Mouse {
-      Joy_Mouse()
+    struct ZENI_REST_DLL Controller_Mouse {
+      Controller_Mouse()
         : enabled(false),
-        joy_axes(Joysticks::AXIS_LEFT_THUMB_X, Joysticks::AXIS_LEFT_THUMB_Y),
+        controller_axes(SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY),
         noise_zone(8192, 4096),
         pixels_per_second(1000.0f, 1000.0f),
-        left_click(Joysticks::BUTTON_A),
-        escape(Joysticks::BUTTON_START),
-        scroll_hat(0)
+        left_click(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_A),
+        escape(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_BACK),
+        scroll_down(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN),
+        scroll_up(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP)
       {
       }
 
       bool enabled;
 
-      Point2i joy_axes;
+      Point2i controller_axes;
       Point2i noise_zone;
       Point2i velocity;
       Point2f pixels_per_second;
 
-      int left_click;
-      int escape;
-
-      int scroll_hat;
-    } joy_mouse;
+      SDL_GameControllerButton left_click;
+      SDL_GameControllerButton escape;
+      SDL_GameControllerButton scroll_down;
+      SDL_GameControllerButton scroll_up;
+    } controller_mouse;
 #endif
 
   private:
@@ -148,7 +150,8 @@ namespace Zeni {
     std::stack<Gamestate> m_states;
     Unordered_Map<int, bool> m_keys;
     Unordered_Map<int, bool> m_mouse_buttons;
-    Unordered_Map<int, Unordered_Map<int, bool> > m_joy_buttons;
+    Unordered_Map<int, Unordered_Map<int, Sint16> > m_controller_axes;
+    Unordered_Map<int, Unordered_Map<int, bool> > m_controller_buttons;
 #ifdef _WINDOWS
 #pragma warning( pop )
 #endif

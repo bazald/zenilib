@@ -59,92 +59,22 @@ namespace Zeni {
 #ifndef ANDROID
   void Gamestate_II::on_event(const SDL_Event &event) {
     switch(event.type) {
-    case SDL_JOYAXISMOTION:
+    case SDL_CONTROLLERAXISMOTION:
       {
-        float confidence = (float(event.jaxis.value) + 0.5f) / 32767.5f;
+        float confidence = (float(event.caxis.value) + 0.5f) / 32767.5f;
         const float ac = float(fabs(confidence));
         const float nm = confidence < 0.0f ? -1.0f : 1.0f;
         confidence = nm * std::min(std::max(ac - m_joystick_min, 0.0f) / (m_joystick_max - m_joystick_min), 1.0f);
 
-        fire_event(Zeni_Input_ID(SDL_JOYAXISMOTION, event.jaxis.axis, get_Joysticks().get_joystick_index(event.jaxis.which)), confidence);
+        fire_event(Zeni_Input_ID(SDL_CONTROLLERAXISMOTION, event.caxis.axis, event.caxis.which), confidence);
       }
       break;
-    case SDL_JOYBALLMOTION:
-      {
-        const int ac = abs(event.jball.xrel);
-        const int nm = event.jball.xrel < 0.0f ? -1 : 1;
-        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
-
-        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 0, get_Joysticks().get_joystick_index(event.jball.which)), confidence);
-      }
-      {
-        const int ac = abs(event.jball.yrel);
-        const int nm = event.jball.yrel < 0.0f ? -1 : 1;
-        const float confidence = nm * std::min(std::max(float(ac - m_joyball_min), 0.0f) / (m_joyball_max - m_joyball_min), 1.0f);
-
-        fire_event(Zeni_Input_ID(SDL_JOYBALLMOTION, event.jball.ball * 2 + 1, get_Joysticks().get_joystick_index(event.jball.which)), confidence);
-      }
-      break;
-    case SDL_JOYBUTTONDOWN:
-    case SDL_JOYBUTTONUP:
+    case SDL_CONTROLLERBUTTONDOWN:
+    case SDL_CONTROLLERBUTTONUP:
       {
         const float confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-        fire_event(Zeni_Input_ID(SDL_JOYBUTTONDOWN, event.jbutton.button, get_Joysticks().get_joystick_index(event.jbutton.which)), confidence);
-      }
-      break;
-    case SDL_JOYHATMOTION:
-      {
-        float confidence;
-
-        switch(event.jhat.value) {
-          case SDL_HAT_LEFT:
-          case SDL_HAT_LEFTDOWN:
-          case SDL_HAT_LEFTUP:
-            confidence = -1.0f;
-            break;
-
-          case SDL_HAT_RIGHT:
-          case SDL_HAT_RIGHTDOWN:
-          case SDL_HAT_RIGHTUP:
-            confidence = 1.0f;
-            break;
-
-          case SDL_HAT_CENTERED:
-          case SDL_HAT_DOWN:
-          case SDL_HAT_UP:
-          default:
-            confidence = 0.0f;
-            break;
-        }
-
-        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 0, get_Joysticks().get_joystick_index(event.jhat.which)), confidence);
-      }
-      {
-        float confidence;
-
-        switch(event.jhat.value) {
-          case SDL_HAT_DOWN:
-          case SDL_HAT_LEFTDOWN:
-          case SDL_HAT_RIGHTDOWN:
-            confidence = -1.0f;
-            break;
-
-          case SDL_HAT_UP:
-          case SDL_HAT_LEFTUP:
-          case SDL_HAT_RIGHTUP:
-            confidence = 1.0f;
-            break;
-
-          case SDL_HAT_CENTERED:
-          case SDL_HAT_LEFT:
-          case SDL_HAT_RIGHT:
-          default:
-            confidence = 0.0f;
-            break;
-        }
-
-        fire_event(Zeni_Input_ID(SDL_JOYHATMOTION, 1, get_Joysticks().get_joystick_index(event.jhat.which)), confidence);
+        fire_event(Zeni_Input_ID(SDL_CONTROLLERAXISMOTION, event.cbutton.button, event.cbutton.which), confidence);
       }
       break;
     case SDL_KEYDOWN:
@@ -248,9 +178,9 @@ namespace Zeni {
         }
         break;
 
-      case SDL_JOYBUTTONDOWN:
+      case SDL_CONTROLLERBUTTONDOWN:
         {
-          const float confidence = gr.get_joy_button_state(it->first.which, it->first.subid) ? 1.0f : 0.0f;
+          const float confidence = gr.get_controller_button_state(it->first.which, SDL_GameControllerButton(it->first.subid)) ? 1.0f : 0.0f;
 
           if(m_firing_missed_events && it->first.previous_confidence != confidence)
             on_event(it->first, confidence, it->second);

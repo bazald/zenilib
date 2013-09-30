@@ -136,11 +136,10 @@ namespace Zeni {
 #if SDL_VERSION_ATLEAST(1,3,0)
     virtual void on_mouse_wheel(const SDL_MouseWheelEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
 #endif
-    // "Joystick" events
-    virtual void on_joy_axis(const SDL_JoyAxisEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_ball(const SDL_JoyBallEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_hat(const SDL_JoyHatEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
-    virtual void on_joy_button(const SDL_JoyButtonEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    // Controller events
+    virtual void on_controller_axis(const SDL_ControllerAxisEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_controller_button(const SDL_ControllerButtonEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
+    virtual void on_controller_device(const SDL_ControllerDeviceEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Quit events
     virtual void on_quit(const SDL_QuitEvent &event); ///< Override this input callback in your Gamestates. See SDL documentation for details.
     // Annoying events

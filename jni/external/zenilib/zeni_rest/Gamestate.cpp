@@ -56,18 +56,17 @@ namespace Zeni {
       on_mouse_wheel(event.wheel);
       break;
 #endif
-    case SDL_JOYAXISMOTION:
-      on_joy_axis(event.jaxis);
+    case SDL_CONTROLLERAXISMOTION:
+      on_controller_axis(event.caxis);
       break;
-    case SDL_JOYBALLMOTION:
-      on_joy_ball(event.jball);
+    case SDL_CONTROLLERBUTTONDOWN:
+    case SDL_CONTROLLERBUTTONUP:
+      on_controller_button(event.cbutton);
       break;
-    case SDL_JOYHATMOTION:
-      on_joy_hat(event.jhat);
-      break;
-    case SDL_JOYBUTTONDOWN:
-    case SDL_JOYBUTTONUP:
-      on_joy_button(event.jbutton);
+    case SDL_CONTROLLERDEVICEADDED:
+    case SDL_CONTROLLERDEVICEREMAPPED:
+    case SDL_CONTROLLERDEVICEREMOVED:
+      on_controller_device(event.cdevice);
       break;
     case SDL_QUIT:
       on_quit(event.quit);
@@ -113,16 +112,13 @@ namespace Zeni {
   }
 #endif
 
-  void Gamestate_Base::on_joy_axis(const SDL_JoyAxisEvent &) {
+  void Gamestate_Base::on_controller_axis(const SDL_ControllerAxisEvent &) {
   }
 
-  void Gamestate_Base::on_joy_ball(const SDL_JoyBallEvent &) {
+  void Gamestate_Base::on_controller_button(const SDL_ControllerButtonEvent &) {
   }
 
-  void Gamestate_Base::on_joy_hat(const SDL_JoyHatEvent &) {
-  }
-
-  void Gamestate_Base::on_joy_button(const SDL_JoyButtonEvent &) {
+  void Gamestate_Base::on_controller_device(const SDL_ControllerDeviceEvent &) {
   }
 
   void Gamestate_Base::on_quit(const SDL_QuitEvent &) {
@@ -162,10 +158,10 @@ namespace Zeni {
       if(grab_input)
         wr.mouse_grab(true);
 
-      get_Joysticks().enable(true);
+      get_Controllers().enable(true);
     }
     else {
-      get_Joysticks().enable(false);
+      get_Controllers().enable(false);
 
       hide_cursor = wr.is_mouse_hidden();
       if(hide_cursor)

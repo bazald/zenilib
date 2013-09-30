@@ -28,7 +28,7 @@
 #endif
 
 #include <Zeni/Core.h>
-#include <Zeni/Joysticks.h>
+#include <Zeni/Controllers.h>
 #include <Zeni/Timer.h>
 
 #include <Zeni/Timer.hxx>

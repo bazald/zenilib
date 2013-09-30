@@ -19,7 +19,7 @@ class Play_State : public Gamestate_Base {
   Play_State operator=(const Play_State &);
 
 public:
-  Play_State() {
+  Play_State() : left(0.0f), right(0.0f) {
     set_pausable(true);
   }
 
@@ -27,14 +27,36 @@ private:
   void on_push() {
     //get_Window().mouse_grab(true);
     get_Window().mouse_hide(true);
-    //get_Game().joy_mouse.enabled = false;
+    //get_Game().controller_mouse.enabled = false;
   }
 
   void on_pop() {
     //get_Window().mouse_grab(false);
     get_Window().mouse_hide(false);
-    //get_Game().joy_mouse.enabled = true;
+    //get_Game().controller_mouse.enabled = true;
+    get_Controllers().set_vibration(0, 0.0f, 0.0f);
   }
+
+  void on_cover() {
+    get_Controllers().set_vibration(0, 0.0f, 0.0f);
+  }
+
+  void on_controller_axis(const SDL_ControllerAxisEvent &event) {
+    if(event.which == 0) {
+      if(event.axis == SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+        left = (event.value + 0.5f) / 32767.5f;
+      if(event.axis == SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
+        right = (event.value + 0.5f) / 32767.5f;
+      get_Controllers().set_vibration(0, left, right);
+    }
+  }
+
+  void perform_logic() {
+    
+  }
+  
+  float left;
+  float right;
 };
 
 class Instructions_State : public Widget_Gamestate {
@@ -78,12 +100,12 @@ class Bootstrap {
     virtual Gamestate_Base * operator()() {
       Window::set_title("zenilib Application");
 
-      get_Joysticks();
+      get_Controllers();
       get_Video();
       get_Textures();
       get_Fonts();
       get_Sounds();
-      get_Game().joy_mouse.enabled = true;
+      get_Game().controller_mouse.enabled = true;
 
       return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
     }

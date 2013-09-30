@@ -214,7 +214,7 @@ inline int main2(const int argc, const char * const * const argv) {
       Zeni::Sound::completely_destroy();
       Zeni::Sounds::completely_destroy();
       Zeni::Core::completely_destroy();
-      Zeni::Joysticks::completely_destroy();
+      Zeni::Controllers::completely_destroy();
       Zeni::Timer::completely_destroy();
       Zeni::Colors::completely_destroy();
       Zeni::File_Ops::completely_destroy();

@@ -138,12 +138,16 @@ namespace Zeni {
         m_mouse_buttons[event.button.button] = false;
         break;
 
-      case SDL_JOYBUTTONDOWN:
-        m_joy_buttons[event.jbutton.which][event.jbutton.button] = true;
+      case SDL_CONTROLLERAXISMOTION:
+        m_controller_axes[event.caxis.which][event.caxis.axis] = event.caxis.value;
         break;
-
-      case SDL_JOYBUTTONUP:
-        m_joy_buttons[event.jbutton.which][event.jbutton.button] = false;
+        
+      case SDL_CONTROLLERBUTTONDOWN:
+        m_controller_buttons[event.cbutton.which][event.cbutton.button] = true;
+        break;
+        
+      case SDL_CONTROLLERBUTTONUP:
+        m_controller_buttons[event.cbutton.which][event.cbutton.button] = false;
         break;
 
       default:
@@ -269,11 +273,23 @@ namespace Zeni {
       return it->second;
     return false;
   }
+  
+  Sint16 Game::get_controller_axis_state(const int &which, const SDL_GameControllerAxis &axis) const {
+    const Unordered_Map<int, Unordered_Map<int, Sint16> >::const_iterator jt = m_controller_axes.find(which);
 
-  bool Game::get_joy_button_state(const int &which, const int &button) const {
-    const Unordered_Map<int, Unordered_Map<int, bool> >::const_iterator jt = m_joy_buttons.find(which);
+    if(jt != m_controller_axes.end()) {
+      const Unordered_Map<int, Sint16>::const_iterator it = jt->second.find(axis);
+      if(it != jt->second.end())
+        return it->second;
+    }
 
-    if(jt != m_joy_buttons.end()) {
+    return 0;
+  }
+
+  bool Game::get_controller_button_state(const int &which, const SDL_GameControllerButton &button) const {
+    const Unordered_Map<int, Unordered_Map<int, bool> >::const_iterator jt = m_controller_buttons.find(which);
+
+    if(jt != m_controller_buttons.end()) {
       const Unordered_Map<int, bool>::const_iterator it = jt->second.find(button);
       if(it != jt->second.end())
         return it->second;
@@ -297,24 +313,24 @@ namespace Zeni {
       float time_step = time_passed.get_seconds_since(time_processed);
       time_processed = time_passed;
 
-      get_Joysticks().poll();
+      get_Controllers().poll();
 
 #ifndef ANDROID
-      if(joy_mouse.enabled && (joy_mouse.velocity.x != 0 || joy_mouse.velocity.y != 0)) {
-        Point2f adjusted_vel(joy_mouse.velocity.x + 0.5f, joy_mouse.velocity.y + 0.5f);
+      if(controller_mouse.enabled && (controller_mouse.velocity.x != 0 || controller_mouse.velocity.y != 0)) {
+        Point2f adjusted_vel(controller_mouse.velocity.x + 0.5f, controller_mouse.velocity.y + 0.5f);
         if(adjusted_vel.x < 0.0f)
-          adjusted_vel.x = std::min(0.0f, adjusted_vel.x + joy_mouse.noise_zone.x);
+          adjusted_vel.x = std::min(0.0f, adjusted_vel.x + controller_mouse.noise_zone.x);
         else
-          adjusted_vel.x = std::max(0.0f, adjusted_vel.x - joy_mouse.noise_zone.x);
+          adjusted_vel.x = std::max(0.0f, adjusted_vel.x - controller_mouse.noise_zone.x);
         if(adjusted_vel.y < 0.0f)
-          adjusted_vel.y = std::min(0.0f, adjusted_vel.y + joy_mouse.noise_zone.y);
+          adjusted_vel.y = std::min(0.0f, adjusted_vel.y + controller_mouse.noise_zone.y);
         else
-          adjusted_vel.y = std::max(0.0f, adjusted_vel.y - joy_mouse.noise_zone.y);
-        adjusted_vel.x /= 32767.5f - joy_mouse.noise_zone.x;
-        adjusted_vel.y /= 32767.5f - joy_mouse.noise_zone.y;
+          adjusted_vel.y = std::max(0.0f, adjusted_vel.y - controller_mouse.noise_zone.y);
+        adjusted_vel.x /= 32767.5f - controller_mouse.noise_zone.x;
+        adjusted_vel.y /= 32767.5f - controller_mouse.noise_zone.y;
 
-        int xrel = int(adjusted_vel.x * joy_mouse.pixels_per_second.x * time_step);
-        int yrel = int(adjusted_vel.y * joy_mouse.pixels_per_second.y * time_step);
+        int xrel = int(adjusted_vel.x * controller_mouse.pixels_per_second.x * time_step);
+        int yrel = int(adjusted_vel.y * controller_mouse.pixels_per_second.y * time_step);
 
         if(xrel || yrel) {
           int x, y;
@@ -379,7 +395,6 @@ namespace Zeni {
             throw Quit_Event();
           }
         }
-#if SDL_VERSION_ATLEAST(1,3,0)
         else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
           on_event(event);
 
@@ -388,70 +403,24 @@ namespace Zeni {
             throw Quit_Event();
           }
         }
-#endif
-        else if(event.type == SDL_JOYAXISMOTION) {
-          if(joy_mouse.enabled && (joy_mouse.joy_axes.x == event.jaxis.axis || joy_mouse.joy_axes.y == event.jaxis.axis)) {
-            if(joy_mouse.joy_axes.x == event.jaxis.axis)
-              joy_mouse.velocity.x = event.jaxis.value;
+        else if(event.type == SDL_CONTROLLERAXISMOTION) {
+          if(controller_mouse.enabled && (controller_mouse.controller_axes.x == event.caxis.axis || controller_mouse.controller_axes.y == event.caxis.axis)) {
+            if(controller_mouse.controller_axes.x == event.caxis.axis)
+              controller_mouse.velocity.x = event.caxis.value;
             else
-              joy_mouse.velocity.y = event.jaxis.value;
+              controller_mouse.velocity.y = event.caxis.value;
           }
           else
             on_event(event);
         }
-        else if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP) {
-#ifdef _MACOSX
-          if(event.jbutton.which < 4 && event.jbutton.button < 4) {
-            static bool values[4][4] = {{false, false, false, false},
-                                        {false, false, false, false},
-                                        {false, false, false, false},
-                                        {false, false, false, false}};
-            values[event.jbutton.which][event.jbutton.button] = event.jbutton.state == SDL_PRESSED;
-
+        else if(event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) {
+          if(controller_mouse.enabled && controller_mouse.left_click == event.cbutton.button) {
             SDL_Event e;
 
-            e.common.type = SDL_JOYHATMOTION;
+            e.common.type = event.common.type == SDL_CONTROLLERBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
             e.common.timestamp = event.common.timestamp;
-            e.jhat.which = event.jbutton.which;
-            e.jhat.hat = 0;
-
-            if(values[event.jbutton.which][0]) {
-              if(values[event.jbutton.which][2])
-                e.jhat.value = SDL_HAT_LEFTUP;
-              else if(values[event.jbutton.which][3])
-                e.jhat.value = SDL_HAT_RIGHTUP;
-              else
-                e.jhat.value = SDL_HAT_UP;
-            }
-            else if(values[event.jbutton.which][1]) {
-              if(values[event.jbutton.which][2])
-                e.jhat.value = SDL_HAT_LEFTDOWN;
-              else if(values[event.jbutton.which][3])
-                e.jhat.value = SDL_HAT_RIGHTDOWN;
-              else
-                e.jhat.value = SDL_HAT_DOWN;
-            }
-            else {
-              if(values[event.jbutton.which][2])
-                e.jhat.value = SDL_HAT_LEFT;
-              else if(values[event.jbutton.which][3])
-                e.jhat.value = SDL_HAT_RIGHT;
-              else
-                e.jhat.value = SDL_HAT_CENTERED;
-            }
-
-            SDL_PushEvent(&e);
-          }
-          else
-#endif
-
-          if(joy_mouse.enabled && joy_mouse.left_click == event.jbutton.button) {
-            SDL_Event e;
-
-            e.common.type = event.common.type == SDL_JOYBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
-            e.common.timestamp = event.common.timestamp;
-            e.button.which = event.jbutton.which + 1;
-            e.button.state = event.jbutton.state;
+            e.button.which = event.cbutton.which + 1;
+            e.button.state = event.cbutton.state;
             e.button.button = SDL_BUTTON_LEFT;
 
             Sint32 x, y;
@@ -461,59 +430,30 @@ namespace Zeni {
 
             on_event(e);
           }
-          else if(joy_mouse.enabled && joy_mouse.escape == event.jbutton.button) {
+          else if(controller_mouse.enabled && controller_mouse.escape == event.jbutton.button) {
             SDL_Event e;
 
-            e.common.type = event.common.type == SDL_JOYBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP;
+            e.common.type = event.common.type == SDL_CONTROLLERBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP;
             e.common.timestamp = event.common.timestamp;
-#if SDL_VERSION_ATLEAST(2,0,0)
             e.key.keysym.mod = Uint16(SDL_GetModState());
             e.key.keysym.scancode = SDL_SCANCODE_ESCAPE;
-#else
-            e.key.which = event.jbutton.which + 1;
-            e.key.keysym.mod = SDL_GetModState();
-            e.key.keysym.scancode = 0;
-#endif
-            e.key.state = event.jbutton.state;
+            e.key.state = event.cbutton.state;
             e.key.keysym.sym = SDLK_ESCAPE;
             //e.key.keysym.unicode = 0;
 
             on_event(e);
           }
-          else
-            on_event(event);
-        }
-        else if(event.type == SDL_JOYHATMOTION) {
-          if(joy_mouse.enabled && joy_mouse.scroll_hat == event.jhat.hat && (event.jhat.value == SDL_HAT_DOWN || event.jhat.value == SDL_HAT_UP)) {
+          else if(controller_mouse.enabled && (controller_mouse.scroll_down == event.jbutton.button || controller_mouse.scroll_up == event.jbutton.button)) {
             SDL_Event e;
 
-#if SDL_VERSION_ATLEAST(2,0,0)
             e.common.type = SDL_MOUSEWHEEL;
             e.common.timestamp = event.common.timestamp;
-            e.wheel.which = event.jhat.which + 1;
+            e.wheel.which = event.cbutton.which + 1;
             e.wheel.windowID = 0;
             e.wheel.x = 0;
-            e.wheel.y = event.jhat.value == SDL_HAT_UP ? 1 : -1;
+            e.wheel.y = controller_mouse.scroll_down == event.cbutton.button ? -1 : 1;
 
             on_event(e);
-#else
-            e.type = SDL_MOUSEBUTTONDOWN;
-            e.button.which = event.jhat.which + 1;
-            e.button.state = SDL_PRESSED;
-            e.button.button = event.jhat.value == SDL_HAT_DOWN ? SDL_BUTTON_WHEELDOWN : SDL_BUTTON_WHEELUP;
-
-            int x, y;
-            SDL_GetMouseState(&x, &y);
-            e.button.x = Uint16(x);
-            e.button.y = Uint16(y);
-
-            on_event(e);
-
-            e.type = SDL_MOUSEBUTTONUP;
-            e.button.state = SDL_RELEASED;
-
-            on_event(e);
-#endif
           }
           else
             on_event(event);
