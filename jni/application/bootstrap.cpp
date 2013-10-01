@@ -43,9 +43,9 @@ private:
 
   void on_controller_axis(const SDL_ControllerAxisEvent &event) {
     if(event.which == 0) {
-      if(event.axis == SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+      if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
         left = (event.value + 0.5f) / 32767.5f;
-      if(event.axis == SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
+      if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
         right = (event.value + 0.5f) / 32767.5f;
       get_Controllers().set_vibration(0, left, right);
     }

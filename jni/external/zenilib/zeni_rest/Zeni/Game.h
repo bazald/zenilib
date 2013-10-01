@@ -40,6 +40,8 @@
 #include <Zeni/String.h>
 #include <Zeni/Timer.h>
 
+#include <SDL/SDL_gamecontroller.h>
+
 /* \cond */
 #include <stack>
 #include <vector>
@@ -116,13 +118,13 @@ namespace Zeni {
     struct ZENI_REST_DLL Controller_Mouse {
       Controller_Mouse()
         : enabled(false),
-        controller_axes(SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY),
+        controller_axes(SDL_CONTROLLER_AXIS_LEFTX, SDL_CONTROLLER_AXIS_LEFTY),
         noise_zone(8192, 4096),
         pixels_per_second(1000.0f, 1000.0f),
-        left_click(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_A),
-        escape(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_BACK),
-        scroll_down(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN),
-        scroll_up(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP)
+        left_click(SDL_CONTROLLER_BUTTON_A),
+        escape(SDL_CONTROLLER_BUTTON_BACK),
+        scroll_down(SDL_CONTROLLER_BUTTON_DPAD_DOWN),
+        scroll_up(SDL_CONTROLLER_BUTTON_DPAD_UP)
       {
       }
 

@@ -105,12 +105,12 @@ namespace Zeni {
       if(!joystick)
         continue;
 
-      Joystick_Info * info = nullptr;
+      Joystick_Info * info = 0;
 
       for(Joystick_Array::iterator it = m_joysticks.begin(), iend = m_joysticks.end(); it != iend; ++it) {
         if((*it)->joystick == joystick) {
           SDL_JoystickClose(joystick);
-          joystick = nullptr;
+          joystick = 0;
           info = *it;
           break;
         }
@@ -179,9 +179,9 @@ namespace Zeni {
   }
 
   Controllers::Joystick_Info::Joystick_Info()
-    : joystick(nullptr),
-    gamecontroller(nullptr),
-    haptic(nullptr),
+    : joystick(0),
+    gamecontroller(0),
+    haptic(0),
     haptic_effect_id(-1)
   {
     memset(&haptic_effect, 0, sizeof(haptic_effect));
