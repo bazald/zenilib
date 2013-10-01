@@ -57,7 +57,7 @@
         <!--<API>Direct3D 9</API>-->
         <!--<API>OpenGL Fixed</API>-->
         <!--<API>OpenGL Shader</API>-->
-        <API>OpenGL Shader</API>
+        <API>OpenGL Fixed</API>
         <Full_Screen>0</Full_Screen>
         <Multisampling>0</Multisampling>
         <Resolution>

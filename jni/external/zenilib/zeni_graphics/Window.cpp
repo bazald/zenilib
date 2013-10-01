@@ -509,18 +509,18 @@ namespace Zeni {
 #ifndef TEMP_DISABLE
 #if !defined(_WINDOWS)
 #if SDL_VERSION_ATLEAST(1,3,0)
-    if(m_window)
-      SDL_DestroyWindow(m_window);
-    m_window = 0;
+//     if(m_window)
+//       SDL_DestroyWindow(m_window);
+//     m_window = 0;
 #endif
 
     // Initialize Window
 #if SDL_VERSION_ATLEAST(1,3,0)
-    m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
-      SDL_WINDOW_OPENGL |
-      (g_screen_full ? SDL_WINDOW_FULLSCREEN
-                     : ((g_screen_show_frame ? SDL_WINDOW_OPENGL : SDL_WINDOW_BORDERLESS) |
-                        (g_screen_resizable ? SDL_WINDOW_RESIZABLE : SDL_WINDOW_OPENGL))));
+//     m_window = SDL_CreateWindow(get_m_title().c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_screen_size.x, g_screen_size.y,
+//       SDL_WINDOW_OPENGL |
+//       (g_screen_full ? SDL_WINDOW_FULLSCREEN
+//                      : ((g_screen_show_frame ? SDL_WINDOW_OPENGL : SDL_WINDOW_BORDERLESS) |
+//                         (g_screen_resizable ? SDL_WINDOW_RESIZABLE : SDL_WINDOW_OPENGL))));
 #else    
     const SDL_VideoInfo *VideoInfo = SDL_GetVideoInfo();
 
