@@ -157,7 +157,7 @@ namespace Zeni {
     for(Joystick_Array::iterator it = m_joysticks.begin(), iend = m_joysticks.end(); it != iend; ++it) {
       if(*it && (*it)->joystick_id == id) {
         delete *it;
-        *it = nullptr;
+        *it = 0;
         break;
       }
     }
