@@ -636,8 +636,8 @@ SDL_SYS_JoystickIsHaptic(SDL_Joystick * joystick)
 int
 SDL_SYS_JoystickSameHaptic(SDL_Haptic * haptic, SDL_Joystick * joystick)
 {
-    if ((joystick->hwdata->bXInputHaptic == haptic->hwdata->bXInputHaptic) && (haptic->hwdata->userid == joystick->hwdata->userid)) {
-        return 1;
+    if ((joystick->hwdata->bXInputHaptic == haptic->hwdata->bXInputHaptic)) {
+        return haptic->hwdata->userid == joystick->hwdata->userid;
     } else {
         HRESULT ret;
         DIDEVICEINSTANCE hap_instance, joy_instance;

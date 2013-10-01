@@ -39,10 +39,6 @@
 
 #include <vector>
 
-typedef struct _XINPUT_CAPABILITIES XINPUT_CAPABILITIES;
-typedef struct _XINPUT_STATE XINPUT_STATE;
-typedef struct _XINPUT_VIBRATION XINPUT_VIBRATION;
-
 namespace Zeni {
 
   class ZENI_CORE_DLL Controllers;
@@ -74,43 +70,14 @@ namespace Zeni {
     Controllers & operator=(const Controllers &);
 
   public:
-    enum {
-      AXIS_LEFT_THUMB_X = 0,
-      AXIS_LEFT_THUMB_Y = 1,
-      AXIS_RIGHT_THUMB_X = 2,
-      AXIS_RIGHT_THUMB_Y = 3,
-      AXIS_LEFT_TRIGGER = 4,
-      AXIS_RIGHT_TRIGGER = 5
-    } Xbox_360_Axis;
+    size_t get_num_controllers() const; ///< Get the number of controllers attached to the system
+    
+    Sint32 get_controller_index(const Sint32 &id) const; ///< Get the index of a given controller from the true SDL_JoystickInstanceID
+    const char * get_controller_name(const Sint32 &index) const; ///< Get the name of a given controller
+    bool is_controller_connected(const Sint32 &index) const; ///< Check to see if the controller is currently connected
 
-    enum {
-      BUTTON_START = 4,
-      BUTTON_BACK = 5,
-      BUTTON_LEFT_THUMB = 6,
-      BUTTON_RIGHT_THUMB = 7,
-      BUTTON_LEFT_SHOULDER = 8,
-      BUTTON_RIGHT_SHOULDER = 9,
-      BUTTON_A = 10,
-      BUTTON_B = 11,
-      BUTTON_X = 12,
-      BUTTON_Y = 13,
-      //BUTTON_GUIDE = 14,
-    } Xbox_360_Button;
-
-    size_t get_num_joysticks() const; ///< Get the number of joysticks attached to the system
-
-    Sint32 get_joystick_id(const Sint32 &index) const; ///< Get the id (as mapped by SDL) from the index
-    Sint32 get_joystick_index(const Sint32 &id) const; ///< Get the index from the id (as mapped by SDL)
-
-    const char * get_joystick_name(const Sint32 &index) const; ///< Get the name of a given joystick
-    int get_joystick_num_axes(const Sint32 &index) const; ///< Get the number of axes for a joystick
-    int get_joystick_num_balls(const Sint32 &index) const; ///< Get the number of balls for a joystick
-    int get_joystick_num_hats(const Sint32 &index) const; ///< Get the number of hats for a joystick
-    int get_joystick_num_buttons(const Sint32 &index) const; ///< Get the number of buttons for a joystick
-    bool is_joystick_connected(const Sint32 &index) const; ///< Check to see if the joystick is currently connected
-
-    void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for joysticks
-    void enable(const bool &enable_); ///< Temporarily turn joystick input on/off
+    void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for controllers
+    void enable(const bool &enable_); ///< Temporarily turn controller input on/off
     
     void poll(); ///< Poll for new input
 
@@ -149,8 +116,8 @@ namespace Zeni {
 
   ZENI_CORE_DLL Controllers & get_Controllers(); ///< Get access to the singleton.
 
-  struct Joystick_Init_Failure : public Error {
-    Joystick_Init_Failure() : Error("Zeni Joystick Failed to Initialize Correctly") {}
+  struct Controllers_Init_Failure : public Error {
+    Controllers_Init_Failure() : Error("Zeni Controllers Failed to Initialize Correctly") {}
   };
 
 }

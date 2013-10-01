@@ -121,6 +121,9 @@ namespace Zeni {
   void Game::on_event(android_app &app, const AInputEvent &event) {
 #else
   void Game::on_event(const SDL_Event &event) {
+    SDL_Event event2;
+    memcpy(&event2, &event, sizeof(SDL_Event));
+
     switch(event.type) {
       case SDL_KEYDOWN:
         m_keys[event.key.keysym.sym] = true;
@@ -139,15 +142,24 @@ namespace Zeni {
         break;
 
       case SDL_CONTROLLERAXISMOTION:
-        m_controller_axes[event.caxis.which][event.caxis.axis] = event.caxis.value;
+        {
+          event2.caxis.which = get_Controllers().get_controller_index(event.caxis.which);
+          m_controller_axes[event2.caxis.which][event2.caxis.axis] = event.caxis.value;
+        }
         break;
         
       case SDL_CONTROLLERBUTTONDOWN:
-        m_controller_buttons[event.cbutton.which][event.cbutton.button] = true;
+        {
+          event2.cbutton.which = get_Controllers().get_controller_index(event.cbutton.which);
+          m_controller_buttons[event2.cbutton.which][event2.cbutton.button] = true;
+        }
         break;
         
       case SDL_CONTROLLERBUTTONUP:
-        m_controller_buttons[event.cbutton.which][event.cbutton.button] = false;
+        {
+          event2.cbutton.which = get_Controllers().get_controller_index(event.cbutton.which);
+          m_controller_buttons[event2.cbutton.which][event2.cbutton.button] = false;
+        }
         break;
 
       default:
@@ -177,9 +189,9 @@ namespace Zeni {
     }
 
 #ifdef ANDROID
-    gs.on_event(app, event);
+    gs.on_event(app, event2);
 #else
-    gs.on_event(event);
+    gs.on_event(event2);
 #endif
   }
 
@@ -404,7 +416,7 @@ namespace Zeni {
           }
         }
         else if(event.type == SDL_CONTROLLERAXISMOTION) {
-          if(controller_mouse.enabled && (controller_mouse.controller_axes.x == event.caxis.axis || controller_mouse.controller_axes.y == event.caxis.axis)) {
+          if(controller_mouse.enabled && event.caxis.which == 0 && (controller_mouse.controller_axes.x == event.caxis.axis || controller_mouse.controller_axes.y == event.caxis.axis)) {
             if(controller_mouse.controller_axes.x == event.caxis.axis)
               controller_mouse.velocity.x = event.caxis.value;
             else
@@ -414,7 +426,7 @@ namespace Zeni {
             on_event(event);
         }
         else if(event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) {
-          if(controller_mouse.enabled && controller_mouse.left_click == event.cbutton.button) {
+          if(controller_mouse.enabled && event.cbutton.which == 0 && controller_mouse.left_click == event.cbutton.button) {
             SDL_Event e;
 
             e.common.type = event.common.type == SDL_CONTROLLERBUTTONDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
@@ -430,7 +442,7 @@ namespace Zeni {
 
             on_event(e);
           }
-          else if(controller_mouse.enabled && controller_mouse.escape == event.jbutton.button) {
+          else if(controller_mouse.enabled && event.cbutton.which == 0 && controller_mouse.escape == event.jbutton.button) {
             SDL_Event e;
 
             e.common.type = event.common.type == SDL_CONTROLLERBUTTONDOWN ? SDL_KEYDOWN : SDL_KEYUP;
@@ -443,7 +455,7 @@ namespace Zeni {
 
             on_event(e);
           }
-          else if(controller_mouse.enabled && (controller_mouse.scroll_down == event.jbutton.button || controller_mouse.scroll_up == event.jbutton.button)) {
+          else if(controller_mouse.enabled && event.cbutton.which == 0 && (controller_mouse.scroll_down == event.jbutton.button || controller_mouse.scroll_up == event.jbutton.button)) {
             SDL_Event e;
 
             e.common.type = SDL_MOUSEWHEEL;
