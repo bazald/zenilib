@@ -66,7 +66,7 @@ namespace Zeni {
 
   Sint32 Controllers::get_controller_index(const Sint32 &id) const {
     for(size_t i = 0, iend = m_joysticks.size(); i != iend; ++i) {
-      if(SDL_JoystickInstanceID(m_joysticks[i]->joystick) == id)
+      if(m_joysticks[i] && m_joysticks[i]->joystick_id == id)
         return Sint32(i);
     }
 
@@ -99,76 +99,99 @@ namespace Zeni {
 #endif
   }
   
-  void Controllers::poll() {
-    for(int i = 0, iend = SDL_NumJoysticks(); i != iend; ++i) {
-      SDL_Joystick * joystick = SDL_JoystickOpen(i);
-      if(!joystick)
-        continue;
+  void Controllers::device_added(const Sint32 &index) {
+    SDL_Joystick * const joystick = SDL_JoystickOpen(index);
+    if(!joystick)
+      return;
 
-      Joystick_Info * info = 0;
+    Joystick_Info * info = new Joystick_Info;
+    info->joystick = joystick;
+    info->joystick_id = SDL_JoystickInstanceID(joystick);
 
-      for(Joystick_Array::iterator it = m_joysticks.begin(), iend = m_joysticks.end(); it != iend; ++it) {
-        if((*it)->joystick == joystick) {
-          SDL_JoystickClose(joystick);
-          joystick = 0;
-          info = *it;
+    for(Joystick_Array::iterator it = m_joysticks.begin(), iend = m_joysticks.end(); ; ++it) {
+      if(it != iend) {
+        if(!*it) {
+          *it = info;
           break;
         }
       }
+      else {
+        m_joysticks.push_back(info);
+        break;
+      }
+    }
 
-      if(joystick) {
-        info = new Joystick_Info();
-        info->joystick = joystick;
-        for(Joystick_Array::iterator jt = m_joysticks.begin(), jend = m_joysticks.end(); ; ++jt) {
-          if(jt != jend) {
-            if(SDL_JoystickGetAttached((*jt)->joystick) == SDL_FALSE) {
-              delete *jt;
-              (*jt) = info;
-              break;
-            }
-          }
-          else {
-            m_joysticks.push_back(info);
-            break;
-          }
-        }
+    char szGUID[33];
+    SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(info->joystick), szGUID, sizeof(szGUID));
 
-        char szGUID[33];
-        SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(info->joystick), szGUID, sizeof(szGUID));
+    if(SDL_IsGameController(index))
+      info->gamecontroller = SDL_GameControllerOpen(index);
+    if(info->gamecontroller) {
+      char * mapping = SDL_GameControllerMapping(info->gamecontroller);
+      std::cerr << "Loaded game controller " << info->joystick_id << ": " << mapping << std::endl;
+      SDL_free(mapping);
+    }
+    else {
+      std::cerr << "Failed to load game controller (" << szGUID << "): " << SDL_GetError() << std::endl;
+      SDL_ClearError();
+    }
 
-        if(SDL_IsGameController(i))
-          info->gamecontroller = SDL_GameControllerOpen(i);
-        if(info->gamecontroller) {
-          char * mapping = SDL_GameControllerMapping(info->gamecontroller);
-          std::cerr << "Loaded game controller " << SDL_JoystickInstanceID(info->joystick) << ": " << mapping << std::endl;
-          SDL_free(mapping);
-        }
-        else {
-          std::cerr << "Failed to load game controller (" << szGUID << "): " << SDL_GetError() << std::endl;
-          SDL_ClearError();
-        }
-
-        if(SDL_JoystickIsHaptic(info->joystick) == 1)
-          info->haptic = SDL_HapticOpenFromJoystick(info->joystick);
-        if(info->haptic) {
-          if(SDL_HapticEffectSupported(info->haptic, &info->haptic_effect) == SDL_TRUE) {
-            info->haptic_effect_id = SDL_HapticNewEffect(info->haptic, &info->haptic_effect);
-            if(SDL_HapticRunEffect(info->haptic, info->haptic_effect_id, 1) == -1) {
-              std::cerr << "Failed to run effect on joystick (" << szGUID << ")." << std::endl;
-              SDL_ClearError();
-            }
-          }
-        }
-        else {
-          std::cerr << "Joystick (" << szGUID << ") not recognized as haptic." << std::endl;
+    if(SDL_JoystickIsHaptic(info->joystick) == 1)
+      info->haptic = SDL_HapticOpenFromJoystick(info->joystick);
+    if(info->haptic) {
+      if(SDL_HapticEffectSupported(info->haptic, &info->haptic_effect) == SDL_TRUE) {
+        info->haptic_effect_id = SDL_HapticNewEffect(info->haptic, &info->haptic_effect);
+        if(SDL_HapticRunEffect(info->haptic, info->haptic_effect_id, 1) == -1) {
+          std::cerr << "Failed to run effect on joystick (" << szGUID << ")." << std::endl;
           SDL_ClearError();
         }
       }
     }
+    else {
+      std::cerr << "Joystick (" << szGUID << ") not recognized as haptic." << std::endl;
+      SDL_ClearError();
+    }
+  }
+
+  void Controllers::device_removed(const Sint32 &id) {
+    for(Joystick_Array::iterator it = m_joysticks.begin(), iend = m_joysticks.end(); it != iend; ++it) {
+      if(*it && (*it)->joystick_id == id) {
+        delete *it;
+        *it = nullptr;
+        break;
+      }
+    }
+  }
+
+  void Controllers::detect_removed() {
+    for(Joystick_Array::reverse_iterator it = m_joysticks.rbegin(), iend = m_joysticks.rend(); it != iend; ++it) {
+      if(*it && SDL_JoystickGetAttached((*it)->joystick) == SDL_FALSE)
+        device_removed((*it)->joystick_id);
+    }
+
+    //for(int i = SDL_NumJoysticks() - 1; i > -1; --i) {
+    //  SDL_Joystick * joystick = SDL_JoystickOpen(i);
+    //  Sint32 joystick_id = SDL_JoystickInstanceID(joystick);
+    //  SDL_JoystickClose(joystick);
+    //  bool found = false;
+    //  for(Joystick_Array::reverse_iterator it = m_joysticks.rbegin(), iend = m_joysticks.rend(); it != iend; ++it) {
+    //    if((*it) && (*it)->joystick_id == joystick_id) {
+    //      found = true;
+    //      break;
+    //    }
+    //  }
+    //  if(!found)
+    //    device_added(i);
+    //}
+  }
+  
+  void Controllers::device_add_all() {
+    for(int i = 0, iend = SDL_NumJoysticks(); i != iend; ++i)
+      device_added(i);
   }
 
   void Controllers::set_vibration(const size_t &index, const float &left, const float &right) {
-    if(index < m_joysticks.size() && m_joysticks[index]->haptic_effect_id > -1) {
+    if(index < m_joysticks.size() && m_joysticks[index] && m_joysticks[index]->haptic_effect_id > -1) {
       m_joysticks[index]->haptic_effect.leftright.large_magnitude = Uint16(left * 0xFFFF);
       m_joysticks[index]->haptic_effect.leftright.small_magnitude = Uint16(right * 0xFFFF);
       if(m_joysticks[index]->haptic_effect_id > -1) {
@@ -195,6 +218,7 @@ namespace Zeni {
       if(haptic_effect_id > -1)
         SDL_HapticDestroyEffect(haptic, haptic_effect_id);
       SDL_HapticClose(haptic);
+      SDL_ClearError(); ///< HACK
     }
     if(gamecontroller)
       SDL_GameControllerClose(gamecontroller);
@@ -241,7 +265,9 @@ namespace Zeni {
         }
       }
     }
-    
+
+    device_add_all();
+
     SDL_JoystickEventState(SDL_ENABLE);
     SDL_GameControllerEventState(SDL_ENABLE);
 #endif

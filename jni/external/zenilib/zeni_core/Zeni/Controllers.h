@@ -79,11 +79,15 @@ namespace Zeni {
     void reinit(); ///< Reload all joysticks, flushing *all* SDL events and possibly changing 'which' values for controllers
     void enable(const bool &enable_); ///< Temporarily turn controller input on/off
     
-    void poll(); ///< Poll for new input
+    void device_added(const Sint32 &index); ///< Register a new device
+    void device_removed(const Sint32 &id); ///< Remove a device
+    void detect_removed(); ///< Fix to broken SDL device removal detection
 
     void set_vibration(const size_t &index, const float &left, const float &right);
 
   private:
+    void device_add_all(); ///< Register all devices
+
     class Joystick_Info {
       Joystick_Info(const Joystick_Info &rhs);
       Joystick_Info & operator=(const Joystick_Info &rhs);
@@ -93,6 +97,8 @@ namespace Zeni {
       ~Joystick_Info();
 
       SDL_Joystick * joystick;
+      Sint32 joystick_id;
+
       SDL_GameController * gamecontroller;
       SDL_Haptic * haptic;
 

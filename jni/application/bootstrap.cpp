@@ -19,7 +19,7 @@ class Play_State : public Gamestate_Base {
   Play_State operator=(const Play_State &);
 
 public:
-  Play_State() : left(0.0f), right(0.0f) {
+  Play_State() {
     set_pausable(true);
   }
 
@@ -34,29 +34,35 @@ private:
     //get_Window().mouse_grab(false);
     get_Window().mouse_hide(false);
     //get_Game().controller_mouse.enabled = true;
-    get_Controllers().set_vibration(0, 0.0f, 0.0f);
+    for(int i = 0; i != 4; ++i)
+      get_Controllers().set_vibration(i, 0.0f, 0.0f);
   }
 
   void on_cover() {
-    get_Controllers().set_vibration(0, 0.0f, 0.0f);
+    for(int i = 0; i != 4; ++i)
+      get_Controllers().set_vibration(i, 0.0f, 0.0f);
   }
 
   void on_controller_axis(const SDL_ControllerAxisEvent &event) {
-    if(event.which == 0) {
-      if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
-        left = (event.value + 0.5f) / 32767.5f;
-      if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
-        right = (event.value + 0.5f) / 32767.5f;
-      get_Controllers().set_vibration(0, left, right);
-    }
+    if(event.value < -16000 || event.value > 16000)
+      get_Game().write_to_console("Axis: " + ulltoa(event.which) + ':' + ulltoa(event.axis));
+    if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+      vibration[event.which].first = event.value / 32767.0f;
+    if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
+      vibration[event.which].second = event.value / 32767.0f;
+    get_Controllers().set_vibration(event.which, vibration[event.which].first, vibration[event.which].second);
+  }
+
+  void on_controller_button(const SDL_ControllerButtonEvent &event) {
+    if(event.state == SDL_PRESSED)
+      get_Game().write_to_console("Button: " + ulltoa(event.which) + ':' + ulltoa(event.button));
   }
 
   void perform_logic() {
-    
+    //get_Game().write_to_console("Num Controllers = " + ulltoa(get_Controllers().get_num_controllers()));
   }
   
-  float left;
-  float right;
+  std::map<int, std::pair<float, float> > vibration;
 };
 
 class Instructions_State : public Widget_Gamestate {
