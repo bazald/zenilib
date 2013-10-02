@@ -462,39 +462,31 @@ namespace Zeni {
 		return !is_initialized() || get().set_icon();
   }
 
-  bool Window::is_mouse_grabbed() const {
-#ifdef ANDROID
-    return true;
-#elif SDL_VERSION_ATLEAST(2,0,0)
+  Window::Mouse_State Window::get_mouse_state() const {
+    if(SDL_GetRelativeMouseMode() == SDL_TRUE)
+      return MOUSE_RELATIVE;
+
+    const bool mouse_hidden = SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE == SDL_TRUE;
+
     SDL_Window * const window = get_Window().get_window();
-    return window && SDL_GetWindowGrab(window) == SDL_TRUE;
-#else
-    return SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON;
-#endif
+    if(window && SDL_GetWindowGrab(window) == SDL_TRUE)
+      return mouse_hidden ? MOUSE_GRABBED_AND_HIDDEN : MOUSE_GRABBED;
+    else
+      return mouse_hidden ? MOUSE_HIDDEN : MOUSE_NORMAL;
   }
 
-  bool Window::is_mouse_hidden() const {
-#ifdef ANDROID
-    return true;
-#else
-    return SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE;
-#endif
-  }
+  void Window::set_mouse_state(const Window::Mouse_State &mouse_state) {
+    if(mouse_state == MOUSE_RELATIVE)
+      SDL_SetRelativeMouseMode(SDL_TRUE);
+    else {
+      SDL_SetRelativeMouseMode(SDL_FALSE);
 
-  void Window::mouse_grab(const bool &grab) {
-#if SDL_VERSION_ATLEAST(2,0,0)
-    SDL_Window * const window = get_Window().get_window();
-    if(window)
-      SDL_SetWindowGrab(window, grab ? SDL_TRUE : SDL_FALSE);
-#elif !defined(ANDROID)
-    SDL_WM_GrabInput(grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
-#endif
-  }
+      SDL_ShowCursor((mouse_state & MOUSE_HIDDEN) ? SDL_DISABLE : SDL_ENABLE);
 
-  void Window::mouse_hide(const bool &hide) {
-#ifndef ANDROID
-    SDL_ShowCursor(hide ? SDL_DISABLE : SDL_ENABLE);
-#endif
+      SDL_Window * const window = get_Window().get_window();
+      if(window)
+        SDL_SetWindowGrab(window, (mouse_state & MOUSE_GRABBED) ? SDL_TRUE : SDL_FALSE);
+    }
   }
 
 #if SDL_VERSION_ATLEAST(1,3,0)

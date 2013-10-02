@@ -95,10 +95,9 @@ namespace Zeni {
     static bool set_icon(const String &filename); ///< Set the window icon
 
     // Mouse Functions
-    bool is_mouse_grabbed() const; ///< Find out if the (primary) Window has grabbed the mouse
-    bool is_mouse_hidden() const; ///< Find out if the mouse cursor is hidden
-    void mouse_grab(const bool &grab); ///< Tell the (primary) Window to grab/ungrab the mouse
-    void mouse_hide(const bool &hide); ///< Hide/Unhide the mouse
+    enum Mouse_State {MOUSE_NORMAL, MOUSE_GRABBED = 1, MOUSE_HIDDEN = 2, MOUSE_GRABBED_AND_HIDDEN = 3, MOUSE_RELATIVE = 7};
+    Mouse_State get_mouse_state() const; ///< Find out if the mouse cursor is grabbed/hidden/relative
+    void set_mouse_state(const Mouse_State &mouse_state);
 #endif
 
     // Enable/Disable use of the Rendering Device

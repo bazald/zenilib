@@ -147,29 +147,19 @@ namespace Zeni {
     const bool gain = event.gain != 0;
 #endif
 
-    static bool hide_cursor = false;
-    static bool grab_input = false;
+    static Window::Mouse_State mouse_state = Window::MOUSE_NORMAL;
     Window &wr = get_Window();
 
     if(gain) {
-      if(hide_cursor)
-        wr.mouse_hide(true);
-
-      if(grab_input)
-        wr.mouse_grab(true);
+      wr.set_mouse_state(mouse_state);
 
       get_Controllers().enable(true);
     }
     else {
       get_Controllers().enable(false);
 
-      hide_cursor = wr.is_mouse_hidden();
-      if(hide_cursor)
-        wr.mouse_hide(false);
-
-      grab_input = wr.is_mouse_grabbed();
-      if(grab_input)
-        wr.mouse_grab(false);
+      mouse_state = wr.get_mouse_state();
+      wr.set_mouse_state(Window::MOUSE_NORMAL);
 
       if(m_pausable)
         get_Game().push_Popup_Pause_State();

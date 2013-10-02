@@ -34,33 +34,17 @@ namespace Zeni {
   }
 
   void Widget_Gamestate::on_push() {
-#ifndef ANDROID
     Window &wr = get_Window();
 
-    m_hide_cursor = wr.is_mouse_hidden();
-    if(m_hide_cursor)
-      wr.mouse_hide(false);
-
-    m_grab_input = wr.is_mouse_grabbed();
-    if(m_grab_input)
-      wr.mouse_grab(false);
-#endif
+    m_mouse_state = wr.get_mouse_state();
+    wr.set_mouse_state(Window::MOUSE_NORMAL);
 
     m_clear_color = get_Video().get_clear_Color();
   }
 
   void Widget_Gamestate::on_pop() {
     get_Video().set_clear_Color(m_clear_color);
-
-#ifndef ANDROID
-    Window &wr = get_Window();
-
-    if(m_hide_cursor)
-      wr.mouse_hide(true);
-
-    if(m_grab_input)
-      wr.mouse_grab(true);
-#endif
+    get_Window().set_mouse_state(m_mouse_state);
   }
 
 #ifndef ANDROID

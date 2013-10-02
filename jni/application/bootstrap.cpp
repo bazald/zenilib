@@ -25,14 +25,12 @@ public:
 
 private:
   void on_push() {
-    //get_Window().mouse_grab(true);
-    get_Window().mouse_hide(true);
+    get_Window().set_mouse_state(Window::MOUSE_HIDDEN);
     //get_Game().controller_mouse.enabled = false;
   }
 
   void on_pop() {
-    //get_Window().mouse_grab(false);
-    get_Window().mouse_hide(false);
+    get_Window().set_mouse_state(Window::MOUSE_NORMAL);
     //get_Game().controller_mouse.enabled = true;
     for(int i = 0; i != 4; ++i)
       get_Controllers().set_vibration(i, 0.0f, 0.0f);
