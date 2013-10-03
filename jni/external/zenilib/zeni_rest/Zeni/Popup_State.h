@@ -49,6 +49,8 @@ namespace Zeni {
         get_Core().set_screen_saver(true);
       }
 
+      get_Controllers().reset_vibration_all();
+
       Widget_Gamestate::on_push();
     }
 

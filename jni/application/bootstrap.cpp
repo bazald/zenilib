@@ -26,41 +26,20 @@ public:
 private:
   void on_push() {
     get_Window().set_mouse_state(Window::MOUSE_HIDDEN);
-    //get_Game().controller_mouse.enabled = false;
   }
 
   void on_pop() {
-    get_Window().set_mouse_state(Window::MOUSE_NORMAL);
-    //get_Game().controller_mouse.enabled = true;
-    for(int i = 0; i != 4; ++i)
-      get_Controllers().set_vibration(i, 0.0f, 0.0f);
+    get_Controllers().reset_vibration_all();
   }
 
   void on_cover() {
-    for(int i = 0; i != 4; ++i)
-      get_Controllers().set_vibration(i, 0.0f, 0.0f);
-  }
-
-  void on_controller_axis(const SDL_ControllerAxisEvent &event) {
-    if(event.value < -16000 || event.value > 16000)
-      get_Game().write_to_console("Axis: " + ulltoa(event.which) + ':' + ulltoa(event.axis));
-    if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
-      vibration[event.which].first = event.value / 32767.0f;
-    if(event.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
-      vibration[event.which].second = event.value / 32767.0f;
-    get_Controllers().set_vibration(event.which, vibration[event.which].first, vibration[event.which].second);
+    get_Controllers().reset_vibration_all();
   }
 
   void on_controller_button(const SDL_ControllerButtonEvent &event) {
-    if(event.state == SDL_PRESSED)
-      get_Game().write_to_console("Button: " + ulltoa(event.which) + ':' + ulltoa(event.button));
+    if(event.button == SDL_CONTROLLER_BUTTON_BACK && event.state == SDL_PRESSED)
+      get_Game().push_Popup_Menu_State();
   }
-
-  void perform_logic() {
-    //get_Game().write_to_console("Num Controllers = " + ulltoa(get_Controllers().get_num_controllers()));
-  }
-  
-  std::map<int, std::pair<float, float> > vibration;
 };
 
 class Instructions_State : public Widget_Gamestate {
@@ -109,7 +88,6 @@ class Bootstrap {
       get_Textures();
       get_Fonts();
       get_Sounds();
-      get_Game().controller_mouse.enabled = true;
 
       return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
     }

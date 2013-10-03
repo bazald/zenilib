@@ -120,6 +120,20 @@ namespace Zeni {
       get_Video().set_clear_Color(Color(1.0f, 0.0f, 0.0f, 0.0f));
     }
 
+    void on_push() {
+      get_Game().controller_mouse.enabled = true;
+    }
+
+    void on_cover() {
+      get_Game().controller_mouse.enabled = false;
+    }
+
+    void on_uncover() {
+      get_Controllers().reset_vibration_all();
+      get_Game().controller_mouse.enabled = true;
+      get_Window().set_mouse_state(Window::MOUSE_NORMAL);
+    }
+
 #ifndef ANDROID
     void on_key(const SDL_KeyboardEvent &/*event*/)
     {

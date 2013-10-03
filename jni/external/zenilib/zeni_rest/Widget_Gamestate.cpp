@@ -36,15 +36,19 @@ namespace Zeni {
   void Widget_Gamestate::on_push() {
     Window &wr = get_Window();
 
+    m_clear_color = get_Video().get_clear_Color();
+
+    m_controller_mouse = get_Game().controller_mouse.enabled;
+    get_Game().controller_mouse.enabled = true;
+
     m_mouse_state = wr.get_mouse_state();
     wr.set_mouse_state(Window::MOUSE_NORMAL);
-
-    m_clear_color = get_Video().get_clear_Color();
   }
 
   void Widget_Gamestate::on_pop() {
     get_Video().set_clear_Color(m_clear_color);
     get_Window().set_mouse_state(m_mouse_state);
+    get_Game().controller_mouse.enabled = m_controller_mouse;
   }
 
 #ifndef ANDROID

@@ -191,7 +191,7 @@ namespace Zeni {
   }
 
   void Controllers::set_vibration(const size_t &index, const float &left, const float &right) {
-    if(index < m_joysticks.size() && m_joysticks[index] && m_joysticks[index]->haptic_effect_id > -1) {
+    if(index < m_joysticks.size() && m_joysticks[index]) {
       m_joysticks[index]->haptic_effect.leftright.large_magnitude = Uint16(left * 0xFFFF);
       m_joysticks[index]->haptic_effect.leftright.small_magnitude = Uint16(right * 0xFFFF);
       if(m_joysticks[index]->haptic_effect_id > -1) {
@@ -199,6 +199,11 @@ namespace Zeni {
           SDL_ClearError();
       }
     }
+  }
+
+  void Controllers::reset_vibration_all() {
+    for(int i = 0, iend = m_joysticks.size(); i != iend; ++i)
+      set_vibration(i, 0.0f, 0.0f);
   }
 
   Controllers::Joystick_Info::Joystick_Info()

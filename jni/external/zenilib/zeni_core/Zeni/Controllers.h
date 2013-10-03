@@ -83,7 +83,8 @@ namespace Zeni {
     void device_removed(const Sint32 &id); ///< Remove a device
     void detect_removed(); ///< Fix to broken SDL device removal detection
 
-    void set_vibration(const size_t &index, const float &left, const float &right);
+    void set_vibration(const size_t &index, const float &left, const float &right); ///< Set vibration for controller [0,...] to <[0,1],[0,1]>
+    void reset_vibration_all(); ///< Set vibration for all controllers to <0,0>
 
   private:
     void device_add_all(); ///< Register all devices
