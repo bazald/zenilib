@@ -68,7 +68,7 @@ namespace Zeni {
   Vertex2f_Color * Vertex2f_Color::interpolate_to(const float &rhs_part, const Vertex2f_Color &rhs) const {
     const Point3f midpt = position.interpolate_to(rhs_part, rhs.position);
     return new Vertex2f_Color(Point2f(midpt.x, midpt.y), 
-      Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
+      Color(m_argb).interpolate_to(rhs_part, Color(rhs.m_argb)).get_argb());
   }
 
   Vertex2f_Color::Vertex2f_Color()

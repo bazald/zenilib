@@ -69,7 +69,7 @@ namespace Zeni {
   Vertex3f_Color * Vertex3f_Color::interpolate_to(const float &rhs_part, const Vertex3f_Color &rhs) const {
     return new Vertex3f_Color(position.interpolate_to(rhs_part, rhs.position), 
       0.5f*(normal + rhs.normal), 
-      Color(m_argb).interpolate_to(rhs_part, rhs.m_argb).get_argb());
+      Color(m_argb).interpolate_to(rhs_part, Color(rhs.m_argb)).get_argb());
   }
 
   Vertex3f_Color::Vertex3f_Color()
