@@ -466,7 +466,7 @@ namespace Zeni {
     if(SDL_GetRelativeMouseMode() == SDL_TRUE)
       return MOUSE_RELATIVE;
 
-    const bool mouse_hidden = SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE == SDL_TRUE;
+    const bool mouse_hidden = (SDL_ShowCursor(SDL_QUERY) != SDL_ENABLE) == SDL_TRUE;
 
     SDL_Window * const window = get_Window().get_window();
     if(window && SDL_GetWindowGrab(window) == SDL_TRUE)
