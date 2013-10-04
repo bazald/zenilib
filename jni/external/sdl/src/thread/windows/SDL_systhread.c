@@ -187,8 +187,10 @@ SDL_SYS_SetupThread(const char *name)
             mov fs:[0],esp
         }
 
+#ifndef NDEBUG
         /* The program itself should ignore this bogus exception. */
         RaiseException(0x406D1388, 0, sizeof(inf)/sizeof(DWORD), (DWORD*)&inf);
+#endif
 
         __asm {  /* tear down SEH. */
             mov eax,[esp]
