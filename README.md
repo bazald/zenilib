@@ -57,7 +57,7 @@ It should be possible to build it on any platform supported by:
 | libogg | 1.2.2 | Xiph BSD-like License |
 | libpng | 1.2.46 | zlib/libpng License |
 | libvorbis | 1.3.2 | Xiph BSD-like License |
-| SDL | 2.0.0+ (Modified r7769) | zlib License |
+| SDL | 2.0.0+ (Modified r7781) | zlib License |
 | SDL_net | 2.0.0 | zlib License |
 | TinyXML | 2.6.2 | zlib/libpng License |
 | zlib | 1.2.5 | zlib/libpng License |
