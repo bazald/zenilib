@@ -72,9 +72,9 @@ namespace Zeni {
     case SDL_CONTROLLERBUTTONDOWN:
     case SDL_CONTROLLERBUTTONUP:
       {
-        const float confidence = event.jbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
+        const float confidence = event.cbutton.state == SDL_PRESSED ? 1.0f : 0.0f;
 
-        fire_event(Zeni_Input_ID(SDL_CONTROLLERAXISMOTION, event.cbutton.button, event.cbutton.which), confidence);
+        fire_event(Zeni_Input_ID(SDL_CONTROLLERBUTTONDOWN, event.cbutton.button, event.cbutton.which), confidence);
       }
       break;
     case SDL_KEYDOWN:
