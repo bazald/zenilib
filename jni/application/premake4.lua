@@ -27,12 +27,7 @@ project(APPLICATION_NAME)
     prebuildcommands { "xcopy "..rebase("jni/external/bin/x64").." "..rebase("bin/x64").." /E /Y" }
   configuration { "macosx or linux" }
     prebuildcommands { "rsync -av --exclude '.*' "..rebase("dev/pc_").."/ "..rebase("") }
-  if _OPTIONS.macosx ~= "native" then
-    configuration { "macosx", "Debug*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("Info_d.plist") }
-    configuration { "macosx", "Release*" }
-      prebuildcommands { "/usr/libexec/PlistBuddy -c \"Set :LSMinimumSystemVersion ".._OPTIONS.macosx.."\" "..rebase("Info.plist") }
-  else
+  if true then
     local ver=os.getversion()
     if ver.majorversion == 10 and ver.minorversion >= 6 then
       local macosx = string.format("%d.%d", ver.majorversion, ver.minorversion)

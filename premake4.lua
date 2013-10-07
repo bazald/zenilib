@@ -24,22 +24,6 @@ if not _OPTIONS["dir"] then
    _OPTIONS["dir"] = "build"
 end
 
-newoption {
-  trigger     = "macosx",
-  value       = "SDK",
-  description = "Choose which version of Mac OS X to target",
-  allowed = {
-      { "10.6",     "Mac OS 10.6" },
-      { "10.7",     "Mac OS 10.7" },
-      { "10.8",     "Mac OS 10.8" },
-      { "native",   "Whatever version you happen to be running (default)" }
-  }
-}
-
-if not _OPTIONS["macosx"] then
-  _OPTIONS["macosx"] = "native"
-end
-
 solution "zenilib"
   configurations { "Debug", "Release" }
 
@@ -131,32 +115,6 @@ solution "zenilib"
 
   configuration "macosx"
     buildoptions { "-Qunused-arguments" }
-
-    if os.get() == "macosx" and _OPTIONS.macosx ~= "native" then
-      local sysroot="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
-      if not os.isdir(sysroot) then
-        sysroot="/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
-      end
-      if not os.isdir(sysroot) then
-        sysroot="/Applications/Developer/SDKs/MacOSX".._OPTIONS.macosx..".sdk"
-      end
-      if not os.isdir(sysroot) then
-        error("Mac OS ".._OPTIONS.macosx.." SDK not found.")
-      end
-
-      buildoptions { "--sysroot "..sysroot,
-                    "-isysroot "..sysroot,
-                    "-mmacosx_version_min,".._OPTIONS.macosx }
-      linkoptions {  "--sysroot "..sysroot,
-                    "-isysroot "..sysroot,
-                    "-mmacosx_version_min,".._OPTIONS.macosx}
-    end
-
-    local ver=os.getversion()
-    if _OPTIONS.macosx ~= "10.6" and (_OPTIONS.macosx ~= "native" or ver.majorversion ~= 10 or ver.minorversion ~= 6) then
-      buildoptions { "-stdlib=libc++" }
-      linkoptions { "-stdlib=libc++" }
-    end
 
   configuration "*"
     if _ACTION then
