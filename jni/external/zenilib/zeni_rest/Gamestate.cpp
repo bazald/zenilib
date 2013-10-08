@@ -139,7 +139,7 @@ namespace Zeni {
     bool gain;
     if(event.event == SDL_WINDOWEVENT_ENTER && wr.has_focus() || event.event == SDL_WINDOWEVENT_FOCUS_GAINED)
       gain = true;
-    else if(event.event == SDL_WINDOWEVENT_LEAVE || event.event == SDL_WINDOWEVENT_FOCUS_LOST || event.event == SDL_WINDOW_MINIMIZED)
+    else if(event.event == SDL_WINDOWEVENT_HIDDEN || event.event == SDL_WINDOWEVENT_MINIMIZED || event.event == SDL_WINDOWEVENT_LEAVE || event.event == SDL_WINDOWEVENT_FOCUS_LOST)
       gain = false;
     else
       return;
