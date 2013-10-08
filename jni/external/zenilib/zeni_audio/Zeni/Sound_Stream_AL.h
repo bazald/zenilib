@@ -13,9 +13,9 @@ namespace Zeni {
     Sound_Stream_AL(const Sound_Stream_AL &);
     Sound_Stream_AL & operator=(const Sound_Stream_AL &);
 
-    // stereo 44kHz = 2 * 88000 bytes per second
-    static const size_t NUM_BUFFERS = 60;
-    static const size_t BUFFER_SIZE = 4096;
+    // stereo 44kHz = 2 * 88000 bytes per second -> ~35.7 seconds
+    static const size_t NUM_BUFFERS = 192;
+    static const size_t BUFFER_SIZE = 32768;
 
   public:
     Sound_Stream_AL(const String &path, const bool &looping_ = false, const float &time_ = 0.0f);
