@@ -119,6 +119,9 @@ done
 for file in $(ls -d "$DIR/vs2010/*.filters" "$DIR/vs2010/*.user" "$DIR/vs2010/*.vcxproj" 2> /dev/null); do
   if [ -f "$file" ]; then rm "$file"; fi
 done
+for file in $(ls -d "$DIR/vs2012/*.filters" "$DIR/vs2012/*.user" "$DIR/vs2012/*.vcxproj" 2> /dev/null); do
+  if [ -f "$file" ]; then rm "$file"; fi
+done
 
 $PREMAKE --os=windows --build=$BUILD --dir="$DIR" vs2010
 $PREMAKE --os=windows --build=$BUILD --dir="$DIR" vs2012
@@ -210,9 +213,10 @@ IF NOT "%STATE%"=="config" (
 
 
 DEL /Q "%DIR%\vs2010\*.filters" "%DIR%\vs2010\*.user" "%DIR%\vs2010\*.vcxproj"
+DEL /Q "%DIR%\vs2010\*.filters" "%DIR%\vs2010\*.user" "%DIR%\vs2012\*.vcxproj"
 
 "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% vs2010
-"%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% vs2010
+"%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% vs2012
 "%DP0%\dev\premake\premake4-windows.exe" --file="%DP0%\premake4.lua" --os=windows --build=%BUILD% --dir=%DIR% xcode4
 
 

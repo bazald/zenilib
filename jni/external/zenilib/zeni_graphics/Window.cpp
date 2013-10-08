@@ -433,6 +433,10 @@ namespace Zeni {
   void Window::set_opengl_flag(const bool &on) {
     g_opengl_flag = on;
   }
+  
+  bool Window::has_focus() const {
+    return (SDL_GetWindowFlags(m_window) & SDL_WINDOW_INPUT_FOCUS) != 0;
+  }
 
   void Window::set_tt(const String &title, const String &taskmsg) {
     get_m_title() = title;

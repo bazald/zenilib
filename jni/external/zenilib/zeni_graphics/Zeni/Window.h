@@ -85,6 +85,7 @@ namespace Zeni {
     inline static const bool & is_frame_visible(); ///< Determine whether the frame is visible (windowed only)
     inline static const bool & is_resizable(); ///< Determine whether the frame is resizable (windowed only)
     inline const std::vector<Point2i> & get_resolutions() const; ///< Get available full screen resolutions
+    bool has_focus() const; ///< Determine if the Window currently has focus or not
 
     // Window Decorations
     inline const String & get_title() const; ///< Get the window title
