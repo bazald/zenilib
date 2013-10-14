@@ -39,34 +39,31 @@ namespace Zeni {
   template <class TIME>
   class Chronometer {
   public:
-    Chronometer();
-    ~Chronometer();
+    typedef TIME time_type;
+    typedef typename TIME::Second_Type Second_Type;
 
-    Chronometer(const Chronometer<TIME> &rhs);
-    Chronometer & operator =(const Chronometer<TIME> &rhs);
+    Chronometer();
 
     // Starting and Stopping
     const bool & is_running() const; ///< Get whether the Chronometer is currently counting or stopped.
-    const TIME & start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
-    const TIME & stop(); ///< Stop the Chronometer and get the current TIME.
+    Second_Type start(); ///< Start the Chronometer and get the current TIME.  This does NOT reset the Chronometer.
+    Second_Type stop(); ///< Stop the Chronometer and get the current TIME.
 
     // Time Accessor and Modifiers
-    typename TIME::Second_Type seconds() const; ///< Get the number of seconds counted by the Chronometer.
-    void set(const typename TIME::Second_Type &time); ///< Set the number of seconds counted by the Chronometer.
+    Second_Type seconds() const; ///< Get the number of seconds counted by the Chronometer.
+    void set(const Second_Type &time); ///< Set the number of seconds counted by the Chronometer.
     void reset(); ///< Reset the Chronometer.  This does NOT stop the Chronometer.
 
     // Scaling
-    const typename TIME::Second_Type & scaling_factor() const; ///< Get the scaling factor.
-    void scale(const typename TIME::Second_Type &scaling_factor = typename TIME::Second_Type(1)); ///< Scale the amount of time that passes by some amount.
+    const Second_Type & scaling_factor() const; ///< Get the scaling factor.
+    void scale(const Second_Type &scaling_factor = Second_Type(1)); ///< Scale the amount of time that passes by some amount.
 
   private:
-    typename TIME::Second_Type m_seconds_counted;
-
-    TIME m_start_time;
-    TIME m_end_time;
+    Second_Type m_seconds_before_start;
+    Second_Type m_start;
     bool m_running;
 
-    typename TIME::Second_Type m_scaling_factor;
+    Second_Type m_scaling_factor;
 
   public:
     static bool are_paused(); ///< Check to see if all Chronometer<TIME> objects are paused
@@ -74,8 +71,10 @@ namespace Zeni {
     static void unpause_all(); ///< Unpause all Chronometer<TIME> objects
 
   private:
-    static std::set<Chronometer<TIME> *> & get_chronometers();
-    static std::set<Chronometer<TIME> *> & get_paused();
+    static Second_Type get_time_passed();
+
+    static time_type & get_start_time();
+    static Second_Type g_seconds_before_start;
     static bool g_are_paused;
   };
 
