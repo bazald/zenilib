@@ -28,7 +28,7 @@ namespace Zeni {
 
   template <class TIME>
   Chronometer<TIME>::Chronometer()
-    : m_seconds_before_start(TIME::Second_Type()),
+    : m_seconds_before_start(typename TIME::Second_Type()),
     m_running(false),
     m_scaling_factor(typename TIME::Second_Type(1))
   {
@@ -102,7 +102,7 @@ namespace Zeni {
   
   template <class TIME>
   typename TIME::Second_Type Chronometer<TIME>::get_time_passed() {
-    return g_seconds_before_start + (g_are_paused ? TIME::Second_Type() : TIME().get_seconds_since(get_start_time()));
+    return g_seconds_before_start + (g_are_paused ? typename TIME::Second_Type() : TIME().get_seconds_since(get_start_time()));
   }
   
   template <class TIME>
@@ -111,7 +111,7 @@ namespace Zeni {
     return g_time;
   }
   template <class TIME>
-  typename TIME::Second_Type Chronometer<TIME>::g_seconds_before_start = TIME::Second_Type();
+  typename TIME::Second_Type Chronometer<TIME>::g_seconds_before_start = typename TIME::Second_Type();
   template <class TIME>
   bool Chronometer<TIME>::g_are_paused = false;
 
