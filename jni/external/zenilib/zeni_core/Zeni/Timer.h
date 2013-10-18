@@ -66,7 +66,7 @@ namespace Zeni {
     typedef float Second_Type;
 
     Time(); ///< Initialize to the current time
-    Time(const Tick_Type &ticks);
+    explicit Time(const Tick_Type &ticks);
     inline Time & operator=(const Tick_Type &ticks);
 
     // Accessors

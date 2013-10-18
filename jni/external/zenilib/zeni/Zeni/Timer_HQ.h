@@ -82,8 +82,8 @@ namespace Zeni {
     typedef long double Second_Type;
 
     Time_HQ(); ///< Initialize to the current time
-    Time_HQ(const HQ_Tick_Type &ticks);
-    Time_HQ(const HQ_Tick_Type &ticks, const HQ_Tick_Type &ticks_per_second);
+    explicit Time_HQ(const HQ_Tick_Type &ticks);
+    explicit Time_HQ(const HQ_Tick_Type &ticks, const HQ_Tick_Type &ticks_per_second);
     inline Time_HQ & operator=(const HQ_Tick_Type &ticks);
 
     // Accessors
