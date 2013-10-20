@@ -114,7 +114,8 @@ namespace Zeni {
   class ZENI_REST_DLL Popup_Menu_State : public Popup_State {
     Popup_Menu_State(const Popup_Menu_State &);
     Popup_Menu_State operator=(const Popup_Menu_State &);
-
+    
+  public:
     class ZENI_REST_DLL Continue_Button : public Text_Button {
       Continue_Button(const Continue_Button &);
       Continue_Button operator=(const Continue_Button &);
@@ -152,7 +153,6 @@ namespace Zeni {
       }
     } menu_button;
 
-  public:
 #ifndef ANDROID
     class ZENI_REST_DLL Configure_Video_Button : public Text_Button {
       Configure_Video_Button(const Configure_Video_Button &);
@@ -246,7 +246,7 @@ namespace Zeni {
       configure_video_button(Point2f(200.0f, 310.0f), Point2f(600.0f, 370.0f)),
 #endif
       sound_check_box(Point2f(200.0f, 390.0f), Point2f(260.0f, 450.0f)),
-      quit_button(Point2f(400.0f, 390.0f), Point2f(600.0f, 450.0f))
+      quit_button(Point2f(410.0f, 390.0f), Point2f(600.0f, 450.0f))
     {
       m_widgets.lend_Widget(continue_button);
 #ifndef ANDROID

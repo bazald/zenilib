@@ -79,6 +79,37 @@ private:
 };
 
 class Bootstrap {
+  class Popup_Menu_Instructions : public Popup_Menu_State {
+  public:
+    class Factory : public Popup_Menu_State_Factory {
+    public:
+      Popup_Menu_Instructions * operator()() {
+        return new Popup_Menu_Instructions;
+      }
+    };
+
+    class Instructions_Button : public Text_Button {
+    public:
+      Instructions_Button()
+        : Zeni::Text_Button(Point2f(200.0f, 230.0f), Point2f(600.0f, 290.0f),
+                            "system_36_800x600", "Instructions")
+      {
+      }
+
+      void on_accept() {
+        get_Game().push_state(new Instructions_State);
+      }
+    } instructions_button;
+
+    Popup_Menu_Instructions() {
+      m_widgets.lend_Widget(instructions_button);
+      menu_button.set_upper_left(Point2f(200.0f, 310.0f));
+      menu_button.set_lower_right(Point2f(400.0f, 370.0f));
+      configure_video_button.set_upper_left(Point2f(410.0f, 310.0f));
+      configure_video_button.text = "Configure";
+    }
+  };
+
   class Gamestate_One_Initializer : public Gamestate_Zero_Initializer {
     virtual Gamestate_Base * operator()() {
       Window::set_title("zenilib Application");
@@ -88,6 +119,8 @@ class Bootstrap {
       get_Textures();
       get_Fonts();
       get_Sounds();
+
+      get_Game().replace_Popup_Menu_State_Factory(new Popup_Menu_Instructions::Factory);
 
       return new Title_State<Play_State, Instructions_State>("Zenipex Library\nApplication");
     }
