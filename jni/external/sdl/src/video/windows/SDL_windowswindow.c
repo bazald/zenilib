@@ -22,6 +22,8 @@
 
 #if SDL_VIDEO_DRIVER_WINDOWS
 
+#include "../../core/windows/SDL_windows.h"
+
 #include "SDL_assert.h"
 #include "../SDL_sysvideo.h"
 #include "../SDL_pixels_c.h"
@@ -403,6 +405,9 @@ void
 WIN_RaiseWindow(_THIS, SDL_Window * window)
 {
     WIN_SetWindowPositionInternal(_this, window, SWP_NOCOPYBITS | SWP_NOMOVE | SWP_NOSIZE);
+
+    /* Raising the window while alt-tabbed can cause it to be minimized for some reason? */
+    WIN_RestoreWindow(_this, window);
 }
 
 void

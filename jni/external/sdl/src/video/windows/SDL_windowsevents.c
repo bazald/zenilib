@@ -309,18 +309,16 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
 
 #ifdef WMMSG_DEBUG
-    {
-        FILE *log = fopen("wmmsg.txt", "a");
-        fprintf(log, "Received windows message: %p ", hwnd);
-        if (msg > MAX_WMMSG) {
-            fprintf(log, "%d", msg);
-        } else {
-            fprintf(log, "%s", wmtab[msg]);
-        }
-        fprintf(log, " -- 0x%X, 0x%X\n", wParam, lParam);
-        fclose(log);
-    }
-#endif
+	{
+		char message[1024];
+		if (msg > MAX_WMMSG) {
+			SDL_snprintf(message, sizeof(message), "Received windows message: %p UNKNOWN (%d) -- 0x%X, 0x%X\n", hwnd, msg, wParam, lParam);
+		} else {
+			SDL_snprintf(message, sizeof(message), "Received windows message: %p %s -- 0x%X, 0x%X\n", hwnd, wmtab[msg], wParam, lParam);
+		}
+		OutputDebugStringA(message);
+	}
+#endif /* WMMSG_DEBUG */
 
     if (IME_HandleMessage(hwnd, msg, wParam, &lParam, data->videodata))
         return 0;
@@ -466,10 +464,20 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_MOUSEWHEEL:
         {
-            /* FIXME: This may need to accumulate deltas up to WHEEL_DELTA */
-            short motion = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+            static short s_AccumulatedMotion;
 
-            SDL_SendMouseWheel(data->window, 0, 0, motion);
+            s_AccumulatedMotion += GET_WHEEL_DELTA_WPARAM(wParam);
+            if (s_AccumulatedMotion > 0) {
+                while (s_AccumulatedMotion >= WHEEL_DELTA) {
+                    SDL_SendMouseWheel(data->window, 0, 0, 1);
+                    s_AccumulatedMotion -= WHEEL_DELTA;
+                }
+            } else {
+                while (s_AccumulatedMotion <= -WHEEL_DELTA) {
+                    SDL_SendMouseWheel(data->window, 0, 0, -1);
+                    s_AccumulatedMotion += WHEEL_DELTA;
+                }
+            }
             break;
         }
 

@@ -22,7 +22,9 @@
 
 #if SDL_VIDEO_DRIVER_WINDOWS
 
-#include "SDL.h"
+#include "../../core/windows/SDL_windows.h"
+
+#include "SDL_assert.h"
 #include "SDL_windowsvideo.h"
 
 
@@ -340,7 +342,8 @@ int
 WIN_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
 {
     WIN_DialogData *dialog;
-    int i, x, y, which;
+    int i, x, y;
+    UINT_PTR which;
     const SDL_MessageBoxButtonData *buttons = messageboxdata->buttons;
     HFONT DialogFont;
     SIZE Size;

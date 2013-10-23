@@ -636,9 +636,11 @@ SDL_SYS_JoystickIsHaptic(SDL_Joystick * joystick)
 int
 SDL_SYS_JoystickSameHaptic(SDL_Haptic * haptic, SDL_Joystick * joystick)
 {
-    if ((joystick->hwdata->bXInputHaptic == haptic->hwdata->bXInputHaptic)) {
-        return haptic->hwdata->userid == joystick->hwdata->userid;
-    } else {
+    if (joystick->hwdata->bXInputHaptic != haptic->hwdata->bXInputHaptic) {
+        return 0;  /* one is XInput, one is not; not the same device. */
+    } else if (joystick->hwdata->bXInputHaptic) {  /* XInput */
+        return (haptic->hwdata->userid == joystick->hwdata->userid);
+    } else {  /* DirectInput */
         HRESULT ret;
         DIDEVICEINSTANCE hap_instance, joy_instance;
 
@@ -1323,10 +1325,16 @@ SDL_SYS_HapticRunEffect(SDL_Haptic * haptic, struct haptic_effect *effect,
         XINPUT_VIBRATION *vib = &effect->hweffect->vibration;
         SDL_assert(effect->effect.type == SDL_HAPTIC_LEFTRIGHT);  /* should catch this at higher level */
         SDL_LockMutex(haptic->hwdata->mutex);
-        if(effect->effect.leftright.length == SDL_HAPTIC_INFINITY || iterations == SDL_HAPTIC_INFINITY)
-          haptic->hwdata->stopTicks = SDL_HAPTIC_INFINITY;
-        else
-          haptic->hwdata->stopTicks = SDL_GetTicks() + (effect->effect.leftright.length * iterations);
+        if(effect->effect.leftright.length == SDL_HAPTIC_INFINITY || iterations == SDL_HAPTIC_INFINITY) {
+            haptic->hwdata->stopTicks = SDL_HAPTIC_INFINITY;
+        } else if ((!effect->effect.leftright.length) || (!iterations)) {
+            /* do nothing. Effect runs for zero milliseconds. */
+        } else {
+            haptic->hwdata->stopTicks = SDL_GetTicks() + (effect->effect.leftright.length * iterations);
+            if ((haptic->hwdata->stopTicks == SDL_HAPTIC_INFINITY) || (haptic->hwdata->stopTicks == 0)) {
+                haptic->hwdata->stopTicks = 1;  /* fix edge cases. */
+            }
+        }
         SDL_UnlockMutex(haptic->hwdata->mutex);
         return (XINPUTSETSTATE(haptic->hwdata->userid, vib) == ERROR_SUCCESS) ? 0 : -1;
     }
@@ -1559,10 +1567,12 @@ SDL_RunXInputHaptic(void *arg)
         SDL_Delay(50);
         SDL_LockMutex(hwdata->mutex);
         /* If we're currently running and need to stop... */
-        if ((hwdata->stopTicks) && (hwdata->stopTicks < SDL_GetTicks())) {
-            XINPUT_VIBRATION vibration = { 0, 0 };
-            hwdata->stopTicks = 0;
-            XINPUTSETSTATE(hwdata->userid, &vibration);
+        if (hwdata->stopTicks) {
+            if ((hwdata->stopTicks != SDL_HAPTIC_INFINITY) && SDL_TICKS_PASSED(SDL_GetTicks(), hwdata->stopTicks)) {
+                XINPUT_VIBRATION vibration = { 0, 0 };
+                hwdata->stopTicks = 0;
+                XINPUTSETSTATE(hwdata->userid, &vibration);
+            }
         }
         SDL_UnlockMutex(hwdata->mutex);
     }

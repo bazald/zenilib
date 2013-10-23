@@ -763,6 +763,11 @@ SDL_JoystickGUID SDL_JoystickGetDeviceGUID(int device_index)
 /* return the guid for this opened device */
 SDL_JoystickGUID SDL_JoystickGetGUID(SDL_Joystick * joystick)
 {
+    if (!SDL_PrivateJoystickValid(joystick)) {
+        SDL_JoystickGUID emptyGUID;
+        SDL_zero( emptyGUID );
+        return emptyGUID;
+    }
     return SDL_SYS_JoystickGetGUID( joystick );
 }
 
@@ -825,7 +830,7 @@ SDL_JoystickGUID SDL_JoystickGetGUIDFromString(const char *pchGUID)
 {
     SDL_JoystickGUID guid;
     int maxoutputbytes= sizeof(guid);
-    int len = SDL_strlen( pchGUID );
+    size_t len = SDL_strlen( pchGUID );
     Uint8 *p;
     int i;
 

@@ -596,6 +596,12 @@ SDL_UpperBlit(SDL_Surface * src, const SDL_Rect * srcrect,
             h -= dy;
     }
 
+    /* Switch back to a fast blit if we were previously stretching */
+    if (src->map->info.flags & SDL_COPY_NEAREST) {
+        src->map->info.flags &= ~SDL_COPY_NEAREST;
+        SDL_InvalidateMap(src->map);
+    }
+
     if (w > 0 && h > 0) {
         SDL_Rect sr;
         sr.x = srcx;
@@ -747,7 +753,10 @@ SDL_LowerBlitScaled(SDL_Surface * src, SDL_Rect * srcrect,
         return 0;
     }
 
-    src->map->info.flags |= SDL_COPY_NEAREST;
+    if (!(src->map->info.flags & SDL_COPY_NEAREST)) {
+        src->map->info.flags |= SDL_COPY_NEAREST;
+        SDL_InvalidateMap(src->map);
+    }
 
     if ( !(src->map->info.flags & complex_copy_flags) &&
          src->format->format == dst->format->format &&
@@ -942,7 +951,7 @@ SDL_ConvertSurfaceFormat(SDL_Surface * surface, Uint32 pixel_format,
 /*
  * Create a surface on the stack for quick blit operations
  */
-static __inline__ SDL_bool
+static SDL_INLINE SDL_bool
 SDL_CreateSurfaceOnStack(int width, int height, Uint32 pixel_format,
                          void * pixels, int pitch, SDL_Surface * surface,
                          SDL_PixelFormat * format, SDL_BlitMap * blitmap)

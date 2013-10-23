@@ -25,6 +25,7 @@
 #include "SDL_hints.h"
 #include "SDL_opengles2.h"
 #include "../SDL_sysrender.h"
+#include "../../video/SDL_blit.h"
 #include "SDL_shaders_gles2.h"
 
 /* Used to re-create the window with OpenGL ES capability */
@@ -81,6 +82,7 @@ typedef struct GLES2_ShaderCacheEntry
     GLES2_ShaderType type;
     const GLES2_ShaderInstance *instance;
     int references;
+    Uint8 modulation_r, modulation_g, modulation_b, modulation_a;
     struct GLES2_ShaderCacheEntry *prev;
     struct GLES2_ShaderCacheEntry *next;
 } GLES2_ShaderCacheEntry;
@@ -98,6 +100,9 @@ typedef struct GLES2_ProgramCacheEntry
     GLES2_ShaderCacheEntry *vertex_shader;
     GLES2_ShaderCacheEntry *fragment_shader;
     GLuint uniform_locations[16];
+    Uint8 color_r, color_g, color_b, color_a;
+    Uint8 modulation_r, modulation_g, modulation_b, modulation_a;
+    GLfloat projection[4][4];
     struct GLES2_ProgramCacheEntry *prev;
     struct GLES2_ProgramCacheEntry *next;
 } GLES2_ProgramCacheEntry;
@@ -122,8 +127,7 @@ typedef enum
     GLES2_UNIFORM_PROJECTION,
     GLES2_UNIFORM_TEXTURE,
     GLES2_UNIFORM_MODULATION,
-    GLES2_UNIFORM_COLOR,
-    GLES2_UNIFORM_COLORTABLE
+    GLES2_UNIFORM_COLOR
 } GLES2_Uniform;
 
 typedef enum
@@ -157,6 +161,7 @@ typedef struct GLES2_DriverContext
     GLES2_ShaderCache shader_cache;
     GLES2_ProgramCache program_cache;
     GLES2_ProgramCacheEntry *current_program;
+    Uint8 clear_r, clear_g, clear_b, clear_a;
 } GLES2_DriverContext;
 
 #define GLES2_MAX_CACHED_PROGRAMS 8
@@ -493,8 +498,6 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
         return -1;
     }
     texture->driverdata = data;
-
-    renderdata->glActiveTexture(GL_TEXTURE0);
     renderdata->glBindTexture(data->texture_type, data->texture);
     renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MIN_FILTER, scaleMode);
     renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MAG_FILTER, scaleMode);
@@ -550,9 +553,7 @@ GLES2_UpdateTexture(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect
     }
 
     /* Create a texture subimage with the supplied data */
-    data->glActiveTexture(GL_TEXTURE0);
     data->glBindTexture(tdata->texture_type, tdata->texture);
-    data->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     data->glTexSubImage2D(tdata->texture_type,
                     0,
                     rect->x,
@@ -722,8 +723,15 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
         data->glGetUniformLocation(entry->id, "u_modulation");
     entry->uniform_locations[GLES2_UNIFORM_COLOR] =
         data->glGetUniformLocation(entry->id, "u_color");
-    entry->uniform_locations[GLES2_UNIFORM_COLORTABLE] =
-        data->glGetUniformLocation(entry->id, "u_colorTable");
+
+    entry->modulation_r = entry->modulation_g = entry->modulation_b = entry->modulation_a = 1.0f;
+    entry->color_r = entry->color_g = entry->color_b = entry->color_a = 1.0f;
+
+    data->glUseProgram(entry->id);
+    data->glUniformMatrix4fv(entry->uniform_locations[GLES2_UNIFORM_PROJECTION], 1, GL_FALSE, (GLfloat *)entry->projection);
+    data->glUniform1i(entry->uniform_locations[GLES2_UNIFORM_TEXTURE], 0);  /* always texture unit 0. */
+    data->glUniform4f(entry->uniform_locations[GLES2_UNIFORM_MODULATION], 1.0f, 1.0f, 1.0f, 1.0f);
+    data->glUniform4f(entry->uniform_locations[GLES2_UNIFORM_COLOR], 1.0f, 1.0f, 1.0f, 1.0f);
 
     /* Cache the linked program */
     if (data->program_cache.head)
@@ -962,7 +970,6 @@ GLES2_SetOrthographicProjection(SDL_Renderer *renderer)
 {
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
     GLfloat projection[4][4];
-    GLuint locProjection;
 
     if (!renderer->viewport.w || !renderer->viewport.h) {
         return 0;
@@ -995,8 +1002,12 @@ GLES2_SetOrthographicProjection(SDL_Renderer *renderer)
     projection[3][3] = 1.0f;
 
     /* Set the projection matrix */
-    locProjection = data->current_program->uniform_locations[GLES2_UNIFORM_PROJECTION];
-    data->glUniformMatrix4fv(locProjection, 1, GL_FALSE, (GLfloat *)projection);
+    if (SDL_memcmp(data->current_program->projection, projection, sizeof (projection)) != 0) {
+        const GLuint locProjection = data->current_program->uniform_locations[GLES2_UNIFORM_PROJECTION];
+        data->glUniformMatrix4fv(locProjection, 1, GL_FALSE, (GLfloat *)projection);
+        SDL_memcpy(data->current_program->projection, projection, sizeof (projection));
+    }
+
     return 0;
 }
 
@@ -1019,6 +1030,15 @@ static int GLES2_RenderReadPixels(SDL_Renderer * renderer, const SDL_Rect * rect
                     Uint32 pixel_format, void * pixels, int pitch);
 static void GLES2_RenderPresent(SDL_Renderer *renderer);
 
+static SDL_bool
+CompareColors(Uint8 r1, Uint8 g1, Uint8 b1, Uint8 a1,
+              Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
+{
+    Uint32 Pixel1, Pixel2;
+    RGBA8888_FROM_RGBA(Pixel1, r1, g1, b1, a1);
+    RGBA8888_FROM_RGBA(Pixel2, r2, g2, b2, a2);
+    return (Pixel1 == Pixel2);
+}
 
 static int
 GLES2_RenderClear(SDL_Renderer * renderer)
@@ -1027,10 +1047,17 @@ GLES2_RenderClear(SDL_Renderer * renderer)
 
     GLES2_ActivateRenderer(renderer);
 
-    data->glClearColor((GLfloat) renderer->r * inv255f,
-                 (GLfloat) renderer->g * inv255f,
-                 (GLfloat) renderer->b * inv255f,
-                 (GLfloat) renderer->a * inv255f);
+    if (!CompareColors(data->clear_r, data->clear_g, data->clear_b, data->clear_a,
+                        renderer->r, renderer->g, renderer->b, renderer->a)) {
+        data->glClearColor((GLfloat) renderer->r * inv255f,
+                     (GLfloat) renderer->g * inv255f,
+                     (GLfloat) renderer->b * inv255f,
+                     (GLfloat) renderer->a * inv255f);
+        data->clear_r = renderer->r;
+        data->clear_g = renderer->g;
+        data->clear_b = renderer->b;
+        data->clear_a = renderer->a;
+    }
 
     data->glClear(GL_COLOR_BUFFER_BIT);
 
@@ -1080,8 +1107,9 @@ static int
 GLES2_SetDrawingState(SDL_Renderer * renderer)
 {
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
-    int blendMode = renderer->blendMode;
-    GLuint locColor;
+    const int blendMode = renderer->blendMode;
+    GLES2_ProgramCacheEntry *program;
+    Uint8 r, g, b, a;
 
     GLES2_ActivateRenderer(renderer);
 
@@ -1090,26 +1118,34 @@ GLES2_SetDrawingState(SDL_Renderer * renderer)
     GLES2_SetTexCoords(data, SDL_FALSE);
 
     /* Activate an appropriate shader and set the projection matrix */
-    if (GLES2_SelectProgram(renderer, GLES2_IMAGESOURCE_SOLID, blendMode) < 0)
+    if (GLES2_SelectProgram(renderer, GLES2_IMAGESOURCE_SOLID, blendMode) < 0) {
         return -1;
+    }
 
     /* Select the color to draw with */
-    locColor = data->current_program->uniform_locations[GLES2_UNIFORM_COLOR];
+    g = renderer->g;
+    a = renderer->a;
+
     if (renderer->target &&
-        (renderer->target->format == SDL_PIXELFORMAT_ARGB8888 ||
+         (renderer->target->format == SDL_PIXELFORMAT_ARGB8888 ||
          renderer->target->format == SDL_PIXELFORMAT_RGB888)) {
-        data->glUniform4f(locColor,
-                    renderer->b * inv255f,
-                    renderer->g * inv255f,
-                    renderer->r * inv255f,
-                    renderer->a * inv255f);
-    } else {
-        data->glUniform4f(locColor,
-                    renderer->r * inv255f,
-                    renderer->g * inv255f,
-                    renderer->b * inv255f,
-                    renderer->a * inv255f);
+        r = renderer->b;
+        b = renderer->r;
+     } else {
+        r = renderer->r;
+        b = renderer->b;
+     }
+
+    program = data->current_program;
+    if (!CompareColors(program->color_r, program->color_g, program->color_b, program->color_a, r, g, b, a)) {
+        /* Select the color to draw with */
+        data->glUniform4f(program->uniform_locations[GLES2_UNIFORM_COLOR], r * inv255f, g * inv255f, b * inv255f, a * inv255f);
+        program->color_r = r;
+        program->color_g = g;
+        program->color_b = b;
+        program->color_a = a;
     }
+
     return 0;
 }
 
@@ -1216,8 +1252,8 @@ GLES2_RenderCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *s
     SDL_BlendMode blendMode;
     GLfloat vertices[8];
     GLfloat texCoords[8];
-    GLuint locTexture;
-    GLuint locModulation;
+    GLES2_ProgramCacheEntry *program;
+    Uint8 r, g, b, a;
 
     GLES2_ActivateRenderer(renderer);
 
@@ -1303,31 +1339,36 @@ GLES2_RenderCopy(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *s
                 return -1;
         }
     }
-    if (GLES2_SelectProgram(renderer, sourceType, blendMode) < 0)
+
+    if (GLES2_SelectProgram(renderer, sourceType, blendMode) < 0) {
         return -1;
+    }
 
     /* Select the target texture */
-    locTexture = data->current_program->uniform_locations[GLES2_UNIFORM_TEXTURE];
-    data->glActiveTexture(GL_TEXTURE0);
     data->glBindTexture(tdata->texture_type, tdata->texture);
-    data->glUniform1i(locTexture, 0);
 
     /* Configure color modulation */
-    locModulation = data->current_program->uniform_locations[GLES2_UNIFORM_MODULATION];
+    g = texture->g;
+    a = texture->a;
+
     if (renderer->target &&
         (renderer->target->format == SDL_PIXELFORMAT_ARGB8888 ||
          renderer->target->format == SDL_PIXELFORMAT_RGB888)) {
-        data->glUniform4f(locModulation,
-                    texture->b * inv255f,
-                    texture->g * inv255f,
-                    texture->r * inv255f,
-                    texture->a * inv255f);
+        r = texture->b;
+        b = texture->r;
     } else {
-        data->glUniform4f(locModulation,
-                    texture->r * inv255f,
-                    texture->g * inv255f,
-                    texture->b * inv255f,
-                    texture->a * inv255f);
+        r = texture->r;
+        b = texture->b;
+    }
+
+    program = data->current_program;
+
+    if (!CompareColors(program->modulation_r, program->modulation_g, program->modulation_b, program->modulation_a, r, g, b, a)) {
+        data->glUniform4f(program->uniform_locations[GLES2_UNIFORM_MODULATION], r * inv255f, g * inv255f, b * inv255f, a * inv255f);
+        program->modulation_r = r;
+        program->modulation_g = g;
+        program->modulation_b = b;
+        program->modulation_a = a;
     }
 
     /* Configure texture blending */
@@ -1366,11 +1407,11 @@ GLES2_RenderCopyEx(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect 
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
     GLES2_TextureData *tdata = (GLES2_TextureData *)texture->driverdata;
     GLES2_ImageSource sourceType = GLES2_IMAGESOURCE_TEXTURE_ABGR;
+    GLES2_ProgramCacheEntry *program;
+    Uint8 r, g, b, a;
     SDL_BlendMode blendMode;
     GLfloat vertices[8];
     GLfloat texCoords[8];
-    GLuint locTexture;
-    GLuint locModulation;
     GLfloat translate[8];
     GLfloat fAngle[4];
     GLfloat tmp;
@@ -1470,27 +1511,31 @@ GLES2_RenderCopyEx(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect 
         return -1;
 
     /* Select the target texture */
-    locTexture = data->current_program->uniform_locations[GLES2_UNIFORM_TEXTURE];
-    data->glActiveTexture(GL_TEXTURE0);
     data->glBindTexture(tdata->texture_type, tdata->texture);
-    data->glUniform1i(locTexture, 0);
 
     /* Configure color modulation */
-    locModulation = data->current_program->uniform_locations[GLES2_UNIFORM_MODULATION];
+    /* !!! FIXME: grep for glUniform4f(), move that stuff to a subroutine, it's a lot of copy/paste. */
+    g = texture->g;
+    a = texture->a;
+
     if (renderer->target &&
         (renderer->target->format == SDL_PIXELFORMAT_ARGB8888 ||
          renderer->target->format == SDL_PIXELFORMAT_RGB888)) {
-        data->glUniform4f(locModulation,
-                    texture->b * inv255f,
-                    texture->g * inv255f,
-                    texture->r * inv255f,
-                    texture->a * inv255f);
+        r = texture->b;
+        b = texture->r;
     } else {
-        data->glUniform4f(locModulation,
-                    texture->r * inv255f,
-                    texture->g * inv255f,
-                    texture->b * inv255f,
-                    texture->a * inv255f);
+        r = texture->r;
+        b = texture->b;
+    }
+
+    program = data->current_program;
+
+    if (!CompareColors(program->modulation_r, program->modulation_g, program->modulation_b, program->modulation_a, r, g, b, a)) {
+        data->glUniform4f(program->uniform_locations[GLES2_UNIFORM_MODULATION], r * inv255f, g * inv255f, b * inv255f, a * inv255f);
+        program->modulation_r = r;
+        program->modulation_g = g;
+        program->modulation_b = b;
+        program->modulation_a = a;
     }
 
     /* Configure texture blending */
@@ -1559,8 +1604,6 @@ GLES2_RenderReadPixels(SDL_Renderer * renderer, const SDL_Rect * rect,
     }
 
     SDL_GetRendererOutputSize(renderer, &w, &h);
-
-    data->glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
     data->glReadPixels(rect->x, (h-rect->y)-rect->h, rect->w, rect->h,
                        GL_RGBA, GL_UNSIGNED_BYTE, temp_pixels);
@@ -1652,6 +1695,15 @@ GLES2_ResetState(SDL_Renderer *renderer)
 
     data->current.blendMode = -1;
     data->current.tex_coords = SDL_FALSE;
+
+    data->glActiveTexture(GL_TEXTURE0);
+    data->glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    data->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    data->glClearColor((GLfloat) data->clear_r * inv255f,
+                        (GLfloat) data->clear_g * inv255f,
+                        (GLfloat) data->clear_b * inv255f,
+                        (GLfloat) data->clear_a * inv255f);
 
     data->glEnableVertexAttribArray(GLES2_ATTRIBUTE_POSITION);
     data->glDisableVertexAttribArray(GLES2_ATTRIBUTE_TEXCOORD);
