@@ -127,7 +127,7 @@ project(APPLICATION_NAME)
     files { "**.h", "**.hxx", "**.cpp" }
 
     if _OPTIONS.build == "all" then
-      links { "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_GLEW", "local_SDL" }
+      links { "local_SDL", "zeni_rest", "zeni_graphics", "zeni_net", "zeni_core", "zeni_audio", "zeni", "local_GLEW" }
     else
       files { "../external/zenilib/**.h" }
     end
