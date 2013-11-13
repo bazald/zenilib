@@ -26,9 +26,11 @@
  */
 
 /**
- *  Simple DirectMedia Layer (SDL)
+ *  \mainpage Simple DirectMedia Layer (SDL)
  *
  *  http://www.libsdl.org/
+ *
+ *  \section intro_sec Introduction
  *
  *  Simple DirectMedia Layer is a cross-platform development library designed
  *  to provide low level access to audio, keyboard, mouse, joystick, and

@@ -621,9 +621,9 @@ SDL_GetIndexOfDisplay(SDL_VideoDisplay *display)
 void *
 SDL_GetDisplayDriverData( int displayIndex )
 {
-	CHECK_DISPLAY_INDEX( displayIndex, NULL );
+    CHECK_DISPLAY_INDEX( displayIndex, NULL );
 
-	return _this->displays[displayIndex].driverdata;
+    return _this->displays[displayIndex].driverdata;
 }
 
 const char *
@@ -1118,11 +1118,11 @@ SDL_UpdateFullscreenMode(SDL_Window * window, SDL_bool fullscreen)
                 }
 
                 /* only do the mode change if we want exclusive fullscreen */
-                if ( ( window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP ) != SDL_WINDOW_FULLSCREEN_DESKTOP )
+                if ((window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP) != SDL_WINDOW_FULLSCREEN_DESKTOP) {
                     SDL_SetDisplayModeForDisplay(display, &fullscreen_mode);
-                else
+                } else {
                     SDL_SetDisplayModeForDisplay(display, NULL);
-
+                }
 
                 if (_this->SetWindowFullscreen) {
                     _this->SetWindowFullscreen(_this, other, display, SDL_TRUE);
@@ -1627,8 +1627,29 @@ SDL_SetWindowSize(SDL_Window * window, int w, int h)
         return;
     }
 
+    /* Make sure we don't exceed any window size limits */
+    if (window->min_w && w < window->min_w)
+    {
+        w = window->min_w;
+    }
+    if (window->max_w && w > window->max_w)
+    {
+        w = window->max_w;
+    }
+    if (window->min_h && h < window->min_h)
+    {
+        h = window->min_h;
+    }
+    if (window->max_h && h > window->max_h)
+    {
+        h = window->max_h;
+    }
+
     /* FIXME: Should this change fullscreen modes? */
-    if (!(window->flags & SDL_WINDOW_FULLSCREEN)) {
+    if (window->flags & SDL_WINDOW_FULLSCREEN) {
+        window->windowed.w = w;
+        window->windowed.h = h;
+    } else {
         window->w = w;
         window->h = h;
         if (_this->SetWindowSize) {
@@ -2113,9 +2134,24 @@ SDL_OnWindowFocusGained(SDL_Window * window)
     SDL_UpdateWindowGrab(window);
 }
 
-static SDL_bool ShouldMinimizeOnFocusLoss()
+static SDL_bool
+ShouldMinimizeOnFocusLoss(SDL_Window * window)
 {
-    const char *hint = SDL_GetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS);
+    SDL_bool default_minimize;
+    const char *hint;
+
+    if (!(window->flags & SDL_WINDOW_FULLSCREEN)) {
+        return SDL_FALSE;
+    }
+
+    if ((window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP) {
+        /* We're not doing a mode switch, so it's okay to stay around */
+        default_minimize = SDL_FALSE;
+    } else {
+        default_minimize = SDL_TRUE;
+    }
+
+    hint = SDL_GetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS);
     if (hint) {
         if (*hint == '0') {
             return SDL_FALSE;
@@ -2123,7 +2159,8 @@ static SDL_bool ShouldMinimizeOnFocusLoss()
             return SDL_TRUE;
         }
     }
-    return SDL_TRUE;
+
+    return default_minimize;
 }
 
 void
@@ -2135,8 +2172,7 @@ SDL_OnWindowFocusLost(SDL_Window * window)
 
     SDL_UpdateWindowGrab(window);
 
-    /* If we're fullscreen and lose focus, minimize unless the hint tells us otherwise */
-    if ((window->flags & SDL_WINDOW_FULLSCREEN) && ShouldMinimizeOnFocusLoss()) {
+    if (ShouldMinimizeOnFocusLoss(window)) {
         SDL_MinimizeWindow(window);
     }
 }
