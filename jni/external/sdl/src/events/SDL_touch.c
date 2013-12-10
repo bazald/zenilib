@@ -48,7 +48,7 @@ SDL_TouchID
 SDL_GetTouchDevice(int index)
 {
     if (index < 0 || index >= SDL_num_touch) {
-        /* SDL_SetError("Unknown touch device"); */
+        SDL_SetError("Unknown touch device");
         return 0;
     }
     return SDL_touchDevices[index]->id;
@@ -74,7 +74,7 @@ SDL_GetTouch(SDL_TouchID id)
 {
     int index = SDL_GetTouchIndex(id);
     if (index < 0 || index >= SDL_num_touch) {
-        /* SDL_SetError("Unknown touch device"); */
+        SDL_SetError("Unknown touch device");
         return NULL;
     }
     return SDL_touchDevices[index];

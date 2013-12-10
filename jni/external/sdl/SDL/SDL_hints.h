@@ -203,6 +203,16 @@ extern "C" {
  *    "LandscapeLeft", "LandscapeRight", "Portrait" "PortraitUpsideDown"
  */
 #define SDL_HINT_ORIENTATIONS "SDL_IOS_ORIENTATIONS"
+    
+/**
+ *  \brief  A variable controlling whether an Android built-in accelerometer should be
+ *  listed as a joystick device, rather than listing actual joysticks only.
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - List only real joysticks and accept input from them
+ *    "1"       - List real joysticks along with the accelerometer as if it were a 3 axis joystick (the default).
+ */
+#define SDL_HINT_ACCEL_AS_JOY "SDL_ACCEL_AS_JOY"
 
 
 /**
@@ -272,6 +282,14 @@ extern "C" {
  *  \brief If set to 1, then do not allow high-DPI windows. ("Retina" on Mac)
  */
 #define SDL_HINT_VIDEO_HIGHDPI_DISABLED "SDL_VIDEO_HIGHDPI_DISABLED"
+
+/**
+ *  \brief A variable that determines whether ctrl+click should generate a right-click event on Mac
+ *  
+ *  If present, holding ctrl while left clicking will generate a right click
+ *  event when on Mac.
+ */
+#define SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"
 
 
 /**

@@ -24,6 +24,7 @@
 
 #include "SDL_syswm.h"
 #include "SDL_timer.h"  /* For SDL_GetTicks() */
+#include "SDL_hints.h"
 #include "../SDL_sysvideo.h"
 #include "../../events/SDL_keyboard_c.h"
 #include "../../events/SDL_mouse_c.h"
@@ -49,7 +50,8 @@ static void ConvertNSRect(NSRect *r)
     r->origin.y = CGDisplayPixelsHigh(kCGDirectMainDisplay) - r->origin.y - r->size.height;
 }
 
-static void ScheduleContextUpdates(SDL_WindowData *data)
+static void
+ScheduleContextUpdates(SDL_WindowData *data)
 {
     NSMutableArray *contexts = data->nscontexts;
     @synchronized (contexts) {
@@ -58,6 +60,34 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
         }
     }
 }
+
+static int
+GetHintCtrlClickEmulateRightClick()
+{
+	const char *hint = SDL_GetHint( SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK );
+	return hint != NULL && *hint != '0';
+}
+
+static unsigned int
+GetWindowStyle(SDL_Window * window)
+{
+    unsigned int style;
+
+    if (window->flags & SDL_WINDOW_FULLSCREEN) {
+        style = NSBorderlessWindowMask;
+    } else {
+        if (window->flags & SDL_WINDOW_BORDERLESS) {
+            style = NSBorderlessWindowMask;
+        } else {
+            style = (NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask);
+        }
+        if (window->flags & SDL_WINDOW_RESIZABLE) {
+            style |= NSResizableWindowMask;
+        }
+    }
+    return style;
+}
+
 
 @implementation Cocoa_WindowListener
 
@@ -71,6 +101,8 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
     observingVisible = YES;
     wasCtrlLeft = NO;
     wasVisible = [window isVisible];
+    isFullscreen = NO;
+    inFullscreenTransition = NO;
 
     center = [NSNotificationCenter defaultCenter];
 
@@ -82,6 +114,12 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
         [center addObserver:self selector:@selector(windowDidDeminiaturize:) name:NSWindowDidDeminiaturizeNotification object:window];
         [center addObserver:self selector:@selector(windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:window];
         [center addObserver:self selector:@selector(windowDidResignKey:) name:NSWindowDidResignKeyNotification object:window];
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+        [center addObserver:self selector:@selector(windowWillEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:window];
+        [center addObserver:self selector:@selector(windowDidEnterFullScreen:) name:NSWindowDidEnterFullScreenNotification object:window];
+        [center addObserver:self selector:@selector(windowWillExitFullScreen:) name:NSWindowWillExitFullScreenNotification object:window];
+        [center addObserver:self selector:@selector(windowDidExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:window];
+#endif /* Mac OS X 10.7+ */
     } else {
         [window setDelegate:self];
     }
@@ -145,6 +183,11 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
     }
 }
 
+- (BOOL) isToggledFullscreen
+{
+    return isFullscreen;
+}
+
 - (void)close
 {
     NSNotificationCenter *center;
@@ -162,6 +205,12 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
         [center removeObserver:self name:NSWindowDidDeminiaturizeNotification object:window];
         [center removeObserver:self name:NSWindowDidBecomeKeyNotification object:window];
         [center removeObserver:self name:NSWindowDidResignKeyNotification object:window];
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+        [center removeObserver:self name:NSWindowWillEnterFullScreenNotification object:window];
+        [center removeObserver:self name:NSWindowDidEnterFullScreenNotification object:window];
+        [center removeObserver:self name:NSWindowWillExitFullScreenNotification object:window];
+        [center removeObserver:self name:NSWindowDidExitFullScreenNotification object:window];
+#endif /* Mac OS X 10.7+ */
     } else {
         [window setDelegate:nil];
     }
@@ -243,8 +292,15 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
     y = (int)rect.origin.y;
     w = (int)rect.size.width;
     h = (int)rect.size.height;
-    if (SDL_IsShapedWindow(_data->window))
+
+    if (inFullscreenTransition) {
+        /* We'll take care of this at the end of the transition */
+        return;
+    }
+
+    if (SDL_IsShapedWindow(_data->window)) {
         Cocoa_ResizeWindowShape(_data->window);
+    }
 
     ScheduleContextUpdates(_data);
 
@@ -310,6 +366,46 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
     }
 }
 
+- (void)windowWillEnterFullScreen:(NSNotification *)aNotification
+{
+    SDL_Window *window = _data->window;
+    NSWindow *nswindow = _data->nswindow;
+
+    if (!(window->flags & SDL_WINDOW_RESIZABLE)) {
+        if ((window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP) {
+            [nswindow setStyleMask:(NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask)];
+        } else {
+            [nswindow setStyleMask:NSBorderlessWindowMask];
+        }
+    }
+    isFullscreen = YES;
+    inFullscreenTransition = YES;
+}
+
+- (void)windowDidEnterFullScreen:(NSNotification *)aNotification
+{
+    inFullscreenTransition = NO;
+    [self windowDidResize:aNotification];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)aNotification
+{
+    inFullscreenTransition = YES;
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)aNotification
+{
+    SDL_Window *window = _data->window;
+    NSWindow *nswindow = _data->nswindow;
+
+    if (!(window->flags & SDL_WINDOW_RESIZABLE)) {
+        [nswindow setStyleMask:GetWindowStyle(window)];
+    }
+    isFullscreen = NO;
+    inFullscreenTransition = NO;
+    [self windowDidResize:aNotification];
+}
+
 /* We'll respond to key events by doing nothing so we don't beep.
  * We could handle key messages here, but we lose some in the NSApp dispatch,
  * where they get converted to action messages, etc.
@@ -341,7 +437,8 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
 
     switch ([theEvent buttonNumber]) {
     case 0:
-        if ([theEvent modifierFlags] & NSControlKeyMask) {
+        if (([theEvent modifierFlags] & NSControlKeyMask) &&
+		    GetHintCtrlClickEmulateRightClick()) {
             wasCtrlLeft = YES;
             button = SDL_BUTTON_RIGHT;
         } else {
@@ -598,26 +695,6 @@ static void ScheduleContextUpdates(SDL_WindowData *data)
 }
 @end
 
-static unsigned int
-GetWindowStyle(SDL_Window * window)
-{
-    unsigned int style;
-
-    if (window->flags & SDL_WINDOW_FULLSCREEN) {
-        style = NSBorderlessWindowMask;
-    } else {
-        if (window->flags & SDL_WINDOW_BORDERLESS) {
-            style = NSBorderlessWindowMask;
-        } else {
-            style = (NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask);
-        }
-        if (window->flags & SDL_WINDOW_RESIZABLE) {
-            style |= NSResizableWindowMask;
-        }
-    }
-    return style;
-}
-
 static int
 SetupWindowData(_THIS, SDL_Window * window, NSWindow *nswindow, SDL_bool created)
 {
@@ -740,14 +817,27 @@ Cocoa_CreateWindow(_THIS, SDL_Window * window)
             rect.origin.y -= screenRect.origin.y;
         }
     }
-    nswindow = [[SDLWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:NO screen:screen];
+
+    @try {
+        nswindow = [[SDLWindow alloc] initWithContentRect:rect styleMask:style backing:NSBackingStoreBuffered defer:NO screen:screen];
+    }
+    @catch (NSException *e) {
+        SDL_SetError("%s", [[e reason] UTF8String]);
+        [pool release];
+        return -1;
+    }
     [nswindow setBackgroundColor:[NSColor blackColor]];
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+    if ([nswindow respondsToSelector:@selector(setCollectionBehavior:)]) {
+        [nswindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+    }
+#endif
 
     /* Create a default view for this window */
     rect = [nswindow contentRectForFrameRect:[nswindow frame]];
     NSView *contentView = [[SDLView alloc] initWithFrame:rect];
 
-    if ((window->flags & SDL_WINDOW_ALLOW_HIGHDPI) > 0) {
+    if (window->flags & SDL_WINDOW_ALLOW_HIGHDPI) {
         if ([contentView respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)]) {
             [contentView setWantsBestResolutionOpenGLSurface:YES];
         }
@@ -1004,10 +1094,45 @@ Cocoa_SetWindowBordered(_THIS, SDL_Window * window, SDL_bool bordered)
     [pool release];
 }
 
-void
-Cocoa_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
+static SDL_bool
+Cocoa_CanToggleFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    NSWindow *nswindow = data->nswindow;
+
+    if (![nswindow respondsToSelector: @selector(toggleFullScreen:)]) {
+        return SDL_FALSE;
+    }
+
+    /* We can enter new style fullscreen mode for "fullscreen desktop" */
+    if ((window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP) {
+        return SDL_TRUE;
+    }
+
+    /* We can always leave new style fullscreen mode */
+    if (!fullscreen && [data->listener isToggledFullscreen]) {
+        return SDL_TRUE;
+    }
+
+    /* Requesting a mode switched fullscreen mode */
+    return SDL_FALSE;
+}
+
+static void
+Cocoa_SetWindowFullscreen_NewStyle(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
+{
+    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    NSWindow *nswindow = data->nswindow;
+ 
+    if (fullscreen != [data->listener isToggledFullscreen]) {
+        [nswindow performSelector: @selector(toggleFullScreen:) withObject:nswindow];
+    }
+    ScheduleContextUpdates(data);
+}
+
+static void
+Cocoa_SetWindowFullscreen_OldStyle(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
+{
     SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
     NSWindow *nswindow = data->nswindow;
     NSRect rect;
@@ -1081,6 +1206,18 @@ Cocoa_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display
     }
 
     ScheduleContextUpdates(data);
+}
+
+void
+Cocoa_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, SDL_bool fullscreen)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    if (Cocoa_CanToggleFullscreen(_this, window, display, fullscreen)) {
+        Cocoa_SetWindowFullscreen_NewStyle(_this, window, display, fullscreen);
+    } else {
+        Cocoa_SetWindowFullscreen_OldStyle(_this, window, display, fullscreen);
+    }
 
     [pool release];
 }
