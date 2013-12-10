@@ -38,6 +38,7 @@
 #include <Zeni/Core.h>
 #include <Zeni/Color.h>
 #include <Zeni/Coordinate.h>
+#include <Zeni/Image.h>
 #include <Zeni/Matrix4f.h>
 #include <Zeni/Singleton.h>
 #include <Zeni/String.h>
