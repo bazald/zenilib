@@ -355,6 +355,12 @@ static char* EVDEV_consoles[] = {
     "/dev/console"
 };
 
+#define KDGKBTYPE       0x4B33  /* get keyboard type */
+#define         KB_84           0x01
+#define         KB_101          0x02    /* this is what we always answer */
+#define KDGKBMODE       0x4B44  /* gets current keyboard mode */
+#define NAME_MAX         255    /* # chars in a file name */
+
 #define IS_CONSOLE(fd) isatty (fd) && ioctl(fd, KDGKBTYPE, &arg) == 0 && ((arg == KB_101) || (arg == KB_84))
 
 static int SDL_EVDEV_get_console_fd(void)
