@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -173,11 +173,32 @@ extern "C" {
 #define SDL_HINT_GRAB_KEYBOARD              "SDL_GRAB_KEYBOARD"
 
 /**
- *  \brief Minimize your SDL_Window if it loses key focus when in Fullscreen mode. Defaults to true.
+*  \brief  A variable controlling whether relative mouse mode is implemented using mouse warping
+*
+*  This variable can be set to the following values:
+*    "0"       - Relative mouse mode uses raw input
+*    "1"       - Relative mouse mode uses mouse warping
+*
+*  By default SDL will use raw input for relative mouse mode
+*/
+#define SDL_HINT_MOUSE_RELATIVE_MODE_WARP    "SDL_MOUSE_RELATIVE_MODE_WARP"
+
+/**
+ *  \brief Minimize your SDL_Window if it loses key focus when in fullscreen mode. Defaults to true.
  *
  */
 #define SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS   "SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS"
 
+/**
+ *  \brief Set whether windows go fullscreen in their own spaces on Mac OS X
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - Fullscreen windows will use the classic fullscreen mode
+ *    "1"       - Fullscreen windows will use fullscreen spaces
+ *
+ *  By default SDL will use the classic fullscreen mode.
+ */
+#define SDL_HINT_VIDEO_FULLSCREEN_SPACES   "SDL_VIDEO_FULLSCREEN_SPACES"
 
 /**
  *  \brief  A variable controlling whether the idle timer is disabled on iOS.
@@ -291,6 +312,40 @@ extern "C" {
  */
 #define SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"
 
+/**
+*  \brief  A variable specifying which shader compiler to preload when using the Chrome ANGLE binaries
+*
+*  SDL has EGL and OpenGL ES2 support on Windows via the ANGLE project. It
+*  can use two different sets of binaries, those compiled by the user from source
+*  or those provided by the Chrome browser. In the later case, these binaries require
+*  that SDL loads 
+*
+*  This variable can be set to the following values:
+*    "d3dcompiler_46.dll" - default, best for Vista or later.
+*    "d3dcompiler_43.dll" - for XP support.
+*    "none" - do not load any library, useful if you compiled ANGLE from source and included the compiler in your binaries.
+*
+*/
+#define SDL_HINT_VIDEO_WIN_D3DCOMPILER              "SDL_VIDEO_WIN_D3DCOMPILER"
+
+/**
+*  \brief  A variable that is the address of another SDL_Window* (as a hex string formatted with "%p").
+*  
+*  If this hint is set before SDL_CreateWindowFrom() and the SDL_Window* it is set to has
+*  SDL_WINDOW_OPENGL set (and running on WGL only, currently), then two things will occur on the newly 
+*  created SDL_Window:
+
+*  1. Its pixel format will be set to the same pixel format as this SDL_Window.  This is
+*  needed for example when sharing an OpenGL context across multiple windows.
+*
+*  2. The flag SDL_WINDOW_OPENGL will be set on the new window so it can be used for
+*  OpenGL rendering.
+*
+*  This variable can be set to the following values:
+*    The address (as a string "%p") of the SDL_Window* that new windows created with SDL_CreateWindowFrom() should
+*    share a pixel format with.
+*/
+#define SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT    "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT"
 
 /**
  *  \brief  An enumeration of hint priorities

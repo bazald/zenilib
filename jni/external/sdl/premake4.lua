@@ -98,6 +98,7 @@ project "local_SDL"
             "src/audio/disk/*.c",
             "src/audio/dummy/*.c",
             "src/cpuinfo/*.c",
+            "src/dynapi/*.c",
             "src/events/*.c",
             "src/file/*.c",
             "src/haptic/*.c",

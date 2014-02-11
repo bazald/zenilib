@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #ifdef SDL_JOYSTICK_IOKIT
 
@@ -48,6 +48,7 @@
 #include "../SDL_joystick_c.h"
 #include "SDL_sysjoystick_c.h"
 #include "SDL_events.h"
+#include "../../haptic/darwin/SDL_syshaptic_c.h"    /* For haptic hot plugging */
 #if !SDL_EVENTS_DISABLED
 #include "../../events/SDL_events_c.h"
 #endif
@@ -122,6 +123,9 @@ HIDRemovalCallback(void *target, IOReturn result, void *refcon, void *sender)
 {
     recDevice *device = (recDevice *) refcon;
     device->removed = 1;
+#if SDL_HAPTIC_IOKIT
+    MacHaptic_MaybeRemoveDevice(device->ffservice);
+#endif
     s_bDeviceRemoved = SDL_TRUE;
 }
 
@@ -134,6 +138,9 @@ void JoystickDeviceWasRemovedCallback( void * refcon, io_service_t service, natu
     {
         recDevice *device = (recDevice *) refcon;
         device->removed = 1;
+#if SDL_HAPTIC_IOKIT
+        MacHaptic_MaybeRemoveDevice(device->ffservice);
+#endif
         s_bDeviceRemoved = SDL_TRUE;
     }
 }
@@ -679,6 +686,9 @@ AddDeviceHelper( io_object_t ioHIDDeviceObject )
      * SDL_HapticOpenFromJoystick */
     if (FFIsForceFeedback(ioHIDDeviceObject) == FF_OK) {
         device->ffservice = ioHIDDeviceObject;
+#if SDL_HAPTIC_IOKIT
+        MacHaptic_MaybeAddDevice(ioHIDDeviceObject);
+#endif
     } else {
         device->ffservice = 0;
     }

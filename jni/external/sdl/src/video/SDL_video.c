@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../SDL_internal.h"
 
 /* The high-level video driver subsystem */
 
@@ -59,14 +59,17 @@ static VideoBootStrap *bootstrap[] = {
 #if SDL_VIDEO_DRIVER_X11
     &X11_bootstrap,
 #endif
+#if SDL_VIDEO_DRIVER_MIR
+    &MIR_bootstrap,
+#endif
 #if SDL_VIDEO_DRIVER_DIRECTFB
     &DirectFB_bootstrap,
 #endif
 #if SDL_VIDEO_DRIVER_WINDOWS
     &WINDOWS_bootstrap,
 #endif
-#if SDL_VIDEO_DRIVER_BWINDOW
-    &BWINDOW_bootstrap,
+#if SDL_VIDEO_DRIVER_HAIKU
+    &HAIKU_bootstrap,
 #endif
 #if SDL_VIDEO_DRIVER_PANDORA
     &PND_bootstrap,
@@ -83,6 +86,9 @@ static VideoBootStrap *bootstrap[] = {
 #if SDL_VIDEO_DRIVER_RPI
     &RPI_bootstrap,
 #endif 
+#if SDL_VIDEO_DRIVER_WAYLAND
+    &Wayland_bootstrap,
+#endif
 #if SDL_VIDEO_DRIVER_DUMMY
     &DUMMY_bootstrap,
 #endif
@@ -111,6 +117,15 @@ static SDL_VideoDevice *_this = NULL;
                      _this->num_displays - 1); \
         return retval; \
     }
+
+#define FULLSCREEN_MASK ( SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_FULLSCREEN )
+
+#ifdef __MACOSX__
+/* Support for Mac OS X fullscreen spaces */
+extern SDL_bool Cocoa_IsWindowInFullscreenSpace(SDL_Window * window);
+extern SDL_bool Cocoa_SetWindowFullscreenSpace(SDL_Window * window, SDL_bool state);
+#endif
+
 
 /* Support for framebuffer emulation using an accelerated renderer */
 
@@ -435,8 +450,10 @@ SDL_VideoInit(const char *driver_name)
     if (driver_name != NULL) {
         for (i = 0; bootstrap[i]; ++i) {
             if (SDL_strncasecmp(bootstrap[i]->name, driver_name, SDL_strlen(driver_name)) == 0) {
-                video = bootstrap[i]->create(index);
-                break;
+                if (bootstrap[i]->available()) {
+                    video = bootstrap[i]->create(index);
+                    break;
+                }
             }
         }
     } else {
@@ -463,39 +480,7 @@ SDL_VideoInit(const char *driver_name)
     /* Set some very sane GL defaults */
     _this->gl_config.driver_loaded = 0;
     _this->gl_config.dll_handle = NULL;
-    _this->gl_config.red_size = 3;
-    _this->gl_config.green_size = 3;
-    _this->gl_config.blue_size = 2;
-    _this->gl_config.alpha_size = 0;
-    _this->gl_config.buffer_size = 0;
-    _this->gl_config.depth_size = 16;
-    _this->gl_config.stencil_size = 0;
-    _this->gl_config.double_buffer = 1;
-    _this->gl_config.accum_red_size = 0;
-    _this->gl_config.accum_green_size = 0;
-    _this->gl_config.accum_blue_size = 0;
-    _this->gl_config.accum_alpha_size = 0;
-    _this->gl_config.stereo = 0;
-    _this->gl_config.multisamplebuffers = 0;
-    _this->gl_config.multisamplesamples = 0;
-    _this->gl_config.retained_backing = 1;
-    _this->gl_config.accelerated = -1;  /* accelerated or not, both are fine */
-    _this->gl_config.profile_mask = 0;
-#if SDL_VIDEO_OPENGL
-    _this->gl_config.major_version = 2;
-    _this->gl_config.minor_version = 1;
-#elif SDL_VIDEO_OPENGL_ES2
-    _this->gl_config.major_version = 2;
-    _this->gl_config.minor_version = 0;
-    _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_ES;   
-#elif SDL_VIDEO_OPENGL_ES
-    _this->gl_config.major_version = 1;
-    _this->gl_config.minor_version = 1;
-    _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_ES;
-#endif
-    _this->gl_config.flags = 0;
-    
-    _this->gl_config.share_with_current_context = 0;
+    SDL_GL_ResetAttributes();
 
     _this->current_glwin_tls = SDL_TLSCreate();
     _this->current_glctx_tls = SDL_TLSCreate();
@@ -1080,8 +1065,17 @@ SDL_RestoreMousePosition(SDL_Window *window)
 static void
 SDL_UpdateFullscreenMode(SDL_Window * window, SDL_bool fullscreen)
 {
-    SDL_VideoDisplay *display = SDL_GetDisplayForWindow(window);
+    SDL_VideoDisplay *display;
     SDL_Window *other;
+
+#ifdef __MACOSX__
+    if (Cocoa_SetWindowFullscreenSpace(window, fullscreen)) {
+        window->last_fullscreen_flags = window->flags;
+        return;
+    }
+#endif
+
+    display = SDL_GetDisplayForWindow(window);
 
     if (fullscreen) {
         /* Hide any other fullscreen windows */
@@ -1093,7 +1087,9 @@ SDL_UpdateFullscreenMode(SDL_Window * window, SDL_bool fullscreen)
 
     /* See if anything needs to be done now */
     if ((display->fullscreen_window == window) == fullscreen) {
-        return;
+        if ((window->last_fullscreen_flags & FULLSCREEN_MASK) == (window->flags & FULLSCREEN_MASK)) {
+            return;
+        }
     }
 
     /* See if there are any fullscreen windows */
@@ -1138,6 +1134,8 @@ SDL_UpdateFullscreenMode(SDL_Window * window, SDL_bool fullscreen)
                 }
 
                 SDL_RestoreMousePosition(other);
+
+                window->last_fullscreen_flags = window->flags;
                 return;
             }
         }
@@ -1156,10 +1154,12 @@ SDL_UpdateFullscreenMode(SDL_Window * window, SDL_bool fullscreen)
 
     /* Restore the cursor position */
     SDL_RestoreMousePosition(window);
+
+    window->last_fullscreen_flags = window->flags;
 }
 
 #define CREATE_FLAGS \
-    (SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE)
+    (SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI)
 
 static void
 SDL_FinishWindowCreation(SDL_Window *window, Uint32 flags)
@@ -1220,6 +1220,17 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
             return NULL;
         }
     }
+
+    /* Unless the user has specified the high-DPI disabling hint, respect the
+     * SDL_WINDOW_ALLOW_HIGHDPI flag.
+     */
+    if (flags & SDL_WINDOW_ALLOW_HIGHDPI) {
+        hint = SDL_GetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED);
+        if (hint && SDL_atoi(hint) > 0) {
+            flags &= ~SDL_WINDOW_ALLOW_HIGHDPI;
+        }
+    }
+
     window = (SDL_Window *)SDL_calloc(1, sizeof(*window));
     if (!window) {
         SDL_OutOfMemory();
@@ -1247,18 +1258,10 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
         }
     }
     window->flags = ((flags & CREATE_FLAGS) | SDL_WINDOW_HIDDEN);
+    window->last_fullscreen_flags = window->flags;
     window->brightness = 1.0f;
     window->next = _this->windows;
-
-    /* Unless the user has specified the high-DPI disabling hint, respect the
-     * SDL_WINDOW_ALLOW_HIGHDPI flag.
-     */
-    hint = SDL_GetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED);
-    if (!hint || *hint != '1') {
-        if ((flags & SDL_WINDOW_ALLOW_HIGHDPI)) {
-            window->flags |= SDL_WINDOW_ALLOW_HIGHDPI;
-        }
-    }
+    window->is_destroying = SDL_FALSE;
 
     if (_this->windows) {
         _this->windows->prev = window;
@@ -1298,6 +1301,8 @@ SDL_CreateWindowFrom(const void *data)
     window->magic = &_this->window_magic;
     window->id = _this->next_object_id++;
     window->flags = SDL_WINDOW_FOREIGN;
+    window->last_fullscreen_flags = window->flags;
+    window->is_destroying = SDL_FALSE;
     window->brightness = 1.0f;
     window->next = _this->windows;
     if (_this->windows) {
@@ -1358,6 +1363,8 @@ SDL_RecreateWindow(SDL_Window * window, Uint32 flags)
     window->title = NULL;
     window->icon = NULL;
     window->flags = ((flags & CREATE_FLAGS) | SDL_WINDOW_HIDDEN);
+    window->last_fullscreen_flags = window->flags;
+    window->is_destroying = SDL_FALSE;
 
     if (_this->CreateWindow && !(flags & SDL_WINDOW_FOREIGN)) {
         if (_this->CreateWindow(_this, window) < 0) {
@@ -1837,7 +1844,6 @@ SDL_RestoreWindow(SDL_Window * window)
     }
 }
 
-#define FULLSCREEN_MASK ( SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_FULLSCREEN )
 int
 SDL_SetWindowFullscreen(SDL_Window * window, Uint32 flags)
 {
@@ -2035,8 +2041,8 @@ SDL_UpdateWindowGrab(SDL_Window * window)
 {
     if (_this->SetWindowGrab) {
         SDL_bool grabbed;
-        if ((window->flags & SDL_WINDOW_INPUT_GRABBED) &&
-            (window->flags & SDL_WINDOW_INPUT_FOCUS)) {
+        if ((SDL_GetMouse()->relative_mode || (window->flags & SDL_WINDOW_INPUT_GRABBED)) &&
+             (window->flags & SDL_WINDOW_INPUT_FOCUS)) {
             grabbed = SDL_TRUE;
         } else {
             grabbed = SDL_FALSE;
@@ -2137,19 +2143,17 @@ SDL_OnWindowFocusGained(SDL_Window * window)
 static SDL_bool
 ShouldMinimizeOnFocusLoss(SDL_Window * window)
 {
-    SDL_bool default_minimize;
     const char *hint;
 
-    if (!(window->flags & SDL_WINDOW_FULLSCREEN)) {
+    if (!(window->flags & SDL_WINDOW_FULLSCREEN) || window->is_destroying) {
         return SDL_FALSE;
     }
 
-    if ((window->flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP) {
-        /* We're not doing a mode switch, so it's okay to stay around */
-        default_minimize = SDL_FALSE;
-    } else {
-        default_minimize = SDL_TRUE;
+#ifdef __MACOSX__
+    if (Cocoa_IsWindowInFullscreenSpace(window)) {
+        return SDL_FALSE;
     }
+#endif
 
     hint = SDL_GetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS);
     if (hint) {
@@ -2160,7 +2164,7 @@ ShouldMinimizeOnFocusLoss(SDL_Window * window)
         }
     }
 
-    return default_minimize;
+    return SDL_TRUE;
 }
 
 void
@@ -2199,6 +2203,8 @@ SDL_DestroyWindow(SDL_Window * window)
     SDL_VideoDisplay *display;
 
     CHECK_WINDOW_MAGIC(window, );
+
+    window->is_destroying = SDL_TRUE;
 
     /* Restore video mode, etc. */
     SDL_HideWindow(window);
@@ -2510,6 +2516,49 @@ SDL_GL_ExtensionSupported(const char *extension)
 #else
     return SDL_FALSE;
 #endif
+}
+
+void
+SDL_GL_ResetAttributes()
+{
+    if (!_this) {
+        return;
+    }
+
+    _this->gl_config.red_size = 3;
+    _this->gl_config.green_size = 3;
+    _this->gl_config.blue_size = 2;
+    _this->gl_config.alpha_size = 0;
+    _this->gl_config.buffer_size = 0;
+    _this->gl_config.depth_size = 16;
+    _this->gl_config.stencil_size = 0;
+    _this->gl_config.double_buffer = 1;
+    _this->gl_config.accum_red_size = 0;
+    _this->gl_config.accum_green_size = 0;
+    _this->gl_config.accum_blue_size = 0;
+    _this->gl_config.accum_alpha_size = 0;
+    _this->gl_config.stereo = 0;
+    _this->gl_config.multisamplebuffers = 0;
+    _this->gl_config.multisamplesamples = 0;
+    _this->gl_config.retained_backing = 1;
+    _this->gl_config.accelerated = -1;  /* accelerated or not, both are fine */
+    _this->gl_config.profile_mask = 0;
+#if SDL_VIDEO_OPENGL
+    _this->gl_config.major_version = 2;
+    _this->gl_config.minor_version = 1;
+#elif SDL_VIDEO_OPENGL_ES2
+    _this->gl_config.major_version = 2;
+    _this->gl_config.minor_version = 0;
+    _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_ES;
+#elif SDL_VIDEO_OPENGL_ES
+    _this->gl_config.major_version = 1;
+    _this->gl_config.minor_version = 1;
+    _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_ES;
+#endif
+    _this->gl_config.flags = 0;
+    _this->gl_config.framebuffer_srgb_capable = 0;
+
+    _this->gl_config.share_with_current_context = 0;
 }
 
 int

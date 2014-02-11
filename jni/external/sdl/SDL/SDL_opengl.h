@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -5978,7 +5978,7 @@ typedef void (APIENTRYP PFNGLBLENDFUNCSEPARATEIPROC) (GLuint buf, GLenum srcRGB,
 /* ARB_viewport_array */
 #endif
 
-#if 1
+#ifndef GL_ARB_multitexture
 #define GL_ARB_multitexture 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glActiveTextureARB (GLenum texture);
@@ -6409,7 +6409,7 @@ typedef void (APIENTRYP PFNGLGETQUERYOBJECTIVARBPROC) (GLuint id, GLenum pname, 
 typedef void (APIENTRYP PFNGLGETQUERYOBJECTUIVARBPROC) (GLuint id, GLenum pname, GLuint *params);
 #endif
 
-#if 1
+#ifndef GL_ARB_shader_objects
 #define GL_ARB_shader_objects 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glDeleteObjectARB (GLhandleARB obj);

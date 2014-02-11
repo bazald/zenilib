@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #ifdef SDL_JOYSTICK_DINPUT
 
@@ -48,6 +48,10 @@
 
 #define INITGUID /* Only set here, if set twice will cause mingw32 to break. */
 #include "SDL_dxjoystick_c.h"
+
+#if SDL_HAPTIC_DINPUT
+#include "../../haptic/windows/SDL_syshaptic_c.h"    /* For haptic hot plugging */
+#endif
 
 #ifndef DIDFT_OPTIONAL
 #define DIDFT_OPTIONAL      0x80000000
@@ -630,7 +634,11 @@ SDL_SYS_JoystickInit(void)
         /* spin up the thread to detect hotplug of devices */
 #if defined(__WIN32__) && !defined(HAVE_LIBC)
 #undef SDL_CreateThread
+#if SDL_DYNAMIC_API
+        s_threadJoystick= SDL_CreateThread_REAL( SDL_JoystickThread, "SDL_joystick", NULL, NULL, NULL );
+#else
         s_threadJoystick= SDL_CreateThread( SDL_JoystickThread, "SDL_joystick", NULL, NULL, NULL );
+#endif
 #else
         s_threadJoystick = SDL_CreateThread( SDL_JoystickThread, "SDL_joystick", NULL );
 #endif
@@ -820,7 +828,17 @@ void SDL_SYS_JoystickDetect()
         while ( pCurList )
         {
             JoyStick_DeviceData *pListNext = NULL;
+
+#if SDL_HAPTIC_DINPUT
+            if (pCurList->bXInputDevice) {
+                XInputHaptic_MaybeRemoveDevice(pCurList->XInputUserId);
+            } else {
+                DirectInputHaptic_MaybeRemoveDevice(&pCurList->dxdevice);
+            }
+#endif
+
 #if !SDL_EVENTS_DISABLED
+            {
             SDL_Event event;
             event.type = SDL_JOYDEVICEREMOVED;
 
@@ -830,6 +848,7 @@ void SDL_SYS_JoystickDetect()
                     || (*SDL_EventOK) (SDL_EventOKParam, &event)) {
                         SDL_PushEvent(&event);
                 }
+            }
             }
 #endif /* !SDL_EVENTS_DISABLED */
 
@@ -851,7 +870,16 @@ void SDL_SYS_JoystickDetect()
         {
             if ( pNewJoystick->send_add_event )
             {
+#if SDL_HAPTIC_DINPUT
+                if (pNewJoystick->bXInputDevice) {
+                    XInputHaptic_MaybeAddDevice(pNewJoystick->XInputUserId);
+                } else {
+                    DirectInputHaptic_MaybeAddDevice(&pNewJoystick->dxdevice);
+                }
+#endif
+
 #if !SDL_EVENTS_DISABLED
+                {
                 SDL_Event event;
                 event.type = SDL_JOYDEVICEADDED;
 
@@ -861,6 +889,7 @@ void SDL_SYS_JoystickDetect()
                         || (*SDL_EventOK) (SDL_EventOKParam, &event)) {
                             SDL_PushEvent(&event);
                     }
+                }
                 }
 #endif /* !SDL_EVENTS_DISABLED */
                 pNewJoystick->send_add_event = 0;

@@ -62,6 +62,12 @@ edit $SYSROOT/etc/ld.so.preload and comment out all lines in it.
     sudo umount $SYSROOT/proc
     sudo umount $SYSROOT/sys
     sudo umount /mnt
+    
+There's one more fix required, as the libdl.so symlink uses an absolute path 
+which doesn't quite work in our setup.
+
+    sudo rm -rf $SYSROOT/usr/lib/arm-linux-gnueabihf/libdl.so
+    sudo ln -s ../../../lib/arm-linux-gnueabihf/libdl.so.2 $SYSROOT/usr/lib/arm-linux-gnueabihf/libdl.so
 
 The final step is compiling SDL itself.
 
@@ -118,7 +124,7 @@ Reference: http://www.raspberrypi.org/phpBB3/viewtopic.php?t=5062
 
 The Text Input API is supported, with translation of scan codes done via the
 kernel symbol tables. For this to work, SDL needs access to a valid console.
-If you notice there's no SDL_TEXTINPUT message being emmited, double check that
+If you notice there's no SDL_TEXTINPUT message being emitted, double check that
 your app has read access to one of the following:
     
 * /proc/self/fd/0

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #if SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED
 
@@ -724,8 +724,8 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
     entry->uniform_locations[GLES2_UNIFORM_COLOR] =
         data->glGetUniformLocation(entry->id, "u_color");
 
-    entry->modulation_r = entry->modulation_g = entry->modulation_b = entry->modulation_a = 1.0f;
-    entry->color_r = entry->color_g = entry->color_b = entry->color_a = 1.0f;
+    entry->modulation_r = entry->modulation_g = entry->modulation_b = entry->modulation_a = 255;
+    entry->color_r = entry->color_g = entry->color_b = entry->color_a = 255;
 
     data->glUseProgram(entry->id);
     data->glUniformMatrix4fv(entry->uniform_locations[GLES2_UNIFORM_PROJECTION], 1, GL_FALSE, (GLfloat *)entry->projection);
@@ -1043,16 +1043,33 @@ CompareColors(Uint8 r1, Uint8 g1, Uint8 b1, Uint8 a1,
 static int
 GLES2_RenderClear(SDL_Renderer * renderer)
 {
+    Uint8 r, g, b, a;
+
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
 
     GLES2_ActivateRenderer(renderer);
 
     if (!CompareColors(data->clear_r, data->clear_g, data->clear_b, data->clear_a,
                         renderer->r, renderer->g, renderer->b, renderer->a)) {
-        data->glClearColor((GLfloat) renderer->r * inv255f,
-                     (GLfloat) renderer->g * inv255f,
-                     (GLfloat) renderer->b * inv255f,
-                     (GLfloat) renderer->a * inv255f);
+
+       /* Select the color to clear with */
+       g = renderer->g;
+       a = renderer->a;
+   
+       if (renderer->target &&
+            (renderer->target->format == SDL_PIXELFORMAT_ARGB8888 ||
+             renderer->target->format == SDL_PIXELFORMAT_RGB888)) {
+           r = renderer->b;
+           b = renderer->r;
+        } else {
+           r = renderer->r;
+           b = renderer->b;
+        }
+
+        data->glClearColor((GLfloat) r * inv255f,
+                     (GLfloat) g * inv255f,
+                     (GLfloat) b * inv255f,
+                     (GLfloat) a * inv255f);
         data->clear_r = renderer->r;
         data->clear_g = renderer->g;
         data->clear_b = renderer->b;

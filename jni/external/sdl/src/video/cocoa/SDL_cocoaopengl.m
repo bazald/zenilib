@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 /* NSOpenGL implementation of SDL OpenGL support */
 
@@ -34,19 +34,6 @@
 #include "SDL_opengl.h"
 
 #define DEFAULT_OPENGL  "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib"
-
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
-/* New methods for converting to and from backing store pixels, taken from
- * AppKit/NSView.h in 10.8 SDK. */
-@interface NSView (Backing)
-- (NSPoint)convertPointToBacking:(NSPoint)aPoint;
-- (NSPoint)convertPointFromBacking:(NSPoint)aPoint;
-- (NSSize)convertSizeToBacking:(NSSize)aSize;
-- (NSSize)convertSizeFromBacking:(NSSize)aSize;
-- (NSRect)convertRectToBacking:(NSRect)aRect;
-- (NSRect)convertRectFromBacking:(NSRect)aRect;
-@end
-#endif
 
 #ifndef kCGLPFAOpenGLProfile
 #define kCGLPFAOpenGLProfile 99
