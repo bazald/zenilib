@@ -366,7 +366,7 @@
 
 #define EVIOCGID _IOR('E', 0x02, struct input_devinfo)
 #define EVIOCRMFF               _IOW('E', 0x81, int)
-#define SDL_X11_HAVE_UTF8 1
+#define SDL_X11_HAVE_UTF8 0
 #define XK_Escape (0xFF1B)
 #define XK_KP_Enter (0xFF8D)
 #define XK_Return (0xFF0D)
