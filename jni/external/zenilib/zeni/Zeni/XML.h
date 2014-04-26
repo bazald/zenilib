@@ -74,6 +74,14 @@ namespace Zeni {
     double to_double() const; ///< Get the contained string as a double precision floating point number
     String to_string() const; ///< Get the contained string
 
+    /** Attribute Accessors **/
+    
+    bool attribute_to_bool(const String &attribute) const; ///< Get the attribute string as a boolean
+    int attribute_to_int(const String &attribute) const; ///< Get the attribute string as an integer
+    float attribute_to_float(const String &attribute) const; ///< Get the attribute string as a floating point number
+    double attribute_to_double(const String &attribute) const; ///< Get the attribute string as a double precision floating point number
+    String attribute_to_string(const String &attribute) const; ///< Get the attribute string
+
   protected:
     TiXmlNode * child(const String &field) const;
     TiXmlNode * first_child() const;
@@ -98,7 +106,7 @@ namespace Zeni {
 
     void create_child(const String &field); ///< Create a child node
     void remove_child(const XML_Element &child); ///< Remove a child node, which will be rendered invalid
-
+    
     /** Text Modifiers **/
 
     void set_bool(const bool &b); ///< Set the contained string as a boolean
@@ -162,6 +170,10 @@ namespace Zeni {
 
   struct ZENI_DLL XML_Element_Ungood : public Error {
     XML_Element_Ungood() : Error("XML_Element not good!") {}
+  };
+  
+  struct ZENI_DLL XML_Element_Non_Attribute : public Error {
+    XML_Element_Non_Attribute() : Error("XML_Element attempted to access non-existent attribute!") {}
   };
 
   struct ZENI_DLL XML_Element_Nonleaf : public Error {

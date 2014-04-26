@@ -117,6 +117,43 @@ namespace Zeni {
     return text;
   }
 
+  bool XML_Element_c::attribute_to_bool(const String &attribute) const {
+    return attribute_to_int(attribute) != 0;
+  }
+
+  int XML_Element_c::attribute_to_int(const String &attribute) const {
+    return atoi(attribute_to_string(attribute).c_str());
+  }
+
+  float XML_Element_c::attribute_to_float(const String &attribute) const {
+    return float(atof(attribute_to_string(attribute).c_str()));
+  }
+
+  double XML_Element_c::attribute_to_double(const String &attribute) const {
+    return atof(attribute_to_string(attribute).c_str());
+  }
+  
+  String XML_Element_c::attribute_to_string(const String &attribute) const {
+    if(!good()) {
+      std::cerr << "Bad XML_Element_c attempted to_string()\n";
+      throw XML_Element_Ungood();
+    }
+
+    TiXmlElement *element = m_handle.ToElement();
+    if(!element) {
+      std::cerr << "XML_Element_c invalid\n";
+      throw XML_Element_Ungood();
+    }
+
+    const char * text = element->Attribute(attribute.c_str());
+    if(!text) {
+      std::cerr << "XML_Element_c attempted to access non-existent attribute\n";
+      throw XML_Element_Non_Attribute();
+    }
+
+    return text;
+  }
+
   TiXmlNode * XML_Element_c::child(const String &field) const {
     TiXmlNode * node = m_handle.ToNode();
     return node ? node->FirstChild(field.c_str()) : 0;
