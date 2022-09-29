@@ -1,6 +1,6 @@
-#The Zenipex Library (zenilib) 0.5.3.0
+# The Zenipex Library (zenilib) 0.5.3.0
 
-##Contents
+## Contents
 
 1. Introduction
 2. License
@@ -8,7 +8,7 @@
 4. Documentation
 
 
-##1. Introduction
+## 1. Introduction
 
 The Zenipex Library (zenilib) is a game development framework, created with the goal of allowing someone with some knowledge of C++ to create 3D games for both Windows and Linux platforms (and hopefully others) quickly.
 
@@ -21,7 +21,7 @@ Since its initial release, ease of use has been a continual focus.  Features hav
 ~[bazald](mailto:bazald@gmail.com)
 
 
-##2. License/Authors
+## 2. License/Authors
 
 The Zenipex Library is an open source project.  For details please refer to the first comment in any given file and refer to the included copies of the GPL and LGPL.
 
@@ -35,7 +35,7 @@ In my opinion, the first option is easier, as it requires no effort post-release
 If you have any questions about the GPL, feel free to shoot me an e-mail.
 
 
-##3. Supported Platforms
+## 3. Supported Platforms
  
 This software is known to compile and run on:
  
@@ -62,5 +62,5 @@ It should be possible to build it on any platform supported by:
 | TinyXML | 2.6.2 | zlib/libpng License |
 | zlib | 1.2.5 | zlib/libpng License |
 
-##4. Documentation
+## 4. Documentation
 Documentation is available in any format supported by Doxygen.  You can build any format by modifying the ./Doxyfile file to access the correct directories on your system.
